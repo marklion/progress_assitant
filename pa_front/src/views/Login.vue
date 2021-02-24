@@ -7,7 +7,8 @@
 <script>
 export default {
     name: 'Login',
-
+    beforeMount() {
+    },
 }
 </script>
 

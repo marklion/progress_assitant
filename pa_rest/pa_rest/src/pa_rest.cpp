@@ -10,3 +10,23 @@ std::string pa_rest::echo(const std::string& text)
     return "Hi, " + resp;
 }
 
+
+rest_userinfo pa_rest::proc_get_userinfo(const std::string& pa_ssid)
+{
+    rest_userinfo ret;
+    auto result = PA_API_proc_get_userinfo(pa_ssid);
+    if (result)
+    {
+        ret.name = result->m_name;
+        ret.company = result->m_company;
+        ret.logo = result->m_logo;
+        ret.role = result->m_role;
+        ret.online = true;
+    }
+
+    return ret;
+}
+std::string pa_rest::proc_post_wechat_login(const std::string& code)
+{
+    return PA_API_proc_wechat_login(code);
+}

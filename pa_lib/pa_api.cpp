@@ -1,6 +1,7 @@
 #include "pa_api.h"
 #include "pa.pb.h"
 #include <memory>
+#include "pa_database.h"
 
 static tdf_log g_log("pa lib");
 
@@ -92,6 +93,41 @@ std::string PA_API_proc_test_echo(const std::string& _input)
             ret = resp_msg.output();
         }
     }
+
+    return ret;
+}
+
+bool PA_API_proc_add_company(const std::string &_name)
+{
+    bool ret = false;
+
+    pa_sql_company company;
+    company.m_name = _name;
+
+    ret = company.insert_record();
+
+    return ret;
+}
+
+std::string PA_API_proc_wechat_login(const std::string &_code)
+{
+    return "123";
+}
+std::unique_ptr<userinfo> PA_API_proc_get_userinfo(const std::string &_ssid)
+{
+    std::unique_ptr<userinfo> ret(new userinfo());
+    if (_ssid == "123")
+    {
+        ret->m_name = "测试名称";
+        ret->m_role = "administrator";
+        ret->m_company = "测试公司";
+        ret->m_logo= "/logo";
+    }
+    else
+    {
+        ret.reset();
+    }
+    
 
     return ret;
 }

@@ -10,6 +10,14 @@
 /*! Some detailed description of the service */
 // '*location' comment sets resource path for this service
 // *location: pa_rest
+
+struct rest_userinfo {
+    std::string name;
+    std::string role;
+    std::string company;
+    std::string logo;
+    bool online;
+};
 class pa_rest: public ngrest::Service
 {
 public:
@@ -27,6 +35,14 @@ public:
     // *method: GET
     //
     std::string echo(const std::string& text);
+
+    // *location: /userinfo/{pa_ssid}
+    // *method: GET
+    rest_userinfo proc_get_userinfo(const std::string& pa_ssid);
+
+    // *location: /wechat_login
+    // *method: POST
+    std::string proc_post_wechat_login(const std::string& code);
 };
 
 

@@ -28,20 +28,64 @@ export default {
         return {
             bar_title: '',
             has_go_back: false,
+            is_login: false,
         }
     },
-    beforeMount: function () {
+    mounted: function () {
+        
     },
     watch: {
-        $route: function(to, from) {
+        $route: function (to, from) {
+            var vue_this = this;
             this.bar_title = to.meta.private_title;
             this.has_go_back = to.meta.has_go_back;
+            if (to.query.code) {
+                this.$axios.post('/wechat_login', {
+                    code: to.query.code
+                }).then(function (resp) {
+                    vue_this.$cookies.set('pa_ssid', resp.data.result);
+                    vue_this.$router.replace({
+                        name: 'Home',
+                        query: {
+                            company: to.query.state
+                        }
+                    });
+                }).catch(function (err) {
+                    console.log(err);
+                });
+            }
+            else if (this.is_login == false)
+            {
+                this.get_userinfo();
+            }
             console.log(from);
         }
     },
     methods: {
         onClickLeft() {
             this.$router.back(-1);
+        },
+        get_userinfo() {
+            var vue_this = this;
+            var ssid = vue_this.$cookies.get('pa_ssid');
+            vue_this.$axios.get('userinfo/' + ssid).then(function (resp) {
+                if (resp.data.result.online == true) {
+                    vue_this.is_login = true;
+                    vue_this.$store.commit('set_userinfo', {
+                        name: resp.data.result.name,
+                        company: resp.data.result.company,
+                        role: resp.data.result.role,
+                        logo: vue_this.$remote_url + resp.data.result.logo,
+                    });
+                } else {
+                    var company_from_url = vue_this.$route.query.company;
+                    window.location.href = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxa390f8b6f68e9c6d&redirect_uri=http%3a%2f%2fwww.d8sis.cn%2fpa_web&response_type=code&scope=snsapi_userinfo&state=" + company_from_url + "#wechat_redirect"
+                }
+            }).catch(function (err) {
+                console.log(err);
+                var company_from_url = vue_this.$route.query.company;
+                window.location.href = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxa390f8b6f68e9c6d&redirect_uri=http%3a%2f%2fwww.d8sis.cn%2fpa_web&response_type=code&scope=snsapi_userinfo&state=" + company_from_url + "#wechat_redirect"
+            });
         },
     },
 }

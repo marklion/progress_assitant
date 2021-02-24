@@ -1,6 +1,7 @@
 <template>
 <div class="home">
     <van-button type="primary" @click="to_login">登陆</van-button>
+    <div>{{$store.state.userinfo.name}}</div>
 </div>
 </template>
 
