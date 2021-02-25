@@ -7,6 +7,7 @@
 #include <ngrest/common/Service.h>
 #include <ngrest/common/Callback.h>
 #include <ngrest/engine/Handler.h>
+#include <vector>
 
 //! Dummy description for the service
 /*! Some detailed description of the service */
@@ -42,9 +43,24 @@ public:
     // *method: GET
     rest_userinfo proc_get_userinfo(const std::string& pa_ssid);
 
+    // *location: /userinfo
+   // *method: POST
+    bool proc_post_userinfo(const std::string& pa_ssid, const std::string& name, const std::string& logo, const std::string& company, const std::string& role);
+
     // *location: /wechat_login
     // *method: POST
     void proc_post_wechat_login_async(const std::string& code, ngrest::Callback<const std::string&>& callback);
+
+    // *location: /company/{company_id}
+    // *method: GET
+    std::string proc_get_company(const std::string& company_id);
+
+    // *location: /all_companies
+    // *method: GET
+    std::vector<std::string> proc_get_all_companies();
+    // *location: /all_roles/{company_name}
+    // *method: GET
+    std::vector<std::string> proc_get_all_roles(const std::string& company_name);
 };
 
 

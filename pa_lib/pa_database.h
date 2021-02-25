@@ -20,6 +20,26 @@ public:
     }
 };
 
+class pa_sql_comp_role:public sqlite_orm{
+public:
+    pa_sql_comp_role():sqlite_orm(PA_DB_FILE) {}
+    pa_sql_comp_role(const std::string &_filename):sqlite_orm(_filename) {}
+    int m_role_id = 0;
+    int m_company_id = 0;
+    virtual std::vector<sqlite_orm_column> columns_defined() {
+        std::vector<sqlite_orm_column> ret;
+
+        ret.push_back(sqlite_orm_column("role_id", sqlite_orm_column::INTEGER, &m_role_id));
+        ret.push_back(sqlite_orm_column("company_id", sqlite_orm_column::INTEGER, &m_company_id));
+
+        return ret;
+    }
+
+    virtual std::string table_name() {
+        return "comp_role";
+    }
+};
+
 class pa_sql_userinfo:public sqlite_orm {
 public:
     pa_sql_userinfo():sqlite_orm(PA_DB_FILE) {}
@@ -27,8 +47,7 @@ public:
     std::string m_name;
     std::string m_openid;
     std::string m_logo;
-    int m_role = 0;
-    int m_company = 0;
+    int m_comp_role_id = 0;
     virtual std::vector<sqlite_orm_column> columns_defined()
     {
         std::vector<sqlite_orm_column> ret;
@@ -36,8 +55,7 @@ public:
         ret.push_back(sqlite_orm_column("name", sqlite_orm_column::STRING, &m_name));
         ret.push_back(sqlite_orm_column("openid", sqlite_orm_column::STRING, &m_openid, SQLITE_ORM_COLUMN_LIMIT_UNIQ));
         ret.push_back(sqlite_orm_column("logo", sqlite_orm_column::STRING, &m_logo));
-        ret.push_back(sqlite_orm_column("role", sqlite_orm_column::INTEGER, &m_role));
-        ret.push_back(sqlite_orm_column("company", sqlite_orm_column::INTEGER, &m_company));
+        ret.push_back(sqlite_orm_column("comp_role_id", sqlite_orm_column::INTEGER, &m_comp_role_id));
 
         return ret;
     }
@@ -94,4 +112,10 @@ std::unique_ptr<pa_sql_userlogin> PA_SQL_get_userlogin(const std::string &_ssid)
 std::unique_ptr<pa_sql_userlogin> PA_SQL_get_userlogin(int _user_id);
 std::unique_ptr<pa_sql_userinfo> PA_SQL_get_online_userinfo(const std::string &_ssid);
 std::unique_ptr<pa_sql_company> PA_SQL_get_company(int _company_id);
+std::unique_ptr<pa_sql_company> PA_SQL_get_company(const std::string &_company_name);
 std::unique_ptr<pa_sql_role> PA_SQL_get_role(int _role_id);
+std::unique_ptr<pa_sql_role> PA_SQL_get_role(const std::string &_role_name);
+std::unique_ptr<pa_sql_comp_role> PA_SQL_get_comp_role(int _comp_role_id);
+std::unique_ptr<pa_sql_comp_role> PA_SQL_get_comp_role(int _company_id, int _role_id);
+std::list<pa_sql_company> PA_SQL_get_all_companies();
+std::list<pa_sql_role> PA_SQL_get_all_roles(const std::string &_company_name);

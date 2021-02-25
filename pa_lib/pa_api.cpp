@@ -101,14 +101,52 @@ std::string PA_API_proc_test_echo(const std::string& _input)
     return ret;
 }
 
-bool PA_API_proc_add_company(const std::string &_name)
+bool PA_API_proc_add_company_role(const std::string &_name, const std::string &_role)
 {
     bool ret = false;
 
-    pa_sql_company company;
-    company.m_name = _name;
+    int company_id = 0;
+    int role_id = 0;
 
-    ret = company.insert_record();
+    auto company_from_sql = PA_SQL_get_company(_name);
+    if (company_from_sql)
+    {
+        company_id = company_from_sql->get_pri_id();
+    }
+    else
+    {
+        pa_sql_company company;
+        company.m_name = _name;
+        company.insert_record();
+        company_id = company.get_pri_id();
+    }
+
+    auto role_from_sql = PA_SQL_get_role(_role);
+    if (role_from_sql)
+    {
+        role_id = role_from_sql->get_pri_id();
+    }
+    else
+    {
+        pa_sql_role role;
+        role.m_role_name = _role;
+        role.insert_record();
+        role_id = role.get_pri_id();
+    }
+
+    auto comp_role_from_sql = PA_SQL_get_comp_role(company_id, role_id);
+    if (!comp_role_from_sql)
+    {
+        pa_sql_comp_role comp_role;
+        comp_role.m_company_id = company_id;
+        comp_role.m_role_id = role_id;
+        ret = comp_role.insert_record();
+    }
+    else
+    {
+        g_log.err("same record exists");
+    }
+    
 
     return ret;
 }
@@ -266,16 +304,83 @@ std::unique_ptr<userinfo> PA_API_proc_get_userinfo(const std::string &_ssid)
         ret->m_name = user_from_sql->m_name;
         ret->m_logo = user_from_sql->m_logo;
 
-        auto company_from_sql = PA_SQL_get_company(user_from_sql->m_company);
-        if (company_from_sql)
+        auto comp_role = PA_SQL_get_comp_role(user_from_sql->m_comp_role_id);
+        if (comp_role)
         {
-            ret->m_company = company_from_sql->m_name;
-        }
+            auto company_from_sql = PA_SQL_get_company(comp_role->m_company_id);
+            if (company_from_sql)
+            {
+                ret->m_company = company_from_sql->m_name;
+            }
 
-        auto role_from_sql = PA_SQL_get_role(user_from_sql->m_role);
-        if (role_from_sql)
+            auto role_from_sql = PA_SQL_get_role(comp_role->m_role_id);
+            if (role_from_sql)
+            {
+                ret->m_role = role_from_sql->m_role_name;
+            }
+        }
+    }
+
+    return ret;
+}
+
+std::vector<std::string> PA_API_proc_get_all_companies()
+{
+    std::vector<std::string> ret;
+
+    auto companies = PA_SQL_get_all_companies();
+    for (auto &itr:companies)
+    {
+        ret.push_back(itr.m_name);
+    }
+
+    return ret;
+}
+std::vector<std::string> PA_API_proc_get_all_roles(const std::string &_company_name)
+{
+    std::vector<std::string> ret;
+
+    auto roles = PA_SQL_get_all_roles(_company_name);
+    for (auto &itr:roles)
+    {
+        ret.push_back(itr.m_role_name);
+    }
+
+    return ret;
+}
+
+std::string PA_API_proc_get_company(int _company_id)
+{
+    auto company = PA_SQL_get_company(_company_id);
+    std::string ret;
+    if (company)
+    {
+        ret = company->m_name;
+    }
+
+    return ret;
+}
+
+bool PA_API_proc_update_userinfo(const std::string& _ssid, const std::string &_name, const std::string &_logo, const std::string &_company, const std::string &_role)
+{
+    bool ret = false;
+
+    auto userinfo = PA_SQL_get_online_userinfo(_ssid);
+    if (userinfo)
+    {
+        userinfo->m_name = _name;
+        userinfo->m_logo = _logo;
+
+        auto company = PA_SQL_get_company(_company);
+        auto role = PA_SQL_get_role(_role);
+        if (company && role)
         {
-            ret->m_role = role_from_sql->m_role_name;
+            auto comp_role = PA_SQL_get_comp_role(company->get_pri_id(), role->get_pri_id());
+            if (comp_role)
+            {
+                userinfo->m_comp_role_id = comp_role->get_pri_id();
+                ret = userinfo->update_record();
+            }
         }
     }
 

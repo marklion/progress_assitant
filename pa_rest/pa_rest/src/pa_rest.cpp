@@ -17,6 +17,7 @@ std::string pa_rest::echo(const std::string& text)
 
 rest_userinfo pa_rest::proc_get_userinfo(const std::string& pa_ssid)
 {
+    LOG_CURRENT_REQ("pa_ssid : %s", pa_ssid.c_str());
     rest_userinfo ret;
 
     ret.online = false;
@@ -33,6 +34,12 @@ rest_userinfo pa_rest::proc_get_userinfo(const std::string& pa_ssid)
     return ret;
 }
 
+bool pa_rest::proc_post_userinfo(const std::string& pa_ssid, const std::string& name, const std::string& logo, const std::string& company, const std::string& role)
+{
+    LOG_CURRENT_REQ("ssid:%s,name:%s,company:%s,role:%s", pa_ssid.c_str(), name.c_str(), logo.c_str(), company.c_str(), role.c_str());
+    return PA_API_proc_update_userinfo(pa_ssid, name, logo, company, role);
+}
+
 void pa_rest::proc_post_wechat_login_async(const std::string& code, ngrest::Callback<const std::string&>& callback)
 {
     LOG_CURRENT_REQ("code : %s", code.c_str());
@@ -43,4 +50,22 @@ void pa_rest::proc_post_wechat_login_async(const std::string& code, ngrest::Call
             callback.success(ret);
         });
     }).detach();
+}
+
+std::string pa_rest::proc_get_company(const std::string &company_id)
+{
+    LOG_CURRENT_REQ("company_id: %s", company_id.c_str());
+    return PA_API_proc_get_company(atoi(company_id.c_str()));
+}
+
+std::vector<std::string> pa_rest::proc_get_all_companies()
+{
+    LOG_CURRENT_REQ();
+    return PA_API_proc_get_all_companies();
+}
+
+std::vector<std::string> pa_rest::proc_get_all_roles(const std::string &company_name)
+{
+    LOG_CURRENT_REQ("company_name: %s", company_name.c_str());
+    return PA_API_proc_get_all_roles(company_name);
 }

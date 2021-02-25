@@ -45,11 +45,19 @@ export default {
             }
         };
     },
+    watch: {
+        "$store.state.userinfo": function (value) {
+            if (!value.company) {
+                this.$router.push({
+                    name: 'BindCompany',
+                    query: {
+                        company: this.$route.query.company
+                    }
+                });
+            }
+        },
+    },
     beforeMount() {
-        if (!this.$store.state.userinfo.company)
-        {
-            this.$router.push({name:'BindCompany', query: {company: this.$route.query.company}});
-        }
     },
     methods: {},
 }

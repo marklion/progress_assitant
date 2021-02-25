@@ -63,7 +63,46 @@ std::unique_ptr<pa_sql_company> PA_SQL_get_company(int _company_id)
 {
     return sqlite_orm::search_record<pa_sql_company>(PA_DB_FILE, _company_id);
 }
+std::unique_ptr<pa_sql_company> PA_SQL_get_company(const std::string &_company_name)
+{
+    return sqlite_orm::search_record<pa_sql_company>(PA_DB_FILE, "name = '%s'", _company_name.c_str());
+}
 std::unique_ptr<pa_sql_role> PA_SQL_get_role(int _role_id)
 {
     return sqlite_orm::search_record<pa_sql_role>(PA_DB_FILE, _role_id);
+}
+std::unique_ptr<pa_sql_role> PA_SQL_get_role(const std::string &_role_name)
+{
+    return sqlite_orm::search_record<pa_sql_role>(PA_DB_FILE, "role_name = '%s'", _role_name.c_str());
+}
+
+std::unique_ptr<pa_sql_comp_role> PA_SQL_get_comp_role(int _comp_role_id)
+{
+    return sqlite_orm::search_record<pa_sql_comp_role>(PA_DB_FILE, _comp_role_id);
+}
+
+std::unique_ptr<pa_sql_comp_role> PA_SQL_get_comp_role(int _company_id, int _role_id)
+{
+    return sqlite_orm::search_record<pa_sql_comp_role>(PA_DB_FILE, "company_id = %d AND role_id = %d", _company_id, _role_id);
+}
+
+std::list<pa_sql_company> PA_SQL_get_all_companies()
+{
+    return sqlite_orm::search_record_all<pa_sql_company>(PA_DB_FILE);
+}
+std::list<pa_sql_role> PA_SQL_get_all_roles(const std::string &_company_name)
+{
+    std::list<pa_sql_role> ret;
+
+    auto company = PA_SQL_get_company(_company_name);
+    if (company)
+    {
+        auto comp_roles = sqlite_orm::search_record_all<pa_sql_comp_role>(PA_DB_FILE, "company_id = %d", company->get_pri_id());
+        for (auto &itr:comp_roles)
+        {
+            ret.push_back(*(PA_SQL_get_role(itr.m_role_id)));
+        }
+    }
+
+    return ret;
 }

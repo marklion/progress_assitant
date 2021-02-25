@@ -31,34 +31,35 @@ export default {
             is_login: false,
         }
     },
-    mounted: function () {
-        
-    },
-    watch: {
-        $route: function (to, from) {
-            var vue_this = this;
-            this.bar_title = to.meta.private_title;
-            this.has_go_back = to.meta.has_go_back;
-            if (to.query.code) {
-                this.$axios.post('/wechat_login', {
-                    code: to.query.code
+    beforeMount: function () {
+        var vue_this = this;
+        this.$router.onReady(function () {
+            console.log(vue_this.$route);
+            console.log(vue_this.$store.state);
+            if (vue_this.$route.query.code) {
+                vue_this.$axios.post('/wechat_login', {
+                    code: vue_this.$route.query.code
                 }).then(function (resp) {
                     vue_this.$cookies.set('pa_ssid', resp.data.result);
+                    vue_this.get_userinfo();
                     vue_this.$router.replace({
                         name: 'Home',
                         query: {
-                            company: to.query.state
+                            company: vue_this.$route.query.state
                         }
                     });
                 }).catch(function (err) {
                     console.log(err);
                 });
+            } else {
+                vue_this.get_userinfo();
             }
-            else if (this.is_login == false)
-            {
-                this.get_userinfo();
-            }
-            console.log(from);
+        });
+    },
+    watch: {
+        $route: function (to) {
+            this.bar_title = to.meta.private_title;
+            this.has_go_back = to.meta.has_go_back;
         }
     },
     methods: {
