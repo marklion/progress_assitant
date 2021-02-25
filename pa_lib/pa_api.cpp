@@ -2,6 +2,10 @@
 #include "pa.pb.h"
 #include <memory>
 #include "pa_database.h"
+#include <curl/curl.h>
+#include "CJsonObject.hpp"
+#include <fstream>
+#include <uuid/uuid.h>
 
 static tdf_log g_log("pa lib");
 
@@ -109,25 +113,171 @@ bool PA_API_proc_add_company(const std::string &_name)
     return ret;
 }
 
-std::string PA_API_proc_wechat_login(const std::string &_code)
+static size_t dg_proc_curl(void *ptr, size_t size, size_t nmemb, void *user_data)
 {
-    return "123";
+    auto in_buff = (std::string *)user_data;
+    in_buff->append((char *)ptr, size * nmemb);
+
+    return size * nmemb;
 }
-std::unique_ptr<userinfo> PA_API_proc_get_userinfo(const std::string &_ssid)
+
+static std::string pa_rest_req(const std::string &_req)
 {
-    std::unique_ptr<userinfo> ret(new userinfo());
-    if (_ssid == "123")
+    std::string in_buff;
+    auto curlhandle = curl_easy_init();
+    if (nullptr != curlhandle)
     {
-        ret->m_name = "测试名称";
-        ret->m_role = "administrator";
-        ret->m_company = "测试公司";
-        ret->m_logo= "/logo";
+        curl_easy_setopt(curlhandle, CURLOPT_URL, _req.c_str());
+        curl_easy_setopt(curlhandle, CURLOPT_WRITEDATA, &in_buff);
+        curl_easy_setopt(curlhandle, CURLOPT_WRITEFUNCTION, dg_proc_curl);
+        curl_easy_perform(curlhandle);
+        curl_easy_cleanup(curlhandle);
+    }
+
+    return in_buff;
+}
+static std::string pa_store_logo_to_file(const std::string &_logo, const std::string &_upid)
+{
+    std::string ret;
+    std::string file_name("/dist/logo_res/logo_");
+    file_name.append(_upid);
+    file_name.append(".jpg");
+    
+    std::fstream out_file;
+    out_file.open(file_name.c_str(), std::ios::binary|std::ios::out|std::ios::trunc);
+    if (out_file.is_open())
+    {
+        out_file.write(_logo.data(), _logo.length());
+        ret = file_name;
+        ret.erase(ret.begin(), ret.begin() + 5);
+        out_file.close();
     }
     else
     {
-        ret.reset();
+        g_log.err("logo store file openned failed");
     }
     
+
+    return ret;
+}
+static std::unique_ptr<pa_sql_userinfo> fetch_user_info(const std::string &_name, const std::string &_logo, const std::string &_openid)
+{
+    auto p_user_info = PA_SQL_get_userinfo(_openid);
+    if (nullptr == p_user_info)
+    {
+        p_user_info.reset(new pa_sql_userinfo());
+        p_user_info->m_openid = _openid;
+        p_user_info->insert_record();
+    }
+    p_user_info->m_name = _name;
+    p_user_info->m_logo = _logo;
+    
+    p_user_info->update_record();
+
+    return p_user_info;
+}
+static std::string pa_gen_ssid()
+{
+    uuid_t out;
+    std::string ret;
+
+    uuid_generate(out);
+    char byte_show[3];
+    for (auto itr : out)
+    {
+        sprintf(byte_show, "%02X", itr);
+        ret.append(byte_show);
+    }
+
+    return ret;
+}
+static std::unique_ptr<pa_sql_userlogin> pa_pull_user_info_from_wechat(const std::string& _acctok, const std::string &_open_id)
+{
+    std::unique_ptr<pa_sql_userlogin> ret(new pa_sql_userlogin());
+    std::string req = "https://api.weixin.qq.com/sns/userinfo?access_token=" + _acctok + "&openid=" + _open_id + "&lang=zh_CN";
+    auto in_buff = pa_rest_req(req);
+
+    g_log.log("user infor:" + in_buff);
+    neb::CJsonObject oJson(in_buff);
+
+    if (oJson.KeyExist("errcode"))
+    {
+        g_log.err(oJson("errmsg"));
+    }
+    else
+    {
+        auto logo_path = oJson("headimgurl");
+        auto logo_content = pa_rest_req(logo_path);
+        auto p_user_info = fetch_user_info(oJson("nickname"), pa_store_logo_to_file(logo_content, _open_id), _open_id);
+        if (p_user_info)
+        {
+            ret->m_ssid = pa_gen_ssid();
+            ret->m_user_id = p_user_info->get_pri_id();
+            ret->m_time_stamp = time(NULL) / 3600;
+        }
+    }
+
+    return ret;
+}
+std::string PA_API_proc_wechat_login(const std::string &_code)
+{
+    std::string ret;
+    std::string wechat_secret(getenv("WECHAT_SECRET"));
+    std::string req = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=wxa390f8b6f68e9c6d&secret=" + wechat_secret + "&code=" + _code + "&grant_type=authorization_code";
+
+    std::string in_buff = pa_rest_req(req);
+    neb::CJsonObject oJson(in_buff);
+
+    if (oJson.KeyExist("errcode"))
+    {
+        g_log.err("failed to get openid: %s", oJson("errmsg"));
+    }
+    else
+    {
+        // search if user already login, if so, return ssid
+        auto p_user_info = PA_SQL_get_userinfo(oJson("openid"));
+        if (p_user_info)
+        {
+            auto login_user = PA_SQL_get_userlogin(p_user_info->get_pri_id());
+            if (login_user)
+            {
+                ret = login_user->m_ssid;
+            }
+        }
+        if (ret.length() <= 0)
+        {
+            auto user_information = pa_pull_user_info_from_wechat(oJson("access_token"), oJson("openid"));
+            if (true == user_information->insert_record())
+            {
+                ret = user_information->m_ssid;
+            }
+        }
+    }
+
+    return ret;
+}
+std::unique_ptr<userinfo> PA_API_proc_get_userinfo(const std::string &_ssid)
+{
+    std::unique_ptr<userinfo> ret;
+    auto user_from_sql = PA_SQL_get_online_userinfo(_ssid);
+    if (user_from_sql)
+    {
+        ret.reset(new userinfo());
+        ret->m_name = user_from_sql->m_name;
+        ret->m_logo = user_from_sql->m_logo;
+
+        auto company_from_sql = PA_SQL_get_company(user_from_sql->m_company);
+        if (company_from_sql)
+        {
+            ret->m_company = company_from_sql->m_name;
+        }
+
+        auto role_from_sql = PA_SQL_get_role(user_from_sql->m_role);
+        if (role_from_sql)
+        {
+            ret->m_role = role_from_sql->m_role_name;
+        }
+    }
 
     return ret;
 }

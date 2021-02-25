@@ -30,4 +30,4 @@ set_target_properties(pa_rest PROPERTIES
 )
 
 find_library(PA_LIB libpa_lib.so ${PRJ_INTERNAL_BUILD}/lib)
-target_link_libraries(pa_rest ngrestutils ngrestcommon ngrestjson ngrestengine $ENV{NGREST_EXT_LIBS} ${PA_LIB})
+target_link_libraries(pa_rest ngrestutils ngrestcommon ngrestjson ngrestengine $ENV{NGREST_EXT_LIBS} ${PA_LIB} pthread)

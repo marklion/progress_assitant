@@ -3,7 +3,11 @@
 
 #include "pa_rest.h"
 #include "../../../pa_lib/pa_api.h"
+#include <thread>
 
+#define LOG_CURRENT_REQ(format, ...) g_log.log("calling %s with " format,__func__, ##__VA_ARGS__)
+
+static tdf_log g_log("pa_rest");
 std::string pa_rest::echo(const std::string& text)
 {
     auto resp = PA_API_proc_test_echo(text);
@@ -14,6 +18,8 @@ std::string pa_rest::echo(const std::string& text)
 rest_userinfo pa_rest::proc_get_userinfo(const std::string& pa_ssid)
 {
     rest_userinfo ret;
+
+    ret.online = false;
     auto result = PA_API_proc_get_userinfo(pa_ssid);
     if (result)
     {
@@ -26,7 +32,15 @@ rest_userinfo pa_rest::proc_get_userinfo(const std::string& pa_ssid)
 
     return ret;
 }
-std::string pa_rest::proc_post_wechat_login(const std::string& code)
+
+void pa_rest::proc_post_wechat_login_async(const std::string& code, ngrest::Callback<const std::string&>& callback)
 {
-    return PA_API_proc_wechat_login(code);
+    LOG_CURRENT_REQ("code : %s", code.c_str());
+
+    std::thread([&callback, code]{
+        auto ret = PA_API_proc_wechat_login(code);
+        ngrest::Handler::post([&callback, ret]{
+            callback.success(ret);
+        });
+    }).detach();
 }

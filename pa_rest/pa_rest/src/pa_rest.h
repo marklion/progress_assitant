@@ -5,6 +5,8 @@
 #define PA_REST_H
 
 #include <ngrest/common/Service.h>
+#include <ngrest/common/Callback.h>
+#include <ngrest/engine/Handler.h>
 
 //! Dummy description for the service
 /*! Some detailed description of the service */
@@ -42,7 +44,7 @@ public:
 
     // *location: /wechat_login
     // *method: POST
-    std::string proc_post_wechat_login(const std::string& code);
+    void proc_post_wechat_login_async(const std::string& code, ngrest::Callback<const std::string&>& callback);
 };
 
 

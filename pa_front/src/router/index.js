@@ -40,6 +40,15 @@ const routes = [
         has_go_back:false,
     },
   },
+  {
+    path: '/bind_company',
+    name: 'BindCompany',
+    component: () => import('../views/BindCompany.vue'),
+    meta: {    
+        private_title: '绑定公司信息',
+        has_go_back:true,
+    },
+  },
 ]
 
 const router = new VueRouter({
