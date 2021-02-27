@@ -34,10 +34,10 @@ rest_userinfo pa_rest::proc_get_userinfo(const std::string& pa_ssid)
     return ret;
 }
 
-bool pa_rest::proc_post_userinfo(const std::string& pa_ssid, const std::string& name, const std::string& logo, const std::string& company, const std::string& role)
+bool pa_rest::proc_post_userinfo(const std::string& pa_ssid, const std::string& name, const std::string& company, const std::string& role)
 {
-    LOG_CURRENT_REQ("ssid:%s,name:%s,company:%s,role:%s", pa_ssid.c_str(), name.c_str(), logo.c_str(), company.c_str(), role.c_str());
-    return PA_API_proc_update_userinfo(pa_ssid, name, logo, company, role);
+    LOG_CURRENT_REQ("ssid:%s,name:%s,company:%s,role:%s", pa_ssid.c_str(), name.c_str(), company.c_str(), role.c_str());
+    return PA_API_proc_update_userinfo(pa_ssid, name, company, role);
 }
 
 void pa_rest::proc_post_wechat_login_async(const std::string& code, ngrest::Callback<const std::string&>& callback)
@@ -68,4 +68,26 @@ std::vector<std::string> pa_rest::proc_get_all_roles(const std::string &company_
 {
     LOG_CURRENT_REQ("company_name: %s", company_name.c_str());
     return PA_API_proc_get_all_roles(company_name);
+}
+
+bool pa_rest::proc_post_upload_img(const std::string &file_content, const std::string &pa_ssid)
+{
+    LOG_CURRENT_REQ("file_content: %s.....", file_content.substr(0, 10).c_str());
+    return PA_API_proc_upate_logo(pa_ssid, file_content);
+}
+
+void pa_rest::proc_post_wx_sign_async(const std::string& nonceStr, long timestamp, const std::string& url, ngrest::Callback<const std::string&>& callback)
+{
+    LOG_CURRENT_REQ("nonceStr: %s, timestamp: %ld, url: %s", nonceStr.c_str(), timestamp, url.c_str());
+    std::thread([&callback, nonceStr, timestamp, url]{
+        auto ret = PA_API_proc_wx_sign(nonceStr, timestamp, url);
+        ngrest::Handler::post([&callback, ret] {
+            callback.success(ret);
+        });
+    }).detach();
+}
+
+std::string pa_rest::proc_get_company_id(const std::string& company_name)
+{
+    return PA_API_proc_get_company_id(company_name);
 }

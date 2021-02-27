@@ -6,7 +6,7 @@ import store from './store'
 import cookies from 'vue-cookies'
 
 Vue.prototype.$cookies = cookies;
-Vue.prototype.$remote_url = 'http://www.d8sis.cn';
+Vue.prototype.$remote_url = 'http://www.d8sis.cn/pa_web';
 Vue.config.productionTip = false
 
 new Vue({

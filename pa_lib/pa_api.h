@@ -27,10 +27,14 @@ std::unique_ptr<userinfo> PA_API_proc_get_userinfo(const std::string &_ssid);
 std::vector<std::string> PA_API_proc_get_all_companies();
 std::vector<std::string> PA_API_proc_get_all_roles(const std::string &_company_name);
 std::string PA_API_proc_get_company(int _company_id);
-bool PA_API_proc_update_userinfo(const std::string& _ssid, const std::string &_name, const std::string &_logo, const std::string &_company, const std::string &_role);
+bool PA_API_proc_update_userinfo(const std::string& _ssid, const std::string &_name, const std::string &_company, const std::string &_role);
+bool PA_API_proc_upate_logo(const std::string& _ssid, const std::string &_base64_img);
+std::string PA_API_proc_wx_sign(const std::string& nonceStr, long timestamp, const std::string &url);
+std::string PA_API_proc_get_company_id(const std::string& _company_name);
 
 }
 
 
 #endif // _PA_API_H_
+
 

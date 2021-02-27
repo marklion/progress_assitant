@@ -45,7 +45,7 @@ public:
 
     // *location: /userinfo
    // *method: POST
-    bool proc_post_userinfo(const std::string& pa_ssid, const std::string& name, const std::string& logo, const std::string& company, const std::string& role);
+    bool proc_post_userinfo(const std::string& pa_ssid, const std::string& name,  const std::string& company, const std::string& role);
 
     // *location: /wechat_login
     // *method: POST
@@ -61,10 +61,18 @@ public:
     // *location: /all_roles/{company_name}
     // *method: GET
     std::vector<std::string> proc_get_all_roles(const std::string& company_name);
+
+    // *location: /upload_img
+    // *method: POST
+    bool proc_post_upload_img(const std::string& file_content, const std::string& pa_ssid);
+
+    // *location: /pa_wx_sign
+    // *method: POST
+    void proc_post_wx_sign_async(const std::string& nonceStr, long timestamp, const std::string& url, ngrest::Callback<const std::string&>& callback);
+
+    // *location: /company_id/{company_name}
+    // *method: GET
+    std::string proc_get_company_id(const std::string& company_name);
 };
 
-
 #endif // PA_REST_H
-
-
-

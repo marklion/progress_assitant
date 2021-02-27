@@ -84,13 +84,11 @@ void PA_API_proc_update_userinfo_helper()
 {
     std::string pa_ssid;
     std::string name;
-    std::string logo;
     std::string company;
     std::string role;
     ASK_PARAM(pa_ssid);
     ASK_PARAM(name);
-    ASK_PARAM(logo);
     ASK_PARAM(company);
     ASK_PARAM(role);
-    std::cout << "result: "<< PA_API_proc_update_userinfo(pa_ssid, name, logo, company, role);
+    std::cout << "result: "<< PA_API_proc_update_userinfo(pa_ssid, name, company, role);
 }

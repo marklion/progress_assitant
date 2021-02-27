@@ -6,10 +6,14 @@
 #include "CJsonObject.hpp"
 #include <fstream>
 #include <uuid/uuid.h>
+#include "Base64.h"
+#include <openssl/sha.h>
+#include <openssl/crypto.h>
 
 static tdf_log g_log("pa lib");
 
-struct api_resp {
+struct api_resp
+{
     pa_msg_type m_type = pa_msg_type_max;
     std::string m_data;
 };
@@ -82,7 +86,7 @@ std::unique_ptr<api_resp> pa_api_send_recv(pa_msg_type _type, const std::string 
     return pret;
 }
 
-std::string PA_API_proc_test_echo(const std::string& _input)
+std::string PA_API_proc_test_echo(const std::string &_input)
 {
     std::string ret;
     pa::echo_test msg;
@@ -146,7 +150,6 @@ bool PA_API_proc_add_company_role(const std::string &_name, const std::string &_
     {
         g_log.err("same record exists");
     }
-    
 
     return ret;
 }
@@ -180,9 +183,9 @@ static std::string pa_store_logo_to_file(const std::string &_logo, const std::st
     std::string file_name("/dist/logo_res/logo_");
     file_name.append(_upid);
     file_name.append(".jpg");
-    
+
     std::fstream out_file;
-    out_file.open(file_name.c_str(), std::ios::binary|std::ios::out|std::ios::trunc);
+    out_file.open(file_name.c_str(), std::ios::binary | std::ios::out | std::ios::trunc);
     if (out_file.is_open())
     {
         out_file.write(_logo.data(), _logo.length());
@@ -194,7 +197,6 @@ static std::string pa_store_logo_to_file(const std::string &_logo, const std::st
     {
         g_log.err("logo store file openned failed");
     }
-    
 
     return ret;
 }
@@ -209,7 +211,7 @@ static std::unique_ptr<pa_sql_userinfo> fetch_user_info(const std::string &_name
     }
     p_user_info->m_name = _name;
     p_user_info->m_logo = _logo;
-    
+
     p_user_info->update_record();
 
     return p_user_info;
@@ -229,7 +231,7 @@ static std::string pa_gen_ssid()
 
     return ret;
 }
-static std::unique_ptr<pa_sql_userlogin> pa_pull_user_info_from_wechat(const std::string& _acctok, const std::string &_open_id)
+static std::unique_ptr<pa_sql_userlogin> pa_pull_user_info_from_wechat(const std::string &_acctok, const std::string &_open_id)
 {
     std::unique_ptr<pa_sql_userlogin> ret(new pa_sql_userlogin());
     std::string req = "https://api.weixin.qq.com/sns/userinfo?access_token=" + _acctok + "&openid=" + _open_id + "&lang=zh_CN";
@@ -329,7 +331,7 @@ std::vector<std::string> PA_API_proc_get_all_companies()
     std::vector<std::string> ret;
 
     auto companies = PA_SQL_get_all_companies();
-    for (auto &itr:companies)
+    for (auto &itr : companies)
     {
         ret.push_back(itr.m_name);
     }
@@ -341,7 +343,7 @@ std::vector<std::string> PA_API_proc_get_all_roles(const std::string &_company_n
     std::vector<std::string> ret;
 
     auto roles = PA_SQL_get_all_roles(_company_name);
-    for (auto &itr:roles)
+    for (auto &itr : roles)
     {
         ret.push_back(itr.m_role_name);
     }
@@ -361,7 +363,7 @@ std::string PA_API_proc_get_company(int _company_id)
     return ret;
 }
 
-bool PA_API_proc_update_userinfo(const std::string& _ssid, const std::string &_name, const std::string &_logo, const std::string &_company, const std::string &_role)
+bool PA_API_proc_update_userinfo(const std::string &_ssid, const std::string &_name, const std::string &_company, const std::string &_role)
 {
     bool ret = false;
 
@@ -369,7 +371,6 @@ bool PA_API_proc_update_userinfo(const std::string& _ssid, const std::string &_n
     if (userinfo)
     {
         userinfo->m_name = _name;
-        userinfo->m_logo = _logo;
 
         auto company = PA_SQL_get_company(_company);
         auto role = PA_SQL_get_role(_role);
@@ -382,6 +383,136 @@ bool PA_API_proc_update_userinfo(const std::string& _ssid, const std::string &_n
                 ret = userinfo->update_record();
             }
         }
+    }
+
+    return ret;
+}
+
+bool PA_API_proc_upate_logo(const std::string &_ssid, const std::string &_base64_img)
+{
+    bool ret = false;
+
+    auto userinfo = PA_SQL_get_online_userinfo(_ssid);
+    if (userinfo)
+    {
+        std::string file_content;
+        Base64::Decode(_base64_img, &file_content);
+        pa_store_logo_to_file(file_content, userinfo->m_openid);
+        ret = true;
+    }
+
+    return ret;
+}
+
+struct content_from_wx
+{
+    std::string m_content_from_wx;
+    long m_expires_timestamp = 0;
+    virtual void refresh_content() = 0;
+    bool is_expired()
+    {
+        bool ret = false;
+        if (time(nullptr) > m_expires_timestamp)
+        {
+            ret = true;
+        }
+
+        return ret;
+    }
+    std::string get_content()
+    {
+        std::string ret;
+        if (is_expired())
+        {
+            refresh_content();
+            ret = m_content_from_wx;
+        }
+        else
+        {
+            ret = m_content_from_wx;
+            g_log.log("content still ready");
+        }
+
+        return ret;
+    }
+};
+struct acc_tok_from_wx : content_from_wx
+{
+    void refresh_content()
+    {
+        std::string wechat_secret(getenv("WECHAT_SECRET"));
+        auto in_buff = pa_rest_req("https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=wxa390f8b6f68e9c6d&secret=" + wechat_secret);
+
+        g_log.log("recv tok from wx:%s", in_buff.c_str());
+        neb::CJsonObject oJson(in_buff);
+
+        if (oJson.KeyExist("errcode"))
+        {
+            g_log.err("failed when req acc_tok:%s", oJson("errmsg"));
+        }
+        else
+        {
+            m_content_from_wx = oJson("access_token");
+            m_expires_timestamp = time(NULL) + atoi(oJson("expires_in").c_str());
+        }
+    }
+} g_acc_tok;
+
+struct jsapi_ticket_from_wx : content_from_wx
+{
+    void refresh_content()
+    {
+        auto in_buff = pa_rest_req("https://api.weixin.qq.com/cgi-bin/ticket/getticket?access_token=" + g_acc_tok.get_content() + "&type=jsapi");
+
+        g_log.log("recv js_ticket from wx:%s", in_buff.c_str());
+        neb::CJsonObject oJson(in_buff);
+
+        if ("0" != oJson("errcode"))
+        {
+            g_log.err("failed when req js_ticket:%s", oJson("errmsg"));
+        }
+        else
+        {
+            m_content_from_wx = oJson("ticket");
+            m_expires_timestamp = time(NULL) + atoi(oJson("expires_in").c_str());
+        }
+    }
+} g_jsapi_ticket;
+std::string PA_API_proc_wx_sign(const std::string &nonceStr, long timestamp, const std::string &url)
+{
+    auto jsapi_ticket = g_jsapi_ticket.get_content();
+    std::string s1 = "jsapi_ticket=" + jsapi_ticket;
+    s1.append("&noncestr=" + nonceStr);
+    s1.append("&timestamp=" + std::to_string(timestamp));
+    s1.append("&url=" + url);
+
+    SHA_CTX c;
+    unsigned char md[SHA_DIGEST_LENGTH];
+    SHA1((unsigned char *)s1.c_str(), s1.length(), md);
+    SHA1_Init(&c);
+    SHA1_Update(&c, s1.c_str(), s1.length());
+    SHA1_Final(md, &c);
+    OPENSSL_cleanse(&c, sizeof(c));
+
+    std::string ret;
+
+    for (size_t i = 0; i < SHA_DIGEST_LENGTH; i++)
+    {
+        char tmp[3] = {0};
+        sprintf(tmp, "%02x", md[i]);
+        ret.append(tmp);
+    }
+
+    return ret;
+}
+
+std::string PA_API_proc_get_company_id(const std::string& _company_name)
+{
+    std::string ret;
+    auto company = PA_SQL_get_company(_company_name);
+    if (company)
+    {
+        ret = std::to_string(company->get_pri_id());
     }
 
     return ret;
