@@ -134,6 +134,19 @@ private:
 public:
     sqlite_orm(const std::string& _sql_file):m_sqlite_file(_sql_file), m_log("test_orm") {}
     virtual ~sqlite_orm() {}
+    static std::string escape_single_quotes(const std::string& _string) {
+        std::string ret;
+
+        for (auto &itr:_string) {
+            if (itr == '\'')
+            {
+                ret.push_back('\'');
+            }
+            ret.push_back(itr);
+        }
+
+        return ret;
+    }
 
     virtual std::vector<sqlite_orm_column> columns_defined() = 0;
     virtual std::string table_name() = 0;
@@ -156,7 +169,7 @@ public:
                 sql_cmd.append(std::to_string(*(static_cast<int *>(single_column.m_data))) + ",");
                 break;
             case sqlite_orm_column::STRING:
-                sql_cmd.append("'" + *(static_cast<std::string *>(single_column.m_data)) + "',");
+                sql_cmd.append("'" + escape_single_quotes(*(static_cast<std::string *>(single_column.m_data))) + "',");
             default:
                 break;
             }
@@ -201,7 +214,7 @@ public:
                 sql_cmd.append(std::to_string(*(static_cast<int *>(single_column.m_data))));
                 break;
             case sqlite_orm_column::STRING:
-                sql_cmd.append("'" + *(static_cast<std::string *>(single_column.m_data)) + "'");
+                sql_cmd.append("'" + escape_single_quotes(*(static_cast<std::string *>(single_column.m_data))) + "'");
                 break;
             
             default:

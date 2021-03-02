@@ -9,10 +9,7 @@
                 </van-uploader>
             </template>
         </van-field>
-        <van-field readonly clickable name="company_picker" :value="company_picker" label="公司" placeholder="点击选择公司" @click="show_company_picker = true" :rules="[{ required: true, message: '请选择公司' }]" />
-        <van-popup v-model="show_company_picker" position="bottom">
-            <van-picker show-toolbar :columns="company_from_server" @confirm="on_company_confirm" @cancel="show_company_picker = false" />
-        </van-popup>
+        <van-field readonly name="company_picker" :value="company_picker" label="公司" placeholder="请扫描所在公司二维码绑定"  :rules="[{ required: true, message: '请扫描所在公司二维码绑定' }]" />
         <van-field readonly clickable name="role_picker" :value="role_picker" label="角色" placeholder="点击选择角色" @click="show_role_picker = true" :rules="[{ required: true, message: '请选择角色' }]" />
         <van-popup v-model="show_role_picker" position="bottom">
             <van-picker show-toolbar :columns="role_from_server" @confirm="on_role_confirm" @cancel="show_role_picker = false" />
@@ -59,9 +56,7 @@ export default {
             role_picker: '',
             name_input: '',
             logo_img: '',
-            show_company_picker: false,
             show_role_picker: false,
-            company_from_server: [],
             role_from_server: [],
             username: '',
             logo: [{
@@ -82,17 +77,6 @@ export default {
         on_role_confirm: function (value) {
             this.role_picker = value;
             this.show_role_picker = false;
-        },
-        get_all_company: function () {
-            var vue_this = this;
-            vue_this.$axios.get('/all_companies').then(function (resp) {
-                resp.data.result.forEach((element, index) => {
-                    vue_this.$set(vue_this.company_from_server, index, element);
-                });
-            }).catch(function (err) {
-                console.log(err);
-            });
-
         },
         get_role_against_company: function (_company) {
             var vue_this = this;
@@ -337,7 +321,6 @@ export default {
             this.company_picker = this.$store.state.userinfo.company;
         }
         this.role_picker = this.$store.state.userinfo.role;
-        this.get_all_company();
         var vue_this = this;
         vue_this.$axios.get('/company/' + this.$route.query.company).then(function (resp) {
             if (resp.data.result != '') {

@@ -62,7 +62,10 @@ export default {
         $route: function (to) {
             this.bar_title = to.meta.private_title;
             this.has_go_back = to.meta.has_go_back;
-        }
+        },
+        "$store.state.userinfo.company": function() {
+            this.config_with_wx();
+        },
     },
     methods: {
         onClickLeft() {
@@ -110,7 +113,7 @@ export default {
                 url: window.location.href,
             }).then(function (resp) {
                 wx.config({
-                    debug: true,
+                    debug: false,
                     appId: 'wxa390f8b6f68e9c6d',
                     timestamp: timestamp,
                     nonceStr: nonceStr,
@@ -122,6 +125,8 @@ export default {
                     vue_this.$axios.get('/company_id/' + vue_this.$store.state.userinfo.company).then(function (resp) {
                         wx.updateAppMessageShareData({
                             title: '流程助手',
+                            desc: vue_this.$store.state.userinfo.company,
+                            imgUrl: '',
                             link: 'http://' + window.location.host + window.location.pathname + '?company=' + resp.data.result,
                             success: function () {
                                 console.log('success to set share btn');

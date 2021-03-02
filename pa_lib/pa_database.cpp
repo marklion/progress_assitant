@@ -2,12 +2,14 @@
 
 std::unique_ptr<pa_sql_userinfo> PA_SQL_get_userinfo(const std::string &_openid)
 {
-    return sqlite_orm::search_record<pa_sql_userinfo>(PA_DB_FILE, "openid = '%s'", _openid.c_str());
+    auto openid = sqlite_orm::escape_single_quotes(_openid);
+    return sqlite_orm::search_record<pa_sql_userinfo>(PA_DB_FILE, "openid = '%s'", openid.c_str());
 }
 
 std::unique_ptr<pa_sql_userlogin> PA_SQL_get_userlogin(const std::string &_ssid)
 {
-    auto ret = sqlite_orm::search_record<pa_sql_userlogin>(PA_DB_FILE, "ssid = '%s'", _ssid.c_str());
+    auto ssid = sqlite_orm::escape_single_quotes(_ssid);
+    auto ret = sqlite_orm::search_record<pa_sql_userlogin>(PA_DB_FILE, "ssid = '%s'", ssid.c_str());
     if (ret)
     {
         auto cur_time = time(NULL) / 3600;
@@ -65,7 +67,8 @@ std::unique_ptr<pa_sql_company> PA_SQL_get_company(int _company_id)
 }
 std::unique_ptr<pa_sql_company> PA_SQL_get_company(const std::string &_company_name)
 {
-    return sqlite_orm::search_record<pa_sql_company>(PA_DB_FILE, "name = '%s'", _company_name.c_str());
+    auto company_name = sqlite_orm::escape_single_quotes(_company_name);
+    return sqlite_orm::search_record<pa_sql_company>(PA_DB_FILE, "name = '%s'", company_name.c_str());
 }
 std::unique_ptr<pa_sql_role> PA_SQL_get_role(int _role_id)
 {
@@ -73,7 +76,8 @@ std::unique_ptr<pa_sql_role> PA_SQL_get_role(int _role_id)
 }
 std::unique_ptr<pa_sql_role> PA_SQL_get_role(const std::string &_role_name)
 {
-    return sqlite_orm::search_record<pa_sql_role>(PA_DB_FILE, "role_name = '%s'", _role_name.c_str());
+    auto role_name = sqlite_orm::escape_single_quotes(_role_name);
+    return sqlite_orm::search_record<pa_sql_role>(PA_DB_FILE, "role_name = '%s'", role_name.c_str());
 }
 
 std::unique_ptr<pa_sql_comp_role> PA_SQL_get_comp_role(int _comp_role_id)
