@@ -9,7 +9,7 @@
                 </van-uploader>
             </template>
         </van-field>
-        <van-field readonly name="company_picker" :value="company_picker" label="公司" placeholder="请扫描所在公司二维码绑定"  :rules="[{ required: true, message: '请扫描所在公司二维码绑定' }]" />
+        <van-field readonly name="company_picker" :value="company_picker" label="公司" placeholder="请扫描所在公司二维码绑定" :rules="[{ required: true, message: '请扫描所在公司二维码绑定' }]" />
         <van-field readonly clickable name="role_picker" :value="role_picker" label="角色" placeholder="点击选择角色" @click="show_role_picker = true" :rules="[{ required: true, message: '请选择角色' }]" />
         <van-popup v-model="show_role_picker" position="bottom">
             <van-picker show-toolbar :columns="role_from_server" @confirm="on_role_confirm" @cancel="show_role_picker = false" />
@@ -104,9 +104,7 @@ export default {
                         company: vue_this.company_picker,
                         role: vue_this.role_picker,
                     });
-                    vue_this.$router.replace({
-                        name: 'Home'
-                    });
+                    vue_this.$router.back(-1);
                 } else {
                     console.log(resp);
                 }
@@ -114,7 +112,7 @@ export default {
                 console.log(err);
             });
         },
-        
+
         // 组件方法 获取 流
         upload_to_wx(file) {
             this.logo.splice(0, 1);
@@ -312,6 +310,7 @@ export default {
             if ('' == this.company_picker) {
                 this.company_picker = value.company;
             }
+            this.get_role_against_company(this.company_picker);
         }
     },
     beforeMount: function () {
@@ -320,6 +319,7 @@ export default {
         if ('' == this.company_picker) {
             this.company_picker = this.$store.state.userinfo.company;
         }
+        this.get_role_against_company(this.company_picker);
         this.role_picker = this.$store.state.userinfo.role;
         var vue_this = this;
         vue_this.$axios.get('/company/' + this.$route.query.company).then(function (resp) {

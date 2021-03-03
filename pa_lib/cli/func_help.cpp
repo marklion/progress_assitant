@@ -131,3 +131,26 @@ void PA_API_proc_get_apps_helper()
         return true;
     });
 }
+
+void PA_API_proc_get_steps_helper()
+{
+    int app_id;
+    ASK_PARAM(app_id);
+    PA_API_proc_get_steps(app_id, [](int _step_id, int _step_order, const std::string &_step_name, const std::string &_step_description)->bool {
+        std::cout << "step id:" << _step_id << std::endl;
+        std::cout << "step order:" << _step_order << std::endl;
+        std::cout << "step name:" << _step_name << std::endl;
+        std::cout << "step description:" << _step_description << std::endl;
+
+        return true;
+    });
+}
+
+void PA_API_proc_add_role_step_helper()
+{
+    int role_id;
+    int step_id;
+    ASK_PARAM(role_id);
+    ASK_PARAM(step_id);
+    std::cout << "result:" << PA_API_proc_add_role_step(role_id, step_id) << std::endl;
+}

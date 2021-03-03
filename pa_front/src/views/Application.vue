@@ -1,7 +1,7 @@
 <template>
 <div class="application_show">
     <van-grid>
-        <van-grid-item v-for="app in apps" :key="app.app_id" icon="photo-o" :text="app.app_name" />
+        <van-grid-item v-for="app in apps" :key="app.app_id" icon="photo-o" :text="app.app_name" :to="{name:'CreateTicket',params: {app_id:app.app_id}, query: {app_name: app.app_name, app_description: app.app_description}}" />
     </van-grid>
 </div>
 </template>

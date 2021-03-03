@@ -49,6 +49,15 @@ const routes = [
         has_go_back:true,
     },
   },
+  {
+    path: '/create_ticket/:app_id',
+    name: 'CreateTicket',
+    component: () => import('../views/CreateTicket.vue'),
+    meta: {    
+        private_title: '创建工单',
+        has_go_back:true,
+    },
+  },
 ]
 
 const router = new VueRouter({

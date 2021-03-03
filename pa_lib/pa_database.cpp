@@ -132,3 +132,24 @@ std::list<pa_sql_app> PA_SQL_get_all_app(int _company_id)
     
     return ret;
 }
+
+std::list<pa_sql_step> PA_SQL_get_all_steps(int _app_id)
+{
+    std::list<pa_sql_step> ret;
+
+    auto steps = sqlite_orm::search_record_all<pa_sql_step>(PA_DB_FILE, "belong_app_id = %d", _app_id);
+    steps.sort([](const pa_sql_step &s1, const pa_sql_step &s2){
+        return s1.m_order_number < s2.m_order_number;
+    });
+    for (auto &itr:steps)
+    {
+        ret.push_back(itr);
+    }
+
+    return ret;
+}
+
+std::unique_ptr<pa_sql_role_step> PA_SQL_get_role_step(int _role_id, int _step_id)
+{
+    return sqlite_orm::search_record<pa_sql_role_step>(PA_DB_FILE, "role_id = %d AND step_id = %d", _role_id, _step_id);
+}

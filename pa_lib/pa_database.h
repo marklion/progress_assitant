@@ -161,13 +161,13 @@ public:
     pa_sql_role_step():sqlite_orm(PA_DB_FILE) {}
     pa_sql_role_step(const std::string &_filename):sqlite_orm(_filename) {}
     int m_role_id = 0;
-    int m_step = 0;
+    int m_step_id = 0;
     virtual std::vector<sqlite_orm_column> columns_defined()
     {
         std::vector<sqlite_orm_column> ret;
 
         ret.push_back(sqlite_orm_column("role_id", sqlite_orm_column::INTEGER, &m_role_id));
-        ret.push_back(sqlite_orm_column("step", sqlite_orm_column::INTEGER, &m_step));
+        ret.push_back(sqlite_orm_column("step_id", sqlite_orm_column::INTEGER, &m_step_id));
 
         return ret;
     }
@@ -210,12 +210,16 @@ public:
     pa_sql_ticket_step(const std::string &_filename):sqlite_orm(_filename) {}
     int m_ticket_id = 0;
     int m_step_id = 0;
+    std::string m_comments;
+    std::string m_time_stamp;
     virtual std::vector<sqlite_orm_column> columns_defined()
     {
         std::vector<sqlite_orm_column> ret;
 
         ret.push_back(sqlite_orm_column("ticket_id", sqlite_orm_column::INTEGER, &m_ticket_id));
-        ret.push_back(sqlite_orm_column("time_stamp", sqlite_orm_column::INTEGER, &m_step_id));
+        ret.push_back(sqlite_orm_column("step_id", sqlite_orm_column::INTEGER, &m_step_id));
+        ret.push_back(sqlite_orm_column("comments", sqlite_orm_column::STRING, &m_comments));
+        ret.push_back(sqlite_orm_column("time_stamp", sqlite_orm_column::STRING, &m_time_stamp));
 
         return ret;
     }
@@ -240,3 +244,5 @@ std::list<pa_sql_role> PA_SQL_get_all_roles(const std::string &_company_name);
 std::unique_ptr<pa_sql_app> PA_SQL_get_app(int _app_id);
 std::list<pa_sql_app> PA_SQL_get_all_app(int _company_id);
 std::unique_ptr<pa_sql_step> PA_SQL_get_step(int _step_id);
+std::list<pa_sql_step> PA_SQL_get_all_steps(int _app_id);
+std::unique_ptr<pa_sql_role_step> PA_SQL_get_role_step(int _role_id, int _step_id);

@@ -565,3 +565,84 @@ void PA_API_proc_get_apps(const std::string &_ssid, std::function<bool (int, con
         }
     }
 }
+
+void PA_API_proc_get_steps(int _app_id, std::function<bool (int, int, const std::string &, const std::string &)> const &f)
+{
+    auto all_step = PA_SQL_get_all_steps(_app_id);
+
+    for (auto &itr:all_step)
+    {
+        if (false == f(itr.get_pri_id(), itr.m_order_number, itr.m_step_name, itr.m_description))
+        {
+            break;
+        }
+    }
+}
+
+bool PA_API_proc_add_role_step(int _role_id, int _step_id)
+{
+    bool ret = false;
+
+    pa_sql_role_step role_step;
+    role_step.m_role_id = _role_id;
+    role_step.m_step_id = _step_id;
+    
+    ret = role_step.insert_record();
+
+    return ret;
+}
+
+static std::string make_cur_time_string()
+{
+    auto sec = time(NULL);
+    struct tm lt;
+
+    localtime_r(&sec, &lt);
+    std::string ret;
+
+    ret = std::to_string(lt.tm_year + 1900) + std::to_string(lt.tm_mon + 1) + std::to_string(lt.tm_mday);
+    ret.append(std::to_string(lt.tm_hour) + std::to_string(lt.tm_min) + std::to_string(lt.tm_sec));
+
+    return ret;
+}
+
+std::string PA_API_proc_create_ticket(const std::string &_ssid, int _step_id, const std::string &_comments)
+{
+    std::string ret;
+
+    auto user = PA_SQL_get_online_userinfo(_ssid);
+    if (user) 
+    {
+        auto comp_role = PA_SQL_get_comp_role(user->m_comp_role_id);
+        if (comp_role)
+        {
+            auto role_step = PA_SQL_get_role_step(comp_role->m_role_id, _step_id);
+            if (role_step)
+            {
+                auto step = PA_SQL_get_step(_step_id);
+                if (step)
+                {
+                    pa_sql_ticket ticket;
+                    ticket.m_belong_app = step->m_belong_app_id;
+                    ticket.m_creator = user->get_pri_id();
+                    ticket.m_current_step = _step_id;
+                    ticket.m_time_stamp = make_cur_time_string();
+                    ticket.insert_record();
+                    ticket.m_ticket_number = ticket.m_time_stamp + std::to_string(ticket.get_pri_id());
+                    ticket.update_record();
+                    pa_sql_ticket_step ticket_step;
+                    ticket_step.m_ticket_id = ticket.get_pri_id();
+                    ticket_step.m_step_id = _step_id;
+                    ticket_step.m_time_stamp = make_cur_time_string();
+                    ticket_step.m_comments = _comments;
+                    if (ticket_step.insert_record())
+                    {
+                        ret = ticket.m_ticket_number;
+                    }
+                }
+            }
+        }
+    }
+
+    return ret;
+}

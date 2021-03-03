@@ -27,6 +27,13 @@ struct rest_appinfo {
     std::string app_name;
     std::string app_description;
 };
+
+struct rest_stepinfo {
+    int step_id;
+    int order_number;
+    std::string step_name;
+    std::string step_description;
+};
 class pa_rest: public ngrest::Service
 {
 public:
@@ -84,6 +91,14 @@ public:
     // *location: /apps/{pa_ssid}
     // *method: GET
     std::vector<rest_appinfo> proc_get_apps(const std::string& pa_ssid);
+
+    // *location: /steps/{app_id}
+    // *method: GET
+    std::vector<rest_stepinfo> proc_get_steps(int app_id);
+
+    // *location: /ticket
+    // *method: POST
+    std::string proc_post_ticket(const std::string& pa_ssid, int step_id, const std::string& comments);
 };
 
 #endif // PA_REST_H

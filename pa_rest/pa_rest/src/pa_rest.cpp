@@ -108,3 +108,27 @@ std::vector<rest_appinfo> pa_rest::proc_get_apps(const std::string& pa_ssid)
 
     return ret;
 }
+
+std::vector<rest_stepinfo> pa_rest::proc_get_steps(int app_id)
+{
+    std::vector<rest_stepinfo> ret;
+
+    PA_API_proc_get_steps(app_id, [&](int _step_id, int _order_number, const std::string &_step_name, const std::string &_step_description)->bool {
+        rest_stepinfo tmp;
+        tmp.step_name = _step_name;
+        tmp.step_description = _step_description;
+        tmp.order_number = _order_number;
+        tmp.step_id = _step_id;
+
+        ret.push_back(tmp);
+
+        return true;
+    });
+
+    return ret;
+}
+
+std::string pa_rest::proc_post_ticket(const std::string& pa_ssid, int step_id, const std::string& comments)
+{
+    return PA_API_proc_create_ticket(pa_ssid, step_id, comments);
+}

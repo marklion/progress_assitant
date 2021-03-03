@@ -34,6 +34,9 @@ std::string PA_API_proc_get_company_id(const std::string& _company_name);
 bool PA_API_proc_add_app(const std::string &_company_name, const std::string &_app_name, const std::string &_description);
 bool PA_API_proc_add_step(int _app_id, int _order_number, const std::string &_step_name, const std::string &_description);
 void PA_API_proc_get_apps(const std::string &_ssid, std::function<bool (int, const std::string &, const std::string &)> const &f);
+void PA_API_proc_get_steps(int _app_id, std::function<bool (int, int, const std::string &, const std::string &)> const &f);
+bool PA_API_proc_add_role_step(int _role_id, int _step_id);
+std::string PA_API_proc_create_ticket(const std::string &_ssid, int _step_id, const std::string &_comments);
 
 
 #endif // _PA_API_H_
