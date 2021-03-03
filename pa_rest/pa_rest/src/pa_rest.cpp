@@ -91,3 +91,20 @@ std::string pa_rest::proc_get_company_id(const std::string& company_name)
 {
     return PA_API_proc_get_company_id(company_name);
 }
+
+std::vector<rest_appinfo> pa_rest::proc_get_apps(const std::string& pa_ssid)
+{
+    std::vector<rest_appinfo> ret;
+
+    PA_API_proc_get_apps(pa_ssid, [&](int _app_id, const std::string& _app_name, const std::string &_app_description)->bool {
+        rest_appinfo tmp;
+        tmp.app_id = _app_id;
+        tmp.app_name = _app_name;
+        tmp.app_description = _app_description;
+        
+        ret.push_back(tmp);
+        return true;
+    });
+
+    return ret;
+}

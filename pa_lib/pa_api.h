@@ -3,6 +3,7 @@
 #include "../tcp_framework/tdf_include.h"
 #include <memory>
 #include <vector>
+#include <functional>
 
 #define PA_DAEMON_API_PORT 7079
 
@@ -18,7 +19,6 @@ struct userinfo{
     std::string m_logo;
 };
 
-extern "C" {
 std::string PA_API_proc_test_echo(const std::string& _input);
 
 bool PA_API_proc_add_company_role(const std::string &_name, const std::string &_role);
@@ -31,8 +31,9 @@ bool PA_API_proc_update_userinfo(const std::string& _ssid, const std::string &_n
 bool PA_API_proc_upate_logo(const std::string& _ssid, const std::string &_base64_img);
 std::string PA_API_proc_wx_sign(const std::string& nonceStr, long timestamp, const std::string &url);
 std::string PA_API_proc_get_company_id(const std::string& _company_name);
-
-}
+bool PA_API_proc_add_app(const std::string &_company_name, const std::string &_app_name, const std::string &_description);
+bool PA_API_proc_add_step(int _app_id, int _order_number, const std::string &_step_name, const std::string &_description);
+void PA_API_proc_get_apps(const std::string &_ssid, std::function<bool (int, const std::string &, const std::string &)> const &f);
 
 
 #endif // _PA_API_H_

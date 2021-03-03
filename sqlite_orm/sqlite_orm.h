@@ -65,6 +65,10 @@ struct sqlite_orm_column {
 
 class sqlite_orm
 {
+public:
+    virtual bool whole_unique() {
+        return false;
+    }
 private:
     std::string m_sqlite_file = "";
     bool table_exists = false;
@@ -93,6 +97,16 @@ private:
             sql_cmd.append(single_column.convert_limit() + ",");
         }
         sql_cmd.pop_back();
+        if (whole_unique())
+        {
+            sql_cmd.append(" UNIQUE (");
+            for (auto &itr:columns_defined())
+            {
+                sql_cmd.append(itr.m_name + ",");
+            }
+            sql_cmd.pop_back();
+            sql_cmd.append(") ON CONFLICT REPLACE");
+        }
         sql_cmd.append(");");
 
         (void)execute_sql_cmd(sql_cmd, m_sqlite_file);

@@ -21,6 +21,12 @@ struct rest_userinfo {
     std::string logo;
     bool online;
 };
+
+struct rest_appinfo {
+    int app_id;
+    std::string app_name;
+    std::string app_description;
+};
 class pa_rest: public ngrest::Service
 {
 public:
@@ -73,6 +79,11 @@ public:
     // *location: /company_id/{company_name}
     // *method: GET
     std::string proc_get_company_id(const std::string& company_name);
+
+
+    // *location: /apps/{pa_ssid}
+    // *method: GET
+    std::vector<rest_appinfo> proc_get_apps(const std::string& pa_ssid);
 };
 
 #endif // PA_REST_H

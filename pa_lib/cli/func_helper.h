@@ -11,6 +11,9 @@ void PA_API_proc_get_all_companies_helper();
 void PA_API_proc_get_all_roles_helper();
 void PA_API_proc_get_company_helper();
 void PA_API_proc_update_userinfo_helper();
+void PA_API_proc_add_app_helper();
+void PA_API_proc_add_step_helper();
+void PA_API_proc_get_apps_helper();
 
 
 #endif // _FUNC_HELPER_H_

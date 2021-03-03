@@ -13,6 +13,9 @@ static void register_func_helper() {
     REG_FUNC_HELPER(PA_API_proc_get_all_companies);
     REG_FUNC_HELPER(PA_API_proc_get_all_roles);
     REG_FUNC_HELPER(PA_API_proc_get_company);
+    REG_FUNC_HELPER(PA_API_proc_add_app);
+    REG_FUNC_HELPER(PA_API_proc_add_step);
+    REG_FUNC_HELPER(PA_API_proc_get_apps);
 }
 
 int main(int argc, char const *argv[])

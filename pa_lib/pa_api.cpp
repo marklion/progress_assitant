@@ -517,3 +517,51 @@ std::string PA_API_proc_get_company_id(const std::string& _company_name)
 
     return ret;
 }
+
+bool PA_API_proc_add_app(const std::string &_company_name, const std::string &_app_name, const std::string &_description)
+{
+    bool ret = false;
+
+    auto company = PA_SQL_get_company(_company_name);
+    if (company)
+    {
+        pa_sql_app app;
+        app.m_app_name = _app_name;
+        app.m_belong_company_id = company->get_pri_id();
+        app.m_description = _description;
+        ret = app.insert_record();
+    }
+
+    return ret;
+}
+bool PA_API_proc_add_step(int _app_id, int _order_number, const std::string &_step_name, const std::string &_description)
+{
+    pa_sql_step step;
+
+    step.m_belong_app_id = _app_id;
+    step.m_order_number = _order_number;
+    step.m_step_name = _step_name;
+    step.m_description = _description;
+
+    return step.insert_record();
+}
+
+void PA_API_proc_get_apps(const std::string &_ssid, std::function<bool (int, const std::string &, const std::string &)> const &f)
+{
+    auto user = PA_SQL_get_online_userinfo(_ssid);
+    if (user)
+    {
+        auto comp_role = PA_SQL_get_comp_role(user->m_comp_role_id);
+        if (comp_role)
+        {
+            auto all_app = PA_SQL_get_all_app(comp_role->m_company_id);
+            for (auto &itr:all_app)
+            {
+                if (false == f(itr.get_pri_id(), itr.m_app_name, itr.m_description))
+                {
+                    break;
+                }
+            }
+        }
+    }
+}

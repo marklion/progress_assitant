@@ -92,3 +92,42 @@ void PA_API_proc_update_userinfo_helper()
     ASK_PARAM(role);
     std::cout << "result: "<< PA_API_proc_update_userinfo(pa_ssid, name, company, role);
 }
+
+void PA_API_proc_add_app_helper()
+{
+    std::string company_name;
+    std::string app_name;
+    std::string description;
+    ASK_PARAM(company_name);
+    ASK_PARAM(app_name);
+    ASK_PARAM(description);
+
+    std::cout << "result: "<< PA_API_proc_add_app(company_name, app_name, description);
+}
+void PA_API_proc_add_step_helper()
+{
+    int company_id;
+    int order_number;
+    std::string step_name;
+    std::string description;
+    ASK_PARAM(company_id);
+    ASK_PARAM(order_number);
+    ASK_PARAM(step_name);
+    ASK_PARAM(description);
+
+    std::cout << "result: "<< PA_API_proc_add_step(company_id, order_number, step_name, description);
+}
+
+void PA_API_proc_get_apps_helper()
+{
+    std::string pa_ssid;
+    ASK_PARAM(pa_ssid);
+
+    PA_API_proc_get_apps(pa_ssid, [](int _app_id, const std::string _app_name, const std::string &_app_description)->bool {
+        std::cout << "app id:" << _app_id << std::endl;
+        std::cout << "app name:" << _app_name << std::endl;
+        std::cout << "app description:" << _app_description << std::endl;
+        
+        return true;
+    });
+}

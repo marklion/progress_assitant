@@ -110,3 +110,25 @@ std::list<pa_sql_role> PA_SQL_get_all_roles(const std::string &_company_name)
 
     return ret;
 }
+
+std::unique_ptr<pa_sql_app> PA_SQL_get_app(int _app_id)
+{
+    return sqlite_orm::search_record<pa_sql_app>(PA_DB_FILE, _app_id);
+}
+std::unique_ptr<pa_sql_step> PA_SQL_get_step(int _step_id)
+{
+    return sqlite_orm::search_record<pa_sql_step>(PA_DB_FILE, _step_id);
+}
+
+std::list<pa_sql_app> PA_SQL_get_all_app(int _company_id)
+{
+    std::list<pa_sql_app> ret;
+
+    auto apps = sqlite_orm::search_record_all<pa_sql_app>(PA_DB_FILE, "belong_company_id = %d", _company_id);
+    for (auto &itr:apps)
+    {
+        ret.push_back(itr);
+    }
+    
+    return ret;
+}

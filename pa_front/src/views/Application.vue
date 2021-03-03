@@ -1,12 +1,37 @@
 <template>
 <div class="application_show">
-
+    <van-grid>
+        <van-grid-item v-for="app in apps" :key="app.app_id" icon="photo-o" :text="app.app_name" />
+    </van-grid>
 </div>
 </template>
 
 <script>
+import Vue from 'vue';
+import {
+    Grid,
+    GridItem
+} from 'vant';
+
+Vue.use(Grid);
+Vue.use(GridItem);
 export default {
     name: 'Application',
+    data: function () {
+        return {
+            apps: [],
+        };
+    },
+    beforeMount: function () {
+        var vue_this = this;
+        vue_this.$axios.get('/apps/' + vue_this.$cookies.get('pa_ssid')).then(function (resp) {
+            resp.data.result.forEach((element, index) => {
+                vue_this.$set(vue_this.apps, index, element);
+            });
+        }).catch(function (err) {
+            console.log(err);
+        });
+    }
 }
 </script>
 
