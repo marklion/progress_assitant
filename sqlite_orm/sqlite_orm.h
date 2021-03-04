@@ -74,6 +74,7 @@ private:
     bool table_exists = false;
     tdf_log m_log;
     int m_pri_id = -1;
+
     void create_table() {
         std::string sql_cmd = "CREATE TABLE IF NOT EXISTS ";
         sql_cmd.append(table_name() + " (");
@@ -99,7 +100,7 @@ private:
         sql_cmd.pop_back();
         if (whole_unique())
         {
-            sql_cmd.append(" UNIQUE (");
+            sql_cmd.append(" , UNIQUE (");
             for (auto &itr:columns_defined())
             {
                 sql_cmd.append(itr.m_name + ",");
@@ -168,7 +169,11 @@ public:
     int get_pri_id() {
         return m_pri_id;
     }
-
+    void remove_table() {
+        std::string sql_cmd = "DROP TABLE IF EXISTS ";
+        sql_cmd.append(table_name() + ";");
+        (void)execute_sql_cmd(sql_cmd, m_sqlite_file);
+    };
     bool insert_record() { 
         bool ret = false;
         // refresh table structure

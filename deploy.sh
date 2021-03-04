@@ -30,7 +30,7 @@ start_all_server() {
     tail -n $line $0 | tar zx  --skip-old-files -C /
     nginx -c /conf/nginx.conf
     /root/.ngrest/ngrest-build/deploy/bin/ngrestserver -s /lib &
-    valgrind pa_daemon &
+    pa_daemon &
     bash
 }
 

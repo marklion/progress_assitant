@@ -1,0 +1,92 @@
+[
+    {
+        "company_name": "卓创公司",
+        "roles": ["管理员", "操作工", "主管", "经理", "采购员"],
+        "support_apps": [
+            {
+                "app_name": "出差",
+                "app_description": "出差需要填写此流程",
+                "steps": [
+                    {
+                        "step_name":"申报出差地",
+                        "step_description": "填写要去的地方",
+                        "permissions": [1,2,3,4],
+                        "primary_role": 0
+                    },
+                    {
+                        "step_name":"主管审批",
+                        "step_description": "填写人员备份",
+                        "permissions": [1,3,4],
+                        "primary_role": 3
+                    },
+                    {
+                        "step_name":"经理审批",
+                        "step_description": "同意或驳回",
+                        "permissions": [1,4],
+                        "primary_role": 4
+                    }
+                ]
+            },
+            {
+                "app_name": "采购",
+                "app_description": "这是个测试流程",
+                "steps": [
+                    {
+                        "step_name":"采购员填写",
+                        "step_description": "随便填",
+                        "permissions": [1,5],
+                        "primary_role": 0
+                    },
+                    {
+                        "step_name":"经理审批",
+                        "step_description": "同意或驳回",
+                        "permissions": [1,4],
+                        "primary_role": 4
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "company_name": "真公司",
+        "roles": ["管理员", "假会计", "经理"],
+        "support_apps": [
+            {
+                "app_name": "报账",
+                "app_description": "不需要填写此流程",
+                "steps": [
+                    {
+                        "step_name":"假报账",
+                        "step_description": "不填写",
+                        "permissions": [1,2],
+                        "primary_role": 0
+                    },
+                    {
+                        "step_name":"经理审批",
+                        "step_description": "同意或驳回",
+                        "permissions": [1,3],
+                        "primary_role": 3
+                    }
+                ]
+            },
+            {
+                "app_name": "采购",
+                "app_description": "假的测试流程",
+                "steps": [
+                    {
+                        "step_name":"采购员填写",
+                        "step_description": "随便填",
+                        "permissions": [1,2],
+                        "primary_role": 0
+                    },
+                    {
+                        "step_name":"经理审批",
+                        "step_description": "同意或驳回",
+                        "permissions": [1,3],
+                        "primary_role": 3
+                    }
+                ]
+            }
+        ]
+    }
+]

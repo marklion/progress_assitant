@@ -22,7 +22,8 @@ done
 
 
 [ -d ${BUILD_DIR}/conf ] || mkdir ${BUILD_DIR}/conf
-cp ${SRC_DIR}/nginx_conf/nginx.conf ${BUILD_DIR}/conf
+cp ${SRC_DIR}/pa_conf/nginx.conf ${BUILD_DIR}/conf
+cp ${SRC_DIR}/pa_conf/data_config.json ${BUILD_DIR}/conf
 
 pushd ${SRC_DIR}/pa_front
 [ -d node_modules ] || npm install 

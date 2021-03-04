@@ -18,6 +18,7 @@ static void register_func_helper() {
     REG_FUNC_HELPER(PA_API_proc_get_apps);
     REG_FUNC_HELPER(PA_API_proc_get_steps);
     REG_FUNC_HELPER(PA_API_proc_add_role_step);
+    REG_FUNC_HELPER(PA_API_proc_get_tickets);
 }
 
 int main(int argc, char const *argv[])

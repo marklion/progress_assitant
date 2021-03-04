@@ -19,6 +19,9 @@ struct userinfo{
     std::string m_logo;
 };
 
+typedef std::function<bool (int, const std::string &, const std::string &, const std::string &, const std::string &)> const & travel_ticket;
+
+
 std::string PA_API_proc_test_echo(const std::string& _input);
 
 bool PA_API_proc_add_company_role(const std::string &_name, const std::string &_role);
@@ -32,12 +35,15 @@ bool PA_API_proc_upate_logo(const std::string& _ssid, const std::string &_base64
 std::string PA_API_proc_wx_sign(const std::string& nonceStr, long timestamp, const std::string &url);
 std::string PA_API_proc_get_company_id(const std::string& _company_name);
 bool PA_API_proc_add_app(const std::string &_company_name, const std::string &_app_name, const std::string &_description);
-bool PA_API_proc_add_step(int _app_id, int _order_number, const std::string &_step_name, const std::string &_description);
+bool PA_API_proc_add_step(const std::string &_company_name,const std::string &_app_name, const std::string &_step_name, int _order_number, int _primary_operator, const std::string &_description);
+bool PA_API_proc_add_step(int _app_id, int _order_number, int _primary_operator, const std::string &_step_name, const std::string &_description);
 void PA_API_proc_get_apps(const std::string &_ssid, std::function<bool (int, const std::string &, const std::string &)> const &f);
 void PA_API_proc_get_steps(int _app_id, std::function<bool (int, int, const std::string &, const std::string &)> const &f);
 bool PA_API_proc_add_role_step(int _role_id, int _step_id);
+bool PA_API_proc_add_step_role(const std::string &_company_name,const std::string &_app_name, const std::string &_step_name, const std::string &_role_name);
 std::string PA_API_proc_create_ticket(const std::string &_ssid, int _step_id, const std::string &_comments);
-
+void PA_API_proc_get_tickets(const std::string &_ssid, travel_ticket proc_created, travel_ticket proc_operated, travel_ticket proc_need_do);
+void PA_API_remove_all_config();
 
 #endif // _PA_API_H_
 

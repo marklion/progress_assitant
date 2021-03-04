@@ -534,7 +534,7 @@ bool PA_API_proc_add_app(const std::string &_company_name, const std::string &_a
 
     return ret;
 }
-bool PA_API_proc_add_step(int _app_id, int _order_number, const std::string &_step_name, const std::string &_description)
+bool PA_API_proc_add_step(int _app_id, int _order_number, int _primary_operator, const std::string &_step_name, const std::string &_description)
 {
     pa_sql_step step;
 
@@ -542,6 +542,7 @@ bool PA_API_proc_add_step(int _app_id, int _order_number, const std::string &_st
     step.m_order_number = _order_number;
     step.m_step_name = _step_name;
     step.m_description = _description;
+    step.m_pri_role = _primary_operator;
 
     return step.insert_record();
 }
@@ -635,6 +636,7 @@ std::string PA_API_proc_create_ticket(const std::string &_ssid, int _step_id, co
                     ticket_step.m_step_id = _step_id;
                     ticket_step.m_time_stamp = make_cur_time_string();
                     ticket_step.m_comments = _comments;
+                    ticket_step.m_operator_id = user->get_pri_id();
                     if (ticket_step.insert_record())
                     {
                         ret = ticket.m_ticket_number;
@@ -645,4 +647,113 @@ std::string PA_API_proc_create_ticket(const std::string &_ssid, int _step_id, co
     }
 
     return ret;
+}
+
+void PA_API_proc_get_tickets(const std::string &_ssid, travel_ticket proc_created, travel_ticket proc_operated, travel_ticket proc_need_do)
+{
+    auto user = PA_SQL_get_online_userinfo(_ssid);
+    if (user)
+    {
+        auto all_tickets = PA_SQL_get_tickets_by_user(user->get_pri_id());
+        for (auto &itr:all_tickets)
+        {
+            auto ticket_id = itr.get_pri_id();
+            auto ticket_number = itr.m_ticket_number;
+            std::string creator;
+            auto ticket_creator = PA_SQL_get_userinfo(itr.m_creator);
+            if (ticket_creator)
+            {
+                creator = ticket_creator->m_name;
+            }
+            auto need_role = PA_SQL_get_role_need_ticket(itr.get_pri_id());
+            std::string role_name = "";
+            if (need_role)
+            {
+                role_name = need_role->m_role_name;
+            }
+            auto timestamp = itr.m_time_stamp;
+            if (itr.m_creator == user->get_pri_id())
+            {
+                if (false == proc_created(ticket_id, creator, ticket_number, role_name, timestamp))
+                {
+                    break;
+                }
+            }
+            auto ticket_steps = PA_SQL_get_ticket_steps_by_ticket(itr.get_pri_id());
+            for (auto &single_ticket_step:ticket_steps)
+            {
+                if (single_ticket_step.m_operator_id == user->get_pri_id())
+                {
+                    if (false == proc_operated(ticket_id, creator, ticket_number, role_name, timestamp))
+                    {
+                        break;
+                    }
+                }
+            }
+
+            auto my_role = PA_SQL_get_role_by_user(user->get_pri_id());
+            if (my_role)
+            {
+                if (need_role->get_pri_id() == my_role->get_pri_id())
+                {
+                    if (false == proc_need_do(ticket_id, creator, ticket_number, role_name, timestamp))
+                    {
+                        break;
+                    }
+                }
+            }
+            
+        }
+    }
+}
+
+bool PA_API_proc_add_step(const std::string &_company_name,const std::string &_app_name, const std::string &_step_name, int _order_number, int _primary_operator, const std::string &_description)
+{
+    bool ret = false;
+
+    auto app = PA_SQL_get_app(_company_name, _app_name);
+    if (app)
+    {
+        ret = PA_API_proc_add_step(app->get_pri_id(), _order_number, _primary_operator, _step_name, _description);
+    }
+
+    return ret;
+}
+
+bool PA_API_proc_add_step_role(const std::string &_company_name,const std::string &_app_name, const std::string &_step_name, const std::string &_role_name)
+{
+    bool ret = false;
+
+    auto app = PA_SQL_get_app(_company_name, _app_name);
+    if (app)
+    {
+        auto step = PA_SQL_get_step(app->get_pri_id(), _step_name);
+        if (step)
+        {
+            auto role = PA_SQL_get_role(_role_name);
+            if (role)
+            {
+                ret = PA_API_proc_add_role_step(role->get_pri_id(), step->get_pri_id());
+            }
+        }
+    }
+
+    return ret;
+}
+
+void PA_API_remove_all_config()
+{
+    pa_sql_company company;
+    pa_sql_role role;
+    pa_sql_comp_role comp_role;
+    pa_sql_app app;
+    pa_sql_step step;
+    pa_sql_role_step role_step;
+
+    company.remove_table();
+    role.remove_table();
+    comp_role.remove_table();
+    app.remove_table();
+    step.remove_table();
+    role_step.remove_table();
 }
