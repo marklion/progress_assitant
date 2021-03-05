@@ -132,3 +132,50 @@ std::string pa_rest::proc_post_ticket(const std::string& pa_ssid, int step_id, c
 {
     return PA_API_proc_create_ticket(pa_ssid, step_id, comments);
 }
+
+rest_tickets_part pa_rest::proc_get_tickets_brief(const std::string& pa_ssid)
+{
+    LOG_CURRENT_REQ("app_id : %s", pa_ssid.c_str());
+    rest_tickets_part ret;
+
+    PA_API_proc_get_tickets(
+        pa_ssid,
+        [&](int _ticket_id, const std::string &_creator, const std::string &_ticket_number, const std::string &_role, const std::string &_timestamp, const std::string &_app_name, const std::string &_next_step_name) -> bool {
+            rest_ticket_brief tmp;
+            tmp.ticket_id = _ticket_id;
+            tmp.ticket_number = _ticket_number;
+            tmp.creator = _creator;
+            tmp.assignee_role = _role;
+            tmp.timestamp = _timestamp;
+            tmp.app_name = _app_name;
+            tmp.next_step_name = _next_step_name;
+            ret.created_by_me.push_back(tmp);
+            return true;
+        },
+        [&](int _ticket_id, const std::string &_creator, const std::string &_ticket_number, const std::string &_role, const std::string &_timestamp, const std::string &_app_name, const std::string &_next_step_name) -> bool {
+            rest_ticket_brief tmp;
+            tmp.ticket_id = _ticket_id;
+            tmp.ticket_number = _ticket_number;
+            tmp.creator = _creator;
+            tmp.assignee_role = _role;
+            tmp.timestamp = _timestamp;
+            tmp.app_name = _app_name;
+            tmp.next_step_name = _next_step_name;
+            ret.operated_by_me.push_back(tmp);
+            return true;
+        },
+        [&](int _ticket_id, const std::string &_creator, const std::string &_ticket_number, const std::string &_role, const std::string &_timestamp, const std::string &_app_name, const std::string &_next_step_name) -> bool {
+            rest_ticket_brief tmp;
+            tmp.ticket_id = _ticket_id;
+            tmp.ticket_number = _ticket_number;
+            tmp.creator = _creator;
+            tmp.assignee_role = _role;
+            tmp.timestamp = _timestamp;
+            tmp.app_name = _app_name;
+            tmp.next_step_name = _next_step_name;
+            ret.need_i_handle.push_back(tmp);
+            return true;
+        });
+
+    return ret;
+}

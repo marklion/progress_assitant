@@ -46,7 +46,7 @@ static void init_data_base_config()
                 for (auto i = 0; i < permission_count;i++)
                 {
                     auto role = atoi(permission_config(i).c_str());
-                    PA_API_proc_add_step_role(company_name, app_name, step_name, company_config["roles"](i));
+                    PA_API_proc_add_step_role(company_name, app_name, step_name, company_config["roles"](role - 1));
                 }
             }
         }

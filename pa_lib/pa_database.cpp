@@ -223,7 +223,8 @@ std::list<pa_sql_ticket> PA_SQL_get_tickets_need_step(int _step_id)
         auto tickets = PA_SQL_get_tickets_by_app(step->m_belong_app_id);
         for (auto &itr:tickets)
         {
-            if (step->m_order_number - itr.m_current_step == 1)
+            auto ticket_next_step = PA_SQL_get_next_step(itr.m_current_step);
+            if (ticket_next_step && ticket_next_step->get_pri_id() == _step_id)
             {
                 ret.push_back(itr);
             }
@@ -260,6 +261,12 @@ std::list<pa_sql_ticket> PA_SQL_get_tickets_by_user(int _user_id)
             ret.insert(ret.end(), tickets_need_do.begin(), tickets_need_do.end());
         }
     }
+    ret.sort([](pa_sql_ticket &s1, pa_sql_ticket &s2) {
+        return s1.get_pri_id() < s2.get_pri_id();
+    });
+    ret.unique([](pa_sql_ticket &s1, pa_sql_ticket &s2) {
+        return s1.get_pri_id() == s2.get_pri_id();
+    });
 
     return ret;
 }
@@ -275,14 +282,10 @@ std::unique_ptr<pa_sql_role> PA_SQL_get_role_need_ticket(int _ticket_id)
     auto ticket = PA_SQL_get_ticket(_ticket_id);
     if (ticket)
     {
-        auto steps = PA_SQL_get_all_steps(ticket->m_belong_app);
-        for (auto &itr:steps)
+        auto next_step = PA_SQL_get_next_step(ticket->m_current_step);
+        if (next_step)
         {
-            if (itr.m_order_number - ticket->m_current_step == 1)
-            {
-                ret.reset(PA_SQL_get_role(itr.get_pri_id()).release());
-                break;
-            }
+            ret.reset(PA_SQL_get_role(next_step->m_pri_role).release());
         }
     }
 
@@ -300,6 +303,9 @@ std::list<pa_sql_role> PA_SQL_get_roles_by_app(int _app_id)
         ret.insert(ret.end(), roles.begin(), roles.end());
     }
 
+    ret.sort([](pa_sql_role &s1, pa_sql_role &s2)->bool {
+        return s1.get_pri_id() < s2.get_pri_id();
+    });
     ret.unique([](pa_sql_role &s1, pa_sql_role &s2)->bool {
         return s1.get_pri_id() == s2.get_pri_id();
     });
@@ -341,4 +347,22 @@ std::unique_ptr<pa_sql_app> PA_SQL_get_app(const std::string &_company_name, con
     }
 
     return std::unique_ptr<pa_sql_app>();
+}
+
+std::unique_ptr<pa_sql_step> PA_SQL_get_next_step(int _step_id)
+{
+    auto step = PA_SQL_get_step(_step_id);
+    if (step)
+    {
+        auto all_steps = PA_SQL_get_all_steps(step->m_belong_app_id);
+        for (auto &itr:all_steps)
+        {
+            if (itr.m_order_number - step->m_order_number == 1)
+            {
+                return PA_SQL_get_step(itr.get_pri_id());
+            }
+        }
+    }
+
+    return std::unique_ptr<pa_sql_step>();
 }

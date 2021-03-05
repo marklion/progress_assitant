@@ -600,9 +600,9 @@ static std::string make_cur_time_string()
 
     localtime_r(&sec, &lt);
     std::string ret;
-
-    ret = std::to_string(lt.tm_year + 1900) + std::to_string(lt.tm_mon + 1) + std::to_string(lt.tm_mday);
-    ret.append(std::to_string(lt.tm_hour) + std::to_string(lt.tm_min) + std::to_string(lt.tm_sec));
+    char tmp[128] = {0};
+    sprintf(tmp, "%04d-%02d-%02d", lt.tm_year + 1900, lt.tm_mon + 1, lt.tm_mday);
+    ret.assign(tmp);
 
     return ret;
 }
@@ -672,9 +672,21 @@ void PA_API_proc_get_tickets(const std::string &_ssid, travel_ticket proc_create
                 role_name = need_role->m_role_name;
             }
             auto timestamp = itr.m_time_stamp;
+            std::string app_name;
+            auto app = PA_SQL_get_app(itr.m_belong_app);
+            std::string next_step_name = "已结束";
+            auto next_step = PA_SQL_get_next_step(itr.m_current_step);
+            if (next_step)
+            {
+                next_step_name = next_step->m_step_name;
+            }
+            if (app)
+            {
+                app_name = app->m_app_name;
+            }
             if (itr.m_creator == user->get_pri_id())
             {
-                if (false == proc_created(ticket_id, creator, ticket_number, role_name, timestamp))
+                if (false == proc_created(ticket_id, creator, ticket_number, role_name, timestamp, app_name, next_step_name))
                 {
                     break;
                 }
@@ -684,7 +696,7 @@ void PA_API_proc_get_tickets(const std::string &_ssid, travel_ticket proc_create
             {
                 if (single_ticket_step.m_operator_id == user->get_pri_id())
                 {
-                    if (false == proc_operated(ticket_id, creator, ticket_number, role_name, timestamp))
+                    if (false == proc_operated(ticket_id, creator, ticket_number, role_name, timestamp, app_name, next_step_name))
                     {
                         break;
                     }
@@ -694,15 +706,21 @@ void PA_API_proc_get_tickets(const std::string &_ssid, travel_ticket proc_create
             auto my_role = PA_SQL_get_role_by_user(user->get_pri_id());
             if (my_role)
             {
-                if (need_role->get_pri_id() == my_role->get_pri_id())
+                if (next_step)
                 {
-                    if (false == proc_need_do(ticket_id, creator, ticket_number, role_name, timestamp))
+                    auto roles_need_by_next_step = PA_SQL_get_role_by_step(next_step->get_pri_id());
+                    for (auto &single_role : roles_need_by_next_step)
                     {
-                        break;
+                        if (my_role->get_pri_id() == single_role.get_pri_id())
+                        {
+                            if (false == proc_need_do(ticket_id, creator, ticket_number, role_name, timestamp, app_name, next_step_name))
+                            {
+                                break;
+                            }
+                        }
                     }
                 }
             }
-            
         }
     }
 }

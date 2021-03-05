@@ -34,6 +34,22 @@ struct rest_stepinfo {
     std::string step_name;
     std::string step_description;
 };
+
+struct rest_ticket_brief {
+    int ticket_id;
+    std::string ticket_number;
+    std::string creator;
+    std::string timestamp;
+    std::string assignee_role;
+    std::string app_name;
+    std::string next_step_name;
+};
+
+struct rest_tickets_part {
+    std::vector<rest_ticket_brief> created_by_me;
+    std::vector<rest_ticket_brief> operated_by_me;
+    std::vector<rest_ticket_brief> need_i_handle;
+};
 class pa_rest: public ngrest::Service
 {
 public:
@@ -99,6 +115,10 @@ public:
     // *location: /ticket
     // *method: POST
     std::string proc_post_ticket(const std::string& pa_ssid, int step_id, const std::string& comments);
+
+    // *location: /tickets_brief/{pa_ssid}
+    // *method: GET
+    rest_tickets_part proc_get_tickets_brief(const std::string& pa_ssid);
 };
 
 #endif // PA_REST_H

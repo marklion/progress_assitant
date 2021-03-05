@@ -281,3 +281,4 @@ std::list<pa_sql_ticket> PA_SQL_get_tickets_by_app(int _app_id);
 std::list<pa_sql_role> PA_SQL_get_roles_by_app(int _app_id);
 std::unique_ptr<pa_sql_ticket_step> PA_SQL_get_ticket_step_by_step(int ticket_id, int _step_id);
 std::list<pa_sql_ticket_step> PA_SQL_get_ticket_steps_by_ticket(int _ticket_id);
+std::unique_ptr<pa_sql_step> PA_SQL_get_next_step(int _step_id);

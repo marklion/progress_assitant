@@ -19,7 +19,7 @@ struct userinfo{
     std::string m_logo;
 };
 
-typedef std::function<bool (int, const std::string &, const std::string &, const std::string &, const std::string &)> const & travel_ticket;
+typedef std::function<bool (int, const std::string &, const std::string &, const std::string &, const std::string &, const std::string &, const std::string &)> const & travel_ticket;
 
 
 std::string PA_API_proc_test_echo(const std::string& _input);

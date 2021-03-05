@@ -8,7 +8,6 @@ extern bool execute_sql_cmd(const std::string& _sql_cmd, const std::string& _sql
     sqlite3 *db = nullptr;
     bool ret = false;
 
-    g_log.log("start to execute: %s in database: %s", _sql_cmd.c_str(), _sql_file.c_str());
     auto sql_ret = sqlite3_open(_sql_file.c_str(), &db);
     if (sql_ret == 0 && nullptr != db)
     {
@@ -49,7 +48,7 @@ extern bool execute_sql_cmd(const std::string& _sql_cmd, const std::string& _sql
             std::string output_log = "result of " + _sql_cmd + " is ";
             if (_ret)
             {
-                if (_ret->size() > 0)
+                if (_ret->size() > 0 && _sql_cmd.find("last_insert_rowid()") == _sql_cmd.npos && _sql_cmd.find("PRAGMA") == _sql_cmd.npos)
                 {
                     output_log.append("\n");
                     bool header = true;
@@ -83,10 +82,6 @@ extern bool execute_sql_cmd(const std::string& _sql_cmd, const std::string& _sql
                 output_log.append("success");
             }
             g_log.log(output_log);
-        }
-        else
-        {
-            g_log.err("failed to execute: %s", _sql_cmd.c_str());
         }
         if (nullptr != errmsg)
         {
