@@ -366,3 +366,28 @@ std::unique_ptr<pa_sql_step> PA_SQL_get_next_step(int _step_id)
 
     return std::unique_ptr<pa_sql_step>();
 }
+
+std::unique_ptr<pa_sql_ticket> PA_SQL_get_ticket(const std::string &_ticket_number)
+{
+    auto ticket_number = sqlite_orm::escape_single_quotes(_ticket_number);
+    return sqlite_orm::search_record<pa_sql_ticket>(PA_DB_FILE, "ticket_number = '%s'", ticket_number.c_str());
+}
+
+std::unique_ptr<pa_sql_step> PA_SQL_get_prev_step(int _step_id)
+{
+    auto step = PA_SQL_get_step(_step_id);
+    if (step)
+    {
+        auto all_steps = PA_SQL_get_all_steps(step->m_belong_app_id);
+        for (auto &itr:all_steps)
+        {
+            if (itr.m_order_number - step->m_order_number == -1)
+            {
+                return PA_SQL_get_step(itr.get_pri_id());
+            }
+        }
+    }
+
+    return std::unique_ptr<pa_sql_step>();
+
+}

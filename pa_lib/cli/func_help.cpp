@@ -113,13 +113,15 @@ void PA_API_proc_add_step_helper()
     int primary_operator;
     std::string step_name;
     std::string description;
+    std::string step_component;
     ASK_PARAM(company_id);
     ASK_PARAM(order_number);
     ASK_PARAM(step_name);
     ASK_PARAM(description);
     ASK_PARAM(primary_operator);
+    ASK_PARAM(step_component);
 
-    std::cout << "result: " << PA_API_proc_add_step(company_id, order_number, primary_operator, step_name, description);
+    std::cout << "result: " << PA_API_proc_add_step(company_id, order_number, primary_operator, step_name, description, step_component);
 }
 
 void PA_API_proc_get_apps_helper()
@@ -140,11 +142,12 @@ void PA_API_proc_get_steps_helper()
 {
     int app_id;
     ASK_PARAM(app_id);
-    PA_API_proc_get_steps(app_id, [](int _step_id, int _step_order, const std::string &_step_name, const std::string &_step_description) -> bool {
+    PA_API_proc_get_steps(app_id, [](int _step_id, int _step_order, const std::string &_step_name, const std::string &_step_description, const std::string &_step_component) -> bool {
         std::cout << "step id:" << _step_id << std::endl;
         std::cout << "step order:" << _step_order << std::endl;
         std::cout << "step name:" << _step_name << std::endl;
         std::cout << "step description:" << _step_description << std::endl;
+        std::cout << "step component:" << _step_component<< std::endl;
 
         return true;
     });

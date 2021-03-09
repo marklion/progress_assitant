@@ -34,13 +34,20 @@ static void init_data_base_config()
             PA_API_proc_add_app(company_name, app_name, app_description);
             auto steps_config = app_config["steps"];
             auto steps_count = steps_config.GetArraySize();
-            for (auto i = 0; i < steps_count;i++)
+            PA_API_proc_add_step(company_name, app_name, "创建流程", 0, 0, "创建流程", "");
+            for (int j = 0; j < role_count; j++)
+            {
+                auto role_name = company_config["roles"](j);
+                PA_API_proc_add_step_role(company_name, app_name, "创建流程", role_name);
+            }
+            for (auto i = 0; i < steps_count; i++)
             {
                 auto steps = steps_config[i];
                 auto step_name = steps("step_name");
                 auto step_description = steps("step_description");
                 auto step_primary_operator = atoi(steps("primary_role").c_str());
-                PA_API_proc_add_step(company_name, app_name,step_name, i + 1,  step_primary_operator, step_description);
+                auto step_component = steps("step_component");
+                PA_API_proc_add_step(company_name, app_name,step_name, i + 1,  step_primary_operator, step_description, step_component);
                 auto permission_config = steps["permissions"];
                 auto permission_count = permission_config.GetArraySize();
                 for (auto i = 0; i < permission_count;i++)

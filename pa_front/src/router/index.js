@@ -54,7 +54,16 @@ const routes = [
     name: 'CreateTicket',
     component: () => import('../views/CreateTicket.vue'),
     meta: {    
-        private_title: '创建工单',
+        private_title: '创建流程',
+        has_go_back:true,
+    },
+  },
+  {
+    path: '/ticket/:ticket_number',
+    name: 'TicketDetail',
+    component: () => import('../views/TicketDetail.vue'),
+    meta: {    
+        private_title: '流程详情',
         has_go_back:true,
     },
   },

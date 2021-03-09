@@ -151,6 +151,7 @@ public:
     int m_order_number = 0;
     int m_belong_app_id = 0;
     int m_pri_role = 0;
+    std::string m_step_component;
     virtual std::vector<sqlite_orm_column> columns_defined()
     {
         std::vector<sqlite_orm_column> ret;
@@ -160,6 +161,7 @@ public:
         ret.push_back(sqlite_orm_column("belong_app_id", sqlite_orm_column::INTEGER, &m_belong_app_id));
         ret.push_back(sqlite_orm_column("order_number", sqlite_orm_column::INTEGER, &m_order_number));
         ret.push_back(sqlite_orm_column("pri_role", sqlite_orm_column::INTEGER, &m_pri_role));
+        ret.push_back(sqlite_orm_column("step_component", sqlite_orm_column::STRING, &m_step_component));
 
         return ret;
     }
@@ -275,6 +277,7 @@ std::unique_ptr<pa_sql_role_step> PA_SQL_get_role_step(int _role_id, int _step_i
 std::list<pa_sql_step> PA_SQL_get_steps_by_comp_role(int _role_id);
 std::list<pa_sql_role> PA_SQL_get_role_by_step(int _step_id);
 std::unique_ptr<pa_sql_ticket> PA_SQL_get_ticket(int _ticket_id);
+std::unique_ptr<pa_sql_ticket> PA_SQL_get_ticket(const std::string &_ticket_number);
 std::list<pa_sql_ticket> PA_SQL_get_tickets_by_user(int _user_id);
 std::list<pa_sql_ticket> PA_SQL_get_tickets_need_step(int _step_id);
 std::list<pa_sql_ticket> PA_SQL_get_tickets_by_app(int _app_id);
@@ -282,3 +285,4 @@ std::list<pa_sql_role> PA_SQL_get_roles_by_app(int _app_id);
 std::unique_ptr<pa_sql_ticket_step> PA_SQL_get_ticket_step_by_step(int ticket_id, int _step_id);
 std::list<pa_sql_ticket_step> PA_SQL_get_ticket_steps_by_ticket(int _ticket_id);
 std::unique_ptr<pa_sql_step> PA_SQL_get_next_step(int _step_id);
+std::unique_ptr<pa_sql_step> PA_SQL_get_prev_step(int _step_id);

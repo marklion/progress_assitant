@@ -97,7 +97,6 @@ export default {
             resp.data.result.need_i_handle.forEach((element, index) => {
                 vue_this.$set(vue_this.all_tickets.need_i_handle, index, element);
             });
-            console.log(vue_this);
         }).catch(function (err) {
             console.log(err);
         });

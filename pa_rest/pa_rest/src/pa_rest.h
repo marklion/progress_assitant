@@ -33,6 +33,7 @@ struct rest_stepinfo {
     int order_number;
     std::string step_name;
     std::string step_description;
+    std::string step_component;
 };
 
 struct rest_ticket_brief {
@@ -49,6 +50,23 @@ struct rest_tickets_part {
     std::vector<rest_ticket_brief> created_by_me;
     std::vector<rest_ticket_brief> operated_by_me;
     std::vector<rest_ticket_brief> need_i_handle;
+};
+
+struct rest_steps_in_ticket {
+    std::string name;
+    int id;
+    std::string comment;
+    std::string description;
+    std::string operator_user;
+    std::string component;
+};
+struct rest_ticket_detail {
+    std::string ticket_number;
+    std::string app_name;
+    std::string app_description;
+    std::string ticket_timestamp;
+    int next_step;
+    std::vector<rest_steps_in_ticket> all_steps;
 };
 class pa_rest: public ngrest::Service
 {
@@ -119,6 +137,18 @@ public:
     // *location: /tickets_brief/{pa_ssid}
     // *method: GET
     rest_tickets_part proc_get_tickets_brief(const std::string& pa_ssid);
+
+    // *location: /ticket_detail/{ticket_number}
+    // *method: GET
+    rest_ticket_detail proc_get_ticket_detail(const std::string& ticket_number);
+
+    // *location: /ticket_editable/{ticket_number}/{pa_ssid}
+    // *method: GET
+    bool proc_get_ticket_editable(const std::string& ticket_number, std::string& pa_ssid);
+
+    // *location: /ticket/{ticket_number}
+    // *method: POST
+    bool proc_post_ticket_update(const std::string& ticket_number, const std::string& pa_ssid, int step_id, const std::string& comments, int direction);
 };
 
 #endif // PA_REST_H

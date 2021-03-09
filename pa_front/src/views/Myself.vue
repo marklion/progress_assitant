@@ -28,11 +28,15 @@ import {
     Col,
     Row
 } from 'vant';
+import {
+    Image as VanImage
+} from 'vant';
 
 Vue.use(Cell);
 Vue.use(CellGroup);
 Vue.use(Col);
 Vue.use(Row);
+Vue.use(VanImage);
 export default {
     name: 'Myself',
 }

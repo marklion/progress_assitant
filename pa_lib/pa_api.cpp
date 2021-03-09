@@ -283,6 +283,15 @@ std::string PA_API_proc_wechat_login(const std::string &_code)
             {
                 ret = login_user->m_ssid;
             }
+            else
+            {
+                pa_sql_userlogin new_login;
+                new_login.m_ssid = pa_gen_ssid();
+                new_login.m_time_stamp = time(nullptr) / 3600;
+                new_login.m_user_id = p_user_info->get_pri_id();
+                if (new_login.insert_record())
+                    ret = new_login.m_ssid;
+            }
         }
         if (ret.length() <= 0)
         {
@@ -534,7 +543,7 @@ bool PA_API_proc_add_app(const std::string &_company_name, const std::string &_a
 
     return ret;
 }
-bool PA_API_proc_add_step(int _app_id, int _order_number, int _primary_operator, const std::string &_step_name, const std::string &_description)
+bool PA_API_proc_add_step(int _app_id, int _order_number, int _primary_operator, const std::string &_step_name, const std::string &_description, const std::string &_component)
 {
     pa_sql_step step;
 
@@ -543,6 +552,7 @@ bool PA_API_proc_add_step(int _app_id, int _order_number, int _primary_operator,
     step.m_step_name = _step_name;
     step.m_description = _description;
     step.m_pri_role = _primary_operator;
+    step.m_step_component = _component;
 
     return step.insert_record();
 }
@@ -567,15 +577,18 @@ void PA_API_proc_get_apps(const std::string &_ssid, std::function<bool (int, con
     }
 }
 
-void PA_API_proc_get_steps(int _app_id, std::function<bool (int, int, const std::string &, const std::string &)> const &f)
+void PA_API_proc_get_steps(int _app_id, std::function<bool (int, int, const std::string &, const std::string &, const std::string &)> const &f)
 {
     auto all_step = PA_SQL_get_all_steps(_app_id);
 
     for (auto &itr:all_step)
     {
-        if (false == f(itr.get_pri_id(), itr.m_order_number, itr.m_step_name, itr.m_description))
+        if (itr.m_order_number > 0)
         {
-            break;
+            if (false == f(itr.get_pri_id(), itr.m_order_number, itr.m_step_name, itr.m_description, itr.m_step_component))
+            {
+                break;
+            }
         }
     }
 }
@@ -629,7 +642,9 @@ std::string PA_API_proc_create_ticket(const std::string &_ssid, int _step_id, co
                     ticket.m_current_step = _step_id;
                     ticket.m_time_stamp = make_cur_time_string();
                     ticket.insert_record();
-                    ticket.m_ticket_number = ticket.m_time_stamp + std::to_string(ticket.get_pri_id());
+                    auto ticket_number = ticket.m_time_stamp;
+                    ticket_number.erase(std::remove(ticket_number.begin(),ticket_number.end(), '-'), ticket_number.end());
+                    ticket.m_ticket_number = ticket_number + std::to_string(ticket.get_pri_id());
                     ticket.update_record();
                     pa_sql_ticket_step ticket_step;
                     ticket_step.m_ticket_id = ticket.get_pri_id();
@@ -725,14 +740,14 @@ void PA_API_proc_get_tickets(const std::string &_ssid, travel_ticket proc_create
     }
 }
 
-bool PA_API_proc_add_step(const std::string &_company_name,const std::string &_app_name, const std::string &_step_name, int _order_number, int _primary_operator, const std::string &_description)
+bool PA_API_proc_add_step(const std::string &_company_name,const std::string &_app_name, const std::string &_step_name, int _order_number, int _primary_operator, const std::string &_description, const std::string &_component)
 {
     bool ret = false;
 
     auto app = PA_SQL_get_app(_company_name, _app_name);
     if (app)
     {
-        ret = PA_API_proc_add_step(app->get_pri_id(), _order_number, _primary_operator, _step_name, _description);
+        ret = PA_API_proc_add_step(app->get_pri_id(), _order_number, _primary_operator, _step_name, _description, _component);
     }
 
     return ret;
@@ -774,4 +789,139 @@ void PA_API_remove_all_config()
     app.remove_table();
     step.remove_table();
     role_step.remove_table();
+}
+
+std::unique_ptr<pa_api_ticket_detail> PA_API_proc_get_ticket_detail(const std::string &_ticket_number)
+{
+    auto ticket = PA_SQL_get_ticket(_ticket_number);
+    if (ticket)
+    {
+        auto all_steps = PA_SQL_get_all_steps(ticket->m_belong_app);
+
+        std::unique_ptr<pa_api_ticket_detail> ret(new pa_api_ticket_detail());
+        ret->ticket_number = _ticket_number;
+        auto app = PA_SQL_get_app(ticket->m_belong_app);
+        if (app)
+        {
+            ret->app_name = app->m_app_name;
+        }
+        auto next_step = PA_SQL_get_next_step(ticket->m_current_step);
+        if (next_step)
+        {
+            ret->next_step = next_step->get_pri_id();
+        }
+        ret->ticket_timestamp = ticket->m_time_stamp;
+
+        for (auto &itr:all_steps)
+        {
+            if (itr.m_order_number > 0)
+            {
+                pa_api_steps_in_ticket tmp;
+                tmp.id = itr.get_pri_id();
+                tmp.name = itr.m_step_name;
+                auto ticket_step = PA_SQL_get_ticket_step_by_step(ticket->get_pri_id(), itr.get_pri_id());
+                if (ticket_step)
+                {
+                    tmp.comment = ticket_step->m_comments;
+                    auto operator_user = PA_SQL_get_userinfo(ticket_step->m_operator_id);
+                    if (operator_user)
+                    {
+                        tmp.operator_user = operator_user->m_name;
+                    }
+                    tmp.description = itr.m_description;
+                }
+                tmp.component = itr.m_step_component;
+                ret->all_steps.push_back(tmp);
+            }
+        }
+
+        return ret;
+    }
+
+    return std::unique_ptr<pa_api_ticket_detail>();
+}
+bool PA_API_proc_get_editable(const std::string &_ticket_number, const std::string &_ssid)
+{
+    bool ret = false;
+
+    auto user = PA_SQL_get_online_userinfo(_ssid);
+    auto ticket = PA_SQL_get_ticket(_ticket_number);
+    if (user && ticket)
+    {
+        auto user_role = PA_SQL_get_role_by_user(user->get_pri_id());
+        if (user_role)
+        {
+            auto next_step = PA_SQL_get_next_step(ticket->m_current_step);
+            if (next_step)
+            {
+                auto all_role = PA_SQL_get_role_by_step(next_step->get_pri_id());
+                for (auto &itr : all_role)
+                {
+                    if (itr.get_pri_id() == user_role->get_pri_id())
+                    {
+                        ret = true;
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
+    return ret;
+}
+
+bool PA_API_proc_update_ticket(const std::string &_ticket_number, int _step_id, const std::string &_ssid, const std::string &_comment, int _direction)
+{
+    bool ret = false;
+
+    auto ticket = PA_SQL_get_ticket(_ticket_number);
+    auto user = PA_SQL_get_online_userinfo(_ssid);
+
+    if (ticket && user) 
+    {
+        auto role = PA_SQL_get_role_by_user(user->get_pri_id());
+        if (role)
+        {
+            auto role_step = PA_SQL_get_role_step(role->get_pri_id(), _step_id);
+            auto step = PA_SQL_get_step(_step_id);
+            if (role_step && step)
+            {
+                auto exist_ticket_step = PA_SQL_get_ticket_step_by_step(ticket->get_pri_id(), _step_id);
+                if (exist_ticket_step)
+                {
+                    exist_ticket_step->m_comments = _comment;
+                    exist_ticket_step->m_operator_id = user->get_pri_id();
+                    exist_ticket_step->m_time_stamp = make_cur_time_string();
+                    ret = exist_ticket_step->update_record();
+                }
+                else
+                {
+                    pa_sql_ticket_step ticket_step;
+                    ticket_step.m_comments = _comment;
+                    ticket_step.m_operator_id = user->get_pri_id();
+                    ticket_step.m_step_id = step->get_pri_id();
+                    ticket_step.m_ticket_id = ticket->get_pri_id();
+                    ticket_step.m_time_stamp = make_cur_time_string();
+                    ret = ticket_step.insert_record();
+                }
+                int direction_left = _direction;
+                while (direction_left != 0)
+                {
+                    if (direction_left > 0)
+                    {
+                        ticket->m_current_step = PA_SQL_get_next_step(ticket->m_current_step)->get_pri_id();
+                        direction_left--;
+                    }
+                    else
+                    {
+                        ticket->m_current_step = PA_SQL_get_prev_step(ticket->m_current_step)->get_pri_id();
+                        direction_left++;
+                    }
+                }
+                ticket->update_record();
+            }
+        }
+    }
+
+    return ret;
 }

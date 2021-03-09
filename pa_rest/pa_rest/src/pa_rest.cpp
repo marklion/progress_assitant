@@ -113,12 +113,13 @@ std::vector<rest_stepinfo> pa_rest::proc_get_steps(int app_id)
 {
     std::vector<rest_stepinfo> ret;
 
-    PA_API_proc_get_steps(app_id, [&](int _step_id, int _order_number, const std::string &_step_name, const std::string &_step_description)->bool {
+    PA_API_proc_get_steps(app_id, [&](int _step_id, int _order_number, const std::string &_step_name, const std::string &_step_description, const std::string &_step_component)->bool {
         rest_stepinfo tmp;
         tmp.step_name = _step_name;
         tmp.step_description = _step_description;
         tmp.order_number = _order_number;
         tmp.step_id = _step_id;
+        tmp.step_component = _step_component;
 
         ret.push_back(tmp);
 
@@ -178,4 +179,42 @@ rest_tickets_part pa_rest::proc_get_tickets_brief(const std::string& pa_ssid)
         });
 
     return ret;
+}
+
+rest_ticket_detail pa_rest::proc_get_ticket_detail(const std::string& ticket_number)
+{
+    rest_ticket_detail ret;
+
+    auto detail = PA_API_proc_get_ticket_detail(ticket_number);
+    if (detail)
+    {
+        ret.app_description = detail->app_description;
+        ret.app_name = detail->app_name;
+        ret.next_step = detail->next_step;
+        ret.ticket_number = detail->ticket_number;
+        ret.ticket_timestamp = detail->ticket_timestamp;
+
+        for (auto &itr:detail->all_steps)
+        {
+            rest_steps_in_ticket tmp;
+            tmp.comment = itr.comment;
+            tmp.description = itr.description;
+            tmp.id = itr.id;
+            tmp.name = itr.name;
+            tmp.operator_user = itr.operator_user;
+            tmp.component = itr.component;
+            ret.all_steps.push_back(tmp);
+        }
+    }
+    return ret;
+}
+
+bool pa_rest::proc_get_ticket_editable(const std::string& ticket_number, std::string& pa_ssid)
+{
+    return PA_API_proc_get_editable(ticket_number, pa_ssid);
+}
+
+bool pa_rest::proc_post_ticket_update(const std::string& ticket_number, const std::string& pa_ssid, int step_id, const std::string& comments, int direction)
+{
+    return PA_API_proc_update_ticket(ticket_number, step_id, pa_ssid, comments, direction);
 }

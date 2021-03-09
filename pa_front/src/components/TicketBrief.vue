@@ -1,7 +1,7 @@
 <template>
 <div class="ticket_brief">
     <div class="ticket_number_show">流程号：{{ticket_number}}</div>
-    <van-card :desc="'创建人：' + creator" :title="app_name">
+    <van-card :desc="'创建人：' + creator" :title="app_name" @click="nav_to_ticket">
         <template #num>
             <div class="time_stamp_show">{{timestamp}}</div>
         </template>
@@ -38,6 +38,11 @@ export default {
         assignee_role: String,
         app_name: String,
         next_step_name: String,
+    },
+    methods: {
+        nav_to_ticket: function () {
+            this.$router.push({name:'TicketDetail', params:{ticket_number:this.ticket_number}});
+        },
     },
 }
 </script>
