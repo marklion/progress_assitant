@@ -21,18 +21,20 @@ struct userinfo{
 
 struct pa_api_steps_in_ticket {
     std::string name;
-    int id;
+    int id = 0;
     std::string comment;
     std::string description;
     std::string operator_user;
     std::string component;
+    int result = 0;
+    std::string timestamp;
 };
 struct pa_api_ticket_detail {
     std::string ticket_number;
     std::string app_name;
     std::string app_description;
     std::string ticket_timestamp;
-    int next_step;
+    int next_step = 0;
     std::vector<pa_api_steps_in_ticket> all_steps;
 };
 

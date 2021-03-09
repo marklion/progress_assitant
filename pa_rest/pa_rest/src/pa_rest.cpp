@@ -203,6 +203,8 @@ rest_ticket_detail pa_rest::proc_get_ticket_detail(const std::string& ticket_num
             tmp.name = itr.name;
             tmp.operator_user = itr.operator_user;
             tmp.component = itr.component;
+            tmp.result = itr.result;
+            tmp.timestamp = itr.timestamp;
             ret.all_steps.push_back(tmp);
         }
     }

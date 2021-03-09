@@ -234,6 +234,7 @@ public:
     int m_operator_id = 0;
     std::string m_comments;
     std::string m_time_stamp;
+    int m_result = 0;
     virtual std::vector<sqlite_orm_column> columns_defined()
     {
         std::vector<sqlite_orm_column> ret;
@@ -243,6 +244,7 @@ public:
         ret.push_back(sqlite_orm_column("operator_id", sqlite_orm_column::INTEGER, &m_operator_id));
         ret.push_back(sqlite_orm_column("comments", sqlite_orm_column::STRING, &m_comments));
         ret.push_back(sqlite_orm_column("time_stamp", sqlite_orm_column::STRING, &m_time_stamp));
+        ret.push_back(sqlite_orm_column("m_result", sqlite_orm_column::INTEGER, &m_result));
 
         return ret;
     }

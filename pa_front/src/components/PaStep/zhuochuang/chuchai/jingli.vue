@@ -1,27 +1,22 @@
 <template>
 <div class="pa_step_jingli_show">
-    <van-radio-group v-model="step_detail.directer_approve">
-        <van-radio :name="true">批准</van-radio>
-        <van-radio :name="false">驳回</van-radio>
-    </van-radio-group>
+    <van-field v-model="step_detail.comment" :readonly="!editable" name="title" label="意见" placeholder="请填入详细意见" :rules="[{ required: true, message: '请填写意见' }]" />
 </div>
 </template>
 
 <script>
 import Vue from 'vue';
 import {
-    RadioGroup,
-    Radio
+    Field,
 } from 'vant';
 
-Vue.use(Radio);
-Vue.use(RadioGroup);
+Vue.use(Field);
 export default {
     name: 'jingli',
     data: function () {
         return {
             step_detail: {
-                directer_approve: {},
+                comment: '',
             },
         };
     },

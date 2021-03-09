@@ -12,11 +12,17 @@
     </div>
     <van-steps direction="vertical" :active="step_index">
         <van-step v-for="(single_step, index) in all_step" :key="index">{{single_step.name}}
-            <component :is="current_step_component[index]" :ref="single_step.id" :step_content="step_comments(index)" :editable="editable"></component>
-            <div style="margin: 16px;" v-if="editable && step_index == index">
-                <van-button round type="info" editable @click="submit(1, $refs[single_step.id][0])">提交下一步</van-button>
-                <van-button round type="danger" editable @click="submit(-1,$refs[single_step.id][0])">返回上一步</van-button>
-            </div>
+            <step-detail 
+                :editable="step_editable(single_step.id)" 
+                :first_step="index == 0" 
+                :step_comment="single_step.comment" 
+                :step_component="single_step.component" 
+                :step_description="single_step.description" 
+                :step_id="single_step.id" 
+                :step_name="single_step.name"
+                :step_operator="single_step.operator_user" :step_result="single_step.result" :step_timestamp="single_step.timestamp"
+                :ticket_number="ticket_detail_info.ticket_number">
+            </step-detail>
         </van-step>
     </van-steps>
 </div>
@@ -36,6 +42,8 @@ Vue.use(Button);
 Vue.use(Step);
 Vue.use(Steps);
 
+import StepDetail from '../components/StepDetail.vue'
+
 export default {
     name: 'TicketDetail',
     data: function () {
@@ -54,26 +62,21 @@ export default {
                 return this.all_step[_index].comment;
             },
             editable: false,
+            step_editable: function (_step_id) {
+                var ret = false;
+                if (this.editable && _step_id == this.ticket_detail_info.next_step)
+                {
+                    ret = true;
+                }
+                return ret;
+            },
         };
     },
+    components: {
+        "step-detail":StepDetail,
+    },
     methods: {
-        submit: function (_dir, _component) {
-            var vue_this = this;
-            vue_this.$axios.post('/ticket/' + vue_this.ticket_detail_info.ticket_number, {
-                pa_ssid: vue_this.$cookies.get('pa_ssid'),
-                comments: _component.make_json(),
-                step_id: vue_this.ticket_detail_info.next_step,
-                direction:_dir,
-            }).then(function (resp) {
-                if (resp.data.result == true) {
-                    vue_this.$router.replace({
-                        name: 'Home',
-                    });
-                }
-            }).catch(function (err) {
-                console.log(err);
-            });
-        }
+        
     },
     beforeMount: function () {
         var vue_this = this;

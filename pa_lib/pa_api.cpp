@@ -823,6 +823,8 @@ std::unique_ptr<pa_api_ticket_detail> PA_API_proc_get_ticket_detail(const std::s
                 if (ticket_step)
                 {
                     tmp.comment = ticket_step->m_comments;
+                    tmp.result = ticket_step->m_result;
+                    tmp.timestamp = ticket_step->m_time_stamp;
                     auto operator_user = PA_SQL_get_userinfo(ticket_step->m_operator_id);
                     if (operator_user)
                     {
@@ -892,6 +894,14 @@ bool PA_API_proc_update_ticket(const std::string &_ticket_number, int _step_id, 
                     exist_ticket_step->m_comments = _comment;
                     exist_ticket_step->m_operator_id = user->get_pri_id();
                     exist_ticket_step->m_time_stamp = make_cur_time_string();
+                    if (_direction > 0)
+                    {
+                        exist_ticket_step->m_result = 1;
+                    }
+                    else
+                    {
+                        exist_ticket_step->m_result = 2;
+                    }
                     ret = exist_ticket_step->update_record();
                 }
                 else
@@ -902,6 +912,14 @@ bool PA_API_proc_update_ticket(const std::string &_ticket_number, int _step_id, 
                     ticket_step.m_step_id = step->get_pri_id();
                     ticket_step.m_ticket_id = ticket->get_pri_id();
                     ticket_step.m_time_stamp = make_cur_time_string();
+                    if (_direction > 0)
+                    {
+                        ticket_step.m_result = 1;
+                    }
+                    else
+                    {
+                        ticket_step.m_result = 2;
+                    }
                     ret = ticket_step.insert_record();
                 }
                 int direction_left = _direction;

@@ -59,6 +59,8 @@ struct rest_steps_in_ticket {
     std::string description;
     std::string operator_user;
     std::string component;
+    int result;
+    std::string timestamp;
 };
 struct rest_ticket_detail {
     std::string ticket_number;
