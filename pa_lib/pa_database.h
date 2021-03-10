@@ -207,6 +207,7 @@ public:
     int m_creator = 0;
     int m_belong_app = 0;
     int m_current_step = 0;
+    int m_next_assignee_id = 0;
     virtual std::vector<sqlite_orm_column> columns_defined()
     {
         std::vector<sqlite_orm_column> ret;
@@ -216,6 +217,7 @@ public:
         ret.push_back(sqlite_orm_column("creator", sqlite_orm_column::INTEGER, &m_creator));
         ret.push_back(sqlite_orm_column("belong_app", sqlite_orm_column::INTEGER, &m_belong_app));
         ret.push_back(sqlite_orm_column("current_step", sqlite_orm_column::INTEGER, &m_current_step));
+        ret.push_back(sqlite_orm_column("next_assignee_id", sqlite_orm_column::INTEGER, &m_next_assignee_id));
 
         return ret;
     }
@@ -259,6 +261,7 @@ std::unique_ptr<pa_sql_userinfo> PA_SQL_get_userinfo(int _user_id);
 std::unique_ptr<pa_sql_userlogin> PA_SQL_get_userlogin(const std::string &_ssid);
 std::unique_ptr<pa_sql_userlogin> PA_SQL_get_userlogin(int _user_id);
 std::unique_ptr<pa_sql_userinfo> PA_SQL_get_online_userinfo(const std::string &_ssid);
+std::list<pa_sql_userinfo> PA_SQL_get_users_by_role(int _role_id);
 std::unique_ptr<pa_sql_company> PA_SQL_get_company(int _company_id);
 std::unique_ptr<pa_sql_company> PA_SQL_get_company(const std::string &_company_name);
 std::unique_ptr<pa_sql_role> PA_SQL_get_role(int _role_id);

@@ -6,12 +6,13 @@
             <div class="time_stamp_show">{{timestamp}}</div>
         </template>
         <template #price>
-            <div class="assignee_role_show">需要 {{assignee_role}} 处理</div>
+            <div class="assignee_role_show" v-if="next_step_name">需要 {{next_assignee_name}}({{assignee_role}}) 处理</div>
         </template>
         <template #tags>
             <span>流程状态：</span>
             <span>
-                <van-tag plain type="primary">{{next_step_name}}</van-tag>
+                <van-tag plain type="primary" v-if="next_step_name">{{next_step_name}}</van-tag>
+                <van-tag plain type="primary" v-else>已结束</van-tag>
             </span>
         </template>
     </van-card>
@@ -38,6 +39,7 @@ export default {
         assignee_role: String,
         app_name: String,
         next_step_name: String,
+        next_assignee_name: String,
     },
     methods: {
         nav_to_ticket: function () {

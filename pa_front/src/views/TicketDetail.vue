@@ -7,8 +7,10 @@
         {{ticket_detail_info.app_name}}
     </div>
     <div class="ticket_timestamp_show">
-
         {{ticket_detail_info.ticket_timestamp}}
+    </div>
+    <div class="next_assignee_name_show">
+        当前状态：等待{{ticket_detail_info.next_assignee_name}}处理
     </div>
     <van-steps direction="vertical" :active="step_index">
         <van-step v-for="(single_step, index) in all_step" :key="index">{{single_step.name}}
@@ -21,7 +23,8 @@
                 :step_id="single_step.id" 
                 :step_name="single_step.name"
                 :step_operator="single_step.operator_user" :step_result="single_step.result" :step_timestamp="single_step.timestamp"
-                :ticket_number="ticket_detail_info.ticket_number">
+                :ticket_number="ticket_detail_info.ticket_number"
+                :last_step="index == all_step.length - 1">
             </step-detail>
         </van-step>
     </van-steps>
@@ -55,6 +58,7 @@ export default {
                 app_description: '',
                 ticket_timestamp: '',
                 next_step: 0,
+                next_assignee_name: '',
             },
             all_step: [],
             current_step_component: [],
@@ -86,6 +90,7 @@ export default {
             vue_this.ticket_detail_info.app_description = resp.data.result.app_description;
             vue_this.ticket_detail_info.ticket_timestamp = resp.data.result.ticket_timestamp;
             vue_this.ticket_detail_info.next_step = resp.data.result.next_step;
+            vue_this.ticket_detail_info.next_assignee_name = resp.data.result.next_assignee_name;
             resp.data.result.all_steps.forEach((element, index) => {
                 vue_this.$set(vue_this.all_step, index, element);
                 vue_this.$set(vue_this.current_step_component, index, () => import('../components/' + element.component));

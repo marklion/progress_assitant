@@ -250,17 +250,9 @@ std::list<pa_sql_ticket> PA_SQL_get_tickets_by_user(int _user_id)
             ret.push_back(*(ticket));
         }
     }
+    auto ticket_need_i_do = sqlite_orm::search_record_all<pa_sql_ticket>(PA_DB_FILE, "next_assignee_id = %d", _user_id);
+    ret.insert(ret.end(), ticket_need_i_do.begin(), ticket_need_i_do.end());
 
-    auto user = PA_SQL_get_userinfo(_user_id);
-    if (user)
-    {
-        auto steps_joind_by_role = PA_SQL_get_steps_by_comp_role(user->m_comp_role_id);
-        for (auto &step:steps_joind_by_role)
-        {
-            auto tickets_need_do = PA_SQL_get_tickets_need_step(step.get_pri_id());
-            ret.insert(ret.end(), tickets_need_do.begin(), tickets_need_do.end());
-        }
-    }
     ret.sort([](pa_sql_ticket &s1, pa_sql_ticket &s2) {
         return s1.get_pri_id() < s2.get_pri_id();
     });
@@ -390,4 +382,16 @@ std::unique_ptr<pa_sql_step> PA_SQL_get_prev_step(int _step_id)
 
     return std::unique_ptr<pa_sql_step>();
 
+}
+
+std::list<pa_sql_userinfo> PA_SQL_get_users_by_role(int _role_id)
+{
+    std::list<pa_sql_userinfo> ret;
+    auto comp_roles = sqlite_orm::search_record_all<pa_sql_comp_role>(PA_DB_FILE, "role_id = %d", _role_id);
+    for (auto &itr:comp_roles)
+    {
+        ret = sqlite_orm::search_record_all<pa_sql_userinfo>(PA_DB_FILE, "comp_role_id = %d", itr.get_pri_id());
+    }
+
+    return ret;
 }

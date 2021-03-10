@@ -44,6 +44,7 @@ struct rest_ticket_brief {
     std::string assignee_role;
     std::string app_name;
     std::string next_step_name;
+    std::string assignee_name;
 };
 
 struct rest_tickets_part {
@@ -68,8 +69,15 @@ struct rest_ticket_detail {
     std::string app_description;
     std::string ticket_timestamp;
     int next_step;
+    std::string next_assignee_name;
     std::vector<rest_steps_in_ticket> all_steps;
 };
+
+struct rest_users_by_step {
+    std::string name;
+    int id;
+};
+
 class pa_rest: public ngrest::Service
 {
 public:
@@ -134,7 +142,7 @@ public:
 
     // *location: /ticket
     // *method: POST
-    std::string proc_post_ticket(const std::string& pa_ssid, int step_id, const std::string& comments);
+    std::string proc_post_ticket(const std::string& pa_ssid, int step_id, const std::string& comments, int assignee_id);
 
     // *location: /tickets_brief/{pa_ssid}
     // *method: GET
@@ -150,7 +158,11 @@ public:
 
     // *location: /ticket/{ticket_number}
     // *method: POST
-    bool proc_post_ticket_update(const std::string& ticket_number, const std::string& pa_ssid, int step_id, const std::string& comments, int direction);
+    bool proc_post_ticket_update(const std::string& ticket_number, const std::string& pa_ssid, int step_id, const std::string& comments, int direction, int assignee_id);
+
+    // *location: /users_by_step/{step_id}
+    // *method: GET
+    std::vector<rest_users_by_step> proc_get_users_by_step(int step_id);
 };
 
 #endif // PA_REST_H

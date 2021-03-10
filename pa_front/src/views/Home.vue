@@ -13,13 +13,13 @@
 
     <van-tabs v-model="active">
         <van-tab title="待处理">
-            <ticket-brief v-for="single_brief in all_tickets.need_i_handle" :key="single_brief.ticket_number" :ticket_number="single_brief.ticket_number" :creator="single_brief.creator" :assignee_role="single_brief.assignee_role" :timestamp="single_brief.timestamp" :app_name="single_brief.app_name" :next_step_name="single_brief.next_step_name"></ticket-brief>
+            <ticket-brief v-for="single_brief in all_tickets.need_i_handle" :key="single_brief.ticket_number" :ticket_number="single_brief.ticket_number" :creator="single_brief.creator" :assignee_role="single_brief.assignee_role" :timestamp="single_brief.timestamp" :app_name="single_brief.app_name" :next_step_name="single_brief.next_step_name" :next_assignee_name="single_brief.assignee_name"></ticket-brief>
         </van-tab>
         <van-tab title="我创建的">
-            <ticket-brief v-for="single_brief in all_tickets.created_by_me" :key="single_brief.ticket_number" :ticket_number="single_brief.ticket_number" :creator="single_brief.creator" :assignee_role="single_brief.assignee_role" :timestamp="single_brief.timestamp" :app_name="single_brief.app_name" :next_step_name="single_brief.next_step_name"></ticket-brief>
+            <ticket-brief v-for="single_brief in all_tickets.created_by_me" :key="single_brief.ticket_number" :ticket_number="single_brief.ticket_number" :creator="single_brief.creator" :assignee_role="single_brief.assignee_role" :timestamp="single_brief.timestamp" :app_name="single_brief.app_name" :next_step_name="single_brief.next_step_name" :next_assignee_name="single_brief.assignee_name"></ticket-brief>
         </van-tab>
         <van-tab title="我参与的">
-            <ticket-brief v-for="single_brief in all_tickets.operated_by_me" :key="single_brief.ticket_number" :ticket_number="single_brief.ticket_number" :creator="single_brief.creator" :assignee_role="single_brief.assignee_role" :timestamp="single_brief.timestamp" :app_name="single_brief.app_name" :next_step_name="single_brief.next_step_name"></ticket-brief>
+            <ticket-brief v-for="single_brief in all_tickets.operated_by_me" :key="single_brief.ticket_number" :ticket_number="single_brief.ticket_number" :creator="single_brief.creator" :assignee_role="single_brief.assignee_role" :timestamp="single_brief.timestamp" :app_name="single_brief.app_name" :next_step_name="single_brief.next_step_name" :next_assignee_name="single_brief.assignee_name"></ticket-brief>
         </van-tab>
     </van-tabs>
 </div>

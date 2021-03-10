@@ -620,7 +620,7 @@ static std::string make_cur_time_string()
     return ret;
 }
 
-std::string PA_API_proc_create_ticket(const std::string &_ssid, int _step_id, const std::string &_comments)
+std::string PA_API_proc_create_ticket(const std::string &_ssid, int _step_id, const std::string &_comments, int _next_assignee_id)
 {
     std::string ret;
 
@@ -634,9 +634,10 @@ std::string PA_API_proc_create_ticket(const std::string &_ssid, int _step_id, co
             if (role_step)
             {
                 auto step = PA_SQL_get_step(_step_id);
-                if (step)
+                if (step && PA_SQL_get_userinfo(_next_assignee_id))
                 {
                     pa_sql_ticket ticket;
+                    ticket.m_next_assignee_id = _next_assignee_id;
                     ticket.m_belong_app = step->m_belong_app_id;
                     ticket.m_creator = user->get_pri_id();
                     ticket.m_current_step = _step_id;
@@ -670,71 +671,59 @@ void PA_API_proc_get_tickets(const std::string &_ssid, travel_ticket proc_create
     if (user)
     {
         auto all_tickets = PA_SQL_get_tickets_by_user(user->get_pri_id());
-        for (auto &itr:all_tickets)
+        for (auto &itr : all_tickets)
         {
-            auto ticket_id = itr.get_pri_id();
-            auto ticket_number = itr.m_ticket_number;
-            std::string creator;
             auto ticket_creator = PA_SQL_get_userinfo(itr.m_creator);
-            if (ticket_creator)
-            {
-                creator = ticket_creator->m_name;
-            }
             auto need_role = PA_SQL_get_role_need_ticket(itr.get_pri_id());
-            std::string role_name = "";
-            if (need_role)
-            {
-                role_name = need_role->m_role_name;
-            }
-            auto timestamp = itr.m_time_stamp;
-            std::string app_name;
-            auto app = PA_SQL_get_app(itr.m_belong_app);
-            std::string next_step_name = "已结束";
             auto next_step = PA_SQL_get_next_step(itr.m_current_step);
-            if (next_step)
-            {
-                next_step_name = next_step->m_step_name;
-            }
+            auto app = PA_SQL_get_app(itr.m_belong_app);
+            auto next_assignee = PA_SQL_get_userinfo(itr.m_next_assignee_id);
+
+            pa_api_ticket_brief tmp_brief;
+
+            tmp_brief.id = itr.get_pri_id();
+            tmp_brief.ticket_number = itr.m_ticket_number;
+            tmp_brief.timestamp = itr.m_time_stamp;
+
             if (app)
             {
-                app_name = app->m_app_name;
+                tmp_brief.app_name = app->m_app_name;
             }
+            if (next_assignee)
+            {
+                tmp_brief.assignee_name = next_assignee->m_name;
+            }
+            if (need_role)
+            {
+                tmp_brief.assignee_role_name = need_role->m_role_name;
+            }
+            if (ticket_creator)
+            {
+                tmp_brief.creator_name = ticket_creator->m_name;
+            }
+            if (next_step)
+            {
+                tmp_brief.next_step_name = next_step->m_step_name;
+            }
+
             if (itr.m_creator == user->get_pri_id())
             {
-                if (false == proc_created(ticket_id, creator, ticket_number, role_name, timestamp, app_name, next_step_name))
-                {
-                    break;
-                }
+                proc_created(tmp_brief);
             }
+
             auto ticket_steps = PA_SQL_get_ticket_steps_by_ticket(itr.get_pri_id());
-            for (auto &single_ticket_step:ticket_steps)
+            for (auto &single_ticket_step : ticket_steps)
             {
                 if (single_ticket_step.m_operator_id == user->get_pri_id())
                 {
-                    if (false == proc_operated(ticket_id, creator, ticket_number, role_name, timestamp, app_name, next_step_name))
-                    {
-                        break;
-                    }
+                    proc_operated(tmp_brief);
+                    break;
                 }
             }
 
-            auto my_role = PA_SQL_get_role_by_user(user->get_pri_id());
-            if (my_role)
+            if (itr.m_next_assignee_id == user->get_pri_id())
             {
-                if (next_step)
-                {
-                    auto roles_need_by_next_step = PA_SQL_get_role_by_step(next_step->get_pri_id());
-                    for (auto &single_role : roles_need_by_next_step)
-                    {
-                        if (my_role->get_pri_id() == single_role.get_pri_id())
-                        {
-                            if (false == proc_need_do(ticket_id, creator, ticket_number, role_name, timestamp, app_name, next_step_name))
-                            {
-                                break;
-                            }
-                        }
-                    }
-                }
+                proc_need_do(tmp_brief);
             }
         }
     }
@@ -811,6 +800,11 @@ std::unique_ptr<pa_api_ticket_detail> PA_API_proc_get_ticket_detail(const std::s
             ret->next_step = next_step->get_pri_id();
         }
         ret->ticket_timestamp = ticket->m_time_stamp;
+        auto next_assignee = PA_SQL_get_userinfo(ticket->m_next_assignee_id);
+        if (next_assignee)
+        {
+            ret->next_assignee_name = next_assignee->m_name;
+        }
 
         for (auto &itr:all_steps)
         {
@@ -872,74 +866,147 @@ bool PA_API_proc_get_editable(const std::string &_ticket_number, const std::stri
     return ret;
 }
 
-bool PA_API_proc_update_ticket(const std::string &_ticket_number, int _step_id, const std::string &_ssid, const std::string &_comment, int _direction)
+bool static step_is_last(int _step_id)
+{
+    bool ret = false;
+    
+    auto step = PA_SQL_get_step(_step_id);
+    if (step)
+    {
+        auto all_steps = PA_SQL_get_all_steps(step->m_belong_app_id);
+        auto last_itr = all_steps.end();
+        last_itr--;
+        if (_step_id == last_itr->get_pri_id())
+        {
+            ret = true;
+        }
+    }
+
+    return ret;
+}
+
+bool PA_API_proc_update_ticket(const std::string &_ticket_number, int _step_id, const std::string &_ssid, const std::string &_comment, int _direction, int _next_assignee_id)
 {
     bool ret = false;
 
     auto ticket = PA_SQL_get_ticket(_ticket_number);
     auto user = PA_SQL_get_online_userinfo(_ssid);
+    int next_assignee_id = _next_assignee_id;
 
     if (ticket && user) 
     {
-        auto role = PA_SQL_get_role_by_user(user->get_pri_id());
-        if (role)
+        if (_direction < 0)
         {
-            auto role_step = PA_SQL_get_role_step(role->get_pri_id(), _step_id);
-            auto step = PA_SQL_get_step(_step_id);
-            if (role_step && step)
+            auto current_step = PA_SQL_get_step(ticket->m_current_step);
+            if (current_step)
             {
-                auto exist_ticket_step = PA_SQL_get_ticket_step_by_step(ticket->get_pri_id(), _step_id);
-                if (exist_ticket_step)
+                auto ticket_step = PA_SQL_get_ticket_step_by_step(ticket->get_pri_id(), current_step->get_pri_id());
+                if (ticket_step)
                 {
-                    exist_ticket_step->m_comments = _comment;
-                    exist_ticket_step->m_operator_id = user->get_pri_id();
-                    exist_ticket_step->m_time_stamp = make_cur_time_string();
-                    if (_direction > 0)
+                    next_assignee_id = ticket_step->m_operator_id;
+                }
+            }
+        }
+        else if (_direction == 0)
+        {
+            next_assignee_id = ticket->m_next_assignee_id;
+        }
+
+        if (step_is_last(_step_id) ||  PA_SQL_get_userinfo(next_assignee_id))
+        {
+            ticket->m_next_assignee_id = next_assignee_id;
+            auto role = PA_SQL_get_role_by_user(user->get_pri_id());
+            if (role)
+            {
+                auto role_step = PA_SQL_get_role_step(role->get_pri_id(), _step_id);
+                auto step = PA_SQL_get_step(_step_id);
+                if (role_step && step)
+                {
+                    auto exist_ticket_step = PA_SQL_get_ticket_step_by_step(ticket->get_pri_id(), _step_id);
+                    if (exist_ticket_step)
                     {
-                        exist_ticket_step->m_result = 1;
+                        exist_ticket_step->m_comments = _comment;
+                        exist_ticket_step->m_operator_id = user->get_pri_id();
+                        exist_ticket_step->m_time_stamp = make_cur_time_string();
+                        if (_direction > 0)
+                        {
+                            exist_ticket_step->m_result = 1;
+                        }
+                        else
+                        {
+                            exist_ticket_step->m_result = 2;
+                        }
+                        ret = exist_ticket_step->update_record();
                     }
                     else
                     {
-                        exist_ticket_step->m_result = 2;
+                        pa_sql_ticket_step ticket_step;
+                        ticket_step.m_comments = _comment;
+                        ticket_step.m_operator_id = user->get_pri_id();
+                        ticket_step.m_step_id = step->get_pri_id();
+                        ticket_step.m_ticket_id = ticket->get_pri_id();
+                        ticket_step.m_time_stamp = make_cur_time_string();
+                        if (_direction > 0)
+                        {
+                            ticket_step.m_result = 1;
+                        }
+                        else if (_direction < 0)
+                        {
+                            ticket_step.m_result = 2;
+                        }
+                        ret = ticket_step.insert_record();
                     }
-                    ret = exist_ticket_step->update_record();
+                    int direction_left = _direction;
+                    while (direction_left != 0)
+                    {
+                        if (direction_left > 0)
+                        {
+                            ticket->m_current_step = PA_SQL_get_next_step(ticket->m_current_step)->get_pri_id();
+                            direction_left--;
+                        }
+                        else
+                        {
+                            ticket->m_current_step = PA_SQL_get_prev_step(ticket->m_current_step)->get_pri_id();
+                            direction_left++;
+                        }
+                    }
+                    ticket->update_record();
                 }
-                else
-                {
-                    pa_sql_ticket_step ticket_step;
-                    ticket_step.m_comments = _comment;
-                    ticket_step.m_operator_id = user->get_pri_id();
-                    ticket_step.m_step_id = step->get_pri_id();
-                    ticket_step.m_ticket_id = ticket->get_pri_id();
-                    ticket_step.m_time_stamp = make_cur_time_string();
-                    if (_direction > 0)
-                    {
-                        ticket_step.m_result = 1;
-                    }
-                    else
-                    {
-                        ticket_step.m_result = 2;
-                    }
-                    ret = ticket_step.insert_record();
-                }
-                int direction_left = _direction;
-                while (direction_left != 0)
-                {
-                    if (direction_left > 0)
-                    {
-                        ticket->m_current_step = PA_SQL_get_next_step(ticket->m_current_step)->get_pri_id();
-                        direction_left--;
-                    }
-                    else
-                    {
-                        ticket->m_current_step = PA_SQL_get_prev_step(ticket->m_current_step)->get_pri_id();
-                        direction_left++;
-                    }
-                }
-                ticket->update_record();
             }
         }
     }
 
     return ret;
+}
+
+void PA_API_proc_get_users_by_step(int _step_id, std::function<void (const pa_api_users_by_step &)> const &f)
+{
+    auto next_step = PA_SQL_get_next_step(_step_id);
+    if (next_step)
+    {
+        auto all_roles = PA_SQL_get_role_by_step(next_step->get_pri_id());
+        std::list<pa_api_users_by_step> all_user;
+        for (auto &itr : all_roles)
+        {
+            auto users_by_role = PA_SQL_get_users_by_role(itr.get_pri_id());
+            for (auto &user : users_by_role)
+            {
+                pa_api_users_by_step tmp;
+                tmp.id = user.get_pri_id();
+                tmp.name = user.m_name;
+                all_user.push_back(tmp);
+            }
+        }
+        all_user.sort([](pa_api_users_by_step &s1, pa_api_users_by_step &s2) {
+            return s1.id < s2.id;
+        });
+        all_user.unique([](pa_api_users_by_step &s1, pa_api_users_by_step &s2) {
+            return s1.id == s2.id;
+        });
+
+        for (auto &itr : all_user)
+        {
+            f(itr);
+        }
+    }
 }

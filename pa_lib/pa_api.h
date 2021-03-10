@@ -19,6 +19,16 @@ struct userinfo{
     std::string m_logo;
 };
 
+struct pa_api_ticket_brief {
+    int id = 0;
+    std::string ticket_number;
+    std::string app_name;
+    std::string timestamp;
+    std::string next_step_name;
+    std::string assignee_name;
+    std::string assignee_role_name;
+    std::string creator_name;
+};
 struct pa_api_steps_in_ticket {
     std::string name;
     int id = 0;
@@ -35,10 +45,16 @@ struct pa_api_ticket_detail {
     std::string app_description;
     std::string ticket_timestamp;
     int next_step = 0;
+    std::string next_assignee_name;
     std::vector<pa_api_steps_in_ticket> all_steps;
 };
 
-typedef std::function<bool (int, const std::string &, const std::string &, const std::string &, const std::string &, const std::string &, const std::string &)> const & travel_ticket;
+struct pa_api_users_by_step {
+    int id = 0;
+    std::string name;
+};
+
+typedef std::function<void (const pa_api_ticket_brief &)> const & travel_ticket;
 
 
 std::string PA_API_proc_test_echo(const std::string& _input);
@@ -60,12 +76,13 @@ void PA_API_proc_get_apps(const std::string &_ssid, std::function<bool (int, con
 void PA_API_proc_get_steps(int _app_id, std::function<bool (int, int, const std::string &, const std::string &, const std::string &)> const &f);
 bool PA_API_proc_add_role_step(int _role_id, int _step_id);
 bool PA_API_proc_add_step_role(const std::string &_company_name,const std::string &_app_name, const std::string &_step_name, const std::string &_role_name);
-std::string PA_API_proc_create_ticket(const std::string &_ssid, int _step_id, const std::string &_comments);
+std::string PA_API_proc_create_ticket(const std::string &_ssid, int _step_id, const std::string &_comments, int _next_assignee_id);
 void PA_API_proc_get_tickets(const std::string &_ssid, travel_ticket proc_created, travel_ticket proc_operated, travel_ticket proc_need_do);
 void PA_API_remove_all_config();
 std::unique_ptr<pa_api_ticket_detail> PA_API_proc_get_ticket_detail(const std::string &_ticket_number);
 bool PA_API_proc_get_editable(const std::string &_ticket_number, const std::string &_ssid);
-bool PA_API_proc_update_ticket(const std::string &_ticket_number, int _step_id, const std::string &_ssid, const std::string &_comment, int _direction);
+bool PA_API_proc_update_ticket(const std::string &_ticket_number, int _step_id, const std::string &_ssid, const std::string &_comment, int _direction, int _next_assignee_id);
+void PA_API_proc_get_users_by_step(int _step_id, std::function<void (const pa_api_users_by_step &)> const &f);
 
 #endif // _PA_API_H_
 

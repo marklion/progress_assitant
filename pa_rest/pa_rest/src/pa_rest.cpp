@@ -129,54 +129,38 @@ std::vector<rest_stepinfo> pa_rest::proc_get_steps(int app_id)
     return ret;
 }
 
-std::string pa_rest::proc_post_ticket(const std::string& pa_ssid, int step_id, const std::string& comments)
+std::string pa_rest::proc_post_ticket(const std::string& pa_ssid, int step_id, const std::string& comments, int assignee_id)
 {
-    return PA_API_proc_create_ticket(pa_ssid, step_id, comments);
+    return PA_API_proc_create_ticket(pa_ssid, step_id, comments, assignee_id);
 }
 
+static rest_ticket_brief make_ticket_brief(const pa_api_ticket_brief &_ticket_brief)
+{
+    rest_ticket_brief tmp;
+    tmp.app_name = _ticket_brief.app_name;
+    tmp.assignee_name = _ticket_brief.assignee_name;
+    tmp.assignee_role = _ticket_brief.assignee_role_name;
+    tmp.creator = _ticket_brief.creator_name;
+    tmp.next_step_name = _ticket_brief.next_step_name;
+    tmp.ticket_id = _ticket_brief.id;
+    tmp.ticket_number = _ticket_brief.ticket_number;
+    tmp.timestamp = _ticket_brief.timestamp;
+
+    return tmp;
+}
 rest_tickets_part pa_rest::proc_get_tickets_brief(const std::string& pa_ssid)
 {
     LOG_CURRENT_REQ("app_id : %s", pa_ssid.c_str());
     rest_tickets_part ret;
 
     PA_API_proc_get_tickets(
-        pa_ssid,
-        [&](int _ticket_id, const std::string &_creator, const std::string &_ticket_number, const std::string &_role, const std::string &_timestamp, const std::string &_app_name, const std::string &_next_step_name) -> bool {
-            rest_ticket_brief tmp;
-            tmp.ticket_id = _ticket_id;
-            tmp.ticket_number = _ticket_number;
-            tmp.creator = _creator;
-            tmp.assignee_role = _role;
-            tmp.timestamp = _timestamp;
-            tmp.app_name = _app_name;
-            tmp.next_step_name = _next_step_name;
-            ret.created_by_me.push_back(tmp);
-            return true;
-        },
-        [&](int _ticket_id, const std::string &_creator, const std::string &_ticket_number, const std::string &_role, const std::string &_timestamp, const std::string &_app_name, const std::string &_next_step_name) -> bool {
-            rest_ticket_brief tmp;
-            tmp.ticket_id = _ticket_id;
-            tmp.ticket_number = _ticket_number;
-            tmp.creator = _creator;
-            tmp.assignee_role = _role;
-            tmp.timestamp = _timestamp;
-            tmp.app_name = _app_name;
-            tmp.next_step_name = _next_step_name;
-            ret.operated_by_me.push_back(tmp);
-            return true;
-        },
-        [&](int _ticket_id, const std::string &_creator, const std::string &_ticket_number, const std::string &_role, const std::string &_timestamp, const std::string &_app_name, const std::string &_next_step_name) -> bool {
-            rest_ticket_brief tmp;
-            tmp.ticket_id = _ticket_id;
-            tmp.ticket_number = _ticket_number;
-            tmp.creator = _creator;
-            tmp.assignee_role = _role;
-            tmp.timestamp = _timestamp;
-            tmp.app_name = _app_name;
-            tmp.next_step_name = _next_step_name;
-            ret.need_i_handle.push_back(tmp);
-            return true;
-        });
+        pa_ssid, [&](const pa_api_ticket_brief &_ticket_brief) { 
+                ret.created_by_me.push_back(make_ticket_brief(_ticket_brief)); 
+            }, [&](const pa_api_ticket_brief &_ticket_brief) {
+                ret.operated_by_me.push_back(make_ticket_brief(_ticket_brief)); 
+            }, [&](const pa_api_ticket_brief &_ticket_brief) {
+                ret.need_i_handle.push_back(make_ticket_brief(_ticket_brief)); 
+            });
 
     return ret;
 }
@@ -193,6 +177,7 @@ rest_ticket_detail pa_rest::proc_get_ticket_detail(const std::string& ticket_num
         ret.next_step = detail->next_step;
         ret.ticket_number = detail->ticket_number;
         ret.ticket_timestamp = detail->ticket_timestamp;
+        ret.next_assignee_name = detail->next_assignee_name;
 
         for (auto &itr:detail->all_steps)
         {
@@ -216,7 +201,21 @@ bool pa_rest::proc_get_ticket_editable(const std::string& ticket_number, std::st
     return PA_API_proc_get_editable(ticket_number, pa_ssid);
 }
 
-bool pa_rest::proc_post_ticket_update(const std::string& ticket_number, const std::string& pa_ssid, int step_id, const std::string& comments, int direction)
+bool pa_rest::proc_post_ticket_update(const std::string& ticket_number, const std::string& pa_ssid, int step_id, const std::string& comments, int direction, int assignee_id)
 {
-    return PA_API_proc_update_ticket(ticket_number, step_id, pa_ssid, comments, direction);
+    return PA_API_proc_update_ticket(ticket_number, step_id, pa_ssid, comments, direction, assignee_id);
+}
+
+std::vector<rest_users_by_step> pa_rest::proc_get_users_by_step(int _step_id)
+{
+    std::vector<rest_users_by_step> ret;
+
+    PA_API_proc_get_users_by_step(_step_id, [&](const pa_api_users_by_step &_user){
+        rest_users_by_step tmp;
+        tmp.id = _user.id;
+        tmp.name = _user.name;
+        ret.push_back(tmp);
+    });
+
+    return ret;
 }
