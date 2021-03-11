@@ -22,7 +22,7 @@ static void init_data_base_config()
         for (int j = 0; j < role_count; j++)
         {
             auto role_name = company_config["roles"](j);
-            PA_API_proc_add_company_role(company_name, role_name);
+            PA_API_proc_add_company_role(company_name, role_name, company_config("logo"));
         } 
         auto support_apps_config = company_config["support_apps"];
         auto apps_count = support_apps_config.GetArraySize();

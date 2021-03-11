@@ -7,11 +7,13 @@ public:
     pa_sql_company():sqlite_orm(PA_DB_FILE) {}
     pa_sql_company(const std::string &_filename):sqlite_orm(_filename) {}
     std::string m_name;
+    std::string m_logo;
 
     virtual std::vector<sqlite_orm_column> columns_defined() {
         std::vector<sqlite_orm_column> ret;
 
         ret.push_back(sqlite_orm_column("name", sqlite_orm_column::STRING, &m_name, SQLITE_ORM_COLUMN_LIMIT_UNIQ));
+        ret.push_back(sqlite_orm_column("logo", sqlite_orm_column::STRING, &m_logo));
 
         return ret;
     }

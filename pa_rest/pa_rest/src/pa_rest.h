@@ -20,8 +20,13 @@ struct rest_userinfo {
     std::string company;
     std::string logo;
     bool online;
+    std::string company_logo;
 };
 
+struct rest_company_info {
+    std::string company_name;
+    std::string company_logo;
+};
 struct rest_appinfo {
     int app_id;
     std::string app_name;
@@ -110,7 +115,7 @@ public:
 
     // *location: /company/{company_id}
     // *method: GET
-    std::string proc_get_company(const std::string& company_id);
+    rest_company_info proc_get_company(const std::string& company_id);
 
     // *location: /all_companies
     // *method: GET

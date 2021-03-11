@@ -103,6 +103,7 @@ export default {
                         logo: vue_this.$store.state.userinfo.logo,
                         company: vue_this.company_picker,
                         role: vue_this.role_picker,
+                        company_logo: vue_this.$store.state.userinfo.company_logo,
                     });
                     vue_this.$router.back(-1);
                 } else {
@@ -323,8 +324,15 @@ export default {
         this.role_picker = this.$store.state.userinfo.role;
         var vue_this = this;
         vue_this.$axios.get('/company/' + this.$route.query.company).then(function (resp) {
-            if (resp.data.result != '') {
-                vue_this.company_picker = resp.data.result;
+            if (resp.data.result.company_name != '') {
+                vue_this.company_picker = resp.data.result.company_name;
+                vue_this.$store.commit('set_userinfo', {
+                    name: vue_this.$store.state.userinfo.name,
+                    logo: vue_this.$store.state.userinfo.logo,
+                    company:vue_this.$store.state.userinfo.company, 
+                    role: vue_this.$store.state.userinfo.role, 
+                    company_logo: vue_this.$remote_url + resp.data.result.company_logo,
+                });
                 vue_this.get_role_against_company(vue_this.company_picker);
             }
         }).catch(function (err) {

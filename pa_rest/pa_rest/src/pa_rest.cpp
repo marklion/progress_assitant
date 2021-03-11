@@ -28,6 +28,7 @@ rest_userinfo pa_rest::proc_get_userinfo(const std::string& pa_ssid)
         ret.company = result->m_company;
         ret.logo = result->m_logo;
         ret.role = result->m_role;
+        ret.company_logo = result->m_company_logo;
         ret.online = true;
     }
 
@@ -52,10 +53,15 @@ void pa_rest::proc_post_wechat_login_async(const std::string& code, ngrest::Call
     }).detach();
 }
 
-std::string pa_rest::proc_get_company(const std::string &company_id)
+rest_company_info pa_rest::proc_get_company(const std::string &company_id)
 {
     LOG_CURRENT_REQ("company_id: %s", company_id.c_str());
-    return PA_API_proc_get_company(atoi(company_id.c_str()));
+    rest_company_info ret;
+    auto lib_ret = PA_API_proc_get_company(atoi(company_id.c_str()));
+    ret.company_name = lib_ret.company_name;
+    ret.company_logo = lib_ret.company_logo;
+
+    return ret;
 }
 
 std::vector<std::string> pa_rest::proc_get_all_companies()

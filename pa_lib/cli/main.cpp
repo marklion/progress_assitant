@@ -7,12 +7,10 @@ static std::map<std::string,pf_function_helper> g_func_helpers;
 
 static void register_func_helper() {
     REG_FUNC_HELPER(PA_API_proc_test_echo);
-    REG_FUNC_HELPER(PA_API_proc_add_company_role);
     REG_FUNC_HELPER(PA_API_proc_wechat_login);
     REG_FUNC_HELPER(PA_API_proc_get_userinfo);
     REG_FUNC_HELPER(PA_API_proc_get_all_companies);
     REG_FUNC_HELPER(PA_API_proc_get_all_roles);
-    REG_FUNC_HELPER(PA_API_proc_get_company);
     REG_FUNC_HELPER(PA_API_proc_add_app);
     REG_FUNC_HELPER(PA_API_proc_add_step);
     REG_FUNC_HELPER(PA_API_proc_get_apps);

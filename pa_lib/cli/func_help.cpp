@@ -19,22 +19,6 @@ void PA_API_proc_test_echo_helper()
     std::cout << "output:" << output << std::endl;
 }
 
-void PA_API_proc_add_company_role_helper()
-{
-    std::string name;
-    std::string role;
-
-    ASK_PARAM(name);
-    ASK_PARAM(role);
-    if (PA_API_proc_add_company_role(name, role))
-    {
-        std::cout << "success!" << std::endl;
-    }
-    else
-    {
-        std::cout << "failure!" << std::endl;
-    }
-}
 
 void PA_API_proc_wechat_login_helper()
 {
@@ -73,14 +57,7 @@ void PA_API_proc_get_all_roles_helper()
     }
 }
 
-void PA_API_proc_get_company_helper()
-{
-    int company_id;
-    ASK_PARAM(company_id);
-    auto ret = PA_API_proc_get_company(company_id);
 
-    std::cout << "company:" << ret << std::endl;
-}
 
 void PA_API_proc_update_userinfo_helper()
 {

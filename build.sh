@@ -29,6 +29,8 @@ pushd ${SRC_DIR}/pa_front
 [ -d node_modules ] || npm install 
 npm run build
 mkdir ./dist/logo_res
+mkdir ./dist/company_logo
+cp ${SRC_DIR}/pa_conf/company_logo/* ./dist/company_logo/
 cp ./dist -a ${BUILD_DIR}/
 popd
 

@@ -1,7 +1,18 @@
 <template>
 <div id="app">
-    <van-nav-bar v-if="has_go_back" :title="bar_title" left-text="返回" left-arrow @click-left="onClickLeft" />
-    <van-nav-bar v-else :title="bar_title" />
+    <van-nav-bar :left-arrow="has_go_back" @click-left="onClickLeft" @click-right="onClickRight">
+        <template #right>
+            <van-icon name="share-o" size="20"></van-icon>
+        </template>
+        <template #title>
+            <span>
+                <van-image width="50" height="50" :src="$store.state.userinfo.company_logo" />
+            </span>
+            <span>
+                {{bar_title}}
+            </span>
+        </template>
+    </van-nav-bar>
     <router-view />
     <van-tabbar route>
         <van-tabbar-item replace :to="{name:'Home'}" icon="home-o">主页</van-tabbar-item>
@@ -20,6 +31,15 @@ import {
 } from 'vant';
 import wx from 'weixin-js-sdk'
 
+import {
+    Icon
+} from 'vant';
+import {
+    Image as VanImage
+} from 'vant';
+
+Vue.use(VanImage);
+Vue.use(Icon);
 Vue.use(Tabbar);
 Vue.use(TabbarItem);
 
@@ -30,6 +50,7 @@ export default {
             bar_title: '',
             has_go_back: false,
             is_login: false,
+            company_id: 0,
         }
     },
     beforeMount: function () {
@@ -63,11 +84,22 @@ export default {
             this.bar_title = to.meta.private_title;
             this.has_go_back = to.meta.has_go_back;
         },
-        "$store.state.userinfo.company": function() {
-            this.config_with_wx();
+        "$store.state.userinfo.company": function () {
+            var vue_this = this;
+            vue_this.$axios.get('/company_id/' + vue_this.$store.state.userinfo.company).then(function (resp) {
+                vue_this.company_id = resp.data.result;
+                vue_this.config_with_wx();
+            }).catch(function (err) {
+                console.log(err);
+            });
         },
     },
     methods: {
+        onClickRight: function () {
+            wx.miniProgram.navigateTo({
+                url: '/pages/share/share?company_id=' + this.company_id + '&logo=' + this.$store.state.userinfo.company_logo
+            });
+        },
         onClickLeft() {
             this.$router.back(-1);
         },
@@ -82,15 +114,16 @@ export default {
                         company: resp.data.result.company,
                         role: resp.data.result.role,
                         logo: vue_this.$remote_url + resp.data.result.logo,
+                        company_logo: vue_this.$remote_url + resp.data.result.company_logo,
                     });
                 } else {
                     var company_from_url = vue_this.$route.query.company;
-                    window.location.href = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxa390f8b6f68e9c6d&redirect_uri=http%3a%2f%2fwww.d8sis.cn%2fpa_web&response_type=code&scope=snsapi_userinfo&state=" + company_from_url + "#wechat_redirect"
+                    window.location.href = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxa390f8b6f68e9c6d&redirect_uri=https%3a%2f%2fwww.d8sis.cn%2fpa_web&response_type=code&scope=snsapi_userinfo&state=" + company_from_url + "#wechat_redirect"
                 }
             }).catch(function (err) {
                 console.log(err);
                 var company_from_url = vue_this.$route.query.company;
-                window.location.href = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxa390f8b6f68e9c6d&redirect_uri=http%3a%2f%2fwww.d8sis.cn%2fpa_web&response_type=code&scope=snsapi_userinfo&state=" + company_from_url + "#wechat_redirect"
+                window.location.href = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxa390f8b6f68e9c6d&redirect_uri=https%3a%2f%2fwww.d8sis.cn%2fpa_web&response_type=code&scope=snsapi_userinfo&state=" + company_from_url + "#wechat_redirect"
             });
         },
         randomString: function (len) {
@@ -122,24 +155,19 @@ export default {
                 });
                 wx.ready(function () {
                     console.log('success to config wx');
-                    vue_this.$axios.get('/company_id/' + vue_this.$store.state.userinfo.company).then(function (resp) {
-                        wx.updateAppMessageShareData({
-                            title: '流程助手',
-                            desc: vue_this.$store.state.userinfo.company,
-                            imgUrl: '',
-                            link: 'http://' + window.location.host + window.location.pathname + '?company=' + resp.data.result,
-                            success: function () {
-                                console.log('success to set share btn');
-                            }
-                        });
-
-                    }).catch(function (err) {
+                    wx.updateAppMessageShareData({
+                        title: '流程助手',
+                        desc: vue_this.$store.state.userinfo.company,
+                        imgUrl: '',
+                        link: 'http://' + window.location.host + window.location.pathname + '?company=' + vue_this.company_id,
+                        success: function () {
+                            console.log('success to set share btn');
+                        }
+                    });
+                    wx.error(function (err) {
+                        console.log('fail to config wx');
                         console.log(err);
                     });
-                });
-                wx.error(function (err) {
-                    console.log('fail to config wx');
-                    console.log(err);
                 });
             }).catch(function (err) {
                 console.log(err);

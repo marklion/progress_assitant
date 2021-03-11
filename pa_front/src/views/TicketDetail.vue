@@ -9,8 +9,11 @@
     <div class="ticket_timestamp_show">
         {{ticket_detail_info.ticket_timestamp}}
     </div>
-    <div class="next_assignee_name_show">
+    <div v-if="ticket_detail_info.next_step != 0" class="next_assignee_name_show">
         当前状态：等待{{ticket_detail_info.next_assignee_name}}处理
+    </div>
+    <div v-else class="next_assignee_name_show">
+        当前状态：已结束
     </div>
     <van-steps direction="vertical" :active="step_index">
         <van-step v-for="(single_step, index) in all_step" :key="index">{{single_step.name}}

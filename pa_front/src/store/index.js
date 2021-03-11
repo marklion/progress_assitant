@@ -10,6 +10,7 @@ export default new Vuex.Store({
       role: '',
       company: '',
       logo: '',
+      company_logo:''
     },
   },
   mutations: {

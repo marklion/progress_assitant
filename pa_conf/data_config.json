@@ -2,6 +2,7 @@
     {
         "company_name": "卓创公司",
         "roles": ["管理员", "操作工", "主管", "经理"],
+        "logo": "/company_logo/huineng.jpg",
         "support_apps": [
             {
                 "app_name": "出差",

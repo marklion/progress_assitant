@@ -12,11 +12,17 @@ enum pa_msg_type {
     pa_msg_type_max,
 };
 
+struct pa_api_company_info {
+    std::string company_name;
+    std::string company_logo;
+};
+
 struct userinfo{
     std::string m_name;
     std::string m_role;
     std::string m_company;
     std::string m_logo;
+    std::string m_company_logo;
 };
 
 struct pa_api_ticket_brief {
@@ -59,12 +65,12 @@ typedef std::function<void (const pa_api_ticket_brief &)> const & travel_ticket;
 
 std::string PA_API_proc_test_echo(const std::string& _input);
 
-bool PA_API_proc_add_company_role(const std::string &_name, const std::string &_role);
+bool PA_API_proc_add_company_role(const std::string &_name, const std::string &_role, const std::string &_logo);
 std::string PA_API_proc_wechat_login(const std::string &_code);
 std::unique_ptr<userinfo> PA_API_proc_get_userinfo(const std::string &_ssid);
 std::vector<std::string> PA_API_proc_get_all_companies();
 std::vector<std::string> PA_API_proc_get_all_roles(const std::string &_company_name);
-std::string PA_API_proc_get_company(int _company_id);
+pa_api_company_info PA_API_proc_get_company(int _company_id);
 bool PA_API_proc_update_userinfo(const std::string& _ssid, const std::string &_name, const std::string &_company, const std::string &_role);
 bool PA_API_proc_upate_logo(const std::string& _ssid, const std::string &_base64_img);
 std::string PA_API_proc_wx_sign(const std::string& nonceStr, long timestamp, const std::string &url);
