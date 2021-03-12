@@ -14,7 +14,7 @@ const routes = [
     },
   },
   {
-    path: '/login',
+    path: '/login_mp',
     name: 'Login',
     component: () => import('../views/Login.vue'),
     meta: {    

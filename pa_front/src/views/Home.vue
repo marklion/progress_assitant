@@ -87,6 +87,14 @@ export default {
     },
     beforeMount() {
         var vue_this = this;
+        if (!vue_this.$store.state.userinfo.company) {
+            this.$router.push({
+                name: 'BindCompany',
+                query: {
+                    company: this.$route.query.company
+                }
+            });
+        }
         vue_this.$axios.get('/tickets_brief/' + vue_this.$cookies.get('pa_ssid')).then(function (resp) {
             resp.data.result.created_by_me.forEach((element, index) => {
                 vue_this.$set(vue_this.all_tickets.created_by_me, index, element);

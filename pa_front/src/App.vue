@@ -1,24 +1,29 @@
 <template>
 <div id="app">
-    <van-nav-bar :left-arrow="has_go_back" @click-left="onClickLeft" @click-right="onClickRight">
-        <template #right>
-            <van-icon name="share-o" size="20"></van-icon>
-        </template>
-        <template #title>
-            <span>
-                <van-image width="50" height="50" :src="$store.state.userinfo.company_logo" />
-            </span>
-            <span>
-                {{bar_title}}
-            </span>
-        </template>
-    </van-nav-bar>
-    <router-view />
-    <van-tabbar route>
-        <van-tabbar-item replace :to="{name:'Home'}" icon="home-o">主页</van-tabbar-item>
-        <van-tabbar-item replace :to="{name:'Application'}" icon="apps-o">应用</van-tabbar-item>
-        <van-tabbar-item replace :to="{name:'Myself'}" icon="user-o">我的</van-tabbar-item>
-    </van-tabbar>
+    <div v-if="is_login">
+        <van-nav-bar :left-arrow="has_go_back" @click-left="onClickLeft" @click-right="onClickRight">
+            <template #right>
+                <van-icon name="share-o" size="20"></van-icon>
+            </template>
+            <template #title>
+                <span>
+                    <van-image width="50" height="50" :src="$store.state.userinfo.company_logo" />
+                </span>
+                <span>
+                    {{bar_title}}
+                </span>
+            </template>
+        </van-nav-bar>
+        <router-view />
+        <van-tabbar route>
+            <van-tabbar-item replace :to="{name:'Home'}" icon="home-o">主页</van-tabbar-item>
+            <van-tabbar-item replace :to="{name:'Application'}" icon="apps-o">应用</van-tabbar-item>
+            <van-tabbar-item replace :to="{name:'Myself'}" icon="user-o">我的</van-tabbar-item>
+        </van-tabbar>
+    </div>
+    <div v-else>
+        <welcome></welcome>
+    </div>
 </div>
 </template>
 
@@ -37,7 +42,12 @@ import {
 import {
     Image as VanImage
 } from 'vant';
+import Welcome from '@/components/Welcome.vue';
+import {
+    Toast
+} from 'vant';
 
+Vue.use(Toast);
 Vue.use(VanImage);
 Vue.use(Icon);
 Vue.use(Tabbar);
@@ -52,6 +62,9 @@ export default {
             is_login: false,
             company_id: 0,
         }
+    },
+    components: {
+        welcome: Welcome,
     },
     beforeMount: function () {
         var vue_this = this;
@@ -105,6 +118,11 @@ export default {
         },
         get_userinfo() {
             var vue_this = this;
+            vue_this.$toast.loading({
+                message: '加载中...',
+                forbidClick: true,
+                duration: 0,
+            });
             var ssid = vue_this.$cookies.get('pa_ssid');
             vue_this.$axios.get('userinfo/' + ssid).then(function (resp) {
                 if (resp.data.result.online == true) {
@@ -116,14 +134,11 @@ export default {
                         logo: vue_this.$remote_url + resp.data.result.logo,
                         company_logo: vue_this.$remote_url + resp.data.result.company_logo,
                     });
-                } else {
-                    var company_from_url = vue_this.$route.query.company;
-                    window.location.href = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxa390f8b6f68e9c6d&redirect_uri=https%3a%2f%2fwww.d8sis.cn%2fpa_web&response_type=code&scope=snsapi_userinfo&state=" + company_from_url + "#wechat_redirect"
                 }
             }).catch(function (err) {
                 console.log(err);
-                var company_from_url = vue_this.$route.query.company;
-                window.location.href = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxa390f8b6f68e9c6d&redirect_uri=https%3a%2f%2fwww.d8sis.cn%2fpa_web&response_type=code&scope=snsapi_userinfo&state=" + company_from_url + "#wechat_redirect"
+            }).finally(function () {
+                vue_this.$toast.clear();
             });
         },
         randomString: function (len) {
