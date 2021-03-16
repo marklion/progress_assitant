@@ -1,27 +1,16 @@
 <template>
 <div class="home">
-    <h1>{{company_name()}}</h1>
-    <van-row align="center" type="flex">
-        <van-col>
-            <van-image round width="60px" height="60px" :src="$store.state.userinfo.logo" />
-        </van-col>
-        <van-col>
-            <div class="name_show">{{$store.state.userinfo.name}}</div>
-            <div class="role_show">{{$store.state.userinfo.role}}</div>
-        </van-col>
-    </van-row>
-
-    <van-tabs v-model="active">
-        <van-tab title="待处理">
-            <ticket-brief v-for="single_brief in all_tickets.need_i_handle" :key="single_brief.ticket_number" :ticket_number="single_brief.ticket_number" :creator="single_brief.creator" :assignee_role="single_brief.assignee_role" :timestamp="single_brief.timestamp" :app_name="single_brief.app_name" :next_step_name="single_brief.next_step_name" :next_assignee_name="single_brief.assignee_name"></ticket-brief>
-        </van-tab>
-        <van-tab title="我创建的">
-            <ticket-brief v-for="single_brief in all_tickets.created_by_me" :key="single_brief.ticket_number" :ticket_number="single_brief.ticket_number" :creator="single_brief.creator" :assignee_role="single_brief.assignee_role" :timestamp="single_brief.timestamp" :app_name="single_brief.app_name" :next_step_name="single_brief.next_step_name" :next_assignee_name="single_brief.assignee_name"></ticket-brief>
-        </van-tab>
-        <van-tab title="我参与的">
-            <ticket-brief v-for="single_brief in all_tickets.operated_by_me" :key="single_brief.ticket_number" :ticket_number="single_brief.ticket_number" :creator="single_brief.creator" :assignee_role="single_brief.assignee_role" :timestamp="single_brief.timestamp" :app_name="single_brief.app_name" :next_step_name="single_brief.next_step_name" :next_assignee_name="single_brief.assignee_name"></ticket-brief>
-        </van-tab>
-    </van-tabs>
+    <div class="today_price_show">
+        今日报价
+    </div>
+    <van-card v-for="(single_stuff, index) in today_stuff" :key="index" :price="single_stuff.price" :desc="single_stuff.company" :title="single_stuff.name">
+        <template #tags>
+            <van-tag plain type="danger">{{single_stuff.last}}</van-tag>
+        </template>
+        <template #num>
+            <van-button round size="small" icon="plus" type="primary" @click="nav_to_plan(single_stuff.type_id)">报计划</van-button>
+        </template>
+    </van-card>
 </div>
 </template>
 
@@ -33,82 +22,50 @@ import {
 import {
     Image as VanImage
 } from 'vant';
+
 import {
-    Col,
-    Row
+    Card
 } from 'vant';
-import TicketBrief from '../components/TicketBrief.vue'
 import {
-    Tab,
-    Tabs
+    Tag
 } from 'vant';
 
-Vue.use(Tab);
-Vue.use(Tabs);
-Vue.use(Col);
-Vue.use(Row);
+Vue.use(Tag);
+Vue.use(Card);
 
 Vue.use(VanImage);
 Vue.use(Button);
 export default {
     name: 'Home',
-    components: {
-        "ticket-brief": TicketBrief,
-    },
+    components: {},
     data: function () {
         return {
-            active: 0,
-            company_name() {
-                var ret = "未绑定公司";
-                if (this.$store.state.userinfo.company) {
-                    ret = this.$store.state.userinfo.company;
-                }
-
-                return ret;
-            },
-            all_tickets: {
-                created_by_me: [],
-                operated_by_me: [],
-                need_i_handle: [],
-            },
+            today_stuff: [],
         };
-    },
-    watch: {
-        "$store.state.userinfo": function (value) {
-            if (!value.company) {
-                this.$router.push({
-                    name: 'BindCompany',
-                    query: {
-                        company: this.$route.query.company
-                    }
-                });
-            }
-        },
     },
     beforeMount() {
         var vue_this = this;
-        if (!vue_this.$store.state.userinfo.company) {
-            this.$router.push({
-                name: 'BindCompany',
-                query: {
-                    company: this.$route.query.company
-                }
-            });
-        }
-        vue_this.$axios.get('/tickets_brief/' + vue_this.$cookies.get('pa_ssid')).then(function (resp) {
-            resp.data.result.created_by_me.forEach((element, index) => {
-                vue_this.$set(vue_this.all_tickets.created_by_me, index, element);
-            });
-            resp.data.result.operated_by_me.forEach((element, index) => {
-                vue_this.$set(vue_this.all_tickets.operated_by_me, index, element);
-            });
-            resp.data.result.need_i_handle.forEach((element, index) => {
-                vue_this.$set(vue_this.all_tickets.need_i_handle, index, element);
+        this.$get_client("stuff_info").get_today().then(function (resp) {
+            resp.forEach((element, index) => {
+                vue_this.$set(vue_this.today_stuff, index, element)
             });
         }).catch(function (err) {
             console.log(err);
         });
     },
-    methods: {},
+    methods: {
+        nav_to_plan: function (_type_id) {
+            if (this.$store.state.userinfo.is_login) {
+                this.$router.push({
+                    name: 'StuffPlan',
+                    params: {
+                        type_id: _type_id
+                    }
+                });
+            } else {
+                window.location.href = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxa390f8b6f68e9c6d&redirect_uri=https%3a%2f%2fwww.d8sis.cn%2fpa_web%2flogin_mp&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect"
+            }
+        }
+    },
 }
 </script>

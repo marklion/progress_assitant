@@ -6,11 +6,12 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     userinfo: {
+      is_login:false,
       name:'',
-      role: '',
+      buyer: true,
       company: '',
       logo: '',
-      company_logo:''
+      phone:''
     },
   },
   mutations: {

@@ -1,33 +1,23 @@
 <template>
 <div id="app">
-    <div v-if="is_login">
-        <van-nav-bar :left-arrow="has_go_back" @click-left="onClickLeft" @click-right="onClickRight">
-            <template #right>
-                <van-icon name="share-o" size="20"></van-icon>
-            </template>
-            <template #title>
-                <span>
-                    <van-image width="50" height="50" :src="$store.state.userinfo.company_logo" />
-                </span>
-                <span>
-                    {{bar_title}}
-                </span>
-            </template>
-        </van-nav-bar>
-        <router-view />
-        <van-tabbar route>
-            <van-tabbar-item replace :to="{name:'Home'}" icon="home-o">主页</van-tabbar-item>
-            <van-tabbar-item replace :to="{name:'Application'}" icon="apps-o">应用</van-tabbar-item>
-            <van-tabbar-item replace :to="{name:'Myself'}" icon="user-o">我的</van-tabbar-item>
-        </van-tabbar>
-    </div>
-    <div v-else>
-        <welcome></welcome>
-    </div>
+    <van-nav-bar :left-arrow="has_go_back" :title="bar_title" @click-left="onClickLeft" @click-right="onClickRight">
+        <template #right>
+            <van-icon name="share-o" size="20"></van-icon>
+        </template>
+    </van-nav-bar>
+    <router-view />
+    <van-tabbar route>
+        <van-tabbar-item replace :to="{name:'Home'}" icon="home-o">主页</van-tabbar-item>
+        <van-tabbar-item replace :to="{name:'Application'}" icon="apps-o">应用</van-tabbar-item>
+        <van-tabbar-item replace :to="{name:'Myself'}" icon="user-o">我的</van-tabbar-item>
+    </van-tabbar>
 </div>
 </template>
 
 <script>
+import {
+    get_client
+} from '@/plugins/rpc_helper.js'
 import Vue from 'vue';
 import {
     NavBar,
@@ -42,7 +32,6 @@ import {
 import {
     Image as VanImage
 } from 'vant';
-import Welcome from '@/components/Welcome.vue';
 import {
     Toast
 } from 'vant';
@@ -60,57 +49,21 @@ export default {
             bar_title: '',
             has_go_back: false,
             is_login: false,
-            company_id: 0,
         }
     },
-    components: {
-        welcome: Welcome,
-    },
     beforeMount: function () {
-        var vue_this = this;
-        this.$router.onReady(function () {
-            console.log(vue_this.$route);
-            console.log(vue_this.$store.state);
-            if (vue_this.$route.query.code) {
-                vue_this.$axios.post('/wechat_login', {
-                    code: vue_this.$route.query.code
-                }).then(function (resp) {
-                    vue_this.$cookies.set('pa_ssid', resp.data.result);
-                    vue_this.get_userinfo();
-                    vue_this.$router.replace({
-                        name: 'Home',
-                        query: {
-                            company: vue_this.$route.query.state
-                        }
-                    });
-                }).catch(function (err) {
-                    console.log(err);
-                });
-            } else {
-                vue_this.get_userinfo();
-            }
-        });
-        this.config_with_wx();
+        this.get_userinfo();
     },
     watch: {
         $route: function (to) {
             this.bar_title = to.meta.private_title;
             this.has_go_back = to.meta.has_go_back;
         },
-        "$store.state.userinfo.company": function () {
-            var vue_this = this;
-            vue_this.$axios.get('/company_id/' + vue_this.$store.state.userinfo.company).then(function (resp) {
-                vue_this.company_id = resp.data.result;
-                vue_this.config_with_wx();
-            }).catch(function (err) {
-                console.log(err);
-            });
-        },
     },
     methods: {
         onClickRight: function () {
             wx.miniProgram.navigateTo({
-                url: '/pages/share/share?company_id=' + this.company_id + '&logo=' + this.$store.state.userinfo.company_logo
+                url: '/pages/share/share'
             });
         },
         onClickLeft() {
@@ -124,15 +77,20 @@ export default {
                 duration: 0,
             });
             var ssid = vue_this.$cookies.get('pa_ssid');
-            vue_this.$axios.get('userinfo/' + ssid).then(function (resp) {
-                if (resp.data.result.online == true) {
-                    vue_this.is_login = true;
+            get_client('user_management').get_user_info(ssid).then(function (resp) {
+                console.log(resp);
+                if (resp.user_id != 0) {
                     vue_this.$store.commit('set_userinfo', {
-                        name: resp.data.result.name,
-                        company: resp.data.result.company,
-                        role: resp.data.result.role,
-                        logo: vue_this.$remote_url + resp.data.result.logo,
-                        company_logo: vue_this.$remote_url + resp.data.result.company_logo,
+                        is_login: true,
+                        name: resp.name,
+                        buyer: resp.buyer,
+                        company: resp.company,
+                        logo: resp.logo,
+                        phone: resp.phone,
+                    });
+                } else {
+                    vue_this.$store.commit('set_userinfo', {
+                        is_login: false,
                     });
                 }
             }).catch(function (err) {
@@ -140,53 +98,7 @@ export default {
             }).finally(function () {
                 vue_this.$toast.clear();
             });
-        },
-        randomString: function (len) {
-            len = len || 32;
-            var $chars = 'ABCDEFGHJKMNPQRSTWXYZabcdefhijkmnprstwxyz2345678'; /****默认去掉了容易混淆的字符oOLl,9gq,Vv,Uu,I1****/
-            var maxPos = $chars.length;
-            var pwd = '';
-            for (var i = 0; i < len; i++) {
-                pwd += $chars.charAt(Math.floor(Math.random() * maxPos));
-            }
-            return pwd;
-        },
-        config_with_wx: function () {
-            var vue_this = this;
-            var timestamp = (new Date()).getTime();
-            var nonceStr = this.randomString(32);
-            this.$axios.post('/pa_wx_sign', {
-                timestamp: timestamp,
-                nonceStr: nonceStr,
-                url: window.location.href,
-            }).then(function (resp) {
-                wx.config({
-                    debug: false,
-                    appId: 'wxa390f8b6f68e9c6d',
-                    timestamp: timestamp,
-                    nonceStr: nonceStr,
-                    signature: resp.data.result,
-                    jsApiList: ['updateAppMessageShareData']
-                });
-                wx.ready(function () {
-                    console.log('success to config wx');
-                    wx.updateAppMessageShareData({
-                        title: '流程助手',
-                        desc: vue_this.$store.state.userinfo.company,
-                        imgUrl: '',
-                        link: 'http://' + window.location.host + window.location.pathname + '?company=' + vue_this.company_id,
-                        success: function () {
-                            console.log('success to set share btn');
-                        }
-                    });
-                    wx.error(function (err) {
-                        console.log('fail to config wx');
-                        console.log(err);
-                    });
-                });
-            }).catch(function (err) {
-                console.log(err);
-            });
+
         },
     },
 }

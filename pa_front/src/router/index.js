@@ -9,7 +9,7 @@ const routes = [
     name: 'Home',
     component: () => import('../views/Home.vue'),
     meta: {    
-        private_title: '流程助手',
+        private_title: '掌易',
         has_go_back:false,
     },
   },
@@ -18,7 +18,7 @@ const routes = [
     name: 'Login',
     component: () => import('../views/Login.vue'),
     meta: {    
-        private_title: '登陆',
+        private_title: '登陆中',
         has_go_back:true,
     },
   },
@@ -64,6 +64,24 @@ const routes = [
     component: () => import('../views/TicketDetail.vue'),
     meta: {    
         private_title: '流程详情',
+        has_go_back:true,
+    },
+  },
+  {
+    path: '/stuff_plan/:type_id',
+    name: 'StuffPlan',
+    component: () => import('../views/StuffPlan.vue'),
+    meta: {    
+        private_title: '计划上报',
+        has_go_back:true,
+    },
+  },
+  {
+    path: '/plan_detail/:plan_id',
+    name: 'PlanDetail',
+    component: () => import('../views/PlanDetail.vue'),
+    meta: {    
+        private_title: '计划详情',
         has_go_back:true,
     },
   },

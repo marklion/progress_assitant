@@ -24,6 +24,17 @@ export default {
     },
     beforeMount: function () {
         var vue_this = this;
+        // eslint-disable-next-line
+        var transport = new Thrift.Transport("https://www.d8sis.cn/pa_web/pa_rpc/");
+        // eslint-disable-next-line
+        var protocol = new Thrift.TJSONProtocol(transport);
+        // eslint-disable-next-line
+        var client = new config_managementClient(protocol);
+        client.get_support_apps("ssid").then(function (resp) {
+            console.log(resp);
+        }).catch(function (err) {
+            console.log(err);
+        });
         vue_this.$axios.get('/apps/' + vue_this.$cookies.get('pa_ssid')).then(function (resp) {
             resp.data.result.forEach((element, index) => {
                 vue_this.$set(vue_this.apps, index, element);

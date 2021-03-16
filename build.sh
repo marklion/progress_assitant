@@ -1,12 +1,14 @@
 #!/bin/bash
 
-COMPS=("tcp_framework" "sqlite_orm" "pa_lib" "pa_rest" "pa_daemon")
+COMPS=("tcp_framework" "sqlite_orm" "pa_lib" "pa_rest" "pa_daemon" "pa_rpc")
 SRC_DIR=`dirname $(realpath $0)`
 
 BUILD_DIR=${1:-build}
 BUILD_DIR=$(realpath $BUILD_DIR)
 
 [ -d ${BUILD_DIR} ] || mkdir -p "${BUILD_DIR}"
+
+${SRC_DIR}/gen_thrift.sh
 
 for SUB_FOLDER in ${COMPS[*]}
 do
