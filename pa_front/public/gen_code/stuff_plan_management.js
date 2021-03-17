@@ -185,7 +185,7 @@ stuff_plan_management_get_created_plan_result = class {
     this.success = null;
     if (args) {
       if (args.success !== undefined && args.success !== null) {
-        this.success = Thrift.copyList(args.success, [stuff_plan]);
+        this.success = Thrift.copyList(args.success, [null]);
       }
     }
   }
@@ -203,13 +203,12 @@ stuff_plan_management_get_created_plan_result = class {
         case 0:
         if (ftype == Thrift.Type.LIST) {
           this.success = [];
-          const _rtmp311 = input.readListBegin();
-          const _size10 = _rtmp311.size || 0;
-          for (let _i12 = 0; _i12 < _size10; ++_i12) {
-            let elem13 = null;
-            elem13 = new stuff_plan();
-            elem13.read(input);
-            this.success.push(elem13);
+          const _rtmp321 = input.readListBegin();
+          const _size20 = _rtmp321.size || 0;
+          for (let _i22 = 0; _i22 < _size20; ++_i22) {
+            let elem23 = null;
+            elem23 = input.readI64().value;
+            this.success.push(elem23);
           }
           input.readListEnd();
         } else {
@@ -232,11 +231,11 @@ stuff_plan_management_get_created_plan_result = class {
     output.writeStructBegin('stuff_plan_management_get_created_plan_result');
     if (this.success !== null && this.success !== undefined) {
       output.writeFieldBegin('success', Thrift.Type.LIST, 0);
-      output.writeListBegin(Thrift.Type.STRUCT, this.success.length);
-      for (let iter14 in this.success) {
-        if (this.success.hasOwnProperty(iter14)) {
-          iter14 = this.success[iter14];
-          iter14.write(output);
+      output.writeListBegin(Thrift.Type.I64, this.success.length);
+      for (let iter24 in this.success) {
+        if (this.success.hasOwnProperty(iter24)) {
+          iter24 = this.success[iter24];
+          output.writeI64(iter24);
         }
       }
       output.writeListEnd();

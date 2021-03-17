@@ -6,47 +6,24 @@
     <div class="stuff_company_show">
         {{stuff_brief.company}}
     </div>
-    <van-form @submit="submit_plan">
-        <van-field name="stepper" label="计划量(吨)">
-            <template #input>
-                <van-stepper decimal-length="1" v-model="plan_count" />
-            </template>
-        </van-field>
-        <van-field v-model="vichele_info" name="vichele_info" label="运输车辆" :rules="[{ required: true, message: '请添加运输车辆信息' }]" />
-        <div style="margin: 16px;">
-            <van-button round block type="info" native-type="submit">提交</van-button>
-        </div>
-    </van-form>
+    <stuff-info-submit :is_create="true" :min_time="min_time"></stuff-info-submit>
 </div>
 </template>
 
 <script>
-import Vue from 'vue';
-import {
-    Form
-} from 'vant';
-import {
-    Field
-} from 'vant';
-import {
-    Stepper
-} from 'vant';
-import { Button } from 'vant';
-
-Vue.use(Button);
-Vue.use(Stepper);
-Vue.use(Field);
-Vue.use(Form);
+import StuffInfoSubmit from '../components/StuffInfoSubmit.vue'
 export default {
     name: 'StuffPlan',
+    components: {
+        "stuff-info-submit": StuffInfoSubmit,
+    },
     data: function () {
         return {
             stuff_brief: {
                 name: '',
                 company: '',
             },
-            plan_count:10.0,
-            vichele_info:'',
+            min_time: {},
         };
     },
     beforeMount: function () {
@@ -57,19 +34,10 @@ export default {
         }).catch(function (err) {
             console.log(err);
         });
+        this.min_time = new Date();
     },
     methods: {
-        submit_plan: function () {
-            var vue_this = this;
-            this.$get_client("stuff_plan_management").create_plan({
-                count:this.plan_count,
-                type_id: parseInt(this.$route.params.type_id),
-                }, this.$cookies.get("pa_ssid")).then(function (resp) {
-                    vue_this.$router.push({name:'PlanDetail', params:{plan_id:resp}});
-                }).catch(function (err) {
-                    console.log(err);
-                });
-        } 
+
     },
 }
 </script>

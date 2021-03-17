@@ -23,7 +23,7 @@ class stuff_plan_managementIf {
  public:
   virtual ~stuff_plan_managementIf() {}
   virtual int64_t create_plan(const stuff_plan& plan, const std::string& ssid) = 0;
-  virtual void get_created_plan(std::vector<stuff_plan> & _return, const std::string& ssid) = 0;
+  virtual void get_created_plan(std::vector<int64_t> & _return, const std::string& ssid) = 0;
   virtual void get_plan(stuff_plan& _return, const int64_t plan_id) = 0;
   virtual bool update_plan(const stuff_plan& plan, const std::string& ssid) = 0;
 };
@@ -59,7 +59,7 @@ class stuff_plan_managementNull : virtual public stuff_plan_managementIf {
     int64_t _return = 0;
     return _return;
   }
-  void get_created_plan(std::vector<stuff_plan> & /* _return */, const std::string& /* ssid */) {
+  void get_created_plan(std::vector<int64_t> & /* _return */, const std::string& /* ssid */) {
     return;
   }
   void get_plan(stuff_plan& /* _return */, const int64_t /* plan_id */) {
@@ -245,11 +245,11 @@ class stuff_plan_management_get_created_plan_result {
   }
 
   virtual ~stuff_plan_management_get_created_plan_result() noexcept;
-  std::vector<stuff_plan>  success;
+  std::vector<int64_t>  success;
 
   _stuff_plan_management_get_created_plan_result__isset __isset;
 
-  void __set_success(const std::vector<stuff_plan> & val);
+  void __set_success(const std::vector<int64_t> & val);
 
   bool operator == (const stuff_plan_management_get_created_plan_result & rhs) const
   {
@@ -278,7 +278,7 @@ class stuff_plan_management_get_created_plan_presult {
 
 
   virtual ~stuff_plan_management_get_created_plan_presult() noexcept;
-  std::vector<stuff_plan> * success;
+  std::vector<int64_t> * success;
 
   _stuff_plan_management_get_created_plan_presult__isset __isset;
 
@@ -529,9 +529,9 @@ class stuff_plan_managementClient : virtual public stuff_plan_managementIf {
   int64_t create_plan(const stuff_plan& plan, const std::string& ssid);
   void send_create_plan(const stuff_plan& plan, const std::string& ssid);
   int64_t recv_create_plan();
-  void get_created_plan(std::vector<stuff_plan> & _return, const std::string& ssid);
+  void get_created_plan(std::vector<int64_t> & _return, const std::string& ssid);
   void send_get_created_plan(const std::string& ssid);
-  void recv_get_created_plan(std::vector<stuff_plan> & _return);
+  void recv_get_created_plan(std::vector<int64_t> & _return);
   void get_plan(stuff_plan& _return, const int64_t plan_id);
   void send_get_plan(const int64_t plan_id);
   void recv_get_plan(stuff_plan& _return);
@@ -601,7 +601,7 @@ class stuff_plan_managementMultiface : virtual public stuff_plan_managementIf {
     return ifaces_[i]->create_plan(plan, ssid);
   }
 
-  void get_created_plan(std::vector<stuff_plan> & _return, const std::string& ssid) {
+  void get_created_plan(std::vector<int64_t> & _return, const std::string& ssid) {
     size_t sz = ifaces_.size();
     size_t i = 0;
     for (; i < (sz - 1); ++i) {
@@ -665,9 +665,9 @@ class stuff_plan_managementConcurrentClient : virtual public stuff_plan_manageme
   int64_t create_plan(const stuff_plan& plan, const std::string& ssid);
   int32_t send_create_plan(const stuff_plan& plan, const std::string& ssid);
   int64_t recv_create_plan(const int32_t seqid);
-  void get_created_plan(std::vector<stuff_plan> & _return, const std::string& ssid);
+  void get_created_plan(std::vector<int64_t> & _return, const std::string& ssid);
   int32_t send_get_created_plan(const std::string& ssid);
-  void recv_get_created_plan(std::vector<stuff_plan> & _return, const int32_t seqid);
+  void recv_get_created_plan(std::vector<int64_t> & _return, const int32_t seqid);
   void get_plan(stuff_plan& _return, const int64_t plan_id);
   int32_t send_get_plan(const int64_t plan_id);
   void recv_get_plan(stuff_plan& _return, const int32_t seqid);

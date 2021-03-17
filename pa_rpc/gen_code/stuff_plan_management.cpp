@@ -320,14 +320,14 @@ uint32_t stuff_plan_management_get_created_plan_result::read(::apache::thrift::p
         if (ftype == ::apache::thrift::protocol::T_LIST) {
           {
             this->success.clear();
-            uint32_t _size23;
-            ::apache::thrift::protocol::TType _etype26;
-            xfer += iprot->readListBegin(_etype26, _size23);
-            this->success.resize(_size23);
-            uint32_t _i27;
-            for (_i27 = 0; _i27 < _size23; ++_i27)
+            uint32_t _size45;
+            ::apache::thrift::protocol::TType _etype48;
+            xfer += iprot->readListBegin(_etype48, _size45);
+            this->success.resize(_size45);
+            uint32_t _i49;
+            for (_i49 = 0; _i49 < _size45; ++_i49)
             {
-              xfer += this->success[_i27].read(iprot);
+              xfer += iprot->readI64(this->success[_i49]);
             }
             xfer += iprot->readListEnd();
           }
@@ -357,11 +357,11 @@ uint32_t stuff_plan_management_get_created_plan_result::write(::apache::thrift::
   if (this->__isset.success) {
     xfer += oprot->writeFieldBegin("success", ::apache::thrift::protocol::T_LIST, 0);
     {
-      xfer += oprot->writeListBegin(::apache::thrift::protocol::T_STRUCT, static_cast<uint32_t>(this->success.size()));
-      std::vector<stuff_plan> ::const_iterator _iter28;
-      for (_iter28 = this->success.begin(); _iter28 != this->success.end(); ++_iter28)
+      xfer += oprot->writeListBegin(::apache::thrift::protocol::T_I64, static_cast<uint32_t>(this->success.size()));
+      std::vector<int64_t> ::const_iterator _iter50;
+      for (_iter50 = this->success.begin(); _iter50 != this->success.end(); ++_iter50)
       {
-        xfer += (*_iter28).write(oprot);
+        xfer += oprot->writeI64((*_iter50));
       }
       xfer += oprot->writeListEnd();
     }
@@ -402,14 +402,14 @@ uint32_t stuff_plan_management_get_created_plan_presult::read(::apache::thrift::
         if (ftype == ::apache::thrift::protocol::T_LIST) {
           {
             (*(this->success)).clear();
-            uint32_t _size29;
-            ::apache::thrift::protocol::TType _etype32;
-            xfer += iprot->readListBegin(_etype32, _size29);
-            (*(this->success)).resize(_size29);
-            uint32_t _i33;
-            for (_i33 = 0; _i33 < _size29; ++_i33)
+            uint32_t _size51;
+            ::apache::thrift::protocol::TType _etype54;
+            xfer += iprot->readListBegin(_etype54, _size51);
+            (*(this->success)).resize(_size51);
+            uint32_t _i55;
+            for (_i55 = 0; _i55 < _size51; ++_i55)
             {
-              xfer += (*(this->success))[_i33].read(iprot);
+              xfer += iprot->readI64((*(this->success))[_i55]);
             }
             xfer += iprot->readListEnd();
           }
@@ -879,7 +879,7 @@ int64_t stuff_plan_managementClient::recv_create_plan()
   throw ::apache::thrift::TApplicationException(::apache::thrift::TApplicationException::MISSING_RESULT, "create_plan failed: unknown result");
 }
 
-void stuff_plan_managementClient::get_created_plan(std::vector<stuff_plan> & _return, const std::string& ssid)
+void stuff_plan_managementClient::get_created_plan(std::vector<int64_t> & _return, const std::string& ssid)
 {
   send_get_created_plan(ssid);
   recv_get_created_plan(_return);
@@ -899,7 +899,7 @@ void stuff_plan_managementClient::send_get_created_plan(const std::string& ssid)
   oprot_->getTransport()->flush();
 }
 
-void stuff_plan_managementClient::recv_get_created_plan(std::vector<stuff_plan> & _return)
+void stuff_plan_managementClient::recv_get_created_plan(std::vector<int64_t> & _return)
 {
 
   int32_t rseqid = 0;
@@ -1381,7 +1381,7 @@ int64_t stuff_plan_managementConcurrentClient::recv_create_plan(const int32_t se
   } // end while(true)
 }
 
-void stuff_plan_managementConcurrentClient::get_created_plan(std::vector<stuff_plan> & _return, const std::string& ssid)
+void stuff_plan_managementConcurrentClient::get_created_plan(std::vector<int64_t> & _return, const std::string& ssid)
 {
   int32_t seqid = send_get_created_plan(ssid);
   recv_get_created_plan(_return, seqid);
@@ -1405,7 +1405,7 @@ int32_t stuff_plan_managementConcurrentClient::send_get_created_plan(const std::
   return cseqid;
 }
 
-void stuff_plan_managementConcurrentClient::recv_get_created_plan(std::vector<stuff_plan> & _return, const int32_t seqid)
+void stuff_plan_managementConcurrentClient::recv_get_created_plan(std::vector<int64_t> & _return, const int32_t seqid)
 {
 
   int32_t rseqid = 0;

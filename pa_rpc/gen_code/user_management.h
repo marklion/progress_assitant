@@ -26,6 +26,9 @@ class user_managementIf {
   virtual void user_login(std::string& _return, const std::string& code) = 0;
   virtual bool update_user_info(const user_info& info, const std::string& ssid) = 0;
   virtual bool remove_user(const int64_t user_id, const std::string& ssid) = 0;
+  virtual void get_bound_vichele(std::vector<std::string> & _return, const std::string& ssid) = 0;
+  virtual bool bind_new_vichele(const std::string& ssid, const std::string& vichele) = 0;
+  virtual void remove_vichele(const std::string& ssid, const std::string& vichele) = 0;
 };
 
 class user_managementIfFactory {
@@ -68,6 +71,16 @@ class user_managementNull : virtual public user_managementIf {
   bool remove_user(const int64_t /* user_id */, const std::string& /* ssid */) {
     bool _return = false;
     return _return;
+  }
+  void get_bound_vichele(std::vector<std::string> & /* _return */, const std::string& /* ssid */) {
+    return;
+  }
+  bool bind_new_vichele(const std::string& /* ssid */, const std::string& /* vichele */) {
+    bool _return = false;
+    return _return;
+  }
+  void remove_vichele(const std::string& /* ssid */, const std::string& /* vichele */) {
+    return;
   }
 };
 
@@ -501,6 +514,314 @@ class user_management_remove_user_presult {
 
 };
 
+typedef struct _user_management_get_bound_vichele_args__isset {
+  _user_management_get_bound_vichele_args__isset() : ssid(false) {}
+  bool ssid :1;
+} _user_management_get_bound_vichele_args__isset;
+
+class user_management_get_bound_vichele_args {
+ public:
+
+  user_management_get_bound_vichele_args(const user_management_get_bound_vichele_args&);
+  user_management_get_bound_vichele_args& operator=(const user_management_get_bound_vichele_args&);
+  user_management_get_bound_vichele_args() : ssid() {
+  }
+
+  virtual ~user_management_get_bound_vichele_args() noexcept;
+  std::string ssid;
+
+  _user_management_get_bound_vichele_args__isset __isset;
+
+  void __set_ssid(const std::string& val);
+
+  bool operator == (const user_management_get_bound_vichele_args & rhs) const
+  {
+    if (!(ssid == rhs.ssid))
+      return false;
+    return true;
+  }
+  bool operator != (const user_management_get_bound_vichele_args &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const user_management_get_bound_vichele_args & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+
+class user_management_get_bound_vichele_pargs {
+ public:
+
+
+  virtual ~user_management_get_bound_vichele_pargs() noexcept;
+  const std::string* ssid;
+
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _user_management_get_bound_vichele_result__isset {
+  _user_management_get_bound_vichele_result__isset() : success(false) {}
+  bool success :1;
+} _user_management_get_bound_vichele_result__isset;
+
+class user_management_get_bound_vichele_result {
+ public:
+
+  user_management_get_bound_vichele_result(const user_management_get_bound_vichele_result&);
+  user_management_get_bound_vichele_result& operator=(const user_management_get_bound_vichele_result&);
+  user_management_get_bound_vichele_result() {
+  }
+
+  virtual ~user_management_get_bound_vichele_result() noexcept;
+  std::vector<std::string>  success;
+
+  _user_management_get_bound_vichele_result__isset __isset;
+
+  void __set_success(const std::vector<std::string> & val);
+
+  bool operator == (const user_management_get_bound_vichele_result & rhs) const
+  {
+    if (!(success == rhs.success))
+      return false;
+    return true;
+  }
+  bool operator != (const user_management_get_bound_vichele_result &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const user_management_get_bound_vichele_result & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _user_management_get_bound_vichele_presult__isset {
+  _user_management_get_bound_vichele_presult__isset() : success(false) {}
+  bool success :1;
+} _user_management_get_bound_vichele_presult__isset;
+
+class user_management_get_bound_vichele_presult {
+ public:
+
+
+  virtual ~user_management_get_bound_vichele_presult() noexcept;
+  std::vector<std::string> * success;
+
+  _user_management_get_bound_vichele_presult__isset __isset;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+
+};
+
+typedef struct _user_management_bind_new_vichele_args__isset {
+  _user_management_bind_new_vichele_args__isset() : ssid(false), vichele(false) {}
+  bool ssid :1;
+  bool vichele :1;
+} _user_management_bind_new_vichele_args__isset;
+
+class user_management_bind_new_vichele_args {
+ public:
+
+  user_management_bind_new_vichele_args(const user_management_bind_new_vichele_args&);
+  user_management_bind_new_vichele_args& operator=(const user_management_bind_new_vichele_args&);
+  user_management_bind_new_vichele_args() : ssid(), vichele() {
+  }
+
+  virtual ~user_management_bind_new_vichele_args() noexcept;
+  std::string ssid;
+  std::string vichele;
+
+  _user_management_bind_new_vichele_args__isset __isset;
+
+  void __set_ssid(const std::string& val);
+
+  void __set_vichele(const std::string& val);
+
+  bool operator == (const user_management_bind_new_vichele_args & rhs) const
+  {
+    if (!(ssid == rhs.ssid))
+      return false;
+    if (!(vichele == rhs.vichele))
+      return false;
+    return true;
+  }
+  bool operator != (const user_management_bind_new_vichele_args &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const user_management_bind_new_vichele_args & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+
+class user_management_bind_new_vichele_pargs {
+ public:
+
+
+  virtual ~user_management_bind_new_vichele_pargs() noexcept;
+  const std::string* ssid;
+  const std::string* vichele;
+
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _user_management_bind_new_vichele_result__isset {
+  _user_management_bind_new_vichele_result__isset() : success(false) {}
+  bool success :1;
+} _user_management_bind_new_vichele_result__isset;
+
+class user_management_bind_new_vichele_result {
+ public:
+
+  user_management_bind_new_vichele_result(const user_management_bind_new_vichele_result&);
+  user_management_bind_new_vichele_result& operator=(const user_management_bind_new_vichele_result&);
+  user_management_bind_new_vichele_result() : success(0) {
+  }
+
+  virtual ~user_management_bind_new_vichele_result() noexcept;
+  bool success;
+
+  _user_management_bind_new_vichele_result__isset __isset;
+
+  void __set_success(const bool val);
+
+  bool operator == (const user_management_bind_new_vichele_result & rhs) const
+  {
+    if (!(success == rhs.success))
+      return false;
+    return true;
+  }
+  bool operator != (const user_management_bind_new_vichele_result &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const user_management_bind_new_vichele_result & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _user_management_bind_new_vichele_presult__isset {
+  _user_management_bind_new_vichele_presult__isset() : success(false) {}
+  bool success :1;
+} _user_management_bind_new_vichele_presult__isset;
+
+class user_management_bind_new_vichele_presult {
+ public:
+
+
+  virtual ~user_management_bind_new_vichele_presult() noexcept;
+  bool* success;
+
+  _user_management_bind_new_vichele_presult__isset __isset;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+
+};
+
+typedef struct _user_management_remove_vichele_args__isset {
+  _user_management_remove_vichele_args__isset() : ssid(false), vichele(false) {}
+  bool ssid :1;
+  bool vichele :1;
+} _user_management_remove_vichele_args__isset;
+
+class user_management_remove_vichele_args {
+ public:
+
+  user_management_remove_vichele_args(const user_management_remove_vichele_args&);
+  user_management_remove_vichele_args& operator=(const user_management_remove_vichele_args&);
+  user_management_remove_vichele_args() : ssid(), vichele() {
+  }
+
+  virtual ~user_management_remove_vichele_args() noexcept;
+  std::string ssid;
+  std::string vichele;
+
+  _user_management_remove_vichele_args__isset __isset;
+
+  void __set_ssid(const std::string& val);
+
+  void __set_vichele(const std::string& val);
+
+  bool operator == (const user_management_remove_vichele_args & rhs) const
+  {
+    if (!(ssid == rhs.ssid))
+      return false;
+    if (!(vichele == rhs.vichele))
+      return false;
+    return true;
+  }
+  bool operator != (const user_management_remove_vichele_args &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const user_management_remove_vichele_args & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+
+class user_management_remove_vichele_pargs {
+ public:
+
+
+  virtual ~user_management_remove_vichele_pargs() noexcept;
+  const std::string* ssid;
+  const std::string* vichele;
+
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+
+class user_management_remove_vichele_result {
+ public:
+
+  user_management_remove_vichele_result(const user_management_remove_vichele_result&);
+  user_management_remove_vichele_result& operator=(const user_management_remove_vichele_result&);
+  user_management_remove_vichele_result() {
+  }
+
+  virtual ~user_management_remove_vichele_result() noexcept;
+
+  bool operator == (const user_management_remove_vichele_result & /* rhs */) const
+  {
+    return true;
+  }
+  bool operator != (const user_management_remove_vichele_result &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const user_management_remove_vichele_result & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+
+class user_management_remove_vichele_presult {
+ public:
+
+
+  virtual ~user_management_remove_vichele_presult() noexcept;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+
+};
+
 class user_managementClient : virtual public user_managementIf {
  public:
   user_managementClient(std::shared_ptr< ::apache::thrift::protocol::TProtocol> prot) {
@@ -538,6 +859,15 @@ class user_managementClient : virtual public user_managementIf {
   bool remove_user(const int64_t user_id, const std::string& ssid);
   void send_remove_user(const int64_t user_id, const std::string& ssid);
   bool recv_remove_user();
+  void get_bound_vichele(std::vector<std::string> & _return, const std::string& ssid);
+  void send_get_bound_vichele(const std::string& ssid);
+  void recv_get_bound_vichele(std::vector<std::string> & _return);
+  bool bind_new_vichele(const std::string& ssid, const std::string& vichele);
+  void send_bind_new_vichele(const std::string& ssid, const std::string& vichele);
+  bool recv_bind_new_vichele();
+  void remove_vichele(const std::string& ssid, const std::string& vichele);
+  void send_remove_vichele(const std::string& ssid, const std::string& vichele);
+  void recv_remove_vichele();
  protected:
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> piprot_;
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> poprot_;
@@ -557,6 +887,9 @@ class user_managementProcessor : public ::apache::thrift::TDispatchProcessor {
   void process_user_login(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
   void process_update_user_info(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
   void process_remove_user(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
+  void process_get_bound_vichele(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
+  void process_bind_new_vichele(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
+  void process_remove_vichele(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
  public:
   user_managementProcessor(::std::shared_ptr<user_managementIf> iface) :
     iface_(iface) {
@@ -564,6 +897,9 @@ class user_managementProcessor : public ::apache::thrift::TDispatchProcessor {
     processMap_["user_login"] = &user_managementProcessor::process_user_login;
     processMap_["update_user_info"] = &user_managementProcessor::process_update_user_info;
     processMap_["remove_user"] = &user_managementProcessor::process_remove_user;
+    processMap_["get_bound_vichele"] = &user_managementProcessor::process_get_bound_vichele;
+    processMap_["bind_new_vichele"] = &user_managementProcessor::process_bind_new_vichele;
+    processMap_["remove_vichele"] = &user_managementProcessor::process_remove_vichele;
   }
 
   virtual ~user_managementProcessor() {}
@@ -630,6 +966,34 @@ class user_managementMultiface : virtual public user_managementIf {
     return ifaces_[i]->remove_user(user_id, ssid);
   }
 
+  void get_bound_vichele(std::vector<std::string> & _return, const std::string& ssid) {
+    size_t sz = ifaces_.size();
+    size_t i = 0;
+    for (; i < (sz - 1); ++i) {
+      ifaces_[i]->get_bound_vichele(_return, ssid);
+    }
+    ifaces_[i]->get_bound_vichele(_return, ssid);
+    return;
+  }
+
+  bool bind_new_vichele(const std::string& ssid, const std::string& vichele) {
+    size_t sz = ifaces_.size();
+    size_t i = 0;
+    for (; i < (sz - 1); ++i) {
+      ifaces_[i]->bind_new_vichele(ssid, vichele);
+    }
+    return ifaces_[i]->bind_new_vichele(ssid, vichele);
+  }
+
+  void remove_vichele(const std::string& ssid, const std::string& vichele) {
+    size_t sz = ifaces_.size();
+    size_t i = 0;
+    for (; i < (sz - 1); ++i) {
+      ifaces_[i]->remove_vichele(ssid, vichele);
+    }
+    ifaces_[i]->remove_vichele(ssid, vichele);
+  }
+
 };
 
 // The 'concurrent' client is a thread safe client that correctly handles
@@ -674,6 +1038,15 @@ class user_managementConcurrentClient : virtual public user_managementIf {
   bool remove_user(const int64_t user_id, const std::string& ssid);
   int32_t send_remove_user(const int64_t user_id, const std::string& ssid);
   bool recv_remove_user(const int32_t seqid);
+  void get_bound_vichele(std::vector<std::string> & _return, const std::string& ssid);
+  int32_t send_get_bound_vichele(const std::string& ssid);
+  void recv_get_bound_vichele(std::vector<std::string> & _return, const int32_t seqid);
+  bool bind_new_vichele(const std::string& ssid, const std::string& vichele);
+  int32_t send_bind_new_vichele(const std::string& ssid, const std::string& vichele);
+  bool recv_bind_new_vichele(const int32_t seqid);
+  void remove_vichele(const std::string& ssid, const std::string& vichele);
+  int32_t send_remove_vichele(const std::string& ssid, const std::string& vichele);
+  void recv_remove_vichele(const int32_t seqid);
  protected:
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> piprot_;
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> poprot_;

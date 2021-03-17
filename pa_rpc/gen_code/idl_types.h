@@ -166,12 +166,14 @@ void swap(stuff_detail &a, stuff_detail &b);
 std::ostream& operator<<(std::ostream& out, const stuff_detail& obj);
 
 typedef struct _stuff_plan__isset {
-  _stuff_plan__isset() : type_id(false), count(false), vichele_info(false), plan_id(false), created_by(false) {}
+  _stuff_plan__isset() : type_id(false), count(false), vichele_info(false), plan_id(false), created_by(false), plan_time(false), created_time(false) {}
   bool type_id :1;
   bool count :1;
   bool vichele_info :1;
   bool plan_id :1;
   bool created_by :1;
+  bool plan_time :1;
+  bool created_time :1;
 } _stuff_plan__isset;
 
 class stuff_plan : public virtual ::apache::thrift::TBase {
@@ -179,7 +181,7 @@ class stuff_plan : public virtual ::apache::thrift::TBase {
 
   stuff_plan(const stuff_plan&);
   stuff_plan& operator=(const stuff_plan&);
-  stuff_plan() : type_id(0), count(0), plan_id(0), created_by(0) {
+  stuff_plan() : type_id(0), count(0), plan_id(0), created_by(0), plan_time(), created_time(0) {
   }
 
   virtual ~stuff_plan() noexcept;
@@ -188,6 +190,8 @@ class stuff_plan : public virtual ::apache::thrift::TBase {
   std::vector<std::string>  vichele_info;
   int64_t plan_id;
   int64_t created_by;
+  std::string plan_time;
+  int64_t created_time;
 
   _stuff_plan__isset __isset;
 
@@ -201,6 +205,10 @@ class stuff_plan : public virtual ::apache::thrift::TBase {
 
   void __set_created_by(const int64_t val);
 
+  void __set_plan_time(const std::string& val);
+
+  void __set_created_time(const int64_t val);
+
   bool operator == (const stuff_plan & rhs) const
   {
     if (!(type_id == rhs.type_id))
@@ -212,6 +220,10 @@ class stuff_plan : public virtual ::apache::thrift::TBase {
     if (!(plan_id == rhs.plan_id))
       return false;
     if (!(created_by == rhs.created_by))
+      return false;
+    if (!(plan_time == rhs.plan_time))
+      return false;
+    if (!(created_time == rhs.created_time))
       return false;
     return true;
   }

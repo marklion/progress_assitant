@@ -8,16 +8,13 @@
     <router-view />
     <van-tabbar route>
         <van-tabbar-item replace :to="{name:'Home'}" icon="home-o">主页</van-tabbar-item>
-        <van-tabbar-item replace :to="{name:'Application'}" icon="apps-o">应用</van-tabbar-item>
+        <van-tabbar-item replace :to="{name:'Order'}" icon="orders-o">订单</van-tabbar-item>
         <van-tabbar-item replace :to="{name:'Myself'}" icon="user-o">我的</van-tabbar-item>
     </van-tabbar>
 </div>
 </template>
 
 <script>
-import {
-    get_client
-} from '@/plugins/rpc_helper.js'
 import Vue from 'vue';
 import {
     NavBar,
@@ -77,7 +74,7 @@ export default {
                 duration: 0,
             });
             var ssid = vue_this.$cookies.get('pa_ssid');
-            get_client('user_management').get_user_info(ssid).then(function (resp) {
+            vue_this.$get_client('user_management').get_user_info(ssid).then(function (resp) {
                 console.log(resp);
                 if (resp.user_id != 0) {
                     vue_this.$store.commit('set_userinfo', {

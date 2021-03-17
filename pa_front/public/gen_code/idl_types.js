@@ -257,6 +257,8 @@ stuff_plan = class {
     this.vichele_info = null;
     this.plan_id = null;
     this.created_by = null;
+    this.plan_time = null;
+    this.created_time = null;
     if (args) {
       if (args.type_id !== undefined && args.type_id !== null) {
         this.type_id = args.type_id;
@@ -272,6 +274,12 @@ stuff_plan = class {
       }
       if (args.created_by !== undefined && args.created_by !== null) {
         this.created_by = args.created_by;
+      }
+      if (args.plan_time !== undefined && args.plan_time !== null) {
+        this.plan_time = args.plan_time;
+      }
+      if (args.created_time !== undefined && args.created_time !== null) {
+        this.created_time = args.created_time;
       }
     }
   }
@@ -329,6 +337,20 @@ stuff_plan = class {
           input.skip(ftype);
         }
         break;
+        case 6:
+        if (ftype == Thrift.Type.STRING) {
+          this.plan_time = input.readString().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        case 7:
+        if (ftype == Thrift.Type.I64) {
+          this.created_time = input.readI64().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
         default:
           input.skip(ftype);
       }
@@ -370,6 +392,16 @@ stuff_plan = class {
     if (this.created_by !== null && this.created_by !== undefined) {
       output.writeFieldBegin('created_by', Thrift.Type.I64, 5);
       output.writeI64(this.created_by);
+      output.writeFieldEnd();
+    }
+    if (this.plan_time !== null && this.plan_time !== undefined) {
+      output.writeFieldBegin('plan_time', Thrift.Type.STRING, 6);
+      output.writeString(this.plan_time);
+      output.writeFieldEnd();
+    }
+    if (this.created_time !== null && this.created_time !== undefined) {
+      output.writeFieldBegin('created_time', Thrift.Type.I64, 7);
+      output.writeI64(this.created_time);
       output.writeFieldEnd();
     }
     output.writeFieldStop();

@@ -28,6 +28,19 @@ public:
     virtual bool remove_user(const int64_t user_id, const std::string &ssid) {
         return true;
     }
+    virtual void get_bound_vichele(std::vector<std::string> &_return, const std::string &ssid)
+    {
+        _return.push_back("京QZN370");
+        _return.push_back("京QZN371");
+    }
+    virtual bool bind_new_vichele(const std::string &ssid, const std::string &vichele)
+    {
+        return true;
+    }
+    virtual void remove_vichele(const std::string &ssid, const std::string &vichele)
+    {
+
+    }
 };
 
 #endif // _USER_MANAGEMENT_IMP_H_

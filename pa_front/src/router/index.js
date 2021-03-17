@@ -23,48 +23,12 @@ const routes = [
     },
   },
   {
-    path: '/application',
-    name: 'Application',
-    component: () => import('../views/Application.vue'),
-    meta: {    
-        private_title: '应用',
-        has_go_back:false,
-    },
-  },
-  {
     path: '/myself',
     name: 'Myself',
     component: () => import('../views/Myself.vue'),
     meta: {    
         private_title: '我的',
         has_go_back:false,
-    },
-  },
-  {
-    path: '/bind_company',
-    name: 'BindCompany',
-    component: () => import('../views/BindCompany.vue'),
-    meta: {    
-        private_title: '绑定公司信息',
-        has_go_back:true,
-    },
-  },
-  {
-    path: '/create_ticket/:app_id',
-    name: 'CreateTicket',
-    component: () => import('../views/CreateTicket.vue'),
-    meta: {    
-        private_title: '创建流程',
-        has_go_back:true,
-    },
-  },
-  {
-    path: '/ticket/:ticket_number',
-    name: 'TicketDetail',
-    component: () => import('../views/TicketDetail.vue'),
-    meta: {    
-        private_title: '流程详情',
-        has_go_back:true,
     },
   },
   {
@@ -85,6 +49,25 @@ const routes = [
         has_go_back:true,
     },
   },
+  {
+    path: '/order',
+    name: 'Order',
+    component: () => import('../views/Order.vue'),
+    meta: {    
+        private_title: '订单',
+        has_go_back:false,
+    },
+  },
+  {
+    path: '/company_home',
+    name: 'CompanyHome',
+    component: () => import('../views/CompanyHome.vue'),
+    meta: {    
+        private_title: '公司首页',
+        has_go_back:false,
+    },
+  },
+
 ]
 
 const router = new VueRouter({

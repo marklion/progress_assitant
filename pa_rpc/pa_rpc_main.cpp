@@ -9,6 +9,7 @@
 #include "user_management_imp.h"
 #include "stuff_info_imp.h"
 #include "stuff_plan_management_imp.h"
+#include "company_management_imp.h"
 
 using namespace ::apache::thrift;
 using namespace ::apache::thrift::protocol;
@@ -22,6 +23,7 @@ int main(int argc, char **argv)
     multi_processor->registerProcessor("user_management", std::shared_ptr<TProcessor>(new user_managementProcessor(std::shared_ptr<user_management_handler>(new user_management_handler()))));
     multi_processor->registerProcessor("stuff_info", std::shared_ptr<TProcessor>(new stuff_infoProcessor(std::shared_ptr<stuff_info_handler>(new stuff_info_handler()))));
     multi_processor->registerProcessor("stuff_plan_management", std::shared_ptr<TProcessor>(new stuff_plan_managementProcessor(std::shared_ptr<stuff_plan_management_handler>(new stuff_plan_management_handler()))));
+    multi_processor->registerProcessor("company_management", std::shared_ptr<TProcessor>(new company_managementProcessor(std::shared_ptr<company_management_handler>(new company_management_handler()))));
 
     ::std::shared_ptr<TServerTransport> serverTransport(new TServerSocket(8123));
     ::std::shared_ptr<TTransportFactory> transportFactory(new THttpServerTransportFactory());

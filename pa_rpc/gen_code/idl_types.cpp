@@ -401,6 +401,14 @@ void stuff_plan::__set_plan_id(const int64_t val) {
 void stuff_plan::__set_created_by(const int64_t val) {
   this->created_by = val;
 }
+
+void stuff_plan::__set_plan_time(const std::string& val) {
+  this->plan_time = val;
+}
+
+void stuff_plan::__set_created_time(const int64_t val) {
+  this->created_time = val;
+}
 std::ostream& operator<<(std::ostream& out, const stuff_plan& obj)
 {
   obj.printTo(out);
@@ -481,6 +489,22 @@ uint32_t stuff_plan::read(::apache::thrift::protocol::TProtocol* iprot) {
           xfer += iprot->skip(ftype);
         }
         break;
+      case 6:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->plan_time);
+          this->__isset.plan_time = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 7:
+        if (ftype == ::apache::thrift::protocol::T_I64) {
+          xfer += iprot->readI64(this->created_time);
+          this->__isset.created_time = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
       default:
         xfer += iprot->skip(ftype);
         break;
@@ -526,6 +550,14 @@ uint32_t stuff_plan::write(::apache::thrift::protocol::TProtocol* oprot) const {
   xfer += oprot->writeI64(this->created_by);
   xfer += oprot->writeFieldEnd();
 
+  xfer += oprot->writeFieldBegin("plan_time", ::apache::thrift::protocol::T_STRING, 6);
+  xfer += oprot->writeString(this->plan_time);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("created_time", ::apache::thrift::protocol::T_I64, 7);
+  xfer += oprot->writeI64(this->created_time);
+  xfer += oprot->writeFieldEnd();
+
   xfer += oprot->writeFieldStop();
   xfer += oprot->writeStructEnd();
   return xfer;
@@ -538,6 +570,8 @@ void swap(stuff_plan &a, stuff_plan &b) {
   swap(a.vichele_info, b.vichele_info);
   swap(a.plan_id, b.plan_id);
   swap(a.created_by, b.created_by);
+  swap(a.plan_time, b.plan_time);
+  swap(a.created_time, b.created_time);
   swap(a.__isset, b.__isset);
 }
 
@@ -547,6 +581,8 @@ stuff_plan::stuff_plan(const stuff_plan& other10) {
   vichele_info = other10.vichele_info;
   plan_id = other10.plan_id;
   created_by = other10.created_by;
+  plan_time = other10.plan_time;
+  created_time = other10.created_time;
   __isset = other10.__isset;
 }
 stuff_plan& stuff_plan::operator=(const stuff_plan& other11) {
@@ -555,6 +591,8 @@ stuff_plan& stuff_plan::operator=(const stuff_plan& other11) {
   vichele_info = other11.vichele_info;
   plan_id = other11.plan_id;
   created_by = other11.created_by;
+  plan_time = other11.plan_time;
+  created_time = other11.created_time;
   __isset = other11.__isset;
   return *this;
 }
@@ -566,6 +604,8 @@ void stuff_plan::printTo(std::ostream& out) const {
   out << ", " << "vichele_info=" << to_string(vichele_info);
   out << ", " << "plan_id=" << to_string(plan_id);
   out << ", " << "created_by=" << to_string(created_by);
+  out << ", " << "plan_time=" << to_string(plan_time);
+  out << ", " << "created_time=" << to_string(created_time);
   out << ")";
 }
 
