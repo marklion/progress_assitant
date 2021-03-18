@@ -7,7 +7,8 @@
     </van-nav-bar>
     <router-view />
     <van-tabbar route>
-        <van-tabbar-item replace :to="{name:'Home'}" icon="home-o">主页</van-tabbar-item>
+        <van-tabbar-item v-if="buyer" replace :to="{name:'Home'}" icon="home-o">主页</van-tabbar-item>
+        <van-tabbar-item v-else replace :to="{name:'CompanyHome'}" icon="home-o">主页</van-tabbar-item>
         <van-tabbar-item replace :to="{name:'Order'}" icon="orders-o">订单</van-tabbar-item>
         <van-tabbar-item replace :to="{name:'Myself'}" icon="user-o">我的</van-tabbar-item>
     </van-tabbar>
@@ -46,15 +47,22 @@ export default {
             bar_title: '',
             has_go_back: false,
             is_login: false,
+            buyer: true,
         }
     },
     beforeMount: function () {
-        this.get_userinfo();
+        var vue_this = this;
+        this.$router.onReady(function () {
+            vue_this.get_userinfo();
+        });
     },
     watch: {
         $route: function (to) {
             this.bar_title = to.meta.private_title;
             this.has_go_back = to.meta.has_go_back;
+        },
+        "$store.state.userinfo.buyer": function (_val) {
+            this.buyer = _val;
         },
     },
     methods: {
@@ -85,6 +93,7 @@ export default {
                         logo: resp.logo,
                         phone: resp.phone,
                     });
+                    vue_this.buyer = resp.buyer;
                 } else {
                     vue_this.$store.commit('set_userinfo', {
                         is_login: false,
@@ -94,6 +103,18 @@ export default {
                 console.log(err);
             }).finally(function () {
                 vue_this.$toast.clear();
+                if (vue_this.$route.path == '/') {
+                    if (vue_this.buyer) {
+                        vue_this.$router.replace({
+                            name: 'Home'
+                        });
+                    } else {
+                        vue_this.$router.replace({
+                            name: 'CompanyHome'
+                        });
+                    }
+
+                }
             });
 
         },

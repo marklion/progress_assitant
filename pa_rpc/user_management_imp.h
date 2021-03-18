@@ -14,10 +14,12 @@ public:
         _return.company = "桩公司";
         _return.logo = "";
         _return.phone = "123123123";
-        if (ssid == "sample_ssid")
+        _return.user_id = 1;
+        if (ssid == "company_ssid")
         {
-            _return.user_id = 1;
+            _return.buyer = false;
         }
+        
     }
     virtual void user_login(std::string &_return, const std::string &code) {
         _return.assign("sample_ssid");
