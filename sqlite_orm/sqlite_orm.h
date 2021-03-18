@@ -70,10 +70,10 @@ public:
         return false;
     }
 private:
-    std::string m_sqlite_file = "";
     bool table_exists = false;
     tdf_log m_log;
     int m_pri_id = -1;
+    std::string m_sqlite_file = "";
 
     void create_table() {
         std::string sql_cmd = "CREATE TABLE IF NOT EXISTS ";
@@ -174,7 +174,7 @@ public:
         sql_cmd.append(table_name() + ";");
         (void)execute_sql_cmd(sql_cmd, m_sqlite_file);
     };
-    bool insert_record() { 
+    virtual bool insert_record() { 
         bool ret = false;
         // refresh table structure
         fetch_table();
@@ -248,11 +248,11 @@ public:
         return ret;
     }
     template <typename sql_record>
-    static std::list<sql_record> search_record_all(const std::string &_sqlite_file,std::function<bool ( const sql_record &)> const &f, const std::string &_qurey)
+    static std::list<sql_record> search_record_all(const std::string &_qurey)
     {
         std::list<sql_record> ret;
         std::vector<std::map<std::string, std::string>> search_ret;
-        sql_record tmp_record(_sqlite_file);
+        sql_record tmp_record;
 
         std::string sql_cmd = "SELECT * FROM " + tmp_record.table_name();
         if (_qurey.length() > 0)
@@ -260,51 +260,11 @@ public:
             sql_cmd.append(" WHERE " + _qurey);
         }
         sql_cmd.append(";");
-        if (execute_sql_cmd(sql_cmd, _sqlite_file, &search_ret))
+        if (execute_sql_cmd(sql_cmd, tmp_record.m_sqlite_file, &search_ret))
         {
             for (auto &itr:search_ret)
             {
-                sql_record single_record(_sqlite_file);
-                single_record.m_pri_id = atoi(itr["PRI_ID"].c_str());
-                for (auto &single_column :single_record.columns_defined())
-                {
-                    switch (single_column.m_type)
-                    {
-                        case sqlite_orm_column::INTEGER:
-                        *(static_cast<int *>(single_column.m_data)) = atoi(itr[single_column.m_name].c_str());
-                        break;
-                        case sqlite_orm_column::STRING:
-                        *(static_cast<std::string *>(single_column.m_data)) = itr[single_column.m_name].c_str();
-                        break;
-                    }
-                }
-                if (f(single_record))
-                {
-                    ret.push_back(single_record);
-                }
-            }
-        }
-
-        return ret;
-    }
-    template <typename sql_record>
-    static std::list<sql_record> search_record_all(const std::string &_sqlite_file, const std::string &_qurey)
-    {
-        std::list<sql_record> ret;
-        std::vector<std::map<std::string, std::string>> search_ret;
-        sql_record tmp_record(_sqlite_file);
-
-        std::string sql_cmd = "SELECT * FROM " + tmp_record.table_name();
-        if (_qurey.length() > 0)
-        {
-            sql_cmd.append(" WHERE " + _qurey);
-        }
-        sql_cmd.append(";");
-        if (execute_sql_cmd(sql_cmd, _sqlite_file, &search_ret))
-        {
-            for (auto &itr:search_ret)
-            {
-                sql_record single_record(_sqlite_file);
+                sql_record single_record;
                 single_record.m_pri_id = atoi(itr["PRI_ID"].c_str());
                 for (auto &single_column :single_record.columns_defined())
                 {
@@ -325,25 +285,25 @@ public:
         return ret;
     }
     template <typename sql_record>
-    static std::list<sql_record> search_record_all(const std::string &_sqlite_file) {
-        return search_record_all<sql_record>(_sqlite_file,""); 
+    static std::list<sql_record> search_record_all() {
+        return search_record_all<sql_record>(""); 
     }
     template <typename sql_record>
-    static std::list<sql_record> search_record_all(const std::string &_sqlite_file, const char *_query, ...)
+    static std::list<sql_record> search_record_all(const char *_query, ...)
     {
         va_list vl;
         va_start(vl, _query);
         char tmpbuff[256];
         vsnprintf(tmpbuff, sizeof(tmpbuff), _query, vl);
         va_end(vl);
-        return search_record_all<sql_record>(_sqlite_file, std::string(tmpbuff));
+        return search_record_all<sql_record>(std::string(tmpbuff));
     }
     template <typename sql_record>
-    static std::unique_ptr<sql_record> search_record(const std::string &_sqlite_file, const std::string &_qurey)
+    static std::unique_ptr<sql_record> search_record(const std::string &_qurey)
     {
         std::unique_ptr<sql_record> ret;
 
-        auto records = search_record_all<sql_record>(_sqlite_file,_qurey);
+        auto records = search_record_all<sql_record>(_qurey);
         if (records.size() > 0)
         {
             ret.reset(new sql_record(records.front()));
@@ -352,42 +312,19 @@ public:
         return ret;
     }
     template <typename sql_record>
-    static std::unique_ptr<sql_record> search_record(const std::string &_sqlite_file, std::function<bool ( const sql_record &)> const &f, const std::string &_qurey = "")
-    {
-        std::unique_ptr<sql_record> ret;
-
-        auto records = search_record_all<sql_record>(_sqlite_file, f, _qurey);
-        if (records.size() > 0)
-        {
-            ret.reset(new sql_record(records.front()));
-        }
-
-        return ret;
-    }
-    template <typename sql_record>
-    static std::unique_ptr<sql_record> search_record(const std::string &_sqlite_file, const char *_query, ...)
+    static std::unique_ptr<sql_record> search_record(const char *_query, ...)
     {
         va_list vl;
         va_start(vl, _query);
         char tmpbuff[256];
         vsnprintf(tmpbuff, sizeof(tmpbuff), _query, vl);
         va_end(vl);
-        return search_record<sql_record>(_sqlite_file, std::string(tmpbuff));
+        return search_record<sql_record>(std::string(tmpbuff));
     }
     template <typename sql_record>
-    static std::unique_ptr<sql_record> search_record(const std::string &_sqlite_file, std::function<bool ( const sql_record &)> const &f, const char *_query, ...)
+    static std::unique_ptr<sql_record> search_record(int _pri_id)
     {
-        va_list vl;
-        va_start(vl, _query);
-        char tmpbuff[256];
-        vsnprintf(tmpbuff, sizeof(tmpbuff), _query, vl);
-        va_end(vl);
-        return search_record<sql_record>(_sqlite_file, f, std::string(tmpbuff));
-    }
-    template <typename sql_record>
-    static std::unique_ptr<sql_record> search_record(const std::string &_sqlite_file, int _pri_id)
-    {
-        return search_record<sql_record>(_sqlite_file, "PRI_ID = %d", _pri_id);
+        return search_record<sql_record>("PRI_ID = %d", _pri_id);
     }
 };
 

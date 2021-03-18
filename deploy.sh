@@ -26,11 +26,9 @@ get_docker_image() {
 
 start_all_server() {
     line=`wc -l $0|awk '{print $1}'`
-    line=`expr $line - 84` 
+    line=`expr $line - 82` 
     tail -n $line $0 | tar zx  --skip-old-files -C /
     nginx -c /conf/nginx.conf
-    /root/.ngrest/ngrest-build/deploy/bin/ngrestserver -s /lib &
-    pa_daemon &
     pa_rpc &
     bash
 }

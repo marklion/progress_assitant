@@ -1,6 +1,6 @@
 #!/bin/bash
 
-COMPS=("tcp_framework" "sqlite_orm" "pa_lib" "pa_rest" "pa_daemon" "pa_rpc")
+COMPS=("tcp_framework" "sqlite_orm" "pa_rpc")
 SRC_DIR=`dirname $(realpath $0)`
 
 BUILD_DIR=${1:-build}
