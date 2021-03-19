@@ -7,7 +7,7 @@
     </van-nav-bar>
     <router-view />
     <van-tabbar route>
-        <van-tabbar-item v-if="buyer" replace :to="{name:'Home'}" icon="home-o">主页</van-tabbar-item>
+        <van-tabbar-item v-if="$store.state.userinfo.buyer" replace :to="{name:'Home'}" icon="home-o">主页</van-tabbar-item>
         <van-tabbar-item v-else replace :to="{name:'CompanyHome'}" icon="home-o">主页</van-tabbar-item>
         <van-tabbar-item replace :to="{name:'Order'}" icon="orders-o">订单</van-tabbar-item>
         <van-tabbar-item replace :to="{name:'Myself'}" icon="user-o">我的</van-tabbar-item>
@@ -46,8 +46,8 @@ export default {
         return {
             bar_title: '',
             has_go_back: false,
-            is_login: false,
             buyer: true,
+            need_info:false,
         }
     },
     beforeMount: function () {
@@ -60,9 +60,6 @@ export default {
         $route: function (to) {
             this.bar_title = to.meta.private_title;
             this.has_go_back = to.meta.has_go_back;
-        },
-        "$store.state.userinfo.buyer": function (_val) {
-            this.buyer = _val;
         },
     },
     methods: {
@@ -85,26 +82,29 @@ export default {
             vue_this.$get_client('user_management').get_user_info(ssid).then(function (resp) {
                 console.log(resp);
                 if (resp.user_id != 0) {
-                    vue_this.$store.commit('set_userinfo', {
-                        is_login: true,
-                        name: resp.name,
-                        buyer: resp.buyer,
-                        company: resp.company,
-                        logo: resp.logo,
-                        phone: resp.phone,
-                    });
-                    vue_this.buyer = resp.buyer;
+                    vue_this.$store.commit('set_userinfo', resp);
+                    vue_this.$store.commit('set_login', true);
+                    if (!(resp.company && resp.phone)) {
+                        vue_this.need_info = true;
+                        vue_this.$router.replace({
+                            name: 'SelfInfo',
+                            query: {
+                                from: 'auto'
+                            }
+                        })
+                    }
                 } else {
                     vue_this.$store.commit('set_userinfo', {
-                        is_login: false,
+                        buyer: true,
                     });
+                    vue_this.$store.commit('set_login', false);
                 }
             }).catch(function (err) {
                 console.log(err);
             }).finally(function () {
                 vue_this.$toast.clear();
-                if (vue_this.$route.path == '/') {
-                    if (vue_this.buyer) {
+                if (vue_this.$route.path == '/' && vue_this.need_info == false) {
+                    if (vue_this.$store.state.userinfo.buyer) {
                         vue_this.$router.replace({
                             name: 'Home'
                         });

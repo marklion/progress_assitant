@@ -18,7 +18,7 @@ do
     pushd $BUILD_DIR/$COMP_NAME
     [ -f Makefile ] || cmake $SUB_FOLDER -D PRJ_INTERNAL_BUILD=${BUILD_DIR}
 
-    [ $? == "0" ] && make || exit -1
+    [ $? == "0" ] && make -j 8 || exit -1
     popd
 done
 

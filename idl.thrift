@@ -10,10 +10,11 @@ service user_management{
     user_info get_user_info(1:string ssid),
     string user_login(1:string code),
     bool update_user_info(1:user_info info, 2:string ssid),
-    bool remove_user(1:i64 user_id, 2:string ssid),
+    void logff_user(1:string ssid),
     list<string> get_bound_vichele(1:string ssid)
     bool bind_new_vichele(1:string ssid, 2:string vichele),
     void remove_vichele(1:string ssid, 2:string vichele),
+    bool update_logo(1:string content, 2:string ssid),
 }
 
 struct stuff_detail {

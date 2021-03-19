@@ -337,14 +337,10 @@ user_management_update_user_info_result = class {
   }
 
 };
-user_management_remove_user_args = class {
+user_management_logff_user_args = class {
   constructor(args) {
-    this.user_id = null;
     this.ssid = null;
     if (args) {
-      if (args.user_id !== undefined && args.user_id !== null) {
-        this.user_id = args.user_id;
-      }
       if (args.ssid !== undefined && args.ssid !== null) {
         this.ssid = args.ssid;
       }
@@ -362,69 +358,8 @@ user_management_remove_user_args = class {
       }
       switch (fid) {
         case 1:
-        if (ftype == Thrift.Type.I64) {
-          this.user_id = input.readI64().value;
-        } else {
-          input.skip(ftype);
-        }
-        break;
-        case 2:
         if (ftype == Thrift.Type.STRING) {
           this.ssid = input.readString().value;
-        } else {
-          input.skip(ftype);
-        }
-        break;
-        default:
-          input.skip(ftype);
-      }
-      input.readFieldEnd();
-    }
-    input.readStructEnd();
-    return;
-  }
-
-  write (output) {
-    output.writeStructBegin('user_management_remove_user_args');
-    if (this.user_id !== null && this.user_id !== undefined) {
-      output.writeFieldBegin('user_id', Thrift.Type.I64, 1);
-      output.writeI64(this.user_id);
-      output.writeFieldEnd();
-    }
-    if (this.ssid !== null && this.ssid !== undefined) {
-      output.writeFieldBegin('ssid', Thrift.Type.STRING, 2);
-      output.writeString(this.ssid);
-      output.writeFieldEnd();
-    }
-    output.writeFieldStop();
-    output.writeStructEnd();
-    return;
-  }
-
-};
-user_management_remove_user_result = class {
-  constructor(args) {
-    this.success = null;
-    if (args) {
-      if (args.success !== undefined && args.success !== null) {
-        this.success = args.success;
-      }
-    }
-  }
-
-  read (input) {
-    input.readStructBegin();
-    while (true) {
-      const ret = input.readFieldBegin();
-      const ftype = ret.ftype;
-      const fid = ret.fid;
-      if (ftype == Thrift.Type.STOP) {
-        break;
-      }
-      switch (fid) {
-        case 0:
-        if (ftype == Thrift.Type.BOOL) {
-          this.success = input.readBool().value;
         } else {
           input.skip(ftype);
         }
@@ -442,12 +377,39 @@ user_management_remove_user_result = class {
   }
 
   write (output) {
-    output.writeStructBegin('user_management_remove_user_result');
-    if (this.success !== null && this.success !== undefined) {
-      output.writeFieldBegin('success', Thrift.Type.BOOL, 0);
-      output.writeBool(this.success);
+    output.writeStructBegin('user_management_logff_user_args');
+    if (this.ssid !== null && this.ssid !== undefined) {
+      output.writeFieldBegin('ssid', Thrift.Type.STRING, 1);
+      output.writeString(this.ssid);
       output.writeFieldEnd();
     }
+    output.writeFieldStop();
+    output.writeStructEnd();
+    return;
+  }
+
+};
+user_management_logff_user_result = class {
+  constructor(args) {
+  }
+
+  read (input) {
+    input.readStructBegin();
+    while (true) {
+      const ret = input.readFieldBegin();
+      const ftype = ret.ftype;
+      if (ftype == Thrift.Type.STOP) {
+        break;
+      }
+      input.skip(ftype);
+      input.readFieldEnd();
+    }
+    input.readStructEnd();
+    return;
+  }
+
+  write (output) {
+    output.writeStructBegin('user_management_logff_user_result');
     output.writeFieldStop();
     output.writeStructEnd();
     return;
@@ -782,6 +744,123 @@ user_management_remove_vichele_result = class {
   }
 
 };
+user_management_update_logo_args = class {
+  constructor(args) {
+    this.content = null;
+    this.ssid = null;
+    if (args) {
+      if (args.content !== undefined && args.content !== null) {
+        this.content = args.content;
+      }
+      if (args.ssid !== undefined && args.ssid !== null) {
+        this.ssid = args.ssid;
+      }
+    }
+  }
+
+  read (input) {
+    input.readStructBegin();
+    while (true) {
+      const ret = input.readFieldBegin();
+      const ftype = ret.ftype;
+      const fid = ret.fid;
+      if (ftype == Thrift.Type.STOP) {
+        break;
+      }
+      switch (fid) {
+        case 1:
+        if (ftype == Thrift.Type.STRING) {
+          this.content = input.readString().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        case 2:
+        if (ftype == Thrift.Type.STRING) {
+          this.ssid = input.readString().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        default:
+          input.skip(ftype);
+      }
+      input.readFieldEnd();
+    }
+    input.readStructEnd();
+    return;
+  }
+
+  write (output) {
+    output.writeStructBegin('user_management_update_logo_args');
+    if (this.content !== null && this.content !== undefined) {
+      output.writeFieldBegin('content', Thrift.Type.STRING, 1);
+      output.writeString(this.content);
+      output.writeFieldEnd();
+    }
+    if (this.ssid !== null && this.ssid !== undefined) {
+      output.writeFieldBegin('ssid', Thrift.Type.STRING, 2);
+      output.writeString(this.ssid);
+      output.writeFieldEnd();
+    }
+    output.writeFieldStop();
+    output.writeStructEnd();
+    return;
+  }
+
+};
+user_management_update_logo_result = class {
+  constructor(args) {
+    this.success = null;
+    if (args) {
+      if (args.success !== undefined && args.success !== null) {
+        this.success = args.success;
+      }
+    }
+  }
+
+  read (input) {
+    input.readStructBegin();
+    while (true) {
+      const ret = input.readFieldBegin();
+      const ftype = ret.ftype;
+      const fid = ret.fid;
+      if (ftype == Thrift.Type.STOP) {
+        break;
+      }
+      switch (fid) {
+        case 0:
+        if (ftype == Thrift.Type.BOOL) {
+          this.success = input.readBool().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        case 0:
+          input.skip(ftype);
+          break;
+        default:
+          input.skip(ftype);
+      }
+      input.readFieldEnd();
+    }
+    input.readStructEnd();
+    return;
+  }
+
+  write (output) {
+    output.writeStructBegin('user_management_update_logo_result');
+    if (this.success !== null && this.success !== undefined) {
+      output.writeFieldBegin('success', Thrift.Type.BOOL, 0);
+      output.writeBool(this.success);
+      output.writeFieldEnd();
+    }
+    output.writeFieldStop();
+    output.writeStructEnd();
+    return;
+  }
+
+};
 user_managementClient = class user_managementClient {
   constructor(input, output) {
     this.input = input;
@@ -958,30 +1037,29 @@ user_managementClient = class user_managementClient {
     throw 'update_user_info failed: unknown result';
   }
 
-  remove_user (user_id, ssid) {
+  logff_user (ssid) {
     const self = this;
     return new Promise((resolve, reject) => {
-      self.send_remove_user(user_id, ssid, (error, result) => {
+      self.send_logff_user(ssid, (error, result) => {
         return error ? reject(error) : resolve(result);
       });
     });
   }
 
-  send_remove_user (user_id, ssid, callback) {
+  send_logff_user (ssid, callback) {
     const params = {
-      user_id: user_id,
       ssid: ssid
     };
-    const args = new user_management_remove_user_args(params);
+    const args = new user_management_logff_user_args(params);
     try {
-      this.output.writeMessageBegin('remove_user', Thrift.MessageType.CALL, this.seqid);
+      this.output.writeMessageBegin('logff_user', Thrift.MessageType.CALL, this.seqid);
       args.write(this.output);
       this.output.writeMessageEnd();
       const self = this;
       this.output.getTransport().flush(true, () => {
         let error = null, result = null;
         try {
-          result = self.recv_remove_user();
+          result = self.recv_logff_user();
         } catch (e) {
           error = e;
         }
@@ -996,7 +1074,7 @@ user_managementClient = class user_managementClient {
     }
   }
 
-  recv_remove_user () {
+  recv_logff_user () {
     const ret = this.input.readMessageBegin();
     const mtype = ret.mtype;
     if (mtype == Thrift.MessageType.EXCEPTION) {
@@ -1005,14 +1083,11 @@ user_managementClient = class user_managementClient {
       this.input.readMessageEnd();
       throw x;
     }
-    const result = new user_management_remove_user_result();
+    const result = new user_management_logff_user_result();
     result.read(this.input);
     this.input.readMessageEnd();
 
-    if (null !== result.success) {
-      return result.success;
-    }
-    throw 'remove_user failed: unknown result';
+    return;
   }
 
   get_bound_vichele (ssid) {
@@ -1180,5 +1255,62 @@ user_managementClient = class user_managementClient {
     this.input.readMessageEnd();
 
     return;
+  }
+
+  update_logo (content, ssid) {
+    const self = this;
+    return new Promise((resolve, reject) => {
+      self.send_update_logo(content, ssid, (error, result) => {
+        return error ? reject(error) : resolve(result);
+      });
+    });
+  }
+
+  send_update_logo (content, ssid, callback) {
+    const params = {
+      content: content,
+      ssid: ssid
+    };
+    const args = new user_management_update_logo_args(params);
+    try {
+      this.output.writeMessageBegin('update_logo', Thrift.MessageType.CALL, this.seqid);
+      args.write(this.output);
+      this.output.writeMessageEnd();
+      const self = this;
+      this.output.getTransport().flush(true, () => {
+        let error = null, result = null;
+        try {
+          result = self.recv_update_logo();
+        } catch (e) {
+          error = e;
+        }
+        callback(error, result);
+      });
+    }
+    catch (e) {
+      if (typeof this.output.getTransport().reset === 'function') {
+        this.output.getTransport().reset();
+      }
+      throw e;
+    }
+  }
+
+  recv_update_logo () {
+    const ret = this.input.readMessageBegin();
+    const mtype = ret.mtype;
+    if (mtype == Thrift.MessageType.EXCEPTION) {
+      const x = new Thrift.TApplicationException();
+      x.read(this.input);
+      this.input.readMessageEnd();
+      throw x;
+    }
+    const result = new user_management_update_logo_result();
+    result.read(this.input);
+    this.input.readMessageEnd();
+
+    if (null !== result.success) {
+      return result.success;
+    }
+    throw 'update_logo failed: unknown result';
   }
 };

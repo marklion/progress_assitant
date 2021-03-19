@@ -13,4 +13,4 @@ add_executable(pa_rpc ${RPC_SRC} ${RPC_IMP_SRC})
 
 find_library(SQLITE_ORM_LIB libsqlite_orm.so ${PRJ_INTERNAL_BUILD}/lib)
 
-target_link_libraries(pa_rpc ${SQLITE_ORM_LIB} libthrift.a)
+target_link_libraries(pa_rpc ${SQLITE_ORM_LIB} libthrift.a curl uuid)

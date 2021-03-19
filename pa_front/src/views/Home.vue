@@ -55,7 +55,7 @@ export default {
     },
     methods: {
         nav_to_plan: function (_type_id) {
-            if (this.$store.state.userinfo.is_login) {
+            if (this.$store.state.is_login) {
                 this.$router.push({
                     name: 'StuffPlan',
                     params: {

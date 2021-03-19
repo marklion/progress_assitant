@@ -25,10 +25,11 @@ class user_managementIf {
   virtual void get_user_info(user_info& _return, const std::string& ssid) = 0;
   virtual void user_login(std::string& _return, const std::string& code) = 0;
   virtual bool update_user_info(const user_info& info, const std::string& ssid) = 0;
-  virtual bool remove_user(const int64_t user_id, const std::string& ssid) = 0;
+  virtual void logff_user(const std::string& ssid) = 0;
   virtual void get_bound_vichele(std::vector<std::string> & _return, const std::string& ssid) = 0;
   virtual bool bind_new_vichele(const std::string& ssid, const std::string& vichele) = 0;
   virtual void remove_vichele(const std::string& ssid, const std::string& vichele) = 0;
+  virtual bool update_logo(const std::string& content, const std::string& ssid) = 0;
 };
 
 class user_managementIfFactory {
@@ -68,9 +69,8 @@ class user_managementNull : virtual public user_managementIf {
     bool _return = false;
     return _return;
   }
-  bool remove_user(const int64_t /* user_id */, const std::string& /* ssid */) {
-    bool _return = false;
-    return _return;
+  void logff_user(const std::string& /* ssid */) {
+    return;
   }
   void get_bound_vichele(std::vector<std::string> & /* _return */, const std::string& /* ssid */) {
     return;
@@ -81,6 +81,10 @@ class user_managementNull : virtual public user_managementIf {
   }
   void remove_vichele(const std::string& /* ssid */, const std::string& /* vichele */) {
     return;
+  }
+  bool update_logo(const std::string& /* content */, const std::string& /* ssid */) {
+    bool _return = false;
+    return _return;
   }
 };
 
@@ -403,43 +407,37 @@ class user_management_update_user_info_presult {
 
 };
 
-typedef struct _user_management_remove_user_args__isset {
-  _user_management_remove_user_args__isset() : user_id(false), ssid(false) {}
-  bool user_id :1;
+typedef struct _user_management_logff_user_args__isset {
+  _user_management_logff_user_args__isset() : ssid(false) {}
   bool ssid :1;
-} _user_management_remove_user_args__isset;
+} _user_management_logff_user_args__isset;
 
-class user_management_remove_user_args {
+class user_management_logff_user_args {
  public:
 
-  user_management_remove_user_args(const user_management_remove_user_args&);
-  user_management_remove_user_args& operator=(const user_management_remove_user_args&);
-  user_management_remove_user_args() : user_id(0), ssid() {
+  user_management_logff_user_args(const user_management_logff_user_args&);
+  user_management_logff_user_args& operator=(const user_management_logff_user_args&);
+  user_management_logff_user_args() : ssid() {
   }
 
-  virtual ~user_management_remove_user_args() noexcept;
-  int64_t user_id;
+  virtual ~user_management_logff_user_args() noexcept;
   std::string ssid;
 
-  _user_management_remove_user_args__isset __isset;
-
-  void __set_user_id(const int64_t val);
+  _user_management_logff_user_args__isset __isset;
 
   void __set_ssid(const std::string& val);
 
-  bool operator == (const user_management_remove_user_args & rhs) const
+  bool operator == (const user_management_logff_user_args & rhs) const
   {
-    if (!(user_id == rhs.user_id))
-      return false;
     if (!(ssid == rhs.ssid))
       return false;
     return true;
   }
-  bool operator != (const user_management_remove_user_args &rhs) const {
+  bool operator != (const user_management_logff_user_args &rhs) const {
     return !(*this == rhs);
   }
 
-  bool operator < (const user_management_remove_user_args & ) const;
+  bool operator < (const user_management_logff_user_args & ) const;
 
   uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
   uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
@@ -447,68 +445,49 @@ class user_management_remove_user_args {
 };
 
 
-class user_management_remove_user_pargs {
+class user_management_logff_user_pargs {
  public:
 
 
-  virtual ~user_management_remove_user_pargs() noexcept;
-  const int64_t* user_id;
+  virtual ~user_management_logff_user_pargs() noexcept;
   const std::string* ssid;
 
   uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
 
 };
 
-typedef struct _user_management_remove_user_result__isset {
-  _user_management_remove_user_result__isset() : success(false) {}
-  bool success :1;
-} _user_management_remove_user_result__isset;
 
-class user_management_remove_user_result {
+class user_management_logff_user_result {
  public:
 
-  user_management_remove_user_result(const user_management_remove_user_result&);
-  user_management_remove_user_result& operator=(const user_management_remove_user_result&);
-  user_management_remove_user_result() : success(0) {
+  user_management_logff_user_result(const user_management_logff_user_result&);
+  user_management_logff_user_result& operator=(const user_management_logff_user_result&);
+  user_management_logff_user_result() {
   }
 
-  virtual ~user_management_remove_user_result() noexcept;
-  bool success;
+  virtual ~user_management_logff_user_result() noexcept;
 
-  _user_management_remove_user_result__isset __isset;
-
-  void __set_success(const bool val);
-
-  bool operator == (const user_management_remove_user_result & rhs) const
+  bool operator == (const user_management_logff_user_result & /* rhs */) const
   {
-    if (!(success == rhs.success))
-      return false;
     return true;
   }
-  bool operator != (const user_management_remove_user_result &rhs) const {
+  bool operator != (const user_management_logff_user_result &rhs) const {
     return !(*this == rhs);
   }
 
-  bool operator < (const user_management_remove_user_result & ) const;
+  bool operator < (const user_management_logff_user_result & ) const;
 
   uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
   uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
 
 };
 
-typedef struct _user_management_remove_user_presult__isset {
-  _user_management_remove_user_presult__isset() : success(false) {}
-  bool success :1;
-} _user_management_remove_user_presult__isset;
 
-class user_management_remove_user_presult {
+class user_management_logff_user_presult {
  public:
 
 
-  virtual ~user_management_remove_user_presult() noexcept;
-  bool* success;
-
-  _user_management_remove_user_presult__isset __isset;
+  virtual ~user_management_logff_user_presult() noexcept;
 
   uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
 
@@ -822,6 +801,117 @@ class user_management_remove_vichele_presult {
 
 };
 
+typedef struct _user_management_update_logo_args__isset {
+  _user_management_update_logo_args__isset() : content(false), ssid(false) {}
+  bool content :1;
+  bool ssid :1;
+} _user_management_update_logo_args__isset;
+
+class user_management_update_logo_args {
+ public:
+
+  user_management_update_logo_args(const user_management_update_logo_args&);
+  user_management_update_logo_args& operator=(const user_management_update_logo_args&);
+  user_management_update_logo_args() : content(), ssid() {
+  }
+
+  virtual ~user_management_update_logo_args() noexcept;
+  std::string content;
+  std::string ssid;
+
+  _user_management_update_logo_args__isset __isset;
+
+  void __set_content(const std::string& val);
+
+  void __set_ssid(const std::string& val);
+
+  bool operator == (const user_management_update_logo_args & rhs) const
+  {
+    if (!(content == rhs.content))
+      return false;
+    if (!(ssid == rhs.ssid))
+      return false;
+    return true;
+  }
+  bool operator != (const user_management_update_logo_args &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const user_management_update_logo_args & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+
+class user_management_update_logo_pargs {
+ public:
+
+
+  virtual ~user_management_update_logo_pargs() noexcept;
+  const std::string* content;
+  const std::string* ssid;
+
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _user_management_update_logo_result__isset {
+  _user_management_update_logo_result__isset() : success(false) {}
+  bool success :1;
+} _user_management_update_logo_result__isset;
+
+class user_management_update_logo_result {
+ public:
+
+  user_management_update_logo_result(const user_management_update_logo_result&);
+  user_management_update_logo_result& operator=(const user_management_update_logo_result&);
+  user_management_update_logo_result() : success(0) {
+  }
+
+  virtual ~user_management_update_logo_result() noexcept;
+  bool success;
+
+  _user_management_update_logo_result__isset __isset;
+
+  void __set_success(const bool val);
+
+  bool operator == (const user_management_update_logo_result & rhs) const
+  {
+    if (!(success == rhs.success))
+      return false;
+    return true;
+  }
+  bool operator != (const user_management_update_logo_result &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const user_management_update_logo_result & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _user_management_update_logo_presult__isset {
+  _user_management_update_logo_presult__isset() : success(false) {}
+  bool success :1;
+} _user_management_update_logo_presult__isset;
+
+class user_management_update_logo_presult {
+ public:
+
+
+  virtual ~user_management_update_logo_presult() noexcept;
+  bool* success;
+
+  _user_management_update_logo_presult__isset __isset;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+
+};
+
 class user_managementClient : virtual public user_managementIf {
  public:
   user_managementClient(std::shared_ptr< ::apache::thrift::protocol::TProtocol> prot) {
@@ -856,9 +946,9 @@ class user_managementClient : virtual public user_managementIf {
   bool update_user_info(const user_info& info, const std::string& ssid);
   void send_update_user_info(const user_info& info, const std::string& ssid);
   bool recv_update_user_info();
-  bool remove_user(const int64_t user_id, const std::string& ssid);
-  void send_remove_user(const int64_t user_id, const std::string& ssid);
-  bool recv_remove_user();
+  void logff_user(const std::string& ssid);
+  void send_logff_user(const std::string& ssid);
+  void recv_logff_user();
   void get_bound_vichele(std::vector<std::string> & _return, const std::string& ssid);
   void send_get_bound_vichele(const std::string& ssid);
   void recv_get_bound_vichele(std::vector<std::string> & _return);
@@ -868,6 +958,9 @@ class user_managementClient : virtual public user_managementIf {
   void remove_vichele(const std::string& ssid, const std::string& vichele);
   void send_remove_vichele(const std::string& ssid, const std::string& vichele);
   void recv_remove_vichele();
+  bool update_logo(const std::string& content, const std::string& ssid);
+  void send_update_logo(const std::string& content, const std::string& ssid);
+  bool recv_update_logo();
  protected:
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> piprot_;
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> poprot_;
@@ -886,20 +979,22 @@ class user_managementProcessor : public ::apache::thrift::TDispatchProcessor {
   void process_get_user_info(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
   void process_user_login(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
   void process_update_user_info(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
-  void process_remove_user(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
+  void process_logff_user(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
   void process_get_bound_vichele(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
   void process_bind_new_vichele(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
   void process_remove_vichele(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
+  void process_update_logo(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
  public:
   user_managementProcessor(::std::shared_ptr<user_managementIf> iface) :
     iface_(iface) {
     processMap_["get_user_info"] = &user_managementProcessor::process_get_user_info;
     processMap_["user_login"] = &user_managementProcessor::process_user_login;
     processMap_["update_user_info"] = &user_managementProcessor::process_update_user_info;
-    processMap_["remove_user"] = &user_managementProcessor::process_remove_user;
+    processMap_["logff_user"] = &user_managementProcessor::process_logff_user;
     processMap_["get_bound_vichele"] = &user_managementProcessor::process_get_bound_vichele;
     processMap_["bind_new_vichele"] = &user_managementProcessor::process_bind_new_vichele;
     processMap_["remove_vichele"] = &user_managementProcessor::process_remove_vichele;
+    processMap_["update_logo"] = &user_managementProcessor::process_update_logo;
   }
 
   virtual ~user_managementProcessor() {}
@@ -957,13 +1052,13 @@ class user_managementMultiface : virtual public user_managementIf {
     return ifaces_[i]->update_user_info(info, ssid);
   }
 
-  bool remove_user(const int64_t user_id, const std::string& ssid) {
+  void logff_user(const std::string& ssid) {
     size_t sz = ifaces_.size();
     size_t i = 0;
     for (; i < (sz - 1); ++i) {
-      ifaces_[i]->remove_user(user_id, ssid);
+      ifaces_[i]->logff_user(ssid);
     }
-    return ifaces_[i]->remove_user(user_id, ssid);
+    ifaces_[i]->logff_user(ssid);
   }
 
   void get_bound_vichele(std::vector<std::string> & _return, const std::string& ssid) {
@@ -992,6 +1087,15 @@ class user_managementMultiface : virtual public user_managementIf {
       ifaces_[i]->remove_vichele(ssid, vichele);
     }
     ifaces_[i]->remove_vichele(ssid, vichele);
+  }
+
+  bool update_logo(const std::string& content, const std::string& ssid) {
+    size_t sz = ifaces_.size();
+    size_t i = 0;
+    for (; i < (sz - 1); ++i) {
+      ifaces_[i]->update_logo(content, ssid);
+    }
+    return ifaces_[i]->update_logo(content, ssid);
   }
 
 };
@@ -1035,9 +1139,9 @@ class user_managementConcurrentClient : virtual public user_managementIf {
   bool update_user_info(const user_info& info, const std::string& ssid);
   int32_t send_update_user_info(const user_info& info, const std::string& ssid);
   bool recv_update_user_info(const int32_t seqid);
-  bool remove_user(const int64_t user_id, const std::string& ssid);
-  int32_t send_remove_user(const int64_t user_id, const std::string& ssid);
-  bool recv_remove_user(const int32_t seqid);
+  void logff_user(const std::string& ssid);
+  int32_t send_logff_user(const std::string& ssid);
+  void recv_logff_user(const int32_t seqid);
   void get_bound_vichele(std::vector<std::string> & _return, const std::string& ssid);
   int32_t send_get_bound_vichele(const std::string& ssid);
   void recv_get_bound_vichele(std::vector<std::string> & _return, const int32_t seqid);
@@ -1047,6 +1151,9 @@ class user_managementConcurrentClient : virtual public user_managementIf {
   void remove_vichele(const std::string& ssid, const std::string& vichele);
   int32_t send_remove_vichele(const std::string& ssid, const std::string& vichele);
   void recv_remove_vichele(const int32_t seqid);
+  bool update_logo(const std::string& content, const std::string& ssid);
+  int32_t send_update_logo(const std::string& content, const std::string& ssid);
+  bool recv_update_logo(const int32_t seqid);
  protected:
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> piprot_;
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> poprot_;

@@ -67,7 +67,15 @@ const routes = [
         has_go_back:false,
     },
   },
-
+  {
+    path: '/self_info',
+    name: 'SelfInfo',
+    component: () => import('../views/SelfInfo.vue'),
+    meta: {    
+        private_title: '个人信息',
+        has_go_back:true,
+    },
+  },
 ]
 
 const router = new VueRouter({
