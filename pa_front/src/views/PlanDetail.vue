@@ -1,6 +1,6 @@
 <template>
 <div class="plan_detail show">
-    <stuff-info-submit :is_create="false" :orig_plan_count="plan_count" :orig_plan_time="plan_time" :plan_id="parseInt($route.params.plan_id)" :orig_vichele_info="vichele_info" :min_time="new Date(created_time)"></stuff-info-submit>
+    <stuff-info-submit :orig_name="name" :orig_price="price" :is_create="false" :orig_plan_count="plan_count" :orig_plan_time="plan_time" :plan_id="parseInt($route.params.plan_id)" :orig_vichele_info="vichele_info" :min_time="new Date(created_time)"></stuff-info-submit>
 </div>
 </template>
 
@@ -15,6 +15,7 @@ export default {
         return {
             name: '',
             company: '',
+            price:0.0,
             plan_count: 10.4,
             plan_time: '',
             vichele_info: [],
@@ -33,6 +34,7 @@ export default {
             vue_this.$get_client("stuff_info").get_stuff_detail(resp.type_id).then(function (detail_resp) {
                 vue_this.name = detail_resp.name;
                 vue_this.company = detail_resp.company;
+                vue_this.price = detail_resp.price;
             }).catch(function (err) {
                 console.log(err);
             });

@@ -45,6 +45,9 @@ struct stuff_plan {
     5:i64 created_by,
     6:string plan_time,
     7:i64 created_time,
+    8:string name, 
+    9:double price,
+    10:i64 status,
 }
 
 service stuff_plan_management {

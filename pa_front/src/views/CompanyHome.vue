@@ -23,7 +23,7 @@
         <van-form @submit="edit_stuff">
             <van-field v-model="stuff_in_edit.name" name="商品名" label="商品名" readonly />
             <van-field v-model="stuff_in_edit.price" name="价格" label="价格" placeholder="请输入价格" :rules="[{ required: true, message: '请填写价格' }]" />
-            <van-field v-model="stuff_in_edit.comment" name="价格" label="存量" placeholder="请输入存量信息" :rules="[{ required: true, message: '请填写存量' }]" />
+            <van-field v-model="stuff_in_edit.last" name="价格" label="存量" placeholder="请输入存量信息" :rules="[{ required: true, message: '请填写存量' }]" />
             <div style="margin: 16px;">
                 <van-button round block type="info" native-type="submit">确认</van-button>
             </div>
@@ -73,7 +73,7 @@ export default {
             stuff_in_edit: {
                 name: '',
                 price: 0,
-                comment: '',
+                last: '',
             },
             show_edit_stuff: false,
             show_remove_stuff: false,

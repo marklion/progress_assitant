@@ -52,7 +52,7 @@ struct sqlite_orm_column {
     }
     std::string m_name;
     enum column_type {
-        INTEGER, STRING
+        INTEGER, STRING, REAL
     } m_type;
     void *m_data;
     unsigned long m_limit;
@@ -91,6 +91,9 @@ private:
             
             case sqlite_orm_column::STRING:
                 sql_cmd.append("STRING ");
+                break;
+            case sqlite_orm_column::REAL:
+                sql_cmd.append("REAL ");
                 break;
             default:
                 break;
@@ -135,6 +138,9 @@ private:
                 
                 case sqlite_orm_column::STRING:
                     sql_cmd.append("STRING");
+                    break;
+                case sqlite_orm_column::REAL:
+                    sql_cmd.append("REAL");
                     break;
                 default:
                     break;
@@ -189,6 +195,10 @@ public:
                 break;
             case sqlite_orm_column::STRING:
                 sql_cmd.append("'" + escape_single_quotes(*(static_cast<std::string *>(single_column.m_data))) + "',");
+                break;
+            case sqlite_orm_column::REAL:
+                sql_cmd.append(std::to_string(*(static_cast<double *>(single_column.m_data))) + ",");
+                break;
             default:
                 break;
             }
@@ -235,7 +245,9 @@ public:
             case sqlite_orm_column::STRING:
                 sql_cmd.append("'" + escape_single_quotes(*(static_cast<std::string *>(single_column.m_data))) + "'");
                 break;
-            
+            case sqlite_orm_column::REAL:
+                sql_cmd.append(std::to_string(*(static_cast<double *>(single_column.m_data))));
+                break;
             default:
                 break;
             }
@@ -275,6 +287,9 @@ public:
                         break;
                         case sqlite_orm_column::STRING:
                         *(static_cast<std::string *>(single_column.m_data)) = itr[single_column.m_name].c_str();
+                        break;
+                        case sqlite_orm_column::REAL:
+                        *(static_cast<double *>(single_column.m_data)) = std::stod(itr[single_column.m_name]);
                         break;
                     }
                 }

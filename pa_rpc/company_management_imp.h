@@ -53,7 +53,7 @@ public:
                 auto stuff_company = stuff_need_edit->get_parent<pa_sql_company>("belong_company");
                 if (stuff_company && company && stuff_company->get_pri_id() == company->get_pri_id())
                 {
-                    stuff_need_edit->comment = stuff.last;
+                    stuff_need_edit->last = stuff.last;
                     stuff_need_edit->price = stuff.price;
 
                     ret = stuff_need_edit->update_record();

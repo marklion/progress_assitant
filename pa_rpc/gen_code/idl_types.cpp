@@ -409,6 +409,18 @@ void stuff_plan::__set_plan_time(const std::string& val) {
 void stuff_plan::__set_created_time(const int64_t val) {
   this->created_time = val;
 }
+
+void stuff_plan::__set_name(const std::string& val) {
+  this->name = val;
+}
+
+void stuff_plan::__set_price(const double val) {
+  this->price = val;
+}
+
+void stuff_plan::__set_status(const int64_t val) {
+  this->status = val;
+}
 std::ostream& operator<<(std::ostream& out, const stuff_plan& obj)
 {
   obj.printTo(out);
@@ -505,6 +517,30 @@ uint32_t stuff_plan::read(::apache::thrift::protocol::TProtocol* iprot) {
           xfer += iprot->skip(ftype);
         }
         break;
+      case 8:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->name);
+          this->__isset.name = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 9:
+        if (ftype == ::apache::thrift::protocol::T_DOUBLE) {
+          xfer += iprot->readDouble(this->price);
+          this->__isset.price = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 10:
+        if (ftype == ::apache::thrift::protocol::T_I64) {
+          xfer += iprot->readI64(this->status);
+          this->__isset.status = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
       default:
         xfer += iprot->skip(ftype);
         break;
@@ -558,6 +594,18 @@ uint32_t stuff_plan::write(::apache::thrift::protocol::TProtocol* oprot) const {
   xfer += oprot->writeI64(this->created_time);
   xfer += oprot->writeFieldEnd();
 
+  xfer += oprot->writeFieldBegin("name", ::apache::thrift::protocol::T_STRING, 8);
+  xfer += oprot->writeString(this->name);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("price", ::apache::thrift::protocol::T_DOUBLE, 9);
+  xfer += oprot->writeDouble(this->price);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("status", ::apache::thrift::protocol::T_I64, 10);
+  xfer += oprot->writeI64(this->status);
+  xfer += oprot->writeFieldEnd();
+
   xfer += oprot->writeFieldStop();
   xfer += oprot->writeStructEnd();
   return xfer;
@@ -572,6 +620,9 @@ void swap(stuff_plan &a, stuff_plan &b) {
   swap(a.created_by, b.created_by);
   swap(a.plan_time, b.plan_time);
   swap(a.created_time, b.created_time);
+  swap(a.name, b.name);
+  swap(a.price, b.price);
+  swap(a.status, b.status);
   swap(a.__isset, b.__isset);
 }
 
@@ -583,6 +634,9 @@ stuff_plan::stuff_plan(const stuff_plan& other10) {
   created_by = other10.created_by;
   plan_time = other10.plan_time;
   created_time = other10.created_time;
+  name = other10.name;
+  price = other10.price;
+  status = other10.status;
   __isset = other10.__isset;
 }
 stuff_plan& stuff_plan::operator=(const stuff_plan& other11) {
@@ -593,6 +647,9 @@ stuff_plan& stuff_plan::operator=(const stuff_plan& other11) {
   created_by = other11.created_by;
   plan_time = other11.plan_time;
   created_time = other11.created_time;
+  name = other11.name;
+  price = other11.price;
+  status = other11.status;
   __isset = other11.__isset;
   return *this;
 }
@@ -606,6 +663,9 @@ void stuff_plan::printTo(std::ostream& out) const {
   out << ", " << "created_by=" << to_string(created_by);
   out << ", " << "plan_time=" << to_string(plan_time);
   out << ", " << "created_time=" << to_string(created_time);
+  out << ", " << "name=" << to_string(name);
+  out << ", " << "price=" << to_string(price);
+  out << ", " << "status=" << to_string(status);
   out << ")";
 }
 

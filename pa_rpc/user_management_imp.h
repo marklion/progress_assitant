@@ -120,12 +120,42 @@ public:
 
     virtual void get_bound_vichele(std::vector<std::string> &_return, const std::string &ssid)
     {
-        _return.push_back("京QZN370");
-        _return.push_back("京QZN371");
+        auto user = PA_DATAOPT_get_online_user(ssid);
+        if (user)
+        {
+            auto company = user->get_parent<pa_sql_company>("belong_company");
+            if (company)
+            {
+                auto bound_vicheles = company->get_all_children<pa_sql_vichele>("belong_company");
+                for (auto &itr:bound_vicheles)
+                {
+                    _return.push_back(itr.number);
+                }
+            }
+        }
     }
     virtual bool bind_new_vichele(const std::string &ssid, const std::string &vichele)
     {
-        return true;
+        bool ret = false;
+
+        auto opt_user = PA_DATAOPT_get_online_user(ssid);
+        if (opt_user)
+        {
+            auto company = opt_user->get_parent<pa_sql_company>("belong_company");
+            if (company)
+            {
+                auto exist_vichele = company->get_children<pa_sql_vichele>("belong_company", "number = '%s'", vichele.c_str());
+                if (!exist_vichele)
+                {
+                    pa_sql_vichele tmp;
+                    tmp.number = vichele;
+                    tmp.set_parent(*company, "belong_company");
+                    ret = tmp.insert_record();
+                }
+            }
+        }
+
+        return ret;
     }
     virtual void remove_vichele(const std::string &ssid, const std::string &vichele)
     {

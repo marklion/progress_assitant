@@ -20,7 +20,11 @@
             </van-col>
         </van-row>
         <van-popup v-model="show_vichele_picker" round position="bottom">
-            <van-picker show-toolbar :columns="bound_vichele" @cancel="show_vichele_picker = false" @confirm="add_vichele" />
+            <van-picker show-toolbar :columns="bound_vichele" @cancel="show_vichele_picker = false" @confirm="add_vichele">
+                <template #title>
+                    <van-button type="info" native-type="button" @click="show_add_vichele_diag = true">添加车辆</van-button>
+                </template>
+            </van-picker>
         </van-popup>
         <span style="margin-left:16px" v-for="(single_vichele, index) in vichele_info" :key="index">
             <van-tag closeable size="large" type="primary" @close="remove_vichele(index)">
@@ -32,6 +36,9 @@
         </div>
 
     </van-form>
+    <van-dialog v-model="show_add_vichele_diag" title="添加车辆" show-cancel-button @confirm="submit_new_vichele">
+        <van-field v-model="new_vichele" placeholder="请输入车牌号" />
+    </van-dialog>
 </div>
 </template>
 
@@ -68,8 +75,14 @@ import {
 import {
     Picker
 } from 'vant';
-import { Toast } from 'vant';
+import {
+    Toast
+} from 'vant';
+import {
+    Dialog
+} from 'vant';
 
+Vue.use(Dialog);
 Vue.use(Toast);
 Vue.use(Picker);
 Vue.use(Divider);
@@ -97,6 +110,8 @@ export default {
         is_create: Boolean,
         plan_id: Number,
         type_id: Number,
+        orig_name: String,
+        orig_price: Number,
     },
     data: function () {
         return {
@@ -106,6 +121,8 @@ export default {
             show_time_picker: false,
             bound_vichele: [],
             show_vichele_picker: false,
+            show_add_vichele_diag: false,
+            new_vichele: '',
         };
     },
     computed: {
@@ -147,22 +164,34 @@ export default {
             this.vichele_info = this.orig_vichele_info;
             this.vichele_info = this.orig_vichele_info.slice(0);
         }
-        var vue_this = this;
-        vue_this.$get_client("user_management").get_bound_vichele(vue_this.$cookies.get('pa_ssid')).then(function (resp) {
-            resp.forEach((element, index) => {
-                vue_this.$set(vue_this.bound_vichele, index, element);
-            });
-        }).catch(function (err) {
-            console.log(err);
-        });
+        this.fetch_current_vichele();
     },
     methods: {
+        fetch_current_vichele: function () {
+            var vue_this = this;
+            vue_this.$get_client("user_management").get_bound_vichele(vue_this.$cookies.get('pa_ssid')).then(function (resp) {
+                resp.forEach((element, index) => {
+                    vue_this.$set(vue_this.bound_vichele, index, element);
+                });
+            }).catch(function (err) {
+                console.log(err);
+            });
+        },
+        submit_new_vichele: function () {
+            var vue_this = this;
+            vue_this.$get_client("user_management").bind_new_vichele(vue_this.$cookies.get('pa_ssid'), vue_this.new_vichele).then(function (resp) {
+                if (resp) {
+                    vue_this.fetch_current_vichele();
+                }
+            }).catch(function (err) {
+                console.log(err);
+            });
+        },
         add_vichele: function (_vichele) {
             if (this.vichele_info.indexOf(_vichele) == -1) {
                 this.vichele_info.push(_vichele);
                 this.show_vichele_picker = false;
-            }
-            else {
+            } else {
                 this.$toast.fail('已添加');
             }
         },
@@ -193,6 +222,8 @@ export default {
                     type_id: this.type_id,
                     plan_time: this.plan_time,
                     vichele_info: this.vichele_info,
+                    name: this.orig_name,
+                    price:this.orig_price,
                 }, this.$cookies.get("pa_ssid")).then(function (resp) {
                     vue_this.$router.push({
                         name: 'PlanDetail',

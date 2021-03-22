@@ -259,6 +259,9 @@ stuff_plan = class {
     this.created_by = null;
     this.plan_time = null;
     this.created_time = null;
+    this.name = null;
+    this.price = null;
+    this.status = null;
     if (args) {
       if (args.type_id !== undefined && args.type_id !== null) {
         this.type_id = args.type_id;
@@ -280,6 +283,15 @@ stuff_plan = class {
       }
       if (args.created_time !== undefined && args.created_time !== null) {
         this.created_time = args.created_time;
+      }
+      if (args.name !== undefined && args.name !== null) {
+        this.name = args.name;
+      }
+      if (args.price !== undefined && args.price !== null) {
+        this.price = args.price;
+      }
+      if (args.status !== undefined && args.status !== null) {
+        this.status = args.status;
       }
     }
   }
@@ -351,6 +363,27 @@ stuff_plan = class {
           input.skip(ftype);
         }
         break;
+        case 8:
+        if (ftype == Thrift.Type.STRING) {
+          this.name = input.readString().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        case 9:
+        if (ftype == Thrift.Type.DOUBLE) {
+          this.price = input.readDouble().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        case 10:
+        if (ftype == Thrift.Type.I64) {
+          this.status = input.readI64().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
         default:
           input.skip(ftype);
       }
@@ -402,6 +435,21 @@ stuff_plan = class {
     if (this.created_time !== null && this.created_time !== undefined) {
       output.writeFieldBegin('created_time', Thrift.Type.I64, 7);
       output.writeI64(this.created_time);
+      output.writeFieldEnd();
+    }
+    if (this.name !== null && this.name !== undefined) {
+      output.writeFieldBegin('name', Thrift.Type.STRING, 8);
+      output.writeString(this.name);
+      output.writeFieldEnd();
+    }
+    if (this.price !== null && this.price !== undefined) {
+      output.writeFieldBegin('price', Thrift.Type.DOUBLE, 9);
+      output.writeDouble(this.price);
+      output.writeFieldEnd();
+    }
+    if (this.status !== null && this.status !== undefined) {
+      output.writeFieldBegin('status', Thrift.Type.I64, 10);
+      output.writeI64(this.status);
       output.writeFieldEnd();
     }
     output.writeFieldStop();
