@@ -75,6 +75,16 @@ public:
         return sqlite_orm::search_record_all<T>("%s_ext_key = %d", _parent_tag.c_str(), get_pri_id());
     }
     template <typename T>
+    std::list<T> get_all_children(const std::string &_parent_tag, const char *_query, ...)
+    {
+        va_list vl;
+        va_start(vl, _query);
+        char tmpbuff[256];
+        vsnprintf(tmpbuff, sizeof(tmpbuff), _query, vl);
+        va_end(vl);
+        return sqlite_orm::search_record_all<T>("%s_ext_key = %d AND %s", _parent_tag.c_str(), get_pri_id(), tmpbuff);
+    }
+    template <typename T>
     std::unique_ptr<T> get_children(const std::string &_parent_tag)
     {
         auto all_children = sqlite_orm::search_record_all<T>("%s_ext_key = %d", _parent_tag.c_str(), get_pri_id());
@@ -84,6 +94,17 @@ public:
             return std::unique_ptr<T>(new T(all_children.front()));
         }
         return std::unique_ptr<T>();
+    }
+    template <typename T>
+    std::unique_ptr<T> get_children(const std::string &_parent_tag, const char *_query, ...)
+    {
+        va_list vl;
+        va_start(vl, _query);
+        char tmpbuff[256];
+        vsnprintf(tmpbuff, sizeof(tmpbuff), _query, vl);
+        va_end(vl);
+
+        return sqlite_orm::search_record<T>("%s_ext_key = %d AND %s",  _parent_tag.c_str(), get_pri_id(), tmpbuff);
     }
 };
 

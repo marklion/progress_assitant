@@ -163,7 +163,7 @@ static size_t dg_proc_curl(void *ptr, size_t size, size_t nmemb, void *user_data
     return size * nmemb;
 }
 
-static std::string pa_rest_req(const std::string &_req)
+static std::string PA_DATAOPT_rest_req(const std::string &_req)
 {
     std::string in_buff;
     auto curlhandle = curl_easy_init();
@@ -178,7 +178,7 @@ static std::string pa_rest_req(const std::string &_req)
 
     return in_buff;
 }
-static std::string pa_store_logo_to_file(const std::string &_logo, const std::string &_upid)
+static std::string PA_DATAOPT_store_logo_to_file(const std::string &_logo, const std::string &_upid)
 {
     std::string ret;
     std::string file_name("/dist/logo_res/logo_");
@@ -217,7 +217,7 @@ static std::unique_ptr<pa_sql_userinfo> fetch_user_info(const std::string &_name
 
     return p_user_info;
 }
-static std::string pa_gen_ssid()
+static std::string PA_DATAOPT_gen_ssid()
 {
     uuid_t out;
     std::string ret;
@@ -232,11 +232,11 @@ static std::string pa_gen_ssid()
 
     return ret;
 }
-static std::unique_ptr<pa_sql_userlogin> pa_pull_user_info_from_wechat(const std::string &_acctok, const std::string &_open_id)
+static std::unique_ptr<pa_sql_userlogin> PA_DATAOPT_pull_user_info_from_wechat(const std::string &_acctok, const std::string &_open_id)
 {
     std::unique_ptr<pa_sql_userlogin> ret(new pa_sql_userlogin());
     std::string req = "https://api.weixin.qq.com/sns/userinfo?access_token=" + _acctok + "&openid=" + _open_id + "&lang=zh_CN";
-    auto in_buff = pa_rest_req(req);
+    auto in_buff = PA_DATAOPT_rest_req(req);
 
     g_log.log("user infor:" + in_buff);
     neb::CJsonObject oJson(in_buff);
@@ -248,11 +248,11 @@ static std::unique_ptr<pa_sql_userlogin> pa_pull_user_info_from_wechat(const std
     else
     {
         auto logo_path = oJson("headimgurl");
-        auto logo_content = pa_rest_req(logo_path);
-        auto p_user_info = fetch_user_info(oJson("nickname"), pa_store_logo_to_file(logo_content, _open_id), _open_id);
+        auto logo_content = PA_DATAOPT_rest_req(logo_path);
+        auto p_user_info = fetch_user_info(oJson("nickname"), PA_DATAOPT_store_logo_to_file(logo_content, _open_id), _open_id);
         if (p_user_info)
         {
-            ret->m_ssid = pa_gen_ssid();
+            ret->m_ssid = PA_DATAOPT_gen_ssid();
             ret->m_user_id = p_user_info->get_pri_id();
             ret->m_time_stamp = time(NULL) / 3600;
         }
@@ -266,7 +266,7 @@ std::string PA_API_proc_wechat_login(const std::string &_code)
     std::string wechat_secret(getenv("WECHAT_SECRET"));
     std::string req = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=wxa390f8b6f68e9c6d&secret=" + wechat_secret + "&code=" + _code + "&grant_type=authorization_code";
 
-    std::string in_buff = pa_rest_req(req);
+    std::string in_buff = PA_DATAOPT_rest_req(req);
     neb::CJsonObject oJson(in_buff);
 
     if (oJson.KeyExist("errcode"))
@@ -287,7 +287,7 @@ std::string PA_API_proc_wechat_login(const std::string &_code)
             else
             {
                 pa_sql_userlogin new_login;
-                new_login.m_ssid = pa_gen_ssid();
+                new_login.m_ssid = PA_DATAOPT_gen_ssid();
                 new_login.m_time_stamp = time(nullptr) / 3600;
                 new_login.m_user_id = p_user_info->get_pri_id();
                 if (new_login.insert_record())
@@ -296,7 +296,7 @@ std::string PA_API_proc_wechat_login(const std::string &_code)
         }
         if (ret.length() <= 0)
         {
-            auto user_information = pa_pull_user_info_from_wechat(oJson("access_token"), oJson("openid"));
+            auto user_information = PA_DATAOPT_pull_user_info_from_wechat(oJson("access_token"), oJson("openid"));
             if (true == user_information->insert_record())
             {
                 ret = user_information->m_ssid;
@@ -409,7 +409,7 @@ bool PA_API_proc_upate_logo(const std::string &_ssid, const std::string &_base64
     {
         std::string file_content;
         Base64::Decode(_base64_img, &file_content);
-        pa_store_logo_to_file(file_content, userinfo->m_openid);
+        PA_DATAOPT_store_logo_to_file(file_content, userinfo->m_openid);
         ret = true;
     }
 
@@ -453,7 +453,7 @@ struct acc_tok_from_wx : content_from_wx
     void refresh_content()
     {
         std::string wechat_secret(getenv("WECHAT_SECRET"));
-        auto in_buff = pa_rest_req("https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=wxa390f8b6f68e9c6d&secret=" + wechat_secret);
+        auto in_buff = PA_DATAOPT_rest_req("https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=wxa390f8b6f68e9c6d&secret=" + wechat_secret);
 
         g_log.log("recv tok from wx:%s", in_buff.c_str());
         neb::CJsonObject oJson(in_buff);
@@ -474,7 +474,7 @@ struct jsapi_ticket_from_wx : content_from_wx
 {
     void refresh_content()
     {
-        auto in_buff = pa_rest_req("https://api.weixin.qq.com/cgi-bin/ticket/getticket?access_token=" + g_acc_tok.get_content() + "&type=jsapi");
+        auto in_buff = PA_DATAOPT_rest_req("https://api.weixin.qq.com/cgi-bin/ticket/getticket?access_token=" + g_acc_tok.get_content() + "&type=jsapi");
 
         g_log.log("recv js_ticket from wx:%s", in_buff.c_str());
         neb::CJsonObject oJson(in_buff);

@@ -27,6 +27,9 @@ struct stuff_detail {
 
 service company_management {
     list<i64> get_all_type(1:string ssid),
+    i64 add_type(1:string name, 2:i64 price, 3:string ssid),
+    bool edit_type(1:stuff_detail stuff, 2:string ssid),
+    void remove_type(1:stuff_detail stuff, 2:string ssid),
 }
 
 service stuff_info {

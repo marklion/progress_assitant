@@ -23,6 +23,9 @@ class company_managementIf {
  public:
   virtual ~company_managementIf() {}
   virtual void get_all_type(std::vector<int64_t> & _return, const std::string& ssid) = 0;
+  virtual int64_t add_type(const std::string& name, const int64_t price, const std::string& ssid) = 0;
+  virtual bool edit_type(const stuff_detail& stuff, const std::string& ssid) = 0;
+  virtual void remove_type(const stuff_detail& stuff, const std::string& ssid) = 0;
 };
 
 class company_managementIfFactory {
@@ -53,6 +56,17 @@ class company_managementNull : virtual public company_managementIf {
  public:
   virtual ~company_managementNull() {}
   void get_all_type(std::vector<int64_t> & /* _return */, const std::string& /* ssid */) {
+    return;
+  }
+  int64_t add_type(const std::string& /* name */, const int64_t /* price */, const std::string& /* ssid */) {
+    int64_t _return = 0;
+    return _return;
+  }
+  bool edit_type(const stuff_detail& /* stuff */, const std::string& /* ssid */) {
+    bool _return = false;
+    return _return;
+  }
+  void remove_type(const stuff_detail& /* stuff */, const std::string& /* ssid */) {
     return;
   }
 };
@@ -161,6 +175,328 @@ class company_management_get_all_type_presult {
 
 };
 
+typedef struct _company_management_add_type_args__isset {
+  _company_management_add_type_args__isset() : name(false), price(false), ssid(false) {}
+  bool name :1;
+  bool price :1;
+  bool ssid :1;
+} _company_management_add_type_args__isset;
+
+class company_management_add_type_args {
+ public:
+
+  company_management_add_type_args(const company_management_add_type_args&);
+  company_management_add_type_args& operator=(const company_management_add_type_args&);
+  company_management_add_type_args() : name(), price(0), ssid() {
+  }
+
+  virtual ~company_management_add_type_args() noexcept;
+  std::string name;
+  int64_t price;
+  std::string ssid;
+
+  _company_management_add_type_args__isset __isset;
+
+  void __set_name(const std::string& val);
+
+  void __set_price(const int64_t val);
+
+  void __set_ssid(const std::string& val);
+
+  bool operator == (const company_management_add_type_args & rhs) const
+  {
+    if (!(name == rhs.name))
+      return false;
+    if (!(price == rhs.price))
+      return false;
+    if (!(ssid == rhs.ssid))
+      return false;
+    return true;
+  }
+  bool operator != (const company_management_add_type_args &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const company_management_add_type_args & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+
+class company_management_add_type_pargs {
+ public:
+
+
+  virtual ~company_management_add_type_pargs() noexcept;
+  const std::string* name;
+  const int64_t* price;
+  const std::string* ssid;
+
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _company_management_add_type_result__isset {
+  _company_management_add_type_result__isset() : success(false) {}
+  bool success :1;
+} _company_management_add_type_result__isset;
+
+class company_management_add_type_result {
+ public:
+
+  company_management_add_type_result(const company_management_add_type_result&);
+  company_management_add_type_result& operator=(const company_management_add_type_result&);
+  company_management_add_type_result() : success(0) {
+  }
+
+  virtual ~company_management_add_type_result() noexcept;
+  int64_t success;
+
+  _company_management_add_type_result__isset __isset;
+
+  void __set_success(const int64_t val);
+
+  bool operator == (const company_management_add_type_result & rhs) const
+  {
+    if (!(success == rhs.success))
+      return false;
+    return true;
+  }
+  bool operator != (const company_management_add_type_result &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const company_management_add_type_result & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _company_management_add_type_presult__isset {
+  _company_management_add_type_presult__isset() : success(false) {}
+  bool success :1;
+} _company_management_add_type_presult__isset;
+
+class company_management_add_type_presult {
+ public:
+
+
+  virtual ~company_management_add_type_presult() noexcept;
+  int64_t* success;
+
+  _company_management_add_type_presult__isset __isset;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+
+};
+
+typedef struct _company_management_edit_type_args__isset {
+  _company_management_edit_type_args__isset() : stuff(false), ssid(false) {}
+  bool stuff :1;
+  bool ssid :1;
+} _company_management_edit_type_args__isset;
+
+class company_management_edit_type_args {
+ public:
+
+  company_management_edit_type_args(const company_management_edit_type_args&);
+  company_management_edit_type_args& operator=(const company_management_edit_type_args&);
+  company_management_edit_type_args() : ssid() {
+  }
+
+  virtual ~company_management_edit_type_args() noexcept;
+  stuff_detail stuff;
+  std::string ssid;
+
+  _company_management_edit_type_args__isset __isset;
+
+  void __set_stuff(const stuff_detail& val);
+
+  void __set_ssid(const std::string& val);
+
+  bool operator == (const company_management_edit_type_args & rhs) const
+  {
+    if (!(stuff == rhs.stuff))
+      return false;
+    if (!(ssid == rhs.ssid))
+      return false;
+    return true;
+  }
+  bool operator != (const company_management_edit_type_args &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const company_management_edit_type_args & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+
+class company_management_edit_type_pargs {
+ public:
+
+
+  virtual ~company_management_edit_type_pargs() noexcept;
+  const stuff_detail* stuff;
+  const std::string* ssid;
+
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _company_management_edit_type_result__isset {
+  _company_management_edit_type_result__isset() : success(false) {}
+  bool success :1;
+} _company_management_edit_type_result__isset;
+
+class company_management_edit_type_result {
+ public:
+
+  company_management_edit_type_result(const company_management_edit_type_result&);
+  company_management_edit_type_result& operator=(const company_management_edit_type_result&);
+  company_management_edit_type_result() : success(0) {
+  }
+
+  virtual ~company_management_edit_type_result() noexcept;
+  bool success;
+
+  _company_management_edit_type_result__isset __isset;
+
+  void __set_success(const bool val);
+
+  bool operator == (const company_management_edit_type_result & rhs) const
+  {
+    if (!(success == rhs.success))
+      return false;
+    return true;
+  }
+  bool operator != (const company_management_edit_type_result &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const company_management_edit_type_result & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _company_management_edit_type_presult__isset {
+  _company_management_edit_type_presult__isset() : success(false) {}
+  bool success :1;
+} _company_management_edit_type_presult__isset;
+
+class company_management_edit_type_presult {
+ public:
+
+
+  virtual ~company_management_edit_type_presult() noexcept;
+  bool* success;
+
+  _company_management_edit_type_presult__isset __isset;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+
+};
+
+typedef struct _company_management_remove_type_args__isset {
+  _company_management_remove_type_args__isset() : stuff(false), ssid(false) {}
+  bool stuff :1;
+  bool ssid :1;
+} _company_management_remove_type_args__isset;
+
+class company_management_remove_type_args {
+ public:
+
+  company_management_remove_type_args(const company_management_remove_type_args&);
+  company_management_remove_type_args& operator=(const company_management_remove_type_args&);
+  company_management_remove_type_args() : ssid() {
+  }
+
+  virtual ~company_management_remove_type_args() noexcept;
+  stuff_detail stuff;
+  std::string ssid;
+
+  _company_management_remove_type_args__isset __isset;
+
+  void __set_stuff(const stuff_detail& val);
+
+  void __set_ssid(const std::string& val);
+
+  bool operator == (const company_management_remove_type_args & rhs) const
+  {
+    if (!(stuff == rhs.stuff))
+      return false;
+    if (!(ssid == rhs.ssid))
+      return false;
+    return true;
+  }
+  bool operator != (const company_management_remove_type_args &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const company_management_remove_type_args & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+
+class company_management_remove_type_pargs {
+ public:
+
+
+  virtual ~company_management_remove_type_pargs() noexcept;
+  const stuff_detail* stuff;
+  const std::string* ssid;
+
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+
+class company_management_remove_type_result {
+ public:
+
+  company_management_remove_type_result(const company_management_remove_type_result&);
+  company_management_remove_type_result& operator=(const company_management_remove_type_result&);
+  company_management_remove_type_result() {
+  }
+
+  virtual ~company_management_remove_type_result() noexcept;
+
+  bool operator == (const company_management_remove_type_result & /* rhs */) const
+  {
+    return true;
+  }
+  bool operator != (const company_management_remove_type_result &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const company_management_remove_type_result & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+
+class company_management_remove_type_presult {
+ public:
+
+
+  virtual ~company_management_remove_type_presult() noexcept;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+
+};
+
 class company_managementClient : virtual public company_managementIf {
  public:
   company_managementClient(std::shared_ptr< ::apache::thrift::protocol::TProtocol> prot) {
@@ -189,6 +525,15 @@ class company_managementClient : virtual public company_managementIf {
   void get_all_type(std::vector<int64_t> & _return, const std::string& ssid);
   void send_get_all_type(const std::string& ssid);
   void recv_get_all_type(std::vector<int64_t> & _return);
+  int64_t add_type(const std::string& name, const int64_t price, const std::string& ssid);
+  void send_add_type(const std::string& name, const int64_t price, const std::string& ssid);
+  int64_t recv_add_type();
+  bool edit_type(const stuff_detail& stuff, const std::string& ssid);
+  void send_edit_type(const stuff_detail& stuff, const std::string& ssid);
+  bool recv_edit_type();
+  void remove_type(const stuff_detail& stuff, const std::string& ssid);
+  void send_remove_type(const stuff_detail& stuff, const std::string& ssid);
+  void recv_remove_type();
  protected:
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> piprot_;
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> poprot_;
@@ -205,10 +550,16 @@ class company_managementProcessor : public ::apache::thrift::TDispatchProcessor 
   typedef std::map<std::string, ProcessFunction> ProcessMap;
   ProcessMap processMap_;
   void process_get_all_type(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
+  void process_add_type(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
+  void process_edit_type(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
+  void process_remove_type(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
  public:
   company_managementProcessor(::std::shared_ptr<company_managementIf> iface) :
     iface_(iface) {
     processMap_["get_all_type"] = &company_managementProcessor::process_get_all_type;
+    processMap_["add_type"] = &company_managementProcessor::process_add_type;
+    processMap_["edit_type"] = &company_managementProcessor::process_edit_type;
+    processMap_["remove_type"] = &company_managementProcessor::process_remove_type;
   }
 
   virtual ~company_managementProcessor() {}
@@ -247,6 +598,33 @@ class company_managementMultiface : virtual public company_managementIf {
     return;
   }
 
+  int64_t add_type(const std::string& name, const int64_t price, const std::string& ssid) {
+    size_t sz = ifaces_.size();
+    size_t i = 0;
+    for (; i < (sz - 1); ++i) {
+      ifaces_[i]->add_type(name, price, ssid);
+    }
+    return ifaces_[i]->add_type(name, price, ssid);
+  }
+
+  bool edit_type(const stuff_detail& stuff, const std::string& ssid) {
+    size_t sz = ifaces_.size();
+    size_t i = 0;
+    for (; i < (sz - 1); ++i) {
+      ifaces_[i]->edit_type(stuff, ssid);
+    }
+    return ifaces_[i]->edit_type(stuff, ssid);
+  }
+
+  void remove_type(const stuff_detail& stuff, const std::string& ssid) {
+    size_t sz = ifaces_.size();
+    size_t i = 0;
+    for (; i < (sz - 1); ++i) {
+      ifaces_[i]->remove_type(stuff, ssid);
+    }
+    ifaces_[i]->remove_type(stuff, ssid);
+  }
+
 };
 
 // The 'concurrent' client is a thread safe client that correctly handles
@@ -282,6 +660,15 @@ class company_managementConcurrentClient : virtual public company_managementIf {
   void get_all_type(std::vector<int64_t> & _return, const std::string& ssid);
   int32_t send_get_all_type(const std::string& ssid);
   void recv_get_all_type(std::vector<int64_t> & _return, const int32_t seqid);
+  int64_t add_type(const std::string& name, const int64_t price, const std::string& ssid);
+  int32_t send_add_type(const std::string& name, const int64_t price, const std::string& ssid);
+  int64_t recv_add_type(const int32_t seqid);
+  bool edit_type(const stuff_detail& stuff, const std::string& ssid);
+  int32_t send_edit_type(const stuff_detail& stuff, const std::string& ssid);
+  bool recv_edit_type(const int32_t seqid);
+  void remove_type(const stuff_detail& stuff, const std::string& ssid);
+  int32_t send_remove_type(const stuff_detail& stuff, const std::string& ssid);
+  void recv_remove_type(const int32_t seqid);
  protected:
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> piprot_;
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> poprot_;

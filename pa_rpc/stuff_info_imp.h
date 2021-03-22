@@ -1,4 +1,5 @@
 #include "gen_code/stuff_info.h"
+#include "pa_utils.h"
 
 class stuff_info_handler: virtual public stuff_infoIf {
 public:
@@ -14,13 +15,18 @@ public:
     }
     virtual void get_stuff_detail(stuff_detail &_return, const int64_t type_id)
     {
-        if (type_id == 1)
+        auto stuff_info = sqlite_orm::search_record<pa_sql_stuff_info>(type_id);
+        if (stuff_info)
         {
-            _return.company = "汇能煤化工";
-            _return.last = "充足";
-            _return.name = "LNG";
-            _return.price = 3000;
-            _return.type_id = 1;
+            auto company = stuff_info->get_parent<pa_sql_company>("belong_company");
+            if (company)
+            {
+                _return.company = company->name;
+                _return.last = stuff_info->comment;
+                _return.name = stuff_info->name;
+                _return.price = stuff_info->price;
+                _return.type_id = type_id;
+            }
         }
     }
 };
