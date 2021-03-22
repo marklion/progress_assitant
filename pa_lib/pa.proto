@@ -1,7 +1,0 @@
-syntax="proto3";
-package pa;
-
-message echo_test {
-    string input = 1;
-    string output= 2;
-}
