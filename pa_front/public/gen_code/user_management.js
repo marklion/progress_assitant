@@ -877,6 +877,110 @@ user_management_update_logo_result = class {
   }
 
 };
+user_management_get_customer_info_args = class {
+  constructor(args) {
+    this.user_id = null;
+    if (args) {
+      if (args.user_id !== undefined && args.user_id !== null) {
+        this.user_id = args.user_id;
+      }
+    }
+  }
+
+  read (input) {
+    input.readStructBegin();
+    while (true) {
+      const ret = input.readFieldBegin();
+      const ftype = ret.ftype;
+      const fid = ret.fid;
+      if (ftype == Thrift.Type.STOP) {
+        break;
+      }
+      switch (fid) {
+        case 1:
+        if (ftype == Thrift.Type.I64) {
+          this.user_id = input.readI64().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        case 0:
+          input.skip(ftype);
+          break;
+        default:
+          input.skip(ftype);
+      }
+      input.readFieldEnd();
+    }
+    input.readStructEnd();
+    return;
+  }
+
+  write (output) {
+    output.writeStructBegin('user_management_get_customer_info_args');
+    if (this.user_id !== null && this.user_id !== undefined) {
+      output.writeFieldBegin('user_id', Thrift.Type.I64, 1);
+      output.writeI64(this.user_id);
+      output.writeFieldEnd();
+    }
+    output.writeFieldStop();
+    output.writeStructEnd();
+    return;
+  }
+
+};
+user_management_get_customer_info_result = class {
+  constructor(args) {
+    this.success = null;
+    if (args) {
+      if (args.success !== undefined && args.success !== null) {
+        this.success = args.success;
+      }
+    }
+  }
+
+  read (input) {
+    input.readStructBegin();
+    while (true) {
+      const ret = input.readFieldBegin();
+      const ftype = ret.ftype;
+      const fid = ret.fid;
+      if (ftype == Thrift.Type.STOP) {
+        break;
+      }
+      switch (fid) {
+        case 0:
+        if (ftype == Thrift.Type.STRING) {
+          this.success = input.readString().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        case 0:
+          input.skip(ftype);
+          break;
+        default:
+          input.skip(ftype);
+      }
+      input.readFieldEnd();
+    }
+    input.readStructEnd();
+    return;
+  }
+
+  write (output) {
+    output.writeStructBegin('user_management_get_customer_info_result');
+    if (this.success !== null && this.success !== undefined) {
+      output.writeFieldBegin('success', Thrift.Type.STRING, 0);
+      output.writeString(this.success);
+      output.writeFieldEnd();
+    }
+    output.writeFieldStop();
+    output.writeStructEnd();
+    return;
+  }
+
+};
 user_managementClient = class user_managementClient {
   constructor(input, output) {
     this.input = input;
@@ -1329,5 +1433,61 @@ user_managementClient = class user_managementClient {
       return result.success;
     }
     throw 'update_logo failed: unknown result';
+  }
+
+  get_customer_info (user_id) {
+    const self = this;
+    return new Promise((resolve, reject) => {
+      self.send_get_customer_info(user_id, (error, result) => {
+        return error ? reject(error) : resolve(result);
+      });
+    });
+  }
+
+  send_get_customer_info (user_id, callback) {
+    const params = {
+      user_id: user_id
+    };
+    const args = new user_management_get_customer_info_args(params);
+    try {
+      this.output.writeMessageBegin('get_customer_info', Thrift.MessageType.CALL, this.seqid);
+      args.write(this.output);
+      this.output.writeMessageEnd();
+      const self = this;
+      this.output.getTransport().flush(true, () => {
+        let error = null, result = null;
+        try {
+          result = self.recv_get_customer_info();
+        } catch (e) {
+          error = e;
+        }
+        callback(error, result);
+      });
+    }
+    catch (e) {
+      if (typeof this.output.getTransport().reset === 'function') {
+        this.output.getTransport().reset();
+      }
+      throw e;
+    }
+  }
+
+  recv_get_customer_info () {
+    const ret = this.input.readMessageBegin();
+    const mtype = ret.mtype;
+    if (mtype == Thrift.MessageType.EXCEPTION) {
+      const x = new Thrift.TApplicationException();
+      x.read(this.input);
+      this.input.readMessageEnd();
+      throw x;
+    }
+    const result = new user_management_get_customer_info_result();
+    result.read(this.input);
+    this.input.readMessageEnd();
+
+    if (null !== result.success) {
+      return result.success;
+    }
+    throw 'get_customer_info failed: unknown result';
   }
 };

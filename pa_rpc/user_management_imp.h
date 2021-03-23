@@ -195,6 +195,19 @@ public:
 
         return ret;
     }
+
+    virtual void get_customer_info(std::string &_return, const int64_t user_id) 
+    {
+        auto user = sqlite_orm::search_record<pa_sql_userinfo>(user_id);
+        if (user)
+        {
+            auto company = user->get_parent<pa_sql_company>("belong_company");
+            if (company)
+            {
+                _return = company->name + "(" + user->name + ")";
+            }
+        }
+    }
 };
 
 #endif // _USER_MANAGEMENT_IMP_H_

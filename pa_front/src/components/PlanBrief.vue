@@ -8,6 +8,7 @@
             <div>
                 进厂时间：{{plan_time}}
             </div>
+            <van-tag plain type="danger">{{cur_status}}</van-tag>
         </template>
         <template #footer>
             创建时间:{{created_time}}
@@ -21,12 +22,17 @@ import Vue from 'vue';
 import {
     Card
 } from 'vant';
+import {
+    Tag
+} from 'vant';
 
+Vue.use(Tag);
 Vue.use(Card);
 export default {
     name: 'PlanBrief',
     props: {
         plan_id: Number,
+        company_view: Boolean,
     },
     data: function () {
         return {
@@ -35,12 +41,44 @@ export default {
             plan_count: 0.1,
             plan_time: '',
             vichele_info: [],
-            created_time: ''
+            created_time: '',
+            status: 0,
         };
+    },
+    computed: {
+        cur_status: function () {
+            var ret = "未确认";
+            switch (this.status) {
+                case 1:
+                    ret = "已确认"
+                    break;
+                case 2:
+                    ret = "驳回";
+                    break;
+                default:
+                    break;
+            }
+            return ret;
+        },
     },
     methods: {
         nav_to_detail: function () {
-            this.$router.push({name:'PlanDetail', params:{plan_id:this.plan_id}});
+            if (this.company_view) {
+                this.$router.push({
+                    name: 'PlanConfirm',
+                    params: {
+                        plan_id: this.plan_id
+                    }
+                });
+            } else {
+                this.$router.push({
+                    name: 'PlanDetail',
+                    params: {
+                        plan_id: this.plan_id
+                    }
+                });
+
+            }
         },
         formatDateTime: function (date) {
             var y = date.getFullYear();
@@ -66,13 +104,21 @@ export default {
                 vue_this.$set(vue_this.vichele_info, index, element);
             });
             vue_this.created_time = vue_this.formatDateTime(new Date(resp.created_time * 1000));
-
-            vue_this.$get_client("stuff_info").get_stuff_detail(resp.type_id).then(function (detail_resp) {
-                vue_this.name = detail_resp.name;
-                vue_this.company = detail_resp.company;
-            }).catch(function (err) {
-                console.log(err);
-            });
+            vue_this.name = resp.name;
+            vue_this.status = resp.status;
+            if (false == vue_this.company_view) {
+                vue_this.$get_client("stuff_info").get_stuff_detail(resp.type_id).then(function (detail_resp) {
+                    vue_this.company = detail_resp.company;
+                }).catch(function (err) {
+                    console.log(err);
+                });
+            } else {
+                vue_this.$get_client("user_management").get_customer_info(resp.created_by).then(function (resp) {
+                    vue_this.company = resp;
+                }).catch(function (err) {
+                    console.log(err);
+                });
+            }
         }).catch(function (err) {
             console.log(err);
         });

@@ -9,7 +9,8 @@
     <van-tabbar route>
         <van-tabbar-item v-if="$store.state.userinfo.buyer" replace :to="{name:'Home'}" icon="home-o">主页</van-tabbar-item>
         <van-tabbar-item v-else replace :to="{name:'CompanyHome'}" icon="home-o">主页</van-tabbar-item>
-        <van-tabbar-item replace :to="{name:'Order'}" icon="orders-o">订单</van-tabbar-item>
+        <van-tabbar-item v-if="$store.state.userinfo.buyer" replace :to="{name:'Order'}" icon="orders-o">订单</van-tabbar-item>
+        <van-tabbar-item v-else replace :to="{name:'CompanyOrder'}" icon="orders-o">订单</van-tabbar-item>
         <van-tabbar-item replace :to="{name:'Myself'}" icon="user-o">我的</van-tabbar-item>
     </van-tabbar>
 </div>

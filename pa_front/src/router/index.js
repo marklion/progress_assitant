@@ -59,6 +59,15 @@ const routes = [
     },
   },
   {
+    path: '/company_order',
+    name: 'CompanyOrder',
+    component: () => import('../views/CompanyOrder.vue'),
+    meta: {    
+        private_title: '订单',
+        has_go_back:false,
+    },
+  },
+  {
     path: '/company_home',
     name: 'CompanyHome',
     component: () => import('../views/CompanyHome.vue'),
@@ -73,6 +82,24 @@ const routes = [
     component: () => import('../views/SelfInfo.vue'),
     meta: {    
         private_title: '个人信息',
+        has_go_back:true,
+    },
+  },
+  {
+    path: '/plan_confirm/:plan_id',
+    name: 'PlanConfirm',
+    component: () => import('../views/PlanConfirm.vue'),
+    meta: {    
+        private_title: '计划确认',
+        has_go_back:true,
+    },
+  },
+  {
+    path: '/admin',
+    name: 'Admin',
+    component: () => import('../views/Admin.vue'),
+    meta: {    
+        private_title: '管理员菜单',
         has_go_back:true,
     },
   },

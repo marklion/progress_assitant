@@ -110,6 +110,51 @@ class stuff_plan_management_handler : virtual public stuff_plan_managementIf
 
         return ret;
     }
+    virtual void get_company_plan(std::vector<int64_t> &_return, const std::string &ssid) 
+    {
+        auto opt_user = PA_DATAOPT_get_online_user(ssid);
+        if (opt_user && opt_user->buyer == false)
+        {
+            auto company = opt_user->get_parent<pa_sql_company>("belong_company");
+            if (company)
+            {
+                auto stuffs = company->get_all_children<pa_sql_stuff_info>("belong_company");
+                for (auto &itr:stuffs)
+                {
+                    auto plans = itr.get_all_children<pa_sql_plan>("belong_stuff");
+                    for (auto &single_plan:plans)
+                    {
+                        _return.push_back(single_plan.get_pri_id());
+                    }
+                }
+            }
+        }
+    }
+    virtual bool confirm_plan(const int64_t plan_id, const std::string &ssid, const bool confirm) 
+    {
+        bool ret = false;
+        auto opt_user = PA_DATAOPT_get_online_user(ssid);
+        if (opt_user)
+        {
+            auto company = opt_user->get_parent<pa_sql_company>("belong_company");
+            if (company)
+            {
+                auto plan = sqlite_orm::search_record<pa_sql_plan>(plan_id);
+                if (plan)
+                {
+                    auto stuff_info = plan->get_parent<pa_sql_stuff_info>("belong_stuff");
+                    auto belong_company = stuff_info->get_parent<pa_sql_company>("belong_company");
+                    if (belong_company && belong_company->get_pri_id() == company->get_pri_id())
+                    {
+                        plan->status = confirm?1:2;
+                        ret = plan->update_record();
+                    }
+                }
+            }
+        }
+
+        return ret;
+    }
 };
 
 #endif // _STUFF_PLAN_MANAGEMENT_H_

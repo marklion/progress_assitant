@@ -30,6 +30,7 @@ class user_managementIf {
   virtual bool bind_new_vichele(const std::string& ssid, const std::string& vichele) = 0;
   virtual void remove_vichele(const std::string& ssid, const std::string& vichele) = 0;
   virtual bool update_logo(const std::string& content, const std::string& ssid) = 0;
+  virtual void get_customer_info(std::string& _return, const int64_t user_id) = 0;
 };
 
 class user_managementIfFactory {
@@ -85,6 +86,9 @@ class user_managementNull : virtual public user_managementIf {
   bool update_logo(const std::string& /* content */, const std::string& /* ssid */) {
     bool _return = false;
     return _return;
+  }
+  void get_customer_info(std::string& /* _return */, const int64_t /* user_id */) {
+    return;
   }
 };
 
@@ -919,6 +923,110 @@ class user_management_update_logo_presult {
 
 };
 
+typedef struct _user_management_get_customer_info_args__isset {
+  _user_management_get_customer_info_args__isset() : user_id(false) {}
+  bool user_id :1;
+} _user_management_get_customer_info_args__isset;
+
+class user_management_get_customer_info_args {
+ public:
+
+  user_management_get_customer_info_args(const user_management_get_customer_info_args&);
+  user_management_get_customer_info_args& operator=(const user_management_get_customer_info_args&);
+  user_management_get_customer_info_args() : user_id(0) {
+  }
+
+  virtual ~user_management_get_customer_info_args() noexcept;
+  int64_t user_id;
+
+  _user_management_get_customer_info_args__isset __isset;
+
+  void __set_user_id(const int64_t val);
+
+  bool operator == (const user_management_get_customer_info_args & rhs) const
+  {
+    if (!(user_id == rhs.user_id))
+      return false;
+    return true;
+  }
+  bool operator != (const user_management_get_customer_info_args &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const user_management_get_customer_info_args & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+
+class user_management_get_customer_info_pargs {
+ public:
+
+
+  virtual ~user_management_get_customer_info_pargs() noexcept;
+  const int64_t* user_id;
+
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _user_management_get_customer_info_result__isset {
+  _user_management_get_customer_info_result__isset() : success(false) {}
+  bool success :1;
+} _user_management_get_customer_info_result__isset;
+
+class user_management_get_customer_info_result {
+ public:
+
+  user_management_get_customer_info_result(const user_management_get_customer_info_result&);
+  user_management_get_customer_info_result& operator=(const user_management_get_customer_info_result&);
+  user_management_get_customer_info_result() : success() {
+  }
+
+  virtual ~user_management_get_customer_info_result() noexcept;
+  std::string success;
+
+  _user_management_get_customer_info_result__isset __isset;
+
+  void __set_success(const std::string& val);
+
+  bool operator == (const user_management_get_customer_info_result & rhs) const
+  {
+    if (!(success == rhs.success))
+      return false;
+    return true;
+  }
+  bool operator != (const user_management_get_customer_info_result &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const user_management_get_customer_info_result & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _user_management_get_customer_info_presult__isset {
+  _user_management_get_customer_info_presult__isset() : success(false) {}
+  bool success :1;
+} _user_management_get_customer_info_presult__isset;
+
+class user_management_get_customer_info_presult {
+ public:
+
+
+  virtual ~user_management_get_customer_info_presult() noexcept;
+  std::string* success;
+
+  _user_management_get_customer_info_presult__isset __isset;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+
+};
+
 class user_managementClient : virtual public user_managementIf {
  public:
   user_managementClient(std::shared_ptr< ::apache::thrift::protocol::TProtocol> prot) {
@@ -968,6 +1076,9 @@ class user_managementClient : virtual public user_managementIf {
   bool update_logo(const std::string& content, const std::string& ssid);
   void send_update_logo(const std::string& content, const std::string& ssid);
   bool recv_update_logo();
+  void get_customer_info(std::string& _return, const int64_t user_id);
+  void send_get_customer_info(const int64_t user_id);
+  void recv_get_customer_info(std::string& _return);
  protected:
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> piprot_;
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> poprot_;
@@ -991,6 +1102,7 @@ class user_managementProcessor : public ::apache::thrift::TDispatchProcessor {
   void process_bind_new_vichele(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
   void process_remove_vichele(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
   void process_update_logo(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
+  void process_get_customer_info(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
  public:
   user_managementProcessor(::std::shared_ptr<user_managementIf> iface) :
     iface_(iface) {
@@ -1002,6 +1114,7 @@ class user_managementProcessor : public ::apache::thrift::TDispatchProcessor {
     processMap_["bind_new_vichele"] = &user_managementProcessor::process_bind_new_vichele;
     processMap_["remove_vichele"] = &user_managementProcessor::process_remove_vichele;
     processMap_["update_logo"] = &user_managementProcessor::process_update_logo;
+    processMap_["get_customer_info"] = &user_managementProcessor::process_get_customer_info;
   }
 
   virtual ~user_managementProcessor() {}
@@ -1105,6 +1218,16 @@ class user_managementMultiface : virtual public user_managementIf {
     return ifaces_[i]->update_logo(content, ssid);
   }
 
+  void get_customer_info(std::string& _return, const int64_t user_id) {
+    size_t sz = ifaces_.size();
+    size_t i = 0;
+    for (; i < (sz - 1); ++i) {
+      ifaces_[i]->get_customer_info(_return, user_id);
+    }
+    ifaces_[i]->get_customer_info(_return, user_id);
+    return;
+  }
+
 };
 
 // The 'concurrent' client is a thread safe client that correctly handles
@@ -1161,6 +1284,9 @@ class user_managementConcurrentClient : virtual public user_managementIf {
   bool update_logo(const std::string& content, const std::string& ssid);
   int32_t send_update_logo(const std::string& content, const std::string& ssid);
   bool recv_update_logo(const int32_t seqid);
+  void get_customer_info(std::string& _return, const int64_t user_id);
+  int32_t send_get_customer_info(const int64_t user_id);
+  void recv_get_customer_info(std::string& _return, const int32_t seqid);
  protected:
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> piprot_;
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> poprot_;

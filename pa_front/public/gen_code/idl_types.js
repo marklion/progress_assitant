@@ -250,6 +250,119 @@ stuff_detail = class {
   }
 
 };
+user_apply = class {
+  constructor(args) {
+    this.name = null;
+    this.phone = null;
+    this.logo = null;
+    this.apply_id = null;
+    this.status = null;
+    if (args) {
+      if (args.name !== undefined && args.name !== null) {
+        this.name = args.name;
+      }
+      if (args.phone !== undefined && args.phone !== null) {
+        this.phone = args.phone;
+      }
+      if (args.logo !== undefined && args.logo !== null) {
+        this.logo = args.logo;
+      }
+      if (args.apply_id !== undefined && args.apply_id !== null) {
+        this.apply_id = args.apply_id;
+      }
+      if (args.status !== undefined && args.status !== null) {
+        this.status = args.status;
+      }
+    }
+  }
+
+  read (input) {
+    input.readStructBegin();
+    while (true) {
+      const ret = input.readFieldBegin();
+      const ftype = ret.ftype;
+      const fid = ret.fid;
+      if (ftype == Thrift.Type.STOP) {
+        break;
+      }
+      switch (fid) {
+        case 1:
+        if (ftype == Thrift.Type.STRING) {
+          this.name = input.readString().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        case 2:
+        if (ftype == Thrift.Type.STRING) {
+          this.phone = input.readString().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        case 3:
+        if (ftype == Thrift.Type.STRING) {
+          this.logo = input.readString().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        case 4:
+        if (ftype == Thrift.Type.I64) {
+          this.apply_id = input.readI64().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        case 5:
+        if (ftype == Thrift.Type.I64) {
+          this.status = input.readI64().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        default:
+          input.skip(ftype);
+      }
+      input.readFieldEnd();
+    }
+    input.readStructEnd();
+    return;
+  }
+
+  write (output) {
+    output.writeStructBegin('user_apply');
+    if (this.name !== null && this.name !== undefined) {
+      output.writeFieldBegin('name', Thrift.Type.STRING, 1);
+      output.writeString(this.name);
+      output.writeFieldEnd();
+    }
+    if (this.phone !== null && this.phone !== undefined) {
+      output.writeFieldBegin('phone', Thrift.Type.STRING, 2);
+      output.writeString(this.phone);
+      output.writeFieldEnd();
+    }
+    if (this.logo !== null && this.logo !== undefined) {
+      output.writeFieldBegin('logo', Thrift.Type.STRING, 3);
+      output.writeString(this.logo);
+      output.writeFieldEnd();
+    }
+    if (this.apply_id !== null && this.apply_id !== undefined) {
+      output.writeFieldBegin('apply_id', Thrift.Type.I64, 4);
+      output.writeI64(this.apply_id);
+      output.writeFieldEnd();
+    }
+    if (this.status !== null && this.status !== undefined) {
+      output.writeFieldBegin('status', Thrift.Type.I64, 5);
+      output.writeI64(this.status);
+      output.writeFieldEnd();
+    }
+    output.writeFieldStop();
+    output.writeStructEnd();
+    return;
+  }
+
+};
 stuff_plan = class {
   constructor(args) {
     this.type_id = null;

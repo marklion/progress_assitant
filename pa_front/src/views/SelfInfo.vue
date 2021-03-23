@@ -105,12 +105,25 @@ export default {
             var vue_this = this;
             vue_this.$get_client("user_management").update_user_info(vue_this.userinfo, vue_this.$cookies.get('pa_ssid'), vue_this.admin).then(function (resp) {
                 if (resp == true) {
-                    vue_this.$store.commit('set_userinfo', vue_this.userinfo);
-                    if (vue_this.$route.query.from == 'auto') {
-                        window.location.replace("/pa_web/");
-                    } else {
-                        vue_this.$router.go(-1);
-                    }
+                    var ssid = vue_this.$cookies.get('pa_ssid');
+                    vue_this.$get_client('user_management').get_user_info(ssid).then(function (resp) {
+                        if (resp.user_id != 0) {
+                            vue_this.$store.commit('set_userinfo', resp);
+                            vue_this.$store.commit('set_login', true);
+                        } else {
+                            vue_this.$store.commit('set_userinfo', {
+                                buyer: true,
+                            });
+                            vue_this.$store.commit('set_login', false);
+                        }
+                        if (vue_this.$route.query.from == 'auto') {
+                            window.location.replace("/pa_web/");
+                        } else {
+                            vue_this.$router.go(-1);
+                        }
+                    }).catch(function (err) {
+                        console.log(err);
+                    });
                 } else {
                     console.log(resp);
                 }

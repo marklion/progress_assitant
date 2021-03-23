@@ -25,6 +25,8 @@ class user_info;
 
 class stuff_detail;
 
+class user_apply;
+
 class stuff_plan;
 
 typedef struct _user_info__isset {
@@ -164,6 +166,72 @@ class stuff_detail : public virtual ::apache::thrift::TBase {
 void swap(stuff_detail &a, stuff_detail &b);
 
 std::ostream& operator<<(std::ostream& out, const stuff_detail& obj);
+
+typedef struct _user_apply__isset {
+  _user_apply__isset() : name(false), phone(false), logo(false), apply_id(false), status(false) {}
+  bool name :1;
+  bool phone :1;
+  bool logo :1;
+  bool apply_id :1;
+  bool status :1;
+} _user_apply__isset;
+
+class user_apply : public virtual ::apache::thrift::TBase {
+ public:
+
+  user_apply(const user_apply&);
+  user_apply& operator=(const user_apply&);
+  user_apply() : name(), phone(), logo(), apply_id(0), status(0) {
+  }
+
+  virtual ~user_apply() noexcept;
+  std::string name;
+  std::string phone;
+  std::string logo;
+  int64_t apply_id;
+  int64_t status;
+
+  _user_apply__isset __isset;
+
+  void __set_name(const std::string& val);
+
+  void __set_phone(const std::string& val);
+
+  void __set_logo(const std::string& val);
+
+  void __set_apply_id(const int64_t val);
+
+  void __set_status(const int64_t val);
+
+  bool operator == (const user_apply & rhs) const
+  {
+    if (!(name == rhs.name))
+      return false;
+    if (!(phone == rhs.phone))
+      return false;
+    if (!(logo == rhs.logo))
+      return false;
+    if (!(apply_id == rhs.apply_id))
+      return false;
+    if (!(status == rhs.status))
+      return false;
+    return true;
+  }
+  bool operator != (const user_apply &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const user_apply & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+  virtual void printTo(std::ostream& out) const;
+};
+
+void swap(user_apply &a, user_apply &b);
+
+std::ostream& operator<<(std::ostream& out, const user_apply& obj);
 
 typedef struct _stuff_plan__isset {
   _stuff_plan__isset() : type_id(false), count(false), vichele_info(false), plan_id(false), created_by(false), plan_time(false), created_time(false), name(false), price(false), status(false) {}

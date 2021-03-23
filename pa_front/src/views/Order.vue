@@ -1,6 +1,6 @@
 <template>
 <div class="order_show">
-    <plan-brief v-for="(single_plan, index) in all_plans" :key="index" :plan_id="single_plan"></plan-brief>
+    <plan-brief v-for="(single_plan, index) in all_plans" :key="index" :plan_id="single_plan" :company_view="false"></plan-brief>
 </div>
 </template>
 

@@ -15,6 +15,7 @@ service user_management{
     bool bind_new_vichele(1:string ssid, 2:string vichele),
     void remove_vichele(1:string ssid, 2:string vichele),
     bool update_logo(1:string content, 2:string ssid),
+    string get_customer_info(1:i64 user_id),
 }
 
 struct stuff_detail {
@@ -25,11 +26,21 @@ struct stuff_detail {
     5:i64 type_id,
 }
 
+struct user_apply {
+    1:string name, 
+    2:string phone,
+    3:string logo,
+    4:i64 apply_id,
+    5:i64 status,
+}
+
 service company_management {
     list<i64> get_all_type(1:string ssid),
     i64 add_type(1:string name, 2:i64 price, 3:string ssid),
     bool edit_type(1:stuff_detail stuff, 2:string ssid),
     void remove_type(1:stuff_detail stuff, 2:string ssid),
+    list<user_apply> get_all_apply(1:string ssid),
+    bool approve_apply(1:i64 apply_id, 2:string ssid, 3:bool approve),
 }
 
 service stuff_info {
@@ -53,6 +64,8 @@ struct stuff_plan {
 service stuff_plan_management {
     i64 create_plan(1:stuff_plan plan, 2:string ssid),
     list<i64> get_created_plan(1:string ssid),
+    list<i64> get_company_plan(1:string ssid),
     stuff_plan get_plan(1:i64 plan_id),
     bool update_plan(1:stuff_plan plan, 2:string ssid),
+    bool confirm_plan(1:i64 plan_id, 2:string ssid, 3:bool confirm),
 }

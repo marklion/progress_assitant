@@ -26,6 +26,8 @@ class company_managementIf {
   virtual int64_t add_type(const std::string& name, const int64_t price, const std::string& ssid) = 0;
   virtual bool edit_type(const stuff_detail& stuff, const std::string& ssid) = 0;
   virtual void remove_type(const stuff_detail& stuff, const std::string& ssid) = 0;
+  virtual void get_all_apply(std::vector<user_apply> & _return, const std::string& ssid) = 0;
+  virtual bool approve_apply(const int64_t apply_id, const std::string& ssid, const bool approve) = 0;
 };
 
 class company_managementIfFactory {
@@ -68,6 +70,13 @@ class company_managementNull : virtual public company_managementIf {
   }
   void remove_type(const stuff_detail& /* stuff */, const std::string& /* ssid */) {
     return;
+  }
+  void get_all_apply(std::vector<user_apply> & /* _return */, const std::string& /* ssid */) {
+    return;
+  }
+  bool approve_apply(const int64_t /* apply_id */, const std::string& /* ssid */, const bool /* approve */) {
+    bool _return = false;
+    return _return;
   }
 };
 
@@ -497,6 +506,228 @@ class company_management_remove_type_presult {
 
 };
 
+typedef struct _company_management_get_all_apply_args__isset {
+  _company_management_get_all_apply_args__isset() : ssid(false) {}
+  bool ssid :1;
+} _company_management_get_all_apply_args__isset;
+
+class company_management_get_all_apply_args {
+ public:
+
+  company_management_get_all_apply_args(const company_management_get_all_apply_args&);
+  company_management_get_all_apply_args& operator=(const company_management_get_all_apply_args&);
+  company_management_get_all_apply_args() : ssid() {
+  }
+
+  virtual ~company_management_get_all_apply_args() noexcept;
+  std::string ssid;
+
+  _company_management_get_all_apply_args__isset __isset;
+
+  void __set_ssid(const std::string& val);
+
+  bool operator == (const company_management_get_all_apply_args & rhs) const
+  {
+    if (!(ssid == rhs.ssid))
+      return false;
+    return true;
+  }
+  bool operator != (const company_management_get_all_apply_args &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const company_management_get_all_apply_args & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+
+class company_management_get_all_apply_pargs {
+ public:
+
+
+  virtual ~company_management_get_all_apply_pargs() noexcept;
+  const std::string* ssid;
+
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _company_management_get_all_apply_result__isset {
+  _company_management_get_all_apply_result__isset() : success(false) {}
+  bool success :1;
+} _company_management_get_all_apply_result__isset;
+
+class company_management_get_all_apply_result {
+ public:
+
+  company_management_get_all_apply_result(const company_management_get_all_apply_result&);
+  company_management_get_all_apply_result& operator=(const company_management_get_all_apply_result&);
+  company_management_get_all_apply_result() {
+  }
+
+  virtual ~company_management_get_all_apply_result() noexcept;
+  std::vector<user_apply>  success;
+
+  _company_management_get_all_apply_result__isset __isset;
+
+  void __set_success(const std::vector<user_apply> & val);
+
+  bool operator == (const company_management_get_all_apply_result & rhs) const
+  {
+    if (!(success == rhs.success))
+      return false;
+    return true;
+  }
+  bool operator != (const company_management_get_all_apply_result &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const company_management_get_all_apply_result & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _company_management_get_all_apply_presult__isset {
+  _company_management_get_all_apply_presult__isset() : success(false) {}
+  bool success :1;
+} _company_management_get_all_apply_presult__isset;
+
+class company_management_get_all_apply_presult {
+ public:
+
+
+  virtual ~company_management_get_all_apply_presult() noexcept;
+  std::vector<user_apply> * success;
+
+  _company_management_get_all_apply_presult__isset __isset;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+
+};
+
+typedef struct _company_management_approve_apply_args__isset {
+  _company_management_approve_apply_args__isset() : apply_id(false), ssid(false), approve(false) {}
+  bool apply_id :1;
+  bool ssid :1;
+  bool approve :1;
+} _company_management_approve_apply_args__isset;
+
+class company_management_approve_apply_args {
+ public:
+
+  company_management_approve_apply_args(const company_management_approve_apply_args&);
+  company_management_approve_apply_args& operator=(const company_management_approve_apply_args&);
+  company_management_approve_apply_args() : apply_id(0), ssid(), approve(0) {
+  }
+
+  virtual ~company_management_approve_apply_args() noexcept;
+  int64_t apply_id;
+  std::string ssid;
+  bool approve;
+
+  _company_management_approve_apply_args__isset __isset;
+
+  void __set_apply_id(const int64_t val);
+
+  void __set_ssid(const std::string& val);
+
+  void __set_approve(const bool val);
+
+  bool operator == (const company_management_approve_apply_args & rhs) const
+  {
+    if (!(apply_id == rhs.apply_id))
+      return false;
+    if (!(ssid == rhs.ssid))
+      return false;
+    if (!(approve == rhs.approve))
+      return false;
+    return true;
+  }
+  bool operator != (const company_management_approve_apply_args &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const company_management_approve_apply_args & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+
+class company_management_approve_apply_pargs {
+ public:
+
+
+  virtual ~company_management_approve_apply_pargs() noexcept;
+  const int64_t* apply_id;
+  const std::string* ssid;
+  const bool* approve;
+
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _company_management_approve_apply_result__isset {
+  _company_management_approve_apply_result__isset() : success(false) {}
+  bool success :1;
+} _company_management_approve_apply_result__isset;
+
+class company_management_approve_apply_result {
+ public:
+
+  company_management_approve_apply_result(const company_management_approve_apply_result&);
+  company_management_approve_apply_result& operator=(const company_management_approve_apply_result&);
+  company_management_approve_apply_result() : success(0) {
+  }
+
+  virtual ~company_management_approve_apply_result() noexcept;
+  bool success;
+
+  _company_management_approve_apply_result__isset __isset;
+
+  void __set_success(const bool val);
+
+  bool operator == (const company_management_approve_apply_result & rhs) const
+  {
+    if (!(success == rhs.success))
+      return false;
+    return true;
+  }
+  bool operator != (const company_management_approve_apply_result &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const company_management_approve_apply_result & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _company_management_approve_apply_presult__isset {
+  _company_management_approve_apply_presult__isset() : success(false) {}
+  bool success :1;
+} _company_management_approve_apply_presult__isset;
+
+class company_management_approve_apply_presult {
+ public:
+
+
+  virtual ~company_management_approve_apply_presult() noexcept;
+  bool* success;
+
+  _company_management_approve_apply_presult__isset __isset;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+
+};
+
 class company_managementClient : virtual public company_managementIf {
  public:
   company_managementClient(std::shared_ptr< ::apache::thrift::protocol::TProtocol> prot) {
@@ -534,6 +765,12 @@ class company_managementClient : virtual public company_managementIf {
   void remove_type(const stuff_detail& stuff, const std::string& ssid);
   void send_remove_type(const stuff_detail& stuff, const std::string& ssid);
   void recv_remove_type();
+  void get_all_apply(std::vector<user_apply> & _return, const std::string& ssid);
+  void send_get_all_apply(const std::string& ssid);
+  void recv_get_all_apply(std::vector<user_apply> & _return);
+  bool approve_apply(const int64_t apply_id, const std::string& ssid, const bool approve);
+  void send_approve_apply(const int64_t apply_id, const std::string& ssid, const bool approve);
+  bool recv_approve_apply();
  protected:
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> piprot_;
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> poprot_;
@@ -553,6 +790,8 @@ class company_managementProcessor : public ::apache::thrift::TDispatchProcessor 
   void process_add_type(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
   void process_edit_type(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
   void process_remove_type(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
+  void process_get_all_apply(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
+  void process_approve_apply(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
  public:
   company_managementProcessor(::std::shared_ptr<company_managementIf> iface) :
     iface_(iface) {
@@ -560,6 +799,8 @@ class company_managementProcessor : public ::apache::thrift::TDispatchProcessor 
     processMap_["add_type"] = &company_managementProcessor::process_add_type;
     processMap_["edit_type"] = &company_managementProcessor::process_edit_type;
     processMap_["remove_type"] = &company_managementProcessor::process_remove_type;
+    processMap_["get_all_apply"] = &company_managementProcessor::process_get_all_apply;
+    processMap_["approve_apply"] = &company_managementProcessor::process_approve_apply;
   }
 
   virtual ~company_managementProcessor() {}
@@ -625,6 +866,25 @@ class company_managementMultiface : virtual public company_managementIf {
     ifaces_[i]->remove_type(stuff, ssid);
   }
 
+  void get_all_apply(std::vector<user_apply> & _return, const std::string& ssid) {
+    size_t sz = ifaces_.size();
+    size_t i = 0;
+    for (; i < (sz - 1); ++i) {
+      ifaces_[i]->get_all_apply(_return, ssid);
+    }
+    ifaces_[i]->get_all_apply(_return, ssid);
+    return;
+  }
+
+  bool approve_apply(const int64_t apply_id, const std::string& ssid, const bool approve) {
+    size_t sz = ifaces_.size();
+    size_t i = 0;
+    for (; i < (sz - 1); ++i) {
+      ifaces_[i]->approve_apply(apply_id, ssid, approve);
+    }
+    return ifaces_[i]->approve_apply(apply_id, ssid, approve);
+  }
+
 };
 
 // The 'concurrent' client is a thread safe client that correctly handles
@@ -669,6 +929,12 @@ class company_managementConcurrentClient : virtual public company_managementIf {
   void remove_type(const stuff_detail& stuff, const std::string& ssid);
   int32_t send_remove_type(const stuff_detail& stuff, const std::string& ssid);
   void recv_remove_type(const int32_t seqid);
+  void get_all_apply(std::vector<user_apply> & _return, const std::string& ssid);
+  int32_t send_get_all_apply(const std::string& ssid);
+  void recv_get_all_apply(std::vector<user_apply> & _return, const int32_t seqid);
+  bool approve_apply(const int64_t apply_id, const std::string& ssid, const bool approve);
+  int32_t send_approve_apply(const int64_t apply_id, const std::string& ssid, const bool approve);
+  bool recv_approve_apply(const int32_t seqid);
  protected:
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> piprot_;
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> poprot_;

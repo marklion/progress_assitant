@@ -79,4 +79,53 @@ public:
             }
         }
     }
+
+    virtual void get_all_apply(std::vector<user_apply> &_return, const std::string &ssid)  {
+        auto opt_user = PA_DATAOPT_get_online_user(ssid);
+        if (opt_user)
+        {
+            auto all_apply = opt_user->get_all_children<pa_sql_user_apply>("assignee");
+            for (auto &itr:all_apply)
+            {
+                auto assigner_user = itr.get_parent<pa_sql_userinfo>("assigner");
+                if (assigner_user)
+                {
+                    user_apply tmp;
+                    tmp.apply_id = itr.get_pri_id();
+                    tmp.logo = assigner_user->logo;
+                    tmp.name = assigner_user->name;
+                    tmp.phone = assigner_user->phone;
+                    tmp.status = itr.status;
+                    _return.push_back(tmp);
+                }
+            }
+        }
+    }
+    virtual bool approve_apply(const int64_t apply_id, const std::string &ssid, const bool approve) {
+        bool ret = false;
+        auto apply = sqlite_orm::search_record<pa_sql_user_apply>(apply_id);
+        auto opt_user = PA_DATAOPT_get_online_user(ssid);
+        if (apply && opt_user)
+        {
+            auto company = opt_user->get_parent<pa_sql_company>("belong_company");
+            auto assigner = apply->get_parent<pa_sql_userinfo>("assigner");
+            if (company && assigner)
+            {
+                if (approve)
+                {
+                    assigner->set_parent(*company, "belong_company");
+                    ret = assigner->update_record();
+                    apply->status = 1;
+                    ret &= apply->update_record();
+                }
+                else
+                {
+                    apply->status = 2;
+                    ret = apply->update_record();
+                }
+            }
+        }
+
+        return ret;
+    }
 };

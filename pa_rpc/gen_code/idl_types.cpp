@@ -378,6 +378,178 @@ void stuff_detail::printTo(std::ostream& out) const {
 }
 
 
+user_apply::~user_apply() noexcept {
+}
+
+
+void user_apply::__set_name(const std::string& val) {
+  this->name = val;
+}
+
+void user_apply::__set_phone(const std::string& val) {
+  this->phone = val;
+}
+
+void user_apply::__set_logo(const std::string& val) {
+  this->logo = val;
+}
+
+void user_apply::__set_apply_id(const int64_t val) {
+  this->apply_id = val;
+}
+
+void user_apply::__set_status(const int64_t val) {
+  this->status = val;
+}
+std::ostream& operator<<(std::ostream& out, const user_apply& obj)
+{
+  obj.printTo(out);
+  return out;
+}
+
+
+uint32_t user_apply::read(::apache::thrift::protocol::TProtocol* iprot) {
+
+  ::apache::thrift::protocol::TInputRecursionTracker tracker(*iprot);
+  uint32_t xfer = 0;
+  std::string fname;
+  ::apache::thrift::protocol::TType ftype;
+  int16_t fid;
+
+  xfer += iprot->readStructBegin(fname);
+
+  using ::apache::thrift::protocol::TProtocolException;
+
+
+  while (true)
+  {
+    xfer += iprot->readFieldBegin(fname, ftype, fid);
+    if (ftype == ::apache::thrift::protocol::T_STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 1:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->name);
+          this->__isset.name = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 2:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->phone);
+          this->__isset.phone = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 3:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->logo);
+          this->__isset.logo = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 4:
+        if (ftype == ::apache::thrift::protocol::T_I64) {
+          xfer += iprot->readI64(this->apply_id);
+          this->__isset.apply_id = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 5:
+        if (ftype == ::apache::thrift::protocol::T_I64) {
+          xfer += iprot->readI64(this->status);
+          this->__isset.status = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      default:
+        xfer += iprot->skip(ftype);
+        break;
+    }
+    xfer += iprot->readFieldEnd();
+  }
+
+  xfer += iprot->readStructEnd();
+
+  return xfer;
+}
+
+uint32_t user_apply::write(::apache::thrift::protocol::TProtocol* oprot) const {
+  uint32_t xfer = 0;
+  ::apache::thrift::protocol::TOutputRecursionTracker tracker(*oprot);
+  xfer += oprot->writeStructBegin("user_apply");
+
+  xfer += oprot->writeFieldBegin("name", ::apache::thrift::protocol::T_STRING, 1);
+  xfer += oprot->writeString(this->name);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("phone", ::apache::thrift::protocol::T_STRING, 2);
+  xfer += oprot->writeString(this->phone);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("logo", ::apache::thrift::protocol::T_STRING, 3);
+  xfer += oprot->writeString(this->logo);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("apply_id", ::apache::thrift::protocol::T_I64, 4);
+  xfer += oprot->writeI64(this->apply_id);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("status", ::apache::thrift::protocol::T_I64, 5);
+  xfer += oprot->writeI64(this->status);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldStop();
+  xfer += oprot->writeStructEnd();
+  return xfer;
+}
+
+void swap(user_apply &a, user_apply &b) {
+  using ::std::swap;
+  swap(a.name, b.name);
+  swap(a.phone, b.phone);
+  swap(a.logo, b.logo);
+  swap(a.apply_id, b.apply_id);
+  swap(a.status, b.status);
+  swap(a.__isset, b.__isset);
+}
+
+user_apply::user_apply(const user_apply& other4) {
+  name = other4.name;
+  phone = other4.phone;
+  logo = other4.logo;
+  apply_id = other4.apply_id;
+  status = other4.status;
+  __isset = other4.__isset;
+}
+user_apply& user_apply::operator=(const user_apply& other5) {
+  name = other5.name;
+  phone = other5.phone;
+  logo = other5.logo;
+  apply_id = other5.apply_id;
+  status = other5.status;
+  __isset = other5.__isset;
+  return *this;
+}
+void user_apply::printTo(std::ostream& out) const {
+  using ::apache::thrift::to_string;
+  out << "user_apply(";
+  out << "name=" << to_string(name);
+  out << ", " << "phone=" << to_string(phone);
+  out << ", " << "logo=" << to_string(logo);
+  out << ", " << "apply_id=" << to_string(apply_id);
+  out << ", " << "status=" << to_string(status);
+  out << ")";
+}
+
+
 stuff_plan::~stuff_plan() noexcept {
 }
 
@@ -469,14 +641,14 @@ uint32_t stuff_plan::read(::apache::thrift::protocol::TProtocol* iprot) {
         if (ftype == ::apache::thrift::protocol::T_LIST) {
           {
             this->vichele_info.clear();
-            uint32_t _size4;
-            ::apache::thrift::protocol::TType _etype7;
-            xfer += iprot->readListBegin(_etype7, _size4);
-            this->vichele_info.resize(_size4);
-            uint32_t _i8;
-            for (_i8 = 0; _i8 < _size4; ++_i8)
+            uint32_t _size6;
+            ::apache::thrift::protocol::TType _etype9;
+            xfer += iprot->readListBegin(_etype9, _size6);
+            this->vichele_info.resize(_size6);
+            uint32_t _i10;
+            for (_i10 = 0; _i10 < _size6; ++_i10)
             {
-              xfer += iprot->readString(this->vichele_info[_i8]);
+              xfer += iprot->readString(this->vichele_info[_i10]);
             }
             xfer += iprot->readListEnd();
           }
@@ -569,10 +741,10 @@ uint32_t stuff_plan::write(::apache::thrift::protocol::TProtocol* oprot) const {
   xfer += oprot->writeFieldBegin("vichele_info", ::apache::thrift::protocol::T_LIST, 3);
   {
     xfer += oprot->writeListBegin(::apache::thrift::protocol::T_STRING, static_cast<uint32_t>(this->vichele_info.size()));
-    std::vector<std::string> ::const_iterator _iter9;
-    for (_iter9 = this->vichele_info.begin(); _iter9 != this->vichele_info.end(); ++_iter9)
+    std::vector<std::string> ::const_iterator _iter11;
+    for (_iter11 = this->vichele_info.begin(); _iter11 != this->vichele_info.end(); ++_iter11)
     {
-      xfer += oprot->writeString((*_iter9));
+      xfer += oprot->writeString((*_iter11));
     }
     xfer += oprot->writeListEnd();
   }
@@ -626,31 +798,31 @@ void swap(stuff_plan &a, stuff_plan &b) {
   swap(a.__isset, b.__isset);
 }
 
-stuff_plan::stuff_plan(const stuff_plan& other10) {
-  type_id = other10.type_id;
-  count = other10.count;
-  vichele_info = other10.vichele_info;
-  plan_id = other10.plan_id;
-  created_by = other10.created_by;
-  plan_time = other10.plan_time;
-  created_time = other10.created_time;
-  name = other10.name;
-  price = other10.price;
-  status = other10.status;
-  __isset = other10.__isset;
+stuff_plan::stuff_plan(const stuff_plan& other12) {
+  type_id = other12.type_id;
+  count = other12.count;
+  vichele_info = other12.vichele_info;
+  plan_id = other12.plan_id;
+  created_by = other12.created_by;
+  plan_time = other12.plan_time;
+  created_time = other12.created_time;
+  name = other12.name;
+  price = other12.price;
+  status = other12.status;
+  __isset = other12.__isset;
 }
-stuff_plan& stuff_plan::operator=(const stuff_plan& other11) {
-  type_id = other11.type_id;
-  count = other11.count;
-  vichele_info = other11.vichele_info;
-  plan_id = other11.plan_id;
-  created_by = other11.created_by;
-  plan_time = other11.plan_time;
-  created_time = other11.created_time;
-  name = other11.name;
-  price = other11.price;
-  status = other11.status;
-  __isset = other11.__isset;
+stuff_plan& stuff_plan::operator=(const stuff_plan& other13) {
+  type_id = other13.type_id;
+  count = other13.count;
+  vichele_info = other13.vichele_info;
+  plan_id = other13.plan_id;
+  created_by = other13.created_by;
+  plan_time = other13.plan_time;
+  created_time = other13.created_time;
+  name = other13.name;
+  price = other13.price;
+  status = other13.status;
+  __isset = other13.__isset;
   return *this;
 }
 void stuff_plan::printTo(std::ostream& out) const {
