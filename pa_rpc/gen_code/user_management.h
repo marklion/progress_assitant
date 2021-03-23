@@ -24,7 +24,7 @@ class user_managementIf {
   virtual ~user_managementIf() {}
   virtual void get_user_info(user_info& _return, const std::string& ssid) = 0;
   virtual void user_login(std::string& _return, const std::string& code) = 0;
-  virtual bool update_user_info(const user_info& info, const std::string& ssid) = 0;
+  virtual bool update_user_info(const user_info& info, const std::string& ssid, const std::string& admin) = 0;
   virtual void logff_user(const std::string& ssid) = 0;
   virtual void get_bound_vichele(std::vector<std::string> & _return, const std::string& ssid) = 0;
   virtual bool bind_new_vichele(const std::string& ssid, const std::string& vichele) = 0;
@@ -65,7 +65,7 @@ class user_managementNull : virtual public user_managementIf {
   void user_login(std::string& /* _return */, const std::string& /* code */) {
     return;
   }
-  bool update_user_info(const user_info& /* info */, const std::string& /* ssid */) {
+  bool update_user_info(const user_info& /* info */, const std::string& /* ssid */, const std::string& /* admin */) {
     bool _return = false;
     return _return;
   }
@@ -297,9 +297,10 @@ class user_management_user_login_presult {
 };
 
 typedef struct _user_management_update_user_info_args__isset {
-  _user_management_update_user_info_args__isset() : info(false), ssid(false) {}
+  _user_management_update_user_info_args__isset() : info(false), ssid(false), admin(false) {}
   bool info :1;
   bool ssid :1;
+  bool admin :1;
 } _user_management_update_user_info_args__isset;
 
 class user_management_update_user_info_args {
@@ -307,12 +308,13 @@ class user_management_update_user_info_args {
 
   user_management_update_user_info_args(const user_management_update_user_info_args&);
   user_management_update_user_info_args& operator=(const user_management_update_user_info_args&);
-  user_management_update_user_info_args() : ssid() {
+  user_management_update_user_info_args() : ssid(), admin() {
   }
 
   virtual ~user_management_update_user_info_args() noexcept;
   user_info info;
   std::string ssid;
+  std::string admin;
 
   _user_management_update_user_info_args__isset __isset;
 
@@ -320,11 +322,15 @@ class user_management_update_user_info_args {
 
   void __set_ssid(const std::string& val);
 
+  void __set_admin(const std::string& val);
+
   bool operator == (const user_management_update_user_info_args & rhs) const
   {
     if (!(info == rhs.info))
       return false;
     if (!(ssid == rhs.ssid))
+      return false;
+    if (!(admin == rhs.admin))
       return false;
     return true;
   }
@@ -347,6 +353,7 @@ class user_management_update_user_info_pargs {
   virtual ~user_management_update_user_info_pargs() noexcept;
   const user_info* info;
   const std::string* ssid;
+  const std::string* admin;
 
   uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
 
@@ -943,8 +950,8 @@ class user_managementClient : virtual public user_managementIf {
   void user_login(std::string& _return, const std::string& code);
   void send_user_login(const std::string& code);
   void recv_user_login(std::string& _return);
-  bool update_user_info(const user_info& info, const std::string& ssid);
-  void send_update_user_info(const user_info& info, const std::string& ssid);
+  bool update_user_info(const user_info& info, const std::string& ssid, const std::string& admin);
+  void send_update_user_info(const user_info& info, const std::string& ssid, const std::string& admin);
   bool recv_update_user_info();
   void logff_user(const std::string& ssid);
   void send_logff_user(const std::string& ssid);
@@ -1043,13 +1050,13 @@ class user_managementMultiface : virtual public user_managementIf {
     return;
   }
 
-  bool update_user_info(const user_info& info, const std::string& ssid) {
+  bool update_user_info(const user_info& info, const std::string& ssid, const std::string& admin) {
     size_t sz = ifaces_.size();
     size_t i = 0;
     for (; i < (sz - 1); ++i) {
-      ifaces_[i]->update_user_info(info, ssid);
+      ifaces_[i]->update_user_info(info, ssid, admin);
     }
-    return ifaces_[i]->update_user_info(info, ssid);
+    return ifaces_[i]->update_user_info(info, ssid, admin);
   }
 
   void logff_user(const std::string& ssid) {
@@ -1136,8 +1143,8 @@ class user_managementConcurrentClient : virtual public user_managementIf {
   void user_login(std::string& _return, const std::string& code);
   int32_t send_user_login(const std::string& code);
   void recv_user_login(std::string& _return, const int32_t seqid);
-  bool update_user_info(const user_info& info, const std::string& ssid);
-  int32_t send_update_user_info(const user_info& info, const std::string& ssid);
+  bool update_user_info(const user_info& info, const std::string& ssid, const std::string& admin);
+  int32_t send_update_user_info(const user_info& info, const std::string& ssid, const std::string& admin);
   bool recv_update_user_info(const int32_t seqid);
   void logff_user(const std::string& ssid);
   int32_t send_logff_user(const std::string& ssid);

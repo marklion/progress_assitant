@@ -14,4 +14,11 @@ std::unique_ptr<pa_sql_userlogin> PA_DATAOPT_pull_user_info_from_wechat(const st
 std::string PA_DATAOPT_rest_req(const std::string &_req);
 std::string PA_DATAOPT_gen_ssid();
 
+void PA_DATAOPT_init_config();
+std::vector<std::string> PA_DATAOPT_get_admin(const std::string &_company);
+bool PA_DATAOPT_is_admin(const std::string &_phone, const std::string &_company);
+
+std::string PA_DATAOPT_get_company_by_assignee(const std::string &_assignee);
+bool PA_DATAOPT_create_user_apply(const std::string &_assignee, const std::string &_assigner);
+
 #endif // _PA_UTILS_H_

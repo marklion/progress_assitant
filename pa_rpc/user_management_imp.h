@@ -15,7 +15,10 @@ class user_management_handler : virtual public user_managementIf
 {
     tdf_log m_log;
 public:
-    user_management_handler():m_log("pa rpc user") {}
+    user_management_handler():m_log("pa rpc user") {
+        m_log.log("handler init");
+        PA_DATAOPT_init_config();
+    }
     virtual void get_user_info(user_info &_return, const std::string &ssid)
     {
         auto user = PA_DATAOPT_get_online_user(ssid);
@@ -78,14 +81,14 @@ public:
             }
         }
     }
-    virtual bool update_user_info(const user_info &info, const std::string &ssid)
+    virtual bool update_user_info(const user_info& info, const std::string& ssid, const std::string& admin)
     {
         bool ret = false;
 
         auto opt_user = PA_DATAOPT_get_online_user(ssid);
         if (opt_user && opt_user->get_pri_id() == info.user_id)
         {
-            if (info.company.length() > 0)
+            if (info.buyer)
             {
                 auto found_company = sqlite_orm::search_record<pa_sql_company>("name = '%s'", info.company.c_str());
                 if (found_company)
@@ -105,6 +108,22 @@ public:
             opt_user->name = info.name;
             opt_user->phone = info.phone;
             ret = opt_user->update_record();
+            if (ret && info.buyer == false)
+            {
+                if (admin == opt_user->phone)
+                {
+                    auto belong_company = sqlite_orm::search_record<pa_sql_company>("name = '%s'", PA_DATAOPT_get_company_by_assignee(admin).c_str());
+                    if (belong_company)
+                    {
+                        opt_user->set_parent(*belong_company, "belong_company");
+                        ret = opt_user->update_record();
+                    }
+                }
+                else
+                {
+                    ret = PA_DATAOPT_create_user_apply(admin, opt_user->phone);
+                }
+            }
         }
 
         return ret;

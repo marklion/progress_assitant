@@ -128,3 +128,143 @@ std::unique_ptr<pa_sql_userinfo> PA_DATAOPT_get_online_user(const std::string &_
 
     return std::unique_ptr<pa_sql_userinfo>();
 }
+
+void PA_DATAOPT_init_config()
+{
+    std::ifstream config_file("/conf/data_config.json", std::ios::in);
+    std::istreambuf_iterator<char> beg(config_file), end;
+    std::string config_string(beg, end);
+    neb::CJsonObject config(config_string);
+
+    for (size_t i = 0; i < config.GetArraySize(); i++)
+    {
+        auto company_config = config[i];
+        auto company_name = company_config("name");
+        auto company_logo = company_config("logo");
+        auto company_from_sql = sqlite_orm::search_record<pa_sql_company>("name = '%s'", company_name.c_str());
+        if (company_from_sql)
+        {
+            company_from_sql->name = company_name;
+            company_from_sql->logo = company_logo;
+            company_from_sql->update_record();
+        }
+        else
+        {
+            pa_sql_company tmp;
+            tmp.name = company_name;
+            tmp.logo = company_logo;
+            tmp.insert_record();
+        }
+    }
+    
+}
+
+bool PA_DATAOPT_is_admin(const std::string &_phone, const std::string &_company)
+{
+    bool ret = false;
+    std::ifstream config_file("/conf/data_config.json", std::ios::in);
+    std::istreambuf_iterator<char> beg(config_file), end;
+    std::string config_string(beg, end);
+    neb::CJsonObject config(config_string);
+
+    for (size_t i = 0; i < config.GetArraySize(); i++)
+    {
+        auto company_config = config[i];
+        auto company_name = company_config("name");
+        auto company_admin_config = company_config["admin"];
+        if (company_name == _company)
+        {
+            for (size_t j = 0; j < company_admin_config.GetArraySize(); j++)
+            {
+                if (_phone == company_admin_config(j))
+                {
+                    ret = true;
+                    break;
+                }
+            }
+            break;
+        }
+    }
+    
+
+    return ret;
+}
+
+std::vector<std::string> PA_DATAOPT_get_admin(const std::string &_company)
+{
+    std::vector<std::string> ret;
+    std::ifstream config_file("/conf/data_config.json", std::ios::in);
+    std::istreambuf_iterator<char> beg(config_file), end;
+    std::string config_string(beg, end);
+    neb::CJsonObject config(config_string);
+
+    for (size_t i = 0; i < config.GetArraySize(); i++)
+    {
+        auto company_config = config[i];
+        auto company_name = company_config("name");
+        auto company_admin_config = company_config["admin"];
+        if (company_name == _company)
+        {
+            for (size_t j = 0; j < company_admin_config.GetArraySize(); j++)
+            {
+                ret.push_back(company_admin_config(j));
+            }
+            break;
+        }
+    }
+
+    return ret;
+}
+
+std::string PA_DATAOPT_get_company_by_assignee(const std::string &_assignee)
+{
+    std::string ret;
+
+    std::ifstream config_file("/conf/data_config.json", std::ios::in);
+    std::istreambuf_iterator<char> beg(config_file), end;
+    std::string config_string(beg, end);
+    neb::CJsonObject config(config_string);
+
+    for (size_t i = 0; i < config.GetArraySize(); i++)
+    {
+        auto company_config = config[i];
+        auto company_name = company_config("name");
+        auto company_admin_config = company_config["admin"];
+        for (size_t j = 0; j < company_admin_config.GetArraySize(); j++)
+        {
+            if (_assignee == company_admin_config(j))
+            {
+                ret = company_name;
+                break;
+            }
+        }
+        if (ret.length() > 0)
+        {
+            break;
+        }
+    }
+
+    return ret;
+}
+
+bool PA_DATAOPT_create_user_apply(const std::string &_assignee, const std::string &_assigner)
+{
+    bool ret = false;
+
+    auto company_name = PA_DATAOPT_get_company_by_assignee(_assignee);
+    if (company_name.length() > 0)
+    {
+        auto assignee_user = sqlite_orm::search_record<pa_sql_userinfo>("phone = '%s'", _assignee.c_str());
+        auto assigner_user = sqlite_orm::search_record<pa_sql_userinfo>("phone = '%s'", _assigner.c_str());
+        if (assigner_user && assignee_user)
+        {
+            pa_sql_user_apply tmp;
+            tmp.status = 0;
+            tmp.set_parent(*assignee_user, "assignee");
+            tmp.set_parent(*assigner_user, "assigner");
+            ret = tmp.insert_record();
+        }
+    }
+
+    return ret;
+}

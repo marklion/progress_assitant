@@ -10,7 +10,8 @@
             </template>
         </van-field>
         <van-field name="phone" v-model="userinfo.phone" label="手机号" placeholder="请填入手机号" />
-        <van-field name="company_picker" v-model="userinfo.company" label="公司(选填)" placeholder="请填入所在公司" />
+        <van-field name="company_picker" v-if="user_role == '1'" v-model="userinfo.company" label="公司" placeholder="请填入所在公司" :rules="[{ required: true, message: '请填写所属公司' }]" />
+        <van-field name="admin" v-else v-model="admin" label="管理员手机号" placeholder="请填入公司管理员手机号" :rules="[{ required: true, message: '请填写公司管理员手机号' }]" />
         <van-field name="radio" label="身份">
             <template #input>
                 <van-radio-group v-model="user_role" direction="horizontal">
@@ -76,15 +77,16 @@ export default {
                 buyer: false,
                 phone: '',
             },
+            admin: '',
         }
     },
     computed: {
         user_role: {
             get() {
-                return this.userinfo.buyer?'1':'2';
+                return this.userinfo.buyer ? '1' : '2';
             },
             set(_value) {
-                this.userinfo.buyer = _value == '1'?true:false;
+                this.userinfo.buyer = _value == '1' ? true : false;
             }
         },
     },
@@ -101,13 +103,14 @@ export default {
     methods: {
         on_submit: function () {
             var vue_this = this;
-            vue_this.$get_client("user_management").update_user_info(vue_this.userinfo, vue_this.$cookies.get('pa_ssid')).then(function (resp) {
+            vue_this.$get_client("user_management").update_user_info(vue_this.userinfo, vue_this.$cookies.get('pa_ssid'), vue_this.admin).then(function (resp) {
                 if (resp == true) {
                     vue_this.$store.commit('set_userinfo', vue_this.userinfo);
                     if (vue_this.$route.query.from == 'auto') {
                         window.location.replace("/pa_web/");
+                    } else {
+                        vue_this.$router.go(-1);
                     }
-                    vue_this.$router.go(-1);
                 } else {
                     console.log(resp);
                 }

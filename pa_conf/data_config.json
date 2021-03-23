@@ -1,36 +1,7 @@
 [
     {
-        "company_name": "卓创公司",
-        "roles": ["管理员", "操作工", "主管", "经理"],
+        "name": "卓创公司",
         "logo": "/company_logo/huineng.jpg",
-        "support_apps": [
-            {
-                "app_name": "出差",
-                "app_description": "出差需要填写此流程",
-                "steps": [
-                    {
-                        "step_name":"申报出差地",
-                        "step_description": "填写要去的地方",
-                        "permissions": [1,2,3,4],
-                        "primary_role": 2,
-                        "step_component": "PaStep/zhuochuang/chuchai/shenbao.vue"
-                    },
-                    {
-                        "step_name":"主管审批",
-                        "step_description": "填写人员备份",
-                        "permissions": [1,3,4],
-                        "primary_role": 3,
-                        "step_component": "PaStep/zhuochuang/chuchai/CommentOnly.vue"
-                    },
-                    {
-                        "step_name":"经理审批",
-                        "step_description": "同意或驳回",
-                        "permissions": [1,4],
-                        "primary_role": 4,
-                        "step_component": "PaStep/zhuochuang/chuchai/CommentOnly.vue"
-                    }
-                ]
-            }
-        ]
+        "admin": ["18911992582"]
     }
 ]
