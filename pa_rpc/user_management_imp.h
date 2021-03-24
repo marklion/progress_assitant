@@ -81,49 +81,56 @@ public:
             }
         }
     }
-    virtual bool update_user_info(const user_info& info, const std::string& ssid, const std::string& admin)
+    virtual bool update_user_info(const user_info& info, const std::string& ssid)
     {
         bool ret = false;
 
         auto opt_user = PA_DATAOPT_get_online_user(ssid);
         if (opt_user && opt_user->get_pri_id() == info.user_id)
         {
-            if (info.buyer)
+            std::string orig_company_name = "";
+            auto orig_company = opt_user->get_parent<pa_sql_company>("belong_company");
+            if (orig_company)
             {
-                auto found_company = sqlite_orm::search_record<pa_sql_company>("name = '%s'", info.company.c_str());
-                if (found_company)
-                {
-                    opt_user->set_parent(*found_company, "belong_company");
-                }
-                else
-                {
-                    pa_sql_company new_company;
-                    new_company.name = info.company;
-                    new_company.insert_record();
-                    opt_user->set_parent(new_company, "belong_company");
-                }
+                orig_company_name = orig_company->name;
             }
+            auto orig_buyer = opt_user->buyer;
             opt_user->buyer = info.buyer;
             opt_user->logo = info.logo;
             opt_user->name = info.name;
             opt_user->phone = info.phone;
             ret = opt_user->update_record();
-            if (ret && info.buyer == false)
+            if (info.buyer)
             {
-                if (admin == opt_user->phone)
+                auto company = PA_DATAOPT_fetch_company(info.company);
+                if (company)
                 {
-                    auto belong_company = sqlite_orm::search_record<pa_sql_company>("name = '%s'", PA_DATAOPT_get_company_by_assignee(admin).c_str());
-                    if (belong_company)
-                    {
-                        opt_user->set_parent(*belong_company, "belong_company");
-                        ret = opt_user->update_record();
-                    }
-                }
-                else
-                {
-                    ret = PA_DATAOPT_create_user_apply(admin, opt_user->phone);
+                    opt_user->set_parent(*company, "belong_company");
                 }
             }
+            else
+            {
+                if (PA_DATAOPT_is_admin(info.phone, info.company))
+                {
+                    auto company = PA_DATAOPT_fetch_company(info.company);
+                    if (company)
+                    {
+                        opt_user->set_parent(*company, "belong_company");
+                    }
+                }
+                else if (orig_company_name != info.company || orig_buyer)
+                {
+                    pa_sql_company empty;
+                    opt_user->set_parent(empty, "belong_company");
+                    auto all_admin = PA_DATAOPT_get_admin(info.company);
+                    for (auto &itr:all_admin)
+                    {
+                        PA_DATAOPT_create_user_apply(itr, opt_user->phone);
+                    }
+                }
+            }
+
+            ret = opt_user->update_record();
         }
 
         return ret;

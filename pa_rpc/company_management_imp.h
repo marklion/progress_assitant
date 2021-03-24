@@ -105,7 +105,7 @@ public:
         bool ret = false;
         auto apply = sqlite_orm::search_record<pa_sql_user_apply>(apply_id);
         auto opt_user = PA_DATAOPT_get_online_user(ssid);
-        if (apply && opt_user)
+        if (apply && opt_user && apply->status == 0)
         {
             auto company = opt_user->get_parent<pa_sql_company>("belong_company");
             auto assigner = apply->get_parent<pa_sql_userinfo>("assigner");
@@ -122,6 +122,12 @@ public:
                 {
                     apply->status = 2;
                     ret = apply->update_record();
+                }
+                auto other_apply = assigner->get_all_children<pa_sql_user_apply>("assigner");
+                for (auto &itr:other_apply)
+                {
+                    itr.status = apply->status;
+                    itr.update_record();
                 }
             }
         }

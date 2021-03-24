@@ -223,16 +223,12 @@ user_management_update_user_info_args = class {
   constructor(args) {
     this.info = null;
     this.ssid = null;
-    this.admin = null;
     if (args) {
       if (args.info !== undefined && args.info !== null) {
         this.info = new user_info(args.info);
       }
       if (args.ssid !== undefined && args.ssid !== null) {
         this.ssid = args.ssid;
-      }
-      if (args.admin !== undefined && args.admin !== null) {
-        this.admin = args.admin;
       }
     }
   }
@@ -262,13 +258,6 @@ user_management_update_user_info_args = class {
           input.skip(ftype);
         }
         break;
-        case 3:
-        if (ftype == Thrift.Type.STRING) {
-          this.admin = input.readString().value;
-        } else {
-          input.skip(ftype);
-        }
-        break;
         default:
           input.skip(ftype);
       }
@@ -288,11 +277,6 @@ user_management_update_user_info_args = class {
     if (this.ssid !== null && this.ssid !== undefined) {
       output.writeFieldBegin('ssid', Thrift.Type.STRING, 2);
       output.writeString(this.ssid);
-      output.writeFieldEnd();
-    }
-    if (this.admin !== null && this.admin !== undefined) {
-      output.writeFieldBegin('admin', Thrift.Type.STRING, 3);
-      output.writeString(this.admin);
       output.writeFieldEnd();
     }
     output.writeFieldStop();
@@ -1204,20 +1188,19 @@ user_managementClient = class user_managementClient {
     throw 'user_login failed: unknown result';
   }
 
-  update_user_info (info, ssid, admin) {
+  update_user_info (info, ssid) {
     const self = this;
     return new Promise((resolve, reject) => {
-      self.send_update_user_info(info, ssid, admin, (error, result) => {
+      self.send_update_user_info(info, ssid, (error, result) => {
         return error ? reject(error) : resolve(result);
       });
     });
   }
 
-  send_update_user_info (info, ssid, admin, callback) {
+  send_update_user_info (info, ssid, callback) {
     const params = {
       info: info,
-      ssid: ssid,
-      admin: admin
+      ssid: ssid
     };
     const args = new user_management_update_user_info_args(params);
     try {

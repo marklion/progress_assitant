@@ -424,14 +424,6 @@ uint32_t user_management_update_user_info_args::read(::apache::thrift::protocol:
           xfer += iprot->skip(ftype);
         }
         break;
-      case 3:
-        if (ftype == ::apache::thrift::protocol::T_STRING) {
-          xfer += iprot->readString(this->admin);
-          this->__isset.admin = true;
-        } else {
-          xfer += iprot->skip(ftype);
-        }
-        break;
       default:
         xfer += iprot->skip(ftype);
         break;
@@ -457,10 +449,6 @@ uint32_t user_management_update_user_info_args::write(::apache::thrift::protocol
   xfer += oprot->writeString(this->ssid);
   xfer += oprot->writeFieldEnd();
 
-  xfer += oprot->writeFieldBegin("admin", ::apache::thrift::protocol::T_STRING, 3);
-  xfer += oprot->writeString(this->admin);
-  xfer += oprot->writeFieldEnd();
-
   xfer += oprot->writeFieldStop();
   xfer += oprot->writeStructEnd();
   return xfer;
@@ -482,10 +470,6 @@ uint32_t user_management_update_user_info_pargs::write(::apache::thrift::protoco
 
   xfer += oprot->writeFieldBegin("ssid", ::apache::thrift::protocol::T_STRING, 2);
   xfer += oprot->writeString((*(this->ssid)));
-  xfer += oprot->writeFieldEnd();
-
-  xfer += oprot->writeFieldBegin("admin", ::apache::thrift::protocol::T_STRING, 3);
-  xfer += oprot->writeString((*(this->admin)));
   xfer += oprot->writeFieldEnd();
 
   xfer += oprot->writeFieldStop();
@@ -2044,13 +2028,13 @@ void user_managementClient::recv_user_login(std::string& _return)
   throw ::apache::thrift::TApplicationException(::apache::thrift::TApplicationException::MISSING_RESULT, "user_login failed: unknown result");
 }
 
-bool user_managementClient::update_user_info(const user_info& info, const std::string& ssid, const std::string& admin)
+bool user_managementClient::update_user_info(const user_info& info, const std::string& ssid)
 {
-  send_update_user_info(info, ssid, admin);
+  send_update_user_info(info, ssid);
   return recv_update_user_info();
 }
 
-void user_managementClient::send_update_user_info(const user_info& info, const std::string& ssid, const std::string& admin)
+void user_managementClient::send_update_user_info(const user_info& info, const std::string& ssid)
 {
   int32_t cseqid = 0;
   oprot_->writeMessageBegin("update_user_info", ::apache::thrift::protocol::T_CALL, cseqid);
@@ -2058,7 +2042,6 @@ void user_managementClient::send_update_user_info(const user_info& info, const s
   user_management_update_user_info_pargs args;
   args.info = &info;
   args.ssid = &ssid;
-  args.admin = &admin;
   args.write(oprot_);
 
   oprot_->writeMessageEnd();
@@ -2653,7 +2636,7 @@ void user_managementProcessor::process_update_user_info(int32_t seqid, ::apache:
 
   user_management_update_user_info_result result;
   try {
-    result.success = iface_->update_user_info(args.info, args.ssid, args.admin);
+    result.success = iface_->update_user_info(args.info, args.ssid);
     result.__isset.success = true;
   } catch (const std::exception& e) {
     if (this->eventHandler_.get() != nullptr) {
@@ -3235,13 +3218,13 @@ void user_managementConcurrentClient::recv_user_login(std::string& _return, cons
   } // end while(true)
 }
 
-bool user_managementConcurrentClient::update_user_info(const user_info& info, const std::string& ssid, const std::string& admin)
+bool user_managementConcurrentClient::update_user_info(const user_info& info, const std::string& ssid)
 {
-  int32_t seqid = send_update_user_info(info, ssid, admin);
+  int32_t seqid = send_update_user_info(info, ssid);
   return recv_update_user_info(seqid);
 }
 
-int32_t user_managementConcurrentClient::send_update_user_info(const user_info& info, const std::string& ssid, const std::string& admin)
+int32_t user_managementConcurrentClient::send_update_user_info(const user_info& info, const std::string& ssid)
 {
   int32_t cseqid = this->sync_->generateSeqId();
   ::apache::thrift::async::TConcurrentSendSentry sentry(this->sync_.get());
@@ -3250,7 +3233,6 @@ int32_t user_managementConcurrentClient::send_update_user_info(const user_info& 
   user_management_update_user_info_pargs args;
   args.info = &info;
   args.ssid = &ssid;
-  args.admin = &admin;
   args.write(oprot_);
 
   oprot_->writeMessageEnd();

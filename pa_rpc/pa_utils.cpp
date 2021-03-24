@@ -268,3 +268,19 @@ bool PA_DATAOPT_create_user_apply(const std::string &_assignee, const std::strin
 
     return ret;
 }
+
+std::unique_ptr<pa_sql_company> PA_DATAOPT_fetch_company(const std::string &_company)
+{
+    auto found_company = sqlite_orm::search_record<pa_sql_company>("name = '%s'", _company.c_str());
+    if (found_company)
+    {
+        return found_company;
+    }
+    else
+    {
+        pa_sql_company tmp;
+        tmp.name = _company;
+        tmp.insert_record();
+        return sqlite_orm::search_record<pa_sql_company>("name = '%s'", _company.c_str());
+    }
+}

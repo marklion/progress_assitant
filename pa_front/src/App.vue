@@ -85,7 +85,7 @@ export default {
                 if (resp.user_id != 0) {
                     vue_this.$store.commit('set_userinfo', resp);
                     vue_this.$store.commit('set_login', true);
-                    if (!(resp.company && resp.phone)) {
+                    if (!resp.phone) {
                         vue_this.need_info = true;
                         vue_this.$router.replace({
                             name: 'SelfInfo',

@@ -9,7 +9,7 @@ struct user_info {
 service user_management{
     user_info get_user_info(1:string ssid),
     string user_login(1:string code),
-    bool update_user_info(1:user_info info, 2:string ssid, 3:string admin),
+    bool update_user_info(1:user_info info, 2:string ssid),
     void logff_user(1:string ssid),
     list<string> get_bound_vichele(1:string ssid)
     bool bind_new_vichele(1:string ssid, 2:string vichele),

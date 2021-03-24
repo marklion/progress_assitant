@@ -1,5 +1,11 @@
 <template>
 <div class="company_home_show">
+    <div v-if="!enter_company">
+        <van-notice-bar scrollable text="请等待管理员批准加入公司" />
+        <van-row type="flex" justify="center" align="center">
+            <van-button round type="info" icon="replay" @click="refresh_page">刷新</van-button>
+        </van-row>
+    </div>
     <van-row type="flex" justify="center" align="center">
         <h1>今日报价</h1>
         <van-field v-for="(single_type, index) in all_type" :key="index" type="number" v-model="single_type.price" :label="single_type.name" readonly>
@@ -54,7 +60,11 @@ import {
 import {
     Dialog
 } from 'vant';
+import {
+    NoticeBar
+} from 'vant';
 
+Vue.use(NoticeBar);
 Vue.use(Dialog);
 Vue.use(Form);
 Vue.use(Popup);
@@ -79,7 +89,19 @@ export default {
             show_remove_stuff: false,
         };
     },
+    computed: {
+        enter_company: function () {
+            var ret = false;
+            if (this.$store.state.userinfo.company && this.$store.state.userinfo.buyer == false) {
+                ret = true;
+            }
+            return ret;
+        },
+    },
     methods: {
+        refresh_page: function () {
+            this.$router.go(0);
+        },
         edit_stuff: function () {
             var vue_this = this;
             var stuff = Object.create(vue_this.stuff_in_edit);

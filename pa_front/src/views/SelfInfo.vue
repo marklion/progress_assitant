@@ -10,8 +10,7 @@
             </template>
         </van-field>
         <van-field name="phone" v-model="userinfo.phone" label="手机号" placeholder="请填入手机号" />
-        <van-field name="company_picker" v-if="user_role == '1'" v-model="userinfo.company" label="公司" placeholder="请填入所在公司" :rules="[{ required: true, message: '请填写所属公司' }]" />
-        <van-field name="admin" v-else v-model="admin" label="管理员手机号" placeholder="请填入公司管理员手机号" :rules="[{ required: true, message: '请填写公司管理员手机号' }]" />
+        <van-field name="company_picker" v-model="userinfo.company" label="公司" placeholder="请填入所在公司" :rules="[{ required: true, message: '请填写所属公司' }]" />
         <van-field name="radio" label="身份">
             <template #input>
                 <van-radio-group v-model="user_role" direction="horizontal">
@@ -103,7 +102,7 @@ export default {
     methods: {
         on_submit: function () {
             var vue_this = this;
-            vue_this.$get_client("user_management").update_user_info(vue_this.userinfo, vue_this.$cookies.get('pa_ssid'), vue_this.admin).then(function (resp) {
+            vue_this.$get_client("user_management").update_user_info(vue_this.userinfo, vue_this.$cookies.get('pa_ssid')).then(function (resp) {
                 if (resp == true) {
                     var ssid = vue_this.$cookies.get('pa_ssid');
                     vue_this.$get_client('user_management').get_user_info(ssid).then(function (resp) {

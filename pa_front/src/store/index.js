@@ -14,6 +14,7 @@ export default new Vuex.Store({
       user_id:0
     },
     is_login:false,
+    enter_company:false,
   },
   mutations: {
     set_userinfo(state, userinfo){
@@ -21,6 +22,9 @@ export default new Vuex.Store({
     },
     set_login(state, _login) {
       state.is_login = _login;
+    },
+    set_enter(state, _enter) {
+      state.enter_company = _enter;
     },
   },
   actions: {
