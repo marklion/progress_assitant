@@ -16,6 +16,7 @@ service user_management{
     void remove_vichele(1:string ssid, 2:string vichele),
     bool update_logo(1:string content, 2:string ssid),
     string get_customer_info(1:i64 user_id),
+    bool is_admin(1:string ssid),
 }
 
 struct stuff_detail {

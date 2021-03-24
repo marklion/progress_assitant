@@ -16,6 +16,7 @@
                 </div>
             </template>
         </van-cell>
+        <van-cell v-if="is_admin" is-link :to="{name:'Admin'}" title="管理员菜单"></van-cell>
     </van-cell-group>
     <van-button v-if="$store.state.is_login" type="danger" @click="logoff" block>退出登录</van-button>
     <van-button v-else type="primary" @click="login" block>登录</van-button>
@@ -45,6 +46,11 @@ Vue.use(Row);
 Vue.use(VanImage);
 export default {
     name: 'Myself',
+    data: function () {
+        return {
+            is_admin:false,
+        };
+    },
     methods: {
         logoff: function () {
             var vue_this = this;
@@ -55,6 +61,14 @@ export default {
         login: function () {
             window.location.href = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxa390f8b6f68e9c6d&redirect_uri=https%3a%2f%2fwww.d8sis.cn%2fpa_web%2flogin_mp&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect"
         }
+    },
+    beforeMount: function () {
+        var vue_this = this;
+        vue_this.$get_client("user_management").is_admin(vue_this.$cookies.get('pa_ssid')).then(function (resp) {
+            vue_this.is_admin = resp;
+        }).catch(function (err) {
+            console.log(err);
+        });
     },
 }
 </script>

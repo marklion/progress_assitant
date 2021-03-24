@@ -1,11 +1,24 @@
 <template>
 <div class="admin_show">
-    <van-cell v-for="(single_apply, index) in all_apply " :key="index" :lable="'手机号:' + single_apply.phone" title="加入公司申请">
-        <van-image round width="60px" height="60px" :src="single_apply.logo" />
-        {{single_apply.name}}
-        <template #right-icon v-if="single_apply.status == 0">
-            <van-button type="primary" @click="submit_approve(single_apply, true)">批准</van-button>
-            <van-button type="danger" @click="submit_approve(single_apply, false)">驳回</van-button>
+    <van-cell v-for="(single_apply, index) in all_apply " :key="index" :label="'手机号:' + single_apply.phone" :title="single_apply.name + ' 加入公司申请'">
+        <template #right-icon >
+            <van-row v-if="single_apply.status == 0" type="flex" justify="center" align="center" :gutter="5">
+                <van-col>
+                    <van-button type="primary" @click="submit_approve(single_apply, true)">批准</van-button>
+                </van-col>
+                <van-col>
+                    <van-button type="danger" @click="submit_approve(single_apply, false)">驳回</van-button>
+                </van-col>
+            </van-row>
+            <div v-else-if="single_apply.status == 1">
+                已批准
+            </div>
+            <div v-else>
+                已驳回
+            </div>
+        </template>
+        <template #icon>
+            <van-image round width="40px" height="40px" :src="single_apply.logo" />
         </template>
     </van-cell>
 </div>
@@ -23,7 +36,13 @@ import {
 import {
     Button
 } from 'vant';
+import {
+    Col,
+    Row
+} from 'vant';
 
+Vue.use(Col);
+Vue.use(Row);
 Vue.use(Button);
 Vue.use(VanImage);
 Vue.use(Cell);
@@ -38,9 +57,8 @@ export default {
     methods: {
         submit_approve: function (_apply, approve) {
             var vue_this = this;
-            vue_this.$get_client("company_management").appove_apply(_apply.apply_id, vue_this.$cookies.get('pa_ssid'), approve).then(function (resp) {
-                if (resp)
-                {
+            vue_this.$get_client("company_management").approve_apply(_apply.apply_id, vue_this.$cookies.get('pa_ssid'), approve).then(function (resp) {
+                if (resp) {
                     vue_this.init_apply_info();
                 }
             }).catch(function (err) {

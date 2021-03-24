@@ -31,6 +31,7 @@ class user_managementIf {
   virtual void remove_vichele(const std::string& ssid, const std::string& vichele) = 0;
   virtual bool update_logo(const std::string& content, const std::string& ssid) = 0;
   virtual void get_customer_info(std::string& _return, const int64_t user_id) = 0;
+  virtual bool is_admin(const std::string& ssid) = 0;
 };
 
 class user_managementIfFactory {
@@ -89,6 +90,10 @@ class user_managementNull : virtual public user_managementIf {
   }
   void get_customer_info(std::string& /* _return */, const int64_t /* user_id */) {
     return;
+  }
+  bool is_admin(const std::string& /* ssid */) {
+    bool _return = false;
+    return _return;
   }
 };
 
@@ -1027,6 +1032,110 @@ class user_management_get_customer_info_presult {
 
 };
 
+typedef struct _user_management_is_admin_args__isset {
+  _user_management_is_admin_args__isset() : ssid(false) {}
+  bool ssid :1;
+} _user_management_is_admin_args__isset;
+
+class user_management_is_admin_args {
+ public:
+
+  user_management_is_admin_args(const user_management_is_admin_args&);
+  user_management_is_admin_args& operator=(const user_management_is_admin_args&);
+  user_management_is_admin_args() : ssid() {
+  }
+
+  virtual ~user_management_is_admin_args() noexcept;
+  std::string ssid;
+
+  _user_management_is_admin_args__isset __isset;
+
+  void __set_ssid(const std::string& val);
+
+  bool operator == (const user_management_is_admin_args & rhs) const
+  {
+    if (!(ssid == rhs.ssid))
+      return false;
+    return true;
+  }
+  bool operator != (const user_management_is_admin_args &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const user_management_is_admin_args & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+
+class user_management_is_admin_pargs {
+ public:
+
+
+  virtual ~user_management_is_admin_pargs() noexcept;
+  const std::string* ssid;
+
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _user_management_is_admin_result__isset {
+  _user_management_is_admin_result__isset() : success(false) {}
+  bool success :1;
+} _user_management_is_admin_result__isset;
+
+class user_management_is_admin_result {
+ public:
+
+  user_management_is_admin_result(const user_management_is_admin_result&);
+  user_management_is_admin_result& operator=(const user_management_is_admin_result&);
+  user_management_is_admin_result() : success(0) {
+  }
+
+  virtual ~user_management_is_admin_result() noexcept;
+  bool success;
+
+  _user_management_is_admin_result__isset __isset;
+
+  void __set_success(const bool val);
+
+  bool operator == (const user_management_is_admin_result & rhs) const
+  {
+    if (!(success == rhs.success))
+      return false;
+    return true;
+  }
+  bool operator != (const user_management_is_admin_result &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const user_management_is_admin_result & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _user_management_is_admin_presult__isset {
+  _user_management_is_admin_presult__isset() : success(false) {}
+  bool success :1;
+} _user_management_is_admin_presult__isset;
+
+class user_management_is_admin_presult {
+ public:
+
+
+  virtual ~user_management_is_admin_presult() noexcept;
+  bool* success;
+
+  _user_management_is_admin_presult__isset __isset;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+
+};
+
 class user_managementClient : virtual public user_managementIf {
  public:
   user_managementClient(std::shared_ptr< ::apache::thrift::protocol::TProtocol> prot) {
@@ -1079,6 +1188,9 @@ class user_managementClient : virtual public user_managementIf {
   void get_customer_info(std::string& _return, const int64_t user_id);
   void send_get_customer_info(const int64_t user_id);
   void recv_get_customer_info(std::string& _return);
+  bool is_admin(const std::string& ssid);
+  void send_is_admin(const std::string& ssid);
+  bool recv_is_admin();
  protected:
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> piprot_;
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> poprot_;
@@ -1103,6 +1215,7 @@ class user_managementProcessor : public ::apache::thrift::TDispatchProcessor {
   void process_remove_vichele(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
   void process_update_logo(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
   void process_get_customer_info(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
+  void process_is_admin(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
  public:
   user_managementProcessor(::std::shared_ptr<user_managementIf> iface) :
     iface_(iface) {
@@ -1115,6 +1228,7 @@ class user_managementProcessor : public ::apache::thrift::TDispatchProcessor {
     processMap_["remove_vichele"] = &user_managementProcessor::process_remove_vichele;
     processMap_["update_logo"] = &user_managementProcessor::process_update_logo;
     processMap_["get_customer_info"] = &user_managementProcessor::process_get_customer_info;
+    processMap_["is_admin"] = &user_managementProcessor::process_is_admin;
   }
 
   virtual ~user_managementProcessor() {}
@@ -1228,6 +1342,15 @@ class user_managementMultiface : virtual public user_managementIf {
     return;
   }
 
+  bool is_admin(const std::string& ssid) {
+    size_t sz = ifaces_.size();
+    size_t i = 0;
+    for (; i < (sz - 1); ++i) {
+      ifaces_[i]->is_admin(ssid);
+    }
+    return ifaces_[i]->is_admin(ssid);
+  }
+
 };
 
 // The 'concurrent' client is a thread safe client that correctly handles
@@ -1287,6 +1410,9 @@ class user_managementConcurrentClient : virtual public user_managementIf {
   void get_customer_info(std::string& _return, const int64_t user_id);
   int32_t send_get_customer_info(const int64_t user_id);
   void recv_get_customer_info(std::string& _return, const int32_t seqid);
+  bool is_admin(const std::string& ssid);
+  int32_t send_is_admin(const std::string& ssid);
+  bool recv_is_admin(const int32_t seqid);
  protected:
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> piprot_;
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> poprot_;

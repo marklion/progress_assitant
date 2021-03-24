@@ -208,6 +208,23 @@ public:
             }
         }
     }
+
+    virtual bool is_admin(const std::string &ssid)
+    {
+        bool ret = false;
+
+        auto user = PA_DATAOPT_get_online_user(ssid);
+        if (user)
+        {
+            auto company = user->get_parent<pa_sql_company>("belong_company");
+            if (company)
+            {
+                ret = PA_DATAOPT_is_admin(user->phone, company->name);
+            }
+        }
+
+        return ret;
+    }
 };
 
 #endif // _USER_MANAGEMENT_IMP_H_
