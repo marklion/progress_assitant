@@ -25,6 +25,7 @@ struct stuff_detail {
     3:i64 price,
     4:string company,
     5:i64 type_id,
+    6:bool saling,
 }
 
 struct user_apply {
@@ -40,6 +41,7 @@ service company_management {
     i64 add_type(1:string name, 2:i64 price, 3:string ssid),
     bool edit_type(1:stuff_detail stuff, 2:string ssid),
     void remove_type(1:stuff_detail stuff, 2:string ssid),
+    bool readd_type(1:stuff_detail stuff, 2:string ssid),
     list<user_apply> get_all_apply(1:string ssid),
     bool approve_apply(1:i64 apply_id, 2:string ssid, 3:bool approve),
 }

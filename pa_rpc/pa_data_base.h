@@ -85,6 +85,7 @@ public:
     std::string name;
     int price = 0;
     std::string last;
+    int saling = 0;
 
     pa_sql_stuff_info() {
         add_parent_type<pa_sql_company>("belong_company");
@@ -94,6 +95,7 @@ public:
         std::vector<sqlite_orm_column> ret;
         ret.push_back(sqlite_orm_column("name", sqlite_orm_column::STRING, &name));
         ret.push_back(sqlite_orm_column("price", sqlite_orm_column::INTEGER, &price));
+        ret.push_back(sqlite_orm_column("saling", sqlite_orm_column::INTEGER, &saling));
         ret.push_back(sqlite_orm_column("last", sqlite_orm_column::STRING, &last));
 
         return ret;

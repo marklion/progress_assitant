@@ -8,16 +8,19 @@ public:
         auto all_stuff = sqlite_orm::search_record_all<pa_sql_stuff_info>("");
         for (auto &itr:all_stuff)
         {
-            auto belong_company = itr.get_parent<pa_sql_company>("belong_company");
-            if (belong_company)
+            if (itr.saling == 1)
             {
-                stuff_detail tmp;
-                tmp.company = belong_company->name;
-                tmp.last = itr.last;
-                tmp.name = itr.name;
-                tmp.price = itr.price;
-                tmp.type_id = itr.get_pri_id();
-                _return.push_back(tmp);
+                auto belong_company = itr.get_parent<pa_sql_company>("belong_company");
+                if (belong_company)
+                {
+                    stuff_detail tmp;
+                    tmp.company = belong_company->name;
+                    tmp.last = itr.last;
+                    tmp.name = itr.name;
+                    tmp.price = itr.price;
+                    tmp.type_id = itr.get_pri_id();
+                    _return.push_back(tmp);
+                }
             }
         }
     }
@@ -34,6 +37,7 @@ public:
                 _return.name = stuff_info->name;
                 _return.price = stuff_info->price;
                 _return.type_id = type_id;
+                _return.saling = stuff_info->saling == 1?true:false;
             }
         }
     }

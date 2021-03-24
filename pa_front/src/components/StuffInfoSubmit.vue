@@ -223,14 +223,13 @@ export default {
                     plan_time: this.plan_time,
                     vichele_info: this.vichele_info,
                     name: this.orig_name,
-                    price:this.orig_price,
+                    price: this.orig_price,
                 }, this.$cookies.get("pa_ssid")).then(function (resp) {
-                    vue_this.$router.push({
-                        name: 'PlanDetail',
-                        params: {
-                            plan_id: resp
-                        }
-                    });
+                    if (resp > 0) {
+                        vue_this.$router.push({
+                            name: 'Order',
+                        });
+                    }
                 }).catch(function (err) {
                     console.log(err);
                 });

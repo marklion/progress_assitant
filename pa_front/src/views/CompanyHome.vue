@@ -6,16 +6,32 @@
             <van-button round type="info" icon="replay" @click="refresh_page">刷新</van-button>
         </van-row>
     </div>
-    <van-row type="flex" justify="center" align="center">
-        <h1>今日报价</h1>
-        <van-field v-for="(single_type, index) in all_type" :key="index" type="number" v-model="single_type.price" :label="single_type.name" readonly>
-            <template #button>
-                <van-button size="small" type="primary" @click="show_out_edit_diag(single_type)">编辑</van-button>
-                <van-button size="small" type="danger" @click="show_out_remove_diag(single_type)">删除</van-button>
+    <van-cell-group>
+        <template #title>
+            <van-row type="flex" justify="space-between" align="center">
+                <van-col>今日报价</van-col>
+                <van-col>
+                    <van-button type="primary" round icon="plus" @click="show_add_stuff = true">增加商品</van-button>
+                </van-col>
+            </van-row>
+        </template>
+        <van-cell v-for="(single_type, index) in all_type" :key="index" :icon="stuff_status(single_type)" :value="'¥' + single_type.price" :title="single_type.name">
+            <template #extra>
+                <van-row type="flex" justify="center" align="center" :gutter="5">
+                    <van-col>
+                        <van-button size="small" type="info" @click="show_out_edit_diag(single_type)">编辑</van-button>
+                    </van-col>
+                    <van-col>
+                        <van-button v-if="single_type.saling == 1" size="small" type="danger" @click="show_out_remove_diag(single_type)">下架</van-button>
+                        <van-button v-else size="small" type="primary" @click="readd_stuff(single_type)">上架</van-button>
+                    </van-col>
+                </van-row>
             </template>
-        </van-field>
-        <van-button type="primary" round icon="plus" @click="show_add_stuff = true">增加商品</van-button>
-    </van-row>
+            <template #label>
+                <van-tag plain type="danger">{{single_type.last}}</van-tag>
+            </template>
+        </van-cell>
+    </van-cell-group>
     <van-dialog :show-confirm-button="false" :show-cancel-button="false" v-model="show_add_stuff" title="添加商品">
         <van-form @submit="add_stuff">
             <van-field v-model="add_stuff_name" name="商品名" label="商品名" placeholder="请输入商品名" :rules="[{ required: true, message: '请填写商品名' }]" />
@@ -63,7 +79,21 @@ import {
 import {
     NoticeBar
 } from 'vant';
+import {
+    Cell,
+    CellGroup
+} from 'vant';
+import {
+    Tag
+} from 'vant';
+import {
+    Icon
+} from 'vant';
 
+Vue.use(Icon);
+Vue.use(Tag);
+Vue.use(Cell);
+Vue.use(CellGroup);
 Vue.use(NoticeBar);
 Vue.use(Dialog);
 Vue.use(Form);
@@ -87,6 +117,13 @@ export default {
             },
             show_edit_stuff: false,
             show_remove_stuff: false,
+            stuff_status: function (_stuff) {
+                var ret = 'shop-o';
+                if (_stuff.saling == 0) {
+                    ret = 'closed-eye';
+                }
+                return ret;
+            },
         };
     },
     computed: {
@@ -97,8 +134,19 @@ export default {
             }
             return ret;
         },
+
     },
     methods: {
+        readd_stuff(_stuff) {
+            var vue_this = this;
+            vue_this.$get_client("company_management").readd_type(_stuff, vue_this.$cookies.get('pa_ssid')).then(function (resp) {
+                if (resp) {
+                    vue_this.init_company_data();
+                }
+            }).catch(function (err) {
+                console.log(err);
+            });
+        },
         refresh_page: function () {
             this.$router.go(0);
         },
@@ -124,8 +172,8 @@ export default {
             var vue_this = this;
             var stuff = Object.create(_stuff);
             Dialog.confirm({
-                    title: '确认删除',
-                    message: '确定要删除' + _stuff.name + '吗？',
+                    title: '确认下架',
+                    message: '确定要下架' + _stuff.name + '吗？',
                 })
                 .then(() => {
                     stuff.price = parseInt(stuff.price);
@@ -153,6 +201,9 @@ export default {
             vue_this.all_type = [];
             this.$get_client("stuff_info").get_stuff_detail(_id).then(function (resp) {
                 vue_this.$set(vue_this.all_type, vue_this.all_type.length, resp);
+                vue_this.all_type.sort((a, b)=>{
+                    return b.saling - a.saling;
+                });
             }).catch(function (err) {
                 console.log(err);
             });

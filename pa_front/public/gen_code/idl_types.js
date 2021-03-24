@@ -144,6 +144,7 @@ stuff_detail = class {
     this.price = null;
     this.company = null;
     this.type_id = null;
+    this.saling = null;
     if (args) {
       if (args.name !== undefined && args.name !== null) {
         this.name = args.name;
@@ -159,6 +160,9 @@ stuff_detail = class {
       }
       if (args.type_id !== undefined && args.type_id !== null) {
         this.type_id = args.type_id;
+      }
+      if (args.saling !== undefined && args.saling !== null) {
+        this.saling = args.saling;
       }
     }
   }
@@ -208,6 +212,13 @@ stuff_detail = class {
           input.skip(ftype);
         }
         break;
+        case 6:
+        if (ftype == Thrift.Type.BOOL) {
+          this.saling = input.readBool().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
         default:
           input.skip(ftype);
       }
@@ -242,6 +253,11 @@ stuff_detail = class {
     if (this.type_id !== null && this.type_id !== undefined) {
       output.writeFieldBegin('type_id', Thrift.Type.I64, 5);
       output.writeI64(this.type_id);
+      output.writeFieldEnd();
+    }
+    if (this.saling !== null && this.saling !== undefined) {
+      output.writeFieldBegin('saling', Thrift.Type.BOOL, 6);
+      output.writeBool(this.saling);
       output.writeFieldEnd();
     }
     output.writeFieldStop();

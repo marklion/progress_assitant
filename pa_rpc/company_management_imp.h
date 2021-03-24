@@ -1,5 +1,6 @@
 #include "gen_code/company_management.h"
 #include "pa_utils.h"
+#include <algorithm>
 class company_management_handler : virtual public company_managementIf
 {
 public:
@@ -12,6 +13,9 @@ public:
             if (company)
             {
                 auto all_stuff_type = company->get_all_children<pa_sql_stuff_info>("belong_company");
+                all_stuff_type.sort([] (pa_sql_stuff_info &s1, pa_sql_stuff_info &s2) {
+                    return s1.saling > s2.saling;
+                });
                 for (auto &itr : all_stuff_type)
                 {
                     _return.push_back(itr.get_pri_id());
@@ -34,6 +38,7 @@ public:
                     tmp.name = name;
                     tmp.price = price;
                     tmp.set_parent(*company, "belong_company");
+                    tmp.saling = 1;
                     ret = tmp.insert_record();
                 }
             }
@@ -74,7 +79,8 @@ public:
                 auto stuff_company = stuff_need_remove->get_parent<pa_sql_company>("belong_company");
                 if (stuff_company && company && stuff_company->get_pri_id() == company->get_pri_id())
                 {
-                    stuff_need_remove->remove_record();
+                    stuff_need_remove->saling = 0;
+                    stuff_need_remove->update_record();
                 }
             }
         }
@@ -128,6 +134,28 @@ public:
                 {
                     itr.status = apply->status;
                     itr.update_record();
+                }
+            }
+        }
+
+        return ret;
+    }
+
+    virtual bool readd_type(const stuff_detail &stuff, const std::string &ssid)
+    {
+        bool ret = false;
+        auto user = PA_DATAOPT_get_online_user(ssid);
+        if (user)
+        {
+            auto company = user->get_parent<pa_sql_company>("belong_company");
+            auto stuff_need_readd = sqlite_orm::search_record<pa_sql_stuff_info>(stuff.type_id);
+            if (stuff_need_readd)
+            {
+                auto stuff_company = stuff_need_readd->get_parent<pa_sql_company>("belong_company");
+                if (stuff_company && company && stuff_company->get_pri_id() == company->get_pri_id())
+                {
+                    stuff_need_readd->saling = 1;
+                    ret = stuff_need_readd->update_record();
                 }
             }
         }

@@ -229,6 +229,10 @@ void stuff_detail::__set_company(const std::string& val) {
 void stuff_detail::__set_type_id(const int64_t val) {
   this->type_id = val;
 }
+
+void stuff_detail::__set_saling(const bool val) {
+  this->saling = val;
+}
 std::ostream& operator<<(std::ostream& out, const stuff_detail& obj)
 {
   obj.printTo(out);
@@ -297,6 +301,14 @@ uint32_t stuff_detail::read(::apache::thrift::protocol::TProtocol* iprot) {
           xfer += iprot->skip(ftype);
         }
         break;
+      case 6:
+        if (ftype == ::apache::thrift::protocol::T_BOOL) {
+          xfer += iprot->readBool(this->saling);
+          this->__isset.saling = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
       default:
         xfer += iprot->skip(ftype);
         break;
@@ -334,6 +346,10 @@ uint32_t stuff_detail::write(::apache::thrift::protocol::TProtocol* oprot) const
   xfer += oprot->writeI64(this->type_id);
   xfer += oprot->writeFieldEnd();
 
+  xfer += oprot->writeFieldBegin("saling", ::apache::thrift::protocol::T_BOOL, 6);
+  xfer += oprot->writeBool(this->saling);
+  xfer += oprot->writeFieldEnd();
+
   xfer += oprot->writeFieldStop();
   xfer += oprot->writeStructEnd();
   return xfer;
@@ -346,6 +362,7 @@ void swap(stuff_detail &a, stuff_detail &b) {
   swap(a.price, b.price);
   swap(a.company, b.company);
   swap(a.type_id, b.type_id);
+  swap(a.saling, b.saling);
   swap(a.__isset, b.__isset);
 }
 
@@ -355,6 +372,7 @@ stuff_detail::stuff_detail(const stuff_detail& other2) {
   price = other2.price;
   company = other2.company;
   type_id = other2.type_id;
+  saling = other2.saling;
   __isset = other2.__isset;
 }
 stuff_detail& stuff_detail::operator=(const stuff_detail& other3) {
@@ -363,6 +381,7 @@ stuff_detail& stuff_detail::operator=(const stuff_detail& other3) {
   price = other3.price;
   company = other3.company;
   type_id = other3.type_id;
+  saling = other3.saling;
   __isset = other3.__isset;
   return *this;
 }
@@ -374,6 +393,7 @@ void stuff_detail::printTo(std::ostream& out) const {
   out << ", " << "price=" << to_string(price);
   out << ", " << "company=" << to_string(company);
   out << ", " << "type_id=" << to_string(type_id);
+  out << ", " << "saling=" << to_string(saling);
   out << ")";
 }
 

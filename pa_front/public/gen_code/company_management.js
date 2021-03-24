@@ -473,6 +473,124 @@ company_management_remove_type_result = class {
   }
 
 };
+company_management_readd_type_args = class {
+  constructor(args) {
+    this.stuff = null;
+    this.ssid = null;
+    if (args) {
+      if (args.stuff !== undefined && args.stuff !== null) {
+        this.stuff = new stuff_detail(args.stuff);
+      }
+      if (args.ssid !== undefined && args.ssid !== null) {
+        this.ssid = args.ssid;
+      }
+    }
+  }
+
+  read (input) {
+    input.readStructBegin();
+    while (true) {
+      const ret = input.readFieldBegin();
+      const ftype = ret.ftype;
+      const fid = ret.fid;
+      if (ftype == Thrift.Type.STOP) {
+        break;
+      }
+      switch (fid) {
+        case 1:
+        if (ftype == Thrift.Type.STRUCT) {
+          this.stuff = new stuff_detail();
+          this.stuff.read(input);
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        case 2:
+        if (ftype == Thrift.Type.STRING) {
+          this.ssid = input.readString().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        default:
+          input.skip(ftype);
+      }
+      input.readFieldEnd();
+    }
+    input.readStructEnd();
+    return;
+  }
+
+  write (output) {
+    output.writeStructBegin('company_management_readd_type_args');
+    if (this.stuff !== null && this.stuff !== undefined) {
+      output.writeFieldBegin('stuff', Thrift.Type.STRUCT, 1);
+      this.stuff.write(output);
+      output.writeFieldEnd();
+    }
+    if (this.ssid !== null && this.ssid !== undefined) {
+      output.writeFieldBegin('ssid', Thrift.Type.STRING, 2);
+      output.writeString(this.ssid);
+      output.writeFieldEnd();
+    }
+    output.writeFieldStop();
+    output.writeStructEnd();
+    return;
+  }
+
+};
+company_management_readd_type_result = class {
+  constructor(args) {
+    this.success = null;
+    if (args) {
+      if (args.success !== undefined && args.success !== null) {
+        this.success = args.success;
+      }
+    }
+  }
+
+  read (input) {
+    input.readStructBegin();
+    while (true) {
+      const ret = input.readFieldBegin();
+      const ftype = ret.ftype;
+      const fid = ret.fid;
+      if (ftype == Thrift.Type.STOP) {
+        break;
+      }
+      switch (fid) {
+        case 0:
+        if (ftype == Thrift.Type.BOOL) {
+          this.success = input.readBool().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        case 0:
+          input.skip(ftype);
+          break;
+        default:
+          input.skip(ftype);
+      }
+      input.readFieldEnd();
+    }
+    input.readStructEnd();
+    return;
+  }
+
+  write (output) {
+    output.writeStructBegin('company_management_readd_type_result');
+    if (this.success !== null && this.success !== undefined) {
+      output.writeFieldBegin('success', Thrift.Type.BOOL, 0);
+      output.writeBool(this.success);
+      output.writeFieldEnd();
+    }
+    output.writeFieldStop();
+    output.writeStructEnd();
+    return;
+  }
+
+};
 company_management_get_all_apply_args = class {
   constructor(args) {
     this.ssid = null;
@@ -956,6 +1074,63 @@ company_managementClient = class company_managementClient {
     this.input.readMessageEnd();
 
     return;
+  }
+
+  readd_type (stuff, ssid) {
+    const self = this;
+    return new Promise((resolve, reject) => {
+      self.send_readd_type(stuff, ssid, (error, result) => {
+        return error ? reject(error) : resolve(result);
+      });
+    });
+  }
+
+  send_readd_type (stuff, ssid, callback) {
+    const params = {
+      stuff: stuff,
+      ssid: ssid
+    };
+    const args = new company_management_readd_type_args(params);
+    try {
+      this.output.writeMessageBegin('readd_type', Thrift.MessageType.CALL, this.seqid);
+      args.write(this.output);
+      this.output.writeMessageEnd();
+      const self = this;
+      this.output.getTransport().flush(true, () => {
+        let error = null, result = null;
+        try {
+          result = self.recv_readd_type();
+        } catch (e) {
+          error = e;
+        }
+        callback(error, result);
+      });
+    }
+    catch (e) {
+      if (typeof this.output.getTransport().reset === 'function') {
+        this.output.getTransport().reset();
+      }
+      throw e;
+    }
+  }
+
+  recv_readd_type () {
+    const ret = this.input.readMessageBegin();
+    const mtype = ret.mtype;
+    if (mtype == Thrift.MessageType.EXCEPTION) {
+      const x = new Thrift.TApplicationException();
+      x.read(this.input);
+      this.input.readMessageEnd();
+      throw x;
+    }
+    const result = new company_management_readd_type_result();
+    result.read(this.input);
+    this.input.readMessageEnd();
+
+    if (null !== result.success) {
+      return result.success;
+    }
+    throw 'readd_type failed: unknown result';
   }
 
   get_all_apply (ssid) {

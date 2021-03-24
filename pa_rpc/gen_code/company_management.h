@@ -26,6 +26,7 @@ class company_managementIf {
   virtual int64_t add_type(const std::string& name, const int64_t price, const std::string& ssid) = 0;
   virtual bool edit_type(const stuff_detail& stuff, const std::string& ssid) = 0;
   virtual void remove_type(const stuff_detail& stuff, const std::string& ssid) = 0;
+  virtual bool readd_type(const stuff_detail& stuff, const std::string& ssid) = 0;
   virtual void get_all_apply(std::vector<user_apply> & _return, const std::string& ssid) = 0;
   virtual bool approve_apply(const int64_t apply_id, const std::string& ssid, const bool approve) = 0;
 };
@@ -70,6 +71,10 @@ class company_managementNull : virtual public company_managementIf {
   }
   void remove_type(const stuff_detail& /* stuff */, const std::string& /* ssid */) {
     return;
+  }
+  bool readd_type(const stuff_detail& /* stuff */, const std::string& /* ssid */) {
+    bool _return = false;
+    return _return;
   }
   void get_all_apply(std::vector<user_apply> & /* _return */, const std::string& /* ssid */) {
     return;
@@ -506,6 +511,117 @@ class company_management_remove_type_presult {
 
 };
 
+typedef struct _company_management_readd_type_args__isset {
+  _company_management_readd_type_args__isset() : stuff(false), ssid(false) {}
+  bool stuff :1;
+  bool ssid :1;
+} _company_management_readd_type_args__isset;
+
+class company_management_readd_type_args {
+ public:
+
+  company_management_readd_type_args(const company_management_readd_type_args&);
+  company_management_readd_type_args& operator=(const company_management_readd_type_args&);
+  company_management_readd_type_args() : ssid() {
+  }
+
+  virtual ~company_management_readd_type_args() noexcept;
+  stuff_detail stuff;
+  std::string ssid;
+
+  _company_management_readd_type_args__isset __isset;
+
+  void __set_stuff(const stuff_detail& val);
+
+  void __set_ssid(const std::string& val);
+
+  bool operator == (const company_management_readd_type_args & rhs) const
+  {
+    if (!(stuff == rhs.stuff))
+      return false;
+    if (!(ssid == rhs.ssid))
+      return false;
+    return true;
+  }
+  bool operator != (const company_management_readd_type_args &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const company_management_readd_type_args & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+
+class company_management_readd_type_pargs {
+ public:
+
+
+  virtual ~company_management_readd_type_pargs() noexcept;
+  const stuff_detail* stuff;
+  const std::string* ssid;
+
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _company_management_readd_type_result__isset {
+  _company_management_readd_type_result__isset() : success(false) {}
+  bool success :1;
+} _company_management_readd_type_result__isset;
+
+class company_management_readd_type_result {
+ public:
+
+  company_management_readd_type_result(const company_management_readd_type_result&);
+  company_management_readd_type_result& operator=(const company_management_readd_type_result&);
+  company_management_readd_type_result() : success(0) {
+  }
+
+  virtual ~company_management_readd_type_result() noexcept;
+  bool success;
+
+  _company_management_readd_type_result__isset __isset;
+
+  void __set_success(const bool val);
+
+  bool operator == (const company_management_readd_type_result & rhs) const
+  {
+    if (!(success == rhs.success))
+      return false;
+    return true;
+  }
+  bool operator != (const company_management_readd_type_result &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const company_management_readd_type_result & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _company_management_readd_type_presult__isset {
+  _company_management_readd_type_presult__isset() : success(false) {}
+  bool success :1;
+} _company_management_readd_type_presult__isset;
+
+class company_management_readd_type_presult {
+ public:
+
+
+  virtual ~company_management_readd_type_presult() noexcept;
+  bool* success;
+
+  _company_management_readd_type_presult__isset __isset;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+
+};
+
 typedef struct _company_management_get_all_apply_args__isset {
   _company_management_get_all_apply_args__isset() : ssid(false) {}
   bool ssid :1;
@@ -765,6 +881,9 @@ class company_managementClient : virtual public company_managementIf {
   void remove_type(const stuff_detail& stuff, const std::string& ssid);
   void send_remove_type(const stuff_detail& stuff, const std::string& ssid);
   void recv_remove_type();
+  bool readd_type(const stuff_detail& stuff, const std::string& ssid);
+  void send_readd_type(const stuff_detail& stuff, const std::string& ssid);
+  bool recv_readd_type();
   void get_all_apply(std::vector<user_apply> & _return, const std::string& ssid);
   void send_get_all_apply(const std::string& ssid);
   void recv_get_all_apply(std::vector<user_apply> & _return);
@@ -790,6 +909,7 @@ class company_managementProcessor : public ::apache::thrift::TDispatchProcessor 
   void process_add_type(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
   void process_edit_type(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
   void process_remove_type(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
+  void process_readd_type(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
   void process_get_all_apply(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
   void process_approve_apply(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
  public:
@@ -799,6 +919,7 @@ class company_managementProcessor : public ::apache::thrift::TDispatchProcessor 
     processMap_["add_type"] = &company_managementProcessor::process_add_type;
     processMap_["edit_type"] = &company_managementProcessor::process_edit_type;
     processMap_["remove_type"] = &company_managementProcessor::process_remove_type;
+    processMap_["readd_type"] = &company_managementProcessor::process_readd_type;
     processMap_["get_all_apply"] = &company_managementProcessor::process_get_all_apply;
     processMap_["approve_apply"] = &company_managementProcessor::process_approve_apply;
   }
@@ -866,6 +987,15 @@ class company_managementMultiface : virtual public company_managementIf {
     ifaces_[i]->remove_type(stuff, ssid);
   }
 
+  bool readd_type(const stuff_detail& stuff, const std::string& ssid) {
+    size_t sz = ifaces_.size();
+    size_t i = 0;
+    for (; i < (sz - 1); ++i) {
+      ifaces_[i]->readd_type(stuff, ssid);
+    }
+    return ifaces_[i]->readd_type(stuff, ssid);
+  }
+
   void get_all_apply(std::vector<user_apply> & _return, const std::string& ssid) {
     size_t sz = ifaces_.size();
     size_t i = 0;
@@ -929,6 +1059,9 @@ class company_managementConcurrentClient : virtual public company_managementIf {
   void remove_type(const stuff_detail& stuff, const std::string& ssid);
   int32_t send_remove_type(const stuff_detail& stuff, const std::string& ssid);
   void recv_remove_type(const int32_t seqid);
+  bool readd_type(const stuff_detail& stuff, const std::string& ssid);
+  int32_t send_readd_type(const stuff_detail& stuff, const std::string& ssid);
+  bool recv_readd_type(const int32_t seqid);
   void get_all_apply(std::vector<user_apply> & _return, const std::string& ssid);
   int32_t send_get_all_apply(const std::string& ssid);
   void recv_get_all_apply(std::vector<user_apply> & _return, const int32_t seqid);

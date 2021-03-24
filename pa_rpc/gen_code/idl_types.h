@@ -102,12 +102,13 @@ void swap(user_info &a, user_info &b);
 std::ostream& operator<<(std::ostream& out, const user_info& obj);
 
 typedef struct _stuff_detail__isset {
-  _stuff_detail__isset() : name(false), last(false), price(false), company(false), type_id(false) {}
+  _stuff_detail__isset() : name(false), last(false), price(false), company(false), type_id(false), saling(false) {}
   bool name :1;
   bool last :1;
   bool price :1;
   bool company :1;
   bool type_id :1;
+  bool saling :1;
 } _stuff_detail__isset;
 
 class stuff_detail : public virtual ::apache::thrift::TBase {
@@ -115,7 +116,7 @@ class stuff_detail : public virtual ::apache::thrift::TBase {
 
   stuff_detail(const stuff_detail&);
   stuff_detail& operator=(const stuff_detail&);
-  stuff_detail() : name(), last(), price(0), company(), type_id(0) {
+  stuff_detail() : name(), last(), price(0), company(), type_id(0), saling(0) {
   }
 
   virtual ~stuff_detail() noexcept;
@@ -124,6 +125,7 @@ class stuff_detail : public virtual ::apache::thrift::TBase {
   int64_t price;
   std::string company;
   int64_t type_id;
+  bool saling;
 
   _stuff_detail__isset __isset;
 
@@ -137,6 +139,8 @@ class stuff_detail : public virtual ::apache::thrift::TBase {
 
   void __set_type_id(const int64_t val);
 
+  void __set_saling(const bool val);
+
   bool operator == (const stuff_detail & rhs) const
   {
     if (!(name == rhs.name))
@@ -148,6 +152,8 @@ class stuff_detail : public virtual ::apache::thrift::TBase {
     if (!(company == rhs.company))
       return false;
     if (!(type_id == rhs.type_id))
+      return false;
+    if (!(saling == rhs.saling))
       return false;
     return true;
   }
