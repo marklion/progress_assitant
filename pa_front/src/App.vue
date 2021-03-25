@@ -13,6 +13,11 @@
         <van-tabbar-item v-else replace :to="{name:'CompanyOrder'}" icon="orders-o">订单</van-tabbar-item>
         <van-tabbar-item replace :to="{name:'Myself'}" icon="user-o">我的</van-tabbar-item>
     </van-tabbar>
+    <van-dialog v-model="show_share" title="长按图片发送给联系人" >
+        <van-row type="flex" justify="center" align="center">
+            <img src="https://www.d8sis.cn/pa_web/logo_res/sub_qr.jpg" />
+        </van-row>
+    </van-dialog>
 </div>
 </template>
 
@@ -23,7 +28,6 @@ import {
     Tabbar,
     TabbarItem
 } from 'vant';
-import wx from 'weixin-js-sdk'
 
 import {
     Icon
@@ -34,7 +38,18 @@ import {
 import {
     Toast
 } from 'vant';
+import {
+    Dialog
+} from 'vant';
 
+import {
+    Col,
+    Row
+} from 'vant';
+
+Vue.use(Col);
+Vue.use(Row);
+Vue.use(Dialog);
 Vue.use(Toast);
 Vue.use(VanImage);
 Vue.use(Icon);
@@ -48,7 +63,8 @@ export default {
             bar_title: '',
             has_go_back: false,
             buyer: true,
-            need_info:false,
+            need_info: false,
+            show_share: false,
         }
     },
     beforeMount: function () {
@@ -65,9 +81,7 @@ export default {
     },
     methods: {
         onClickRight: function () {
-            wx.miniProgram.navigateTo({
-                url: '/pages/share/share'
-            });
+            this.show_share = true;
         },
         onClickLeft() {
             this.$router.back(-1);
