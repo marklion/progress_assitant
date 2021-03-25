@@ -36,6 +36,10 @@ public:
             _return.phone = user->phone;
             _return.user_id = user->get_pri_id();
         }
+        else
+        {
+            PA_RETURN_UNLOGIN_MSG();
+        }
     }
     virtual void user_login(std::string &_return, const std::string &code)
     {
@@ -49,6 +53,7 @@ public:
         if (oJson.KeyExist("errcode"))
         {
             m_log.err("failed to get openid: %s", oJson("errmsg"));
+            PA_RETURN_MSG("微信登陆失败");
         }
         else
         {
@@ -132,6 +137,10 @@ public:
 
             ret = opt_user->update_record();
         }
+        else
+        {
+            PA_RETURN_UNLOGIN_MSG();
+        }
 
         return ret;
     }
@@ -177,6 +186,10 @@ public:
                     tmp.number = vichele;
                     tmp.set_parent(*company, "belong_company");
                     ret = tmp.insert_record();
+                }
+                else
+                {
+                    PA_RETURN_MSG("车辆已存在");
                 }
             }
         }

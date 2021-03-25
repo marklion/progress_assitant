@@ -1,4 +1,5 @@
 #include "pa_utils.h"
+#include "wechat_msg.h"
 
 static tdf_log g_log("pa util");
 static size_t pa_proc_curl(void *ptr, size_t size, size_t nmemb, void *user_data)
@@ -282,6 +283,10 @@ bool PA_DATAOPT_create_user_apply(const std::string &_assignee, const std::strin
             tmp.set_parent(*assignee_user, "assignee");
             tmp.set_parent(*assigner_user, "assigner");
             ret = tmp.insert_record();
+            if (ret)
+            {
+                PA_WECHAT_send_create_apply_msg(*assignee_user, tmp);
+            }
         }
     }
 

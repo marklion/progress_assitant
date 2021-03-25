@@ -137,8 +137,9 @@ class stuff_plan_management_create_plan_pargs {
 };
 
 typedef struct _stuff_plan_management_create_plan_result__isset {
-  _stuff_plan_management_create_plan_result__isset() : success(false) {}
+  _stuff_plan_management_create_plan_result__isset() : success(false), e(false) {}
   bool success :1;
+  bool e :1;
 } _stuff_plan_management_create_plan_result__isset;
 
 class stuff_plan_management_create_plan_result {
@@ -151,14 +152,19 @@ class stuff_plan_management_create_plan_result {
 
   virtual ~stuff_plan_management_create_plan_result() noexcept;
   int64_t success;
+  gen_exp e;
 
   _stuff_plan_management_create_plan_result__isset __isset;
 
   void __set_success(const int64_t val);
 
+  void __set_e(const gen_exp& val);
+
   bool operator == (const stuff_plan_management_create_plan_result & rhs) const
   {
     if (!(success == rhs.success))
+      return false;
+    if (!(e == rhs.e))
       return false;
     return true;
   }
@@ -174,8 +180,9 @@ class stuff_plan_management_create_plan_result {
 };
 
 typedef struct _stuff_plan_management_create_plan_presult__isset {
-  _stuff_plan_management_create_plan_presult__isset() : success(false) {}
+  _stuff_plan_management_create_plan_presult__isset() : success(false), e(false) {}
   bool success :1;
+  bool e :1;
 } _stuff_plan_management_create_plan_presult__isset;
 
 class stuff_plan_management_create_plan_presult {
@@ -184,6 +191,7 @@ class stuff_plan_management_create_plan_presult {
 
   virtual ~stuff_plan_management_create_plan_presult() noexcept;
   int64_t* success;
+  gen_exp e;
 
   _stuff_plan_management_create_plan_presult__isset __isset;
 
@@ -241,8 +249,9 @@ class stuff_plan_management_get_created_plan_pargs {
 };
 
 typedef struct _stuff_plan_management_get_created_plan_result__isset {
-  _stuff_plan_management_get_created_plan_result__isset() : success(false) {}
+  _stuff_plan_management_get_created_plan_result__isset() : success(false), e(false) {}
   bool success :1;
+  bool e :1;
 } _stuff_plan_management_get_created_plan_result__isset;
 
 class stuff_plan_management_get_created_plan_result {
@@ -255,14 +264,19 @@ class stuff_plan_management_get_created_plan_result {
 
   virtual ~stuff_plan_management_get_created_plan_result() noexcept;
   std::vector<int64_t>  success;
+  gen_exp e;
 
   _stuff_plan_management_get_created_plan_result__isset __isset;
 
   void __set_success(const std::vector<int64_t> & val);
 
+  void __set_e(const gen_exp& val);
+
   bool operator == (const stuff_plan_management_get_created_plan_result & rhs) const
   {
     if (!(success == rhs.success))
+      return false;
+    if (!(e == rhs.e))
       return false;
     return true;
   }
@@ -278,8 +292,9 @@ class stuff_plan_management_get_created_plan_result {
 };
 
 typedef struct _stuff_plan_management_get_created_plan_presult__isset {
-  _stuff_plan_management_get_created_plan_presult__isset() : success(false) {}
+  _stuff_plan_management_get_created_plan_presult__isset() : success(false), e(false) {}
   bool success :1;
+  bool e :1;
 } _stuff_plan_management_get_created_plan_presult__isset;
 
 class stuff_plan_management_get_created_plan_presult {
@@ -288,6 +303,7 @@ class stuff_plan_management_get_created_plan_presult {
 
   virtual ~stuff_plan_management_get_created_plan_presult() noexcept;
   std::vector<int64_t> * success;
+  gen_exp e;
 
   _stuff_plan_management_get_created_plan_presult__isset __isset;
 
@@ -345,8 +361,9 @@ class stuff_plan_management_get_company_plan_pargs {
 };
 
 typedef struct _stuff_plan_management_get_company_plan_result__isset {
-  _stuff_plan_management_get_company_plan_result__isset() : success(false) {}
+  _stuff_plan_management_get_company_plan_result__isset() : success(false), e(false) {}
   bool success :1;
+  bool e :1;
 } _stuff_plan_management_get_company_plan_result__isset;
 
 class stuff_plan_management_get_company_plan_result {
@@ -359,14 +376,19 @@ class stuff_plan_management_get_company_plan_result {
 
   virtual ~stuff_plan_management_get_company_plan_result() noexcept;
   std::vector<int64_t>  success;
+  gen_exp e;
 
   _stuff_plan_management_get_company_plan_result__isset __isset;
 
   void __set_success(const std::vector<int64_t> & val);
 
+  void __set_e(const gen_exp& val);
+
   bool operator == (const stuff_plan_management_get_company_plan_result & rhs) const
   {
     if (!(success == rhs.success))
+      return false;
+    if (!(e == rhs.e))
       return false;
     return true;
   }
@@ -382,8 +404,9 @@ class stuff_plan_management_get_company_plan_result {
 };
 
 typedef struct _stuff_plan_management_get_company_plan_presult__isset {
-  _stuff_plan_management_get_company_plan_presult__isset() : success(false) {}
+  _stuff_plan_management_get_company_plan_presult__isset() : success(false), e(false) {}
   bool success :1;
+  bool e :1;
 } _stuff_plan_management_get_company_plan_presult__isset;
 
 class stuff_plan_management_get_company_plan_presult {
@@ -392,6 +415,7 @@ class stuff_plan_management_get_company_plan_presult {
 
   virtual ~stuff_plan_management_get_company_plan_presult() noexcept;
   std::vector<int64_t> * success;
+  gen_exp e;
 
   _stuff_plan_management_get_company_plan_presult__isset __isset;
 
@@ -449,8 +473,9 @@ class stuff_plan_management_get_plan_pargs {
 };
 
 typedef struct _stuff_plan_management_get_plan_result__isset {
-  _stuff_plan_management_get_plan_result__isset() : success(false) {}
+  _stuff_plan_management_get_plan_result__isset() : success(false), e(false) {}
   bool success :1;
+  bool e :1;
 } _stuff_plan_management_get_plan_result__isset;
 
 class stuff_plan_management_get_plan_result {
@@ -463,14 +488,19 @@ class stuff_plan_management_get_plan_result {
 
   virtual ~stuff_plan_management_get_plan_result() noexcept;
   stuff_plan success;
+  gen_exp e;
 
   _stuff_plan_management_get_plan_result__isset __isset;
 
   void __set_success(const stuff_plan& val);
 
+  void __set_e(const gen_exp& val);
+
   bool operator == (const stuff_plan_management_get_plan_result & rhs) const
   {
     if (!(success == rhs.success))
+      return false;
+    if (!(e == rhs.e))
       return false;
     return true;
   }
@@ -486,8 +516,9 @@ class stuff_plan_management_get_plan_result {
 };
 
 typedef struct _stuff_plan_management_get_plan_presult__isset {
-  _stuff_plan_management_get_plan_presult__isset() : success(false) {}
+  _stuff_plan_management_get_plan_presult__isset() : success(false), e(false) {}
   bool success :1;
+  bool e :1;
 } _stuff_plan_management_get_plan_presult__isset;
 
 class stuff_plan_management_get_plan_presult {
@@ -496,6 +527,7 @@ class stuff_plan_management_get_plan_presult {
 
   virtual ~stuff_plan_management_get_plan_presult() noexcept;
   stuff_plan* success;
+  gen_exp e;
 
   _stuff_plan_management_get_plan_presult__isset __isset;
 
@@ -560,8 +592,9 @@ class stuff_plan_management_update_plan_pargs {
 };
 
 typedef struct _stuff_plan_management_update_plan_result__isset {
-  _stuff_plan_management_update_plan_result__isset() : success(false) {}
+  _stuff_plan_management_update_plan_result__isset() : success(false), e(false) {}
   bool success :1;
+  bool e :1;
 } _stuff_plan_management_update_plan_result__isset;
 
 class stuff_plan_management_update_plan_result {
@@ -574,14 +607,19 @@ class stuff_plan_management_update_plan_result {
 
   virtual ~stuff_plan_management_update_plan_result() noexcept;
   bool success;
+  gen_exp e;
 
   _stuff_plan_management_update_plan_result__isset __isset;
 
   void __set_success(const bool val);
 
+  void __set_e(const gen_exp& val);
+
   bool operator == (const stuff_plan_management_update_plan_result & rhs) const
   {
     if (!(success == rhs.success))
+      return false;
+    if (!(e == rhs.e))
       return false;
     return true;
   }
@@ -597,8 +635,9 @@ class stuff_plan_management_update_plan_result {
 };
 
 typedef struct _stuff_plan_management_update_plan_presult__isset {
-  _stuff_plan_management_update_plan_presult__isset() : success(false) {}
+  _stuff_plan_management_update_plan_presult__isset() : success(false), e(false) {}
   bool success :1;
+  bool e :1;
 } _stuff_plan_management_update_plan_presult__isset;
 
 class stuff_plan_management_update_plan_presult {
@@ -607,6 +646,7 @@ class stuff_plan_management_update_plan_presult {
 
   virtual ~stuff_plan_management_update_plan_presult() noexcept;
   bool* success;
+  gen_exp e;
 
   _stuff_plan_management_update_plan_presult__isset __isset;
 
@@ -678,8 +718,9 @@ class stuff_plan_management_confirm_plan_pargs {
 };
 
 typedef struct _stuff_plan_management_confirm_plan_result__isset {
-  _stuff_plan_management_confirm_plan_result__isset() : success(false) {}
+  _stuff_plan_management_confirm_plan_result__isset() : success(false), e(false) {}
   bool success :1;
+  bool e :1;
 } _stuff_plan_management_confirm_plan_result__isset;
 
 class stuff_plan_management_confirm_plan_result {
@@ -692,14 +733,19 @@ class stuff_plan_management_confirm_plan_result {
 
   virtual ~stuff_plan_management_confirm_plan_result() noexcept;
   bool success;
+  gen_exp e;
 
   _stuff_plan_management_confirm_plan_result__isset __isset;
 
   void __set_success(const bool val);
 
+  void __set_e(const gen_exp& val);
+
   bool operator == (const stuff_plan_management_confirm_plan_result & rhs) const
   {
     if (!(success == rhs.success))
+      return false;
+    if (!(e == rhs.e))
       return false;
     return true;
   }
@@ -715,8 +761,9 @@ class stuff_plan_management_confirm_plan_result {
 };
 
 typedef struct _stuff_plan_management_confirm_plan_presult__isset {
-  _stuff_plan_management_confirm_plan_presult__isset() : success(false) {}
+  _stuff_plan_management_confirm_plan_presult__isset() : success(false), e(false) {}
   bool success :1;
+  bool e :1;
 } _stuff_plan_management_confirm_plan_presult__isset;
 
 class stuff_plan_management_confirm_plan_presult {
@@ -725,6 +772,7 @@ class stuff_plan_management_confirm_plan_presult {
 
   virtual ~stuff_plan_management_confirm_plan_presult() noexcept;
   bool* success;
+  gen_exp e;
 
   _stuff_plan_management_confirm_plan_presult__isset __isset;
 

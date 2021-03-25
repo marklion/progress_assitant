@@ -79,9 +79,17 @@ stuff_plan_management_create_plan_args = class {
 stuff_plan_management_create_plan_result = class {
   constructor(args) {
     this.success = null;
+    this.e = null;
+    if (args instanceof gen_exp) {
+        this.e = args;
+        return;
+    }
     if (args) {
       if (args.success !== undefined && args.success !== null) {
         this.success = args.success;
+      }
+      if (args.e !== undefined && args.e !== null) {
+        this.e = args.e;
       }
     }
   }
@@ -103,9 +111,14 @@ stuff_plan_management_create_plan_result = class {
           input.skip(ftype);
         }
         break;
-        case 0:
+        case 1:
+        if (ftype == Thrift.Type.STRUCT) {
+          this.e = new gen_exp();
+          this.e.read(input);
+        } else {
           input.skip(ftype);
-          break;
+        }
+        break;
         default:
           input.skip(ftype);
       }
@@ -120,6 +133,11 @@ stuff_plan_management_create_plan_result = class {
     if (this.success !== null && this.success !== undefined) {
       output.writeFieldBegin('success', Thrift.Type.I64, 0);
       output.writeI64(this.success);
+      output.writeFieldEnd();
+    }
+    if (this.e !== null && this.e !== undefined) {
+      output.writeFieldBegin('e', Thrift.Type.STRUCT, 1);
+      this.e.write(output);
       output.writeFieldEnd();
     }
     output.writeFieldStop();
@@ -183,9 +201,17 @@ stuff_plan_management_get_created_plan_args = class {
 stuff_plan_management_get_created_plan_result = class {
   constructor(args) {
     this.success = null;
+    this.e = null;
+    if (args instanceof gen_exp) {
+        this.e = args;
+        return;
+    }
     if (args) {
       if (args.success !== undefined && args.success !== null) {
         this.success = Thrift.copyList(args.success, [null]);
+      }
+      if (args.e !== undefined && args.e !== null) {
+        this.e = args.e;
       }
     }
   }
@@ -215,9 +241,14 @@ stuff_plan_management_get_created_plan_result = class {
           input.skip(ftype);
         }
         break;
-        case 0:
+        case 1:
+        if (ftype == Thrift.Type.STRUCT) {
+          this.e = new gen_exp();
+          this.e.read(input);
+        } else {
           input.skip(ftype);
-          break;
+        }
+        break;
         default:
           input.skip(ftype);
       }
@@ -239,6 +270,11 @@ stuff_plan_management_get_created_plan_result = class {
         }
       }
       output.writeListEnd();
+      output.writeFieldEnd();
+    }
+    if (this.e !== null && this.e !== undefined) {
+      output.writeFieldBegin('e', Thrift.Type.STRUCT, 1);
+      this.e.write(output);
       output.writeFieldEnd();
     }
     output.writeFieldStop();
@@ -302,9 +338,17 @@ stuff_plan_management_get_company_plan_args = class {
 stuff_plan_management_get_company_plan_result = class {
   constructor(args) {
     this.success = null;
+    this.e = null;
+    if (args instanceof gen_exp) {
+        this.e = args;
+        return;
+    }
     if (args) {
       if (args.success !== undefined && args.success !== null) {
         this.success = Thrift.copyList(args.success, [null]);
+      }
+      if (args.e !== undefined && args.e !== null) {
+        this.e = args.e;
       }
     }
   }
@@ -334,9 +378,14 @@ stuff_plan_management_get_company_plan_result = class {
           input.skip(ftype);
         }
         break;
-        case 0:
+        case 1:
+        if (ftype == Thrift.Type.STRUCT) {
+          this.e = new gen_exp();
+          this.e.read(input);
+        } else {
           input.skip(ftype);
-          break;
+        }
+        break;
         default:
           input.skip(ftype);
       }
@@ -358,6 +407,11 @@ stuff_plan_management_get_company_plan_result = class {
         }
       }
       output.writeListEnd();
+      output.writeFieldEnd();
+    }
+    if (this.e !== null && this.e !== undefined) {
+      output.writeFieldBegin('e', Thrift.Type.STRUCT, 1);
+      this.e.write(output);
       output.writeFieldEnd();
     }
     output.writeFieldStop();
@@ -421,9 +475,17 @@ stuff_plan_management_get_plan_args = class {
 stuff_plan_management_get_plan_result = class {
   constructor(args) {
     this.success = null;
+    this.e = null;
+    if (args instanceof gen_exp) {
+        this.e = args;
+        return;
+    }
     if (args) {
       if (args.success !== undefined && args.success !== null) {
         this.success = new stuff_plan(args.success);
+      }
+      if (args.e !== undefined && args.e !== null) {
+        this.e = args.e;
       }
     }
   }
@@ -446,9 +508,14 @@ stuff_plan_management_get_plan_result = class {
           input.skip(ftype);
         }
         break;
-        case 0:
+        case 1:
+        if (ftype == Thrift.Type.STRUCT) {
+          this.e = new gen_exp();
+          this.e.read(input);
+        } else {
           input.skip(ftype);
-          break;
+        }
+        break;
         default:
           input.skip(ftype);
       }
@@ -463,6 +530,11 @@ stuff_plan_management_get_plan_result = class {
     if (this.success !== null && this.success !== undefined) {
       output.writeFieldBegin('success', Thrift.Type.STRUCT, 0);
       this.success.write(output);
+      output.writeFieldEnd();
+    }
+    if (this.e !== null && this.e !== undefined) {
+      output.writeFieldBegin('e', Thrift.Type.STRUCT, 1);
+      this.e.write(output);
       output.writeFieldEnd();
     }
     output.writeFieldStop();
@@ -540,9 +612,17 @@ stuff_plan_management_update_plan_args = class {
 stuff_plan_management_update_plan_result = class {
   constructor(args) {
     this.success = null;
+    this.e = null;
+    if (args instanceof gen_exp) {
+        this.e = args;
+        return;
+    }
     if (args) {
       if (args.success !== undefined && args.success !== null) {
         this.success = args.success;
+      }
+      if (args.e !== undefined && args.e !== null) {
+        this.e = args.e;
       }
     }
   }
@@ -564,9 +644,14 @@ stuff_plan_management_update_plan_result = class {
           input.skip(ftype);
         }
         break;
-        case 0:
+        case 1:
+        if (ftype == Thrift.Type.STRUCT) {
+          this.e = new gen_exp();
+          this.e.read(input);
+        } else {
           input.skip(ftype);
-          break;
+        }
+        break;
         default:
           input.skip(ftype);
       }
@@ -581,6 +666,11 @@ stuff_plan_management_update_plan_result = class {
     if (this.success !== null && this.success !== undefined) {
       output.writeFieldBegin('success', Thrift.Type.BOOL, 0);
       output.writeBool(this.success);
+      output.writeFieldEnd();
+    }
+    if (this.e !== null && this.e !== undefined) {
+      output.writeFieldBegin('e', Thrift.Type.STRUCT, 1);
+      this.e.write(output);
       output.writeFieldEnd();
     }
     output.writeFieldStop();
@@ -673,9 +763,17 @@ stuff_plan_management_confirm_plan_args = class {
 stuff_plan_management_confirm_plan_result = class {
   constructor(args) {
     this.success = null;
+    this.e = null;
+    if (args instanceof gen_exp) {
+        this.e = args;
+        return;
+    }
     if (args) {
       if (args.success !== undefined && args.success !== null) {
         this.success = args.success;
+      }
+      if (args.e !== undefined && args.e !== null) {
+        this.e = args.e;
       }
     }
   }
@@ -697,9 +795,14 @@ stuff_plan_management_confirm_plan_result = class {
           input.skip(ftype);
         }
         break;
-        case 0:
+        case 1:
+        if (ftype == Thrift.Type.STRUCT) {
+          this.e = new gen_exp();
+          this.e.read(input);
+        } else {
           input.skip(ftype);
-          break;
+        }
+        break;
         default:
           input.skip(ftype);
       }
@@ -714,6 +817,11 @@ stuff_plan_management_confirm_plan_result = class {
     if (this.success !== null && this.success !== undefined) {
       output.writeFieldBegin('success', Thrift.Type.BOOL, 0);
       output.writeBool(this.success);
+      output.writeFieldEnd();
+    }
+    if (this.e !== null && this.e !== undefined) {
+      output.writeFieldBegin('e', Thrift.Type.STRUCT, 1);
+      this.e.write(output);
       output.writeFieldEnd();
     }
     output.writeFieldStop();
@@ -780,6 +888,9 @@ stuff_plan_managementClient = class stuff_plan_managementClient {
     result.read(this.input);
     this.input.readMessageEnd();
 
+    if (null !== result.e) {
+      throw result.e;
+    }
     if (null !== result.success) {
       return result.success;
     }
@@ -836,6 +947,9 @@ stuff_plan_managementClient = class stuff_plan_managementClient {
     result.read(this.input);
     this.input.readMessageEnd();
 
+    if (null !== result.e) {
+      throw result.e;
+    }
     if (null !== result.success) {
       return result.success;
     }
@@ -892,6 +1006,9 @@ stuff_plan_managementClient = class stuff_plan_managementClient {
     result.read(this.input);
     this.input.readMessageEnd();
 
+    if (null !== result.e) {
+      throw result.e;
+    }
     if (null !== result.success) {
       return result.success;
     }
@@ -948,6 +1065,9 @@ stuff_plan_managementClient = class stuff_plan_managementClient {
     result.read(this.input);
     this.input.readMessageEnd();
 
+    if (null !== result.e) {
+      throw result.e;
+    }
     if (null !== result.success) {
       return result.success;
     }
@@ -1005,6 +1125,9 @@ stuff_plan_managementClient = class stuff_plan_managementClient {
     result.read(this.input);
     this.input.readMessageEnd();
 
+    if (null !== result.e) {
+      throw result.e;
+    }
     if (null !== result.success) {
       return result.success;
     }
@@ -1063,6 +1186,9 @@ stuff_plan_managementClient = class stuff_plan_managementClient {
     result.read(this.input);
     this.input.readMessageEnd();
 
+    if (null !== result.e) {
+      throw result.e;
+    }
     if (null !== result.success) {
       return result.success;
     }

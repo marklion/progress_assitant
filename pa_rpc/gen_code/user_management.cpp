@@ -121,6 +121,14 @@ uint32_t user_management_get_user_info_result::read(::apache::thrift::protocol::
           xfer += iprot->skip(ftype);
         }
         break;
+      case 1:
+        if (ftype == ::apache::thrift::protocol::T_STRUCT) {
+          xfer += this->e.read(iprot);
+          this->__isset.e = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
       default:
         xfer += iprot->skip(ftype);
         break;
@@ -142,6 +150,10 @@ uint32_t user_management_get_user_info_result::write(::apache::thrift::protocol:
   if (this->__isset.success) {
     xfer += oprot->writeFieldBegin("success", ::apache::thrift::protocol::T_STRUCT, 0);
     xfer += this->success.write(oprot);
+    xfer += oprot->writeFieldEnd();
+  } else if (this->__isset.e) {
+    xfer += oprot->writeFieldBegin("e", ::apache::thrift::protocol::T_STRUCT, 1);
+    xfer += this->e.write(oprot);
     xfer += oprot->writeFieldEnd();
   }
   xfer += oprot->writeFieldStop();
@@ -179,6 +191,14 @@ uint32_t user_management_get_user_info_presult::read(::apache::thrift::protocol:
         if (ftype == ::apache::thrift::protocol::T_STRUCT) {
           xfer += (*(this->success)).read(iprot);
           this->__isset.success = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 1:
+        if (ftype == ::apache::thrift::protocol::T_STRUCT) {
+          xfer += this->e.read(iprot);
+          this->__isset.e = true;
         } else {
           xfer += iprot->skip(ftype);
         }
@@ -308,6 +328,14 @@ uint32_t user_management_user_login_result::read(::apache::thrift::protocol::TPr
           xfer += iprot->skip(ftype);
         }
         break;
+      case 1:
+        if (ftype == ::apache::thrift::protocol::T_STRUCT) {
+          xfer += this->e.read(iprot);
+          this->__isset.e = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
       default:
         xfer += iprot->skip(ftype);
         break;
@@ -329,6 +357,10 @@ uint32_t user_management_user_login_result::write(::apache::thrift::protocol::TP
   if (this->__isset.success) {
     xfer += oprot->writeFieldBegin("success", ::apache::thrift::protocol::T_STRING, 0);
     xfer += oprot->writeString(this->success);
+    xfer += oprot->writeFieldEnd();
+  } else if (this->__isset.e) {
+    xfer += oprot->writeFieldBegin("e", ::apache::thrift::protocol::T_STRUCT, 1);
+    xfer += this->e.write(oprot);
     xfer += oprot->writeFieldEnd();
   }
   xfer += oprot->writeFieldStop();
@@ -366,6 +398,14 @@ uint32_t user_management_user_login_presult::read(::apache::thrift::protocol::TP
         if (ftype == ::apache::thrift::protocol::T_STRING) {
           xfer += iprot->readString((*(this->success)));
           this->__isset.success = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 1:
+        if (ftype == ::apache::thrift::protocol::T_STRUCT) {
+          xfer += this->e.read(iprot);
+          this->__isset.e = true;
         } else {
           xfer += iprot->skip(ftype);
         }
@@ -511,6 +551,14 @@ uint32_t user_management_update_user_info_result::read(::apache::thrift::protoco
           xfer += iprot->skip(ftype);
         }
         break;
+      case 1:
+        if (ftype == ::apache::thrift::protocol::T_STRUCT) {
+          xfer += this->e.read(iprot);
+          this->__isset.e = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
       default:
         xfer += iprot->skip(ftype);
         break;
@@ -532,6 +580,10 @@ uint32_t user_management_update_user_info_result::write(::apache::thrift::protoc
   if (this->__isset.success) {
     xfer += oprot->writeFieldBegin("success", ::apache::thrift::protocol::T_BOOL, 0);
     xfer += oprot->writeBool(this->success);
+    xfer += oprot->writeFieldEnd();
+  } else if (this->__isset.e) {
+    xfer += oprot->writeFieldBegin("e", ::apache::thrift::protocol::T_STRUCT, 1);
+    xfer += this->e.write(oprot);
     xfer += oprot->writeFieldEnd();
   }
   xfer += oprot->writeFieldStop();
@@ -569,6 +621,14 @@ uint32_t user_management_update_user_info_presult::read(::apache::thrift::protoc
         if (ftype == ::apache::thrift::protocol::T_BOOL) {
           xfer += iprot->readBool((*(this->success)));
           this->__isset.success = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 1:
+        if (ftype == ::apache::thrift::protocol::T_STRUCT) {
+          xfer += this->e.read(iprot);
+          this->__isset.e = true;
         } else {
           xfer += iprot->skip(ftype);
         }
@@ -688,7 +748,20 @@ uint32_t user_management_logff_user_result::read(::apache::thrift::protocol::TPr
     if (ftype == ::apache::thrift::protocol::T_STOP) {
       break;
     }
-    xfer += iprot->skip(ftype);
+    switch (fid)
+    {
+      case 1:
+        if (ftype == ::apache::thrift::protocol::T_STRUCT) {
+          xfer += this->e.read(iprot);
+          this->__isset.e = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      default:
+        xfer += iprot->skip(ftype);
+        break;
+    }
     xfer += iprot->readFieldEnd();
   }
 
@@ -703,6 +776,11 @@ uint32_t user_management_logff_user_result::write(::apache::thrift::protocol::TP
 
   xfer += oprot->writeStructBegin("user_management_logff_user_result");
 
+  if (this->__isset.e) {
+    xfer += oprot->writeFieldBegin("e", ::apache::thrift::protocol::T_STRUCT, 1);
+    xfer += this->e.write(oprot);
+    xfer += oprot->writeFieldEnd();
+  }
   xfer += oprot->writeFieldStop();
   xfer += oprot->writeStructEnd();
   return xfer;
@@ -732,7 +810,20 @@ uint32_t user_management_logff_user_presult::read(::apache::thrift::protocol::TP
     if (ftype == ::apache::thrift::protocol::T_STOP) {
       break;
     }
-    xfer += iprot->skip(ftype);
+    switch (fid)
+    {
+      case 1:
+        if (ftype == ::apache::thrift::protocol::T_STRUCT) {
+          xfer += this->e.read(iprot);
+          this->__isset.e = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      default:
+        xfer += iprot->skip(ftype);
+        break;
+    }
     xfer += iprot->readFieldEnd();
   }
 
@@ -850,18 +941,26 @@ uint32_t user_management_get_bound_vichele_result::read(::apache::thrift::protoc
         if (ftype == ::apache::thrift::protocol::T_LIST) {
           {
             this->success.clear();
-            uint32_t _size14;
-            ::apache::thrift::protocol::TType _etype17;
-            xfer += iprot->readListBegin(_etype17, _size14);
-            this->success.resize(_size14);
-            uint32_t _i18;
-            for (_i18 = 0; _i18 < _size14; ++_i18)
+            uint32_t _size16;
+            ::apache::thrift::protocol::TType _etype19;
+            xfer += iprot->readListBegin(_etype19, _size16);
+            this->success.resize(_size16);
+            uint32_t _i20;
+            for (_i20 = 0; _i20 < _size16; ++_i20)
             {
-              xfer += iprot->readString(this->success[_i18]);
+              xfer += iprot->readString(this->success[_i20]);
             }
             xfer += iprot->readListEnd();
           }
           this->__isset.success = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 1:
+        if (ftype == ::apache::thrift::protocol::T_STRUCT) {
+          xfer += this->e.read(iprot);
+          this->__isset.e = true;
         } else {
           xfer += iprot->skip(ftype);
         }
@@ -888,13 +987,17 @@ uint32_t user_management_get_bound_vichele_result::write(::apache::thrift::proto
     xfer += oprot->writeFieldBegin("success", ::apache::thrift::protocol::T_LIST, 0);
     {
       xfer += oprot->writeListBegin(::apache::thrift::protocol::T_STRING, static_cast<uint32_t>(this->success.size()));
-      std::vector<std::string> ::const_iterator _iter19;
-      for (_iter19 = this->success.begin(); _iter19 != this->success.end(); ++_iter19)
+      std::vector<std::string> ::const_iterator _iter21;
+      for (_iter21 = this->success.begin(); _iter21 != this->success.end(); ++_iter21)
       {
-        xfer += oprot->writeString((*_iter19));
+        xfer += oprot->writeString((*_iter21));
       }
       xfer += oprot->writeListEnd();
     }
+    xfer += oprot->writeFieldEnd();
+  } else if (this->__isset.e) {
+    xfer += oprot->writeFieldBegin("e", ::apache::thrift::protocol::T_STRUCT, 1);
+    xfer += this->e.write(oprot);
     xfer += oprot->writeFieldEnd();
   }
   xfer += oprot->writeFieldStop();
@@ -932,18 +1035,26 @@ uint32_t user_management_get_bound_vichele_presult::read(::apache::thrift::proto
         if (ftype == ::apache::thrift::protocol::T_LIST) {
           {
             (*(this->success)).clear();
-            uint32_t _size20;
-            ::apache::thrift::protocol::TType _etype23;
-            xfer += iprot->readListBegin(_etype23, _size20);
-            (*(this->success)).resize(_size20);
-            uint32_t _i24;
-            for (_i24 = 0; _i24 < _size20; ++_i24)
+            uint32_t _size22;
+            ::apache::thrift::protocol::TType _etype25;
+            xfer += iprot->readListBegin(_etype25, _size22);
+            (*(this->success)).resize(_size22);
+            uint32_t _i26;
+            for (_i26 = 0; _i26 < _size22; ++_i26)
             {
-              xfer += iprot->readString((*(this->success))[_i24]);
+              xfer += iprot->readString((*(this->success))[_i26]);
             }
             xfer += iprot->readListEnd();
           }
           this->__isset.success = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 1:
+        if (ftype == ::apache::thrift::protocol::T_STRUCT) {
+          xfer += this->e.read(iprot);
+          this->__isset.e = true;
         } else {
           xfer += iprot->skip(ftype);
         }
@@ -1089,6 +1200,14 @@ uint32_t user_management_bind_new_vichele_result::read(::apache::thrift::protoco
           xfer += iprot->skip(ftype);
         }
         break;
+      case 1:
+        if (ftype == ::apache::thrift::protocol::T_STRUCT) {
+          xfer += this->e.read(iprot);
+          this->__isset.e = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
       default:
         xfer += iprot->skip(ftype);
         break;
@@ -1110,6 +1229,10 @@ uint32_t user_management_bind_new_vichele_result::write(::apache::thrift::protoc
   if (this->__isset.success) {
     xfer += oprot->writeFieldBegin("success", ::apache::thrift::protocol::T_BOOL, 0);
     xfer += oprot->writeBool(this->success);
+    xfer += oprot->writeFieldEnd();
+  } else if (this->__isset.e) {
+    xfer += oprot->writeFieldBegin("e", ::apache::thrift::protocol::T_STRUCT, 1);
+    xfer += this->e.write(oprot);
     xfer += oprot->writeFieldEnd();
   }
   xfer += oprot->writeFieldStop();
@@ -1147,6 +1270,14 @@ uint32_t user_management_bind_new_vichele_presult::read(::apache::thrift::protoc
         if (ftype == ::apache::thrift::protocol::T_BOOL) {
           xfer += iprot->readBool((*(this->success)));
           this->__isset.success = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 1:
+        if (ftype == ::apache::thrift::protocol::T_STRUCT) {
+          xfer += this->e.read(iprot);
+          this->__isset.e = true;
         } else {
           xfer += iprot->skip(ftype);
         }
@@ -1282,7 +1413,20 @@ uint32_t user_management_remove_vichele_result::read(::apache::thrift::protocol:
     if (ftype == ::apache::thrift::protocol::T_STOP) {
       break;
     }
-    xfer += iprot->skip(ftype);
+    switch (fid)
+    {
+      case 1:
+        if (ftype == ::apache::thrift::protocol::T_STRUCT) {
+          xfer += this->e.read(iprot);
+          this->__isset.e = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      default:
+        xfer += iprot->skip(ftype);
+        break;
+    }
     xfer += iprot->readFieldEnd();
   }
 
@@ -1297,6 +1441,11 @@ uint32_t user_management_remove_vichele_result::write(::apache::thrift::protocol
 
   xfer += oprot->writeStructBegin("user_management_remove_vichele_result");
 
+  if (this->__isset.e) {
+    xfer += oprot->writeFieldBegin("e", ::apache::thrift::protocol::T_STRUCT, 1);
+    xfer += this->e.write(oprot);
+    xfer += oprot->writeFieldEnd();
+  }
   xfer += oprot->writeFieldStop();
   xfer += oprot->writeStructEnd();
   return xfer;
@@ -1326,7 +1475,20 @@ uint32_t user_management_remove_vichele_presult::read(::apache::thrift::protocol
     if (ftype == ::apache::thrift::protocol::T_STOP) {
       break;
     }
-    xfer += iprot->skip(ftype);
+    switch (fid)
+    {
+      case 1:
+        if (ftype == ::apache::thrift::protocol::T_STRUCT) {
+          xfer += this->e.read(iprot);
+          this->__isset.e = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      default:
+        xfer += iprot->skip(ftype);
+        break;
+    }
     xfer += iprot->readFieldEnd();
   }
 
@@ -1464,6 +1626,14 @@ uint32_t user_management_update_logo_result::read(::apache::thrift::protocol::TP
           xfer += iprot->skip(ftype);
         }
         break;
+      case 1:
+        if (ftype == ::apache::thrift::protocol::T_STRUCT) {
+          xfer += this->e.read(iprot);
+          this->__isset.e = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
       default:
         xfer += iprot->skip(ftype);
         break;
@@ -1485,6 +1655,10 @@ uint32_t user_management_update_logo_result::write(::apache::thrift::protocol::T
   if (this->__isset.success) {
     xfer += oprot->writeFieldBegin("success", ::apache::thrift::protocol::T_BOOL, 0);
     xfer += oprot->writeBool(this->success);
+    xfer += oprot->writeFieldEnd();
+  } else if (this->__isset.e) {
+    xfer += oprot->writeFieldBegin("e", ::apache::thrift::protocol::T_STRUCT, 1);
+    xfer += this->e.write(oprot);
     xfer += oprot->writeFieldEnd();
   }
   xfer += oprot->writeFieldStop();
@@ -1522,6 +1696,14 @@ uint32_t user_management_update_logo_presult::read(::apache::thrift::protocol::T
         if (ftype == ::apache::thrift::protocol::T_BOOL) {
           xfer += iprot->readBool((*(this->success)));
           this->__isset.success = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 1:
+        if (ftype == ::apache::thrift::protocol::T_STRUCT) {
+          xfer += this->e.read(iprot);
+          this->__isset.e = true;
         } else {
           xfer += iprot->skip(ftype);
         }
@@ -1651,6 +1833,14 @@ uint32_t user_management_get_customer_info_result::read(::apache::thrift::protoc
           xfer += iprot->skip(ftype);
         }
         break;
+      case 1:
+        if (ftype == ::apache::thrift::protocol::T_STRUCT) {
+          xfer += this->e.read(iprot);
+          this->__isset.e = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
       default:
         xfer += iprot->skip(ftype);
         break;
@@ -1672,6 +1862,10 @@ uint32_t user_management_get_customer_info_result::write(::apache::thrift::proto
   if (this->__isset.success) {
     xfer += oprot->writeFieldBegin("success", ::apache::thrift::protocol::T_STRING, 0);
     xfer += oprot->writeString(this->success);
+    xfer += oprot->writeFieldEnd();
+  } else if (this->__isset.e) {
+    xfer += oprot->writeFieldBegin("e", ::apache::thrift::protocol::T_STRUCT, 1);
+    xfer += this->e.write(oprot);
     xfer += oprot->writeFieldEnd();
   }
   xfer += oprot->writeFieldStop();
@@ -1709,6 +1903,14 @@ uint32_t user_management_get_customer_info_presult::read(::apache::thrift::proto
         if (ftype == ::apache::thrift::protocol::T_STRING) {
           xfer += iprot->readString((*(this->success)));
           this->__isset.success = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 1:
+        if (ftype == ::apache::thrift::protocol::T_STRUCT) {
+          xfer += this->e.read(iprot);
+          this->__isset.e = true;
         } else {
           xfer += iprot->skip(ftype);
         }
@@ -1838,6 +2040,14 @@ uint32_t user_management_is_admin_result::read(::apache::thrift::protocol::TProt
           xfer += iprot->skip(ftype);
         }
         break;
+      case 1:
+        if (ftype == ::apache::thrift::protocol::T_STRUCT) {
+          xfer += this->e.read(iprot);
+          this->__isset.e = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
       default:
         xfer += iprot->skip(ftype);
         break;
@@ -1859,6 +2069,10 @@ uint32_t user_management_is_admin_result::write(::apache::thrift::protocol::TPro
   if (this->__isset.success) {
     xfer += oprot->writeFieldBegin("success", ::apache::thrift::protocol::T_BOOL, 0);
     xfer += oprot->writeBool(this->success);
+    xfer += oprot->writeFieldEnd();
+  } else if (this->__isset.e) {
+    xfer += oprot->writeFieldBegin("e", ::apache::thrift::protocol::T_STRUCT, 1);
+    xfer += this->e.write(oprot);
     xfer += oprot->writeFieldEnd();
   }
   xfer += oprot->writeFieldStop();
@@ -1896,6 +2110,14 @@ uint32_t user_management_is_admin_presult::read(::apache::thrift::protocol::TPro
         if (ftype == ::apache::thrift::protocol::T_BOOL) {
           xfer += iprot->readBool((*(this->success)));
           this->__isset.success = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 1:
+        if (ftype == ::apache::thrift::protocol::T_STRUCT) {
+          xfer += this->e.read(iprot);
+          this->__isset.e = true;
         } else {
           xfer += iprot->skip(ftype);
         }
@@ -1967,6 +2189,9 @@ void user_managementClient::recv_get_user_info(user_info& _return)
     // _return pointer has now been filled
     return;
   }
+  if (result.__isset.e) {
+    throw result.e;
+  }
   throw ::apache::thrift::TApplicationException(::apache::thrift::TApplicationException::MISSING_RESULT, "get_user_info failed: unknown result");
 }
 
@@ -2024,6 +2249,9 @@ void user_managementClient::recv_user_login(std::string& _return)
   if (result.__isset.success) {
     // _return pointer has now been filled
     return;
+  }
+  if (result.__isset.e) {
+    throw result.e;
   }
   throw ::apache::thrift::TApplicationException(::apache::thrift::TApplicationException::MISSING_RESULT, "user_login failed: unknown result");
 }
@@ -2084,6 +2312,9 @@ bool user_managementClient::recv_update_user_info()
   if (result.__isset.success) {
     return _return;
   }
+  if (result.__isset.e) {
+    throw result.e;
+  }
   throw ::apache::thrift::TApplicationException(::apache::thrift::TApplicationException::MISSING_RESULT, "update_user_info failed: unknown result");
 }
 
@@ -2137,6 +2368,9 @@ void user_managementClient::recv_logff_user()
   iprot_->readMessageEnd();
   iprot_->getTransport()->readEnd();
 
+  if (result.__isset.e) {
+    throw result.e;
+  }
   return;
 }
 
@@ -2194,6 +2428,9 @@ void user_managementClient::recv_get_bound_vichele(std::vector<std::string> & _r
   if (result.__isset.success) {
     // _return pointer has now been filled
     return;
+  }
+  if (result.__isset.e) {
+    throw result.e;
   }
   throw ::apache::thrift::TApplicationException(::apache::thrift::TApplicationException::MISSING_RESULT, "get_bound_vichele failed: unknown result");
 }
@@ -2254,6 +2491,9 @@ bool user_managementClient::recv_bind_new_vichele()
   if (result.__isset.success) {
     return _return;
   }
+  if (result.__isset.e) {
+    throw result.e;
+  }
   throw ::apache::thrift::TApplicationException(::apache::thrift::TApplicationException::MISSING_RESULT, "bind_new_vichele failed: unknown result");
 }
 
@@ -2308,6 +2548,9 @@ void user_managementClient::recv_remove_vichele()
   iprot_->readMessageEnd();
   iprot_->getTransport()->readEnd();
 
+  if (result.__isset.e) {
+    throw result.e;
+  }
   return;
 }
 
@@ -2367,6 +2610,9 @@ bool user_managementClient::recv_update_logo()
   if (result.__isset.success) {
     return _return;
   }
+  if (result.__isset.e) {
+    throw result.e;
+  }
   throw ::apache::thrift::TApplicationException(::apache::thrift::TApplicationException::MISSING_RESULT, "update_logo failed: unknown result");
 }
 
@@ -2424,6 +2670,9 @@ void user_managementClient::recv_get_customer_info(std::string& _return)
   if (result.__isset.success) {
     // _return pointer has now been filled
     return;
+  }
+  if (result.__isset.e) {
+    throw result.e;
   }
   throw ::apache::thrift::TApplicationException(::apache::thrift::TApplicationException::MISSING_RESULT, "get_customer_info failed: unknown result");
 }
@@ -2483,6 +2732,9 @@ bool user_managementClient::recv_is_admin()
   if (result.__isset.success) {
     return _return;
   }
+  if (result.__isset.e) {
+    throw result.e;
+  }
   throw ::apache::thrift::TApplicationException(::apache::thrift::TApplicationException::MISSING_RESULT, "is_admin failed: unknown result");
 }
 
@@ -2530,6 +2782,9 @@ void user_managementProcessor::process_get_user_info(int32_t seqid, ::apache::th
   try {
     iface_->get_user_info(result.success, args.ssid);
     result.__isset.success = true;
+  } catch (gen_exp &e) {
+    result.e = e;
+    result.__isset.e = true;
   } catch (const std::exception& e) {
     if (this->eventHandler_.get() != nullptr) {
       this->eventHandler_->handlerError(ctx, "user_management.get_user_info");
@@ -2584,6 +2839,9 @@ void user_managementProcessor::process_user_login(int32_t seqid, ::apache::thrif
   try {
     iface_->user_login(result.success, args.code);
     result.__isset.success = true;
+  } catch (gen_exp &e) {
+    result.e = e;
+    result.__isset.e = true;
   } catch (const std::exception& e) {
     if (this->eventHandler_.get() != nullptr) {
       this->eventHandler_->handlerError(ctx, "user_management.user_login");
@@ -2638,6 +2896,9 @@ void user_managementProcessor::process_update_user_info(int32_t seqid, ::apache:
   try {
     result.success = iface_->update_user_info(args.info, args.ssid);
     result.__isset.success = true;
+  } catch (gen_exp &e) {
+    result.e = e;
+    result.__isset.e = true;
   } catch (const std::exception& e) {
     if (this->eventHandler_.get() != nullptr) {
       this->eventHandler_->handlerError(ctx, "user_management.update_user_info");
@@ -2691,6 +2952,9 @@ void user_managementProcessor::process_logff_user(int32_t seqid, ::apache::thrif
   user_management_logff_user_result result;
   try {
     iface_->logff_user(args.ssid);
+  } catch (gen_exp &e) {
+    result.e = e;
+    result.__isset.e = true;
   } catch (const std::exception& e) {
     if (this->eventHandler_.get() != nullptr) {
       this->eventHandler_->handlerError(ctx, "user_management.logff_user");
@@ -2745,6 +3009,9 @@ void user_managementProcessor::process_get_bound_vichele(int32_t seqid, ::apache
   try {
     iface_->get_bound_vichele(result.success, args.ssid);
     result.__isset.success = true;
+  } catch (gen_exp &e) {
+    result.e = e;
+    result.__isset.e = true;
   } catch (const std::exception& e) {
     if (this->eventHandler_.get() != nullptr) {
       this->eventHandler_->handlerError(ctx, "user_management.get_bound_vichele");
@@ -2799,6 +3066,9 @@ void user_managementProcessor::process_bind_new_vichele(int32_t seqid, ::apache:
   try {
     result.success = iface_->bind_new_vichele(args.ssid, args.vichele);
     result.__isset.success = true;
+  } catch (gen_exp &e) {
+    result.e = e;
+    result.__isset.e = true;
   } catch (const std::exception& e) {
     if (this->eventHandler_.get() != nullptr) {
       this->eventHandler_->handlerError(ctx, "user_management.bind_new_vichele");
@@ -2852,6 +3122,9 @@ void user_managementProcessor::process_remove_vichele(int32_t seqid, ::apache::t
   user_management_remove_vichele_result result;
   try {
     iface_->remove_vichele(args.ssid, args.vichele);
+  } catch (gen_exp &e) {
+    result.e = e;
+    result.__isset.e = true;
   } catch (const std::exception& e) {
     if (this->eventHandler_.get() != nullptr) {
       this->eventHandler_->handlerError(ctx, "user_management.remove_vichele");
@@ -2906,6 +3179,9 @@ void user_managementProcessor::process_update_logo(int32_t seqid, ::apache::thri
   try {
     result.success = iface_->update_logo(args.content, args.ssid);
     result.__isset.success = true;
+  } catch (gen_exp &e) {
+    result.e = e;
+    result.__isset.e = true;
   } catch (const std::exception& e) {
     if (this->eventHandler_.get() != nullptr) {
       this->eventHandler_->handlerError(ctx, "user_management.update_logo");
@@ -2960,6 +3236,9 @@ void user_managementProcessor::process_get_customer_info(int32_t seqid, ::apache
   try {
     iface_->get_customer_info(result.success, args.user_id);
     result.__isset.success = true;
+  } catch (gen_exp &e) {
+    result.e = e;
+    result.__isset.e = true;
   } catch (const std::exception& e) {
     if (this->eventHandler_.get() != nullptr) {
       this->eventHandler_->handlerError(ctx, "user_management.get_customer_info");
@@ -3014,6 +3293,9 @@ void user_managementProcessor::process_is_admin(int32_t seqid, ::apache::thrift:
   try {
     result.success = iface_->is_admin(args.ssid);
     result.__isset.success = true;
+  } catch (gen_exp &e) {
+    result.e = e;
+    result.__isset.e = true;
   } catch (const std::exception& e) {
     if (this->eventHandler_.get() != nullptr) {
       this->eventHandler_->handlerError(ctx, "user_management.is_admin");
@@ -3123,6 +3405,10 @@ void user_managementConcurrentClient::recv_get_user_info(user_info& _return, con
         sentry.commit();
         return;
       }
+      if (result.__isset.e) {
+        sentry.commit();
+        throw result.e;
+      }
       // in a bad state, don't commit
       throw ::apache::thrift::TApplicationException(::apache::thrift::TApplicationException::MISSING_RESULT, "get_user_info failed: unknown result");
     }
@@ -3206,6 +3492,10 @@ void user_managementConcurrentClient::recv_user_login(std::string& _return, cons
         // _return pointer has now been filled
         sentry.commit();
         return;
+      }
+      if (result.__isset.e) {
+        sentry.commit();
+        throw result.e;
       }
       // in a bad state, don't commit
       throw ::apache::thrift::TApplicationException(::apache::thrift::TApplicationException::MISSING_RESULT, "user_login failed: unknown result");
@@ -3292,6 +3582,10 @@ bool user_managementConcurrentClient::recv_update_user_info(const int32_t seqid)
         sentry.commit();
         return _return;
       }
+      if (result.__isset.e) {
+        sentry.commit();
+        throw result.e;
+      }
       // in a bad state, don't commit
       throw ::apache::thrift::TApplicationException(::apache::thrift::TApplicationException::MISSING_RESULT, "update_user_info failed: unknown result");
     }
@@ -3370,6 +3664,10 @@ void user_managementConcurrentClient::recv_logff_user(const int32_t seqid)
       iprot_->readMessageEnd();
       iprot_->getTransport()->readEnd();
 
+      if (result.__isset.e) {
+        sentry.commit();
+        throw result.e;
+      }
       sentry.commit();
       return;
     }
@@ -3453,6 +3751,10 @@ void user_managementConcurrentClient::recv_get_bound_vichele(std::vector<std::st
         // _return pointer has now been filled
         sentry.commit();
         return;
+      }
+      if (result.__isset.e) {
+        sentry.commit();
+        throw result.e;
       }
       // in a bad state, don't commit
       throw ::apache::thrift::TApplicationException(::apache::thrift::TApplicationException::MISSING_RESULT, "get_bound_vichele failed: unknown result");
@@ -3539,6 +3841,10 @@ bool user_managementConcurrentClient::recv_bind_new_vichele(const int32_t seqid)
         sentry.commit();
         return _return;
       }
+      if (result.__isset.e) {
+        sentry.commit();
+        throw result.e;
+      }
       // in a bad state, don't commit
       throw ::apache::thrift::TApplicationException(::apache::thrift::TApplicationException::MISSING_RESULT, "bind_new_vichele failed: unknown result");
     }
@@ -3618,6 +3924,10 @@ void user_managementConcurrentClient::recv_remove_vichele(const int32_t seqid)
       iprot_->readMessageEnd();
       iprot_->getTransport()->readEnd();
 
+      if (result.__isset.e) {
+        sentry.commit();
+        throw result.e;
+      }
       sentry.commit();
       return;
     }
@@ -3703,6 +4013,10 @@ bool user_managementConcurrentClient::recv_update_logo(const int32_t seqid)
         sentry.commit();
         return _return;
       }
+      if (result.__isset.e) {
+        sentry.commit();
+        throw result.e;
+      }
       // in a bad state, don't commit
       throw ::apache::thrift::TApplicationException(::apache::thrift::TApplicationException::MISSING_RESULT, "update_logo failed: unknown result");
     }
@@ -3787,6 +4101,10 @@ void user_managementConcurrentClient::recv_get_customer_info(std::string& _retur
         sentry.commit();
         return;
       }
+      if (result.__isset.e) {
+        sentry.commit();
+        throw result.e;
+      }
       // in a bad state, don't commit
       throw ::apache::thrift::TApplicationException(::apache::thrift::TApplicationException::MISSING_RESULT, "get_customer_info failed: unknown result");
     }
@@ -3870,6 +4188,10 @@ bool user_managementConcurrentClient::recv_is_admin(const int32_t seqid)
       if (result.__isset.success) {
         sentry.commit();
         return _return;
+      }
+      if (result.__isset.e) {
+        sentry.commit();
+        throw result.e;
       }
       // in a bad state, don't commit
       throw ::apache::thrift::TApplicationException(::apache::thrift::TApplicationException::MISSING_RESULT, "is_admin failed: unknown result");

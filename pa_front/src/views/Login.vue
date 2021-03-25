@@ -15,6 +15,7 @@ export default {
                 window.location.replace("/pa_web/");
             }).catch(function (err) {
                 console.log(err);
+                vue_this.$toast(err.msg);
             });
         }
     },

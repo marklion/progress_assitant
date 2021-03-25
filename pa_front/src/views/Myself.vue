@@ -48,7 +48,7 @@ export default {
     name: 'Myself',
     data: function () {
         return {
-            is_admin:false,
+            is_admin: false,
         };
     },
     methods: {
@@ -68,6 +68,7 @@ export default {
             vue_this.is_admin = resp;
         }).catch(function (err) {
             console.log(err);
+            vue_this.$toast(err.msg);
         });
     },
 }

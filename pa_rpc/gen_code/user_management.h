@@ -147,8 +147,9 @@ class user_management_get_user_info_pargs {
 };
 
 typedef struct _user_management_get_user_info_result__isset {
-  _user_management_get_user_info_result__isset() : success(false) {}
+  _user_management_get_user_info_result__isset() : success(false), e(false) {}
   bool success :1;
+  bool e :1;
 } _user_management_get_user_info_result__isset;
 
 class user_management_get_user_info_result {
@@ -161,14 +162,19 @@ class user_management_get_user_info_result {
 
   virtual ~user_management_get_user_info_result() noexcept;
   user_info success;
+  gen_exp e;
 
   _user_management_get_user_info_result__isset __isset;
 
   void __set_success(const user_info& val);
 
+  void __set_e(const gen_exp& val);
+
   bool operator == (const user_management_get_user_info_result & rhs) const
   {
     if (!(success == rhs.success))
+      return false;
+    if (!(e == rhs.e))
       return false;
     return true;
   }
@@ -184,8 +190,9 @@ class user_management_get_user_info_result {
 };
 
 typedef struct _user_management_get_user_info_presult__isset {
-  _user_management_get_user_info_presult__isset() : success(false) {}
+  _user_management_get_user_info_presult__isset() : success(false), e(false) {}
   bool success :1;
+  bool e :1;
 } _user_management_get_user_info_presult__isset;
 
 class user_management_get_user_info_presult {
@@ -194,6 +201,7 @@ class user_management_get_user_info_presult {
 
   virtual ~user_management_get_user_info_presult() noexcept;
   user_info* success;
+  gen_exp e;
 
   _user_management_get_user_info_presult__isset __isset;
 
@@ -251,8 +259,9 @@ class user_management_user_login_pargs {
 };
 
 typedef struct _user_management_user_login_result__isset {
-  _user_management_user_login_result__isset() : success(false) {}
+  _user_management_user_login_result__isset() : success(false), e(false) {}
   bool success :1;
+  bool e :1;
 } _user_management_user_login_result__isset;
 
 class user_management_user_login_result {
@@ -265,14 +274,19 @@ class user_management_user_login_result {
 
   virtual ~user_management_user_login_result() noexcept;
   std::string success;
+  gen_exp e;
 
   _user_management_user_login_result__isset __isset;
 
   void __set_success(const std::string& val);
 
+  void __set_e(const gen_exp& val);
+
   bool operator == (const user_management_user_login_result & rhs) const
   {
     if (!(success == rhs.success))
+      return false;
+    if (!(e == rhs.e))
       return false;
     return true;
   }
@@ -288,8 +302,9 @@ class user_management_user_login_result {
 };
 
 typedef struct _user_management_user_login_presult__isset {
-  _user_management_user_login_presult__isset() : success(false) {}
+  _user_management_user_login_presult__isset() : success(false), e(false) {}
   bool success :1;
+  bool e :1;
 } _user_management_user_login_presult__isset;
 
 class user_management_user_login_presult {
@@ -298,6 +313,7 @@ class user_management_user_login_presult {
 
   virtual ~user_management_user_login_presult() noexcept;
   std::string* success;
+  gen_exp e;
 
   _user_management_user_login_presult__isset __isset;
 
@@ -362,8 +378,9 @@ class user_management_update_user_info_pargs {
 };
 
 typedef struct _user_management_update_user_info_result__isset {
-  _user_management_update_user_info_result__isset() : success(false) {}
+  _user_management_update_user_info_result__isset() : success(false), e(false) {}
   bool success :1;
+  bool e :1;
 } _user_management_update_user_info_result__isset;
 
 class user_management_update_user_info_result {
@@ -376,14 +393,19 @@ class user_management_update_user_info_result {
 
   virtual ~user_management_update_user_info_result() noexcept;
   bool success;
+  gen_exp e;
 
   _user_management_update_user_info_result__isset __isset;
 
   void __set_success(const bool val);
 
+  void __set_e(const gen_exp& val);
+
   bool operator == (const user_management_update_user_info_result & rhs) const
   {
     if (!(success == rhs.success))
+      return false;
+    if (!(e == rhs.e))
       return false;
     return true;
   }
@@ -399,8 +421,9 @@ class user_management_update_user_info_result {
 };
 
 typedef struct _user_management_update_user_info_presult__isset {
-  _user_management_update_user_info_presult__isset() : success(false) {}
+  _user_management_update_user_info_presult__isset() : success(false), e(false) {}
   bool success :1;
+  bool e :1;
 } _user_management_update_user_info_presult__isset;
 
 class user_management_update_user_info_presult {
@@ -409,6 +432,7 @@ class user_management_update_user_info_presult {
 
   virtual ~user_management_update_user_info_presult() noexcept;
   bool* success;
+  gen_exp e;
 
   _user_management_update_user_info_presult__isset __isset;
 
@@ -465,6 +489,10 @@ class user_management_logff_user_pargs {
 
 };
 
+typedef struct _user_management_logff_user_result__isset {
+  _user_management_logff_user_result__isset() : e(false) {}
+  bool e :1;
+} _user_management_logff_user_result__isset;
 
 class user_management_logff_user_result {
  public:
@@ -475,9 +503,16 @@ class user_management_logff_user_result {
   }
 
   virtual ~user_management_logff_user_result() noexcept;
+  gen_exp e;
 
-  bool operator == (const user_management_logff_user_result & /* rhs */) const
+  _user_management_logff_user_result__isset __isset;
+
+  void __set_e(const gen_exp& val);
+
+  bool operator == (const user_management_logff_user_result & rhs) const
   {
+    if (!(e == rhs.e))
+      return false;
     return true;
   }
   bool operator != (const user_management_logff_user_result &rhs) const {
@@ -491,12 +526,19 @@ class user_management_logff_user_result {
 
 };
 
+typedef struct _user_management_logff_user_presult__isset {
+  _user_management_logff_user_presult__isset() : e(false) {}
+  bool e :1;
+} _user_management_logff_user_presult__isset;
 
 class user_management_logff_user_presult {
  public:
 
 
   virtual ~user_management_logff_user_presult() noexcept;
+  gen_exp e;
+
+  _user_management_logff_user_presult__isset __isset;
 
   uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
 
@@ -552,8 +594,9 @@ class user_management_get_bound_vichele_pargs {
 };
 
 typedef struct _user_management_get_bound_vichele_result__isset {
-  _user_management_get_bound_vichele_result__isset() : success(false) {}
+  _user_management_get_bound_vichele_result__isset() : success(false), e(false) {}
   bool success :1;
+  bool e :1;
 } _user_management_get_bound_vichele_result__isset;
 
 class user_management_get_bound_vichele_result {
@@ -566,14 +609,19 @@ class user_management_get_bound_vichele_result {
 
   virtual ~user_management_get_bound_vichele_result() noexcept;
   std::vector<std::string>  success;
+  gen_exp e;
 
   _user_management_get_bound_vichele_result__isset __isset;
 
   void __set_success(const std::vector<std::string> & val);
 
+  void __set_e(const gen_exp& val);
+
   bool operator == (const user_management_get_bound_vichele_result & rhs) const
   {
     if (!(success == rhs.success))
+      return false;
+    if (!(e == rhs.e))
       return false;
     return true;
   }
@@ -589,8 +637,9 @@ class user_management_get_bound_vichele_result {
 };
 
 typedef struct _user_management_get_bound_vichele_presult__isset {
-  _user_management_get_bound_vichele_presult__isset() : success(false) {}
+  _user_management_get_bound_vichele_presult__isset() : success(false), e(false) {}
   bool success :1;
+  bool e :1;
 } _user_management_get_bound_vichele_presult__isset;
 
 class user_management_get_bound_vichele_presult {
@@ -599,6 +648,7 @@ class user_management_get_bound_vichele_presult {
 
   virtual ~user_management_get_bound_vichele_presult() noexcept;
   std::vector<std::string> * success;
+  gen_exp e;
 
   _user_management_get_bound_vichele_presult__isset __isset;
 
@@ -663,8 +713,9 @@ class user_management_bind_new_vichele_pargs {
 };
 
 typedef struct _user_management_bind_new_vichele_result__isset {
-  _user_management_bind_new_vichele_result__isset() : success(false) {}
+  _user_management_bind_new_vichele_result__isset() : success(false), e(false) {}
   bool success :1;
+  bool e :1;
 } _user_management_bind_new_vichele_result__isset;
 
 class user_management_bind_new_vichele_result {
@@ -677,14 +728,19 @@ class user_management_bind_new_vichele_result {
 
   virtual ~user_management_bind_new_vichele_result() noexcept;
   bool success;
+  gen_exp e;
 
   _user_management_bind_new_vichele_result__isset __isset;
 
   void __set_success(const bool val);
 
+  void __set_e(const gen_exp& val);
+
   bool operator == (const user_management_bind_new_vichele_result & rhs) const
   {
     if (!(success == rhs.success))
+      return false;
+    if (!(e == rhs.e))
       return false;
     return true;
   }
@@ -700,8 +756,9 @@ class user_management_bind_new_vichele_result {
 };
 
 typedef struct _user_management_bind_new_vichele_presult__isset {
-  _user_management_bind_new_vichele_presult__isset() : success(false) {}
+  _user_management_bind_new_vichele_presult__isset() : success(false), e(false) {}
   bool success :1;
+  bool e :1;
 } _user_management_bind_new_vichele_presult__isset;
 
 class user_management_bind_new_vichele_presult {
@@ -710,6 +767,7 @@ class user_management_bind_new_vichele_presult {
 
   virtual ~user_management_bind_new_vichele_presult() noexcept;
   bool* success;
+  gen_exp e;
 
   _user_management_bind_new_vichele_presult__isset __isset;
 
@@ -773,6 +831,10 @@ class user_management_remove_vichele_pargs {
 
 };
 
+typedef struct _user_management_remove_vichele_result__isset {
+  _user_management_remove_vichele_result__isset() : e(false) {}
+  bool e :1;
+} _user_management_remove_vichele_result__isset;
 
 class user_management_remove_vichele_result {
  public:
@@ -783,9 +845,16 @@ class user_management_remove_vichele_result {
   }
 
   virtual ~user_management_remove_vichele_result() noexcept;
+  gen_exp e;
 
-  bool operator == (const user_management_remove_vichele_result & /* rhs */) const
+  _user_management_remove_vichele_result__isset __isset;
+
+  void __set_e(const gen_exp& val);
+
+  bool operator == (const user_management_remove_vichele_result & rhs) const
   {
+    if (!(e == rhs.e))
+      return false;
     return true;
   }
   bool operator != (const user_management_remove_vichele_result &rhs) const {
@@ -799,12 +868,19 @@ class user_management_remove_vichele_result {
 
 };
 
+typedef struct _user_management_remove_vichele_presult__isset {
+  _user_management_remove_vichele_presult__isset() : e(false) {}
+  bool e :1;
+} _user_management_remove_vichele_presult__isset;
 
 class user_management_remove_vichele_presult {
  public:
 
 
   virtual ~user_management_remove_vichele_presult() noexcept;
+  gen_exp e;
+
+  _user_management_remove_vichele_presult__isset __isset;
 
   uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
 
@@ -867,8 +943,9 @@ class user_management_update_logo_pargs {
 };
 
 typedef struct _user_management_update_logo_result__isset {
-  _user_management_update_logo_result__isset() : success(false) {}
+  _user_management_update_logo_result__isset() : success(false), e(false) {}
   bool success :1;
+  bool e :1;
 } _user_management_update_logo_result__isset;
 
 class user_management_update_logo_result {
@@ -881,14 +958,19 @@ class user_management_update_logo_result {
 
   virtual ~user_management_update_logo_result() noexcept;
   bool success;
+  gen_exp e;
 
   _user_management_update_logo_result__isset __isset;
 
   void __set_success(const bool val);
 
+  void __set_e(const gen_exp& val);
+
   bool operator == (const user_management_update_logo_result & rhs) const
   {
     if (!(success == rhs.success))
+      return false;
+    if (!(e == rhs.e))
       return false;
     return true;
   }
@@ -904,8 +986,9 @@ class user_management_update_logo_result {
 };
 
 typedef struct _user_management_update_logo_presult__isset {
-  _user_management_update_logo_presult__isset() : success(false) {}
+  _user_management_update_logo_presult__isset() : success(false), e(false) {}
   bool success :1;
+  bool e :1;
 } _user_management_update_logo_presult__isset;
 
 class user_management_update_logo_presult {
@@ -914,6 +997,7 @@ class user_management_update_logo_presult {
 
   virtual ~user_management_update_logo_presult() noexcept;
   bool* success;
+  gen_exp e;
 
   _user_management_update_logo_presult__isset __isset;
 
@@ -971,8 +1055,9 @@ class user_management_get_customer_info_pargs {
 };
 
 typedef struct _user_management_get_customer_info_result__isset {
-  _user_management_get_customer_info_result__isset() : success(false) {}
+  _user_management_get_customer_info_result__isset() : success(false), e(false) {}
   bool success :1;
+  bool e :1;
 } _user_management_get_customer_info_result__isset;
 
 class user_management_get_customer_info_result {
@@ -985,14 +1070,19 @@ class user_management_get_customer_info_result {
 
   virtual ~user_management_get_customer_info_result() noexcept;
   std::string success;
+  gen_exp e;
 
   _user_management_get_customer_info_result__isset __isset;
 
   void __set_success(const std::string& val);
 
+  void __set_e(const gen_exp& val);
+
   bool operator == (const user_management_get_customer_info_result & rhs) const
   {
     if (!(success == rhs.success))
+      return false;
+    if (!(e == rhs.e))
       return false;
     return true;
   }
@@ -1008,8 +1098,9 @@ class user_management_get_customer_info_result {
 };
 
 typedef struct _user_management_get_customer_info_presult__isset {
-  _user_management_get_customer_info_presult__isset() : success(false) {}
+  _user_management_get_customer_info_presult__isset() : success(false), e(false) {}
   bool success :1;
+  bool e :1;
 } _user_management_get_customer_info_presult__isset;
 
 class user_management_get_customer_info_presult {
@@ -1018,6 +1109,7 @@ class user_management_get_customer_info_presult {
 
   virtual ~user_management_get_customer_info_presult() noexcept;
   std::string* success;
+  gen_exp e;
 
   _user_management_get_customer_info_presult__isset __isset;
 
@@ -1075,8 +1167,9 @@ class user_management_is_admin_pargs {
 };
 
 typedef struct _user_management_is_admin_result__isset {
-  _user_management_is_admin_result__isset() : success(false) {}
+  _user_management_is_admin_result__isset() : success(false), e(false) {}
   bool success :1;
+  bool e :1;
 } _user_management_is_admin_result__isset;
 
 class user_management_is_admin_result {
@@ -1089,14 +1182,19 @@ class user_management_is_admin_result {
 
   virtual ~user_management_is_admin_result() noexcept;
   bool success;
+  gen_exp e;
 
   _user_management_is_admin_result__isset __isset;
 
   void __set_success(const bool val);
 
+  void __set_e(const gen_exp& val);
+
   bool operator == (const user_management_is_admin_result & rhs) const
   {
     if (!(success == rhs.success))
+      return false;
+    if (!(e == rhs.e))
       return false;
     return true;
   }
@@ -1112,8 +1210,9 @@ class user_management_is_admin_result {
 };
 
 typedef struct _user_management_is_admin_presult__isset {
-  _user_management_is_admin_presult__isset() : success(false) {}
+  _user_management_is_admin_presult__isset() : success(false), e(false) {}
   bool success :1;
+  bool e :1;
 } _user_management_is_admin_presult__isset;
 
 class user_management_is_admin_presult {
@@ -1122,6 +1221,7 @@ class user_management_is_admin_presult {
 
   virtual ~user_management_is_admin_presult() noexcept;
   bool* success;
+  gen_exp e;
 
   _user_management_is_admin_presult__isset __isset;
 

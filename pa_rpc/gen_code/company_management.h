@@ -135,8 +135,9 @@ class company_management_get_all_type_pargs {
 };
 
 typedef struct _company_management_get_all_type_result__isset {
-  _company_management_get_all_type_result__isset() : success(false) {}
+  _company_management_get_all_type_result__isset() : success(false), e(false) {}
   bool success :1;
+  bool e :1;
 } _company_management_get_all_type_result__isset;
 
 class company_management_get_all_type_result {
@@ -149,14 +150,19 @@ class company_management_get_all_type_result {
 
   virtual ~company_management_get_all_type_result() noexcept;
   std::vector<int64_t>  success;
+  gen_exp e;
 
   _company_management_get_all_type_result__isset __isset;
 
   void __set_success(const std::vector<int64_t> & val);
 
+  void __set_e(const gen_exp& val);
+
   bool operator == (const company_management_get_all_type_result & rhs) const
   {
     if (!(success == rhs.success))
+      return false;
+    if (!(e == rhs.e))
       return false;
     return true;
   }
@@ -172,8 +178,9 @@ class company_management_get_all_type_result {
 };
 
 typedef struct _company_management_get_all_type_presult__isset {
-  _company_management_get_all_type_presult__isset() : success(false) {}
+  _company_management_get_all_type_presult__isset() : success(false), e(false) {}
   bool success :1;
+  bool e :1;
 } _company_management_get_all_type_presult__isset;
 
 class company_management_get_all_type_presult {
@@ -182,6 +189,7 @@ class company_management_get_all_type_presult {
 
   virtual ~company_management_get_all_type_presult() noexcept;
   std::vector<int64_t> * success;
+  gen_exp e;
 
   _company_management_get_all_type_presult__isset __isset;
 
@@ -253,8 +261,9 @@ class company_management_add_type_pargs {
 };
 
 typedef struct _company_management_add_type_result__isset {
-  _company_management_add_type_result__isset() : success(false) {}
+  _company_management_add_type_result__isset() : success(false), e(false) {}
   bool success :1;
+  bool e :1;
 } _company_management_add_type_result__isset;
 
 class company_management_add_type_result {
@@ -267,14 +276,19 @@ class company_management_add_type_result {
 
   virtual ~company_management_add_type_result() noexcept;
   int64_t success;
+  gen_exp e;
 
   _company_management_add_type_result__isset __isset;
 
   void __set_success(const int64_t val);
 
+  void __set_e(const gen_exp& val);
+
   bool operator == (const company_management_add_type_result & rhs) const
   {
     if (!(success == rhs.success))
+      return false;
+    if (!(e == rhs.e))
       return false;
     return true;
   }
@@ -290,8 +304,9 @@ class company_management_add_type_result {
 };
 
 typedef struct _company_management_add_type_presult__isset {
-  _company_management_add_type_presult__isset() : success(false) {}
+  _company_management_add_type_presult__isset() : success(false), e(false) {}
   bool success :1;
+  bool e :1;
 } _company_management_add_type_presult__isset;
 
 class company_management_add_type_presult {
@@ -300,6 +315,7 @@ class company_management_add_type_presult {
 
   virtual ~company_management_add_type_presult() noexcept;
   int64_t* success;
+  gen_exp e;
 
   _company_management_add_type_presult__isset __isset;
 
@@ -364,8 +380,9 @@ class company_management_edit_type_pargs {
 };
 
 typedef struct _company_management_edit_type_result__isset {
-  _company_management_edit_type_result__isset() : success(false) {}
+  _company_management_edit_type_result__isset() : success(false), e(false) {}
   bool success :1;
+  bool e :1;
 } _company_management_edit_type_result__isset;
 
 class company_management_edit_type_result {
@@ -378,14 +395,19 @@ class company_management_edit_type_result {
 
   virtual ~company_management_edit_type_result() noexcept;
   bool success;
+  gen_exp e;
 
   _company_management_edit_type_result__isset __isset;
 
   void __set_success(const bool val);
 
+  void __set_e(const gen_exp& val);
+
   bool operator == (const company_management_edit_type_result & rhs) const
   {
     if (!(success == rhs.success))
+      return false;
+    if (!(e == rhs.e))
       return false;
     return true;
   }
@@ -401,8 +423,9 @@ class company_management_edit_type_result {
 };
 
 typedef struct _company_management_edit_type_presult__isset {
-  _company_management_edit_type_presult__isset() : success(false) {}
+  _company_management_edit_type_presult__isset() : success(false), e(false) {}
   bool success :1;
+  bool e :1;
 } _company_management_edit_type_presult__isset;
 
 class company_management_edit_type_presult {
@@ -411,6 +434,7 @@ class company_management_edit_type_presult {
 
   virtual ~company_management_edit_type_presult() noexcept;
   bool* success;
+  gen_exp e;
 
   _company_management_edit_type_presult__isset __isset;
 
@@ -474,6 +498,10 @@ class company_management_remove_type_pargs {
 
 };
 
+typedef struct _company_management_remove_type_result__isset {
+  _company_management_remove_type_result__isset() : e(false) {}
+  bool e :1;
+} _company_management_remove_type_result__isset;
 
 class company_management_remove_type_result {
  public:
@@ -484,9 +512,16 @@ class company_management_remove_type_result {
   }
 
   virtual ~company_management_remove_type_result() noexcept;
+  gen_exp e;
 
-  bool operator == (const company_management_remove_type_result & /* rhs */) const
+  _company_management_remove_type_result__isset __isset;
+
+  void __set_e(const gen_exp& val);
+
+  bool operator == (const company_management_remove_type_result & rhs) const
   {
+    if (!(e == rhs.e))
+      return false;
     return true;
   }
   bool operator != (const company_management_remove_type_result &rhs) const {
@@ -500,12 +535,19 @@ class company_management_remove_type_result {
 
 };
 
+typedef struct _company_management_remove_type_presult__isset {
+  _company_management_remove_type_presult__isset() : e(false) {}
+  bool e :1;
+} _company_management_remove_type_presult__isset;
 
 class company_management_remove_type_presult {
  public:
 
 
   virtual ~company_management_remove_type_presult() noexcept;
+  gen_exp e;
+
+  _company_management_remove_type_presult__isset __isset;
 
   uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
 
@@ -568,8 +610,9 @@ class company_management_readd_type_pargs {
 };
 
 typedef struct _company_management_readd_type_result__isset {
-  _company_management_readd_type_result__isset() : success(false) {}
+  _company_management_readd_type_result__isset() : success(false), e(false) {}
   bool success :1;
+  bool e :1;
 } _company_management_readd_type_result__isset;
 
 class company_management_readd_type_result {
@@ -582,14 +625,19 @@ class company_management_readd_type_result {
 
   virtual ~company_management_readd_type_result() noexcept;
   bool success;
+  gen_exp e;
 
   _company_management_readd_type_result__isset __isset;
 
   void __set_success(const bool val);
 
+  void __set_e(const gen_exp& val);
+
   bool operator == (const company_management_readd_type_result & rhs) const
   {
     if (!(success == rhs.success))
+      return false;
+    if (!(e == rhs.e))
       return false;
     return true;
   }
@@ -605,8 +653,9 @@ class company_management_readd_type_result {
 };
 
 typedef struct _company_management_readd_type_presult__isset {
-  _company_management_readd_type_presult__isset() : success(false) {}
+  _company_management_readd_type_presult__isset() : success(false), e(false) {}
   bool success :1;
+  bool e :1;
 } _company_management_readd_type_presult__isset;
 
 class company_management_readd_type_presult {
@@ -615,6 +664,7 @@ class company_management_readd_type_presult {
 
   virtual ~company_management_readd_type_presult() noexcept;
   bool* success;
+  gen_exp e;
 
   _company_management_readd_type_presult__isset __isset;
 
@@ -672,8 +722,9 @@ class company_management_get_all_apply_pargs {
 };
 
 typedef struct _company_management_get_all_apply_result__isset {
-  _company_management_get_all_apply_result__isset() : success(false) {}
+  _company_management_get_all_apply_result__isset() : success(false), e(false) {}
   bool success :1;
+  bool e :1;
 } _company_management_get_all_apply_result__isset;
 
 class company_management_get_all_apply_result {
@@ -686,14 +737,19 @@ class company_management_get_all_apply_result {
 
   virtual ~company_management_get_all_apply_result() noexcept;
   std::vector<user_apply>  success;
+  gen_exp e;
 
   _company_management_get_all_apply_result__isset __isset;
 
   void __set_success(const std::vector<user_apply> & val);
 
+  void __set_e(const gen_exp& val);
+
   bool operator == (const company_management_get_all_apply_result & rhs) const
   {
     if (!(success == rhs.success))
+      return false;
+    if (!(e == rhs.e))
       return false;
     return true;
   }
@@ -709,8 +765,9 @@ class company_management_get_all_apply_result {
 };
 
 typedef struct _company_management_get_all_apply_presult__isset {
-  _company_management_get_all_apply_presult__isset() : success(false) {}
+  _company_management_get_all_apply_presult__isset() : success(false), e(false) {}
   bool success :1;
+  bool e :1;
 } _company_management_get_all_apply_presult__isset;
 
 class company_management_get_all_apply_presult {
@@ -719,6 +776,7 @@ class company_management_get_all_apply_presult {
 
   virtual ~company_management_get_all_apply_presult() noexcept;
   std::vector<user_apply> * success;
+  gen_exp e;
 
   _company_management_get_all_apply_presult__isset __isset;
 
@@ -790,8 +848,9 @@ class company_management_approve_apply_pargs {
 };
 
 typedef struct _company_management_approve_apply_result__isset {
-  _company_management_approve_apply_result__isset() : success(false) {}
+  _company_management_approve_apply_result__isset() : success(false), e(false) {}
   bool success :1;
+  bool e :1;
 } _company_management_approve_apply_result__isset;
 
 class company_management_approve_apply_result {
@@ -804,14 +863,19 @@ class company_management_approve_apply_result {
 
   virtual ~company_management_approve_apply_result() noexcept;
   bool success;
+  gen_exp e;
 
   _company_management_approve_apply_result__isset __isset;
 
   void __set_success(const bool val);
 
+  void __set_e(const gen_exp& val);
+
   bool operator == (const company_management_approve_apply_result & rhs) const
   {
     if (!(success == rhs.success))
+      return false;
+    if (!(e == rhs.e))
       return false;
     return true;
   }
@@ -827,8 +891,9 @@ class company_management_approve_apply_result {
 };
 
 typedef struct _company_management_approve_apply_presult__isset {
-  _company_management_approve_apply_presult__isset() : success(false) {}
+  _company_management_approve_apply_presult__isset() : success(false), e(false) {}
   bool success :1;
+  bool e :1;
 } _company_management_approve_apply_presult__isset;
 
 class company_management_approve_apply_presult {
@@ -837,6 +902,7 @@ class company_management_approve_apply_presult {
 
   virtual ~company_management_approve_apply_presult() noexcept;
   bool* success;
+  gen_exp e;
 
   _company_management_approve_apply_presult__isset __isset;
 

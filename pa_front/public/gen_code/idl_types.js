@@ -8,6 +8,58 @@ if (typeof Int64 === 'undefined' && typeof require === 'function') {
 }
 
 
+gen_exp = class {
+  constructor(args) {
+    this.msg = null;
+    if (args) {
+      if (args.msg !== undefined && args.msg !== null) {
+        this.msg = args.msg;
+      }
+    }
+  }
+
+  read (input) {
+    input.readStructBegin();
+    while (true) {
+      const ret = input.readFieldBegin();
+      const ftype = ret.ftype;
+      const fid = ret.fid;
+      if (ftype == Thrift.Type.STOP) {
+        break;
+      }
+      switch (fid) {
+        case 1:
+        if (ftype == Thrift.Type.STRING) {
+          this.msg = input.readString().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        case 0:
+          input.skip(ftype);
+          break;
+        default:
+          input.skip(ftype);
+      }
+      input.readFieldEnd();
+    }
+    input.readStructEnd();
+    return;
+  }
+
+  write (output) {
+    output.writeStructBegin('gen_exp');
+    if (this.msg !== null && this.msg !== undefined) {
+      output.writeFieldBegin('msg', Thrift.Type.STRING, 1);
+      output.writeString(this.msg);
+      output.writeFieldEnd();
+    }
+    output.writeFieldStop();
+    output.writeStructEnd();
+    return;
+  }
+
+};
 user_info = class {
   constructor(args) {
     this.user_id = null;

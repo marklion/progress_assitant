@@ -65,9 +65,17 @@ user_management_get_user_info_args = class {
 user_management_get_user_info_result = class {
   constructor(args) {
     this.success = null;
+    this.e = null;
+    if (args instanceof gen_exp) {
+        this.e = args;
+        return;
+    }
     if (args) {
       if (args.success !== undefined && args.success !== null) {
         this.success = new user_info(args.success);
+      }
+      if (args.e !== undefined && args.e !== null) {
+        this.e = args.e;
       }
     }
   }
@@ -90,9 +98,14 @@ user_management_get_user_info_result = class {
           input.skip(ftype);
         }
         break;
-        case 0:
+        case 1:
+        if (ftype == Thrift.Type.STRUCT) {
+          this.e = new gen_exp();
+          this.e.read(input);
+        } else {
           input.skip(ftype);
-          break;
+        }
+        break;
         default:
           input.skip(ftype);
       }
@@ -107,6 +120,11 @@ user_management_get_user_info_result = class {
     if (this.success !== null && this.success !== undefined) {
       output.writeFieldBegin('success', Thrift.Type.STRUCT, 0);
       this.success.write(output);
+      output.writeFieldEnd();
+    }
+    if (this.e !== null && this.e !== undefined) {
+      output.writeFieldBegin('e', Thrift.Type.STRUCT, 1);
+      this.e.write(output);
       output.writeFieldEnd();
     }
     output.writeFieldStop();
@@ -170,9 +188,17 @@ user_management_user_login_args = class {
 user_management_user_login_result = class {
   constructor(args) {
     this.success = null;
+    this.e = null;
+    if (args instanceof gen_exp) {
+        this.e = args;
+        return;
+    }
     if (args) {
       if (args.success !== undefined && args.success !== null) {
         this.success = args.success;
+      }
+      if (args.e !== undefined && args.e !== null) {
+        this.e = args.e;
       }
     }
   }
@@ -194,9 +220,14 @@ user_management_user_login_result = class {
           input.skip(ftype);
         }
         break;
-        case 0:
+        case 1:
+        if (ftype == Thrift.Type.STRUCT) {
+          this.e = new gen_exp();
+          this.e.read(input);
+        } else {
           input.skip(ftype);
-          break;
+        }
+        break;
         default:
           input.skip(ftype);
       }
@@ -211,6 +242,11 @@ user_management_user_login_result = class {
     if (this.success !== null && this.success !== undefined) {
       output.writeFieldBegin('success', Thrift.Type.STRING, 0);
       output.writeString(this.success);
+      output.writeFieldEnd();
+    }
+    if (this.e !== null && this.e !== undefined) {
+      output.writeFieldBegin('e', Thrift.Type.STRUCT, 1);
+      this.e.write(output);
       output.writeFieldEnd();
     }
     output.writeFieldStop();
@@ -288,9 +324,17 @@ user_management_update_user_info_args = class {
 user_management_update_user_info_result = class {
   constructor(args) {
     this.success = null;
+    this.e = null;
+    if (args instanceof gen_exp) {
+        this.e = args;
+        return;
+    }
     if (args) {
       if (args.success !== undefined && args.success !== null) {
         this.success = args.success;
+      }
+      if (args.e !== undefined && args.e !== null) {
+        this.e = args.e;
       }
     }
   }
@@ -312,9 +356,14 @@ user_management_update_user_info_result = class {
           input.skip(ftype);
         }
         break;
-        case 0:
+        case 1:
+        if (ftype == Thrift.Type.STRUCT) {
+          this.e = new gen_exp();
+          this.e.read(input);
+        } else {
           input.skip(ftype);
-          break;
+        }
+        break;
         default:
           input.skip(ftype);
       }
@@ -329,6 +378,11 @@ user_management_update_user_info_result = class {
     if (this.success !== null && this.success !== undefined) {
       output.writeFieldBegin('success', Thrift.Type.BOOL, 0);
       output.writeBool(this.success);
+      output.writeFieldEnd();
+    }
+    if (this.e !== null && this.e !== undefined) {
+      output.writeFieldBegin('e', Thrift.Type.STRUCT, 1);
+      this.e.write(output);
       output.writeFieldEnd();
     }
     output.writeFieldStop();
@@ -391,6 +445,16 @@ user_management_logff_user_args = class {
 };
 user_management_logff_user_result = class {
   constructor(args) {
+    this.e = null;
+    if (args instanceof gen_exp) {
+        this.e = args;
+        return;
+    }
+    if (args) {
+      if (args.e !== undefined && args.e !== null) {
+        this.e = args.e;
+      }
+    }
   }
 
   read (input) {
@@ -398,10 +462,25 @@ user_management_logff_user_result = class {
     while (true) {
       const ret = input.readFieldBegin();
       const ftype = ret.ftype;
+      const fid = ret.fid;
       if (ftype == Thrift.Type.STOP) {
         break;
       }
-      input.skip(ftype);
+      switch (fid) {
+        case 1:
+        if (ftype == Thrift.Type.STRUCT) {
+          this.e = new gen_exp();
+          this.e.read(input);
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        case 0:
+          input.skip(ftype);
+          break;
+        default:
+          input.skip(ftype);
+      }
       input.readFieldEnd();
     }
     input.readStructEnd();
@@ -410,6 +489,11 @@ user_management_logff_user_result = class {
 
   write (output) {
     output.writeStructBegin('user_management_logff_user_result');
+    if (this.e !== null && this.e !== undefined) {
+      output.writeFieldBegin('e', Thrift.Type.STRUCT, 1);
+      this.e.write(output);
+      output.writeFieldEnd();
+    }
     output.writeFieldStop();
     output.writeStructEnd();
     return;
@@ -471,9 +555,17 @@ user_management_get_bound_vichele_args = class {
 user_management_get_bound_vichele_result = class {
   constructor(args) {
     this.success = null;
+    this.e = null;
+    if (args instanceof gen_exp) {
+        this.e = args;
+        return;
+    }
     if (args) {
       if (args.success !== undefined && args.success !== null) {
         this.success = Thrift.copyList(args.success, [null]);
+      }
+      if (args.e !== undefined && args.e !== null) {
+        this.e = args.e;
       }
     }
   }
@@ -503,9 +595,14 @@ user_management_get_bound_vichele_result = class {
           input.skip(ftype);
         }
         break;
-        case 0:
+        case 1:
+        if (ftype == Thrift.Type.STRUCT) {
+          this.e = new gen_exp();
+          this.e.read(input);
+        } else {
           input.skip(ftype);
-          break;
+        }
+        break;
         default:
           input.skip(ftype);
       }
@@ -527,6 +624,11 @@ user_management_get_bound_vichele_result = class {
         }
       }
       output.writeListEnd();
+      output.writeFieldEnd();
+    }
+    if (this.e !== null && this.e !== undefined) {
+      output.writeFieldBegin('e', Thrift.Type.STRUCT, 1);
+      this.e.write(output);
       output.writeFieldEnd();
     }
     output.writeFieldStop();
@@ -603,9 +705,17 @@ user_management_bind_new_vichele_args = class {
 user_management_bind_new_vichele_result = class {
   constructor(args) {
     this.success = null;
+    this.e = null;
+    if (args instanceof gen_exp) {
+        this.e = args;
+        return;
+    }
     if (args) {
       if (args.success !== undefined && args.success !== null) {
         this.success = args.success;
+      }
+      if (args.e !== undefined && args.e !== null) {
+        this.e = args.e;
       }
     }
   }
@@ -627,9 +737,14 @@ user_management_bind_new_vichele_result = class {
           input.skip(ftype);
         }
         break;
-        case 0:
+        case 1:
+        if (ftype == Thrift.Type.STRUCT) {
+          this.e = new gen_exp();
+          this.e.read(input);
+        } else {
           input.skip(ftype);
-          break;
+        }
+        break;
         default:
           input.skip(ftype);
       }
@@ -644,6 +759,11 @@ user_management_bind_new_vichele_result = class {
     if (this.success !== null && this.success !== undefined) {
       output.writeFieldBegin('success', Thrift.Type.BOOL, 0);
       output.writeBool(this.success);
+      output.writeFieldEnd();
+    }
+    if (this.e !== null && this.e !== undefined) {
+      output.writeFieldBegin('e', Thrift.Type.STRUCT, 1);
+      this.e.write(output);
       output.writeFieldEnd();
     }
     output.writeFieldStop();
@@ -719,6 +839,16 @@ user_management_remove_vichele_args = class {
 };
 user_management_remove_vichele_result = class {
   constructor(args) {
+    this.e = null;
+    if (args instanceof gen_exp) {
+        this.e = args;
+        return;
+    }
+    if (args) {
+      if (args.e !== undefined && args.e !== null) {
+        this.e = args.e;
+      }
+    }
   }
 
   read (input) {
@@ -726,10 +856,25 @@ user_management_remove_vichele_result = class {
     while (true) {
       const ret = input.readFieldBegin();
       const ftype = ret.ftype;
+      const fid = ret.fid;
       if (ftype == Thrift.Type.STOP) {
         break;
       }
-      input.skip(ftype);
+      switch (fid) {
+        case 1:
+        if (ftype == Thrift.Type.STRUCT) {
+          this.e = new gen_exp();
+          this.e.read(input);
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        case 0:
+          input.skip(ftype);
+          break;
+        default:
+          input.skip(ftype);
+      }
       input.readFieldEnd();
     }
     input.readStructEnd();
@@ -738,6 +883,11 @@ user_management_remove_vichele_result = class {
 
   write (output) {
     output.writeStructBegin('user_management_remove_vichele_result');
+    if (this.e !== null && this.e !== undefined) {
+      output.writeFieldBegin('e', Thrift.Type.STRUCT, 1);
+      this.e.write(output);
+      output.writeFieldEnd();
+    }
     output.writeFieldStop();
     output.writeStructEnd();
     return;
@@ -812,9 +962,17 @@ user_management_update_logo_args = class {
 user_management_update_logo_result = class {
   constructor(args) {
     this.success = null;
+    this.e = null;
+    if (args instanceof gen_exp) {
+        this.e = args;
+        return;
+    }
     if (args) {
       if (args.success !== undefined && args.success !== null) {
         this.success = args.success;
+      }
+      if (args.e !== undefined && args.e !== null) {
+        this.e = args.e;
       }
     }
   }
@@ -836,9 +994,14 @@ user_management_update_logo_result = class {
           input.skip(ftype);
         }
         break;
-        case 0:
+        case 1:
+        if (ftype == Thrift.Type.STRUCT) {
+          this.e = new gen_exp();
+          this.e.read(input);
+        } else {
           input.skip(ftype);
-          break;
+        }
+        break;
         default:
           input.skip(ftype);
       }
@@ -853,6 +1016,11 @@ user_management_update_logo_result = class {
     if (this.success !== null && this.success !== undefined) {
       output.writeFieldBegin('success', Thrift.Type.BOOL, 0);
       output.writeBool(this.success);
+      output.writeFieldEnd();
+    }
+    if (this.e !== null && this.e !== undefined) {
+      output.writeFieldBegin('e', Thrift.Type.STRUCT, 1);
+      this.e.write(output);
       output.writeFieldEnd();
     }
     output.writeFieldStop();
@@ -916,9 +1084,17 @@ user_management_get_customer_info_args = class {
 user_management_get_customer_info_result = class {
   constructor(args) {
     this.success = null;
+    this.e = null;
+    if (args instanceof gen_exp) {
+        this.e = args;
+        return;
+    }
     if (args) {
       if (args.success !== undefined && args.success !== null) {
         this.success = args.success;
+      }
+      if (args.e !== undefined && args.e !== null) {
+        this.e = args.e;
       }
     }
   }
@@ -940,9 +1116,14 @@ user_management_get_customer_info_result = class {
           input.skip(ftype);
         }
         break;
-        case 0:
+        case 1:
+        if (ftype == Thrift.Type.STRUCT) {
+          this.e = new gen_exp();
+          this.e.read(input);
+        } else {
           input.skip(ftype);
-          break;
+        }
+        break;
         default:
           input.skip(ftype);
       }
@@ -957,6 +1138,11 @@ user_management_get_customer_info_result = class {
     if (this.success !== null && this.success !== undefined) {
       output.writeFieldBegin('success', Thrift.Type.STRING, 0);
       output.writeString(this.success);
+      output.writeFieldEnd();
+    }
+    if (this.e !== null && this.e !== undefined) {
+      output.writeFieldBegin('e', Thrift.Type.STRUCT, 1);
+      this.e.write(output);
       output.writeFieldEnd();
     }
     output.writeFieldStop();
@@ -1020,9 +1206,17 @@ user_management_is_admin_args = class {
 user_management_is_admin_result = class {
   constructor(args) {
     this.success = null;
+    this.e = null;
+    if (args instanceof gen_exp) {
+        this.e = args;
+        return;
+    }
     if (args) {
       if (args.success !== undefined && args.success !== null) {
         this.success = args.success;
+      }
+      if (args.e !== undefined && args.e !== null) {
+        this.e = args.e;
       }
     }
   }
@@ -1044,9 +1238,14 @@ user_management_is_admin_result = class {
           input.skip(ftype);
         }
         break;
-        case 0:
+        case 1:
+        if (ftype == Thrift.Type.STRUCT) {
+          this.e = new gen_exp();
+          this.e.read(input);
+        } else {
           input.skip(ftype);
-          break;
+        }
+        break;
         default:
           input.skip(ftype);
       }
@@ -1061,6 +1260,11 @@ user_management_is_admin_result = class {
     if (this.success !== null && this.success !== undefined) {
       output.writeFieldBegin('success', Thrift.Type.BOOL, 0);
       output.writeBool(this.success);
+      output.writeFieldEnd();
+    }
+    if (this.e !== null && this.e !== undefined) {
+      output.writeFieldBegin('e', Thrift.Type.STRUCT, 1);
+      this.e.write(output);
       output.writeFieldEnd();
     }
     output.writeFieldStop();
@@ -1126,6 +1330,9 @@ user_managementClient = class user_managementClient {
     result.read(this.input);
     this.input.readMessageEnd();
 
+    if (null !== result.e) {
+      throw result.e;
+    }
     if (null !== result.success) {
       return result.success;
     }
@@ -1182,6 +1389,9 @@ user_managementClient = class user_managementClient {
     result.read(this.input);
     this.input.readMessageEnd();
 
+    if (null !== result.e) {
+      throw result.e;
+    }
     if (null !== result.success) {
       return result.success;
     }
@@ -1239,6 +1449,9 @@ user_managementClient = class user_managementClient {
     result.read(this.input);
     this.input.readMessageEnd();
 
+    if (null !== result.e) {
+      throw result.e;
+    }
     if (null !== result.success) {
       return result.success;
     }
@@ -1295,6 +1508,9 @@ user_managementClient = class user_managementClient {
     result.read(this.input);
     this.input.readMessageEnd();
 
+    if (null !== result.e) {
+      throw result.e;
+    }
     return;
   }
 
@@ -1348,6 +1564,9 @@ user_managementClient = class user_managementClient {
     result.read(this.input);
     this.input.readMessageEnd();
 
+    if (null !== result.e) {
+      throw result.e;
+    }
     if (null !== result.success) {
       return result.success;
     }
@@ -1405,6 +1624,9 @@ user_managementClient = class user_managementClient {
     result.read(this.input);
     this.input.readMessageEnd();
 
+    if (null !== result.e) {
+      throw result.e;
+    }
     if (null !== result.success) {
       return result.success;
     }
@@ -1462,6 +1684,9 @@ user_managementClient = class user_managementClient {
     result.read(this.input);
     this.input.readMessageEnd();
 
+    if (null !== result.e) {
+      throw result.e;
+    }
     return;
   }
 
@@ -1516,6 +1741,9 @@ user_managementClient = class user_managementClient {
     result.read(this.input);
     this.input.readMessageEnd();
 
+    if (null !== result.e) {
+      throw result.e;
+    }
     if (null !== result.success) {
       return result.success;
     }
@@ -1572,6 +1800,9 @@ user_managementClient = class user_managementClient {
     result.read(this.input);
     this.input.readMessageEnd();
 
+    if (null !== result.e) {
+      throw result.e;
+    }
     if (null !== result.success) {
       return result.success;
     }
@@ -1628,6 +1859,9 @@ user_managementClient = class user_managementClient {
     result.read(this.input);
     this.input.readMessageEnd();
 
+    if (null !== result.e) {
+      throw result.e;
+    }
     if (null !== result.success) {
       return result.success;
     }

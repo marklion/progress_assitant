@@ -4,5 +4,7 @@
 #include "pa_utils.h"
 
 void PA_WECHAT_send_plan_msg(pa_sql_userinfo &_touser, pa_sql_plan &_plan);
+void PA_WECHAT_send_create_apply_msg(pa_sql_userinfo &_touser, pa_sql_user_apply &_apply);
+void PA_WECHAT_send_process_apply_msg(pa_sql_userinfo &_touser, pa_sql_user_apply &_apply);
 
 #endif // _WECHAT_MSG_H_

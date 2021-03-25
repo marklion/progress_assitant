@@ -23,7 +23,7 @@ export default {
                 name: '',
                 company: '',
                 price: 0.0,
-                type_id:0,
+                type_id: 0,
             },
             min_time: {},
         };
@@ -34,9 +34,10 @@ export default {
             vue_this.stuff_brief.name = resp.name;
             vue_this.stuff_brief.company = resp.company;
             vue_this.stuff_brief.price = resp.price;
-            vue_this.stuff_brief.type_id= resp.type_id;
+            vue_this.stuff_brief.type_id = resp.type_id;
         }).catch(function (err) {
             console.log(err);
+            vue_this.$toast(err.msg);
         });
         this.min_time = new Date();
     },

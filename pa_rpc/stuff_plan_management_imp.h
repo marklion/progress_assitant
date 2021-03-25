@@ -28,7 +28,15 @@ class stuff_plan_management_handler : virtual public stuff_plan_managementIf
     {
         int64_t ret = 0;
         auto opt_user = PA_DATAOPT_get_online_user(ssid);
+        if (!opt_user)
+        {
+            PA_RETURN_UNLOGIN_MSG();
+        }
         auto stuff_type = sqlite_orm::search_record<pa_sql_stuff_info>(plan.type_id);
+        if (!stuff_type)
+        {
+            PA_RETURN_NOSTUFF_MSG();
+        }
         if (opt_user && stuff_type)
         {
             pa_sql_plan tmp;
@@ -71,6 +79,10 @@ class stuff_plan_management_handler : virtual public stuff_plan_managementIf
                 _return.push_back(itr.get_pri_id());
             }
         }
+        else
+        {
+            PA_RETURN_UNLOGIN_MSG();
+        }
     }
     virtual void get_plan(stuff_plan &_return, const int64_t plan_id) {
         auto plan = sqlite_orm::search_record<pa_sql_plan>(plan_id);
@@ -99,12 +111,24 @@ class stuff_plan_management_handler : virtual public stuff_plan_managementIf
                 _return.vichele_info.push_back(itr);
             }
         }
+        else
+        {
+            PA_RETURN_NOPLAN_MSG();
+        }
     }
     virtual bool update_plan(const stuff_plan &plan, const std::string &ssid) {
         bool ret = false;
 
         auto opt_user = PA_DATAOPT_get_online_user(ssid);
+        if (!opt_user)
+        {
+            PA_RETURN_UNLOGIN_MSG();
+        }
         auto plan_in_sql = sqlite_orm::search_record<pa_sql_plan>(plan.plan_id);
+        if (!plan_in_sql)
+        {
+            PA_RETURN_NOPLAN_MSG();
+        }
         if (opt_user && plan_in_sql)
         {
             auto created_user = plan_in_sql->get_parent<pa_sql_userinfo>("created_by");
@@ -133,6 +157,10 @@ class stuff_plan_management_handler : virtual public stuff_plan_managementIf
                     PA_WECHAT_send_plan_msg(*opt_user, *plan_in_sql);
                 }
             }
+            else
+            {
+                PA_RETURN_NOPRIVA_MSG();
+            }
         }
 
         return ret;
@@ -155,6 +183,14 @@ class stuff_plan_management_handler : virtual public stuff_plan_managementIf
                     }
                 }
             }
+            else
+            {
+                PA_RETURN_NOCOMPANY_MSG();
+            }
+        }
+        else
+        {
+            PA_RETURN_MSG("用户未注册为卖家");
         }
     }
     virtual bool confirm_plan(const int64_t plan_id, const std::string &ssid, const bool confirm) 
@@ -190,8 +226,24 @@ class stuff_plan_management_handler : virtual public stuff_plan_managementIf
                             }
                         }
                     }
+                    else
+                    {
+                        PA_RETURN_NOPRIVA_MSG();
+                    }
+                }
+                else
+                {
+                    PA_RETURN_NOPLAN_MSG();
                 }
             }
+            else
+            {
+                PA_RETURN_NOCOMPANY_MSG();
+            }
+        }
+        else
+        {
+            PA_RETURN_UNLOGIN_MSG();
         }
 
         return ret;

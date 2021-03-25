@@ -21,6 +21,14 @@ public:
                     _return.push_back(itr.get_pri_id());
                 }
             }
+            else
+            {
+                PA_RETURN_NOCOMPANY_MSG();
+            }
+        }
+        else
+        {
+            PA_RETURN_UNLOGIN_MSG();
         }
     }
     virtual int64_t add_type(const std::string& name, const int64_t price, const std::string& ssid) 
@@ -42,6 +50,14 @@ public:
                     ret = tmp.insert_record();
                 }
             }
+            else
+            {
+                PA_RETURN_NOCOMPANY_MSG();
+            }
+        }
+        else
+        {
+            PA_RETURN_UNLOGIN_MSG();
         }
 
         return ret;
@@ -63,8 +79,20 @@ public:
 
                     ret = stuff_need_edit->update_record();
                 }
+                else
+                {
+                    PA_RETURN_NOPRIVA_MSG();
+                }
             }
-        } 
+            else
+            {
+                PA_RETURN_NOSTUFF_MSG();
+            }
+        }
+        else
+        {
+            PA_RETURN_UNLOGIN_MSG();
+        }
         return ret;
     }
     virtual void remove_type(const stuff_detail &stuff, const std::string &ssid)
@@ -82,7 +110,19 @@ public:
                     stuff_need_remove->saling = 0;
                     stuff_need_remove->update_record();
                 }
+                else
+                {
+                    PA_RETURN_NOPRIVA_MSG();
+                }
             }
+            else
+            {
+                PA_RETURN_NOSTUFF_MSG();
+            }
+        }
+        else
+        {
+            PA_RETURN_UNLOGIN_MSG();
         }
     }
 
@@ -106,11 +146,23 @@ public:
                 }
             }
         }
+        else
+        {
+            PA_RETURN_UNLOGIN_MSG();
+        }
     }
     virtual bool approve_apply(const int64_t apply_id, const std::string &ssid, const bool approve) {
         bool ret = false;
         auto apply = sqlite_orm::search_record<pa_sql_user_apply>(apply_id);
         auto opt_user = PA_DATAOPT_get_online_user(ssid);
+        if (!opt_user)
+        {
+            PA_RETURN_UNLOGIN_MSG();
+        }
+        if (!apply || apply->status != 0)
+        {
+            PA_RETURN_MSG("申请不存在或已审批");
+        }
         if (apply && opt_user && apply->status == 0)
         {
             auto company = opt_user->get_parent<pa_sql_company>("belong_company");
@@ -128,6 +180,10 @@ public:
                 {
                     apply->status = 2;
                     ret = apply->update_record();
+                }
+                if (ret)
+                {
+                    PA_WECHAT_send_process_apply_msg(*assigner, *apply);
                 }
                 auto other_apply = assigner->get_all_children<pa_sql_user_apply>("assigner");
                 for (auto &itr:other_apply)
@@ -157,7 +213,19 @@ public:
                     stuff_need_readd->saling = 1;
                     ret = stuff_need_readd->update_record();
                 }
+                else
+                {
+                    PA_RETURN_NOPRIVA_MSG();
+                }
             }
+            else
+            {
+                PA_RETURN_NOSTUFF_MSG();
+            }
+        }
+        else
+        {
+            PA_RETURN_UNLOGIN_MSG();
         }
 
         return ret;

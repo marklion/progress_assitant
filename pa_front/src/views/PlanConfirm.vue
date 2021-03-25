@@ -63,7 +63,7 @@ export default {
                 unit_price: 0.0,
                 total_price: 0.0,
                 plan_time: '',
-                need_confirm:0,
+                need_confirm: 0,
                 vichele_info: [],
             },
             plan_owner_info: {
@@ -76,12 +76,12 @@ export default {
         submit_confirm: function (_confirm) {
             var vue_this = this;
             vue_this.$get_client("stuff_plan_management").confirm_plan(vue_this.plan_detail.plan_id, vue_this.$cookies.get('pa_ssid'), _confirm).then(function (resp) {
-                if (resp)
-                {
+                if (resp) {
                     vue_this.$router.back();
                 }
             }).catch(function (err) {
                 console.log(err);
+                vue_this.$toast(err.msg);
             });
         },
     },
@@ -103,9 +103,11 @@ export default {
                 vue_this.plan_owner_info.name = resp.split('(')[1].split(')')[0];
             }).catch(function (err) {
                 console.log(err);
+                vue_this.$toast(err.msg);
             });
         }).catch(function (err) {
             console.log(err);
+            vue_this.$toast(err.msg);
         });
     },
 }

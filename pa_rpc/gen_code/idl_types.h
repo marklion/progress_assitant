@@ -21,6 +21,8 @@
 
 
 
+class gen_exp;
+
 class user_info;
 
 class stuff_detail;
@@ -28,6 +30,50 @@ class stuff_detail;
 class user_apply;
 
 class stuff_plan;
+
+typedef struct _gen_exp__isset {
+  _gen_exp__isset() : msg(false) {}
+  bool msg :1;
+} _gen_exp__isset;
+
+class gen_exp : public ::apache::thrift::TException {
+ public:
+
+  gen_exp(const gen_exp&);
+  gen_exp& operator=(const gen_exp&);
+  gen_exp() : msg() {
+  }
+
+  virtual ~gen_exp() noexcept;
+  std::string msg;
+
+  _gen_exp__isset __isset;
+
+  void __set_msg(const std::string& val);
+
+  bool operator == (const gen_exp & rhs) const
+  {
+    if (!(msg == rhs.msg))
+      return false;
+    return true;
+  }
+  bool operator != (const gen_exp &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const gen_exp & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+  virtual void printTo(std::ostream& out) const;
+  mutable std::string thriftTExceptionMessageHolder_;
+  const char* what() const noexcept;
+};
+
+void swap(gen_exp &a, gen_exp &b);
+
+std::ostream& operator<<(std::ostream& out, const gen_exp& obj);
 
 typedef struct _user_info__isset {
   _user_info__isset() : user_id(false), name(false), logo(false), company(false), buyer(false), phone(false) {}

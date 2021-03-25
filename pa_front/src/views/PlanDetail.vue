@@ -15,11 +15,11 @@ export default {
         return {
             name: '',
             company: '',
-            price:0.0,
+            price: 0.0,
             plan_count: 10.4,
             plan_time: '',
             vichele_info: [],
-            created_time:10,
+            created_time: 10,
         };
     },
     beforeMount: function () {
@@ -37,9 +37,11 @@ export default {
                 vue_this.price = detail_resp.price;
             }).catch(function (err) {
                 console.log(err);
+                vue_this.$toast(err.msg);
             });
         }).catch(function (err) {
             console.log(err);
+            vue_this.$toast(err.msg);
         });
     },
 }

@@ -175,6 +175,7 @@ export default {
                 });
             }).catch(function (err) {
                 console.log(err);
+                vue_this.$toast(err.msg);
             });
         },
         submit_new_vichele: function () {
@@ -185,6 +186,7 @@ export default {
                 }
             }).catch(function (err) {
                 console.log(err);
+                vue_this.$toast(err.msg);
             });
         },
         add_vichele: function (_vichele) {
@@ -232,6 +234,7 @@ export default {
                     }
                 }).catch(function (err) {
                     console.log(err);
+                    vue_this.$toast(err.msg);
                 });
             } else {
                 vue_this.$get_client("stuff_plan_management").update_plan({
@@ -245,6 +248,7 @@ export default {
                     }
                 }).catch(function (err) {
                     console.log(err);
+                    vue_this.$toast(err.msg);
                 });
             }
         }

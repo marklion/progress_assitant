@@ -51,6 +51,7 @@ export default {
             });
         }).catch(function (err) {
             console.log(err);
+            vue_this.$toast(err.msg);
         });
     },
     methods: {

@@ -65,9 +65,17 @@ company_management_get_all_type_args = class {
 company_management_get_all_type_result = class {
   constructor(args) {
     this.success = null;
+    this.e = null;
+    if (args instanceof gen_exp) {
+        this.e = args;
+        return;
+    }
     if (args) {
       if (args.success !== undefined && args.success !== null) {
         this.success = Thrift.copyList(args.success, [null]);
+      }
+      if (args.e !== undefined && args.e !== null) {
+        this.e = args.e;
       }
     }
   }
@@ -97,9 +105,14 @@ company_management_get_all_type_result = class {
           input.skip(ftype);
         }
         break;
-        case 0:
+        case 1:
+        if (ftype == Thrift.Type.STRUCT) {
+          this.e = new gen_exp();
+          this.e.read(input);
+        } else {
           input.skip(ftype);
-          break;
+        }
+        break;
         default:
           input.skip(ftype);
       }
@@ -121,6 +134,11 @@ company_management_get_all_type_result = class {
         }
       }
       output.writeListEnd();
+      output.writeFieldEnd();
+    }
+    if (this.e !== null && this.e !== undefined) {
+      output.writeFieldBegin('e', Thrift.Type.STRUCT, 1);
+      this.e.write(output);
       output.writeFieldEnd();
     }
     output.writeFieldStop();
@@ -213,9 +231,17 @@ company_management_add_type_args = class {
 company_management_add_type_result = class {
   constructor(args) {
     this.success = null;
+    this.e = null;
+    if (args instanceof gen_exp) {
+        this.e = args;
+        return;
+    }
     if (args) {
       if (args.success !== undefined && args.success !== null) {
         this.success = args.success;
+      }
+      if (args.e !== undefined && args.e !== null) {
+        this.e = args.e;
       }
     }
   }
@@ -237,9 +263,14 @@ company_management_add_type_result = class {
           input.skip(ftype);
         }
         break;
-        case 0:
+        case 1:
+        if (ftype == Thrift.Type.STRUCT) {
+          this.e = new gen_exp();
+          this.e.read(input);
+        } else {
           input.skip(ftype);
-          break;
+        }
+        break;
         default:
           input.skip(ftype);
       }
@@ -254,6 +285,11 @@ company_management_add_type_result = class {
     if (this.success !== null && this.success !== undefined) {
       output.writeFieldBegin('success', Thrift.Type.I64, 0);
       output.writeI64(this.success);
+      output.writeFieldEnd();
+    }
+    if (this.e !== null && this.e !== undefined) {
+      output.writeFieldBegin('e', Thrift.Type.STRUCT, 1);
+      this.e.write(output);
       output.writeFieldEnd();
     }
     output.writeFieldStop();
@@ -331,9 +367,17 @@ company_management_edit_type_args = class {
 company_management_edit_type_result = class {
   constructor(args) {
     this.success = null;
+    this.e = null;
+    if (args instanceof gen_exp) {
+        this.e = args;
+        return;
+    }
     if (args) {
       if (args.success !== undefined && args.success !== null) {
         this.success = args.success;
+      }
+      if (args.e !== undefined && args.e !== null) {
+        this.e = args.e;
       }
     }
   }
@@ -355,9 +399,14 @@ company_management_edit_type_result = class {
           input.skip(ftype);
         }
         break;
-        case 0:
+        case 1:
+        if (ftype == Thrift.Type.STRUCT) {
+          this.e = new gen_exp();
+          this.e.read(input);
+        } else {
           input.skip(ftype);
-          break;
+        }
+        break;
         default:
           input.skip(ftype);
       }
@@ -372,6 +421,11 @@ company_management_edit_type_result = class {
     if (this.success !== null && this.success !== undefined) {
       output.writeFieldBegin('success', Thrift.Type.BOOL, 0);
       output.writeBool(this.success);
+      output.writeFieldEnd();
+    }
+    if (this.e !== null && this.e !== undefined) {
+      output.writeFieldBegin('e', Thrift.Type.STRUCT, 1);
+      this.e.write(output);
       output.writeFieldEnd();
     }
     output.writeFieldStop();
@@ -448,6 +502,16 @@ company_management_remove_type_args = class {
 };
 company_management_remove_type_result = class {
   constructor(args) {
+    this.e = null;
+    if (args instanceof gen_exp) {
+        this.e = args;
+        return;
+    }
+    if (args) {
+      if (args.e !== undefined && args.e !== null) {
+        this.e = args.e;
+      }
+    }
   }
 
   read (input) {
@@ -455,10 +519,25 @@ company_management_remove_type_result = class {
     while (true) {
       const ret = input.readFieldBegin();
       const ftype = ret.ftype;
+      const fid = ret.fid;
       if (ftype == Thrift.Type.STOP) {
         break;
       }
-      input.skip(ftype);
+      switch (fid) {
+        case 1:
+        if (ftype == Thrift.Type.STRUCT) {
+          this.e = new gen_exp();
+          this.e.read(input);
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        case 0:
+          input.skip(ftype);
+          break;
+        default:
+          input.skip(ftype);
+      }
       input.readFieldEnd();
     }
     input.readStructEnd();
@@ -467,6 +546,11 @@ company_management_remove_type_result = class {
 
   write (output) {
     output.writeStructBegin('company_management_remove_type_result');
+    if (this.e !== null && this.e !== undefined) {
+      output.writeFieldBegin('e', Thrift.Type.STRUCT, 1);
+      this.e.write(output);
+      output.writeFieldEnd();
+    }
     output.writeFieldStop();
     output.writeStructEnd();
     return;
@@ -542,9 +626,17 @@ company_management_readd_type_args = class {
 company_management_readd_type_result = class {
   constructor(args) {
     this.success = null;
+    this.e = null;
+    if (args instanceof gen_exp) {
+        this.e = args;
+        return;
+    }
     if (args) {
       if (args.success !== undefined && args.success !== null) {
         this.success = args.success;
+      }
+      if (args.e !== undefined && args.e !== null) {
+        this.e = args.e;
       }
     }
   }
@@ -566,9 +658,14 @@ company_management_readd_type_result = class {
           input.skip(ftype);
         }
         break;
-        case 0:
+        case 1:
+        if (ftype == Thrift.Type.STRUCT) {
+          this.e = new gen_exp();
+          this.e.read(input);
+        } else {
           input.skip(ftype);
-          break;
+        }
+        break;
         default:
           input.skip(ftype);
       }
@@ -583,6 +680,11 @@ company_management_readd_type_result = class {
     if (this.success !== null && this.success !== undefined) {
       output.writeFieldBegin('success', Thrift.Type.BOOL, 0);
       output.writeBool(this.success);
+      output.writeFieldEnd();
+    }
+    if (this.e !== null && this.e !== undefined) {
+      output.writeFieldBegin('e', Thrift.Type.STRUCT, 1);
+      this.e.write(output);
       output.writeFieldEnd();
     }
     output.writeFieldStop();
@@ -646,9 +748,17 @@ company_management_get_all_apply_args = class {
 company_management_get_all_apply_result = class {
   constructor(args) {
     this.success = null;
+    this.e = null;
+    if (args instanceof gen_exp) {
+        this.e = args;
+        return;
+    }
     if (args) {
       if (args.success !== undefined && args.success !== null) {
         this.success = Thrift.copyList(args.success, [user_apply]);
+      }
+      if (args.e !== undefined && args.e !== null) {
+        this.e = args.e;
       }
     }
   }
@@ -679,9 +789,14 @@ company_management_get_all_apply_result = class {
           input.skip(ftype);
         }
         break;
-        case 0:
+        case 1:
+        if (ftype == Thrift.Type.STRUCT) {
+          this.e = new gen_exp();
+          this.e.read(input);
+        } else {
           input.skip(ftype);
-          break;
+        }
+        break;
         default:
           input.skip(ftype);
       }
@@ -703,6 +818,11 @@ company_management_get_all_apply_result = class {
         }
       }
       output.writeListEnd();
+      output.writeFieldEnd();
+    }
+    if (this.e !== null && this.e !== undefined) {
+      output.writeFieldBegin('e', Thrift.Type.STRUCT, 1);
+      this.e.write(output);
       output.writeFieldEnd();
     }
     output.writeFieldStop();
@@ -795,9 +915,17 @@ company_management_approve_apply_args = class {
 company_management_approve_apply_result = class {
   constructor(args) {
     this.success = null;
+    this.e = null;
+    if (args instanceof gen_exp) {
+        this.e = args;
+        return;
+    }
     if (args) {
       if (args.success !== undefined && args.success !== null) {
         this.success = args.success;
+      }
+      if (args.e !== undefined && args.e !== null) {
+        this.e = args.e;
       }
     }
   }
@@ -819,9 +947,14 @@ company_management_approve_apply_result = class {
           input.skip(ftype);
         }
         break;
-        case 0:
+        case 1:
+        if (ftype == Thrift.Type.STRUCT) {
+          this.e = new gen_exp();
+          this.e.read(input);
+        } else {
           input.skip(ftype);
-          break;
+        }
+        break;
         default:
           input.skip(ftype);
       }
@@ -836,6 +969,11 @@ company_management_approve_apply_result = class {
     if (this.success !== null && this.success !== undefined) {
       output.writeFieldBegin('success', Thrift.Type.BOOL, 0);
       output.writeBool(this.success);
+      output.writeFieldEnd();
+    }
+    if (this.e !== null && this.e !== undefined) {
+      output.writeFieldBegin('e', Thrift.Type.STRUCT, 1);
+      this.e.write(output);
       output.writeFieldEnd();
     }
     output.writeFieldStop();
@@ -901,6 +1039,9 @@ company_managementClient = class company_managementClient {
     result.read(this.input);
     this.input.readMessageEnd();
 
+    if (null !== result.e) {
+      throw result.e;
+    }
     if (null !== result.success) {
       return result.success;
     }
@@ -959,6 +1100,9 @@ company_managementClient = class company_managementClient {
     result.read(this.input);
     this.input.readMessageEnd();
 
+    if (null !== result.e) {
+      throw result.e;
+    }
     if (null !== result.success) {
       return result.success;
     }
@@ -1016,6 +1160,9 @@ company_managementClient = class company_managementClient {
     result.read(this.input);
     this.input.readMessageEnd();
 
+    if (null !== result.e) {
+      throw result.e;
+    }
     if (null !== result.success) {
       return result.success;
     }
@@ -1073,6 +1220,9 @@ company_managementClient = class company_managementClient {
     result.read(this.input);
     this.input.readMessageEnd();
 
+    if (null !== result.e) {
+      throw result.e;
+    }
     return;
   }
 
@@ -1127,6 +1277,9 @@ company_managementClient = class company_managementClient {
     result.read(this.input);
     this.input.readMessageEnd();
 
+    if (null !== result.e) {
+      throw result.e;
+    }
     if (null !== result.success) {
       return result.success;
     }
@@ -1183,6 +1336,9 @@ company_managementClient = class company_managementClient {
     result.read(this.input);
     this.input.readMessageEnd();
 
+    if (null !== result.e) {
+      throw result.e;
+    }
     if (null !== result.success) {
       return result.success;
     }
@@ -1241,6 +1397,9 @@ company_managementClient = class company_managementClient {
     result.read(this.input);
     this.input.readMessageEnd();
 
+    if (null !== result.e) {
+      throw result.e;
+    }
     if (null !== result.success) {
       return result.success;
     }

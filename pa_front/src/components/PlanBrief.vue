@@ -111,16 +111,19 @@ export default {
                     vue_this.company = detail_resp.company;
                 }).catch(function (err) {
                     console.log(err);
+                    vue_this.$toast(err.msg);
                 });
             } else {
                 vue_this.$get_client("user_management").get_customer_info(resp.created_by).then(function (resp) {
                     vue_this.company = resp;
                 }).catch(function (err) {
                     console.log(err);
+                    vue_this.$toast(err.msg);
                 });
             }
         }).catch(function (err) {
             console.log(err);
+            vue_this.$toast(err.msg);
         });
     },
 }

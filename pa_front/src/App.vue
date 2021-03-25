@@ -6,14 +6,14 @@
         </template>
     </van-nav-bar>
     <router-view />
-    <van-tabbar route>
+    <van-tabbar route fixed placeholder>
         <van-tabbar-item v-if="$store.state.userinfo.buyer" replace :to="{name:'Home'}" icon="home-o">主页</van-tabbar-item>
         <van-tabbar-item v-else replace :to="{name:'CompanyHome'}" icon="home-o">主页</van-tabbar-item>
         <van-tabbar-item v-if="$store.state.userinfo.buyer" replace :to="{name:'Order'}" icon="orders-o">订单</van-tabbar-item>
         <van-tabbar-item v-else replace :to="{name:'CompanyOrder'}" icon="orders-o">订单</van-tabbar-item>
         <van-tabbar-item replace :to="{name:'Myself'}" icon="user-o">我的</van-tabbar-item>
     </van-tabbar>
-    <van-dialog v-model="show_share" title="长按图片发送给联系人" >
+    <van-dialog v-model="show_share" title="长按图片发送给联系人">
         <van-row type="flex" justify="center" align="center">
             <img src="https://www.d8sis.cn/pa_web/logo_res/sub_qr.jpg" />
         </van-row>
@@ -114,10 +114,12 @@ export default {
                     });
                     vue_this.$store.commit('set_login', false);
                 }
-            }).catch(function (err) {
-                console.log(err);
-            }).finally(function () {
                 vue_this.$toast.clear();
+            }).catch(function (err) {
+                vue_this.$toast.clear();
+                console.log(err);
+                vue_this.$toast(err.msg);
+            }).finally(function () {
                 if (vue_this.$route.path == '/' && vue_this.need_info == false) {
                     if (vue_this.$store.state.userinfo.buyer) {
                         vue_this.$router.replace({

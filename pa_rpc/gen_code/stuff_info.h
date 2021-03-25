@@ -99,8 +99,9 @@ class stuff_info_get_today_pargs {
 };
 
 typedef struct _stuff_info_get_today_result__isset {
-  _stuff_info_get_today_result__isset() : success(false) {}
+  _stuff_info_get_today_result__isset() : success(false), e(false) {}
   bool success :1;
+  bool e :1;
 } _stuff_info_get_today_result__isset;
 
 class stuff_info_get_today_result {
@@ -113,14 +114,19 @@ class stuff_info_get_today_result {
 
   virtual ~stuff_info_get_today_result() noexcept;
   std::vector<stuff_detail>  success;
+  gen_exp e;
 
   _stuff_info_get_today_result__isset __isset;
 
   void __set_success(const std::vector<stuff_detail> & val);
 
+  void __set_e(const gen_exp& val);
+
   bool operator == (const stuff_info_get_today_result & rhs) const
   {
     if (!(success == rhs.success))
+      return false;
+    if (!(e == rhs.e))
       return false;
     return true;
   }
@@ -136,8 +142,9 @@ class stuff_info_get_today_result {
 };
 
 typedef struct _stuff_info_get_today_presult__isset {
-  _stuff_info_get_today_presult__isset() : success(false) {}
+  _stuff_info_get_today_presult__isset() : success(false), e(false) {}
   bool success :1;
+  bool e :1;
 } _stuff_info_get_today_presult__isset;
 
 class stuff_info_get_today_presult {
@@ -146,6 +153,7 @@ class stuff_info_get_today_presult {
 
   virtual ~stuff_info_get_today_presult() noexcept;
   std::vector<stuff_detail> * success;
+  gen_exp e;
 
   _stuff_info_get_today_presult__isset __isset;
 
@@ -203,8 +211,9 @@ class stuff_info_get_stuff_detail_pargs {
 };
 
 typedef struct _stuff_info_get_stuff_detail_result__isset {
-  _stuff_info_get_stuff_detail_result__isset() : success(false) {}
+  _stuff_info_get_stuff_detail_result__isset() : success(false), e(false) {}
   bool success :1;
+  bool e :1;
 } _stuff_info_get_stuff_detail_result__isset;
 
 class stuff_info_get_stuff_detail_result {
@@ -217,14 +226,19 @@ class stuff_info_get_stuff_detail_result {
 
   virtual ~stuff_info_get_stuff_detail_result() noexcept;
   stuff_detail success;
+  gen_exp e;
 
   _stuff_info_get_stuff_detail_result__isset __isset;
 
   void __set_success(const stuff_detail& val);
 
+  void __set_e(const gen_exp& val);
+
   bool operator == (const stuff_info_get_stuff_detail_result & rhs) const
   {
     if (!(success == rhs.success))
+      return false;
+    if (!(e == rhs.e))
       return false;
     return true;
   }
@@ -240,8 +254,9 @@ class stuff_info_get_stuff_detail_result {
 };
 
 typedef struct _stuff_info_get_stuff_detail_presult__isset {
-  _stuff_info_get_stuff_detail_presult__isset() : success(false) {}
+  _stuff_info_get_stuff_detail_presult__isset() : success(false), e(false) {}
   bool success :1;
+  bool e :1;
 } _stuff_info_get_stuff_detail_presult__isset;
 
 class stuff_info_get_stuff_detail_presult {
@@ -250,6 +265,7 @@ class stuff_info_get_stuff_detail_presult {
 
   virtual ~stuff_info_get_stuff_detail_presult() noexcept;
   stuff_detail* success;
+  gen_exp e;
 
   _stuff_info_get_stuff_detail_presult__isset __isset;
 

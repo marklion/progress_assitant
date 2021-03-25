@@ -1,7 +1,7 @@
 <template>
 <div class="admin_show">
     <van-cell v-for="(single_apply, index) in all_apply " :key="index" :label="'手机号:' + single_apply.phone" :title="single_apply.name + ' 加入公司申请'">
-        <template #right-icon >
+        <template #right-icon>
             <van-row v-if="single_apply.status == 0" type="flex" justify="center" align="center" :gutter="5">
                 <van-col>
                     <van-button type="primary" @click="submit_approve(single_apply, true)">批准</van-button>
@@ -63,6 +63,7 @@ export default {
                 }
             }).catch(function (err) {
                 console.log(err);
+                vue_this.$toast(err.msg);
             });
         },
         init_apply_info: function () {
@@ -74,6 +75,7 @@ export default {
                 });
             }).catch(function (err) {
                 console.log(err);
+                vue_this.$toast(err.msg);
             });
 
         },

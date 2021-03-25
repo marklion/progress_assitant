@@ -1,3 +1,8 @@
+
+exception gen_exp {
+    1:string msg,
+}
+
 struct user_info {
     1:i64 user_id,
     2:string name,
@@ -7,16 +12,16 @@ struct user_info {
     6:string phone
 }
 service user_management{
-    user_info get_user_info(1:string ssid),
-    string user_login(1:string code),
-    bool update_user_info(1:user_info info, 2:string ssid),
-    void logff_user(1:string ssid),
-    list<string> get_bound_vichele(1:string ssid)
-    bool bind_new_vichele(1:string ssid, 2:string vichele),
-    void remove_vichele(1:string ssid, 2:string vichele),
-    bool update_logo(1:string content, 2:string ssid),
-    string get_customer_info(1:i64 user_id),
-    bool is_admin(1:string ssid),
+    user_info get_user_info(1:string ssid) throws (1:gen_exp e),
+    string user_login(1:string code) throws (1:gen_exp e),
+    bool update_user_info(1:user_info info, 2:string ssid) throws (1:gen_exp e),
+    void logff_user(1:string ssid) throws (1:gen_exp e),
+    list<string> get_bound_vichele(1:string ssid) throws (1:gen_exp e),
+    bool bind_new_vichele(1:string ssid, 2:string vichele) throws (1:gen_exp e),
+    void remove_vichele(1:string ssid, 2:string vichele) throws (1:gen_exp e),
+    bool update_logo(1:string content, 2:string ssid) throws (1:gen_exp e),
+    string get_customer_info(1:i64 user_id) throws (1:gen_exp e),
+    bool is_admin(1:string ssid) throws (1:gen_exp e),
 }
 
 struct stuff_detail {
@@ -37,18 +42,18 @@ struct user_apply {
 }
 
 service company_management {
-    list<i64> get_all_type(1:string ssid),
-    i64 add_type(1:string name, 2:i64 price, 3:string ssid),
-    bool edit_type(1:stuff_detail stuff, 2:string ssid),
-    void remove_type(1:stuff_detail stuff, 2:string ssid),
-    bool readd_type(1:stuff_detail stuff, 2:string ssid),
-    list<user_apply> get_all_apply(1:string ssid),
-    bool approve_apply(1:i64 apply_id, 2:string ssid, 3:bool approve),
+    list<i64> get_all_type(1:string ssid) throws (1:gen_exp e),
+    i64 add_type(1:string name, 2:i64 price, 3:string ssid) throws (1:gen_exp e),
+    bool edit_type(1:stuff_detail stuff, 2:string ssid) throws (1:gen_exp e),
+    void remove_type(1:stuff_detail stuff, 2:string ssid) throws (1:gen_exp e),
+    bool readd_type(1:stuff_detail stuff, 2:string ssid) throws (1:gen_exp e),
+    list<user_apply> get_all_apply(1:string ssid) throws (1:gen_exp e),
+    bool approve_apply(1:i64 apply_id, 2:string ssid, 3:bool approve) throws (1:gen_exp e),
 }
 
 service stuff_info {
-    list<stuff_detail> get_today(),
-    stuff_detail get_stuff_detail(1:i64 type_id),
+    list<stuff_detail> get_today() throws (1:gen_exp e),
+    stuff_detail get_stuff_detail(1:i64 type_id) throws (1:gen_exp e),
 }
 
 struct stuff_plan {
@@ -65,10 +70,10 @@ struct stuff_plan {
 }
 
 service stuff_plan_management {
-    i64 create_plan(1:stuff_plan plan, 2:string ssid),
-    list<i64> get_created_plan(1:string ssid),
-    list<i64> get_company_plan(1:string ssid),
-    stuff_plan get_plan(1:i64 plan_id),
-    bool update_plan(1:stuff_plan plan, 2:string ssid),
-    bool confirm_plan(1:i64 plan_id, 2:string ssid, 3:bool confirm),
+    i64 create_plan(1:stuff_plan plan, 2:string ssid) throws (1:gen_exp e),
+    list<i64> get_created_plan(1:string ssid) throws (1:gen_exp e),
+    list<i64> get_company_plan(1:string ssid) throws (1:gen_exp e),
+    stuff_plan get_plan(1:i64 plan_id) throws (1:gen_exp e),
+    bool update_plan(1:stuff_plan plan, 2:string ssid) throws (1:gen_exp e),
+    bool confirm_plan(1:i64 plan_id, 2:string ssid, 3:bool confirm) throws (1:gen_exp e),
 }

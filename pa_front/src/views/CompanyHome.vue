@@ -145,6 +145,7 @@ export default {
                 }
             }).catch(function (err) {
                 console.log(err);
+                vue_this.$toast(err.msg);
             });
         },
         refresh_page: function () {
@@ -160,6 +161,7 @@ export default {
                 }
             }).catch(function (err) {
                 console.log(err);
+                vue_this.$toast(err.msg);
             }).finally(function () {
                 vue_this.show_edit_stuff = false;
             });
@@ -181,6 +183,7 @@ export default {
                         vue_this.init_company_data();
                     }).catch(function (err) {
                         console.log(err);
+                        vue_this.$toast(err.msg);
                     });
                 });
         },
@@ -192,6 +195,7 @@ export default {
                 }
             }).catch(function (err) {
                 console.log(err);
+                vue_this.$toast(err.msg);
             }).finally(function () {
                 vue_this.show_add_stuff = false;
             });
@@ -201,11 +205,12 @@ export default {
             vue_this.all_type = [];
             this.$get_client("stuff_info").get_stuff_detail(_id).then(function (resp) {
                 vue_this.$set(vue_this.all_type, vue_this.all_type.length, resp);
-                vue_this.all_type.sort((a, b)=>{
+                vue_this.all_type.sort((a, b) => {
                     return b.saling - a.saling;
                 });
             }).catch(function (err) {
                 console.log(err);
+                vue_this.$toast(err.msg);
             });
         },
         init_company_data: function () {
@@ -216,6 +221,7 @@ export default {
                 });
             }).catch(function (err) {
                 console.log(err);
+                vue_this.$toast(err.msg);
             });
 
         }

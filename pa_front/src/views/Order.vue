@@ -7,16 +7,16 @@
 <script>
 import PlanBrief from '../components/PlanBrief.vue'
 export default {
-    name:'Order',
-    data:function() {
+    name: 'Order',
+    data: function () {
         return {
-            all_plans:[],
+            all_plans: [],
         };
     },
     components: {
-        "plan-brief":PlanBrief,
+        "plan-brief": PlanBrief,
     },
-    beforeMount:function() {
+    beforeMount: function () {
         var vue_this = this;
         vue_this.$get_client("stuff_plan_management").get_created_plan(vue_this.$cookies.get('pa_ssid')).then(function (resp) {
             resp.forEach((element, index) => {
@@ -24,6 +24,7 @@ export default {
             });
         }).catch(function (err) {
             console.log(err);
+            vue_this.$toast(err.msg);
         });
     },
 }

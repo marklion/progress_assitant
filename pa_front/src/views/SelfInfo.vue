@@ -122,12 +122,14 @@ export default {
                         }
                     }).catch(function (err) {
                         console.log(err);
+                        vue_this.$toast(err.msg);
                     });
                 } else {
                     console.log(resp);
                 }
             }).catch(function (err) {
                 console.log(err);
+                vue_this.$toast(err.msg);
             });
         },
 
@@ -308,11 +310,13 @@ export default {
             console.log(base64);
             var file_content = base64.split(';base64,')[1];
             console.log(file_content);
+            var vue_this = this;
             this.$get_client("user_management").update_logo(file_content, this.$cookies.get('pa_ssid')).
             then(function (resp) {
                 console.log(resp);
             }).catch(function (err) {
                 console.log(err);
+                vue_this.$toast(err.msg);
             });
             // 提交图片
             // Some code

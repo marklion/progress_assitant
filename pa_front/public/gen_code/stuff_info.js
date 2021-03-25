@@ -40,9 +40,17 @@ stuff_info_get_today_args = class {
 stuff_info_get_today_result = class {
   constructor(args) {
     this.success = null;
+    this.e = null;
+    if (args instanceof gen_exp) {
+        this.e = args;
+        return;
+    }
     if (args) {
       if (args.success !== undefined && args.success !== null) {
         this.success = Thrift.copyList(args.success, [stuff_detail]);
+      }
+      if (args.e !== undefined && args.e !== null) {
+        this.e = args.e;
       }
     }
   }
@@ -73,9 +81,14 @@ stuff_info_get_today_result = class {
           input.skip(ftype);
         }
         break;
-        case 0:
+        case 1:
+        if (ftype == Thrift.Type.STRUCT) {
+          this.e = new gen_exp();
+          this.e.read(input);
+        } else {
           input.skip(ftype);
-          break;
+        }
+        break;
         default:
           input.skip(ftype);
       }
@@ -97,6 +110,11 @@ stuff_info_get_today_result = class {
         }
       }
       output.writeListEnd();
+      output.writeFieldEnd();
+    }
+    if (this.e !== null && this.e !== undefined) {
+      output.writeFieldBegin('e', Thrift.Type.STRUCT, 1);
+      this.e.write(output);
       output.writeFieldEnd();
     }
     output.writeFieldStop();
@@ -160,9 +178,17 @@ stuff_info_get_stuff_detail_args = class {
 stuff_info_get_stuff_detail_result = class {
   constructor(args) {
     this.success = null;
+    this.e = null;
+    if (args instanceof gen_exp) {
+        this.e = args;
+        return;
+    }
     if (args) {
       if (args.success !== undefined && args.success !== null) {
         this.success = new stuff_detail(args.success);
+      }
+      if (args.e !== undefined && args.e !== null) {
+        this.e = args.e;
       }
     }
   }
@@ -185,9 +211,14 @@ stuff_info_get_stuff_detail_result = class {
           input.skip(ftype);
         }
         break;
-        case 0:
+        case 1:
+        if (ftype == Thrift.Type.STRUCT) {
+          this.e = new gen_exp();
+          this.e.read(input);
+        } else {
           input.skip(ftype);
-          break;
+        }
+        break;
         default:
           input.skip(ftype);
       }
@@ -202,6 +233,11 @@ stuff_info_get_stuff_detail_result = class {
     if (this.success !== null && this.success !== undefined) {
       output.writeFieldBegin('success', Thrift.Type.STRUCT, 0);
       this.success.write(output);
+      output.writeFieldEnd();
+    }
+    if (this.e !== null && this.e !== undefined) {
+      output.writeFieldBegin('e', Thrift.Type.STRUCT, 1);
+      this.e.write(output);
       output.writeFieldEnd();
     }
     output.writeFieldStop();
@@ -264,6 +300,9 @@ stuff_infoClient = class stuff_infoClient {
     result.read(this.input);
     this.input.readMessageEnd();
 
+    if (null !== result.e) {
+      throw result.e;
+    }
     if (null !== result.success) {
       return result.success;
     }
@@ -320,6 +359,9 @@ stuff_infoClient = class stuff_infoClient {
     result.read(this.input);
     this.input.readMessageEnd();
 
+    if (null !== result.e) {
+      throw result.e;
+    }
     if (null !== result.success) {
       return result.success;
     }
