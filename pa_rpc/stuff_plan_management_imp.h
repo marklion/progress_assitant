@@ -55,6 +55,7 @@ class stuff_plan_management_handler : virtual public stuff_plan_managementIf
                     PA_WECHAT_send_plan_msg(itr, tmp);
                 }
             }
+            PA_WECHAT_send_plan_msg(*opt_user,tmp);
 
             ret = tmp.get_pri_id();
         }
@@ -117,12 +118,26 @@ class stuff_plan_management_handler : virtual public stuff_plan_managementIf
                     plan_in_sql->vicheles += itr + "-";
                 }
                 ret = plan_in_sql->update_record();
+                auto stuff_type = plan_in_sql->get_parent<pa_sql_stuff_info>("belong_stuff");
+                if (stuff_type)
+                {
+                    auto company = stuff_type->get_parent<pa_sql_company>("belong_company");
+                    if (company)
+                    {
+                        auto company_user = company->get_all_children<pa_sql_userinfo>("belong_company");
+                        for (auto &itr : company_user)
+                        {
+                            PA_WECHAT_send_plan_msg(itr, *plan_in_sql);
+                        }
+                    }
+                    PA_WECHAT_send_plan_msg(*opt_user, *plan_in_sql);
+                }
             }
         }
 
         return ret;
     }
-    virtual void get_company_plan(std::vector<int64_t> &_return, const std::string &ssid) 
+    virtual void get_company_plan(std::vector<int64_t> &_return, const std::string &ssid)
     {
         auto opt_user = PA_DATAOPT_get_online_user(ssid);
         if (opt_user && opt_user->buyer == false)
@@ -160,6 +175,20 @@ class stuff_plan_management_handler : virtual public stuff_plan_managementIf
                     {
                         plan->status = confirm?1:2;
                         ret = plan->update_record();
+                        if (ret)
+                        {
+                            auto company_user = company->get_all_children<pa_sql_userinfo>("belong_company");
+                            for (auto &itr : company_user)
+                            {
+                                PA_WECHAT_send_plan_msg(itr, *plan);
+                            }
+
+                            auto created_user = plan->get_parent<pa_sql_userinfo>("created_by");
+                            if (created_user)
+                            {
+                                PA_WECHAT_send_plan_msg(*created_user, *plan);
+                            }
+                        }
                     }
                 }
             }
