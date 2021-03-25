@@ -2,6 +2,7 @@
 
 PA_DELIVER="pa_deliver.tar.gz"
 WECHAT_SECRET_INPUT=""
+WECHAT_MP_SECRET_INPUT=""
 PORT=80
 DATA_BASE="pa.db"
 IMG_BED_INPUT="logo_res"
@@ -26,7 +27,7 @@ get_docker_image() {
 
 start_all_server() {
     line=`wc -l $0|awk '{print $1}'`
-    line=`expr $line - 82` 
+    line=`expr $line - 86` 
     tail -n $line $0 | tar zx  --skip-old-files -C /
     nginx -c /conf/nginx.conf
     pa_rpc &
@@ -37,14 +38,14 @@ start_docker_con() {
     local DATA_BASE_PATH=`realpath $DATA_BASE`
     local DATA_BASE_PATH=`dirname ${DATA_BASE_PATH}`
     local IMG_BED=`realpath $IMG_BED_INPUT`
-    local CON_ID=`docker create -ti --rm -p ${PORT}:80 -e WECHAT_SECRET="${WECHAT_SECRET_INPUT}"  -v ${DATA_BASE_PATH}:/database -v ${IMG_BED}:/dist/logo_res ${DOCKER_IMG_NAME} /root/install.sh`
+    local CON_ID=`docker create -ti --rm -p ${PORT}:80 -e WECHAT_SECRET="${WECHAT_SECRET_INPUT}" -e WECHAT_MP_SECRET="${WECHAT_MP_SECRET_INPUT}"  -v ${DATA_BASE_PATH}:/database -v ${IMG_BED}:/dist/logo_res ${DOCKER_IMG_NAME} /root/install.sh`
     docker cp $0 ${CON_ID}:/root/
     docker cp /etc/localtime ${CON_ID}:/etc/localtime
     docker cp /etc/timezone ${CON_ID}:/etc/timezone
     docker start -ai ${CON_ID}
 }
 
-while getopts "D:p:w:d:i:" arg
+while getopts "D:p:w:d:i:m:" arg
 do
     case $arg in
         D)
@@ -55,6 +56,9 @@ do
             ;;
         w)
             WECHAT_SECRET_INPUT=${OPTARG}
+            ;;
+        m)
+            WECHAT_MP_SECRET_INPUT=${OPTARG}
             ;;
         d)
             DATA_BASE=${OPTARG}

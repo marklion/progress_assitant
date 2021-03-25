@@ -1,12 +1,31 @@
 #include "pa_utils.h"
 
 static tdf_log g_log("pa util");
-static size_t dg_proc_curl(void *ptr, size_t size, size_t nmemb, void *user_data)
+static size_t pa_proc_curl(void *ptr, size_t size, size_t nmemb, void *user_data)
 {
     auto in_buff = (std::string *)user_data;
     in_buff->append((char *)ptr, size * nmemb);
 
     return size * nmemb;
+}
+std::string PA_DATAOPT_rest_post(const std::string &_url, const std::string &_json)
+{
+    std::string in_buff;
+    auto curlhandle = curl_easy_init();
+    if (nullptr != curlhandle)
+    {
+        curl_easy_setopt(curlhandle, CURLOPT_URL, _url.c_str());
+        curl_easy_setopt(curlhandle, CURLOPT_WRITEDATA, &in_buff);
+        curl_easy_setopt(curlhandle, CURLOPT_WRITEFUNCTION, pa_proc_curl);
+        // 设置post提交方式
+        curl_easy_setopt(curlhandle, CURLOPT_POST, 1);
+        // 设置post的数据
+        curl_easy_setopt(curlhandle, CURLOPT_POSTFIELDS, _json.c_str());
+        curl_easy_perform(curlhandle);
+        curl_easy_cleanup(curlhandle);
+    }
+
+    return in_buff;
 }
 std::string PA_DATAOPT_rest_req(const std::string &_req)
 {
@@ -16,7 +35,7 @@ std::string PA_DATAOPT_rest_req(const std::string &_req)
     {
         curl_easy_setopt(curlhandle, CURLOPT_URL, _req.c_str());
         curl_easy_setopt(curlhandle, CURLOPT_WRITEDATA, &in_buff);
-        curl_easy_setopt(curlhandle, CURLOPT_WRITEFUNCTION, dg_proc_curl);
+        curl_easy_setopt(curlhandle, CURLOPT_WRITEFUNCTION, pa_proc_curl);
         curl_easy_perform(curlhandle);
         curl_easy_cleanup(curlhandle);
     }

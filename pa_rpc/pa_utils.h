@@ -13,7 +13,7 @@ std::string PA_DATAOPT_store_logo_to_file(const std::string &_logo, const std::s
 std::unique_ptr<pa_sql_userlogin> PA_DATAOPT_pull_user_info_from_wechat(const std::string &_acctok, const std::string &_open_id);
 std::string PA_DATAOPT_rest_req(const std::string &_req);
 std::string PA_DATAOPT_gen_ssid();
-
+std::string PA_DATAOPT_rest_post(const std::string &_url, const std::string &_json);
 void PA_DATAOPT_init_config();
 std::vector<std::string> PA_DATAOPT_get_admin(const std::string &_company);
 bool PA_DATAOPT_is_admin(const std::string &_phone, const std::string &_company);

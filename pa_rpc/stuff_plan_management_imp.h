@@ -3,6 +3,7 @@
 
 #include "gen_code/stuff_plan_management.h"
 #include "pa_utils.h"
+#include "wechat_msg.h"
 
 static std::vector<std::string> prepare_vichels(const std::string &_vicheles)
 {
@@ -44,6 +45,17 @@ class stuff_plan_management_handler : virtual public stuff_plan_managementIf
             tmp.set_parent(*opt_user, "created_by");
             tmp.set_parent(*stuff_type, "belong_stuff");
             tmp.insert_record();
+
+            auto company = stuff_type->get_parent<pa_sql_company>("belong_company");
+            if (company)
+            {
+                auto company_user = company->get_all_children<pa_sql_userinfo>("belong_company");
+                for (auto &itr:company_user)
+                {
+                    PA_WECHAT_send_plan_msg(itr, tmp);
+                }
+            }
+
             ret = tmp.get_pri_id();
         }
         return ret;
