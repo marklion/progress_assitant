@@ -10,7 +10,7 @@ import {
 
 Vue.prototype.$cookies = cookies;
 Vue.prototype.$get_client = get_client;
-Vue.prototype.$remote_url = 'https://www.d8sis.cn/pa_web';
+Vue.prototype.$remote_url = process.env.VUE_APP_BACK_END_URL;
 Vue.config.productionTip = false
 
 new Vue({

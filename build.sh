@@ -6,6 +6,8 @@ SRC_DIR=`dirname $(realpath $0)`
 BUILD_DIR=${1:-build}
 BUILD_DIR=$(realpath $BUILD_DIR)
 
+BUILD_MODE=${2:-'test-build'}
+
 [ -d ${BUILD_DIR} ] || mkdir -p "${BUILD_DIR}"
 
 ${SRC_DIR}/gen_thrift.sh
@@ -29,7 +31,7 @@ cp ${SRC_DIR}/pa_conf/data_config.json ${BUILD_DIR}/conf
 
 pushd ${SRC_DIR}/pa_front
 [ -d node_modules ] || npm install 
-npm run build
+npm run ${BUILD_MODE}
 mkdir ./dist/logo_res
 mkdir ./dist/company_logo
 cp ${SRC_DIR}/pa_conf/company_logo/* ./dist/company_logo/
