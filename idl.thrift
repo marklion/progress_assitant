@@ -56,6 +56,16 @@ service stuff_info {
     stuff_detail get_stuff_detail(1:i64 type_id) throws (1:gen_exp e),
 }
 
+struct plan_confirm_info {
+    1:string timestamp,
+    2:string name,
+}
+
+struct pay_confirm_info {
+    1:string timestamp,
+    2:string name,
+}
+
 struct stuff_plan {
     1:i64 type_id,
     2:double count,
@@ -67,6 +77,12 @@ struct stuff_plan {
     8:string name, 
     9:double price,
     10:i64 status,
+    11:string comment,
+    12:plan_confirm_info plan_confirm,
+    13:pay_confirm_info pay_confirm,
+    14:string pay_info,
+    15:string pay_timestamp,
+    16:string close_timestamp,
 }
 
 service stuff_plan_management {
@@ -75,5 +91,6 @@ service stuff_plan_management {
     list<i64> get_company_plan(1:string ssid) throws (1:gen_exp e),
     stuff_plan get_plan(1:i64 plan_id) throws (1:gen_exp e),
     bool update_plan(1:stuff_plan plan, 2:string ssid) throws (1:gen_exp e),
-    bool confirm_plan(1:i64 plan_id, 2:string ssid, 3:bool confirm) throws (1:gen_exp e),
+    bool confirm_plan(1:i64 plan_id, 2:string ssid) throws (1:gen_exp e),
+    bool has_priv_edit(1:i64 plan_id, 2:string ssid) throws (1:gen_exp e),
 }

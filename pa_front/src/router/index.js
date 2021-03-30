@@ -41,11 +41,11 @@ const routes = [
     },
   },
   {
-    path: '/plan_detail/:plan_id',
-    name: 'PlanDetail',
-    component: () => import('../views/PlanDetail.vue'),
+    path: '/plan_update/:plan_id',
+    name: 'PlanUpdate',
+    component: () => import('../views/PlanUpdate.vue'),
     meta: {    
-        private_title: '计划详情',
+        private_title: '计划更新',
         has_go_back:true,
     },
   },
@@ -86,11 +86,11 @@ const routes = [
     },
   },
   {
-    path: '/plan_confirm/:plan_id',
-    name: 'PlanConfirm',
-    component: () => import('../views/PlanConfirm.vue'),
+    path: '/plan_detail/:plan_id',
+    name: 'PlanDetail',
+    component: () => import('../views/PlanDetail.vue'),
     meta: {    
-        private_title: '计划确认',
+        private_title: '计划详情',
         has_go_back:true,
     },
   },

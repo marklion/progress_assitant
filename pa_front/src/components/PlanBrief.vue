@@ -63,22 +63,12 @@ export default {
     },
     methods: {
         nav_to_detail: function () {
-            if (this.company_view) {
-                this.$router.push({
-                    name: 'PlanConfirm',
-                    params: {
-                        plan_id: this.plan_id
-                    }
-                });
-            } else {
-                this.$router.push({
-                    name: 'PlanDetail',
-                    params: {
-                        plan_id: this.plan_id
-                    }
-                });
-
-            }
+            this.$router.push({
+                name: 'PlanDetail',
+                params: {
+                    plan_id: this.plan_id
+                }
+            });
         },
         formatDateTime: function (date) {
             var y = date.getFullYear();

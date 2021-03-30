@@ -1,40 +1,156 @@
 <template>
-<div class="plan_detail show">
-    <stuff-info-submit :orig_name="name" :orig_price="price" :is_create="false" :orig_plan_count="plan_count" :orig_plan_time="plan_time" :plan_id="parseInt($route.params.plan_id)" :orig_vichele_info="vichele_info" :min_time="new Date(created_time)"></stuff-info-submit>
+<div class="plan_confirm_show">
+    <van-cell-group>
+        <template #title>
+            <van-row type="flex" justify="space-between" align="center">
+                <van-col>计划内容</van-col>
+                <van-col v-if="$store.state.userinfo.buyer && plan_detail.status == 0">
+                    <van-button size="small" type="warning" :to="{name:'PlanUpdate', params:{plan_id:plan_detail.plan_id}}">修改计划</van-button>
+                </van-col>
+            </van-row>
+        </template>
+        <van-cell :title="plan_detail.name" :value="plan_detail.count + '吨'" />
+        <van-cell title="单价" :value="plan_detail.unit_price" />
+        <van-cell title="总价" :value="plan_detail.total_price" />
+        <van-cell title="计划到厂" :value="plan_detail.plan_time" />
+    </van-cell-group>
+    <van-cell-group title="提交人信息">
+        <van-cell title="提交人" :value="plan_owner_info.name"></van-cell>
+        <van-cell title="公司" :value="plan_owner_info.company"></van-cell>
+    </van-cell-group>
+    <van-cell-group title="车辆信息">
+        <van-cell v-for="(single_vichele, index) in plan_detail.vichele_info" :key="index" :title="single_vichele"></van-cell>
+    </van-cell-group>
+
+    <plan-operate :plan_id="plan_detail.plan_id" :status="plan_detail.status" ></plan-operate>
+
+    <van-steps direction="vertical" :active="plan_detail.status">
+        <van-step>
+            <h3>创建计划</h3>
+            <p>{{plan_detail.created_time}}</p>
+        </van-step>
+        <van-step>
+            <h3>计划确认</h3>
+            <p>{{plan_detail.plan_confirm_timestamp}}</p>
+            <p>{{plan_detail.plan_confirm_by}}</p>
+        </van-step>
+        <van-step>
+            <h3>付款</h3>
+            <p>{{plan_detail.pay_timestamp}}</p>
+        </van-step>
+        <van-step>
+            <h3>收款确认</h3>
+            <p>{{plan_detail.pay_confirm_timestamp}}</p>
+            <p>{{plan_detail.pay_confirm_by}}</p>
+        </van-step>
+        <van-step>
+            <h3>提货结束</h3>
+            <p>{{plan_detail.close_timestamp}}</p>
+        </van-step>
+    </van-steps>
 </div>
 </template>
 
 <script>
-import StuffInfoSubmit from '../components/StuffInfoSubmit.vue'
+import Vue from 'vue';
+import PlanOperate from '../components/PlanOperate.vue'
+import {
+    Cell,
+    CellGroup
+} from 'vant';
+import {
+    Button
+} from 'vant';
+import {
+    Col,
+    Row
+} from 'vant';
+import {
+    Step,
+    Steps
+} from 'vant';
+
+Vue.use(Step);
+Vue.use(Steps);
+Vue.use(Col);
+Vue.use(Row);
+Vue.use(Button);
+Vue.use(Cell);
+Vue.use(CellGroup);
 export default {
     name: 'PlanDetail',
     components: {
-        "stuff-info-submit": StuffInfoSubmit,
+        "plan-operate":PlanOperate,
     },
     data: function () {
         return {
-            name: '',
-            company: '',
-            price: 0.0,
-            plan_count: 10.4,
-            plan_time: '',
-            vichele_info: [],
-            created_time: 10,
+            plan_detail: {
+                plan_id: 0,
+                name: '',
+                count: 0.0,
+                unit_price: 0.0,
+                total_price: 0.0,
+                plan_time: '',
+                created_time: '',
+                status: 0,
+                vichele_info: [],
+                comment: '',
+                plan_confirm_by: '',
+                plan_confirm_timestamp: '',
+                pay_info: '',
+                pay_timestamp: '',
+                pay_confirm_by: '',
+                pay_confirm_timestamp: '',
+                close_timestamp: '',
+            },
+            plan_owner_info: {
+                name: '',
+                company: '',
+            },
         };
+    },
+    methods: {
+        formatDateTime: function (date) {
+            var y = date.getFullYear();
+            var m = date.getMonth() + 1;
+            m = m < 10 ? ('0' + m) : m;
+            var d = date.getDate();
+            d = d < 10 ? ('0' + d) : d;
+            var h = date.getHours();
+            h = h < 10 ? ('0' + h) : h;
+            var minute = date.getMinutes();
+            minute = minute < 10 ? ('0' + minute) : minute;
+            var second = date.getSeconds();
+            second = second < 10 ? ('0' + second) : second;
+            return y + '-' + m + '-' + d + ' ' + h + ':' + minute + ':' + second;
+        },
+        
     },
     beforeMount: function () {
         var vue_this = this;
         vue_this.$get_client("stuff_plan_management").get_plan(parseInt(vue_this.$route.params.plan_id)).then(function (resp) {
-            vue_this.plan_count = resp.count;
-            vue_this.plan_time = resp.plan_time;
-            vue_this.created_time = resp.created_time * 1000;
+            vue_this.plan_detail.plan_id = resp.plan_id;
+            vue_this.plan_detail.name = resp.name;
+            vue_this.plan_detail.count = resp.count;
+            vue_this.plan_detail.unit_price = resp.price;
+            vue_this.plan_detail.total_price = vue_this.plan_detail.unit_price * vue_this.plan_detail.count;
+            vue_this.plan_detail.plan_time = resp.plan_time;
+            vue_this.plan_detail.created_time = vue_this.formatDateTime(new Date( resp.created_time * 1000));
+            vue_this.plan_detail.status = resp.status;
+            vue_this.plan_detail.comment = resp.comment;
+            vue_this.plan_detail.plan_confirm_by = resp.plan_confirm.name;
+            vue_this.plan_detail.plan_confirm_timestamp = resp.plan_confirm.timestamp;
+            vue_this.plan_detail.pay_info = resp.pay_info;
+            vue_this.plan_detail.pay_confirm_by = resp.pay_confirm.name;
+            vue_this.plan_detail.pay_confirm_timestamp = resp.pay_confirm.timestamp;
+            vue_this.plan_detail.pay_timestamp = resp.pay_timestamp;
+            vue_this.plan_detail.close_timestamp = resp.close_timestamp;
             resp.vichele_info.forEach((element, index) => {
-                vue_this.$set(vue_this.vichele_info, index, element);
+                vue_this.$set(vue_this.plan_detail.vichele_info, index, element);
             });
-            vue_this.$get_client("stuff_info").get_stuff_detail(resp.type_id).then(function (detail_resp) {
-                vue_this.name = detail_resp.name;
-                vue_this.company = detail_resp.company;
-                vue_this.price = detail_resp.price;
+            vue_this.$get_client("user_management").get_customer_info(resp.created_by).then(function (resp) {
+                vue_this.plan_owner_info.company = resp.split('(')[0];
+                vue_this.plan_owner_info.name = resp.split('(')[1].split(')')[0];
             }).catch(function (err) {
                 console.log(err);
                 vue_this.$toast(err.msg);

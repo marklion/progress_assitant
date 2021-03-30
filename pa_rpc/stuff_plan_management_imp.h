@@ -52,6 +52,7 @@ class stuff_plan_management_handler : virtual public stuff_plan_managementIf
             }
             tmp.set_parent(*opt_user, "created_by");
             tmp.set_parent(*stuff_type, "belong_stuff");
+            tmp.comment = plan.comment;
             tmp.insert_record();
 
             auto company = stuff_type->get_parent<pa_sql_company>("belong_company");
@@ -100,6 +101,20 @@ class stuff_plan_management_handler : virtual public stuff_plan_managementIf
             _return.plan_time = plan->plan_time;
             _return.price = plan->price;
             _return.status = plan->status;
+            auto pay_confirm_user = plan->get_parent<pa_sql_userinfo>("pay_confirm_by");
+            auto plan_confirm_user = plan->get_parent<pa_sql_userinfo>("plan_confirm_by");
+            if (pay_confirm_user)
+            {
+                _return.pay_confirm.name = pay_confirm_user->name;
+                _return.pay_confirm.timestamp = plan->pay_confirm_timestamp;
+            }
+            if (plan_confirm_user)
+            {
+                _return.plan_confirm.name = plan_confirm_user->name;
+                _return.plan_confirm.timestamp = plan->plan_confirm_timestamp;
+            }
+            _return.pay_info = plan->payinfo;
+            _return.pay_timestamp = plan->pay_timestamp;
             auto belong_type = plan->get_parent<pa_sql_stuff_info>("belong_stuff");
             if (belong_type)
             {
@@ -128,6 +143,10 @@ class stuff_plan_management_handler : virtual public stuff_plan_managementIf
         if (!plan_in_sql)
         {
             PA_RETURN_NOPLAN_MSG();
+        }
+        if (plan_in_sql && plan_in_sql->status != 0)
+        {
+            PA_RETURN_MSG("计划已确认无法修改");
         }
         if (opt_user && plan_in_sql)
         {
@@ -193,7 +212,7 @@ class stuff_plan_management_handler : virtual public stuff_plan_managementIf
             PA_RETURN_MSG("用户未注册为卖家");
         }
     }
-    virtual bool confirm_plan(const int64_t plan_id, const std::string &ssid, const bool confirm) 
+    virtual bool confirm_plan(const int64_t plan_id, const std::string &ssid) 
     {
         bool ret = false;
         auto opt_user = PA_DATAOPT_get_online_user(ssid);
@@ -207,9 +226,11 @@ class stuff_plan_management_handler : virtual public stuff_plan_managementIf
                 {
                     auto stuff_info = plan->get_parent<pa_sql_stuff_info>("belong_stuff");
                     auto belong_company = stuff_info->get_parent<pa_sql_company>("belong_company");
-                    if (belong_company && belong_company->get_pri_id() == company->get_pri_id())
+                    if (belong_company && belong_company->get_pri_id() == company->get_pri_id() && plan->status == 0)
                     {
-                        plan->status = confirm?1:2;
+                        plan->status = 1;
+                        plan->set_parent(*opt_user, "plan_confirm_by");
+                        plan->plan_confirm_timestamp = PA_DATAOPT_current_time();
                         ret = plan->update_record();
                         if (ret)
                         {
@@ -244,6 +265,52 @@ class stuff_plan_management_handler : virtual public stuff_plan_managementIf
         else
         {
             PA_RETURN_UNLOGIN_MSG();
+        }
+
+        return ret;
+    }
+    virtual bool has_priv_edit(const int64_t plan_id, const std::string &ssid)
+    {
+        bool ret = false;
+
+        auto plan = sqlite_orm::search_record<pa_sql_plan>(plan_id);
+        auto opt_user = PA_DATAOPT_get_online_user(ssid);
+        if (plan && opt_user)
+        {
+            auto stuff = plan->get_parent<pa_sql_stuff_info>("belong_stuff");
+            auto created_user = plan->get_parent<pa_sql_userinfo>("created_by");
+            if (stuff && created_user)
+            {
+                auto sales_company = stuff->get_parent<pa_sql_company>("belong_company");
+                if (sales_company )
+                {
+                    switch (plan->status)
+                    {
+                    case 0:
+                    case 2:
+                    {
+                        auto opt_company = opt_user->get_parent<pa_sql_company>("belong_company");
+                        if (opt_company && opt_company->get_pri_id() == sales_company->get_pri_id())
+                        {
+                            ret = true;
+                        }
+                        break;
+                    }
+                    case 1:
+                    case 3:
+                    {
+                        if (created_user->get_pri_id() == opt_user->get_pri_id())
+                        {
+                            ret = true;
+                        }
+                        break;
+                    }
+                    
+                    default:
+                        break;
+                    }
+                }
+            }
         }
 
         return ret;

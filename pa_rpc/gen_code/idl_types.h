@@ -29,6 +29,10 @@ class stuff_detail;
 
 class user_apply;
 
+class plan_confirm_info;
+
+class pay_confirm_info;
+
 class stuff_plan;
 
 typedef struct _gen_exp__isset {
@@ -285,8 +289,104 @@ void swap(user_apply &a, user_apply &b);
 
 std::ostream& operator<<(std::ostream& out, const user_apply& obj);
 
+typedef struct _plan_confirm_info__isset {
+  _plan_confirm_info__isset() : timestamp(false), name(false) {}
+  bool timestamp :1;
+  bool name :1;
+} _plan_confirm_info__isset;
+
+class plan_confirm_info : public virtual ::apache::thrift::TBase {
+ public:
+
+  plan_confirm_info(const plan_confirm_info&);
+  plan_confirm_info& operator=(const plan_confirm_info&);
+  plan_confirm_info() : timestamp(), name() {
+  }
+
+  virtual ~plan_confirm_info() noexcept;
+  std::string timestamp;
+  std::string name;
+
+  _plan_confirm_info__isset __isset;
+
+  void __set_timestamp(const std::string& val);
+
+  void __set_name(const std::string& val);
+
+  bool operator == (const plan_confirm_info & rhs) const
+  {
+    if (!(timestamp == rhs.timestamp))
+      return false;
+    if (!(name == rhs.name))
+      return false;
+    return true;
+  }
+  bool operator != (const plan_confirm_info &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const plan_confirm_info & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+  virtual void printTo(std::ostream& out) const;
+};
+
+void swap(plan_confirm_info &a, plan_confirm_info &b);
+
+std::ostream& operator<<(std::ostream& out, const plan_confirm_info& obj);
+
+typedef struct _pay_confirm_info__isset {
+  _pay_confirm_info__isset() : timestamp(false), name(false) {}
+  bool timestamp :1;
+  bool name :1;
+} _pay_confirm_info__isset;
+
+class pay_confirm_info : public virtual ::apache::thrift::TBase {
+ public:
+
+  pay_confirm_info(const pay_confirm_info&);
+  pay_confirm_info& operator=(const pay_confirm_info&);
+  pay_confirm_info() : timestamp(), name() {
+  }
+
+  virtual ~pay_confirm_info() noexcept;
+  std::string timestamp;
+  std::string name;
+
+  _pay_confirm_info__isset __isset;
+
+  void __set_timestamp(const std::string& val);
+
+  void __set_name(const std::string& val);
+
+  bool operator == (const pay_confirm_info & rhs) const
+  {
+    if (!(timestamp == rhs.timestamp))
+      return false;
+    if (!(name == rhs.name))
+      return false;
+    return true;
+  }
+  bool operator != (const pay_confirm_info &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const pay_confirm_info & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+  virtual void printTo(std::ostream& out) const;
+};
+
+void swap(pay_confirm_info &a, pay_confirm_info &b);
+
+std::ostream& operator<<(std::ostream& out, const pay_confirm_info& obj);
+
 typedef struct _stuff_plan__isset {
-  _stuff_plan__isset() : type_id(false), count(false), vichele_info(false), plan_id(false), created_by(false), plan_time(false), created_time(false), name(false), price(false), status(false) {}
+  _stuff_plan__isset() : type_id(false), count(false), vichele_info(false), plan_id(false), created_by(false), plan_time(false), created_time(false), name(false), price(false), status(false), comment(false), plan_confirm(false), pay_confirm(false), pay_info(false), pay_timestamp(false), close_timestamp(false) {}
   bool type_id :1;
   bool count :1;
   bool vichele_info :1;
@@ -297,6 +397,12 @@ typedef struct _stuff_plan__isset {
   bool name :1;
   bool price :1;
   bool status :1;
+  bool comment :1;
+  bool plan_confirm :1;
+  bool pay_confirm :1;
+  bool pay_info :1;
+  bool pay_timestamp :1;
+  bool close_timestamp :1;
 } _stuff_plan__isset;
 
 class stuff_plan : public virtual ::apache::thrift::TBase {
@@ -304,7 +410,7 @@ class stuff_plan : public virtual ::apache::thrift::TBase {
 
   stuff_plan(const stuff_plan&);
   stuff_plan& operator=(const stuff_plan&);
-  stuff_plan() : type_id(0), count(0), plan_id(0), created_by(0), plan_time(), created_time(0), name(), price(0), status(0) {
+  stuff_plan() : type_id(0), count(0), plan_id(0), created_by(0), plan_time(), created_time(0), name(), price(0), status(0), comment(), pay_info(), pay_timestamp(), close_timestamp() {
   }
 
   virtual ~stuff_plan() noexcept;
@@ -318,6 +424,12 @@ class stuff_plan : public virtual ::apache::thrift::TBase {
   std::string name;
   double price;
   int64_t status;
+  std::string comment;
+  plan_confirm_info plan_confirm;
+  pay_confirm_info pay_confirm;
+  std::string pay_info;
+  std::string pay_timestamp;
+  std::string close_timestamp;
 
   _stuff_plan__isset __isset;
 
@@ -341,6 +453,18 @@ class stuff_plan : public virtual ::apache::thrift::TBase {
 
   void __set_status(const int64_t val);
 
+  void __set_comment(const std::string& val);
+
+  void __set_plan_confirm(const plan_confirm_info& val);
+
+  void __set_pay_confirm(const pay_confirm_info& val);
+
+  void __set_pay_info(const std::string& val);
+
+  void __set_pay_timestamp(const std::string& val);
+
+  void __set_close_timestamp(const std::string& val);
+
   bool operator == (const stuff_plan & rhs) const
   {
     if (!(type_id == rhs.type_id))
@@ -362,6 +486,18 @@ class stuff_plan : public virtual ::apache::thrift::TBase {
     if (!(price == rhs.price))
       return false;
     if (!(status == rhs.status))
+      return false;
+    if (!(comment == rhs.comment))
+      return false;
+    if (!(plan_confirm == rhs.plan_confirm))
+      return false;
+    if (!(pay_confirm == rhs.pay_confirm))
+      return false;
+    if (!(pay_info == rhs.pay_info))
+      return false;
+    if (!(pay_timestamp == rhs.pay_timestamp))
+      return false;
+    if (!(close_timestamp == rhs.close_timestamp))
       return false;
     return true;
   }

@@ -136,9 +136,17 @@ public:
     int create_time = 0;
     std::string vicheles;
     int status = 0;
+    std::string comment;
+    std::string payinfo;
+    std::string pay_timestamp;
+    std::string plan_confirm_timestamp;
+    std::string pay_confirm_timestamp;
+    std::string close_timestamp;
     pa_sql_plan() {
         add_parent_type<pa_sql_userinfo>("created_by");
         add_parent_type<pa_sql_stuff_info>("belong_stuff");
+        add_parent_type<pa_sql_userinfo>("plan_confirm_by");
+        add_parent_type<pa_sql_userinfo>("pay_confirm_by");
     }
     virtual std::vector<sqlite_orm_column> self_columns_defined()
     {
@@ -150,6 +158,11 @@ public:
         ret.push_back(sqlite_orm_column("create_time", sqlite_orm_column::INTEGER, &create_time));
         ret.push_back(sqlite_orm_column("vicheles", sqlite_orm_column::STRING, &vicheles));
         ret.push_back(sqlite_orm_column("status", sqlite_orm_column::INTEGER, &status));
+        ret.push_back(sqlite_orm_column("payinfo", sqlite_orm_column::STRING, &payinfo));
+        ret.push_back(sqlite_orm_column("plan_confirm_timestamp", sqlite_orm_column::STRING, &plan_confirm_timestamp));
+        ret.push_back(sqlite_orm_column("pay_confirm_timestamp", sqlite_orm_column::STRING, &pay_confirm_timestamp));
+        ret.push_back(sqlite_orm_column("pay_timestamp", sqlite_orm_column::STRING, &pay_timestamp));
+        ret.push_back(sqlite_orm_column("close_timestamp", sqlite_orm_column::STRING, &close_timestamp));
 
         return ret;
     }

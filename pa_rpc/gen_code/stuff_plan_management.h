@@ -27,7 +27,8 @@ class stuff_plan_managementIf {
   virtual void get_company_plan(std::vector<int64_t> & _return, const std::string& ssid) = 0;
   virtual void get_plan(stuff_plan& _return, const int64_t plan_id) = 0;
   virtual bool update_plan(const stuff_plan& plan, const std::string& ssid) = 0;
-  virtual bool confirm_plan(const int64_t plan_id, const std::string& ssid, const bool confirm) = 0;
+  virtual bool confirm_plan(const int64_t plan_id, const std::string& ssid) = 0;
+  virtual bool has_priv_edit(const int64_t plan_id, const std::string& ssid) = 0;
 };
 
 class stuff_plan_managementIfFactory {
@@ -74,7 +75,11 @@ class stuff_plan_managementNull : virtual public stuff_plan_managementIf {
     bool _return = false;
     return _return;
   }
-  bool confirm_plan(const int64_t /* plan_id */, const std::string& /* ssid */, const bool /* confirm */) {
+  bool confirm_plan(const int64_t /* plan_id */, const std::string& /* ssid */) {
+    bool _return = false;
+    return _return;
+  }
+  bool has_priv_edit(const int64_t /* plan_id */, const std::string& /* ssid */) {
     bool _return = false;
     return _return;
   }
@@ -655,10 +660,9 @@ class stuff_plan_management_update_plan_presult {
 };
 
 typedef struct _stuff_plan_management_confirm_plan_args__isset {
-  _stuff_plan_management_confirm_plan_args__isset() : plan_id(false), ssid(false), confirm(false) {}
+  _stuff_plan_management_confirm_plan_args__isset() : plan_id(false), ssid(false) {}
   bool plan_id :1;
   bool ssid :1;
-  bool confirm :1;
 } _stuff_plan_management_confirm_plan_args__isset;
 
 class stuff_plan_management_confirm_plan_args {
@@ -666,13 +670,12 @@ class stuff_plan_management_confirm_plan_args {
 
   stuff_plan_management_confirm_plan_args(const stuff_plan_management_confirm_plan_args&);
   stuff_plan_management_confirm_plan_args& operator=(const stuff_plan_management_confirm_plan_args&);
-  stuff_plan_management_confirm_plan_args() : plan_id(0), ssid(), confirm(0) {
+  stuff_plan_management_confirm_plan_args() : plan_id(0), ssid() {
   }
 
   virtual ~stuff_plan_management_confirm_plan_args() noexcept;
   int64_t plan_id;
   std::string ssid;
-  bool confirm;
 
   _stuff_plan_management_confirm_plan_args__isset __isset;
 
@@ -680,15 +683,11 @@ class stuff_plan_management_confirm_plan_args {
 
   void __set_ssid(const std::string& val);
 
-  void __set_confirm(const bool val);
-
   bool operator == (const stuff_plan_management_confirm_plan_args & rhs) const
   {
     if (!(plan_id == rhs.plan_id))
       return false;
     if (!(ssid == rhs.ssid))
-      return false;
-    if (!(confirm == rhs.confirm))
       return false;
     return true;
   }
@@ -711,7 +710,6 @@ class stuff_plan_management_confirm_plan_pargs {
   virtual ~stuff_plan_management_confirm_plan_pargs() noexcept;
   const int64_t* plan_id;
   const std::string* ssid;
-  const bool* confirm;
 
   uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
 
@@ -780,6 +778,125 @@ class stuff_plan_management_confirm_plan_presult {
 
 };
 
+typedef struct _stuff_plan_management_has_priv_edit_args__isset {
+  _stuff_plan_management_has_priv_edit_args__isset() : plan_id(false), ssid(false) {}
+  bool plan_id :1;
+  bool ssid :1;
+} _stuff_plan_management_has_priv_edit_args__isset;
+
+class stuff_plan_management_has_priv_edit_args {
+ public:
+
+  stuff_plan_management_has_priv_edit_args(const stuff_plan_management_has_priv_edit_args&);
+  stuff_plan_management_has_priv_edit_args& operator=(const stuff_plan_management_has_priv_edit_args&);
+  stuff_plan_management_has_priv_edit_args() : plan_id(0), ssid() {
+  }
+
+  virtual ~stuff_plan_management_has_priv_edit_args() noexcept;
+  int64_t plan_id;
+  std::string ssid;
+
+  _stuff_plan_management_has_priv_edit_args__isset __isset;
+
+  void __set_plan_id(const int64_t val);
+
+  void __set_ssid(const std::string& val);
+
+  bool operator == (const stuff_plan_management_has_priv_edit_args & rhs) const
+  {
+    if (!(plan_id == rhs.plan_id))
+      return false;
+    if (!(ssid == rhs.ssid))
+      return false;
+    return true;
+  }
+  bool operator != (const stuff_plan_management_has_priv_edit_args &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const stuff_plan_management_has_priv_edit_args & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+
+class stuff_plan_management_has_priv_edit_pargs {
+ public:
+
+
+  virtual ~stuff_plan_management_has_priv_edit_pargs() noexcept;
+  const int64_t* plan_id;
+  const std::string* ssid;
+
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _stuff_plan_management_has_priv_edit_result__isset {
+  _stuff_plan_management_has_priv_edit_result__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _stuff_plan_management_has_priv_edit_result__isset;
+
+class stuff_plan_management_has_priv_edit_result {
+ public:
+
+  stuff_plan_management_has_priv_edit_result(const stuff_plan_management_has_priv_edit_result&);
+  stuff_plan_management_has_priv_edit_result& operator=(const stuff_plan_management_has_priv_edit_result&);
+  stuff_plan_management_has_priv_edit_result() : success(0) {
+  }
+
+  virtual ~stuff_plan_management_has_priv_edit_result() noexcept;
+  bool success;
+  gen_exp e;
+
+  _stuff_plan_management_has_priv_edit_result__isset __isset;
+
+  void __set_success(const bool val);
+
+  void __set_e(const gen_exp& val);
+
+  bool operator == (const stuff_plan_management_has_priv_edit_result & rhs) const
+  {
+    if (!(success == rhs.success))
+      return false;
+    if (!(e == rhs.e))
+      return false;
+    return true;
+  }
+  bool operator != (const stuff_plan_management_has_priv_edit_result &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const stuff_plan_management_has_priv_edit_result & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _stuff_plan_management_has_priv_edit_presult__isset {
+  _stuff_plan_management_has_priv_edit_presult__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _stuff_plan_management_has_priv_edit_presult__isset;
+
+class stuff_plan_management_has_priv_edit_presult {
+ public:
+
+
+  virtual ~stuff_plan_management_has_priv_edit_presult() noexcept;
+  bool* success;
+  gen_exp e;
+
+  _stuff_plan_management_has_priv_edit_presult__isset __isset;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+
+};
+
 class stuff_plan_managementClient : virtual public stuff_plan_managementIf {
  public:
   stuff_plan_managementClient(std::shared_ptr< ::apache::thrift::protocol::TProtocol> prot) {
@@ -820,9 +937,12 @@ class stuff_plan_managementClient : virtual public stuff_plan_managementIf {
   bool update_plan(const stuff_plan& plan, const std::string& ssid);
   void send_update_plan(const stuff_plan& plan, const std::string& ssid);
   bool recv_update_plan();
-  bool confirm_plan(const int64_t plan_id, const std::string& ssid, const bool confirm);
-  void send_confirm_plan(const int64_t plan_id, const std::string& ssid, const bool confirm);
+  bool confirm_plan(const int64_t plan_id, const std::string& ssid);
+  void send_confirm_plan(const int64_t plan_id, const std::string& ssid);
   bool recv_confirm_plan();
+  bool has_priv_edit(const int64_t plan_id, const std::string& ssid);
+  void send_has_priv_edit(const int64_t plan_id, const std::string& ssid);
+  bool recv_has_priv_edit();
  protected:
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> piprot_;
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> poprot_;
@@ -844,6 +964,7 @@ class stuff_plan_managementProcessor : public ::apache::thrift::TDispatchProcess
   void process_get_plan(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
   void process_update_plan(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
   void process_confirm_plan(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
+  void process_has_priv_edit(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
  public:
   stuff_plan_managementProcessor(::std::shared_ptr<stuff_plan_managementIf> iface) :
     iface_(iface) {
@@ -853,6 +974,7 @@ class stuff_plan_managementProcessor : public ::apache::thrift::TDispatchProcess
     processMap_["get_plan"] = &stuff_plan_managementProcessor::process_get_plan;
     processMap_["update_plan"] = &stuff_plan_managementProcessor::process_update_plan;
     processMap_["confirm_plan"] = &stuff_plan_managementProcessor::process_confirm_plan;
+    processMap_["has_priv_edit"] = &stuff_plan_managementProcessor::process_has_priv_edit;
   }
 
   virtual ~stuff_plan_managementProcessor() {}
@@ -929,13 +1051,22 @@ class stuff_plan_managementMultiface : virtual public stuff_plan_managementIf {
     return ifaces_[i]->update_plan(plan, ssid);
   }
 
-  bool confirm_plan(const int64_t plan_id, const std::string& ssid, const bool confirm) {
+  bool confirm_plan(const int64_t plan_id, const std::string& ssid) {
     size_t sz = ifaces_.size();
     size_t i = 0;
     for (; i < (sz - 1); ++i) {
-      ifaces_[i]->confirm_plan(plan_id, ssid, confirm);
+      ifaces_[i]->confirm_plan(plan_id, ssid);
     }
-    return ifaces_[i]->confirm_plan(plan_id, ssid, confirm);
+    return ifaces_[i]->confirm_plan(plan_id, ssid);
+  }
+
+  bool has_priv_edit(const int64_t plan_id, const std::string& ssid) {
+    size_t sz = ifaces_.size();
+    size_t i = 0;
+    for (; i < (sz - 1); ++i) {
+      ifaces_[i]->has_priv_edit(plan_id, ssid);
+    }
+    return ifaces_[i]->has_priv_edit(plan_id, ssid);
   }
 
 };
@@ -985,9 +1116,12 @@ class stuff_plan_managementConcurrentClient : virtual public stuff_plan_manageme
   bool update_plan(const stuff_plan& plan, const std::string& ssid);
   int32_t send_update_plan(const stuff_plan& plan, const std::string& ssid);
   bool recv_update_plan(const int32_t seqid);
-  bool confirm_plan(const int64_t plan_id, const std::string& ssid, const bool confirm);
-  int32_t send_confirm_plan(const int64_t plan_id, const std::string& ssid, const bool confirm);
+  bool confirm_plan(const int64_t plan_id, const std::string& ssid);
+  int32_t send_confirm_plan(const int64_t plan_id, const std::string& ssid);
   bool recv_confirm_plan(const int32_t seqid);
+  bool has_priv_edit(const int64_t plan_id, const std::string& ssid);
+  int32_t send_has_priv_edit(const int64_t plan_id, const std::string& ssid);
+  bool recv_has_priv_edit(const int32_t seqid);
  protected:
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> piprot_;
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> poprot_;
