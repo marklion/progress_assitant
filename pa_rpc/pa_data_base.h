@@ -147,6 +147,7 @@ public:
         add_parent_type<pa_sql_stuff_info>("belong_stuff");
         add_parent_type<pa_sql_userinfo>("plan_confirm_by");
         add_parent_type<pa_sql_userinfo>("pay_confirm_by");
+        add_parent_type<pa_sql_userinfo>("close_by");
     }
     virtual std::vector<sqlite_orm_column> self_columns_defined()
     {
@@ -163,6 +164,7 @@ public:
         ret.push_back(sqlite_orm_column("pay_confirm_timestamp", sqlite_orm_column::STRING, &pay_confirm_timestamp));
         ret.push_back(sqlite_orm_column("pay_timestamp", sqlite_orm_column::STRING, &pay_timestamp));
         ret.push_back(sqlite_orm_column("close_timestamp", sqlite_orm_column::STRING, &close_timestamp));
+        ret.push_back(sqlite_orm_column("comment", sqlite_orm_column::STRING, &comment));
 
         return ret;
     }
@@ -171,6 +173,7 @@ public:
     {
         return "plan_table";
     }
+    void send_wechat_msg();
 };
 
 class pa_sql_user_apply:public sql_tree_base {

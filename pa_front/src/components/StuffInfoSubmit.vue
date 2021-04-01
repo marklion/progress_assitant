@@ -8,6 +8,8 @@
         </van-field>
         <van-field center readonly clickable name="datetimePicker" :value="plan_time" label="到厂时间" placeholder="点击选择时间" @click="show_time_picker = true">
         </van-field>
+        <van-field center name="comment" v-model="comment" label="备注" placeholder="请输入备注" >
+        </van-field>
         <van-popup v-model="show_time_picker" position="bottom">
             <van-datetime-picker type="datetime" title="请选择时间" :min-date="min_time" @cancel="show_time_picker = false" @confirm="confirm_time" />
         </van-popup>
@@ -112,6 +114,7 @@ export default {
         type_id: Number,
         orig_name: String,
         orig_price: Number,
+        orig_comment:String,
     },
     data: function () {
         return {
@@ -123,6 +126,7 @@ export default {
             show_vichele_picker: false,
             show_add_vichele_diag: false,
             new_vichele: '',
+            comment:'',
         };
     },
     computed: {
@@ -137,7 +141,7 @@ export default {
             var ret = false;
             if (this.is_create) {
                 ret = true;
-            } else if (this.plan_time != this.orig_plan_time || this.plan_count != this.orig_plan_count || this.vichele_info.toString() != this.orig_vichele_info.toString()) {
+            } else if (this.plan_time != this.orig_plan_time || this.plan_count != this.orig_plan_count || this.vichele_info.toString() != this.orig_vichele_info.toString() || this.orig_comment != this.comment) {
                 ret = true;
             }
             return ret;
@@ -163,6 +167,7 @@ export default {
             this.plan_count = this.orig_plan_count;
             this.vichele_info = this.orig_vichele_info;
             this.vichele_info = this.orig_vichele_info.slice(0);
+            this.comment == this.orig_comment;
         }
         this.fetch_current_vichele();
     },
@@ -226,6 +231,7 @@ export default {
                     vichele_info: this.vichele_info,
                     name: this.orig_name,
                     price: this.orig_price,
+                    comment: this.comment,
                 }, this.$cookies.get("pa_ssid")).then(function (resp) {
                     if (resp > 0) {
                         vue_this.$router.push({
@@ -242,6 +248,7 @@ export default {
                     count: this.plan_count,
                     plan_time: this.plan_time,
                     vichele_info: this.vichele_info,
+                    comment:this.comment,
                 }, this.$cookies.get('pa_ssid')).then(function (resp) {
                     if (resp) {
                         vue_this.$router.back(-1);

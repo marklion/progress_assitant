@@ -4,6 +4,7 @@ unpackage/
 dist/
 build/
 install.sh
+logo_res/
 
 # local env files
 .env.local
@@ -24,3 +25,5 @@ yarn-error.log*
 *.sln
 *.sw*
 *.db
+*.db.back
+

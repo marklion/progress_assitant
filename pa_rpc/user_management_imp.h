@@ -10,6 +10,7 @@
 #include "Base64.h"
 #include <fstream>
 #include "pa_utils.h"
+#include "wechat_msg.h"
 
 class user_management_handler : virtual public user_managementIf
 {
@@ -244,6 +245,11 @@ public:
         }
 
         return ret;
+    }
+
+    virtual void get_wx_api_signature(std::string &_return, const int64_t timestamp, const std::string &nonceStr, const std::string &url)
+    {
+        _return = PA_WECHAT_wx_sign(nonceStr, timestamp, url);
     }
 };
 

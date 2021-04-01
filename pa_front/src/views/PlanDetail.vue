@@ -1,14 +1,6 @@
 <template>
 <div class="plan_confirm_show">
-    <van-cell-group>
-        <template #title>
-            <van-row type="flex" justify="space-between" align="center">
-                <van-col>计划内容</van-col>
-                <van-col v-if="$store.state.userinfo.buyer && plan_detail.status == 0">
-                    <van-button size="small" type="warning" :to="{name:'PlanUpdate', params:{plan_id:plan_detail.plan_id}}">修改计划</van-button>
-                </van-col>
-            </van-row>
-        </template>
+    <van-cell-group title="计划内容">
         <van-cell :title="plan_detail.name" :value="plan_detail.count + '吨'" />
         <van-cell title="单价" :value="plan_detail.unit_price" />
         <van-cell title="总价" :value="plan_detail.total_price" />
@@ -22,12 +14,13 @@
         <van-cell v-for="(single_vichele, index) in plan_detail.vichele_info" :key="index" :title="single_vichele"></van-cell>
     </van-cell-group>
 
-    <plan-operate :plan_id="plan_detail.plan_id" :status="plan_detail.status" ></plan-operate>
+    <plan-operate :plan_id="plan_detail.plan_id" :status="plan_detail.status"></plan-operate>
 
     <van-steps direction="vertical" :active="plan_detail.status">
         <van-step>
             <h3>创建计划</h3>
             <p>{{plan_detail.created_time}}</p>
+            <p>备注：{{plan_detail.comment}}</p>
         </van-step>
         <van-step>
             <h3>计划确认</h3>
@@ -37,6 +30,10 @@
         <van-step>
             <h3>付款</h3>
             <p>{{plan_detail.pay_timestamp}}</p>
+            <div v-if="plan_detail.pay_timestamp">
+                <p>付款信息：</p>
+                <van-image width="100" height="100" :src="$remote_url +  plan_detail.pay_info" @click="preview_pay" />
+            </div>
         </van-step>
         <van-step>
             <h3>收款确认</h3>
@@ -46,6 +43,7 @@
         <van-step>
             <h3>提货结束</h3>
             <p>{{plan_detail.close_timestamp}}</p>
+            <p>{{plan_detail.close_by}}</p>
         </van-step>
     </van-steps>
 </div>
@@ -69,7 +67,11 @@ import {
     Step,
     Steps
 } from 'vant';
-
+import {
+    Image as VanImage
+} from 'vant';
+import { ImagePreview } from 'vant';
+Vue.use(VanImage);
 Vue.use(Step);
 Vue.use(Steps);
 Vue.use(Col);
@@ -80,7 +82,7 @@ Vue.use(CellGroup);
 export default {
     name: 'PlanDetail',
     components: {
-        "plan-operate":PlanOperate,
+        "plan-operate": PlanOperate,
     },
     data: function () {
         return {
@@ -102,6 +104,7 @@ export default {
                 pay_confirm_by: '',
                 pay_confirm_timestamp: '',
                 close_timestamp: '',
+                close_by:'',
             },
             plan_owner_info: {
                 name: '',
@@ -124,7 +127,9 @@ export default {
             second = second < 10 ? ('0' + second) : second;
             return y + '-' + m + '-' + d + ' ' + h + ':' + minute + ':' + second;
         },
-        
+        preview_pay:function () {
+            ImagePreview([this.$remote_url +  this.plan_detail.pay_info]);
+        },
     },
     beforeMount: function () {
         var vue_this = this;
@@ -135,7 +140,7 @@ export default {
             vue_this.plan_detail.unit_price = resp.price;
             vue_this.plan_detail.total_price = vue_this.plan_detail.unit_price * vue_this.plan_detail.count;
             vue_this.plan_detail.plan_time = resp.plan_time;
-            vue_this.plan_detail.created_time = vue_this.formatDateTime(new Date( resp.created_time * 1000));
+            vue_this.plan_detail.created_time = vue_this.formatDateTime(new Date(resp.created_time * 1000));
             vue_this.plan_detail.status = resp.status;
             vue_this.plan_detail.comment = resp.comment;
             vue_this.plan_detail.plan_confirm_by = resp.plan_confirm.name;
@@ -145,6 +150,7 @@ export default {
             vue_this.plan_detail.pay_confirm_timestamp = resp.pay_confirm.timestamp;
             vue_this.plan_detail.pay_timestamp = resp.pay_timestamp;
             vue_this.plan_detail.close_timestamp = resp.close_timestamp;
+            vue_this.plan_detail.close_by = resp.close_by;
             resp.vichele_info.forEach((element, index) => {
                 vue_this.$set(vue_this.plan_detail.vichele_info, index, element);
             });

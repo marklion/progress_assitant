@@ -22,6 +22,7 @@ service user_management{
     bool update_logo(1:string content, 2:string ssid) throws (1:gen_exp e),
     string get_customer_info(1:i64 user_id) throws (1:gen_exp e),
     bool is_admin(1:string ssid) throws (1:gen_exp e),
+    string get_wx_api_signature(1:i64 timestamp, 2:string nonceStr, 3:string url),
 }
 
 struct stuff_detail {
@@ -83,6 +84,7 @@ struct stuff_plan {
     14:string pay_info,
     15:string pay_timestamp,
     16:string close_timestamp,
+    17:string close_by,
 }
 
 service stuff_plan_management {
@@ -93,4 +95,7 @@ service stuff_plan_management {
     bool update_plan(1:stuff_plan plan, 2:string ssid) throws (1:gen_exp e),
     bool confirm_plan(1:i64 plan_id, 2:string ssid) throws (1:gen_exp e),
     bool has_priv_edit(1:i64 plan_id, 2:string ssid) throws (1:gen_exp e),
+    bool upload_payinfo(1:i64 plan_id, 2:string ssid, 3:string content) throws (1:gen_exp e),
+    bool confirm_pay(1:i64 plan_id, 2:string ssid) throws (1:gen_exp e),
+    bool confirm_close(1:i64 plan_id, 2:string ssid) throws (1:gen_exp e),
 }

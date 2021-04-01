@@ -29,6 +29,9 @@ class stuff_plan_managementIf {
   virtual bool update_plan(const stuff_plan& plan, const std::string& ssid) = 0;
   virtual bool confirm_plan(const int64_t plan_id, const std::string& ssid) = 0;
   virtual bool has_priv_edit(const int64_t plan_id, const std::string& ssid) = 0;
+  virtual bool upload_payinfo(const int64_t plan_id, const std::string& ssid, const std::string& content) = 0;
+  virtual bool confirm_pay(const int64_t plan_id, const std::string& ssid) = 0;
+  virtual bool confirm_close(const int64_t plan_id, const std::string& ssid) = 0;
 };
 
 class stuff_plan_managementIfFactory {
@@ -80,6 +83,18 @@ class stuff_plan_managementNull : virtual public stuff_plan_managementIf {
     return _return;
   }
   bool has_priv_edit(const int64_t /* plan_id */, const std::string& /* ssid */) {
+    bool _return = false;
+    return _return;
+  }
+  bool upload_payinfo(const int64_t /* plan_id */, const std::string& /* ssid */, const std::string& /* content */) {
+    bool _return = false;
+    return _return;
+  }
+  bool confirm_pay(const int64_t /* plan_id */, const std::string& /* ssid */) {
+    bool _return = false;
+    return _return;
+  }
+  bool confirm_close(const int64_t /* plan_id */, const std::string& /* ssid */) {
     bool _return = false;
     return _return;
   }
@@ -897,6 +912,370 @@ class stuff_plan_management_has_priv_edit_presult {
 
 };
 
+typedef struct _stuff_plan_management_upload_payinfo_args__isset {
+  _stuff_plan_management_upload_payinfo_args__isset() : plan_id(false), ssid(false), content(false) {}
+  bool plan_id :1;
+  bool ssid :1;
+  bool content :1;
+} _stuff_plan_management_upload_payinfo_args__isset;
+
+class stuff_plan_management_upload_payinfo_args {
+ public:
+
+  stuff_plan_management_upload_payinfo_args(const stuff_plan_management_upload_payinfo_args&);
+  stuff_plan_management_upload_payinfo_args& operator=(const stuff_plan_management_upload_payinfo_args&);
+  stuff_plan_management_upload_payinfo_args() : plan_id(0), ssid(), content() {
+  }
+
+  virtual ~stuff_plan_management_upload_payinfo_args() noexcept;
+  int64_t plan_id;
+  std::string ssid;
+  std::string content;
+
+  _stuff_plan_management_upload_payinfo_args__isset __isset;
+
+  void __set_plan_id(const int64_t val);
+
+  void __set_ssid(const std::string& val);
+
+  void __set_content(const std::string& val);
+
+  bool operator == (const stuff_plan_management_upload_payinfo_args & rhs) const
+  {
+    if (!(plan_id == rhs.plan_id))
+      return false;
+    if (!(ssid == rhs.ssid))
+      return false;
+    if (!(content == rhs.content))
+      return false;
+    return true;
+  }
+  bool operator != (const stuff_plan_management_upload_payinfo_args &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const stuff_plan_management_upload_payinfo_args & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+
+class stuff_plan_management_upload_payinfo_pargs {
+ public:
+
+
+  virtual ~stuff_plan_management_upload_payinfo_pargs() noexcept;
+  const int64_t* plan_id;
+  const std::string* ssid;
+  const std::string* content;
+
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _stuff_plan_management_upload_payinfo_result__isset {
+  _stuff_plan_management_upload_payinfo_result__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _stuff_plan_management_upload_payinfo_result__isset;
+
+class stuff_plan_management_upload_payinfo_result {
+ public:
+
+  stuff_plan_management_upload_payinfo_result(const stuff_plan_management_upload_payinfo_result&);
+  stuff_plan_management_upload_payinfo_result& operator=(const stuff_plan_management_upload_payinfo_result&);
+  stuff_plan_management_upload_payinfo_result() : success(0) {
+  }
+
+  virtual ~stuff_plan_management_upload_payinfo_result() noexcept;
+  bool success;
+  gen_exp e;
+
+  _stuff_plan_management_upload_payinfo_result__isset __isset;
+
+  void __set_success(const bool val);
+
+  void __set_e(const gen_exp& val);
+
+  bool operator == (const stuff_plan_management_upload_payinfo_result & rhs) const
+  {
+    if (!(success == rhs.success))
+      return false;
+    if (!(e == rhs.e))
+      return false;
+    return true;
+  }
+  bool operator != (const stuff_plan_management_upload_payinfo_result &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const stuff_plan_management_upload_payinfo_result & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _stuff_plan_management_upload_payinfo_presult__isset {
+  _stuff_plan_management_upload_payinfo_presult__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _stuff_plan_management_upload_payinfo_presult__isset;
+
+class stuff_plan_management_upload_payinfo_presult {
+ public:
+
+
+  virtual ~stuff_plan_management_upload_payinfo_presult() noexcept;
+  bool* success;
+  gen_exp e;
+
+  _stuff_plan_management_upload_payinfo_presult__isset __isset;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+
+};
+
+typedef struct _stuff_plan_management_confirm_pay_args__isset {
+  _stuff_plan_management_confirm_pay_args__isset() : plan_id(false), ssid(false) {}
+  bool plan_id :1;
+  bool ssid :1;
+} _stuff_plan_management_confirm_pay_args__isset;
+
+class stuff_plan_management_confirm_pay_args {
+ public:
+
+  stuff_plan_management_confirm_pay_args(const stuff_plan_management_confirm_pay_args&);
+  stuff_plan_management_confirm_pay_args& operator=(const stuff_plan_management_confirm_pay_args&);
+  stuff_plan_management_confirm_pay_args() : plan_id(0), ssid() {
+  }
+
+  virtual ~stuff_plan_management_confirm_pay_args() noexcept;
+  int64_t plan_id;
+  std::string ssid;
+
+  _stuff_plan_management_confirm_pay_args__isset __isset;
+
+  void __set_plan_id(const int64_t val);
+
+  void __set_ssid(const std::string& val);
+
+  bool operator == (const stuff_plan_management_confirm_pay_args & rhs) const
+  {
+    if (!(plan_id == rhs.plan_id))
+      return false;
+    if (!(ssid == rhs.ssid))
+      return false;
+    return true;
+  }
+  bool operator != (const stuff_plan_management_confirm_pay_args &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const stuff_plan_management_confirm_pay_args & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+
+class stuff_plan_management_confirm_pay_pargs {
+ public:
+
+
+  virtual ~stuff_plan_management_confirm_pay_pargs() noexcept;
+  const int64_t* plan_id;
+  const std::string* ssid;
+
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _stuff_plan_management_confirm_pay_result__isset {
+  _stuff_plan_management_confirm_pay_result__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _stuff_plan_management_confirm_pay_result__isset;
+
+class stuff_plan_management_confirm_pay_result {
+ public:
+
+  stuff_plan_management_confirm_pay_result(const stuff_plan_management_confirm_pay_result&);
+  stuff_plan_management_confirm_pay_result& operator=(const stuff_plan_management_confirm_pay_result&);
+  stuff_plan_management_confirm_pay_result() : success(0) {
+  }
+
+  virtual ~stuff_plan_management_confirm_pay_result() noexcept;
+  bool success;
+  gen_exp e;
+
+  _stuff_plan_management_confirm_pay_result__isset __isset;
+
+  void __set_success(const bool val);
+
+  void __set_e(const gen_exp& val);
+
+  bool operator == (const stuff_plan_management_confirm_pay_result & rhs) const
+  {
+    if (!(success == rhs.success))
+      return false;
+    if (!(e == rhs.e))
+      return false;
+    return true;
+  }
+  bool operator != (const stuff_plan_management_confirm_pay_result &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const stuff_plan_management_confirm_pay_result & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _stuff_plan_management_confirm_pay_presult__isset {
+  _stuff_plan_management_confirm_pay_presult__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _stuff_plan_management_confirm_pay_presult__isset;
+
+class stuff_plan_management_confirm_pay_presult {
+ public:
+
+
+  virtual ~stuff_plan_management_confirm_pay_presult() noexcept;
+  bool* success;
+  gen_exp e;
+
+  _stuff_plan_management_confirm_pay_presult__isset __isset;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+
+};
+
+typedef struct _stuff_plan_management_confirm_close_args__isset {
+  _stuff_plan_management_confirm_close_args__isset() : plan_id(false), ssid(false) {}
+  bool plan_id :1;
+  bool ssid :1;
+} _stuff_plan_management_confirm_close_args__isset;
+
+class stuff_plan_management_confirm_close_args {
+ public:
+
+  stuff_plan_management_confirm_close_args(const stuff_plan_management_confirm_close_args&);
+  stuff_plan_management_confirm_close_args& operator=(const stuff_plan_management_confirm_close_args&);
+  stuff_plan_management_confirm_close_args() : plan_id(0), ssid() {
+  }
+
+  virtual ~stuff_plan_management_confirm_close_args() noexcept;
+  int64_t plan_id;
+  std::string ssid;
+
+  _stuff_plan_management_confirm_close_args__isset __isset;
+
+  void __set_plan_id(const int64_t val);
+
+  void __set_ssid(const std::string& val);
+
+  bool operator == (const stuff_plan_management_confirm_close_args & rhs) const
+  {
+    if (!(plan_id == rhs.plan_id))
+      return false;
+    if (!(ssid == rhs.ssid))
+      return false;
+    return true;
+  }
+  bool operator != (const stuff_plan_management_confirm_close_args &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const stuff_plan_management_confirm_close_args & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+
+class stuff_plan_management_confirm_close_pargs {
+ public:
+
+
+  virtual ~stuff_plan_management_confirm_close_pargs() noexcept;
+  const int64_t* plan_id;
+  const std::string* ssid;
+
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _stuff_plan_management_confirm_close_result__isset {
+  _stuff_plan_management_confirm_close_result__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _stuff_plan_management_confirm_close_result__isset;
+
+class stuff_plan_management_confirm_close_result {
+ public:
+
+  stuff_plan_management_confirm_close_result(const stuff_plan_management_confirm_close_result&);
+  stuff_plan_management_confirm_close_result& operator=(const stuff_plan_management_confirm_close_result&);
+  stuff_plan_management_confirm_close_result() : success(0) {
+  }
+
+  virtual ~stuff_plan_management_confirm_close_result() noexcept;
+  bool success;
+  gen_exp e;
+
+  _stuff_plan_management_confirm_close_result__isset __isset;
+
+  void __set_success(const bool val);
+
+  void __set_e(const gen_exp& val);
+
+  bool operator == (const stuff_plan_management_confirm_close_result & rhs) const
+  {
+    if (!(success == rhs.success))
+      return false;
+    if (!(e == rhs.e))
+      return false;
+    return true;
+  }
+  bool operator != (const stuff_plan_management_confirm_close_result &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const stuff_plan_management_confirm_close_result & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _stuff_plan_management_confirm_close_presult__isset {
+  _stuff_plan_management_confirm_close_presult__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _stuff_plan_management_confirm_close_presult__isset;
+
+class stuff_plan_management_confirm_close_presult {
+ public:
+
+
+  virtual ~stuff_plan_management_confirm_close_presult() noexcept;
+  bool* success;
+  gen_exp e;
+
+  _stuff_plan_management_confirm_close_presult__isset __isset;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+
+};
+
 class stuff_plan_managementClient : virtual public stuff_plan_managementIf {
  public:
   stuff_plan_managementClient(std::shared_ptr< ::apache::thrift::protocol::TProtocol> prot) {
@@ -943,6 +1322,15 @@ class stuff_plan_managementClient : virtual public stuff_plan_managementIf {
   bool has_priv_edit(const int64_t plan_id, const std::string& ssid);
   void send_has_priv_edit(const int64_t plan_id, const std::string& ssid);
   bool recv_has_priv_edit();
+  bool upload_payinfo(const int64_t plan_id, const std::string& ssid, const std::string& content);
+  void send_upload_payinfo(const int64_t plan_id, const std::string& ssid, const std::string& content);
+  bool recv_upload_payinfo();
+  bool confirm_pay(const int64_t plan_id, const std::string& ssid);
+  void send_confirm_pay(const int64_t plan_id, const std::string& ssid);
+  bool recv_confirm_pay();
+  bool confirm_close(const int64_t plan_id, const std::string& ssid);
+  void send_confirm_close(const int64_t plan_id, const std::string& ssid);
+  bool recv_confirm_close();
  protected:
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> piprot_;
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> poprot_;
@@ -965,6 +1353,9 @@ class stuff_plan_managementProcessor : public ::apache::thrift::TDispatchProcess
   void process_update_plan(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
   void process_confirm_plan(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
   void process_has_priv_edit(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
+  void process_upload_payinfo(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
+  void process_confirm_pay(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
+  void process_confirm_close(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
  public:
   stuff_plan_managementProcessor(::std::shared_ptr<stuff_plan_managementIf> iface) :
     iface_(iface) {
@@ -975,6 +1366,9 @@ class stuff_plan_managementProcessor : public ::apache::thrift::TDispatchProcess
     processMap_["update_plan"] = &stuff_plan_managementProcessor::process_update_plan;
     processMap_["confirm_plan"] = &stuff_plan_managementProcessor::process_confirm_plan;
     processMap_["has_priv_edit"] = &stuff_plan_managementProcessor::process_has_priv_edit;
+    processMap_["upload_payinfo"] = &stuff_plan_managementProcessor::process_upload_payinfo;
+    processMap_["confirm_pay"] = &stuff_plan_managementProcessor::process_confirm_pay;
+    processMap_["confirm_close"] = &stuff_plan_managementProcessor::process_confirm_close;
   }
 
   virtual ~stuff_plan_managementProcessor() {}
@@ -1069,6 +1463,33 @@ class stuff_plan_managementMultiface : virtual public stuff_plan_managementIf {
     return ifaces_[i]->has_priv_edit(plan_id, ssid);
   }
 
+  bool upload_payinfo(const int64_t plan_id, const std::string& ssid, const std::string& content) {
+    size_t sz = ifaces_.size();
+    size_t i = 0;
+    for (; i < (sz - 1); ++i) {
+      ifaces_[i]->upload_payinfo(plan_id, ssid, content);
+    }
+    return ifaces_[i]->upload_payinfo(plan_id, ssid, content);
+  }
+
+  bool confirm_pay(const int64_t plan_id, const std::string& ssid) {
+    size_t sz = ifaces_.size();
+    size_t i = 0;
+    for (; i < (sz - 1); ++i) {
+      ifaces_[i]->confirm_pay(plan_id, ssid);
+    }
+    return ifaces_[i]->confirm_pay(plan_id, ssid);
+  }
+
+  bool confirm_close(const int64_t plan_id, const std::string& ssid) {
+    size_t sz = ifaces_.size();
+    size_t i = 0;
+    for (; i < (sz - 1); ++i) {
+      ifaces_[i]->confirm_close(plan_id, ssid);
+    }
+    return ifaces_[i]->confirm_close(plan_id, ssid);
+  }
+
 };
 
 // The 'concurrent' client is a thread safe client that correctly handles
@@ -1122,6 +1543,15 @@ class stuff_plan_managementConcurrentClient : virtual public stuff_plan_manageme
   bool has_priv_edit(const int64_t plan_id, const std::string& ssid);
   int32_t send_has_priv_edit(const int64_t plan_id, const std::string& ssid);
   bool recv_has_priv_edit(const int32_t seqid);
+  bool upload_payinfo(const int64_t plan_id, const std::string& ssid, const std::string& content);
+  int32_t send_upload_payinfo(const int64_t plan_id, const std::string& ssid, const std::string& content);
+  bool recv_upload_payinfo(const int32_t seqid);
+  bool confirm_pay(const int64_t plan_id, const std::string& ssid);
+  int32_t send_confirm_pay(const int64_t plan_id, const std::string& ssid);
+  bool recv_confirm_pay(const int32_t seqid);
+  bool confirm_close(const int64_t plan_id, const std::string& ssid);
+  int32_t send_confirm_close(const int64_t plan_id, const std::string& ssid);
+  bool recv_confirm_close(const int32_t seqid);
  protected:
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> piprot_;
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> poprot_;

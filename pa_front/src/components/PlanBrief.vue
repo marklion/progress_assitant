@@ -50,10 +50,16 @@ export default {
             var ret = "未确认";
             switch (this.status) {
                 case 1:
-                    ret = "已确认"
+                    ret = "待付款"
                     break;
                 case 2:
-                    ret = "驳回";
+                    ret = "已付款待确认";
+                    break;
+                case 3:
+                    ret = "已收款待提货";
+                    break;
+                case 4:
+                    ret = "已提货";
                     break;
                 default:
                     break;

@@ -32,6 +32,7 @@ class user_managementIf {
   virtual bool update_logo(const std::string& content, const std::string& ssid) = 0;
   virtual void get_customer_info(std::string& _return, const int64_t user_id) = 0;
   virtual bool is_admin(const std::string& ssid) = 0;
+  virtual void get_wx_api_signature(std::string& _return, const int64_t timestamp, const std::string& nonceStr, const std::string& url) = 0;
 };
 
 class user_managementIfFactory {
@@ -94,6 +95,9 @@ class user_managementNull : virtual public user_managementIf {
   bool is_admin(const std::string& /* ssid */) {
     bool _return = false;
     return _return;
+  }
+  void get_wx_api_signature(std::string& /* _return */, const int64_t /* timestamp */, const std::string& /* nonceStr */, const std::string& /* url */) {
+    return;
   }
 };
 
@@ -1229,6 +1233,124 @@ class user_management_is_admin_presult {
 
 };
 
+typedef struct _user_management_get_wx_api_signature_args__isset {
+  _user_management_get_wx_api_signature_args__isset() : timestamp(false), nonceStr(false), url(false) {}
+  bool timestamp :1;
+  bool nonceStr :1;
+  bool url :1;
+} _user_management_get_wx_api_signature_args__isset;
+
+class user_management_get_wx_api_signature_args {
+ public:
+
+  user_management_get_wx_api_signature_args(const user_management_get_wx_api_signature_args&);
+  user_management_get_wx_api_signature_args& operator=(const user_management_get_wx_api_signature_args&);
+  user_management_get_wx_api_signature_args() : timestamp(0), nonceStr(), url() {
+  }
+
+  virtual ~user_management_get_wx_api_signature_args() noexcept;
+  int64_t timestamp;
+  std::string nonceStr;
+  std::string url;
+
+  _user_management_get_wx_api_signature_args__isset __isset;
+
+  void __set_timestamp(const int64_t val);
+
+  void __set_nonceStr(const std::string& val);
+
+  void __set_url(const std::string& val);
+
+  bool operator == (const user_management_get_wx_api_signature_args & rhs) const
+  {
+    if (!(timestamp == rhs.timestamp))
+      return false;
+    if (!(nonceStr == rhs.nonceStr))
+      return false;
+    if (!(url == rhs.url))
+      return false;
+    return true;
+  }
+  bool operator != (const user_management_get_wx_api_signature_args &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const user_management_get_wx_api_signature_args & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+
+class user_management_get_wx_api_signature_pargs {
+ public:
+
+
+  virtual ~user_management_get_wx_api_signature_pargs() noexcept;
+  const int64_t* timestamp;
+  const std::string* nonceStr;
+  const std::string* url;
+
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _user_management_get_wx_api_signature_result__isset {
+  _user_management_get_wx_api_signature_result__isset() : success(false) {}
+  bool success :1;
+} _user_management_get_wx_api_signature_result__isset;
+
+class user_management_get_wx_api_signature_result {
+ public:
+
+  user_management_get_wx_api_signature_result(const user_management_get_wx_api_signature_result&);
+  user_management_get_wx_api_signature_result& operator=(const user_management_get_wx_api_signature_result&);
+  user_management_get_wx_api_signature_result() : success() {
+  }
+
+  virtual ~user_management_get_wx_api_signature_result() noexcept;
+  std::string success;
+
+  _user_management_get_wx_api_signature_result__isset __isset;
+
+  void __set_success(const std::string& val);
+
+  bool operator == (const user_management_get_wx_api_signature_result & rhs) const
+  {
+    if (!(success == rhs.success))
+      return false;
+    return true;
+  }
+  bool operator != (const user_management_get_wx_api_signature_result &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const user_management_get_wx_api_signature_result & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _user_management_get_wx_api_signature_presult__isset {
+  _user_management_get_wx_api_signature_presult__isset() : success(false) {}
+  bool success :1;
+} _user_management_get_wx_api_signature_presult__isset;
+
+class user_management_get_wx_api_signature_presult {
+ public:
+
+
+  virtual ~user_management_get_wx_api_signature_presult() noexcept;
+  std::string* success;
+
+  _user_management_get_wx_api_signature_presult__isset __isset;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+
+};
+
 class user_managementClient : virtual public user_managementIf {
  public:
   user_managementClient(std::shared_ptr< ::apache::thrift::protocol::TProtocol> prot) {
@@ -1284,6 +1406,9 @@ class user_managementClient : virtual public user_managementIf {
   bool is_admin(const std::string& ssid);
   void send_is_admin(const std::string& ssid);
   bool recv_is_admin();
+  void get_wx_api_signature(std::string& _return, const int64_t timestamp, const std::string& nonceStr, const std::string& url);
+  void send_get_wx_api_signature(const int64_t timestamp, const std::string& nonceStr, const std::string& url);
+  void recv_get_wx_api_signature(std::string& _return);
  protected:
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> piprot_;
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> poprot_;
@@ -1309,6 +1434,7 @@ class user_managementProcessor : public ::apache::thrift::TDispatchProcessor {
   void process_update_logo(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
   void process_get_customer_info(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
   void process_is_admin(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
+  void process_get_wx_api_signature(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
  public:
   user_managementProcessor(::std::shared_ptr<user_managementIf> iface) :
     iface_(iface) {
@@ -1322,6 +1448,7 @@ class user_managementProcessor : public ::apache::thrift::TDispatchProcessor {
     processMap_["update_logo"] = &user_managementProcessor::process_update_logo;
     processMap_["get_customer_info"] = &user_managementProcessor::process_get_customer_info;
     processMap_["is_admin"] = &user_managementProcessor::process_is_admin;
+    processMap_["get_wx_api_signature"] = &user_managementProcessor::process_get_wx_api_signature;
   }
 
   virtual ~user_managementProcessor() {}
@@ -1444,6 +1571,16 @@ class user_managementMultiface : virtual public user_managementIf {
     return ifaces_[i]->is_admin(ssid);
   }
 
+  void get_wx_api_signature(std::string& _return, const int64_t timestamp, const std::string& nonceStr, const std::string& url) {
+    size_t sz = ifaces_.size();
+    size_t i = 0;
+    for (; i < (sz - 1); ++i) {
+      ifaces_[i]->get_wx_api_signature(_return, timestamp, nonceStr, url);
+    }
+    ifaces_[i]->get_wx_api_signature(_return, timestamp, nonceStr, url);
+    return;
+  }
+
 };
 
 // The 'concurrent' client is a thread safe client that correctly handles
@@ -1506,6 +1643,9 @@ class user_managementConcurrentClient : virtual public user_managementIf {
   bool is_admin(const std::string& ssid);
   int32_t send_is_admin(const std::string& ssid);
   bool recv_is_admin(const int32_t seqid);
+  void get_wx_api_signature(std::string& _return, const int64_t timestamp, const std::string& nonceStr, const std::string& url);
+  int32_t send_get_wx_api_signature(const int64_t timestamp, const std::string& nonceStr, const std::string& url);
+  void recv_get_wx_api_signature(std::string& _return, const int32_t seqid);
  protected:
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> piprot_;
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> poprot_;

@@ -126,36 +126,49 @@ private:
 
         if ((columns_from_code.size() + 1) > colunms_from_db.size())
         {
-            for (size_t i = colunms_from_db.size() - 1; i < columns_from_code.size() ; i++)
+            for (auto &itr:columns_from_code)
             {
-                std::string sql_cmd = "ALTER TABLE " + table_name() + " ADD COLUMN ";
-                sql_cmd.append(columns_from_code[i].m_name + " ");
-                switch (columns_from_code[i].m_type)
+                auto has_same = false;
+                for (auto &db_itr:colunms_from_db)
                 {
-                case sqlite_orm_column::INTEGER:
-                    sql_cmd.append("INTEGER");
-                    break;
-                
-                case sqlite_orm_column::STRING:
-                    sql_cmd.append("STRING");
-                    break;
-                case sqlite_orm_column::REAL:
-                    sql_cmd.append("REAL");
-                    break;
-                default:
-                    break;
+                    if (db_itr["name"] == itr.m_name)
+                    {
+                        has_same = true;
+                        break;
+                    }
                 }
-                sql_cmd.append(";");
+                if (!has_same)
+                {
+                    std::string sql_cmd = "ALTER TABLE " + table_name() + " ADD COLUMN ";
+                    sql_cmd.append(itr.m_name + " ");
+                    switch (itr.m_type)
+                    {
+                    case sqlite_orm_column::INTEGER:
+                        sql_cmd.append("INTEGER");
+                        break;
 
-                execute_sql_cmd(sql_cmd, m_sqlite_file);
+                    case sqlite_orm_column::STRING:
+                        sql_cmd.append("STRING");
+                        break;
+                    case sqlite_orm_column::REAL:
+                        sql_cmd.append("REAL");
+                        break;
+                    default:
+                        break;
+                    }
+                    sql_cmd.append(";");
+
+                    execute_sql_cmd(sql_cmd, m_sqlite_file);
+                }
             }
-            
         }
     }
+
 public:
-    sqlite_orm(const std::string& _sql_file):m_sqlite_file(_sql_file), m_log("test_orm") {}
+    sqlite_orm(const std::string &_sql_file) : m_sqlite_file(_sql_file), m_log("test_orm") {}
     virtual ~sqlite_orm() {}
-    static std::string escape_single_quotes(const std::string& _string) {
+    static std::string escape_single_quotes(const std::string &_string)
+    {
         std::string ret;
 
         for (auto &itr:_string) {
@@ -185,7 +198,16 @@ public:
         // refresh table structure
         fetch_table();
         // make sql cmd
-        std::string sql_cmd = "INSERT INTO " + table_name() + " VALUES ( NULL,";
+        
+        std::string column_names = " (PRI_ID,";
+        for (auto &itr:columns_defined())
+        {
+            column_names +=itr.m_name + ",";
+        }
+        column_names.pop_back();
+        column_names.push_back(')');
+
+        std::string sql_cmd = "INSERT INTO " + table_name() + column_names + " VALUES ( NULL,";
         for (auto &single_column : columns_defined())
         {
             switch (single_column.m_type)

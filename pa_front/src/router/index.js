@@ -103,6 +103,15 @@ const routes = [
         has_go_back:true,
     },
   },
+  {
+    path: '/close_plan/:plan_id',
+    name: 'ClosePlan',
+    component: () => import('../views/ClosePlan.vue'),
+    meta: {    
+        private_title: '提货关闭',
+        has_go_back:false,
+    },
+  },
 ]
 
 const router = new VueRouter({

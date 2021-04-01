@@ -1,6 +1,7 @@
 #include "wechat_msg.h"
 #include "time.h"
-
+#include <openssl/sha.h>
+#include <openssl/crypto.h>
 static tdf_log g_log("wechat msg");
 struct content_from_wx {
     std::string m_content_from_wx;
@@ -52,6 +53,73 @@ struct acc_tok_from_wx:content_from_wx {
     }
 } g_acc_tok;
 
+struct acc_tok_pub_from_wx:content_from_wx {
+    void refresh_content() {
+        std::string wechat_secret = getenv("WECHAT_SECRET"); 
+        auto in_buff = PA_DATAOPT_rest_req("https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=wxa390f8b6f68e9c6d&secret=" + wechat_secret);
+        g_log.log("recv tok from wx:%s", in_buff.c_str());
+        neb::CJsonObject oJson(in_buff);
+
+        if (oJson.KeyExist("errcode"))
+        {
+            g_log.err("failed when req acc_tok:%s", oJson("errmsg"));
+        }
+        else
+        {
+            m_content_from_wx = oJson("access_token");
+            m_expires_timestamp = time(NULL) + atoi(oJson("expires_in").c_str());
+        }
+        
+
+    }
+} g_acc_pub_tok;
+struct jsapi_ticket_from_wx:content_from_wx {
+    void refresh_content() {
+        auto in_buff = PA_DATAOPT_rest_req("https://api.weixin.qq.com/cgi-bin/ticket/getticket?access_token=" + g_acc_pub_tok.get_content() + "&type=jsapi");
+
+        g_log.log("recv js_ticket from wx:%s", in_buff.c_str());
+        neb::CJsonObject oJson(in_buff);
+
+        if ("0" != oJson("errcode"))
+        {
+            g_log.err("failed when req js_ticket:%s", oJson("errmsg"));
+        }
+        else
+        {
+            m_content_from_wx = oJson("ticket");
+            m_expires_timestamp = time(NULL) + atoi(oJson("expires_in").c_str());
+        }
+
+    }
+} g_jsapi_ticket;
+
+std::string PA_WECHAT_wx_sign(const std::string& nonceStr, long timestamp, const std::string &url)
+{
+    auto jsapi_ticket = g_jsapi_ticket.get_content();
+    std::string s1 = "jsapi_ticket=" + jsapi_ticket;
+    s1.append("&noncestr=" + nonceStr);
+    s1.append("&timestamp=" + std::to_string(timestamp));
+    s1.append("&url=" + url);
+
+    SHA_CTX c;
+    unsigned char md[SHA_DIGEST_LENGTH];
+    SHA1((unsigned char *)s1.c_str(), s1.length(), md);
+    SHA1_Init(&c);
+    SHA1_Update(&c, s1.c_str(), s1.length());
+    SHA1_Final(md, &c);
+    OPENSSL_cleanse(&c, sizeof(c));
+
+    std::string ret;
+
+    for (size_t i = 0; i < SHA_DIGEST_LENGTH; i++)
+    {
+        char tmp[3] = {0};
+        sprintf(tmp, "%02x", md[i]);
+        ret.append(tmp);
+    }
+    
+    return ret;
+}
 static void send_msg_to_wechat(const std::string &_touser, const std::string &_tmp_id, const std::string &_first, const std::vector<std::string> &_keywords, const std::string &_remark)
 {
     std::string acc_tok = g_acc_tok.get_content();
@@ -109,13 +177,22 @@ void PA_WECHAT_send_plan_msg(pa_sql_userinfo &_touser, pa_sql_plan &_plan)
     std::string total_price = std::to_string(_plan.count * _plan.price);
 
     std::string status = "等待确认";
-    if (_plan.status == 1)
+    switch (_plan.status)
     {
-        status = "已确认";
-    }
-    else if (_plan.status == 2)
-    {
-        status = "驳回";
+    case 1:
+        status = "已确认计划";
+        break;
+    case 2:
+        status = "已付款";
+        break;
+    case 3:
+        status = "已确认付款";
+        break;
+    case 4:
+        status = "已提货";
+        break;
+    default:
+        break;
     }
     
     std::vector<std::string> keywords;

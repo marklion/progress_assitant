@@ -1,6 +1,6 @@
 <template>
 <div class="plan_detail show">
-    <stuff-info-submit :orig_name="name" :orig_price="price" :is_create="false" :orig_plan_count="plan_count" :orig_plan_time="plan_time" :plan_id="parseInt($route.params.plan_id)" :orig_vichele_info="vichele_info" :min_time="new Date(created_time)"></stuff-info-submit>
+    <stuff-info-submit :orig_comment="comment" :orig_name="name" :orig_price="price" :is_create="false" :orig_plan_count="plan_count" :orig_plan_time="plan_time" :plan_id="parseInt($route.params.plan_id)" :orig_vichele_info="vichele_info" :min_time="new Date(created_time)"></stuff-info-submit>
 </div>
 </template>
 
@@ -20,6 +20,7 @@ export default {
             plan_time: '',
             vichele_info: [],
             created_time: 10,
+            comment:'',
         };
     },
     beforeMount: function () {
@@ -28,6 +29,7 @@ export default {
             vue_this.plan_count = resp.count;
             vue_this.plan_time = resp.plan_time;
             vue_this.created_time = resp.created_time * 1000;
+            vue_this.comment = resp.comment;
             resp.vichele_info.forEach((element, index) => {
                 vue_this.$set(vue_this.vichele_info, index, element);
             });

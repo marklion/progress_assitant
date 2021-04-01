@@ -386,7 +386,7 @@ void swap(pay_confirm_info &a, pay_confirm_info &b);
 std::ostream& operator<<(std::ostream& out, const pay_confirm_info& obj);
 
 typedef struct _stuff_plan__isset {
-  _stuff_plan__isset() : type_id(false), count(false), vichele_info(false), plan_id(false), created_by(false), plan_time(false), created_time(false), name(false), price(false), status(false), comment(false), plan_confirm(false), pay_confirm(false), pay_info(false), pay_timestamp(false), close_timestamp(false) {}
+  _stuff_plan__isset() : type_id(false), count(false), vichele_info(false), plan_id(false), created_by(false), plan_time(false), created_time(false), name(false), price(false), status(false), comment(false), plan_confirm(false), pay_confirm(false), pay_info(false), pay_timestamp(false), close_timestamp(false), close_by(false) {}
   bool type_id :1;
   bool count :1;
   bool vichele_info :1;
@@ -403,6 +403,7 @@ typedef struct _stuff_plan__isset {
   bool pay_info :1;
   bool pay_timestamp :1;
   bool close_timestamp :1;
+  bool close_by :1;
 } _stuff_plan__isset;
 
 class stuff_plan : public virtual ::apache::thrift::TBase {
@@ -410,7 +411,7 @@ class stuff_plan : public virtual ::apache::thrift::TBase {
 
   stuff_plan(const stuff_plan&);
   stuff_plan& operator=(const stuff_plan&);
-  stuff_plan() : type_id(0), count(0), plan_id(0), created_by(0), plan_time(), created_time(0), name(), price(0), status(0), comment(), pay_info(), pay_timestamp(), close_timestamp() {
+  stuff_plan() : type_id(0), count(0), plan_id(0), created_by(0), plan_time(), created_time(0), name(), price(0), status(0), comment(), pay_info(), pay_timestamp(), close_timestamp(), close_by() {
   }
 
   virtual ~stuff_plan() noexcept;
@@ -430,6 +431,7 @@ class stuff_plan : public virtual ::apache::thrift::TBase {
   std::string pay_info;
   std::string pay_timestamp;
   std::string close_timestamp;
+  std::string close_by;
 
   _stuff_plan__isset __isset;
 
@@ -465,6 +467,8 @@ class stuff_plan : public virtual ::apache::thrift::TBase {
 
   void __set_close_timestamp(const std::string& val);
 
+  void __set_close_by(const std::string& val);
+
   bool operator == (const stuff_plan & rhs) const
   {
     if (!(type_id == rhs.type_id))
@@ -498,6 +502,8 @@ class stuff_plan : public virtual ::apache::thrift::TBase {
     if (!(pay_timestamp == rhs.pay_timestamp))
       return false;
     if (!(close_timestamp == rhs.close_timestamp))
+      return false;
+    if (!(close_by == rhs.close_by))
       return false;
     return true;
   }

@@ -579,6 +579,7 @@ stuff_plan = class {
     this.pay_info = null;
     this.pay_timestamp = null;
     this.close_timestamp = null;
+    this.close_by = null;
     if (args) {
       if (args.type_id !== undefined && args.type_id !== null) {
         this.type_id = args.type_id;
@@ -627,6 +628,9 @@ stuff_plan = class {
       }
       if (args.close_timestamp !== undefined && args.close_timestamp !== null) {
         this.close_timestamp = args.close_timestamp;
+      }
+      if (args.close_by !== undefined && args.close_by !== null) {
+        this.close_by = args.close_by;
       }
     }
   }
@@ -763,6 +767,13 @@ stuff_plan = class {
           input.skip(ftype);
         }
         break;
+        case 17:
+        if (ftype == Thrift.Type.STRING) {
+          this.close_by = input.readString().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
         default:
           input.skip(ftype);
       }
@@ -859,6 +870,11 @@ stuff_plan = class {
     if (this.close_timestamp !== null && this.close_timestamp !== undefined) {
       output.writeFieldBegin('close_timestamp', Thrift.Type.STRING, 16);
       output.writeString(this.close_timestamp);
+      output.writeFieldEnd();
+    }
+    if (this.close_by !== null && this.close_by !== undefined) {
+      output.writeFieldBegin('close_by', Thrift.Type.STRING, 17);
+      output.writeString(this.close_by);
       output.writeFieldEnd();
     }
     output.writeFieldStop();

@@ -6,7 +6,7 @@
                 <div>
                     <van-row align="center" type="flex">
                         <van-col>
-                            <van-image round width="60px" height="60px" :src="$store.state.userinfo.logo" />
+                            <van-image round width="60px" height="60px" :src="$remote_url +  $store.state.userinfo.logo" />
                         </van-col>
                         <van-col>
                             <div class="name_show">{{$store.state.userinfo.name}}</div>

@@ -964,6 +964,10 @@ void stuff_plan::__set_pay_timestamp(const std::string& val) {
 void stuff_plan::__set_close_timestamp(const std::string& val) {
   this->close_timestamp = val;
 }
+
+void stuff_plan::__set_close_by(const std::string& val) {
+  this->close_by = val;
+}
 std::ostream& operator<<(std::ostream& out, const stuff_plan& obj)
 {
   obj.printTo(out);
@@ -1132,6 +1136,14 @@ uint32_t stuff_plan::read(::apache::thrift::protocol::TProtocol* iprot) {
           xfer += iprot->skip(ftype);
         }
         break;
+      case 17:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->close_by);
+          this->__isset.close_by = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
       default:
         xfer += iprot->skip(ftype);
         break;
@@ -1221,6 +1233,10 @@ uint32_t stuff_plan::write(::apache::thrift::protocol::TProtocol* oprot) const {
   xfer += oprot->writeString(this->close_timestamp);
   xfer += oprot->writeFieldEnd();
 
+  xfer += oprot->writeFieldBegin("close_by", ::apache::thrift::protocol::T_STRING, 17);
+  xfer += oprot->writeString(this->close_by);
+  xfer += oprot->writeFieldEnd();
+
   xfer += oprot->writeFieldStop();
   xfer += oprot->writeStructEnd();
   return xfer;
@@ -1244,6 +1260,7 @@ void swap(stuff_plan &a, stuff_plan &b) {
   swap(a.pay_info, b.pay_info);
   swap(a.pay_timestamp, b.pay_timestamp);
   swap(a.close_timestamp, b.close_timestamp);
+  swap(a.close_by, b.close_by);
   swap(a.__isset, b.__isset);
 }
 
@@ -1264,6 +1281,7 @@ stuff_plan::stuff_plan(const stuff_plan& other18) {
   pay_info = other18.pay_info;
   pay_timestamp = other18.pay_timestamp;
   close_timestamp = other18.close_timestamp;
+  close_by = other18.close_by;
   __isset = other18.__isset;
 }
 stuff_plan& stuff_plan::operator=(const stuff_plan& other19) {
@@ -1283,6 +1301,7 @@ stuff_plan& stuff_plan::operator=(const stuff_plan& other19) {
   pay_info = other19.pay_info;
   pay_timestamp = other19.pay_timestamp;
   close_timestamp = other19.close_timestamp;
+  close_by = other19.close_by;
   __isset = other19.__isset;
   return *this;
 }
@@ -1305,6 +1324,7 @@ void stuff_plan::printTo(std::ostream& out) const {
   out << ", " << "pay_info=" << to_string(pay_info);
   out << ", " << "pay_timestamp=" << to_string(pay_timestamp);
   out << ", " << "close_timestamp=" << to_string(close_timestamp);
+  out << ", " << "close_by=" << to_string(close_by);
   out << ")";
 }
 

@@ -55,18 +55,11 @@ class stuff_plan_management_handler : virtual public stuff_plan_managementIf
             tmp.comment = plan.comment;
             tmp.insert_record();
 
-            auto company = stuff_type->get_parent<pa_sql_company>("belong_company");
-            if (company)
-            {
-                auto company_user = company->get_all_children<pa_sql_userinfo>("belong_company");
-                for (auto &itr:company_user)
-                {
-                    PA_WECHAT_send_plan_msg(itr, tmp);
-                }
-            }
-            PA_WECHAT_send_plan_msg(*opt_user,tmp);
-
             ret = tmp.get_pri_id();
+            if (ret > 0)
+            {
+                tmp.send_wechat_msg();
+            }
         }
         return ret;
     }
@@ -101,8 +94,10 @@ class stuff_plan_management_handler : virtual public stuff_plan_managementIf
             _return.plan_time = plan->plan_time;
             _return.price = plan->price;
             _return.status = plan->status;
+            _return.comment = plan->comment;
             auto pay_confirm_user = plan->get_parent<pa_sql_userinfo>("pay_confirm_by");
             auto plan_confirm_user = plan->get_parent<pa_sql_userinfo>("plan_confirm_by");
+            auto close_user = plan->get_parent<pa_sql_userinfo>("close_by");
             if (pay_confirm_user)
             {
                 _return.pay_confirm.name = pay_confirm_user->name;
@@ -112,6 +107,11 @@ class stuff_plan_management_handler : virtual public stuff_plan_managementIf
             {
                 _return.plan_confirm.name = plan_confirm_user->name;
                 _return.plan_confirm.timestamp = plan->plan_confirm_timestamp;
+            }
+            if (close_user)
+            {
+                _return.close_timestamp = plan->close_timestamp;
+                _return.close_by = close_user->name;
             }
             _return.pay_info = plan->payinfo;
             _return.pay_timestamp = plan->pay_timestamp;
@@ -156,24 +156,15 @@ class stuff_plan_management_handler : virtual public stuff_plan_managementIf
                 plan_in_sql->count = plan.count;
                 plan_in_sql->plan_time = plan.plan_time;
                 plan_in_sql->vicheles = "";
+                plan_in_sql->comment = plan.comment;
                 for (auto &itr:plan.vichele_info)
                 {
                     plan_in_sql->vicheles += itr + "-";
                 }
                 ret = plan_in_sql->update_record();
-                auto stuff_type = plan_in_sql->get_parent<pa_sql_stuff_info>("belong_stuff");
-                if (stuff_type)
+                if (ret)
                 {
-                    auto company = stuff_type->get_parent<pa_sql_company>("belong_company");
-                    if (company)
-                    {
-                        auto company_user = company->get_all_children<pa_sql_userinfo>("belong_company");
-                        for (auto &itr : company_user)
-                        {
-                            PA_WECHAT_send_plan_msg(itr, *plan_in_sql);
-                        }
-                    }
-                    PA_WECHAT_send_plan_msg(*opt_user, *plan_in_sql);
+                    plan_in_sql->send_wechat_msg();
                 }
             }
             else
@@ -234,17 +225,7 @@ class stuff_plan_management_handler : virtual public stuff_plan_managementIf
                         ret = plan->update_record();
                         if (ret)
                         {
-                            auto company_user = company->get_all_children<pa_sql_userinfo>("belong_company");
-                            for (auto &itr : company_user)
-                            {
-                                PA_WECHAT_send_plan_msg(itr, *plan);
-                            }
-
-                            auto created_user = plan->get_parent<pa_sql_userinfo>("created_by");
-                            if (created_user)
-                            {
-                                PA_WECHAT_send_plan_msg(*created_user, *plan);
-                            }
+                            plan->send_wechat_msg();
                         }
                     }
                     else
@@ -288,6 +269,7 @@ class stuff_plan_management_handler : virtual public stuff_plan_managementIf
                     {
                     case 0:
                     case 2:
+                    case 3:
                     {
                         auto opt_company = opt_user->get_parent<pa_sql_company>("belong_company");
                         if (opt_company && opt_company->get_pri_id() == sales_company->get_pri_id())
@@ -297,7 +279,6 @@ class stuff_plan_management_handler : virtual public stuff_plan_managementIf
                         break;
                     }
                     case 1:
-                    case 3:
                     {
                         if (created_user->get_pri_id() == opt_user->get_pri_id())
                         {
@@ -311,6 +292,108 @@ class stuff_plan_management_handler : virtual public stuff_plan_managementIf
                     }
                 }
             }
+        }
+
+        return ret;
+    }
+
+    virtual bool upload_payinfo(const int64_t plan_id, const std::string &ssid, const std::string &content)
+    {
+        bool ret = false;
+
+        auto opt_user = PA_DATAOPT_get_online_user(ssid);
+        auto plan = sqlite_orm::search_record<pa_sql_plan>(plan_id);
+        if (opt_user && plan)
+        {
+            auto created_user = plan->get_parent<pa_sql_userinfo>("created_by");
+            if ((plan->status == 1 || plan->status == 2) && created_user && created_user->get_pri_id() == opt_user->get_pri_id())
+            {
+                std::string file_content;
+                Base64::Decode(content, &file_content);
+                auto pay_info = PA_DATAOPT_store_logo_to_file(file_content, std::to_string(plan->create_time));
+                if (pay_info.length() > 0)
+                {
+                    plan->payinfo = pay_info;
+                    plan->pay_timestamp = PA_DATAOPT_current_time();
+                    plan->status = 2;
+                    ret = plan->update_record();
+                    if (ret)
+                    {
+                        plan->send_wechat_msg();
+                    }
+                }
+            }
+            else
+            {
+                PA_RETURN_MSG("该计划单无法上传付款信息");
+            }
+        }
+        else
+        {
+            PA_RETURN_NOPRIVA_MSG();
+        }
+
+        return ret;
+    }
+    virtual bool confirm_pay(const int64_t plan_id, const std::string &ssid)
+    {
+        bool ret = false;
+
+        auto opt_user = PA_DATAOPT_get_online_user(ssid);
+        auto plan = sqlite_orm::search_record<pa_sql_plan>(plan_id);
+        if (plan && opt_user)
+        {
+            if (has_priv_edit(plan_id, ssid) && plan->status == 2)
+            {
+                plan->status = 3;
+                plan->pay_confirm_timestamp = PA_DATAOPT_current_time();
+                plan->set_parent(*opt_user, "pay_confirm_by");
+                ret = plan->update_record();
+                if (ret)
+                {
+                    plan->send_wechat_msg();
+                }
+            }
+            else
+            {
+                PA_RETURN_NOPRIVA_MSG();
+            }
+        }
+        else
+        {
+            PA_RETURN_NOPRIVA_MSG();
+        }
+
+        return ret;
+    }
+
+    virtual bool confirm_close(const int64_t plan_id, const std::string &ssid)
+    {
+        bool ret = false;
+
+        auto opt_user = PA_DATAOPT_get_online_user(ssid);
+        auto plan = sqlite_orm::search_record<pa_sql_plan>(plan_id);
+        if (plan && opt_user)
+        {
+            if (has_priv_edit(plan_id, ssid) && plan->status == 3)
+            {
+                plan->status = 4;
+                plan->close_timestamp = PA_DATAOPT_current_time();
+                plan->set_parent(*opt_user, "close_by");
+                ret = plan->update_record();
+                if (ret)
+                {
+                    plan->send_wechat_msg();
+                }
+            }
+            else
+            {
+                PA_RETURN_NOPRIVA_MSG();
+            }
+        }
+        else
+        {
+            PA_RETURN_NOPRIVA_MSG();
         }
 
         return ret;

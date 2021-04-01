@@ -80,6 +80,7 @@ export default {
         },
     },
     methods: {
+        
         onClickRight: function () {
             this.show_share = true;
         },

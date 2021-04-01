@@ -1273,6 +1273,139 @@ user_management_is_admin_result = class {
   }
 
 };
+user_management_get_wx_api_signature_args = class {
+  constructor(args) {
+    this.timestamp = null;
+    this.nonceStr = null;
+    this.url = null;
+    if (args) {
+      if (args.timestamp !== undefined && args.timestamp !== null) {
+        this.timestamp = args.timestamp;
+      }
+      if (args.nonceStr !== undefined && args.nonceStr !== null) {
+        this.nonceStr = args.nonceStr;
+      }
+      if (args.url !== undefined && args.url !== null) {
+        this.url = args.url;
+      }
+    }
+  }
+
+  read (input) {
+    input.readStructBegin();
+    while (true) {
+      const ret = input.readFieldBegin();
+      const ftype = ret.ftype;
+      const fid = ret.fid;
+      if (ftype == Thrift.Type.STOP) {
+        break;
+      }
+      switch (fid) {
+        case 1:
+        if (ftype == Thrift.Type.I64) {
+          this.timestamp = input.readI64().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        case 2:
+        if (ftype == Thrift.Type.STRING) {
+          this.nonceStr = input.readString().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        case 3:
+        if (ftype == Thrift.Type.STRING) {
+          this.url = input.readString().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        default:
+          input.skip(ftype);
+      }
+      input.readFieldEnd();
+    }
+    input.readStructEnd();
+    return;
+  }
+
+  write (output) {
+    output.writeStructBegin('user_management_get_wx_api_signature_args');
+    if (this.timestamp !== null && this.timestamp !== undefined) {
+      output.writeFieldBegin('timestamp', Thrift.Type.I64, 1);
+      output.writeI64(this.timestamp);
+      output.writeFieldEnd();
+    }
+    if (this.nonceStr !== null && this.nonceStr !== undefined) {
+      output.writeFieldBegin('nonceStr', Thrift.Type.STRING, 2);
+      output.writeString(this.nonceStr);
+      output.writeFieldEnd();
+    }
+    if (this.url !== null && this.url !== undefined) {
+      output.writeFieldBegin('url', Thrift.Type.STRING, 3);
+      output.writeString(this.url);
+      output.writeFieldEnd();
+    }
+    output.writeFieldStop();
+    output.writeStructEnd();
+    return;
+  }
+
+};
+user_management_get_wx_api_signature_result = class {
+  constructor(args) {
+    this.success = null;
+    if (args) {
+      if (args.success !== undefined && args.success !== null) {
+        this.success = args.success;
+      }
+    }
+  }
+
+  read (input) {
+    input.readStructBegin();
+    while (true) {
+      const ret = input.readFieldBegin();
+      const ftype = ret.ftype;
+      const fid = ret.fid;
+      if (ftype == Thrift.Type.STOP) {
+        break;
+      }
+      switch (fid) {
+        case 0:
+        if (ftype == Thrift.Type.STRING) {
+          this.success = input.readString().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        case 0:
+          input.skip(ftype);
+          break;
+        default:
+          input.skip(ftype);
+      }
+      input.readFieldEnd();
+    }
+    input.readStructEnd();
+    return;
+  }
+
+  write (output) {
+    output.writeStructBegin('user_management_get_wx_api_signature_result');
+    if (this.success !== null && this.success !== undefined) {
+      output.writeFieldBegin('success', Thrift.Type.STRING, 0);
+      output.writeString(this.success);
+      output.writeFieldEnd();
+    }
+    output.writeFieldStop();
+    output.writeStructEnd();
+    return;
+  }
+
+};
 user_managementClient = class user_managementClient {
   constructor(input, output) {
     this.input = input;
@@ -1866,5 +1999,63 @@ user_managementClient = class user_managementClient {
       return result.success;
     }
     throw 'is_admin failed: unknown result';
+  }
+
+  get_wx_api_signature (timestamp, nonceStr, url) {
+    const self = this;
+    return new Promise((resolve, reject) => {
+      self.send_get_wx_api_signature(timestamp, nonceStr, url, (error, result) => {
+        return error ? reject(error) : resolve(result);
+      });
+    });
+  }
+
+  send_get_wx_api_signature (timestamp, nonceStr, url, callback) {
+    const params = {
+      timestamp: timestamp,
+      nonceStr: nonceStr,
+      url: url
+    };
+    const args = new user_management_get_wx_api_signature_args(params);
+    try {
+      this.output.writeMessageBegin('get_wx_api_signature', Thrift.MessageType.CALL, this.seqid);
+      args.write(this.output);
+      this.output.writeMessageEnd();
+      const self = this;
+      this.output.getTransport().flush(true, () => {
+        let error = null, result = null;
+        try {
+          result = self.recv_get_wx_api_signature();
+        } catch (e) {
+          error = e;
+        }
+        callback(error, result);
+      });
+    }
+    catch (e) {
+      if (typeof this.output.getTransport().reset === 'function') {
+        this.output.getTransport().reset();
+      }
+      throw e;
+    }
+  }
+
+  recv_get_wx_api_signature () {
+    const ret = this.input.readMessageBegin();
+    const mtype = ret.mtype;
+    if (mtype == Thrift.MessageType.EXCEPTION) {
+      const x = new Thrift.TApplicationException();
+      x.read(this.input);
+      this.input.readMessageEnd();
+      throw x;
+    }
+    const result = new user_management_get_wx_api_signature_result();
+    result.read(this.input);
+    this.input.readMessageEnd();
+
+    if (null !== result.success) {
+      return result.success;
+    }
+    throw 'get_wx_api_signature failed: unknown result';
   }
 };

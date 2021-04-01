@@ -91,12 +91,12 @@ export default {
     },
     beforeMount: function () {
         this.userinfo = this.$store.state.userinfo;
-        this.logo[0].url = this.userinfo.logo;
+        this.logo[0].url = this.$remote_url + this.userinfo.logo;
     },
     watch: {
         "$store.state.userinfo": function (_new_value) {
             this.userinfo = _new_value;
-            this.logo[0].url = this.userinfo.logo;
+            this.logo[0].url = this.$remote_url + this.userinfo.logo;
         }
     },
     methods: {

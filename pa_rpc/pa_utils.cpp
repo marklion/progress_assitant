@@ -58,7 +58,6 @@ std::string PA_DATAOPT_store_logo_to_file(const std::string &_logo, const std::s
         out_file.write(_logo.data(), _logo.length());
         ret = file_name;
         ret.erase(ret.begin(), ret.begin() + 5);
-        ret.insert(0, "https://www.d8sis.cn/pa_web");
         out_file.close();
     }
     else
@@ -319,3 +318,4 @@ std::string PA_DATAOPT_current_time() {
     
     return time_string;
 }
+
