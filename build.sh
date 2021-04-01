@@ -10,7 +10,7 @@ BUILD_MODE=${2:-'test-build'}
 
 [ -d ${BUILD_DIR} ] || mkdir -p "${BUILD_DIR}"
 
-${SRC_DIR}/gen_thrift.sh
+make -f ${SRC_DIR}/gen_thrift.makefile
 
 for SUB_FOLDER in ${COMPS[*]}
 do
@@ -39,7 +39,7 @@ cp ./dist -a ${BUILD_DIR}/
 popd
 
 tar zcf pa_deliver.tar.gz -C ${BUILD_DIR} bin lib conf dist 
-cat deploy.sh pa_deliver.tar.gz > install.sh
-chmod +x install.sh
+cat deploy.sh pa_deliver.tar.gz > ${BUILD_DIR}/install.sh
+chmod +x ${BUILD_DIR}/install.sh
 rm pa_deliver.tar.gz
 
