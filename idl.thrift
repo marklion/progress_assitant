@@ -50,6 +50,7 @@ service company_management {
     bool readd_type(1:stuff_detail stuff, 2:string ssid) throws (1:gen_exp e),
     list<user_apply> get_all_apply(1:string ssid) throws (1:gen_exp e),
     bool approve_apply(1:i64 apply_id, 2:string ssid, 3:bool approve) throws (1:gen_exp e),
+    string generate_statistics(1:string ssid, 2:i64 begin_date, 3:i64 end_date) throws (1:gen_exp e),
 }
 
 service stuff_info {

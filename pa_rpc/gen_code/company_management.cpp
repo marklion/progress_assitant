@@ -1613,6 +1613,245 @@ uint32_t company_management_approve_apply_presult::read(::apache::thrift::protoc
   return xfer;
 }
 
+
+company_management_generate_statistics_args::~company_management_generate_statistics_args() noexcept {
+}
+
+
+uint32_t company_management_generate_statistics_args::read(::apache::thrift::protocol::TProtocol* iprot) {
+
+  ::apache::thrift::protocol::TInputRecursionTracker tracker(*iprot);
+  uint32_t xfer = 0;
+  std::string fname;
+  ::apache::thrift::protocol::TType ftype;
+  int16_t fid;
+
+  xfer += iprot->readStructBegin(fname);
+
+  using ::apache::thrift::protocol::TProtocolException;
+
+
+  while (true)
+  {
+    xfer += iprot->readFieldBegin(fname, ftype, fid);
+    if (ftype == ::apache::thrift::protocol::T_STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 1:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->ssid);
+          this->__isset.ssid = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 2:
+        if (ftype == ::apache::thrift::protocol::T_I64) {
+          xfer += iprot->readI64(this->begin_date);
+          this->__isset.begin_date = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 3:
+        if (ftype == ::apache::thrift::protocol::T_I64) {
+          xfer += iprot->readI64(this->end_date);
+          this->__isset.end_date = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      default:
+        xfer += iprot->skip(ftype);
+        break;
+    }
+    xfer += iprot->readFieldEnd();
+  }
+
+  xfer += iprot->readStructEnd();
+
+  return xfer;
+}
+
+uint32_t company_management_generate_statistics_args::write(::apache::thrift::protocol::TProtocol* oprot) const {
+  uint32_t xfer = 0;
+  ::apache::thrift::protocol::TOutputRecursionTracker tracker(*oprot);
+  xfer += oprot->writeStructBegin("company_management_generate_statistics_args");
+
+  xfer += oprot->writeFieldBegin("ssid", ::apache::thrift::protocol::T_STRING, 1);
+  xfer += oprot->writeString(this->ssid);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("begin_date", ::apache::thrift::protocol::T_I64, 2);
+  xfer += oprot->writeI64(this->begin_date);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("end_date", ::apache::thrift::protocol::T_I64, 3);
+  xfer += oprot->writeI64(this->end_date);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldStop();
+  xfer += oprot->writeStructEnd();
+  return xfer;
+}
+
+
+company_management_generate_statistics_pargs::~company_management_generate_statistics_pargs() noexcept {
+}
+
+
+uint32_t company_management_generate_statistics_pargs::write(::apache::thrift::protocol::TProtocol* oprot) const {
+  uint32_t xfer = 0;
+  ::apache::thrift::protocol::TOutputRecursionTracker tracker(*oprot);
+  xfer += oprot->writeStructBegin("company_management_generate_statistics_pargs");
+
+  xfer += oprot->writeFieldBegin("ssid", ::apache::thrift::protocol::T_STRING, 1);
+  xfer += oprot->writeString((*(this->ssid)));
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("begin_date", ::apache::thrift::protocol::T_I64, 2);
+  xfer += oprot->writeI64((*(this->begin_date)));
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("end_date", ::apache::thrift::protocol::T_I64, 3);
+  xfer += oprot->writeI64((*(this->end_date)));
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldStop();
+  xfer += oprot->writeStructEnd();
+  return xfer;
+}
+
+
+company_management_generate_statistics_result::~company_management_generate_statistics_result() noexcept {
+}
+
+
+uint32_t company_management_generate_statistics_result::read(::apache::thrift::protocol::TProtocol* iprot) {
+
+  ::apache::thrift::protocol::TInputRecursionTracker tracker(*iprot);
+  uint32_t xfer = 0;
+  std::string fname;
+  ::apache::thrift::protocol::TType ftype;
+  int16_t fid;
+
+  xfer += iprot->readStructBegin(fname);
+
+  using ::apache::thrift::protocol::TProtocolException;
+
+
+  while (true)
+  {
+    xfer += iprot->readFieldBegin(fname, ftype, fid);
+    if (ftype == ::apache::thrift::protocol::T_STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 0:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->success);
+          this->__isset.success = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 1:
+        if (ftype == ::apache::thrift::protocol::T_STRUCT) {
+          xfer += this->e.read(iprot);
+          this->__isset.e = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      default:
+        xfer += iprot->skip(ftype);
+        break;
+    }
+    xfer += iprot->readFieldEnd();
+  }
+
+  xfer += iprot->readStructEnd();
+
+  return xfer;
+}
+
+uint32_t company_management_generate_statistics_result::write(::apache::thrift::protocol::TProtocol* oprot) const {
+
+  uint32_t xfer = 0;
+
+  xfer += oprot->writeStructBegin("company_management_generate_statistics_result");
+
+  if (this->__isset.success) {
+    xfer += oprot->writeFieldBegin("success", ::apache::thrift::protocol::T_STRING, 0);
+    xfer += oprot->writeString(this->success);
+    xfer += oprot->writeFieldEnd();
+  } else if (this->__isset.e) {
+    xfer += oprot->writeFieldBegin("e", ::apache::thrift::protocol::T_STRUCT, 1);
+    xfer += this->e.write(oprot);
+    xfer += oprot->writeFieldEnd();
+  }
+  xfer += oprot->writeFieldStop();
+  xfer += oprot->writeStructEnd();
+  return xfer;
+}
+
+
+company_management_generate_statistics_presult::~company_management_generate_statistics_presult() noexcept {
+}
+
+
+uint32_t company_management_generate_statistics_presult::read(::apache::thrift::protocol::TProtocol* iprot) {
+
+  ::apache::thrift::protocol::TInputRecursionTracker tracker(*iprot);
+  uint32_t xfer = 0;
+  std::string fname;
+  ::apache::thrift::protocol::TType ftype;
+  int16_t fid;
+
+  xfer += iprot->readStructBegin(fname);
+
+  using ::apache::thrift::protocol::TProtocolException;
+
+
+  while (true)
+  {
+    xfer += iprot->readFieldBegin(fname, ftype, fid);
+    if (ftype == ::apache::thrift::protocol::T_STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 0:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString((*(this->success)));
+          this->__isset.success = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 1:
+        if (ftype == ::apache::thrift::protocol::T_STRUCT) {
+          xfer += this->e.read(iprot);
+          this->__isset.e = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      default:
+        xfer += iprot->skip(ftype);
+        break;
+    }
+    xfer += iprot->readFieldEnd();
+  }
+
+  xfer += iprot->readStructEnd();
+
+  return xfer;
+}
+
 void company_managementClient::get_all_type(std::vector<int64_t> & _return, const std::string& ssid)
 {
   send_get_all_type(ssid);
@@ -2042,6 +2281,69 @@ bool company_managementClient::recv_approve_apply()
   throw ::apache::thrift::TApplicationException(::apache::thrift::TApplicationException::MISSING_RESULT, "approve_apply failed: unknown result");
 }
 
+void company_managementClient::generate_statistics(std::string& _return, const std::string& ssid, const int64_t begin_date, const int64_t end_date)
+{
+  send_generate_statistics(ssid, begin_date, end_date);
+  recv_generate_statistics(_return);
+}
+
+void company_managementClient::send_generate_statistics(const std::string& ssid, const int64_t begin_date, const int64_t end_date)
+{
+  int32_t cseqid = 0;
+  oprot_->writeMessageBegin("generate_statistics", ::apache::thrift::protocol::T_CALL, cseqid);
+
+  company_management_generate_statistics_pargs args;
+  args.ssid = &ssid;
+  args.begin_date = &begin_date;
+  args.end_date = &end_date;
+  args.write(oprot_);
+
+  oprot_->writeMessageEnd();
+  oprot_->getTransport()->writeEnd();
+  oprot_->getTransport()->flush();
+}
+
+void company_managementClient::recv_generate_statistics(std::string& _return)
+{
+
+  int32_t rseqid = 0;
+  std::string fname;
+  ::apache::thrift::protocol::TMessageType mtype;
+
+  iprot_->readMessageBegin(fname, mtype, rseqid);
+  if (mtype == ::apache::thrift::protocol::T_EXCEPTION) {
+    ::apache::thrift::TApplicationException x;
+    x.read(iprot_);
+    iprot_->readMessageEnd();
+    iprot_->getTransport()->readEnd();
+    throw x;
+  }
+  if (mtype != ::apache::thrift::protocol::T_REPLY) {
+    iprot_->skip(::apache::thrift::protocol::T_STRUCT);
+    iprot_->readMessageEnd();
+    iprot_->getTransport()->readEnd();
+  }
+  if (fname.compare("generate_statistics") != 0) {
+    iprot_->skip(::apache::thrift::protocol::T_STRUCT);
+    iprot_->readMessageEnd();
+    iprot_->getTransport()->readEnd();
+  }
+  company_management_generate_statistics_presult result;
+  result.success = &_return;
+  result.read(iprot_);
+  iprot_->readMessageEnd();
+  iprot_->getTransport()->readEnd();
+
+  if (result.__isset.success) {
+    // _return pointer has now been filled
+    return;
+  }
+  if (result.__isset.e) {
+    throw result.e;
+  }
+  throw ::apache::thrift::TApplicationException(::apache::thrift::TApplicationException::MISSING_RESULT, "generate_statistics failed: unknown result");
+}
+
 bool company_managementProcessor::dispatchCall(::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, const std::string& fname, int32_t seqid, void* callContext) {
   ProcessMap::iterator pfn;
   pfn = processMap_.find(fname);
@@ -2456,6 +2758,63 @@ void company_managementProcessor::process_approve_apply(int32_t seqid, ::apache:
 
   if (this->eventHandler_.get() != nullptr) {
     this->eventHandler_->postWrite(ctx, "company_management.approve_apply", bytes);
+  }
+}
+
+void company_managementProcessor::process_generate_statistics(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext)
+{
+  void* ctx = nullptr;
+  if (this->eventHandler_.get() != nullptr) {
+    ctx = this->eventHandler_->getContext("company_management.generate_statistics", callContext);
+  }
+  ::apache::thrift::TProcessorContextFreer freer(this->eventHandler_.get(), ctx, "company_management.generate_statistics");
+
+  if (this->eventHandler_.get() != nullptr) {
+    this->eventHandler_->preRead(ctx, "company_management.generate_statistics");
+  }
+
+  company_management_generate_statistics_args args;
+  args.read(iprot);
+  iprot->readMessageEnd();
+  uint32_t bytes = iprot->getTransport()->readEnd();
+
+  if (this->eventHandler_.get() != nullptr) {
+    this->eventHandler_->postRead(ctx, "company_management.generate_statistics", bytes);
+  }
+
+  company_management_generate_statistics_result result;
+  try {
+    iface_->generate_statistics(result.success, args.ssid, args.begin_date, args.end_date);
+    result.__isset.success = true;
+  } catch (gen_exp &e) {
+    result.e = e;
+    result.__isset.e = true;
+  } catch (const std::exception& e) {
+    if (this->eventHandler_.get() != nullptr) {
+      this->eventHandler_->handlerError(ctx, "company_management.generate_statistics");
+    }
+
+    ::apache::thrift::TApplicationException x(e.what());
+    oprot->writeMessageBegin("generate_statistics", ::apache::thrift::protocol::T_EXCEPTION, seqid);
+    x.write(oprot);
+    oprot->writeMessageEnd();
+    oprot->getTransport()->writeEnd();
+    oprot->getTransport()->flush();
+    return;
+  }
+
+  if (this->eventHandler_.get() != nullptr) {
+    this->eventHandler_->preWrite(ctx, "company_management.generate_statistics");
+  }
+
+  oprot->writeMessageBegin("generate_statistics", ::apache::thrift::protocol::T_REPLY, seqid);
+  result.write(oprot);
+  oprot->writeMessageEnd();
+  bytes = oprot->getTransport()->writeEnd();
+  oprot->getTransport()->flush();
+
+  if (this->eventHandler_.get() != nullptr) {
+    this->eventHandler_->postWrite(ctx, "company_management.generate_statistics", bytes);
   }
 }
 
@@ -3074,6 +3433,96 @@ bool company_managementConcurrentClient::recv_approve_apply(const int32_t seqid)
       }
       // in a bad state, don't commit
       throw ::apache::thrift::TApplicationException(::apache::thrift::TApplicationException::MISSING_RESULT, "approve_apply failed: unknown result");
+    }
+    // seqid != rseqid
+    this->sync_->updatePending(fname, mtype, rseqid);
+
+    // this will temporarily unlock the readMutex, and let other clients get work done
+    this->sync_->waitForWork(seqid);
+  } // end while(true)
+}
+
+void company_managementConcurrentClient::generate_statistics(std::string& _return, const std::string& ssid, const int64_t begin_date, const int64_t end_date)
+{
+  int32_t seqid = send_generate_statistics(ssid, begin_date, end_date);
+  recv_generate_statistics(_return, seqid);
+}
+
+int32_t company_managementConcurrentClient::send_generate_statistics(const std::string& ssid, const int64_t begin_date, const int64_t end_date)
+{
+  int32_t cseqid = this->sync_->generateSeqId();
+  ::apache::thrift::async::TConcurrentSendSentry sentry(this->sync_.get());
+  oprot_->writeMessageBegin("generate_statistics", ::apache::thrift::protocol::T_CALL, cseqid);
+
+  company_management_generate_statistics_pargs args;
+  args.ssid = &ssid;
+  args.begin_date = &begin_date;
+  args.end_date = &end_date;
+  args.write(oprot_);
+
+  oprot_->writeMessageEnd();
+  oprot_->getTransport()->writeEnd();
+  oprot_->getTransport()->flush();
+
+  sentry.commit();
+  return cseqid;
+}
+
+void company_managementConcurrentClient::recv_generate_statistics(std::string& _return, const int32_t seqid)
+{
+
+  int32_t rseqid = 0;
+  std::string fname;
+  ::apache::thrift::protocol::TMessageType mtype;
+
+  // the read mutex gets dropped and reacquired as part of waitForWork()
+  // The destructor of this sentry wakes up other clients
+  ::apache::thrift::async::TConcurrentRecvSentry sentry(this->sync_.get(), seqid);
+
+  while(true) {
+    if(!this->sync_->getPending(fname, mtype, rseqid)) {
+      iprot_->readMessageBegin(fname, mtype, rseqid);
+    }
+    if(seqid == rseqid) {
+      if (mtype == ::apache::thrift::protocol::T_EXCEPTION) {
+        ::apache::thrift::TApplicationException x;
+        x.read(iprot_);
+        iprot_->readMessageEnd();
+        iprot_->getTransport()->readEnd();
+        sentry.commit();
+        throw x;
+      }
+      if (mtype != ::apache::thrift::protocol::T_REPLY) {
+        iprot_->skip(::apache::thrift::protocol::T_STRUCT);
+        iprot_->readMessageEnd();
+        iprot_->getTransport()->readEnd();
+      }
+      if (fname.compare("generate_statistics") != 0) {
+        iprot_->skip(::apache::thrift::protocol::T_STRUCT);
+        iprot_->readMessageEnd();
+        iprot_->getTransport()->readEnd();
+
+        // in a bad state, don't commit
+        using ::apache::thrift::protocol::TProtocolException;
+        throw TProtocolException(TProtocolException::INVALID_DATA);
+      }
+      company_management_generate_statistics_presult result;
+      result.success = &_return;
+      result.read(iprot_);
+      iprot_->readMessageEnd();
+      iprot_->getTransport()->readEnd();
+
+      if (result.__isset.success) {
+        // _return pointer has now been filled
+        sentry.commit();
+        return;
+      }
+      if (result.__isset.e) {
+        sentry.commit();
+        throw result.e;
+      }
+      // in a bad state, don't commit
+      throw ::apache::thrift::TApplicationException(::apache::thrift::TApplicationException::MISSING_RESULT, "generate_statistics failed: unknown result");
     }
     // seqid != rseqid
     this->sync_->updatePending(fname, mtype, rseqid);

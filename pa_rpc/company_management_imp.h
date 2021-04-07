@@ -1,9 +1,20 @@
+#if !defined(_COMPANY_MANAGEMENT_IMP_H_)
+#define _COMPANY_MANAGEMENT_IMP_H_
+
+#include <Python.h>
 #include "gen_code/company_management.h"
 #include "pa_utils.h"
 #include <algorithm>
+#include "writer.hpp"
 class company_management_handler : virtual public company_managementIf
 {
 public:
+    company_management_handler() {
+        Py_Initialize();
+    }
+    ~company_management_handler() {
+        Py_Finalize();
+    }
     virtual void get_all_type(std::vector<int64_t> &_return, const std::string &ssid)
     {
         auto user = PA_DATAOPT_get_online_user(ssid);
@@ -230,4 +241,82 @@ public:
 
         return ret;
     }
+
+    virtual void generate_statistics(std::string &_return, const std::string &ssid, const int64_t begin_date, const int64_t end_date)
+    {
+        auto opt_user = PA_DATAOPT_get_online_user(ssid);
+        std::list<pa_sql_plan> statistics_plan;
+        if (opt_user)
+        {
+            if (opt_user->buyer)
+            {
+                statistics_plan = opt_user->get_all_children<pa_sql_plan>("created_by", "create_time >= %d AND create_time <= %d", begin_date, end_date);
+            }
+            else
+            {
+                auto company = opt_user->get_parent<pa_sql_company>("belong_company");
+                if (company)
+                {
+                    auto stuffs = company->get_all_children<pa_sql_stuff_info>("belong_company");
+                    for (auto &itr : stuffs)
+                    {
+                        auto plans = itr.get_all_children<pa_sql_plan>("belong_stuff", "create_time >= %d AND create_time <= %d", begin_date, end_date);
+                        statistics_plan.insert(statistics_plan.begin(), plans.begin(), plans.end());
+                    }
+                }
+                else
+                {
+                    PA_RETURN_NOCOMPANY_MSG();
+                }
+            }
+        }
+        else
+        {
+            PA_RETURN_UNLOGIN_MSG();
+        }
+        if (statistics_plan.size() > 0)
+        {
+            std::string file_name_no_ext = std::to_string(begin_date) + "-" + std::to_string(end_date);
+            std::string file_name = file_name_no_ext + ".csv";
+            std::ofstream stream("/dist/logo_res/" + file_name);
+            std::string csv_bom = {
+                (char)0xef, (char)0xbb, (char)0xbf};
+            stream << csv_bom;
+            csv2::Writer<csv2::delimiter<','>> writer(stream);
+            std::vector<std::string> table_header = {
+                "计划单号", "货品名称", "计划量", "总价", "计划人", "计划到厂", "付款时间", "提货时间"};
+            writer.write_row(table_header);
+            for (auto &itr : statistics_plan)
+            {
+                std::string created_user;
+                auto created_by = itr.get_parent<pa_sql_userinfo>("created_by");
+                if (created_by)
+                {
+                    created_user = created_by->name;
+                }
+                std::vector<std::string> one_record = {
+                    std::to_string(itr.create_time), itr.name, std::to_string(itr.count), std::to_string(itr.count * itr.price), created_user, itr.plan_time, itr.pay_timestamp, itr.close_timestamp};
+                writer.write_row(one_record);
+            }
+            stream.close();
+
+            std::string py_converter =
+                "import pandas as pd\n"
+                "import sys\n"
+                "csv = pd.read_csv('/dist/logo_res/" + file_name + "', encoding='utf-8')\n"
+                "csv.to_excel('/dist/logo_res/" + file_name_no_ext + ".xlsx', sheet_name='data', index=False)\n";
+
+            if (Py_IsInitialized())
+            {
+                PyRun_SimpleString(py_converter.c_str());
+            }
+            else
+            {
+                PA_RETURN_MSG("导出失败");
+            }
+
+            _return = "/logo_res/" + file_name_no_ext + ".xlsx";
+        }
+    }
 };
+#endif // _COMPANY_MANAGEMENT_IMP_H_

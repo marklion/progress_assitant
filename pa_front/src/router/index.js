@@ -112,6 +112,15 @@ const routes = [
         has_go_back:false,
     },
   },
+  {
+    path: '/statistics',
+    name: 'Statistics',
+    component: () => import('../views/Statistics.vue'),
+    meta: {    
+        private_title: '交易统计',
+        has_go_back:true,
+    },
+  },
 ]
 
 const router = new VueRouter({

@@ -8,7 +8,7 @@ DATA_BASE="pa.db"
 IMG_BED_INPUT="logo_res"
 
 DOCKER_IMG_NAME="pa_deploy:v1.0"
-SRC_DIR=`dirname $(realpath $0)`
+SRC_DIR=`dirname $(realpath $0)`/../
 is_in_container() {
     cat /proc/1/cgroup | grep pids | grep docker 2>&1>/dev/null
 }
@@ -18,7 +18,7 @@ make_docker_img_from_dockerfile() {
 }
 
 get_docker_image() {
-    docker images ${DOCKER_IMG_NAME} | grep _deploy > /dev/null
+    docker images ${DOCKER_IMG_NAME} | grep pa_deploy > /dev/null
     if [ $? != 0 ]
     then
         make_docker_img_from_dockerfile

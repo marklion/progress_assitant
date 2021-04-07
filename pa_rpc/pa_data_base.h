@@ -43,7 +43,7 @@ public:
         std::vector<sqlite_orm_column> ret;
         ret.push_back(sqlite_orm_column("name", sqlite_orm_column::STRING, &name));
         ret.push_back(sqlite_orm_column("logo", sqlite_orm_column::STRING, &logo));
-        ret.push_back(sqlite_orm_column("phone", sqlite_orm_column::STRING, &phone, SQLITE_ORM_COLUMN_LIMIT_UNIQ));
+        ret.push_back(sqlite_orm_column("phone", sqlite_orm_column::STRING, &phone));
         ret.push_back(sqlite_orm_column("openid", sqlite_orm_column::STRING, &openid, SQLITE_ORM_COLUMN_LIMIT_UNIQ));
         ret.push_back(sqlite_orm_column("buyer", sqlite_orm_column::INTEGER, &buyer));
 

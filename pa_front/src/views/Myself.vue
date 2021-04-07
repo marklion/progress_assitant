@@ -1,8 +1,8 @@
 <template>
 <div class="myself_show">
-    <div v-if="$store.state.is_login">
+    <div v-if="$store.state.is_login" class="login_show">
         <van-row type="flex" justify="center" align="center">
-            <van-image round width="80px" height="80px" :src="$remote_url +  $store.state.userinfo.logo" />
+            <van-image round width="80px" height="80px" fit="cover" :src="$remote_url +  $store.state.userinfo.logo" />
         </van-row>
         <van-row type="flex" justify="center" align="center">
             <van-col>
@@ -18,6 +18,7 @@
         <van-divider />
         <van-cell-group>
             <van-cell v-if="is_admin" icon="manager-o" is-link :to="{name:'Admin'}" title="管理员菜单"></van-cell>
+            <van-cell icon="records" is-link :to="{name:'Statistics'}" title="交易统计"></van-cell>
         </van-cell-group>
         <van-divider />
         <van-button type="danger" @click="logoff" block>退出登录</van-button>
@@ -98,6 +99,9 @@ export default {
 <style scoped>
 .unlogin_show {
     margin-top:100px;
+}
+.login_show {
+    margin-top:60px;
 }
 </style>>
 
