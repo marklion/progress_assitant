@@ -5,7 +5,9 @@
             <van-icon name="share-o" size="20"></van-icon>
         </template>
     </van-nav-bar>
-    <router-view />
+    <van-pull-refresh v-model="isLoading" @refresh="onRefresh">
+        <router-view />
+    </van-pull-refresh>
     <van-tabbar route fixed placeholder>
         <van-tabbar-item v-if="$store.state.userinfo.buyer" replace :to="{name:'Home'}" icon="home-o">主页</van-tabbar-item>
         <van-tabbar-item v-else replace :to="{name:'CompanyHome'}" icon="home-o">主页</van-tabbar-item>
@@ -46,7 +48,11 @@ import {
     Col,
     Row
 } from 'vant';
+import {
+    PullRefresh
+} from 'vant';
 
+Vue.use(PullRefresh);
 Vue.use(Col);
 Vue.use(Row);
 Vue.use(Dialog);
@@ -65,6 +71,7 @@ export default {
             buyer: true,
             need_info: false,
             show_share: false,
+            isLoading:false,
         }
     },
     beforeMount: function () {
@@ -80,7 +87,9 @@ export default {
         },
     },
     methods: {
-        
+        onRefresh: function() {
+            this.$router.go(0);
+        },
         onClickRight: function () {
             this.show_share = true;
         },

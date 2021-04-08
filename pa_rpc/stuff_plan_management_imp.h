@@ -63,14 +63,17 @@ class stuff_plan_management_handler : virtual public stuff_plan_managementIf
         }
         return ret;
     }
-    virtual void get_created_plan(std::vector<int64_t> & _return, const std::string& ssid)  {
+    virtual void get_created_plan(std::vector<plan_status> &_return, const std::string &ssid) {
         auto opt_user = PA_DATAOPT_get_online_user(ssid);
         if (opt_user)
         {
             auto plans = opt_user->get_all_children<pa_sql_plan>("created_by");
             for (auto &itr:plans)
             {
-                _return.push_back(itr.get_pri_id());
+                plan_status tmp;
+                tmp.plan_id = itr.get_pri_id();
+                tmp.status = itr.status;
+                _return.push_back(tmp);
             }
         }
         else
@@ -175,7 +178,7 @@ class stuff_plan_management_handler : virtual public stuff_plan_managementIf
 
         return ret;
     }
-    virtual void get_company_plan(std::vector<int64_t> &_return, const std::string &ssid)
+    virtual void get_company_plan(std::vector<plan_status> &_return, const std::string &ssid) 
     {
         auto opt_user = PA_DATAOPT_get_online_user(ssid);
         if (opt_user && opt_user->buyer == false)
@@ -189,7 +192,10 @@ class stuff_plan_management_handler : virtual public stuff_plan_managementIf
                     auto plans = itr.get_all_children<pa_sql_plan>("belong_stuff");
                     for (auto &single_plan:plans)
                     {
-                        _return.push_back(single_plan.get_pri_id());
+                        plan_status tmp;
+                        tmp.plan_id = single_plan.get_pri_id();
+                        tmp.status = single_plan.status;
+                        _return.push_back(tmp);
                     }
                 }
             }

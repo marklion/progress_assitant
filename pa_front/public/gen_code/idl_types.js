@@ -883,3 +883,68 @@ stuff_plan = class {
   }
 
 };
+plan_status = class {
+  constructor(args) {
+    this.plan_id = null;
+    this.status = null;
+    if (args) {
+      if (args.plan_id !== undefined && args.plan_id !== null) {
+        this.plan_id = args.plan_id;
+      }
+      if (args.status !== undefined && args.status !== null) {
+        this.status = args.status;
+      }
+    }
+  }
+
+  read (input) {
+    input.readStructBegin();
+    while (true) {
+      const ret = input.readFieldBegin();
+      const ftype = ret.ftype;
+      const fid = ret.fid;
+      if (ftype == Thrift.Type.STOP) {
+        break;
+      }
+      switch (fid) {
+        case 1:
+        if (ftype == Thrift.Type.I64) {
+          this.plan_id = input.readI64().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        case 2:
+        if (ftype == Thrift.Type.I64) {
+          this.status = input.readI64().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        default:
+          input.skip(ftype);
+      }
+      input.readFieldEnd();
+    }
+    input.readStructEnd();
+    return;
+  }
+
+  write (output) {
+    output.writeStructBegin('plan_status');
+    if (this.plan_id !== null && this.plan_id !== undefined) {
+      output.writeFieldBegin('plan_id', Thrift.Type.I64, 1);
+      output.writeI64(this.plan_id);
+      output.writeFieldEnd();
+    }
+    if (this.status !== null && this.status !== undefined) {
+      output.writeFieldBegin('status', Thrift.Type.I64, 2);
+      output.writeI64(this.status);
+      output.writeFieldEnd();
+    }
+    output.writeFieldStop();
+    output.writeStructEnd();
+    return;
+  }
+
+};

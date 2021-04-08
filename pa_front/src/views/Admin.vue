@@ -18,7 +18,7 @@
             </div>
         </template>
         <template #icon>
-            <van-image round width="40px" height="40px" :src="single_apply.logo" />
+            <van-image round width="40px" height="40px" :src="$remote_url + single_apply.logo" />
         </template>
     </van-cell>
 </div>

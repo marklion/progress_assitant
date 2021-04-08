@@ -1329,3 +1329,115 @@ void stuff_plan::printTo(std::ostream& out) const {
 }
 
 
+plan_status::~plan_status() noexcept {
+}
+
+
+void plan_status::__set_plan_id(const int64_t val) {
+  this->plan_id = val;
+}
+
+void plan_status::__set_status(const int64_t val) {
+  this->status = val;
+}
+std::ostream& operator<<(std::ostream& out, const plan_status& obj)
+{
+  obj.printTo(out);
+  return out;
+}
+
+
+uint32_t plan_status::read(::apache::thrift::protocol::TProtocol* iprot) {
+
+  ::apache::thrift::protocol::TInputRecursionTracker tracker(*iprot);
+  uint32_t xfer = 0;
+  std::string fname;
+  ::apache::thrift::protocol::TType ftype;
+  int16_t fid;
+
+  xfer += iprot->readStructBegin(fname);
+
+  using ::apache::thrift::protocol::TProtocolException;
+
+
+  while (true)
+  {
+    xfer += iprot->readFieldBegin(fname, ftype, fid);
+    if (ftype == ::apache::thrift::protocol::T_STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 1:
+        if (ftype == ::apache::thrift::protocol::T_I64) {
+          xfer += iprot->readI64(this->plan_id);
+          this->__isset.plan_id = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 2:
+        if (ftype == ::apache::thrift::protocol::T_I64) {
+          xfer += iprot->readI64(this->status);
+          this->__isset.status = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      default:
+        xfer += iprot->skip(ftype);
+        break;
+    }
+    xfer += iprot->readFieldEnd();
+  }
+
+  xfer += iprot->readStructEnd();
+
+  return xfer;
+}
+
+uint32_t plan_status::write(::apache::thrift::protocol::TProtocol* oprot) const {
+  uint32_t xfer = 0;
+  ::apache::thrift::protocol::TOutputRecursionTracker tracker(*oprot);
+  xfer += oprot->writeStructBegin("plan_status");
+
+  xfer += oprot->writeFieldBegin("plan_id", ::apache::thrift::protocol::T_I64, 1);
+  xfer += oprot->writeI64(this->plan_id);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("status", ::apache::thrift::protocol::T_I64, 2);
+  xfer += oprot->writeI64(this->status);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldStop();
+  xfer += oprot->writeStructEnd();
+  return xfer;
+}
+
+void swap(plan_status &a, plan_status &b) {
+  using ::std::swap;
+  swap(a.plan_id, b.plan_id);
+  swap(a.status, b.status);
+  swap(a.__isset, b.__isset);
+}
+
+plan_status::plan_status(const plan_status& other20) {
+  plan_id = other20.plan_id;
+  status = other20.status;
+  __isset = other20.__isset;
+}
+plan_status& plan_status::operator=(const plan_status& other21) {
+  plan_id = other21.plan_id;
+  status = other21.status;
+  __isset = other21.__isset;
+  return *this;
+}
+void plan_status::printTo(std::ostream& out) const {
+  using ::apache::thrift::to_string;
+  out << "plan_status(";
+  out << "plan_id=" << to_string(plan_id);
+  out << ", " << "status=" << to_string(status);
+  out << ")";
+}
+
+

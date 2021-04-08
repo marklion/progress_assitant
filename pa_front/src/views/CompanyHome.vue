@@ -15,7 +15,7 @@
                 </van-col>
             </van-row>
         </template>
-        <van-cell v-for="(single_type, index) in all_type" :key="index" :icon="stuff_status(single_type)" :value="'¥' + single_type.price" :title="single_type.name">
+        <van-cell v-for="(single_type, index) in all_type" center :key="index" :icon="stuff_status(single_type)" :value="'¥' + single_type.price" :title="single_type.name">
             <template #extra>
                 <van-row type="flex" justify="center" align="center" :gutter="5">
                     <van-col>

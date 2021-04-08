@@ -35,6 +35,8 @@ class pay_confirm_info;
 
 class stuff_plan;
 
+class plan_status;
+
 typedef struct _gen_exp__isset {
   _gen_exp__isset() : msg(false) {}
   bool msg :1;
@@ -522,6 +524,54 @@ class stuff_plan : public virtual ::apache::thrift::TBase {
 void swap(stuff_plan &a, stuff_plan &b);
 
 std::ostream& operator<<(std::ostream& out, const stuff_plan& obj);
+
+typedef struct _plan_status__isset {
+  _plan_status__isset() : plan_id(false), status(false) {}
+  bool plan_id :1;
+  bool status :1;
+} _plan_status__isset;
+
+class plan_status : public virtual ::apache::thrift::TBase {
+ public:
+
+  plan_status(const plan_status&);
+  plan_status& operator=(const plan_status&);
+  plan_status() : plan_id(0), status(0) {
+  }
+
+  virtual ~plan_status() noexcept;
+  int64_t plan_id;
+  int64_t status;
+
+  _plan_status__isset __isset;
+
+  void __set_plan_id(const int64_t val);
+
+  void __set_status(const int64_t val);
+
+  bool operator == (const plan_status & rhs) const
+  {
+    if (!(plan_id == rhs.plan_id))
+      return false;
+    if (!(status == rhs.status))
+      return false;
+    return true;
+  }
+  bool operator != (const plan_status &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const plan_status & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+  virtual void printTo(std::ostream& out) const;
+};
+
+void swap(plan_status &a, plan_status &b);
+
+std::ostream& operator<<(std::ostream& out, const plan_status& obj);
 
 
 

@@ -9,7 +9,7 @@ const routes = [
     name: 'Home',
     component: () => import('../views/Home.vue'),
     meta: {    
-        private_title: '掌易',
+        private_title: '今日报价',
         has_go_back:false,
     },
   },
