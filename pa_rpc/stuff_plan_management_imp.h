@@ -37,10 +37,15 @@ class stuff_plan_management_handler : virtual public stuff_plan_managementIf
         {
             PA_RETURN_NOSTUFF_MSG();
         }
-        if (opt_user && stuff_type)
+        auto company = opt_user->get_parent<pa_sql_company>("belong_company");
+        if (! company)
+        {
+            PA_RETURN_NOCOMPANY_MSG();
+        }
+        if (opt_user && stuff_type && company)
         {
             pa_sql_plan tmp;
-            tmp.count = plan.count;
+            tmp.count = 0;
             tmp.create_time = time(NULL);
             tmp.name = stuff_type->name;
             tmp.plan_time = plan.plan_time;
@@ -48,12 +53,30 @@ class stuff_plan_management_handler : virtual public stuff_plan_managementIf
             tmp.status = 0;
             for (auto &itr:plan.vichele_info)
             {
-                tmp.vicheles += itr + "-";
+                tmp.count += itr.count;
             }
             tmp.set_parent(*opt_user, "created_by");
             tmp.set_parent(*stuff_type, "belong_stuff");
             tmp.comment = plan.comment;
             tmp.insert_record();
+            for (auto &itr:plan.vichele_info)
+            {
+                auto main_vhichele = company->get_children<pa_sql_vichele>("belong_company", "number = '%s'", itr.main_vichele.c_str());
+                auto behind_vhichele = company->get_children<pa_sql_vichele_behind>("belong_company", "number = '%s'", itr.behind_vichele.c_str());
+                auto driver = company->get_children<pa_sql_driver>("belong_company", "name = '%s' AND phone = '%s'", itr.driver_name.c_str(), itr.driver_phone.c_str());
+                if (main_vhichele && behind_vhichele && driver)
+                {
+                    pa_sql_single_vichele tmp_single;
+                    tmp_single.count = itr.count;
+                    tmp_single.drop_address = itr.drop_address;
+                    tmp_single.use_for = itr.use_for;
+                    tmp_single.set_parent(*main_vhichele, "main_vichele");
+                    tmp_single.set_parent(*behind_vhichele, "behind_vichele");
+                    tmp_single.set_parent(*driver, "driver");
+                    tmp_single.set_parent(tmp, "belong_plan");
+                    tmp_single.insert_record();
+                }
+            }
 
             ret = tmp.get_pri_id();
             if (ret > 0)
@@ -123,10 +146,24 @@ class stuff_plan_management_handler : virtual public stuff_plan_managementIf
             {
                 _return.type_id = belong_type->get_pri_id();
             }
-            auto all_vicheles = prepare_vichels(plan->vicheles);
-            for (auto &itr:all_vicheles)
+            auto all_vichele_info = plan->get_all_children<pa_sql_single_vichele>("belong_plan");
+            for (auto &itr:all_vichele_info)
             {
-                _return.vichele_info.push_back(itr);
+                auto main_vichele = itr.get_parent<pa_sql_vichele>("main_vichele");
+                auto behind_vichele = itr.get_parent<pa_sql_vichele_behind>("behind_vichele");
+                auto driver = itr.get_parent<pa_sql_driver>("driver");
+                if (main_vichele && behind_vichele && driver)
+                {
+                    vichele_in_plan tmp;
+                    tmp.behind_vichele = behind_vichele->number;
+                    tmp.count = itr.count;
+                    tmp.driver_name = driver->name;
+                    tmp.driver_phone = driver->phone;
+                    tmp.drop_address = itr.drop_address;
+                    tmp.main_vichele = main_vichele->number;
+                    tmp.use_for = itr.use_for;
+                    _return.vichele_info.push_back(tmp);
+                }
             }
         }
         else
@@ -151,19 +188,43 @@ class stuff_plan_management_handler : virtual public stuff_plan_managementIf
         {
             PA_RETURN_MSG("计划已确认无法修改");
         }
+        auto company = opt_user->get_parent<pa_sql_company>("belong_company");
+        if (!company)
+        {
+            PA_RETURN_NOCOMPANY_MSG();
+        }
         if (opt_user && plan_in_sql)
         {
             auto created_user = plan_in_sql->get_parent<pa_sql_userinfo>("created_by");
             if (created_user && created_user->get_pri_id() == opt_user->get_pri_id())
             {
-                plan_in_sql->count = plan.count;
+                plan_in_sql->count = 0;
                 plan_in_sql->plan_time = plan.plan_time;
-                plan_in_sql->vicheles = "";
-                plan_in_sql->comment = plan.comment;
-                for (auto &itr:plan.vichele_info)
+                auto orig_vichele_info = plan_in_sql->get_all_children<pa_sql_single_vichele>("belong_plan");
+                for (auto &itr:orig_vichele_info)
                 {
-                    plan_in_sql->vicheles += itr + "-";
+                    itr.remove_record();
                 }
+                for (auto &itr : plan.vichele_info)
+                {
+                    auto main_vhichele = company->get_children<pa_sql_vichele>("belong_company", "number = '%s'", itr.main_vichele.c_str());
+                    auto behind_vhichele = company->get_children<pa_sql_vichele_behind>("belong_company", "number = '%s'", itr.behind_vichele.c_str());
+                    auto driver = company->get_children<pa_sql_driver>("belong_company", "name = '%s' AND phone = '%s'", itr.driver_name.c_str(), itr.driver_phone.c_str());
+                    if (main_vhichele && behind_vhichele && driver)
+                    {
+                        pa_sql_single_vichele tmp_single;
+                        tmp_single.count = itr.count;
+                        tmp_single.drop_address = itr.drop_address;
+                        tmp_single.use_for = itr.use_for;
+                        tmp_single.set_parent(*main_vhichele, "main_vichele");
+                        tmp_single.set_parent(*behind_vhichele, "behind_vichele");
+                        tmp_single.set_parent(*driver, "driver");
+                        tmp_single.set_parent(*plan_in_sql, "belong_plan");
+                        tmp_single.insert_record();
+                        plan_in_sql->count += itr.count;
+                    }
+                }
+                plan_in_sql->comment = plan.comment;
                 ret = plan_in_sql->update_record();
                 if (ret)
                 {

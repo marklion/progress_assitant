@@ -127,6 +127,38 @@ public:
     }
 };
 
+class pa_sql_vichele_behind:public pa_sql_vichele {
+public:
+    virtual std::string table_name()
+    {
+        return "vichele_behind_table";
+    }
+};
+
+class pa_sql_driver:public sql_tree_base {
+public:
+    std::string name;
+    std::string phone;
+    pa_sql_driver() {
+        add_parent_type<pa_sql_company>("belong_company");
+    }
+    virtual std::vector<sqlite_orm_column> self_columns_defined()
+    {
+        std::vector<sqlite_orm_column> ret;
+        ret.push_back(sqlite_orm_column("name", sqlite_orm_column::STRING, &name, SQLITE_ORM_COLUMN_LIMIT_UNIQ));
+        ret.push_back(sqlite_orm_column("phone", sqlite_orm_column::STRING, &phone, SQLITE_ORM_COLUMN_LIMIT_UNIQ));
+
+        return ret;
+    }
+
+    virtual std::string table_name()
+    {
+        return "driver_table";
+    }
+};
+
+
+
 class pa_sql_plan:public sql_tree_base {
 public:
     std::string name;
@@ -134,7 +166,6 @@ public:
     double count = 0;
     std::string plan_time;
     int create_time = 0;
-    std::string vicheles;
     int status = 0;
     std::string comment;
     std::string payinfo;
@@ -157,7 +188,6 @@ public:
         ret.push_back(sqlite_orm_column("count", sqlite_orm_column::REAL, &count));
         ret.push_back(sqlite_orm_column("plan_time", sqlite_orm_column::STRING, &plan_time));
         ret.push_back(sqlite_orm_column("create_time", sqlite_orm_column::INTEGER, &create_time));
-        ret.push_back(sqlite_orm_column("vicheles", sqlite_orm_column::STRING, &vicheles));
         ret.push_back(sqlite_orm_column("status", sqlite_orm_column::INTEGER, &status));
         ret.push_back(sqlite_orm_column("payinfo", sqlite_orm_column::STRING, &payinfo));
         ret.push_back(sqlite_orm_column("plan_confirm_timestamp", sqlite_orm_column::STRING, &plan_confirm_timestamp));
@@ -176,6 +206,32 @@ public:
     void send_wechat_msg();
 };
 
+class pa_sql_single_vichele:public sql_tree_base {
+public:
+    std::string drop_address;
+    std::string use_for;
+    double count = 0;
+    pa_sql_single_vichele() {
+        add_parent_type<pa_sql_vichele>("main_vichele");
+        add_parent_type<pa_sql_vichele_behind>("behind_vichele");
+        add_parent_type<pa_sql_driver>("driver");
+        add_parent_type<pa_sql_plan>("belong_plan");
+    }
+    virtual std::vector<sqlite_orm_column> self_columns_defined()
+    {
+        std::vector<sqlite_orm_column> ret;
+        ret.push_back(sqlite_orm_column("drop_address", sqlite_orm_column::STRING, &drop_address));
+        ret.push_back(sqlite_orm_column("use_for", sqlite_orm_column::STRING, &use_for));
+        ret.push_back(sqlite_orm_column("count", sqlite_orm_column::REAL, &count));
+
+        return ret;
+    }
+
+    virtual std::string table_name()
+    {
+        return "single_vichele_table";
+    }
+};
 class pa_sql_user_apply:public sql_tree_base {
 public:
     int status = 0;

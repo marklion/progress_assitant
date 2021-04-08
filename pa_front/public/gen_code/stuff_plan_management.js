@@ -229,13 +229,13 @@ stuff_plan_management_get_created_plan_result = class {
         case 0:
         if (ftype == Thrift.Type.LIST) {
           this.success = [];
-          const _rtmp326 = input.readListBegin();
-          const _size25 = _rtmp326.size || 0;
-          for (let _i27 = 0; _i27 < _size25; ++_i27) {
-            let elem28 = null;
-            elem28 = new plan_status();
-            elem28.read(input);
-            this.success.push(elem28);
+          const _rtmp331 = input.readListBegin();
+          const _size30 = _rtmp331.size || 0;
+          for (let _i32 = 0; _i32 < _size30; ++_i32) {
+            let elem33 = null;
+            elem33 = new plan_status();
+            elem33.read(input);
+            this.success.push(elem33);
           }
           input.readListEnd();
         } else {
@@ -264,10 +264,10 @@ stuff_plan_management_get_created_plan_result = class {
     if (this.success !== null && this.success !== undefined) {
       output.writeFieldBegin('success', Thrift.Type.LIST, 0);
       output.writeListBegin(Thrift.Type.STRUCT, this.success.length);
-      for (let iter29 in this.success) {
-        if (this.success.hasOwnProperty(iter29)) {
-          iter29 = this.success[iter29];
-          iter29.write(output);
+      for (let iter34 in this.success) {
+        if (this.success.hasOwnProperty(iter34)) {
+          iter34 = this.success[iter34];
+          iter34.write(output);
         }
       }
       output.writeListEnd();
@@ -367,13 +367,13 @@ stuff_plan_management_get_company_plan_result = class {
         case 0:
         if (ftype == Thrift.Type.LIST) {
           this.success = [];
-          const _rtmp331 = input.readListBegin();
-          const _size30 = _rtmp331.size || 0;
-          for (let _i32 = 0; _i32 < _size30; ++_i32) {
-            let elem33 = null;
-            elem33 = new plan_status();
-            elem33.read(input);
-            this.success.push(elem33);
+          const _rtmp336 = input.readListBegin();
+          const _size35 = _rtmp336.size || 0;
+          for (let _i37 = 0; _i37 < _size35; ++_i37) {
+            let elem38 = null;
+            elem38 = new plan_status();
+            elem38.read(input);
+            this.success.push(elem38);
           }
           input.readListEnd();
         } else {
@@ -402,10 +402,10 @@ stuff_plan_management_get_company_plan_result = class {
     if (this.success !== null && this.success !== undefined) {
       output.writeFieldBegin('success', Thrift.Type.LIST, 0);
       output.writeListBegin(Thrift.Type.STRUCT, this.success.length);
-      for (let iter34 in this.success) {
-        if (this.success.hasOwnProperty(iter34)) {
-          iter34 = this.success[iter34];
-          iter34.write(output);
+      for (let iter39 in this.success) {
+        if (this.success.hasOwnProperty(iter39)) {
+          iter39 = this.success[iter39];
+          iter39.write(output);
         }
       }
       output.writeListEnd();

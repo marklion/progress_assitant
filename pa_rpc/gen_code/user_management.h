@@ -26,13 +26,15 @@ class user_managementIf {
   virtual void user_login(std::string& _return, const std::string& code) = 0;
   virtual bool update_user_info(const user_info& info, const std::string& ssid) = 0;
   virtual void logff_user(const std::string& ssid) = 0;
-  virtual void get_bound_vichele(std::vector<std::string> & _return, const std::string& ssid) = 0;
-  virtual bool bind_new_vichele(const std::string& ssid, const std::string& vichele) = 0;
+  virtual void get_bound_vichele(std::vector<std::string> & _return, const std::string& ssid, const bool main_vichele) = 0;
+  virtual bool bind_new_vichele(const std::string& ssid, const std::string& vichele, const bool main_vichele) = 0;
   virtual void remove_vichele(const std::string& ssid, const std::string& vichele) = 0;
   virtual bool update_logo(const std::string& content, const std::string& ssid) = 0;
   virtual void get_customer_info(std::string& _return, const int64_t user_id) = 0;
   virtual bool is_admin(const std::string& ssid) = 0;
   virtual void get_wx_api_signature(std::string& _return, const int64_t timestamp, const std::string& nonceStr, const std::string& url) = 0;
+  virtual void get_bound_driver_info(std::vector<driver_info> & _return, const std::string& ssid) = 0;
+  virtual bool bind_new_driver(const std::string& ssid, const driver_info& driver) = 0;
 };
 
 class user_managementIfFactory {
@@ -75,10 +77,10 @@ class user_managementNull : virtual public user_managementIf {
   void logff_user(const std::string& /* ssid */) {
     return;
   }
-  void get_bound_vichele(std::vector<std::string> & /* _return */, const std::string& /* ssid */) {
+  void get_bound_vichele(std::vector<std::string> & /* _return */, const std::string& /* ssid */, const bool /* main_vichele */) {
     return;
   }
-  bool bind_new_vichele(const std::string& /* ssid */, const std::string& /* vichele */) {
+  bool bind_new_vichele(const std::string& /* ssid */, const std::string& /* vichele */, const bool /* main_vichele */) {
     bool _return = false;
     return _return;
   }
@@ -98,6 +100,13 @@ class user_managementNull : virtual public user_managementIf {
   }
   void get_wx_api_signature(std::string& /* _return */, const int64_t /* timestamp */, const std::string& /* nonceStr */, const std::string& /* url */) {
     return;
+  }
+  void get_bound_driver_info(std::vector<driver_info> & /* _return */, const std::string& /* ssid */) {
+    return;
+  }
+  bool bind_new_driver(const std::string& /* ssid */, const driver_info& /* driver */) {
+    bool _return = false;
+    return _return;
   }
 };
 
@@ -549,8 +558,9 @@ class user_management_logff_user_presult {
 };
 
 typedef struct _user_management_get_bound_vichele_args__isset {
-  _user_management_get_bound_vichele_args__isset() : ssid(false) {}
+  _user_management_get_bound_vichele_args__isset() : ssid(false), main_vichele(false) {}
   bool ssid :1;
+  bool main_vichele :1;
 } _user_management_get_bound_vichele_args__isset;
 
 class user_management_get_bound_vichele_args {
@@ -558,19 +568,24 @@ class user_management_get_bound_vichele_args {
 
   user_management_get_bound_vichele_args(const user_management_get_bound_vichele_args&);
   user_management_get_bound_vichele_args& operator=(const user_management_get_bound_vichele_args&);
-  user_management_get_bound_vichele_args() : ssid() {
+  user_management_get_bound_vichele_args() : ssid(), main_vichele(0) {
   }
 
   virtual ~user_management_get_bound_vichele_args() noexcept;
   std::string ssid;
+  bool main_vichele;
 
   _user_management_get_bound_vichele_args__isset __isset;
 
   void __set_ssid(const std::string& val);
 
+  void __set_main_vichele(const bool val);
+
   bool operator == (const user_management_get_bound_vichele_args & rhs) const
   {
     if (!(ssid == rhs.ssid))
+      return false;
+    if (!(main_vichele == rhs.main_vichele))
       return false;
     return true;
   }
@@ -592,6 +607,7 @@ class user_management_get_bound_vichele_pargs {
 
   virtual ~user_management_get_bound_vichele_pargs() noexcept;
   const std::string* ssid;
+  const bool* main_vichele;
 
   uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
 
@@ -661,9 +677,10 @@ class user_management_get_bound_vichele_presult {
 };
 
 typedef struct _user_management_bind_new_vichele_args__isset {
-  _user_management_bind_new_vichele_args__isset() : ssid(false), vichele(false) {}
+  _user_management_bind_new_vichele_args__isset() : ssid(false), vichele(false), main_vichele(false) {}
   bool ssid :1;
   bool vichele :1;
+  bool main_vichele :1;
 } _user_management_bind_new_vichele_args__isset;
 
 class user_management_bind_new_vichele_args {
@@ -671,12 +688,13 @@ class user_management_bind_new_vichele_args {
 
   user_management_bind_new_vichele_args(const user_management_bind_new_vichele_args&);
   user_management_bind_new_vichele_args& operator=(const user_management_bind_new_vichele_args&);
-  user_management_bind_new_vichele_args() : ssid(), vichele() {
+  user_management_bind_new_vichele_args() : ssid(), vichele(), main_vichele(0) {
   }
 
   virtual ~user_management_bind_new_vichele_args() noexcept;
   std::string ssid;
   std::string vichele;
+  bool main_vichele;
 
   _user_management_bind_new_vichele_args__isset __isset;
 
@@ -684,11 +702,15 @@ class user_management_bind_new_vichele_args {
 
   void __set_vichele(const std::string& val);
 
+  void __set_main_vichele(const bool val);
+
   bool operator == (const user_management_bind_new_vichele_args & rhs) const
   {
     if (!(ssid == rhs.ssid))
       return false;
     if (!(vichele == rhs.vichele))
+      return false;
+    if (!(main_vichele == rhs.main_vichele))
       return false;
     return true;
   }
@@ -711,6 +733,7 @@ class user_management_bind_new_vichele_pargs {
   virtual ~user_management_bind_new_vichele_pargs() noexcept;
   const std::string* ssid;
   const std::string* vichele;
+  const bool* main_vichele;
 
   uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
 
@@ -1351,6 +1374,237 @@ class user_management_get_wx_api_signature_presult {
 
 };
 
+typedef struct _user_management_get_bound_driver_info_args__isset {
+  _user_management_get_bound_driver_info_args__isset() : ssid(false) {}
+  bool ssid :1;
+} _user_management_get_bound_driver_info_args__isset;
+
+class user_management_get_bound_driver_info_args {
+ public:
+
+  user_management_get_bound_driver_info_args(const user_management_get_bound_driver_info_args&);
+  user_management_get_bound_driver_info_args& operator=(const user_management_get_bound_driver_info_args&);
+  user_management_get_bound_driver_info_args() : ssid() {
+  }
+
+  virtual ~user_management_get_bound_driver_info_args() noexcept;
+  std::string ssid;
+
+  _user_management_get_bound_driver_info_args__isset __isset;
+
+  void __set_ssid(const std::string& val);
+
+  bool operator == (const user_management_get_bound_driver_info_args & rhs) const
+  {
+    if (!(ssid == rhs.ssid))
+      return false;
+    return true;
+  }
+  bool operator != (const user_management_get_bound_driver_info_args &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const user_management_get_bound_driver_info_args & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+
+class user_management_get_bound_driver_info_pargs {
+ public:
+
+
+  virtual ~user_management_get_bound_driver_info_pargs() noexcept;
+  const std::string* ssid;
+
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _user_management_get_bound_driver_info_result__isset {
+  _user_management_get_bound_driver_info_result__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _user_management_get_bound_driver_info_result__isset;
+
+class user_management_get_bound_driver_info_result {
+ public:
+
+  user_management_get_bound_driver_info_result(const user_management_get_bound_driver_info_result&);
+  user_management_get_bound_driver_info_result& operator=(const user_management_get_bound_driver_info_result&);
+  user_management_get_bound_driver_info_result() {
+  }
+
+  virtual ~user_management_get_bound_driver_info_result() noexcept;
+  std::vector<driver_info>  success;
+  gen_exp e;
+
+  _user_management_get_bound_driver_info_result__isset __isset;
+
+  void __set_success(const std::vector<driver_info> & val);
+
+  void __set_e(const gen_exp& val);
+
+  bool operator == (const user_management_get_bound_driver_info_result & rhs) const
+  {
+    if (!(success == rhs.success))
+      return false;
+    if (!(e == rhs.e))
+      return false;
+    return true;
+  }
+  bool operator != (const user_management_get_bound_driver_info_result &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const user_management_get_bound_driver_info_result & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _user_management_get_bound_driver_info_presult__isset {
+  _user_management_get_bound_driver_info_presult__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _user_management_get_bound_driver_info_presult__isset;
+
+class user_management_get_bound_driver_info_presult {
+ public:
+
+
+  virtual ~user_management_get_bound_driver_info_presult() noexcept;
+  std::vector<driver_info> * success;
+  gen_exp e;
+
+  _user_management_get_bound_driver_info_presult__isset __isset;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+
+};
+
+typedef struct _user_management_bind_new_driver_args__isset {
+  _user_management_bind_new_driver_args__isset() : ssid(false), driver(false) {}
+  bool ssid :1;
+  bool driver :1;
+} _user_management_bind_new_driver_args__isset;
+
+class user_management_bind_new_driver_args {
+ public:
+
+  user_management_bind_new_driver_args(const user_management_bind_new_driver_args&);
+  user_management_bind_new_driver_args& operator=(const user_management_bind_new_driver_args&);
+  user_management_bind_new_driver_args() : ssid() {
+  }
+
+  virtual ~user_management_bind_new_driver_args() noexcept;
+  std::string ssid;
+  driver_info driver;
+
+  _user_management_bind_new_driver_args__isset __isset;
+
+  void __set_ssid(const std::string& val);
+
+  void __set_driver(const driver_info& val);
+
+  bool operator == (const user_management_bind_new_driver_args & rhs) const
+  {
+    if (!(ssid == rhs.ssid))
+      return false;
+    if (!(driver == rhs.driver))
+      return false;
+    return true;
+  }
+  bool operator != (const user_management_bind_new_driver_args &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const user_management_bind_new_driver_args & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+
+class user_management_bind_new_driver_pargs {
+ public:
+
+
+  virtual ~user_management_bind_new_driver_pargs() noexcept;
+  const std::string* ssid;
+  const driver_info* driver;
+
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _user_management_bind_new_driver_result__isset {
+  _user_management_bind_new_driver_result__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _user_management_bind_new_driver_result__isset;
+
+class user_management_bind_new_driver_result {
+ public:
+
+  user_management_bind_new_driver_result(const user_management_bind_new_driver_result&);
+  user_management_bind_new_driver_result& operator=(const user_management_bind_new_driver_result&);
+  user_management_bind_new_driver_result() : success(0) {
+  }
+
+  virtual ~user_management_bind_new_driver_result() noexcept;
+  bool success;
+  gen_exp e;
+
+  _user_management_bind_new_driver_result__isset __isset;
+
+  void __set_success(const bool val);
+
+  void __set_e(const gen_exp& val);
+
+  bool operator == (const user_management_bind_new_driver_result & rhs) const
+  {
+    if (!(success == rhs.success))
+      return false;
+    if (!(e == rhs.e))
+      return false;
+    return true;
+  }
+  bool operator != (const user_management_bind_new_driver_result &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const user_management_bind_new_driver_result & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _user_management_bind_new_driver_presult__isset {
+  _user_management_bind_new_driver_presult__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _user_management_bind_new_driver_presult__isset;
+
+class user_management_bind_new_driver_presult {
+ public:
+
+
+  virtual ~user_management_bind_new_driver_presult() noexcept;
+  bool* success;
+  gen_exp e;
+
+  _user_management_bind_new_driver_presult__isset __isset;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+
+};
+
 class user_managementClient : virtual public user_managementIf {
  public:
   user_managementClient(std::shared_ptr< ::apache::thrift::protocol::TProtocol> prot) {
@@ -1388,11 +1642,11 @@ class user_managementClient : virtual public user_managementIf {
   void logff_user(const std::string& ssid);
   void send_logff_user(const std::string& ssid);
   void recv_logff_user();
-  void get_bound_vichele(std::vector<std::string> & _return, const std::string& ssid);
-  void send_get_bound_vichele(const std::string& ssid);
+  void get_bound_vichele(std::vector<std::string> & _return, const std::string& ssid, const bool main_vichele);
+  void send_get_bound_vichele(const std::string& ssid, const bool main_vichele);
   void recv_get_bound_vichele(std::vector<std::string> & _return);
-  bool bind_new_vichele(const std::string& ssid, const std::string& vichele);
-  void send_bind_new_vichele(const std::string& ssid, const std::string& vichele);
+  bool bind_new_vichele(const std::string& ssid, const std::string& vichele, const bool main_vichele);
+  void send_bind_new_vichele(const std::string& ssid, const std::string& vichele, const bool main_vichele);
   bool recv_bind_new_vichele();
   void remove_vichele(const std::string& ssid, const std::string& vichele);
   void send_remove_vichele(const std::string& ssid, const std::string& vichele);
@@ -1409,6 +1663,12 @@ class user_managementClient : virtual public user_managementIf {
   void get_wx_api_signature(std::string& _return, const int64_t timestamp, const std::string& nonceStr, const std::string& url);
   void send_get_wx_api_signature(const int64_t timestamp, const std::string& nonceStr, const std::string& url);
   void recv_get_wx_api_signature(std::string& _return);
+  void get_bound_driver_info(std::vector<driver_info> & _return, const std::string& ssid);
+  void send_get_bound_driver_info(const std::string& ssid);
+  void recv_get_bound_driver_info(std::vector<driver_info> & _return);
+  bool bind_new_driver(const std::string& ssid, const driver_info& driver);
+  void send_bind_new_driver(const std::string& ssid, const driver_info& driver);
+  bool recv_bind_new_driver();
  protected:
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> piprot_;
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> poprot_;
@@ -1435,6 +1695,8 @@ class user_managementProcessor : public ::apache::thrift::TDispatchProcessor {
   void process_get_customer_info(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
   void process_is_admin(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
   void process_get_wx_api_signature(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
+  void process_get_bound_driver_info(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
+  void process_bind_new_driver(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
  public:
   user_managementProcessor(::std::shared_ptr<user_managementIf> iface) :
     iface_(iface) {
@@ -1449,6 +1711,8 @@ class user_managementProcessor : public ::apache::thrift::TDispatchProcessor {
     processMap_["get_customer_info"] = &user_managementProcessor::process_get_customer_info;
     processMap_["is_admin"] = &user_managementProcessor::process_is_admin;
     processMap_["get_wx_api_signature"] = &user_managementProcessor::process_get_wx_api_signature;
+    processMap_["get_bound_driver_info"] = &user_managementProcessor::process_get_bound_driver_info;
+    processMap_["bind_new_driver"] = &user_managementProcessor::process_bind_new_driver;
   }
 
   virtual ~user_managementProcessor() {}
@@ -1515,23 +1779,23 @@ class user_managementMultiface : virtual public user_managementIf {
     ifaces_[i]->logff_user(ssid);
   }
 
-  void get_bound_vichele(std::vector<std::string> & _return, const std::string& ssid) {
+  void get_bound_vichele(std::vector<std::string> & _return, const std::string& ssid, const bool main_vichele) {
     size_t sz = ifaces_.size();
     size_t i = 0;
     for (; i < (sz - 1); ++i) {
-      ifaces_[i]->get_bound_vichele(_return, ssid);
+      ifaces_[i]->get_bound_vichele(_return, ssid, main_vichele);
     }
-    ifaces_[i]->get_bound_vichele(_return, ssid);
+    ifaces_[i]->get_bound_vichele(_return, ssid, main_vichele);
     return;
   }
 
-  bool bind_new_vichele(const std::string& ssid, const std::string& vichele) {
+  bool bind_new_vichele(const std::string& ssid, const std::string& vichele, const bool main_vichele) {
     size_t sz = ifaces_.size();
     size_t i = 0;
     for (; i < (sz - 1); ++i) {
-      ifaces_[i]->bind_new_vichele(ssid, vichele);
+      ifaces_[i]->bind_new_vichele(ssid, vichele, main_vichele);
     }
-    return ifaces_[i]->bind_new_vichele(ssid, vichele);
+    return ifaces_[i]->bind_new_vichele(ssid, vichele, main_vichele);
   }
 
   void remove_vichele(const std::string& ssid, const std::string& vichele) {
@@ -1581,6 +1845,25 @@ class user_managementMultiface : virtual public user_managementIf {
     return;
   }
 
+  void get_bound_driver_info(std::vector<driver_info> & _return, const std::string& ssid) {
+    size_t sz = ifaces_.size();
+    size_t i = 0;
+    for (; i < (sz - 1); ++i) {
+      ifaces_[i]->get_bound_driver_info(_return, ssid);
+    }
+    ifaces_[i]->get_bound_driver_info(_return, ssid);
+    return;
+  }
+
+  bool bind_new_driver(const std::string& ssid, const driver_info& driver) {
+    size_t sz = ifaces_.size();
+    size_t i = 0;
+    for (; i < (sz - 1); ++i) {
+      ifaces_[i]->bind_new_driver(ssid, driver);
+    }
+    return ifaces_[i]->bind_new_driver(ssid, driver);
+  }
+
 };
 
 // The 'concurrent' client is a thread safe client that correctly handles
@@ -1625,11 +1908,11 @@ class user_managementConcurrentClient : virtual public user_managementIf {
   void logff_user(const std::string& ssid);
   int32_t send_logff_user(const std::string& ssid);
   void recv_logff_user(const int32_t seqid);
-  void get_bound_vichele(std::vector<std::string> & _return, const std::string& ssid);
-  int32_t send_get_bound_vichele(const std::string& ssid);
+  void get_bound_vichele(std::vector<std::string> & _return, const std::string& ssid, const bool main_vichele);
+  int32_t send_get_bound_vichele(const std::string& ssid, const bool main_vichele);
   void recv_get_bound_vichele(std::vector<std::string> & _return, const int32_t seqid);
-  bool bind_new_vichele(const std::string& ssid, const std::string& vichele);
-  int32_t send_bind_new_vichele(const std::string& ssid, const std::string& vichele);
+  bool bind_new_vichele(const std::string& ssid, const std::string& vichele, const bool main_vichele);
+  int32_t send_bind_new_vichele(const std::string& ssid, const std::string& vichele, const bool main_vichele);
   bool recv_bind_new_vichele(const int32_t seqid);
   void remove_vichele(const std::string& ssid, const std::string& vichele);
   int32_t send_remove_vichele(const std::string& ssid, const std::string& vichele);
@@ -1646,6 +1929,12 @@ class user_managementConcurrentClient : virtual public user_managementIf {
   void get_wx_api_signature(std::string& _return, const int64_t timestamp, const std::string& nonceStr, const std::string& url);
   int32_t send_get_wx_api_signature(const int64_t timestamp, const std::string& nonceStr, const std::string& url);
   void recv_get_wx_api_signature(std::string& _return, const int32_t seqid);
+  void get_bound_driver_info(std::vector<driver_info> & _return, const std::string& ssid);
+  int32_t send_get_bound_driver_info(const std::string& ssid);
+  void recv_get_bound_driver_info(std::vector<driver_info> & _return, const int32_t seqid);
+  bool bind_new_driver(const std::string& ssid, const driver_info& driver);
+  int32_t send_bind_new_driver(const std::string& ssid, const driver_info& driver);
+  bool recv_bind_new_driver(const int32_t seqid);
  protected:
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> piprot_;
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> poprot_;

@@ -503,9 +503,13 @@ user_management_logff_user_result = class {
 user_management_get_bound_vichele_args = class {
   constructor(args) {
     this.ssid = null;
+    this.main_vichele = null;
     if (args) {
       if (args.ssid !== undefined && args.ssid !== null) {
         this.ssid = args.ssid;
+      }
+      if (args.main_vichele !== undefined && args.main_vichele !== null) {
+        this.main_vichele = args.main_vichele;
       }
     }
   }
@@ -527,9 +531,13 @@ user_management_get_bound_vichele_args = class {
           input.skip(ftype);
         }
         break;
-        case 0:
+        case 2:
+        if (ftype == Thrift.Type.BOOL) {
+          this.main_vichele = input.readBool().value;
+        } else {
           input.skip(ftype);
-          break;
+        }
+        break;
         default:
           input.skip(ftype);
       }
@@ -544,6 +552,11 @@ user_management_get_bound_vichele_args = class {
     if (this.ssid !== null && this.ssid !== undefined) {
       output.writeFieldBegin('ssid', Thrift.Type.STRING, 1);
       output.writeString(this.ssid);
+      output.writeFieldEnd();
+    }
+    if (this.main_vichele !== null && this.main_vichele !== undefined) {
+      output.writeFieldBegin('main_vichele', Thrift.Type.BOOL, 2);
+      output.writeBool(this.main_vichele);
       output.writeFieldEnd();
     }
     output.writeFieldStop();
@@ -641,12 +654,16 @@ user_management_bind_new_vichele_args = class {
   constructor(args) {
     this.ssid = null;
     this.vichele = null;
+    this.main_vichele = null;
     if (args) {
       if (args.ssid !== undefined && args.ssid !== null) {
         this.ssid = args.ssid;
       }
       if (args.vichele !== undefined && args.vichele !== null) {
         this.vichele = args.vichele;
+      }
+      if (args.main_vichele !== undefined && args.main_vichele !== null) {
+        this.main_vichele = args.main_vichele;
       }
     }
   }
@@ -675,6 +692,13 @@ user_management_bind_new_vichele_args = class {
           input.skip(ftype);
         }
         break;
+        case 3:
+        if (ftype == Thrift.Type.BOOL) {
+          this.main_vichele = input.readBool().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
         default:
           input.skip(ftype);
       }
@@ -694,6 +718,11 @@ user_management_bind_new_vichele_args = class {
     if (this.vichele !== null && this.vichele !== undefined) {
       output.writeFieldBegin('vichele', Thrift.Type.STRING, 2);
       output.writeString(this.vichele);
+      output.writeFieldEnd();
+    }
+    if (this.main_vichele !== null && this.main_vichele !== undefined) {
+      output.writeFieldBegin('main_vichele', Thrift.Type.BOOL, 3);
+      output.writeBool(this.main_vichele);
       output.writeFieldEnd();
     }
     output.writeFieldStop();
@@ -1406,6 +1435,280 @@ user_management_get_wx_api_signature_result = class {
   }
 
 };
+user_management_get_bound_driver_info_args = class {
+  constructor(args) {
+    this.ssid = null;
+    if (args) {
+      if (args.ssid !== undefined && args.ssid !== null) {
+        this.ssid = args.ssid;
+      }
+    }
+  }
+
+  read (input) {
+    input.readStructBegin();
+    while (true) {
+      const ret = input.readFieldBegin();
+      const ftype = ret.ftype;
+      const fid = ret.fid;
+      if (ftype == Thrift.Type.STOP) {
+        break;
+      }
+      switch (fid) {
+        case 1:
+        if (ftype == Thrift.Type.STRING) {
+          this.ssid = input.readString().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        case 0:
+          input.skip(ftype);
+          break;
+        default:
+          input.skip(ftype);
+      }
+      input.readFieldEnd();
+    }
+    input.readStructEnd();
+    return;
+  }
+
+  write (output) {
+    output.writeStructBegin('user_management_get_bound_driver_info_args');
+    if (this.ssid !== null && this.ssid !== undefined) {
+      output.writeFieldBegin('ssid', Thrift.Type.STRING, 1);
+      output.writeString(this.ssid);
+      output.writeFieldEnd();
+    }
+    output.writeFieldStop();
+    output.writeStructEnd();
+    return;
+  }
+
+};
+user_management_get_bound_driver_info_result = class {
+  constructor(args) {
+    this.success = null;
+    this.e = null;
+    if (args instanceof gen_exp) {
+        this.e = args;
+        return;
+    }
+    if (args) {
+      if (args.success !== undefined && args.success !== null) {
+        this.success = Thrift.copyList(args.success, [driver_info]);
+      }
+      if (args.e !== undefined && args.e !== null) {
+        this.e = args.e;
+      }
+    }
+  }
+
+  read (input) {
+    input.readStructBegin();
+    while (true) {
+      const ret = input.readFieldBegin();
+      const ftype = ret.ftype;
+      const fid = ret.fid;
+      if (ftype == Thrift.Type.STOP) {
+        break;
+      }
+      switch (fid) {
+        case 0:
+        if (ftype == Thrift.Type.LIST) {
+          this.success = [];
+          const _rtmp311 = input.readListBegin();
+          const _size10 = _rtmp311.size || 0;
+          for (let _i12 = 0; _i12 < _size10; ++_i12) {
+            let elem13 = null;
+            elem13 = new driver_info();
+            elem13.read(input);
+            this.success.push(elem13);
+          }
+          input.readListEnd();
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        case 1:
+        if (ftype == Thrift.Type.STRUCT) {
+          this.e = new gen_exp();
+          this.e.read(input);
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        default:
+          input.skip(ftype);
+      }
+      input.readFieldEnd();
+    }
+    input.readStructEnd();
+    return;
+  }
+
+  write (output) {
+    output.writeStructBegin('user_management_get_bound_driver_info_result');
+    if (this.success !== null && this.success !== undefined) {
+      output.writeFieldBegin('success', Thrift.Type.LIST, 0);
+      output.writeListBegin(Thrift.Type.STRUCT, this.success.length);
+      for (let iter14 in this.success) {
+        if (this.success.hasOwnProperty(iter14)) {
+          iter14 = this.success[iter14];
+          iter14.write(output);
+        }
+      }
+      output.writeListEnd();
+      output.writeFieldEnd();
+    }
+    if (this.e !== null && this.e !== undefined) {
+      output.writeFieldBegin('e', Thrift.Type.STRUCT, 1);
+      this.e.write(output);
+      output.writeFieldEnd();
+    }
+    output.writeFieldStop();
+    output.writeStructEnd();
+    return;
+  }
+
+};
+user_management_bind_new_driver_args = class {
+  constructor(args) {
+    this.ssid = null;
+    this.driver = null;
+    if (args) {
+      if (args.ssid !== undefined && args.ssid !== null) {
+        this.ssid = args.ssid;
+      }
+      if (args.driver !== undefined && args.driver !== null) {
+        this.driver = new driver_info(args.driver);
+      }
+    }
+  }
+
+  read (input) {
+    input.readStructBegin();
+    while (true) {
+      const ret = input.readFieldBegin();
+      const ftype = ret.ftype;
+      const fid = ret.fid;
+      if (ftype == Thrift.Type.STOP) {
+        break;
+      }
+      switch (fid) {
+        case 1:
+        if (ftype == Thrift.Type.STRING) {
+          this.ssid = input.readString().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        case 2:
+        if (ftype == Thrift.Type.STRUCT) {
+          this.driver = new driver_info();
+          this.driver.read(input);
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        default:
+          input.skip(ftype);
+      }
+      input.readFieldEnd();
+    }
+    input.readStructEnd();
+    return;
+  }
+
+  write (output) {
+    output.writeStructBegin('user_management_bind_new_driver_args');
+    if (this.ssid !== null && this.ssid !== undefined) {
+      output.writeFieldBegin('ssid', Thrift.Type.STRING, 1);
+      output.writeString(this.ssid);
+      output.writeFieldEnd();
+    }
+    if (this.driver !== null && this.driver !== undefined) {
+      output.writeFieldBegin('driver', Thrift.Type.STRUCT, 2);
+      this.driver.write(output);
+      output.writeFieldEnd();
+    }
+    output.writeFieldStop();
+    output.writeStructEnd();
+    return;
+  }
+
+};
+user_management_bind_new_driver_result = class {
+  constructor(args) {
+    this.success = null;
+    this.e = null;
+    if (args instanceof gen_exp) {
+        this.e = args;
+        return;
+    }
+    if (args) {
+      if (args.success !== undefined && args.success !== null) {
+        this.success = args.success;
+      }
+      if (args.e !== undefined && args.e !== null) {
+        this.e = args.e;
+      }
+    }
+  }
+
+  read (input) {
+    input.readStructBegin();
+    while (true) {
+      const ret = input.readFieldBegin();
+      const ftype = ret.ftype;
+      const fid = ret.fid;
+      if (ftype == Thrift.Type.STOP) {
+        break;
+      }
+      switch (fid) {
+        case 0:
+        if (ftype == Thrift.Type.BOOL) {
+          this.success = input.readBool().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        case 1:
+        if (ftype == Thrift.Type.STRUCT) {
+          this.e = new gen_exp();
+          this.e.read(input);
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        default:
+          input.skip(ftype);
+      }
+      input.readFieldEnd();
+    }
+    input.readStructEnd();
+    return;
+  }
+
+  write (output) {
+    output.writeStructBegin('user_management_bind_new_driver_result');
+    if (this.success !== null && this.success !== undefined) {
+      output.writeFieldBegin('success', Thrift.Type.BOOL, 0);
+      output.writeBool(this.success);
+      output.writeFieldEnd();
+    }
+    if (this.e !== null && this.e !== undefined) {
+      output.writeFieldBegin('e', Thrift.Type.STRUCT, 1);
+      this.e.write(output);
+      output.writeFieldEnd();
+    }
+    output.writeFieldStop();
+    output.writeStructEnd();
+    return;
+  }
+
+};
 user_managementClient = class user_managementClient {
   constructor(input, output) {
     this.input = input;
@@ -1647,18 +1950,19 @@ user_managementClient = class user_managementClient {
     return;
   }
 
-  get_bound_vichele (ssid) {
+  get_bound_vichele (ssid, main_vichele) {
     const self = this;
     return new Promise((resolve, reject) => {
-      self.send_get_bound_vichele(ssid, (error, result) => {
+      self.send_get_bound_vichele(ssid, main_vichele, (error, result) => {
         return error ? reject(error) : resolve(result);
       });
     });
   }
 
-  send_get_bound_vichele (ssid, callback) {
+  send_get_bound_vichele (ssid, main_vichele, callback) {
     const params = {
-      ssid: ssid
+      ssid: ssid,
+      main_vichele: main_vichele
     };
     const args = new user_management_get_bound_vichele_args(params);
     try {
@@ -1706,19 +2010,20 @@ user_managementClient = class user_managementClient {
     throw 'get_bound_vichele failed: unknown result';
   }
 
-  bind_new_vichele (ssid, vichele) {
+  bind_new_vichele (ssid, vichele, main_vichele) {
     const self = this;
     return new Promise((resolve, reject) => {
-      self.send_bind_new_vichele(ssid, vichele, (error, result) => {
+      self.send_bind_new_vichele(ssid, vichele, main_vichele, (error, result) => {
         return error ? reject(error) : resolve(result);
       });
     });
   }
 
-  send_bind_new_vichele (ssid, vichele, callback) {
+  send_bind_new_vichele (ssid, vichele, main_vichele, callback) {
     const params = {
       ssid: ssid,
-      vichele: vichele
+      vichele: vichele,
+      main_vichele: main_vichele
     };
     const args = new user_management_bind_new_vichele_args(params);
     try {
@@ -2057,5 +2362,124 @@ user_managementClient = class user_managementClient {
       return result.success;
     }
     throw 'get_wx_api_signature failed: unknown result';
+  }
+
+  get_bound_driver_info (ssid) {
+    const self = this;
+    return new Promise((resolve, reject) => {
+      self.send_get_bound_driver_info(ssid, (error, result) => {
+        return error ? reject(error) : resolve(result);
+      });
+    });
+  }
+
+  send_get_bound_driver_info (ssid, callback) {
+    const params = {
+      ssid: ssid
+    };
+    const args = new user_management_get_bound_driver_info_args(params);
+    try {
+      this.output.writeMessageBegin('get_bound_driver_info', Thrift.MessageType.CALL, this.seqid);
+      args.write(this.output);
+      this.output.writeMessageEnd();
+      const self = this;
+      this.output.getTransport().flush(true, () => {
+        let error = null, result = null;
+        try {
+          result = self.recv_get_bound_driver_info();
+        } catch (e) {
+          error = e;
+        }
+        callback(error, result);
+      });
+    }
+    catch (e) {
+      if (typeof this.output.getTransport().reset === 'function') {
+        this.output.getTransport().reset();
+      }
+      throw e;
+    }
+  }
+
+  recv_get_bound_driver_info () {
+    const ret = this.input.readMessageBegin();
+    const mtype = ret.mtype;
+    if (mtype == Thrift.MessageType.EXCEPTION) {
+      const x = new Thrift.TApplicationException();
+      x.read(this.input);
+      this.input.readMessageEnd();
+      throw x;
+    }
+    const result = new user_management_get_bound_driver_info_result();
+    result.read(this.input);
+    this.input.readMessageEnd();
+
+    if (null !== result.e) {
+      throw result.e;
+    }
+    if (null !== result.success) {
+      return result.success;
+    }
+    throw 'get_bound_driver_info failed: unknown result';
+  }
+
+  bind_new_driver (ssid, driver) {
+    const self = this;
+    return new Promise((resolve, reject) => {
+      self.send_bind_new_driver(ssid, driver, (error, result) => {
+        return error ? reject(error) : resolve(result);
+      });
+    });
+  }
+
+  send_bind_new_driver (ssid, driver, callback) {
+    const params = {
+      ssid: ssid,
+      driver: driver
+    };
+    const args = new user_management_bind_new_driver_args(params);
+    try {
+      this.output.writeMessageBegin('bind_new_driver', Thrift.MessageType.CALL, this.seqid);
+      args.write(this.output);
+      this.output.writeMessageEnd();
+      const self = this;
+      this.output.getTransport().flush(true, () => {
+        let error = null, result = null;
+        try {
+          result = self.recv_bind_new_driver();
+        } catch (e) {
+          error = e;
+        }
+        callback(error, result);
+      });
+    }
+    catch (e) {
+      if (typeof this.output.getTransport().reset === 'function') {
+        this.output.getTransport().reset();
+      }
+      throw e;
+    }
+  }
+
+  recv_bind_new_driver () {
+    const ret = this.input.readMessageBegin();
+    const mtype = ret.mtype;
+    if (mtype == Thrift.MessageType.EXCEPTION) {
+      const x = new Thrift.TApplicationException();
+      x.read(this.input);
+      this.input.readMessageEnd();
+      throw x;
+    }
+    const result = new user_management_bind_new_driver_result();
+    result.read(this.input);
+    this.input.readMessageEnd();
+
+    if (null !== result.e) {
+      throw result.e;
+    }
+    if (null !== result.success) {
+      return result.success;
+    }
+    throw 'bind_new_driver failed: unknown result';
   }
 };

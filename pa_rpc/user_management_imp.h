@@ -154,7 +154,7 @@ public:
         }
     }
 
-    virtual void get_bound_vichele(std::vector<std::string> &_return, const std::string &ssid)
+    virtual void get_bound_vichele(std::vector<std::string> &_return, const std::string &ssid, const bool main_vichele) 
     {
         auto user = PA_DATAOPT_get_online_user(ssid);
         if (user)
@@ -162,15 +162,26 @@ public:
             auto company = user->get_parent<pa_sql_company>("belong_company");
             if (company)
             {
-                auto bound_vicheles = company->get_all_children<pa_sql_vichele>("belong_company");
-                for (auto &itr:bound_vicheles)
+                if (main_vichele)
                 {
-                    _return.push_back(itr.number);
+                    auto bound_vicheles = company->get_all_children<pa_sql_vichele>("belong_company");
+                    for (auto &itr : bound_vicheles)
+                    {
+                        _return.push_back(itr.number);
+                    }
+                }
+                else
+                {
+                    auto bound_vicheles = company->get_all_children<pa_sql_vichele_behind>("belong_company");
+                    for (auto &itr : bound_vicheles)
+                    {
+                        _return.push_back(itr.number);
+                    }
                 }
             }
         }
     }
-    virtual bool bind_new_vichele(const std::string &ssid, const std::string &vichele)
+    virtual bool bind_new_vichele(const std::string &ssid, const std::string &vichele, const bool main_vichele)
     {
         bool ret = false;
 
@@ -180,17 +191,35 @@ public:
             auto company = opt_user->get_parent<pa_sql_company>("belong_company");
             if (company)
             {
-                auto exist_vichele = company->get_children<pa_sql_vichele>("belong_company", "number = '%s'", vichele.c_str());
-                if (!exist_vichele)
+                if (main_vichele)
                 {
-                    pa_sql_vichele tmp;
-                    tmp.number = vichele;
-                    tmp.set_parent(*company, "belong_company");
-                    ret = tmp.insert_record();
+                    auto exist_vichele = company->get_children<pa_sql_vichele>("belong_company", "number = '%s'", vichele.c_str());
+                    if (!exist_vichele)
+                    {
+                        pa_sql_vichele tmp;
+                        tmp.number = vichele;
+                        tmp.set_parent(*company, "belong_company");
+                        ret = tmp.insert_record();
+                    }
+                    else
+                    {
+                        PA_RETURN_MSG("车辆已存在");
+                    }
                 }
                 else
                 {
-                    PA_RETURN_MSG("车辆已存在");
+                    auto exist_vichele = company->get_children<pa_sql_vichele_behind>("belong_company", "number = '%s'", vichele.c_str());
+                    if (!exist_vichele)
+                    {
+                        pa_sql_vichele_behind tmp;
+                        tmp.number = vichele;
+                        tmp.set_parent(*company, "belong_company");
+                        ret = tmp.insert_record();
+                    }
+                    else
+                    {
+                        PA_RETURN_MSG("车辆已存在");
+                    }
                 }
             }
         }
@@ -250,6 +279,69 @@ public:
     virtual void get_wx_api_signature(std::string &_return, const int64_t timestamp, const std::string &nonceStr, const std::string &url)
     {
         _return = PA_WECHAT_wx_sign(nonceStr, timestamp, url);
+    }
+
+    virtual void get_bound_driver_info(std::vector<driver_info> &_return, const std::string &ssid)
+    {
+        auto user = PA_DATAOPT_get_online_user(ssid);
+        if (user)
+        {
+            auto company = user->get_parent<pa_sql_company>("belong_company");
+            if (company)
+            {
+                auto drivers = company->get_all_children<pa_sql_driver>("belong_company");
+                for (auto &itr : drivers)
+                {
+                    driver_info tmp;
+                    tmp.name = itr.name;
+                    tmp.phone = itr.phone;
+                    _return.push_back(tmp);
+                }
+            }
+            else
+            {
+                PA_RETURN_NOCOMPANY_MSG();
+            }
+        }
+        else
+        {
+            PA_RETURN_UNLOGIN_MSG();
+        }
+    }
+    virtual bool bind_new_driver(const std::string &ssid, const driver_info &driver)
+    {
+        bool ret = false;
+        auto user = PA_DATAOPT_get_online_user(ssid);
+        if (user)
+        {
+            auto company = user->get_parent<pa_sql_company>("belong_company");
+            if (company)
+            {
+                auto exist_driver = company->get_children<pa_sql_driver>("belong_company", "name = '%s' AND phone = '%s'", driver.name.c_str(), driver.phone.c_str());
+                if (!exist_driver)
+                {
+                    pa_sql_driver tmp;
+                    tmp.name = driver.name;
+                    tmp.phone = driver.phone;
+                    tmp.set_parent(*company, "belong_company");
+                    ret = tmp.insert_record();
+                }
+                else
+                {
+                    PA_RETURN_MSG("司机已存在");
+                }
+            }
+            else
+            {
+                PA_RETURN_NOCOMPANY_MSG();
+            }
+        }
+        else
+        {
+            PA_RETURN_UNLOGIN_MSG();
+        }
+
+        return ret;
     }
 };
 

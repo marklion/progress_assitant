@@ -11,18 +11,26 @@ struct user_info {
     5:bool buyer,
     6:string phone
 }
+
+struct driver_info {
+    1:string name, 
+    2:string phone
+}
+
 service user_management{
     user_info get_user_info(1:string ssid) throws (1:gen_exp e),
     string user_login(1:string code) throws (1:gen_exp e),
     bool update_user_info(1:user_info info, 2:string ssid) throws (1:gen_exp e),
     void logff_user(1:string ssid) throws (1:gen_exp e),
-    list<string> get_bound_vichele(1:string ssid) throws (1:gen_exp e),
-    bool bind_new_vichele(1:string ssid, 2:string vichele) throws (1:gen_exp e),
+    list<string> get_bound_vichele(1:string ssid, 2:bool main_vichele) throws (1:gen_exp e),
+    bool bind_new_vichele(1:string ssid, 2:string vichele, 3:bool main_vichele) throws (1:gen_exp e),
     void remove_vichele(1:string ssid, 2:string vichele) throws (1:gen_exp e),
     bool update_logo(1:string content, 2:string ssid) throws (1:gen_exp e),
     string get_customer_info(1:i64 user_id) throws (1:gen_exp e),
     bool is_admin(1:string ssid) throws (1:gen_exp e),
     string get_wx_api_signature(1:i64 timestamp, 2:string nonceStr, 3:string url),
+    list<driver_info> get_bound_driver_info(1:string ssid) throws (1:gen_exp e),
+    bool bind_new_driver(1:string ssid, 2:driver_info driver) throws (1:gen_exp e)
 }
 
 struct stuff_detail {
@@ -68,10 +76,20 @@ struct pay_confirm_info {
     2:string name,
 }
 
+struct vichele_in_plan {
+    1:string main_vichele,
+    2:string behind_vichele,
+    3:string driver_name,
+    4:string driver_phone,
+    5:double count,
+    6:string drop_address,
+    7:string use_for,
+}
+
 struct stuff_plan {
     1:i64 type_id,
     2:double count,
-    3:list<string> vichele_info,
+    3:list<vichele_in_plan> vichele_info,
     4:i64 plan_id,
     5:i64 created_by,
     6:string plan_time,

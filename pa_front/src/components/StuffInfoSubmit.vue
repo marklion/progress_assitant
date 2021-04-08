@@ -1,14 +1,11 @@
 <template>
 <div class="stuff_info_submit_show">
     <van-form @submit="submit_plan">
-        <van-field center name="stepper" label="计划量(吨)">
-            <template #input>
-                <van-stepper decimal-length="1" v-model="plan_count" />
-            </template>
+        <van-field center readonly name="stepper" label="总计划量(吨)" :value="all_count">
         </van-field>
         <van-field center readonly clickable name="datetimePicker" :value="plan_time" label="到厂时间" placeholder="点击选择时间" @click="show_time_picker = true">
         </van-field>
-        <van-field center name="comment" v-model="comment" label="备注" placeholder="请输入备注" >
+        <van-field center name="comment" v-model="comment" label="备注" placeholder="请输入备注">
         </van-field>
         <van-popup v-model="show_time_picker" position="bottom">
             <van-datetime-picker type="datetime" title="请选择时间" :min-date="min_time" @cancel="show_time_picker = false" @confirm="confirm_time" />
@@ -18,29 +15,14 @@
                 <van-divider>运输车辆</van-divider>
             </van-col>
             <van-col :span="4">
-                <van-button round size="small" type="primary" icon="plus" native-type="button" @click="show_vichele_picker = true"></van-button>
+                <van-button round size="small" type="primary" icon="plus" native-type="button" @click="add_vichele_info"></van-button>
             </van-col>
         </van-row>
-        <van-popup v-model="show_vichele_picker" round position="bottom">
-            <van-picker show-toolbar :columns="bound_vichele" @cancel="show_vichele_picker = false" @confirm="add_vichele">
-                <template #title>
-                    <van-button type="info" native-type="button" @click="show_add_vichele_diag = true">添加车辆</van-button>
-                </template>
-            </van-picker>
-        </van-popup>
-        <span style="margin-left:16px" v-for="(single_vichele, index) in vichele_info" :key="index">
-            <van-tag closeable size="large" type="primary" @close="remove_vichele(index)">
-                {{single_vichele}}
-            </van-tag>
-        </span>
+        <vichele-in-plan v-for="(single_vichele, index) in vichele_info" :key="index" :vichele_info="single_vichele"></vichele-in-plan>
         <div style="margin: 16px;">
             <van-button round block type="info" native-type="submit" :disabled="!stuff_info_change">{{action_name}}</van-button>
         </div>
-
     </van-form>
-    <van-dialog v-model="show_add_vichele_diag" title="添加车辆" show-cancel-button @confirm="submit_new_vichele">
-        <van-field v-model="new_vichele" placeholder="请输入车牌号" />
-    </van-dialog>
 </div>
 </template>
 
@@ -97,6 +79,7 @@ Vue.use(Button);
 Vue.use(Stepper);
 Vue.use(Field);
 Vue.use(Form);
+import VicheleInPlan from './VicheleInPlan.vue'
 export default {
     name: 'StuffInfoSubmit',
     props: {
@@ -114,7 +97,10 @@ export default {
         type_id: Number,
         orig_name: String,
         orig_price: Number,
-        orig_comment:String,
+        orig_comment: String,
+    },
+    components: {
+        "vichele-in-plan": VicheleInPlan,
     },
     data: function () {
         return {
@@ -126,10 +112,18 @@ export default {
             show_vichele_picker: false,
             show_add_vichele_diag: false,
             new_vichele: '',
-            comment:'',
+            comment: '',
         };
     },
     computed: {
+        all_count: function () {
+            var ret = 0;
+            this.vichele_info.forEach((element) => {
+                ret += parseFloat( element.count);
+            });
+
+            return ret;
+        },
         action_name: function () {
             if (this.is_create) {
                 return "提交";
@@ -138,10 +132,17 @@ export default {
             }
         },
         stuff_info_change: function () {
+            var a = JSON.parse(JSON.stringify(this.orig_vichele_info));
+            var b = JSON.parse(JSON.stringify(this.vichele_info));
+            a.sort();
+            b.forEach((element)=>{
+                element.count = parseFloat(element.count);
+            });
+            b.sort();
             var ret = false;
             if (this.is_create) {
                 ret = true;
-            } else if (this.plan_time != this.orig_plan_time || this.plan_count != this.orig_plan_count || this.vichele_info.toString() != this.orig_vichele_info.toString() || this.orig_comment != this.comment) {
+            } else if (this.plan_time != this.orig_plan_time || this.plan_count != this.orig_plan_count || JSON.stringify(a) != JSON.stringify(b) || this.orig_comment != this.comment) {
                 ret = true;
             }
             return ret;
@@ -156,7 +157,10 @@ export default {
         },
         orig_vichele_info(_new_value) {
             var vue_this = this;
-            vue_this.vichele_info = _new_value.slice(0);
+            vue_this.vichele_info = JSON.parse(JSON.stringify(_new_value));
+        },
+        orig_comment(_new_value) {
+            this.comment = _new_value;
         },
     },
     beforeMount: function () {
@@ -165,35 +169,23 @@ export default {
         } else {
             this.plan_time = this.orig_plan_time;
             this.plan_count = this.orig_plan_count;
-            this.vichele_info = this.orig_vichele_info;
-            this.vichele_info = this.orig_vichele_info.slice(0);
-            this.comment == this.orig_comment;
+            this.vichele_info = JSON.parse(JSON.stringify(this.orig_vichele_info));
+            this.comment = this.orig_comment;
         }
-        this.fetch_current_vichele();
     },
     methods: {
-        fetch_current_vichele: function () {
-            var vue_this = this;
-            vue_this.$get_client("user_management").get_bound_vichele(vue_this.$cookies.get('pa_ssid')).then(function (resp) {
-                resp.forEach((element, index) => {
-                    vue_this.$set(vue_this.bound_vichele, index, element);
-                });
-            }).catch(function (err) {
-                console.log(err);
-                vue_this.$toast(err.msg);
+        add_vichele_info: function () {
+            this.vichele_info.push({
+                main_vichele: '',
+                behind_vichele: '',
+                driver_name: '',
+                driver_phone: '',
+                drop_address: '',
+                use_for: '',
+                count: 20,
             });
         },
-        submit_new_vichele: function () {
-            var vue_this = this;
-            vue_this.$get_client("user_management").bind_new_vichele(vue_this.$cookies.get('pa_ssid'), vue_this.new_vichele).then(function (resp) {
-                if (resp) {
-                    vue_this.fetch_current_vichele();
-                }
-            }).catch(function (err) {
-                console.log(err);
-                vue_this.$toast(err.msg);
-            });
-        },
+
         add_vichele: function (_vichele) {
             if (this.vichele_info.indexOf(_vichele) == -1) {
                 this.vichele_info.push(_vichele);
@@ -248,7 +240,7 @@ export default {
                     count: this.plan_count,
                     plan_time: this.plan_time,
                     vichele_info: this.vichele_info,
-                    comment:this.comment,
+                    comment: this.comment,
                 }, this.$cookies.get('pa_ssid')).then(function (resp) {
                     if (resp) {
                         vue_this.$router.back(-1);

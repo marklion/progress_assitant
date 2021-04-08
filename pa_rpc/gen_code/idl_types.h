@@ -25,6 +25,8 @@ class gen_exp;
 
 class user_info;
 
+class driver_info;
+
 class stuff_detail;
 
 class user_apply;
@@ -32,6 +34,8 @@ class user_apply;
 class plan_confirm_info;
 
 class pay_confirm_info;
+
+class vichele_in_plan;
 
 class stuff_plan;
 
@@ -152,6 +156,54 @@ class user_info : public virtual ::apache::thrift::TBase {
 void swap(user_info &a, user_info &b);
 
 std::ostream& operator<<(std::ostream& out, const user_info& obj);
+
+typedef struct _driver_info__isset {
+  _driver_info__isset() : name(false), phone(false) {}
+  bool name :1;
+  bool phone :1;
+} _driver_info__isset;
+
+class driver_info : public virtual ::apache::thrift::TBase {
+ public:
+
+  driver_info(const driver_info&);
+  driver_info& operator=(const driver_info&);
+  driver_info() : name(), phone() {
+  }
+
+  virtual ~driver_info() noexcept;
+  std::string name;
+  std::string phone;
+
+  _driver_info__isset __isset;
+
+  void __set_name(const std::string& val);
+
+  void __set_phone(const std::string& val);
+
+  bool operator == (const driver_info & rhs) const
+  {
+    if (!(name == rhs.name))
+      return false;
+    if (!(phone == rhs.phone))
+      return false;
+    return true;
+  }
+  bool operator != (const driver_info &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const driver_info & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+  virtual void printTo(std::ostream& out) const;
+};
+
+void swap(driver_info &a, driver_info &b);
+
+std::ostream& operator<<(std::ostream& out, const driver_info& obj);
 
 typedef struct _stuff_detail__isset {
   _stuff_detail__isset() : name(false), last(false), price(false), company(false), type_id(false), saling(false) {}
@@ -387,6 +439,84 @@ void swap(pay_confirm_info &a, pay_confirm_info &b);
 
 std::ostream& operator<<(std::ostream& out, const pay_confirm_info& obj);
 
+typedef struct _vichele_in_plan__isset {
+  _vichele_in_plan__isset() : main_vichele(false), behind_vichele(false), driver_name(false), driver_phone(false), count(false), drop_address(false), use_for(false) {}
+  bool main_vichele :1;
+  bool behind_vichele :1;
+  bool driver_name :1;
+  bool driver_phone :1;
+  bool count :1;
+  bool drop_address :1;
+  bool use_for :1;
+} _vichele_in_plan__isset;
+
+class vichele_in_plan : public virtual ::apache::thrift::TBase {
+ public:
+
+  vichele_in_plan(const vichele_in_plan&);
+  vichele_in_plan& operator=(const vichele_in_plan&);
+  vichele_in_plan() : main_vichele(), behind_vichele(), driver_name(), driver_phone(), count(0), drop_address(), use_for() {
+  }
+
+  virtual ~vichele_in_plan() noexcept;
+  std::string main_vichele;
+  std::string behind_vichele;
+  std::string driver_name;
+  std::string driver_phone;
+  double count;
+  std::string drop_address;
+  std::string use_for;
+
+  _vichele_in_plan__isset __isset;
+
+  void __set_main_vichele(const std::string& val);
+
+  void __set_behind_vichele(const std::string& val);
+
+  void __set_driver_name(const std::string& val);
+
+  void __set_driver_phone(const std::string& val);
+
+  void __set_count(const double val);
+
+  void __set_drop_address(const std::string& val);
+
+  void __set_use_for(const std::string& val);
+
+  bool operator == (const vichele_in_plan & rhs) const
+  {
+    if (!(main_vichele == rhs.main_vichele))
+      return false;
+    if (!(behind_vichele == rhs.behind_vichele))
+      return false;
+    if (!(driver_name == rhs.driver_name))
+      return false;
+    if (!(driver_phone == rhs.driver_phone))
+      return false;
+    if (!(count == rhs.count))
+      return false;
+    if (!(drop_address == rhs.drop_address))
+      return false;
+    if (!(use_for == rhs.use_for))
+      return false;
+    return true;
+  }
+  bool operator != (const vichele_in_plan &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const vichele_in_plan & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+  virtual void printTo(std::ostream& out) const;
+};
+
+void swap(vichele_in_plan &a, vichele_in_plan &b);
+
+std::ostream& operator<<(std::ostream& out, const vichele_in_plan& obj);
+
 typedef struct _stuff_plan__isset {
   _stuff_plan__isset() : type_id(false), count(false), vichele_info(false), plan_id(false), created_by(false), plan_time(false), created_time(false), name(false), price(false), status(false), comment(false), plan_confirm(false), pay_confirm(false), pay_info(false), pay_timestamp(false), close_timestamp(false), close_by(false) {}
   bool type_id :1;
@@ -419,7 +549,7 @@ class stuff_plan : public virtual ::apache::thrift::TBase {
   virtual ~stuff_plan() noexcept;
   int64_t type_id;
   double count;
-  std::vector<std::string>  vichele_info;
+  std::vector<vichele_in_plan>  vichele_info;
   int64_t plan_id;
   int64_t created_by;
   std::string plan_time;
@@ -441,7 +571,7 @@ class stuff_plan : public virtual ::apache::thrift::TBase {
 
   void __set_count(const double val);
 
-  void __set_vichele_info(const std::vector<std::string> & val);
+  void __set_vichele_info(const std::vector<vichele_in_plan> & val);
 
   void __set_plan_id(const int64_t val);
 

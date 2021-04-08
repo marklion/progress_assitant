@@ -68,13 +68,13 @@ stuff_info_get_today_result = class {
         case 0:
         if (ftype == Thrift.Type.LIST) {
           this.success = [];
-          const _rtmp321 = input.readListBegin();
-          const _size20 = _rtmp321.size || 0;
-          for (let _i22 = 0; _i22 < _size20; ++_i22) {
-            let elem23 = null;
-            elem23 = new stuff_detail();
-            elem23.read(input);
-            this.success.push(elem23);
+          const _rtmp326 = input.readListBegin();
+          const _size25 = _rtmp326.size || 0;
+          for (let _i27 = 0; _i27 < _size25; ++_i27) {
+            let elem28 = null;
+            elem28 = new stuff_detail();
+            elem28.read(input);
+            this.success.push(elem28);
           }
           input.readListEnd();
         } else {
@@ -103,10 +103,10 @@ stuff_info_get_today_result = class {
     if (this.success !== null && this.success !== undefined) {
       output.writeFieldBegin('success', Thrift.Type.LIST, 0);
       output.writeListBegin(Thrift.Type.STRUCT, this.success.length);
-      for (let iter24 in this.success) {
-        if (this.success.hasOwnProperty(iter24)) {
-          iter24 = this.success[iter24];
-          iter24.write(output);
+      for (let iter29 in this.success) {
+        if (this.success.hasOwnProperty(iter29)) {
+          iter29 = this.success[iter29];
+          iter29.write(output);
         }
       }
       output.writeListEnd();

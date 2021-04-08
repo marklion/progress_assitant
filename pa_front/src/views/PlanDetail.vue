@@ -11,7 +11,15 @@
         <van-cell title="公司" :value="plan_owner_info.company"></van-cell>
     </van-cell-group>
     <van-cell-group title="车辆信息">
-        <van-cell v-for="(single_vichele, index) in plan_detail.vichele_info" :key="index" :title="single_vichele"></van-cell>
+        <van-collapse v-for="(single_vichele, index) in plan_detail.vichele_info" :key="index" v-model="vichele_panel[index]">
+            <van-collapse-item :title="single_vichele.driver_name + '-' + single_vichele.driver_phone" name="1">
+                <van-cell title="主车" :value="single_vichele.main_vichele"></van-cell>
+                <van-cell title="挂车" :value="single_vichele.behind_vichele"></van-cell>
+                <van-cell title="卸车地" :value="single_vichele.drop_address"></van-cell>
+                <van-cell title="数量" :value="single_vichele.count"></van-cell>
+                <van-cell title="用途" :value="single_vichele.use_for"></van-cell>
+            </van-collapse-item>
+        </van-collapse>
     </van-cell-group>
 
     <plan-operate :plan_id="plan_detail.plan_id" :status="plan_detail.status"></plan-operate>
@@ -70,7 +78,16 @@ import {
 import {
     Image as VanImage
 } from 'vant';
-import { ImagePreview } from 'vant';
+import {
+    ImagePreview
+} from 'vant';
+import {
+    Collapse,
+    CollapseItem
+} from 'vant';
+
+Vue.use(Collapse);
+Vue.use(CollapseItem);
 Vue.use(VanImage);
 Vue.use(Step);
 Vue.use(Steps);
@@ -86,6 +103,7 @@ export default {
     },
     data: function () {
         return {
+            vichele_panel:[[]],
             plan_detail: {
                 plan_id: 0,
                 name: '',
@@ -104,7 +122,7 @@ export default {
                 pay_confirm_by: '',
                 pay_confirm_timestamp: '',
                 close_timestamp: '',
-                close_by:'',
+                close_by: '',
             },
             plan_owner_info: {
                 name: '',
@@ -127,8 +145,8 @@ export default {
             second = second < 10 ? ('0' + second) : second;
             return y + '-' + m + '-' + d + ' ' + h + ':' + minute + ':' + second;
         },
-        preview_pay:function () {
-            ImagePreview([this.$remote_url +  this.plan_detail.pay_info]);
+        preview_pay: function () {
+            ImagePreview([this.$remote_url + this.plan_detail.pay_info]);
         },
     },
     beforeMount: function () {
@@ -153,6 +171,7 @@ export default {
             vue_this.plan_detail.close_by = resp.close_by;
             resp.vichele_info.forEach((element, index) => {
                 vue_this.$set(vue_this.plan_detail.vichele_info, index, element);
+                vue_this.$set(vue_this.vichele_panel, index, ['0']);
             });
             vue_this.$get_client("user_management").get_customer_info(resp.created_by).then(function (resp) {
                 vue_this.plan_owner_info.company = resp.split('(')[0];
