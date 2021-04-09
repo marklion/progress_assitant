@@ -291,6 +291,14 @@ uint32_t company_management_add_type_args::read(::apache::thrift::protocol::TPro
         break;
       case 3:
         if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->last);
+          this->__isset.last = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 4:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
           xfer += iprot->readString(this->ssid);
           this->__isset.ssid = true;
         } else {
@@ -322,7 +330,11 @@ uint32_t company_management_add_type_args::write(::apache::thrift::protocol::TPr
   xfer += oprot->writeI64(this->price);
   xfer += oprot->writeFieldEnd();
 
-  xfer += oprot->writeFieldBegin("ssid", ::apache::thrift::protocol::T_STRING, 3);
+  xfer += oprot->writeFieldBegin("last", ::apache::thrift::protocol::T_STRING, 3);
+  xfer += oprot->writeString(this->last);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("ssid", ::apache::thrift::protocol::T_STRING, 4);
   xfer += oprot->writeString(this->ssid);
   xfer += oprot->writeFieldEnd();
 
@@ -349,7 +361,11 @@ uint32_t company_management_add_type_pargs::write(::apache::thrift::protocol::TP
   xfer += oprot->writeI64((*(this->price)));
   xfer += oprot->writeFieldEnd();
 
-  xfer += oprot->writeFieldBegin("ssid", ::apache::thrift::protocol::T_STRING, 3);
+  xfer += oprot->writeFieldBegin("last", ::apache::thrift::protocol::T_STRING, 3);
+  xfer += oprot->writeString((*(this->last)));
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("ssid", ::apache::thrift::protocol::T_STRING, 4);
   xfer += oprot->writeString((*(this->ssid)));
   xfer += oprot->writeFieldEnd();
 
@@ -1913,13 +1929,13 @@ void company_managementClient::recv_get_all_type(std::vector<int64_t> & _return)
   throw ::apache::thrift::TApplicationException(::apache::thrift::TApplicationException::MISSING_RESULT, "get_all_type failed: unknown result");
 }
 
-int64_t company_managementClient::add_type(const std::string& name, const int64_t price, const std::string& ssid)
+int64_t company_managementClient::add_type(const std::string& name, const int64_t price, const std::string& last, const std::string& ssid)
 {
-  send_add_type(name, price, ssid);
+  send_add_type(name, price, last, ssid);
   return recv_add_type();
 }
 
-void company_managementClient::send_add_type(const std::string& name, const int64_t price, const std::string& ssid)
+void company_managementClient::send_add_type(const std::string& name, const int64_t price, const std::string& last, const std::string& ssid)
 {
   int32_t cseqid = 0;
   oprot_->writeMessageBegin("add_type", ::apache::thrift::protocol::T_CALL, cseqid);
@@ -1927,6 +1943,7 @@ void company_managementClient::send_add_type(const std::string& name, const int6
   company_management_add_type_pargs args;
   args.name = &name;
   args.price = &price;
+  args.last = &last;
   args.ssid = &ssid;
   args.write(oprot_);
 
@@ -2443,7 +2460,7 @@ void company_managementProcessor::process_add_type(int32_t seqid, ::apache::thri
 
   company_management_add_type_result result;
   try {
-    result.success = iface_->add_type(args.name, args.price, args.ssid);
+    result.success = iface_->add_type(args.name, args.price, args.last, args.ssid);
     result.__isset.success = true;
   } catch (gen_exp &e) {
     result.e = e;
@@ -2913,13 +2930,13 @@ void company_managementConcurrentClient::recv_get_all_type(std::vector<int64_t> 
   } // end while(true)
 }
 
-int64_t company_managementConcurrentClient::add_type(const std::string& name, const int64_t price, const std::string& ssid)
+int64_t company_managementConcurrentClient::add_type(const std::string& name, const int64_t price, const std::string& last, const std::string& ssid)
 {
-  int32_t seqid = send_add_type(name, price, ssid);
+  int32_t seqid = send_add_type(name, price, last, ssid);
   return recv_add_type(seqid);
 }
 
-int32_t company_managementConcurrentClient::send_add_type(const std::string& name, const int64_t price, const std::string& ssid)
+int32_t company_managementConcurrentClient::send_add_type(const std::string& name, const int64_t price, const std::string& last, const std::string& ssid)
 {
   int32_t cseqid = this->sync_->generateSeqId();
   ::apache::thrift::async::TConcurrentSendSentry sentry(this->sync_.get());
@@ -2928,6 +2945,7 @@ int32_t company_managementConcurrentClient::send_add_type(const std::string& nam
   company_management_add_type_pargs args;
   args.name = &name;
   args.price = &price;
+  args.last = &last;
   args.ssid = &ssid;
   args.write(oprot_);
 

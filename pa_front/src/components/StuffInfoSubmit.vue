@@ -189,7 +189,7 @@ export default {
             });
         },
         remove_vichele_info: function (_index) {
-            this.vichele_info.splice(_index,1);
+            this.vichele_info.splice(_index, 1);
         },
         formatDateTime: function (date) {
             var y = date.getFullYear();
@@ -209,34 +209,39 @@ export default {
         },
         submit_plan: function () {
             var vue_this = this;
-            if (this.is_create) {
-                this.$call_remote_process("stuff_plan_management",'create_plan',[{
-                    count: this.plan_count,
-                    type_id: this.type_id,
-                    plan_time: this.plan_time,
-                    vichele_info: this.vichele_info,
-                    name: this.orig_name,
-                    price: this.orig_price,
-                    comment: this.comment,
-                }, this.$cookies.get("pa_ssid")]).then(function (resp) {
-                    if (resp > 0) {
-                        vue_this.$router.push({
-                            name: 'Order',
-                        });
-                    }
-                });
+            if (vue_this.vichele_info.length <= 0) {
+                vue_this.$toast("请添加车辆信息");
             } else {
-                vue_this.$call_remote_process("stuff_plan_management",'update_plan', [{
-                    plan_id: vue_this.plan_id,
-                    count: this.plan_count,
-                    plan_time: this.plan_time,
-                    vichele_info: this.vichele_info,
-                    comment: this.comment,
-                }, this.$cookies.get('pa_ssid')]).then(function (resp) {
-                    if (resp) {
-                        vue_this.$router.back(-1);
-                    }
-                });
+                if (this.is_create) {
+                    this.$call_remote_process("stuff_plan_management", 'create_plan', [{
+                        count: this.plan_count,
+                        type_id: this.type_id,
+                        plan_time: this.plan_time,
+                        vichele_info: this.vichele_info,
+                        name: this.orig_name,
+                        price: this.orig_price,
+                        comment: this.comment,
+                    }, this.$cookies.get("pa_ssid")]).then(function (resp) {
+                        if (resp > 0) {
+                            vue_this.$router.push({
+                                name: 'Order',
+                            });
+                        }
+                    });
+                } else {
+                    vue_this.$call_remote_process("stuff_plan_management", 'update_plan', [{
+                        plan_id: vue_this.plan_id,
+                        count: this.plan_count,
+                        plan_time: this.plan_time,
+                        vichele_info: this.vichele_info,
+                        comment: this.comment,
+                    }, this.$cookies.get('pa_ssid')]).then(function (resp) {
+                        if (resp) {
+                            vue_this.$router.back(-1);
+                        }
+                    });
+                }
+
             }
         }
     },

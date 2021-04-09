@@ -1,6 +1,6 @@
 <template>
 <div class="vichele_in_plan_show">
-    <van-field readonly clickable :value="my_vichele_info.main_vichele" label="主车" placeholder="点击选择车牌" @click="show_main_vichele_picker = true" />
+    <van-field readonly clickable :value="my_vichele_info.main_vichele" label="主车" placeholder="点击选择车牌" @click="show_main_vichele_picker = true" :rules="[{ required: true, message: '请指定主车' }]" />
     <van-popup v-model="show_main_vichele_picker" position="bottom">
         <van-picker show-toolbar :columns="main_vichele_pool" @confirm="confirm_main_vichele" @cancel="show_main_vichele_picker = false">
             <template #title>
@@ -9,11 +9,13 @@
         </van-picker>
     </van-popup>
     <van-dialog v-model="show_add_main_vichele_diag" close-on-click-overlay title="添加车辆" :show-confirm-button="false">
-        <van-field v-model="new_vichele" placeholder="请输入车牌号" />
-        <van-button round block type="primary" native-type="button" @click="submit_new_vichele(true)">添加车辆</van-button>
+        <van-form @submit="submit_new_vichele(true)">
+            <van-field v-model="new_vichele" placeholder="请输入车牌号" :rules="[{ required:true, message:'请输入正确车牌', pattern: vichele_number_patten}]" />
+            <van-button round block type="primary">添加车辆</van-button>
+        </van-form>
     </van-dialog>
 
-    <van-field readonly clickable :value="my_vichele_info.behind_vichele" label="挂车" placeholder="点击选择车牌" @click="show_behind_vichele_picker = true" />
+    <van-field readonly clickable :value="my_vichele_info.behind_vichele" label="挂车" placeholder="点击选择车牌" @click="show_behind_vichele_picker = true" :rules="[{ required: true, message: '请指定挂车' }]" />
     <van-popup v-model="show_behind_vichele_picker" position="bottom">
         <van-picker show-toolbar :columns="behind_vichele_pool" @confirm="confirm_behind_vichele" @cancel="show_behind_vichele_picker = false">
             <template #title>
@@ -22,12 +24,14 @@
         </van-picker>
     </van-popup>
     <van-dialog v-model="show_add_behind_vichele_diag" close-on-click-overlay title="添加车辆" :show-confirm-button="false">
-        <van-field v-model="new_vichele" placeholder="请输入车牌号" />
-        <van-button round block type="primary" native-type="button" @click="submit_new_vichele(false)">添加车辆</van-button>
+        <van-form @submit="submit_new_vichele(false)">
+            <van-field v-model="new_vichele" placeholder="请输入车牌号" :rules="[{ required:true, message:'请输入正确车牌', pattern: vichele_number_patten}]" />
+            <van-button round block type="primary">添加车辆</van-button>
+        </van-form>
     </van-dialog>
 
-    <van-field readonly clickable :value="my_vichele_info.driver_name" label="司机姓名" placeholder="点击选择司机" @click="show_driver_picker = true" />
-    <van-field readonly :value="my_vichele_info.driver_phone" label="司机电话" />
+    <van-field readonly clickable :value="my_vichele_info.driver_name" label="司机姓名" placeholder="点击选择司机" @click="show_driver_picker = true" :rules="[{ required: true, message: '请指定司机' }]" />
+    <van-field readonly :value="my_vichele_info.driver_phone" label="司机电话" :rules="[{ required: true, message: '请指定司机'}]" />
     <van-popup v-model="show_driver_picker" position="bottom">
         <van-picker show-toolbar :columns="driver_name_pool" @confirm="confirm_driver" @cancel="show_driver_picker = false">
             <template #title>
@@ -36,9 +40,11 @@
         </van-picker>
     </van-popup>
     <van-dialog v-model="show_add_driver_diag" close-on-click-overlay title="新增司机" :show-confirm-button="false">
-        <van-field v-model="new_driver_name" label="姓名" placeholder="请输入司机姓名" />
-        <van-field v-model="new_driver_phone" label="电话" placeholder="请输入司机电话" />
-        <van-button round block type="primary" native-type="button" @click="submit_new_driver">确认添加</van-button>
+        <van-form @submit="submit_new_driver">
+            <van-field v-model="new_driver_name" label="姓名" placeholder="请输入司机姓名" :rules="[{ required: true, message: '请输入正确司机姓名' }]" />
+            <van-field v-model="new_driver_phone" type="tel" label="电话" placeholder="请输入司机电话" :rules="[{ required: true, message: '请输入正确手机号', pattern:phone_pattern }]" />
+            <van-button round block type="primary">确认添加</van-button>
+        </van-form>
     </van-dialog>
 
     <van-field center name="count" label="装车量(吨)">
@@ -47,7 +53,7 @@
         </template>
     </van-field>
 
-    <van-field name="use_for" label="用途">
+    <van-field name="use_for" label="用途" :rules="[{ required: true, message: '请指定用途'}]">
         <template #input>
             <van-radio-group v-model="my_vichele_info.use_for" direction="horizontal" @change="use_for_change">
                 <van-radio name="气化">气化</van-radio>
@@ -56,7 +62,7 @@
         </template>
     </van-field>
 
-    <van-field readonly clickable name="drop_address" :value="my_vichele_info.drop_address" label="卸车地点" placeholder="点击选择省市区" @click="showArea = true" />
+    <van-field readonly clickable name="drop_address" :value="my_vichele_info.drop_address" label="卸车地点" placeholder="点击选择省市区" @click="showArea = true" :rules="[{ required: true, message: '请指定卸车地点'}]" />
     <van-popup v-model="showArea" position="bottom">
         <van-area :area-list="all_area" @confirm="confirm_area" @cancel="showArea = false" />
     </van-popup>
@@ -88,8 +94,14 @@ import {
     RadioGroup,
     Radio
 } from 'vant';
-import { Area } from 'vant';
+import {
+    Area
+} from 'vant';
+import {
+    Form
+} from 'vant';
 
+Vue.use(Form);
 Vue.use(Area);
 Vue.use(Radio);
 Vue.use(RadioGroup);
@@ -115,6 +127,8 @@ export default {
     },
     data: function () {
         return {
+            vichele_number_patten: /^(京[A-HJ-NPQY]|沪[A-HJ-N]|津[A-HJ-NPQR]|渝[A-DFGHN]|冀[A-HJRST]|晋[A-FHJ-M]|蒙[A-HJKLM]|辽[A-HJ-NP]|吉[A-HJK]|黑[A-HJ-NPR]|苏[A-HJ-N]|浙[A-HJKL]|皖[A-HJ-NP-S]|闽[A-HJK]|赣[A-HJKLMS]|鲁[A-HJ-NP-SUVWY]|豫[A-HJ-NP-SU]|鄂[A-HJ-NP-S]|湘[A-HJ-NSU]|粤[A-HJ-NP-Y]|桂[A-HJ-NPR]|琼[A-F]|川[A-HJ-MQ-Z]|贵[A-HJ]|云[AC-HJ-NP-SV]|藏[A-HJ]|陕[A-HJKV]|甘[A-HJ-NP]|青[A-H]|宁[A-E]|新[A-HJ-NP-S])([0-9A-HJ-NP-Z]{4}[0-9A-HJ-NP-Z挂试]|[0-9]{4}学|[A-D0-9][0-9]{3}警|[DF][0-9A-HJ-NP-Z][0-9]{4}|[0-9]{5}[DF])$|^WJ[京沪津渝冀晋蒙辽吉黑苏浙皖闽赣鲁豫鄂湘粤桂琼川贵云藏陕甘青宁新]?[0-9]{4}[0-9JBXTHSD]$|^(V[A-GKMORTV]|K[A-HJ-NORUZ]|H[A-GLOR]|[BCGJLNS][A-DKMNORVY]|G[JS])[0-9]{5}$|^[0-9]{6}使$|^([沪粤川渝辽云桂鄂湘陕藏黑]A|闽D|鲁B|蒙[AEH])[0-9]{4}领$|^粤Z[0-9A-HJ-NP-Z][0-9]{3}[港澳]$/i,
+            phone_pattern: /^(13[0-9]|14[01456879]|15[0-35-9]|16[2567]|17[0-8]|18[0-9]|19[0-35-9])\d{8}$/,
             showArea: false,
             my_vichele_info: this.vichele_info,
             main_vichele_pool: [],
@@ -4187,12 +4201,12 @@ export default {
         },
         fetch_current_vichele: function () {
             var vue_this = this;
-            vue_this.$call_remote_process("user_management",'get_bound_vichele', [vue_this.$cookies.get('pa_ssid'), true]).then(function (resp) {
+            vue_this.$call_remote_process("user_management", 'get_bound_vichele', [vue_this.$cookies.get('pa_ssid'), true]).then(function (resp) {
                 resp.forEach((element, index) => {
                     vue_this.$set(vue_this.main_vichele_pool, index, element);
                 });
             });
-            vue_this.$call_remote_process("user_management",'get_bound_vichele',[vue_this.$cookies.get('pa_ssid'), false]).then(function (resp) {
+            vue_this.$call_remote_process("user_management", 'get_bound_vichele', [vue_this.$cookies.get('pa_ssid'), false]).then(function (resp) {
                 resp.forEach((element, index) => {
                     vue_this.$set(vue_this.behind_vichele_pool, index, element);
                 });
@@ -4200,7 +4214,7 @@ export default {
         },
         fetch_current_driver: function () {
             var vue_this = this;
-            vue_this.$call_remote_process("user_management",'get_bound_driver_info', [vue_this.$cookies.get('pa_ssid')]).then(function (resp) {
+            vue_this.$call_remote_process("user_management", 'get_bound_driver_info', [vue_this.$cookies.get('pa_ssid')]).then(function (resp) {
                 resp.forEach((element, index) => {
                     vue_this.$set(vue_this.driver_name_pool, index, element.name + '-' + element.phone);
                 });
@@ -4208,7 +4222,7 @@ export default {
         },
         submit_new_vichele: function (_main_vichele) {
             var vue_this = this;
-            vue_this.$call_remote_process("user_management",'bind_new_vichele', [vue_this.$cookies.get('pa_ssid'), vue_this.new_vichele, _main_vichele]).then(function (resp) {
+            vue_this.$call_remote_process("user_management", 'bind_new_vichele', [vue_this.$cookies.get('pa_ssid'), vue_this.new_vichele, _main_vichele]).then(function (resp) {
                 if (resp) {
                     vue_this.fetch_current_vichele();
                 }
@@ -4219,7 +4233,7 @@ export default {
         },
         submit_new_driver: function () {
             var vue_this = this;
-            vue_this.$call_remote_process("user_management",'bind_new_driver', [vue_this.$cookies.get('pa_ssid'), {
+            vue_this.$call_remote_process("user_management", 'bind_new_driver', [vue_this.$cookies.get('pa_ssid'), {
                 name: vue_this.new_driver_name,
                 phone: vue_this.new_driver_phone
             }]).then(function (resp) {
@@ -4260,6 +4274,7 @@ export default {
     beforeMount: function () {
         this.fetch_current_vichele();
         this.fetch_current_driver();
+        console.log(typeof this.vichele_number_patten);
     },
 }
 </script>

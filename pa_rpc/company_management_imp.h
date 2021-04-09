@@ -42,7 +42,7 @@ public:
             PA_RETURN_UNLOGIN_MSG();
         }
     }
-    virtual int64_t add_type(const std::string& name, const int64_t price, const std::string& ssid) 
+    virtual int64_t add_type(const std::string &name, const int64_t price, const std::string &last, const std::string &ssid)
     {
         int64_t ret = 0;
 
@@ -56,6 +56,7 @@ public:
                     pa_sql_stuff_info tmp;
                     tmp.name = name;
                     tmp.price = price;
+                    tmp.last = last;
                     tmp.set_parent(*company, "belong_company");
                     tmp.saling = 1;
                     ret = tmp.insert_record();

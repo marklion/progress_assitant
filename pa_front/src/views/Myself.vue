@@ -25,7 +25,7 @@
     </div>
     <div v-else class="unlogin_show">
         <van-row type="flex" justify="center" align="center">
-            <van-image round width="80px" height="80px" :src="$remote_url +  '/logo_res/logo_1617265618.jpg'" />
+            <van-image round width="80px" height="80px" :src="$remote_url +  '/logo_res/logo.jpg'" />
         </van-row>
         <van-row type="flex" justify="center" align="center">
             <h1>掌易助理</h1>

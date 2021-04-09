@@ -151,6 +151,7 @@ company_management_add_type_args = class {
   constructor(args) {
     this.name = null;
     this.price = null;
+    this.last = null;
     this.ssid = null;
     if (args) {
       if (args.name !== undefined && args.name !== null) {
@@ -158,6 +159,9 @@ company_management_add_type_args = class {
       }
       if (args.price !== undefined && args.price !== null) {
         this.price = args.price;
+      }
+      if (args.last !== undefined && args.last !== null) {
+        this.last = args.last;
       }
       if (args.ssid !== undefined && args.ssid !== null) {
         this.ssid = args.ssid;
@@ -191,6 +195,13 @@ company_management_add_type_args = class {
         break;
         case 3:
         if (ftype == Thrift.Type.STRING) {
+          this.last = input.readString().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        case 4:
+        if (ftype == Thrift.Type.STRING) {
           this.ssid = input.readString().value;
         } else {
           input.skip(ftype);
@@ -217,8 +228,13 @@ company_management_add_type_args = class {
       output.writeI64(this.price);
       output.writeFieldEnd();
     }
+    if (this.last !== null && this.last !== undefined) {
+      output.writeFieldBegin('last', Thrift.Type.STRING, 3);
+      output.writeString(this.last);
+      output.writeFieldEnd();
+    }
     if (this.ssid !== null && this.ssid !== undefined) {
-      output.writeFieldBegin('ssid', Thrift.Type.STRING, 3);
+      output.writeFieldBegin('ssid', Thrift.Type.STRING, 4);
       output.writeString(this.ssid);
       output.writeFieldEnd();
     }
@@ -1199,19 +1215,20 @@ company_managementClient = class company_managementClient {
     throw 'get_all_type failed: unknown result';
   }
 
-  add_type (name, price, ssid) {
+  add_type (name, price, last, ssid) {
     const self = this;
     return new Promise((resolve, reject) => {
-      self.send_add_type(name, price, ssid, (error, result) => {
+      self.send_add_type(name, price, last, ssid, (error, result) => {
         return error ? reject(error) : resolve(result);
       });
     });
   }
 
-  send_add_type (name, price, ssid, callback) {
+  send_add_type (name, price, last, ssid, callback) {
     const params = {
       name: name,
       price: price,
+      last: last,
       ssid: ssid
     };
     const args = new company_management_add_type_args(params);

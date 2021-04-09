@@ -52,7 +52,7 @@ struct user_apply {
 
 service company_management {
     list<i64> get_all_type(1:string ssid) throws (1:gen_exp e),
-    i64 add_type(1:string name, 2:i64 price, 3:string ssid) throws (1:gen_exp e),
+    i64 add_type(1:string name, 2:i64 price, 3:string last,  4:string ssid) throws (1:gen_exp e),
     bool edit_type(1:stuff_detail stuff, 2:string ssid) throws (1:gen_exp e),
     void remove_type(1:stuff_detail stuff, 2:string ssid) throws (1:gen_exp e),
     bool readd_type(1:stuff_detail stuff, 2:string ssid) throws (1:gen_exp e),

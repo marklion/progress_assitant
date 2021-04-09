@@ -23,7 +23,7 @@ class company_managementIf {
  public:
   virtual ~company_managementIf() {}
   virtual void get_all_type(std::vector<int64_t> & _return, const std::string& ssid) = 0;
-  virtual int64_t add_type(const std::string& name, const int64_t price, const std::string& ssid) = 0;
+  virtual int64_t add_type(const std::string& name, const int64_t price, const std::string& last, const std::string& ssid) = 0;
   virtual bool edit_type(const stuff_detail& stuff, const std::string& ssid) = 0;
   virtual void remove_type(const stuff_detail& stuff, const std::string& ssid) = 0;
   virtual bool readd_type(const stuff_detail& stuff, const std::string& ssid) = 0;
@@ -62,7 +62,7 @@ class company_managementNull : virtual public company_managementIf {
   void get_all_type(std::vector<int64_t> & /* _return */, const std::string& /* ssid */) {
     return;
   }
-  int64_t add_type(const std::string& /* name */, const int64_t /* price */, const std::string& /* ssid */) {
+  int64_t add_type(const std::string& /* name */, const int64_t /* price */, const std::string& /* last */, const std::string& /* ssid */) {
     int64_t _return = 0;
     return _return;
   }
@@ -202,9 +202,10 @@ class company_management_get_all_type_presult {
 };
 
 typedef struct _company_management_add_type_args__isset {
-  _company_management_add_type_args__isset() : name(false), price(false), ssid(false) {}
+  _company_management_add_type_args__isset() : name(false), price(false), last(false), ssid(false) {}
   bool name :1;
   bool price :1;
+  bool last :1;
   bool ssid :1;
 } _company_management_add_type_args__isset;
 
@@ -213,12 +214,13 @@ class company_management_add_type_args {
 
   company_management_add_type_args(const company_management_add_type_args&);
   company_management_add_type_args& operator=(const company_management_add_type_args&);
-  company_management_add_type_args() : name(), price(0), ssid() {
+  company_management_add_type_args() : name(), price(0), last(), ssid() {
   }
 
   virtual ~company_management_add_type_args() noexcept;
   std::string name;
   int64_t price;
+  std::string last;
   std::string ssid;
 
   _company_management_add_type_args__isset __isset;
@@ -227,6 +229,8 @@ class company_management_add_type_args {
 
   void __set_price(const int64_t val);
 
+  void __set_last(const std::string& val);
+
   void __set_ssid(const std::string& val);
 
   bool operator == (const company_management_add_type_args & rhs) const
@@ -234,6 +238,8 @@ class company_management_add_type_args {
     if (!(name == rhs.name))
       return false;
     if (!(price == rhs.price))
+      return false;
+    if (!(last == rhs.last))
       return false;
     if (!(ssid == rhs.ssid))
       return false;
@@ -258,6 +264,7 @@ class company_management_add_type_pargs {
   virtual ~company_management_add_type_pargs() noexcept;
   const std::string* name;
   const int64_t* price;
+  const std::string* last;
   const std::string* ssid;
 
   uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
@@ -1068,8 +1075,8 @@ class company_managementClient : virtual public company_managementIf {
   void get_all_type(std::vector<int64_t> & _return, const std::string& ssid);
   void send_get_all_type(const std::string& ssid);
   void recv_get_all_type(std::vector<int64_t> & _return);
-  int64_t add_type(const std::string& name, const int64_t price, const std::string& ssid);
-  void send_add_type(const std::string& name, const int64_t price, const std::string& ssid);
+  int64_t add_type(const std::string& name, const int64_t price, const std::string& last, const std::string& ssid);
+  void send_add_type(const std::string& name, const int64_t price, const std::string& last, const std::string& ssid);
   int64_t recv_add_type();
   bool edit_type(const stuff_detail& stuff, const std::string& ssid);
   void send_edit_type(const stuff_detail& stuff, const std::string& ssid);
@@ -1161,13 +1168,13 @@ class company_managementMultiface : virtual public company_managementIf {
     return;
   }
 
-  int64_t add_type(const std::string& name, const int64_t price, const std::string& ssid) {
+  int64_t add_type(const std::string& name, const int64_t price, const std::string& last, const std::string& ssid) {
     size_t sz = ifaces_.size();
     size_t i = 0;
     for (; i < (sz - 1); ++i) {
-      ifaces_[i]->add_type(name, price, ssid);
+      ifaces_[i]->add_type(name, price, last, ssid);
     }
-    return ifaces_[i]->add_type(name, price, ssid);
+    return ifaces_[i]->add_type(name, price, last, ssid);
   }
 
   bool edit_type(const stuff_detail& stuff, const std::string& ssid) {
@@ -1261,8 +1268,8 @@ class company_managementConcurrentClient : virtual public company_managementIf {
   void get_all_type(std::vector<int64_t> & _return, const std::string& ssid);
   int32_t send_get_all_type(const std::string& ssid);
   void recv_get_all_type(std::vector<int64_t> & _return, const int32_t seqid);
-  int64_t add_type(const std::string& name, const int64_t price, const std::string& ssid);
-  int32_t send_add_type(const std::string& name, const int64_t price, const std::string& ssid);
+  int64_t add_type(const std::string& name, const int64_t price, const std::string& last, const std::string& ssid);
+  int32_t send_add_type(const std::string& name, const int64_t price, const std::string& last, const std::string& ssid);
   int64_t recv_add_type(const int32_t seqid);
   bool edit_type(const stuff_detail& stuff, const std::string& ssid);
   int32_t send_edit_type(const stuff_detail& stuff, const std::string& ssid);

@@ -15,17 +15,18 @@ export function get_client(_service_interface) {
 
 export function call_remote_process(_service_interface,process,args) {
     var client = get_client(_service_interface);
-    Toast.loading({
+    Toast.allowMultiple();
+    const toast1 = Toast.loading({
         forbidClick: true,
         duration: 0
     });
     return new Promise(function (resolve, reject) {
         client[process].apply(client, args).then(function (resp) {
-            Toast.clear()
+            toast1.clear()
             resolve(resp);
         }).catch(function (err) {
-            Toast.clear()
-            Toast(err.message);
+            toast1.clear()
+            Toast(err.msg);
             console.log(err);
             reject(err);
         });
