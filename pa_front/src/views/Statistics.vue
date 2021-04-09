@@ -1,7 +1,7 @@
 <template>
 <div class="statistics_show">
     <van-cell title="选择日期区间" :value="date" @click="show_date = true" />
-    <van-calendar v-model="show_date" type="range" @confirm="onConfirm" :min-date="minDate" :max-date="maxDate" />
+    <van-calendar  v-model="show_date" get-container="body" position="right" type="range" @confirm="onConfirm" :min-date="minDate" :max-date="maxDate" />
     <div v-if="download_url">
         <van-divider>请以下链接复制到浏览器下载</van-divider>
         <van-cell  :value="download_url"></van-cell>

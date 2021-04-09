@@ -295,7 +295,7 @@ public:
                     created_user = created_by->name;
                 }
                 std::vector<std::string> one_record = {
-                    std::to_string(itr.create_time), itr.name, std::to_string(itr.count), std::to_string(itr.count * itr.price), created_user, itr.plan_time, itr.pay_timestamp, itr.close_timestamp};
+                    std::to_string(itr.create_time) + std::to_string(itr.get_pri_id()), itr.name, std::to_string(itr.count), std::to_string(itr.count * itr.price), created_user, itr.plan_time, itr.pay_timestamp, itr.close_timestamp};
                 writer.write_row(one_record);
             }
             stream.close();

@@ -196,7 +196,7 @@ void PA_WECHAT_send_plan_msg(pa_sql_userinfo &_touser, pa_sql_plan &_plan)
     }
     
     std::vector<std::string> keywords;
-    keywords.push_back(std::to_string(_plan.create_time));
+    keywords.push_back(std::to_string(_plan.create_time) + std::to_string(_plan.get_pri_id()));
     keywords.push_back(created_name);
     keywords.push_back(total_price);
     keywords.push_back(status);

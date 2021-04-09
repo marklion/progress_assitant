@@ -91,6 +91,9 @@ class stuff_plan_management_handler : virtual public stuff_plan_managementIf
         if (opt_user)
         {
             auto plans = opt_user->get_all_children<pa_sql_plan>("created_by");
+            plans.sort([](pa_sql_plan &s1, pa_sql_plan &s2) {
+                return s1.create_time > s2.create_time;
+            });
             for (auto &itr:plans)
             {
                 plan_status tmp;
@@ -251,6 +254,9 @@ class stuff_plan_management_handler : virtual public stuff_plan_managementIf
                 for (auto &itr:stuffs)
                 {
                     auto plans = itr.get_all_children<pa_sql_plan>("belong_stuff");
+                    plans.sort([](pa_sql_plan &s1, pa_sql_plan &s2) {
+                        return s1.create_time > s2.create_time;
+                    });
                     for (auto &single_plan:plans)
                     {
                         plan_status tmp;
