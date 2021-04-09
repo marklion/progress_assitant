@@ -30,6 +30,9 @@ class company_managementIf {
   virtual void get_all_apply(std::vector<user_apply> & _return, const std::string& ssid) = 0;
   virtual bool approve_apply(const int64_t apply_id, const std::string& ssid, const bool approve) = 0;
   virtual void generate_statistics(std::string& _return, const std::string& ssid, const int64_t begin_date, const int64_t end_date) = 0;
+  virtual bool set_notice(const std::string& ssid, const std::string& notice) = 0;
+  virtual void get_notice(std::string& _return, const std::string& company_name) = 0;
+  virtual void clear_notice(const std::string& ssid) = 0;
 };
 
 class company_managementIfFactory {
@@ -85,6 +88,16 @@ class company_managementNull : virtual public company_managementIf {
     return _return;
   }
   void generate_statistics(std::string& /* _return */, const std::string& /* ssid */, const int64_t /* begin_date */, const int64_t /* end_date */) {
+    return;
+  }
+  bool set_notice(const std::string& /* ssid */, const std::string& /* notice */) {
+    bool _return = false;
+    return _return;
+  }
+  void get_notice(std::string& /* _return */, const std::string& /* company_name */) {
+    return;
+  }
+  void clear_notice(const std::string& /* ssid */) {
     return;
   }
 };
@@ -1047,6 +1060,341 @@ class company_management_generate_statistics_presult {
 
 };
 
+typedef struct _company_management_set_notice_args__isset {
+  _company_management_set_notice_args__isset() : ssid(false), notice(false) {}
+  bool ssid :1;
+  bool notice :1;
+} _company_management_set_notice_args__isset;
+
+class company_management_set_notice_args {
+ public:
+
+  company_management_set_notice_args(const company_management_set_notice_args&);
+  company_management_set_notice_args& operator=(const company_management_set_notice_args&);
+  company_management_set_notice_args() : ssid(), notice() {
+  }
+
+  virtual ~company_management_set_notice_args() noexcept;
+  std::string ssid;
+  std::string notice;
+
+  _company_management_set_notice_args__isset __isset;
+
+  void __set_ssid(const std::string& val);
+
+  void __set_notice(const std::string& val);
+
+  bool operator == (const company_management_set_notice_args & rhs) const
+  {
+    if (!(ssid == rhs.ssid))
+      return false;
+    if (!(notice == rhs.notice))
+      return false;
+    return true;
+  }
+  bool operator != (const company_management_set_notice_args &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const company_management_set_notice_args & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+
+class company_management_set_notice_pargs {
+ public:
+
+
+  virtual ~company_management_set_notice_pargs() noexcept;
+  const std::string* ssid;
+  const std::string* notice;
+
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _company_management_set_notice_result__isset {
+  _company_management_set_notice_result__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _company_management_set_notice_result__isset;
+
+class company_management_set_notice_result {
+ public:
+
+  company_management_set_notice_result(const company_management_set_notice_result&);
+  company_management_set_notice_result& operator=(const company_management_set_notice_result&);
+  company_management_set_notice_result() : success(0) {
+  }
+
+  virtual ~company_management_set_notice_result() noexcept;
+  bool success;
+  gen_exp e;
+
+  _company_management_set_notice_result__isset __isset;
+
+  void __set_success(const bool val);
+
+  void __set_e(const gen_exp& val);
+
+  bool operator == (const company_management_set_notice_result & rhs) const
+  {
+    if (!(success == rhs.success))
+      return false;
+    if (!(e == rhs.e))
+      return false;
+    return true;
+  }
+  bool operator != (const company_management_set_notice_result &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const company_management_set_notice_result & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _company_management_set_notice_presult__isset {
+  _company_management_set_notice_presult__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _company_management_set_notice_presult__isset;
+
+class company_management_set_notice_presult {
+ public:
+
+
+  virtual ~company_management_set_notice_presult() noexcept;
+  bool* success;
+  gen_exp e;
+
+  _company_management_set_notice_presult__isset __isset;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+
+};
+
+typedef struct _company_management_get_notice_args__isset {
+  _company_management_get_notice_args__isset() : company_name(false) {}
+  bool company_name :1;
+} _company_management_get_notice_args__isset;
+
+class company_management_get_notice_args {
+ public:
+
+  company_management_get_notice_args(const company_management_get_notice_args&);
+  company_management_get_notice_args& operator=(const company_management_get_notice_args&);
+  company_management_get_notice_args() : company_name() {
+  }
+
+  virtual ~company_management_get_notice_args() noexcept;
+  std::string company_name;
+
+  _company_management_get_notice_args__isset __isset;
+
+  void __set_company_name(const std::string& val);
+
+  bool operator == (const company_management_get_notice_args & rhs) const
+  {
+    if (!(company_name == rhs.company_name))
+      return false;
+    return true;
+  }
+  bool operator != (const company_management_get_notice_args &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const company_management_get_notice_args & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+
+class company_management_get_notice_pargs {
+ public:
+
+
+  virtual ~company_management_get_notice_pargs() noexcept;
+  const std::string* company_name;
+
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _company_management_get_notice_result__isset {
+  _company_management_get_notice_result__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _company_management_get_notice_result__isset;
+
+class company_management_get_notice_result {
+ public:
+
+  company_management_get_notice_result(const company_management_get_notice_result&);
+  company_management_get_notice_result& operator=(const company_management_get_notice_result&);
+  company_management_get_notice_result() : success() {
+  }
+
+  virtual ~company_management_get_notice_result() noexcept;
+  std::string success;
+  gen_exp e;
+
+  _company_management_get_notice_result__isset __isset;
+
+  void __set_success(const std::string& val);
+
+  void __set_e(const gen_exp& val);
+
+  bool operator == (const company_management_get_notice_result & rhs) const
+  {
+    if (!(success == rhs.success))
+      return false;
+    if (!(e == rhs.e))
+      return false;
+    return true;
+  }
+  bool operator != (const company_management_get_notice_result &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const company_management_get_notice_result & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _company_management_get_notice_presult__isset {
+  _company_management_get_notice_presult__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _company_management_get_notice_presult__isset;
+
+class company_management_get_notice_presult {
+ public:
+
+
+  virtual ~company_management_get_notice_presult() noexcept;
+  std::string* success;
+  gen_exp e;
+
+  _company_management_get_notice_presult__isset __isset;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+
+};
+
+typedef struct _company_management_clear_notice_args__isset {
+  _company_management_clear_notice_args__isset() : ssid(false) {}
+  bool ssid :1;
+} _company_management_clear_notice_args__isset;
+
+class company_management_clear_notice_args {
+ public:
+
+  company_management_clear_notice_args(const company_management_clear_notice_args&);
+  company_management_clear_notice_args& operator=(const company_management_clear_notice_args&);
+  company_management_clear_notice_args() : ssid() {
+  }
+
+  virtual ~company_management_clear_notice_args() noexcept;
+  std::string ssid;
+
+  _company_management_clear_notice_args__isset __isset;
+
+  void __set_ssid(const std::string& val);
+
+  bool operator == (const company_management_clear_notice_args & rhs) const
+  {
+    if (!(ssid == rhs.ssid))
+      return false;
+    return true;
+  }
+  bool operator != (const company_management_clear_notice_args &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const company_management_clear_notice_args & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+
+class company_management_clear_notice_pargs {
+ public:
+
+
+  virtual ~company_management_clear_notice_pargs() noexcept;
+  const std::string* ssid;
+
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _company_management_clear_notice_result__isset {
+  _company_management_clear_notice_result__isset() : e(false) {}
+  bool e :1;
+} _company_management_clear_notice_result__isset;
+
+class company_management_clear_notice_result {
+ public:
+
+  company_management_clear_notice_result(const company_management_clear_notice_result&);
+  company_management_clear_notice_result& operator=(const company_management_clear_notice_result&);
+  company_management_clear_notice_result() {
+  }
+
+  virtual ~company_management_clear_notice_result() noexcept;
+  gen_exp e;
+
+  _company_management_clear_notice_result__isset __isset;
+
+  void __set_e(const gen_exp& val);
+
+  bool operator == (const company_management_clear_notice_result & rhs) const
+  {
+    if (!(e == rhs.e))
+      return false;
+    return true;
+  }
+  bool operator != (const company_management_clear_notice_result &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const company_management_clear_notice_result & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _company_management_clear_notice_presult__isset {
+  _company_management_clear_notice_presult__isset() : e(false) {}
+  bool e :1;
+} _company_management_clear_notice_presult__isset;
+
+class company_management_clear_notice_presult {
+ public:
+
+
+  virtual ~company_management_clear_notice_presult() noexcept;
+  gen_exp e;
+
+  _company_management_clear_notice_presult__isset __isset;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+
+};
+
 class company_managementClient : virtual public company_managementIf {
  public:
   company_managementClient(std::shared_ptr< ::apache::thrift::protocol::TProtocol> prot) {
@@ -1096,6 +1444,15 @@ class company_managementClient : virtual public company_managementIf {
   void generate_statistics(std::string& _return, const std::string& ssid, const int64_t begin_date, const int64_t end_date);
   void send_generate_statistics(const std::string& ssid, const int64_t begin_date, const int64_t end_date);
   void recv_generate_statistics(std::string& _return);
+  bool set_notice(const std::string& ssid, const std::string& notice);
+  void send_set_notice(const std::string& ssid, const std::string& notice);
+  bool recv_set_notice();
+  void get_notice(std::string& _return, const std::string& company_name);
+  void send_get_notice(const std::string& company_name);
+  void recv_get_notice(std::string& _return);
+  void clear_notice(const std::string& ssid);
+  void send_clear_notice(const std::string& ssid);
+  void recv_clear_notice();
  protected:
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> piprot_;
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> poprot_;
@@ -1119,6 +1476,9 @@ class company_managementProcessor : public ::apache::thrift::TDispatchProcessor 
   void process_get_all_apply(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
   void process_approve_apply(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
   void process_generate_statistics(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
+  void process_set_notice(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
+  void process_get_notice(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
+  void process_clear_notice(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
  public:
   company_managementProcessor(::std::shared_ptr<company_managementIf> iface) :
     iface_(iface) {
@@ -1130,6 +1490,9 @@ class company_managementProcessor : public ::apache::thrift::TDispatchProcessor 
     processMap_["get_all_apply"] = &company_managementProcessor::process_get_all_apply;
     processMap_["approve_apply"] = &company_managementProcessor::process_approve_apply;
     processMap_["generate_statistics"] = &company_managementProcessor::process_generate_statistics;
+    processMap_["set_notice"] = &company_managementProcessor::process_set_notice;
+    processMap_["get_notice"] = &company_managementProcessor::process_get_notice;
+    processMap_["clear_notice"] = &company_managementProcessor::process_clear_notice;
   }
 
   virtual ~company_managementProcessor() {}
@@ -1233,6 +1596,34 @@ class company_managementMultiface : virtual public company_managementIf {
     return;
   }
 
+  bool set_notice(const std::string& ssid, const std::string& notice) {
+    size_t sz = ifaces_.size();
+    size_t i = 0;
+    for (; i < (sz - 1); ++i) {
+      ifaces_[i]->set_notice(ssid, notice);
+    }
+    return ifaces_[i]->set_notice(ssid, notice);
+  }
+
+  void get_notice(std::string& _return, const std::string& company_name) {
+    size_t sz = ifaces_.size();
+    size_t i = 0;
+    for (; i < (sz - 1); ++i) {
+      ifaces_[i]->get_notice(_return, company_name);
+    }
+    ifaces_[i]->get_notice(_return, company_name);
+    return;
+  }
+
+  void clear_notice(const std::string& ssid) {
+    size_t sz = ifaces_.size();
+    size_t i = 0;
+    for (; i < (sz - 1); ++i) {
+      ifaces_[i]->clear_notice(ssid);
+    }
+    ifaces_[i]->clear_notice(ssid);
+  }
+
 };
 
 // The 'concurrent' client is a thread safe client that correctly handles
@@ -1289,6 +1680,15 @@ class company_managementConcurrentClient : virtual public company_managementIf {
   void generate_statistics(std::string& _return, const std::string& ssid, const int64_t begin_date, const int64_t end_date);
   int32_t send_generate_statistics(const std::string& ssid, const int64_t begin_date, const int64_t end_date);
   void recv_generate_statistics(std::string& _return, const int32_t seqid);
+  bool set_notice(const std::string& ssid, const std::string& notice);
+  int32_t send_set_notice(const std::string& ssid, const std::string& notice);
+  bool recv_set_notice(const int32_t seqid);
+  void get_notice(std::string& _return, const std::string& company_name);
+  int32_t send_get_notice(const std::string& company_name);
+  void recv_get_notice(std::string& _return, const int32_t seqid);
+  void clear_notice(const std::string& ssid);
+  int32_t send_clear_notice(const std::string& ssid);
+  void recv_clear_notice(const int32_t seqid);
  protected:
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> piprot_;
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> poprot_;

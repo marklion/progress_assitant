@@ -11,12 +11,14 @@ class pa_sql_company : public sql_tree_base
 public:
     std::string name;
     std::string logo;
+    std::string notice;
 
     virtual std::vector<sqlite_orm_column> self_columns_defined()
     {
         std::vector<sqlite_orm_column> ret;
         ret.push_back(sqlite_orm_column("name", sqlite_orm_column::STRING, &name));
         ret.push_back(sqlite_orm_column("logo", sqlite_orm_column::STRING, &logo));
+        ret.push_back(sqlite_orm_column("notice", sqlite_orm_column::STRING, &notice));
 
         return ret;
     }

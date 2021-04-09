@@ -60,7 +60,7 @@ export default {
             const [start, end] = _date;
             this.show_date = false;
             this.begin_date = start.valueOf() / 1000;
-            this.end_date = end.valueOf() / 1000;
+            this.end_date = end.valueOf() / 1000 + 60*60*24;
             this.date = `${start.getFullYear()}/${start.getMonth() + 1}/${start.getDate()}-${end.getFullYear()}/${end.getMonth() + 1}/${end.getDate()}`
         },
     },

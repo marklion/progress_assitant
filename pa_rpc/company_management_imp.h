@@ -319,5 +319,44 @@ public:
             _return = "/logo_res/" + file_name_no_ext + ".xlsx";
         }
     }
+
+    virtual bool set_notice(const std::string &ssid, const std::string &notice)
+    {
+        bool ret = false;
+        auto user = PA_DATAOPT_get_online_user(ssid);
+        if (user) {
+            auto company = user->get_parent<pa_sql_company>("belong_company");
+            if (company) {
+                company->notice = notice;
+                ret = company->update_record();
+            }
+            else
+            {
+                PA_RETURN_NOCOMPANY_MSG();
+            }
+        }
+        else
+        {
+            PA_RETURN_UNLOGIN_MSG();
+        }
+        return ret;
+    }
+
+    virtual void get_notice(std::string &_return, const std::string &company_name) 
+    {
+        auto company = sqlite_orm::search_record<pa_sql_company>("name = '%s'", company_name.c_str());
+        if (company)
+        {
+            _return = company->notice;
+        }
+        else
+        {
+            PA_RETURN_NOCOMPANY_MSG();
+        }
+    }
+    virtual void clear_notice(const std::string &ssid) 
+    {
+        set_notice(ssid, "");
+    }
 };
 #endif // _COMPANY_MANAGEMENT_IMP_H_

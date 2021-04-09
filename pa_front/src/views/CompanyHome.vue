@@ -53,7 +53,16 @@
             </div>
         </van-form>
     </van-dialog>
-
+    <van-divider>当前公告</van-divider>
+    <van-field v-model="notice" rows="2" autosize type="textarea" maxlength="50" placeholder="请输入公告" show-word-limit />
+    <van-row type="flex" justify="center" align="center" :gutter="10">
+        <van-col :span="10">
+            <van-button round block type="danger" @click="submit_notice(false)">清除</van-button>
+        </van-col>
+        <van-col :span="10">
+            <van-button round block type="primary" @click="submit_notice(true)">发布</van-button>
+        </van-col>
+    </van-row>
 </div>
 </template>
 
@@ -91,7 +100,11 @@ import {
 import {
     Icon
 } from 'vant';
+import {
+    Divider
+} from 'vant';
 
+Vue.use(Divider);
 Vue.use(Icon);
 Vue.use(Tag);
 Vue.use(Cell);
@@ -128,6 +141,7 @@ export default {
                 }
                 return ret;
             },
+            notice: '',
         };
     },
     computed: {
@@ -141,6 +155,20 @@ export default {
 
     },
     methods: {
+        submit_notice: function (_val) {
+            var vue_this = this;
+            if (_val) {
+                vue_this.$call_remote_process("company_management", 'set_notice', [vue_this.$cookies.get('pa_ssid'), vue_this.notice]).then(function (resp) {
+                    if (resp) {
+                        vue_this.init_company_data();
+                    }
+                });
+            } else {
+                vue_this.$call_remote_process("company_management", 'clear_notice', [vue_this.$cookies.get('pa_ssid')]).then(function () {
+                    vue_this.init_company_data();
+                });
+            }
+        },
         randomString: function (len) {
             len = len || 32;
             var $chars = 'ABCDEFGHJKMNPQRSTWXYZabcdefhijkmnprstwxyz2345678'; /****默认去掉了容易混淆的字符oOLl,9gq,Vv,Uu,I1****/
@@ -250,12 +278,24 @@ export default {
                     vue_this.get_type_detail(element);
                 });
             });
-
+            if (vue_this.$store.state.userinfo.company) {
+                vue_this.$call_remote_process("company_management", 'get_notice', [vue_this.$store.state.userinfo.company]).then(function (resp) {
+                    vue_this.notice = resp;
+                });
+            }
         }
     },
     beforeMount: function () {
         this.init_company_data();
         this.config_with_wx();
+    },
+    watch: {
+        "$store.state.userinfo.company": function (_val) {
+            var vue_this = this;
+            vue_this.$call_remote_process("company_management", 'get_notice', [_val]).then(function (resp) {
+                vue_this.notice = resp;
+            });
+        },
     },
 }
 </script>
