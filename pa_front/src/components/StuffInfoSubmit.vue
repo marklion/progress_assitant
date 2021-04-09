@@ -18,7 +18,10 @@
                 <van-button round size="small" type="primary" icon="plus" native-type="button" @click="add_vichele_info"></van-button>
             </van-col>
         </van-row>
-        <vichele-in-plan v-for="(single_vichele, index) in vichele_info" :key="index" :vichele_info="single_vichele"></vichele-in-plan>
+        <div class="single_vichele_show" v-for="(single_vichele, index) in vichele_info" :key="index">
+            <vichele-in-plan :vichele_info="single_vichele"></vichele-in-plan>
+            <van-button plain round block icon="delete-o" native-type="button" @click="remove_vichele_info(index)"></van-button>
+        </div>
         <div style="margin: 16px;">
             <van-button round block type="info" native-type="submit" :disabled="!stuff_info_change">{{action_name}}</van-button>
         </div>
@@ -119,7 +122,7 @@ export default {
         all_count: function () {
             var ret = 0;
             this.vichele_info.forEach((element) => {
-                ret += parseFloat( element.count);
+                ret += parseFloat(element.count);
             });
 
             return ret;
@@ -135,7 +138,7 @@ export default {
             var a = JSON.parse(JSON.stringify(this.orig_vichele_info));
             var b = JSON.parse(JSON.stringify(this.vichele_info));
             a.sort();
-            b.forEach((element)=>{
+            b.forEach((element) => {
                 element.count = parseFloat(element.count);
             });
             b.sort();
@@ -175,7 +178,7 @@ export default {
     },
     methods: {
         add_vichele_info: function () {
-            this.vichele_info.push({
+            this.vichele_info.splice(0, 0, {
                 main_vichele: '',
                 behind_vichele: '',
                 driver_name: '',
@@ -185,17 +188,8 @@ export default {
                 count: 20,
             });
         },
-
-        add_vichele: function (_vichele) {
-            if (this.vichele_info.indexOf(_vichele) == -1) {
-                this.vichele_info.push(_vichele);
-                this.show_vichele_picker = false;
-            } else {
-                this.$toast.fail('已添加');
-            }
-        },
-        remove_vichele(_index) {
-            this.vichele_info.splice(_index, 1);
+        remove_vichele_info: function (_index) {
+            this.vichele_info.splice(_index,1);
         },
         formatDateTime: function (date) {
             var y = date.getFullYear();
@@ -255,6 +249,11 @@ export default {
 }
 </script>
 
-<style>
-
+<style scoped>
+.single_vichele_show {
+    border: 1px solid gray;
+    border-radius: 16px;
+    margin-left: 10px;
+    margin-right: 10px
+}
 </style>

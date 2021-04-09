@@ -133,7 +133,7 @@ std::unique_ptr<pa_sql_userinfo> PA_DATAOPT_get_online_user(const std::string &_
     if (login_user)
     {
         auto cur_time = time(NULL) / 3600;
-        if (cur_time < login_user->timestamp || (cur_time - login_user->timestamp) > 12)
+        if (cur_time < login_user->timestamp || (cur_time - login_user->timestamp) > 120)
         {
             login_user->remove_record();
         }
