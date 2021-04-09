@@ -109,7 +109,7 @@ export default {
             var timestamp = (new Date()).getTime();
             var nonceStr = this.randomString(32);
             var vue_this = this;
-            vue_this.$get_client("user_management").get_wx_api_signature(timestamp, nonceStr, window.location.href).then(function (resp) {
+            vue_this.$call_remote_process("user_management", 'get_wx_api_signature', [timestamp, nonceStr, window.location.href]).then(function (resp) {
                 wx.config({
                     debug: false,
                     appId: 'wxa390f8b6f68e9c6d',
@@ -125,8 +125,6 @@ export default {
                     console.log('fail to config wx');
                     console.log(err);
                 });
-            }).catch(function (err) {
-                console.log(err);
             });
         },
         confirm_close: function () {
@@ -293,47 +291,35 @@ export default {
         postImg(base64) {
             var file_content = base64.split(';base64,')[1];
             var vue_this = this;
-            this.$get_client("stuff_plan_management").upload_payinfo(vue_this.plan_id, vue_this.$cookies.get('pa_ssid'), file_content).
+            this.$call_remote_process("stuff_plan_management",'upload_payinfo', [vue_this.plan_id, vue_this.$cookies.get('pa_ssid'), file_content]).
             then(function (resp) {
                 if (resp) {
                     vue_this.$router.go(0);
                 }
-            }).catch(function (err) {
-                console.log(err);
-                vue_this.$toast(err.msg);
             });
             // 提交图片
             // Some code
         },
         get_priv: function (_id) {
             var vue_this = this;
-            vue_this.$get_client("stuff_plan_management").has_priv_edit(_id, vue_this.$cookies.get('pa_ssid')).then(function (resp) {
+            vue_this.$call_remote_process("stuff_plan_management",'has_priv_edit', [_id, vue_this.$cookies.get('pa_ssid')]).then(function (resp) {
                 vue_this.has_pri = resp;
-            }).catch(function (err) {
-                console.log(err);
-                vue_this.$toast(err.msg);
             });
         },
         submit_confirm: function () {
             var vue_this = this;
-            vue_this.$get_client("stuff_plan_management").confirm_plan(vue_this.plan_id, vue_this.$cookies.get('pa_ssid')).then(function (resp) {
+            vue_this.$call_remote_process("stuff_plan_management",'confirm_plan',[vue_this.plan_id, vue_this.$cookies.get('pa_ssid')]).then(function (resp) {
                 if (resp) {
                     vue_this.$router.go(0);
                 }
-            }).catch(function (err) {
-                console.log(err);
-                vue_this.$toast(err.msg);
             });
         },
         submit_confirm_pay: function () {
             var vue_this = this;
-            vue_this.$get_client("stuff_plan_management").confirm_pay(vue_this.plan_id, vue_this.$cookies.get('pa_ssid')).then(function (resp) {
+            vue_this.$call_remote_process("stuff_plan_management",'confirm_pay',[vue_this.plan_id, vue_this.$cookies.get('pa_ssid')]).then(function (resp) {
                 if (resp) {
                     vue_this.$router.go(0);
                 }
-            }).catch(function (err) {
-                console.log(err);
-                vue_this.$toast(err.msg);
             });
         },
     },

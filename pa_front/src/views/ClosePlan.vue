@@ -46,32 +46,23 @@ export default {
     methods: {
         confirm_close: function () {
             var vue_this = this;
-            vue_this.$get_client("stuff_plan_management").confirm_close(vue_this.plan_id, vue_this.$cookies.get('pa_ssid')).then(function (resp) {
+            vue_this.$call_remote_process("stuff_plan_management",'confirm_close', [vue_this.plan_id, vue_this.$cookies.get('pa_ssid')]).then(function (resp) {
                 if (resp) {
                     vue_this.$router.go(0);
                 }
-            }).catch(function (err) {
-                console.log(err);
-                vue_this.$toast(err.msg);
             });
         },
     },
     beforeMount: function () {
         var vue_this = this;
-        vue_this.$get_client("stuff_plan_management").get_plan(parseInt(vue_this.$route.params.plan_id)).then(function (resp) {
+        vue_this.$call_remote_process("stuff_plan_management",'get_plan', [parseInt(vue_this.$route.params.plan_id)]).then(function (resp) {
             vue_this.status = resp.status;
             vue_this.plan_id = resp.plan_id;
             vue_this.count = resp.count;
             vue_this.name = resp.name;
-            vue_this.$get_client("user_management").get_customer_info(resp.created_by).then(function (resp) {
+            vue_this.$call_remote_process("user_management",'get_customer_info', [resp.created_by]).then(function (resp) {
                 vue_this.user_name = resp;
-            }).catch(function (err) {
-                console.log(err);
-                vue_this.$toast(err.msg);
             });
-        }).catch(function (err) {
-            console.log(err);
-            vue_this.$toast(err.msg);
         });
     },
 }

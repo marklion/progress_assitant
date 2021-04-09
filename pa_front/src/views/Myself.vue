@@ -76,7 +76,7 @@ export default {
     methods: {
         logoff: function () {
             var vue_this = this;
-            vue_this.$get_client("user_management").logff_user(vue_this.$cookies.get('pa_ssid')).finally(function () {
+            vue_this.$call_remote_process("user_management",'logff_user', [vue_this.$cookies.get('pa_ssid')]).finally(function () {
                 history.go(0);
             });
         },
@@ -86,11 +86,8 @@ export default {
     },
     beforeMount: function () {
         var vue_this = this;
-        vue_this.$get_client("user_management").is_admin(vue_this.$cookies.get('pa_ssid')).then(function (resp) {
+        vue_this.$call_remote_process("user_management",'is_admin', [vue_this.$cookies.get('pa_ssid')]).then(function (resp) {
             vue_this.is_admin = resp;
-        }).catch(function (err) {
-            console.log(err);
-            vue_this.$toast(err.msg);
         });
     },
 }

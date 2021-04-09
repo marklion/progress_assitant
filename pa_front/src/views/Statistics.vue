@@ -47,15 +47,12 @@ export default {
     methods: {
         generate: function () {
             var vue_this = this;
-            vue_this.$get_client("company_management").generate_statistics(vue_this.$cookies.get('pa_ssid'), vue_this.begin_date, vue_this.end_date).then(function (resp) {
+            vue_this.$call_remote_process("company_management",'generate_statistics', [vue_this.$cookies.get('pa_ssid'), vue_this.begin_date, vue_this.end_date]).then(function (resp) {
                 if (resp) {
                     vue_this.download_url = vue_this.$remote_url + resp;
                 } else {
                     vue_this.$toast("无交易信息");
                 }
-            }).catch(function (err) {
-                console.log(err);
-                vue_this.$toast(err.msg);
             });
 
         },

@@ -57,25 +57,19 @@ export default {
     methods: {
         submit_approve: function (_apply, approve) {
             var vue_this = this;
-            vue_this.$get_client("company_management").approve_apply(_apply.apply_id, vue_this.$cookies.get('pa_ssid'), approve).then(function (resp) {
+            vue_this.$call_remote_process("company_management",'approve_apply', [_apply.apply_id, vue_this.$cookies.get('pa_ssid'), approve]).then(function (resp) {
                 if (resp) {
                     vue_this.init_apply_info();
                 }
-            }).catch(function (err) {
-                console.log(err);
-                vue_this.$toast(err.msg);
             });
         },
         init_apply_info: function () {
             var vue_this = this;
             vue_this.all_apply = [];
-            vue_this.$get_client("company_management").get_all_apply(vue_this.$cookies.get('pa_ssid')).then(function (resp) {
+            vue_this.$call_remote_process("company_management",'get_all_apply', [vue_this.$cookies.get('pa_ssid')]).then(function (resp) {
                 resp.forEach((element, index) => {
                     vue_this.$set(vue_this.all_apply, index, element);
                 });
-            }).catch(function (err) {
-                console.log(err);
-                vue_this.$toast(err.msg);
             });
 
         },

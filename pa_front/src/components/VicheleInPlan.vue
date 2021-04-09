@@ -4187,43 +4187,31 @@ export default {
         },
         fetch_current_vichele: function () {
             var vue_this = this;
-            vue_this.$get_client("user_management").get_bound_vichele(vue_this.$cookies.get('pa_ssid'), true).then(function (resp) {
+            vue_this.$call_remote_process("user_management",'get_bound_vichele', [vue_this.$cookies.get('pa_ssid'), true]).then(function (resp) {
                 resp.forEach((element, index) => {
                     vue_this.$set(vue_this.main_vichele_pool, index, element);
                 });
-            }).catch(function (err) {
-                console.log(err);
-                vue_this.$toast(err.msg);
             });
-            vue_this.$get_client("user_management").get_bound_vichele(vue_this.$cookies.get('pa_ssid'), false).then(function (resp) {
+            vue_this.$call_remote_process("user_management",'get_bound_vichele',[vue_this.$cookies.get('pa_ssid'), false]).then(function (resp) {
                 resp.forEach((element, index) => {
                     vue_this.$set(vue_this.behind_vichele_pool, index, element);
                 });
-            }).catch(function (err) {
-                console.log(err);
-                vue_this.$toast(err.msg);
             });
         },
         fetch_current_driver: function () {
             var vue_this = this;
-            vue_this.$get_client("user_management").get_bound_driver_info(vue_this.$cookies.get('pa_ssid')).then(function (resp) {
+            vue_this.$call_remote_process("user_management",'get_bound_driver_info', [vue_this.$cookies.get('pa_ssid')]).then(function (resp) {
                 resp.forEach((element, index) => {
                     vue_this.$set(vue_this.driver_name_pool, index, element.name + '-' + element.phone);
                 });
-            }).catch(function (err) {
-                console.log(err);
-                vue_this.$toast(err.msg);
             });
         },
         submit_new_vichele: function (_main_vichele) {
             var vue_this = this;
-            vue_this.$get_client("user_management").bind_new_vichele(vue_this.$cookies.get('pa_ssid'), vue_this.new_vichele, _main_vichele).then(function (resp) {
+            vue_this.$call_remote_process("user_management",'bind_new_vichele', [vue_this.$cookies.get('pa_ssid'), vue_this.new_vichele, _main_vichele]).then(function (resp) {
                 if (resp) {
                     vue_this.fetch_current_vichele();
                 }
-            }).catch(function (err) {
-                console.log(err);
-                vue_this.$toast(err.msg);
             }).finally(function () {
                 vue_this.show_add_main_vichele_diag = false;
                 vue_this.show_add_behind_vichele_diag = false;
@@ -4231,16 +4219,13 @@ export default {
         },
         submit_new_driver: function () {
             var vue_this = this;
-            vue_this.$get_client("user_management").bind_new_driver(vue_this.$cookies.get('pa_ssid'), {
+            vue_this.$call_remote_process("user_management",'bind_new_driver', [vue_this.$cookies.get('pa_ssid'), {
                 name: vue_this.new_driver_name,
                 phone: vue_this.new_driver_phone
-            }).then(function (resp) {
+            }]).then(function (resp) {
                 if (resp) {
                     vue_this.fetch_current_driver();
                 }
-            }).catch(function (err) {
-                console.log(err);
-                vue_this.$toast(err.msg);
             }).finally(function () {
                 vue_this.show_add_driver_diag = false;
             });

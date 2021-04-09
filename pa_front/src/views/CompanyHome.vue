@@ -139,13 +139,10 @@ export default {
     methods: {
         readd_stuff(_stuff) {
             var vue_this = this;
-            vue_this.$get_client("company_management").readd_type(_stuff, vue_this.$cookies.get('pa_ssid')).then(function (resp) {
+            vue_this.$call_remote_process("company_management",'readd_type', [_stuff, vue_this.$cookies.get('pa_ssid')]).then(function (resp) {
                 if (resp) {
                     vue_this.init_company_data();
                 }
-            }).catch(function (err) {
-                console.log(err);
-                vue_this.$toast(err.msg);
             });
         },
         refresh_page: function () {
@@ -155,13 +152,10 @@ export default {
             var vue_this = this;
             var stuff = Object.create(vue_this.stuff_in_edit);
             stuff.price = parseInt(stuff.price);
-            vue_this.$get_client("company_management").edit_type(stuff, vue_this.$cookies.get('pa_ssid')).then(function (resp) {
+            vue_this.$call_remote_process("company_management", 'edit_type', [stuff, vue_this.$cookies.get('pa_ssid')]).then(function (resp) {
                 if (resp) {
                     vue_this.init_company_data();
                 }
-            }).catch(function (err) {
-                console.log(err);
-                vue_this.$toast(err.msg);
             }).finally(function () {
                 vue_this.show_edit_stuff = false;
             });
@@ -179,23 +173,17 @@ export default {
                 })
                 .then(() => {
                     stuff.price = parseInt(stuff.price);
-                    vue_this.$get_client("company_management").remove_type(stuff, vue_this.$cookies.get('pa_ssid')).then(function () {
+                    vue_this.$call_remote_process("company_management",'remove_type', [stuff, vue_this.$cookies.get('pa_ssid')]).then(function () {
                         vue_this.init_company_data();
-                    }).catch(function (err) {
-                        console.log(err);
-                        vue_this.$toast(err.msg);
                     });
                 });
         },
         add_stuff: function () {
             var vue_this = this;
-            vue_this.$get_client("company_management").add_type(vue_this.add_stuff_name, parseInt(vue_this.add_stuff_price), this.$cookies.get("pa_ssid")).then(function (resp) {
+            vue_this.$call_remote_process("company_management",'add_type', [vue_this.add_stuff_name, parseInt(vue_this.add_stuff_price), this.$cookies.get("pa_ssid")]).then(function (resp) {
                 if (resp) {
                     vue_this.init_company_data();
                 }
-            }).catch(function (err) {
-                console.log(err);
-                vue_this.$toast(err.msg);
             }).finally(function () {
                 vue_this.show_add_stuff = false;
             });
@@ -203,25 +191,19 @@ export default {
         get_type_detail: function (_id) {
             var vue_this = this;
             vue_this.all_type = [];
-            this.$get_client("stuff_info").get_stuff_detail(_id).then(function (resp) {
+            this.$call_remote_process("stuff_info",'get_stuff_detail', [_id]).then(function (resp) {
                 vue_this.$set(vue_this.all_type, vue_this.all_type.length, resp);
                 vue_this.all_type.sort((a, b) => {
                     return b.saling - a.saling;
                 });
-            }).catch(function (err) {
-                console.log(err);
-                vue_this.$toast(err.msg);
             });
         },
         init_company_data: function () {
             var vue_this = this;
-            vue_this.$get_client("company_management").get_all_type(vue_this.$cookies.get('pa_ssid')).then(function (resp) {
+            vue_this.$call_remote_process("company_management",'get_all_type', [vue_this.$cookies.get('pa_ssid')]).then(function (resp) {
                 resp.forEach(function (element) {
                     vue_this.get_type_detail(element);
                 });
-            }).catch(function (err) {
-                console.log(err);
-                vue_this.$toast(err.msg);
             });
 
         }

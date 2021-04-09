@@ -25,7 +25,7 @@ export default {
     },
     beforeMount: function () {
         var vue_this = this;
-        vue_this.$get_client("stuff_plan_management").get_plan(parseInt(vue_this.$route.params.plan_id)).then(function (resp) {
+        vue_this.$call_remote_process("stuff_plan_management",'get_plan', [parseInt(vue_this.$route.params.plan_id)]).then(function (resp) {
             vue_this.plan_count = resp.count;
             vue_this.plan_time = resp.plan_time;
             vue_this.created_time = resp.created_time * 1000;
@@ -33,17 +33,11 @@ export default {
             resp.vichele_info.forEach((element, index) => {
                 vue_this.$set(vue_this.vichele_info, index, element);
             });
-            vue_this.$get_client("stuff_info").get_stuff_detail(resp.type_id).then(function (detail_resp) {
+            vue_this.$call_remote_process("stuff_info", 'get_stuff_detail', [resp.type_id]).then(function (detail_resp) {
                 vue_this.name = detail_resp.name;
                 vue_this.company = detail_resp.company;
                 vue_this.price = detail_resp.price;
-            }).catch(function (err) {
-                console.log(err);
-                vue_this.$toast(err.msg);
             });
-        }).catch(function (err) {
-            console.log(err);
-            vue_this.$toast(err.msg);
         });
     },
 }

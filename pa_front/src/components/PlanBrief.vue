@@ -93,7 +93,7 @@ export default {
     },
     beforeMount: function () {
         var vue_this = this;
-        vue_this.$get_client("stuff_plan_management").get_plan(vue_this.plan_id).then(function (resp) {
+        vue_this.$call_remote_process("stuff_plan_management", 'get_plan', [vue_this.plan_id]).then(function (resp) {
             vue_this.plan_count = resp.count;
             vue_this.plan_time = resp.plan_time;
             resp.vichele_info.forEach((element, index) => {
@@ -103,23 +103,14 @@ export default {
             vue_this.name = resp.name;
             vue_this.status = resp.status;
             if (false == vue_this.company_view) {
-                vue_this.$get_client("stuff_info").get_stuff_detail(resp.type_id).then(function (detail_resp) {
+                vue_this.$call_remote_process("stuff_info", 'get_stuff_detail', [resp.type_id]).then(function (detail_resp) {
                     vue_this.company = detail_resp.company;
-                }).catch(function (err) {
-                    console.log(err);
-                    vue_this.$toast(err.msg);
                 });
             } else {
-                vue_this.$get_client("user_management").get_customer_info(resp.created_by).then(function (resp) {
+                vue_this.$call_remote_process("user_management", 'get_customer_info', [resp.created_by]).then(function (resp) {
                     vue_this.company = resp;
-                }).catch(function (err) {
-                    console.log(err);
-                    vue_this.$toast(err.msg);
                 });
             }
-        }).catch(function (err) {
-            console.log(err);
-            vue_this.$toast(err.msg);
         });
     },
 }

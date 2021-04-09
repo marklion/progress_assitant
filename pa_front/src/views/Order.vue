@@ -71,13 +71,10 @@ export default {
     },
     beforeMount: function () {
         var vue_this = this;
-        vue_this.$get_client("stuff_plan_management").get_created_plan(vue_this.$cookies.get('pa_ssid')).then(function (resp) {
+        vue_this.$call_remote_process("stuff_plan_management",'get_created_plan', [vue_this.$cookies.get('pa_ssid')]).then(function (resp) {
             resp.forEach((element, index) => {
                 vue_this.$set(vue_this.orders, index, element);
             });
-        }).catch(function (err) {
-            console.log(err);
-            vue_this.$toast(err.msg);
         });
     },
 }

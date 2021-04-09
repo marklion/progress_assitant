@@ -79,7 +79,7 @@ export default {
     },
     beforeMount() {
         var vue_this = this;
-        this.$get_client("stuff_info").get_today().then(function (resp) {
+        this.$call_remote_process("stuff_info",'get_today', []).then(function (resp) {
             resp.forEach((element, index) => {
                 vue_this.$set(vue_this.today_stuff, index, element)
             });
@@ -87,9 +87,6 @@ export default {
             vue_this.orgnize_stuff(vue_this.company_option.find((item) => {
                 return item.value == vue_this.company_filter
             }).text);
-        }).catch(function (err) {
-            console.log(err);
-            vue_this.$toast(err.msg);
         });
     },
     methods: {

@@ -71,7 +71,7 @@ export default {
             buyer: true,
             need_info: false,
             show_share: false,
-            isLoading:false,
+            isLoading: false,
         }
     },
     beforeMount: function () {
@@ -87,7 +87,7 @@ export default {
         },
     },
     methods: {
-        onRefresh: function() {
+        onRefresh: function () {
             this.$router.go(0);
         },
         onClickRight: function () {
@@ -98,13 +98,8 @@ export default {
         },
         get_userinfo() {
             var vue_this = this;
-            vue_this.$toast.loading({
-                message: '加载中...',
-                forbidClick: true,
-                duration: 0,
-            });
             var ssid = vue_this.$cookies.get('pa_ssid');
-            vue_this.$get_client('user_management').get_user_info(ssid).then(function (resp) {
+            vue_this.$call_remote_process('user_management', 'get_user_info', [ssid]).then(function (resp) {
                 console.log(resp);
                 if (resp.user_id != 0) {
                     vue_this.$store.commit('set_userinfo', resp);
@@ -124,11 +119,6 @@ export default {
                     });
                     vue_this.$store.commit('set_login', false);
                 }
-                vue_this.$toast.clear();
-            }).catch(function (err) {
-                vue_this.$toast.clear();
-                console.log(err);
-                vue_this.$toast(err.msg);
             }).finally(function () {
                 if (vue_this.$route.path == '/' && vue_this.need_info == false) {
                     if (vue_this.$store.state.userinfo.buyer) {

@@ -210,7 +210,7 @@ export default {
         submit_plan: function () {
             var vue_this = this;
             if (this.is_create) {
-                this.$get_client("stuff_plan_management").create_plan({
+                this.$call_remote_process("stuff_plan_management",'create_plan',[{
                     count: this.plan_count,
                     type_id: this.type_id,
                     plan_time: this.plan_time,
@@ -218,30 +218,24 @@ export default {
                     name: this.orig_name,
                     price: this.orig_price,
                     comment: this.comment,
-                }, this.$cookies.get("pa_ssid")).then(function (resp) {
+                }, this.$cookies.get("pa_ssid")]).then(function (resp) {
                     if (resp > 0) {
                         vue_this.$router.push({
                             name: 'Order',
                         });
                     }
-                }).catch(function (err) {
-                    console.log(err);
-                    vue_this.$toast(err.msg);
                 });
             } else {
-                vue_this.$get_client("stuff_plan_management").update_plan({
+                vue_this.$call_remote_process("stuff_plan_management",'update_plan', [{
                     plan_id: vue_this.plan_id,
                     count: this.plan_count,
                     plan_time: this.plan_time,
                     vichele_info: this.vichele_info,
                     comment: this.comment,
-                }, this.$cookies.get('pa_ssid')).then(function (resp) {
+                }, this.$cookies.get('pa_ssid')]).then(function (resp) {
                     if (resp) {
                         vue_this.$router.back(-1);
                     }
-                }).catch(function (err) {
-                    console.log(err);
-                    vue_this.$toast(err.msg);
                 });
             }
         }

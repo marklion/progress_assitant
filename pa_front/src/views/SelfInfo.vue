@@ -102,10 +102,10 @@ export default {
     methods: {
         on_submit: function () {
             var vue_this = this;
-            vue_this.$get_client("user_management").update_user_info(vue_this.userinfo, vue_this.$cookies.get('pa_ssid')).then(function (resp) {
+            vue_this.$call_remote_process("user_management",'update_user_info', [vue_this.userinfo, vue_this.$cookies.get('pa_ssid')]).then(function (resp) {
                 if (resp == true) {
                     var ssid = vue_this.$cookies.get('pa_ssid');
-                    vue_this.$get_client('user_management').get_user_info(ssid).then(function (resp) {
+                    vue_this.$call_remote_process('user_management','get_user_info', [ssid]).then(function (resp) {
                         if (resp.user_id != 0) {
                             vue_this.$store.commit('set_userinfo', resp);
                             vue_this.$store.commit('set_login', true);
@@ -120,16 +120,10 @@ export default {
                         } else {
                             vue_this.$router.go(-1);
                         }
-                    }).catch(function (err) {
-                        console.log(err);
-                        vue_this.$toast(err.msg);
                     });
                 } else {
                     console.log(resp);
                 }
-            }).catch(function (err) {
-                console.log(err);
-                vue_this.$toast(err.msg);
             });
         },
 
@@ -310,13 +304,9 @@ export default {
             console.log(base64);
             var file_content = base64.split(';base64,')[1];
             console.log(file_content);
-            var vue_this = this;
-            this.$get_client("user_management").update_logo(file_content, this.$cookies.get('pa_ssid')).
+            this.$call_remote_process("user_management",'update_logo', [file_content, this.$cookies.get('pa_ssid')]).
             then(function (resp) {
                 console.log(resp);
-            }).catch(function (err) {
-                console.log(err);
-                vue_this.$toast(err.msg);
             });
             // 提交图片
             // Some code

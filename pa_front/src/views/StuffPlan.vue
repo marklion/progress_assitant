@@ -30,14 +30,11 @@ export default {
     },
     beforeMount: function () {
         var vue_this = this;
-        this.$get_client("stuff_info").get_stuff_detail(parseInt(vue_this.$route.params.type_id)).then(function (resp) {
+        this.$call_remote_process("stuff_info",'get_stuff_detail', [parseInt(vue_this.$route.params.type_id)]).then(function (resp) {
             vue_this.stuff_brief.name = resp.name;
             vue_this.stuff_brief.company = resp.company;
             vue_this.stuff_brief.price = resp.price;
             vue_this.stuff_brief.type_id = resp.type_id;
-        }).catch(function (err) {
-            console.log(err);
-            vue_this.$toast(err.msg);
         });
         this.min_time = new Date();
     },
