@@ -6,6 +6,7 @@
             <van-button round type="info" icon="replay" @click="refresh_page">刷新</van-button>
         </van-row>
     </div>
+    <van-button plain round icon="scan" class="scan_button_show" @click="confirm_close"></van-button>
     <van-cell-group>
         <template #title>
             <van-row type="flex" justify="space-between" align="center">
@@ -36,7 +37,7 @@
         <van-form @submit="add_stuff">
             <van-field v-model="add_stuff_name" name="商品名" label="商品名" placeholder="请输入商品名" :rules="[{ required: true, message: '请填写商品名' }]" />
             <van-field v-model="add_stuff_price" type="number" name="价格" label="价格" placeholder="请输入价格" :rules="[{ required: true, message: '请填写价格' }]" />
-            <van-field v-model="add_stuff_last" name="存量" label="存量" placeholder="请输入存量信息"  />
+            <van-field v-model="add_stuff_last" name="存量" label="存量" placeholder="请输入存量信息" />
             <div style="margin: 16px;">
                 <van-button round block type="info" native-type="submit">确认</van-button>
             </div>
@@ -46,7 +47,7 @@
         <van-form @submit="edit_stuff">
             <van-field v-model="stuff_in_edit.name" name="商品名" label="商品名" readonly />
             <van-field v-model="stuff_in_edit.price" name="价格" label="价格" placeholder="请输入价格" :rules="[{ required: true, message: '请填写价格' }]" />
-            <van-field v-model="stuff_in_edit.last" name="存量" label="存量" placeholder="请输入存量信息"  />
+            <van-field v-model="stuff_in_edit.last" name="存量" label="存量" placeholder="请输入存量信息" />
             <div style="margin: 16px;">
                 <van-button round block type="info" native-type="submit">确认</van-button>
             </div>
@@ -103,6 +104,7 @@ Vue.use(Button);
 Vue.use(Field);
 Vue.use(Col);
 Vue.use(Row);
+import wx from 'weixin-js-sdk'
 export default {
     name: 'CompanyHome',
     data: function () {
@@ -111,7 +113,7 @@ export default {
             show_add_stuff: false,
             add_stuff_name: '',
             add_stuff_price: '',
-            add_stuff_last:'',
+            add_stuff_last: '',
             stuff_in_edit: {
                 name: '',
                 price: 0,
@@ -139,9 +141,50 @@ export default {
 
     },
     methods: {
+        randomString: function (len) {
+            len = len || 32;
+            var $chars = 'ABCDEFGHJKMNPQRSTWXYZabcdefhijkmnprstwxyz2345678'; /****默认去掉了容易混淆的字符oOLl,9gq,Vv,Uu,I1****/
+            var maxPos = $chars.length;
+            var pwd = '';
+            for (var i = 0; i < len; i++) {
+                pwd += $chars.charAt(Math.floor(Math.random() * maxPos));
+            }
+            return pwd;
+        },
+        config_with_wx: function () {
+            var timestamp = (new Date()).getTime();
+            var nonceStr = this.randomString(32);
+            var vue_this = this;
+            vue_this.$call_remote_process("user_management", 'get_wx_api_signature', [timestamp, nonceStr, window.location.href]).then(function (resp) {
+                wx.config({
+                    debug: false,
+                    appId: 'wxa390f8b6f68e9c6d',
+                    timestamp: timestamp,
+                    nonceStr: nonceStr,
+                    signature: resp,
+                    jsApiList: ['scanQRCode']
+                });
+                wx.ready(function () {
+                    console.log('success to config wx');
+                });
+                wx.error(function (err) {
+                    console.log('fail to config wx');
+                    console.log(err);
+                });
+            });
+        },
+        confirm_close: function () {
+            wx.scanQRCode({
+                needResult: 1,
+                success: function (res) {
+                    var dest_url = res.resultStr;
+                    window.location.href = dest_url;
+                }
+            });
+        },
         readd_stuff(_stuff) {
             var vue_this = this;
-            vue_this.$call_remote_process("company_management",'readd_type', [_stuff, vue_this.$cookies.get('pa_ssid')]).then(function (resp) {
+            vue_this.$call_remote_process("company_management", 'readd_type', [_stuff, vue_this.$cookies.get('pa_ssid')]).then(function (resp) {
                 if (resp) {
                     vue_this.init_company_data();
                 }
@@ -175,14 +218,14 @@ export default {
                 })
                 .then(() => {
                     stuff.price = parseInt(stuff.price);
-                    vue_this.$call_remote_process("company_management",'remove_type', [stuff, vue_this.$cookies.get('pa_ssid')]).then(function () {
+                    vue_this.$call_remote_process("company_management", 'remove_type', [stuff, vue_this.$cookies.get('pa_ssid')]).then(function () {
                         vue_this.init_company_data();
                     });
                 });
         },
         add_stuff: function () {
             var vue_this = this;
-            vue_this.$call_remote_process("company_management",'add_type', [vue_this.add_stuff_name, parseInt(vue_this.add_stuff_price), vue_this.add_stuff_last,  this.$cookies.get("pa_ssid")]).then(function (resp) {
+            vue_this.$call_remote_process("company_management", 'add_type', [vue_this.add_stuff_name, parseInt(vue_this.add_stuff_price), vue_this.add_stuff_last, this.$cookies.get("pa_ssid")]).then(function (resp) {
                 if (resp) {
                     vue_this.init_company_data();
                 }
@@ -193,7 +236,7 @@ export default {
         get_type_detail: function (_id) {
             var vue_this = this;
             vue_this.all_type = [];
-            this.$call_remote_process("stuff_info",'get_stuff_detail', [_id]).then(function (resp) {
+            this.$call_remote_process("stuff_info", 'get_stuff_detail', [_id]).then(function (resp) {
                 vue_this.$set(vue_this.all_type, vue_this.all_type.length, resp);
                 vue_this.all_type.sort((a, b) => {
                     return b.saling - a.saling;
@@ -202,7 +245,7 @@ export default {
         },
         init_company_data: function () {
             var vue_this = this;
-            vue_this.$call_remote_process("company_management",'get_all_type', [vue_this.$cookies.get('pa_ssid')]).then(function (resp) {
+            vue_this.$call_remote_process("company_management", 'get_all_type', [vue_this.$cookies.get('pa_ssid')]).then(function (resp) {
                 resp.forEach(function (element) {
                     vue_this.get_type_detail(element);
                 });
@@ -212,10 +255,17 @@ export default {
     },
     beforeMount: function () {
         this.init_company_data();
+        this.config_with_wx();
     },
 }
 </script>
 
-<style>
-
+<style scoped>
+.scan_button_show {
+    position: fixed;
+    bottom: 10%;
+    left: 10%;
+    color: rgb(183, 196, 64);
+    background-color: rgb(133, 228, 220);
+}
 </style>
