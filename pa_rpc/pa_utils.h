@@ -8,7 +8,7 @@
 #include <fstream>
 
 #define PA_RETURN_MSG(_msg)  do {gen_exp e;e.msg = _msg; throw e;} while (0)
-#define PA_RETURN_UNLOGIN_MSG() PA_RETURN_MSG("用户未登陆")
+#define PA_RETURN_UNLOGIN_MSG() PA_RETURN_MSG("用户未登录")
 #define PA_RETURN_NOCOMPANY_MSG() PA_RETURN_MSG("未绑定公司")
 #define PA_RETURN_NOPRIVA_MSG() PA_RETURN_MSG("无权限")
 #define PA_RETURN_NOSTUFF_MSG() PA_RETURN_MSG("货品不存在")
