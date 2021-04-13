@@ -9,7 +9,7 @@ struct user_info {
     3:string logo,
     4:string company,
     5:bool buyer,
-    6:string phone
+    6:string phone,
 }
 
 struct driver_info {
@@ -20,7 +20,7 @@ struct driver_info {
 service user_management{
     user_info get_user_info(1:string ssid) throws (1:gen_exp e),
     string user_login(1:string code) throws (1:gen_exp e),
-    bool update_user_info(1:user_info info, 2:string ssid) throws (1:gen_exp e),
+    bool update_user_info(1:user_info info, 2:string ssid, 3:string verify_code) throws (1:gen_exp e),
     void logff_user(1:string ssid) throws (1:gen_exp e),
     list<string> get_bound_vichele(1:string ssid, 2:bool main_vichele) throws (1:gen_exp e),
     bool bind_new_vichele(1:string ssid, 2:string vichele, 3:bool main_vichele) throws (1:gen_exp e),
@@ -30,7 +30,8 @@ service user_management{
     bool is_admin(1:string ssid) throws (1:gen_exp e),
     string get_wx_api_signature(1:i64 timestamp, 2:string nonceStr, 3:string url),
     list<driver_info> get_bound_driver_info(1:string ssid) throws (1:gen_exp e),
-    bool bind_new_driver(1:string ssid, 2:driver_info driver) throws (1:gen_exp e)
+    bool bind_new_driver(1:string ssid, 2:driver_info driver) throws (1:gen_exp e),
+    bool send_sms_verify(1:string ssid, 2:string phone) throws (1:gen_exp e),
 }
 
 struct stuff_detail {

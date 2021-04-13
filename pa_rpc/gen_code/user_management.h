@@ -24,7 +24,7 @@ class user_managementIf {
   virtual ~user_managementIf() {}
   virtual void get_user_info(user_info& _return, const std::string& ssid) = 0;
   virtual void user_login(std::string& _return, const std::string& code) = 0;
-  virtual bool update_user_info(const user_info& info, const std::string& ssid) = 0;
+  virtual bool update_user_info(const user_info& info, const std::string& ssid, const std::string& verify_code) = 0;
   virtual void logff_user(const std::string& ssid) = 0;
   virtual void get_bound_vichele(std::vector<std::string> & _return, const std::string& ssid, const bool main_vichele) = 0;
   virtual bool bind_new_vichele(const std::string& ssid, const std::string& vichele, const bool main_vichele) = 0;
@@ -35,6 +35,7 @@ class user_managementIf {
   virtual void get_wx_api_signature(std::string& _return, const int64_t timestamp, const std::string& nonceStr, const std::string& url) = 0;
   virtual void get_bound_driver_info(std::vector<driver_info> & _return, const std::string& ssid) = 0;
   virtual bool bind_new_driver(const std::string& ssid, const driver_info& driver) = 0;
+  virtual bool send_sms_verify(const std::string& ssid, const std::string& phone) = 0;
 };
 
 class user_managementIfFactory {
@@ -70,7 +71,7 @@ class user_managementNull : virtual public user_managementIf {
   void user_login(std::string& /* _return */, const std::string& /* code */) {
     return;
   }
-  bool update_user_info(const user_info& /* info */, const std::string& /* ssid */) {
+  bool update_user_info(const user_info& /* info */, const std::string& /* ssid */, const std::string& /* verify_code */) {
     bool _return = false;
     return _return;
   }
@@ -105,6 +106,10 @@ class user_managementNull : virtual public user_managementIf {
     return;
   }
   bool bind_new_driver(const std::string& /* ssid */, const driver_info& /* driver */) {
+    bool _return = false;
+    return _return;
+  }
+  bool send_sms_verify(const std::string& /* ssid */, const std::string& /* phone */) {
     bool _return = false;
     return _return;
   }
@@ -335,9 +340,10 @@ class user_management_user_login_presult {
 };
 
 typedef struct _user_management_update_user_info_args__isset {
-  _user_management_update_user_info_args__isset() : info(false), ssid(false) {}
+  _user_management_update_user_info_args__isset() : info(false), ssid(false), verify_code(false) {}
   bool info :1;
   bool ssid :1;
+  bool verify_code :1;
 } _user_management_update_user_info_args__isset;
 
 class user_management_update_user_info_args {
@@ -345,12 +351,13 @@ class user_management_update_user_info_args {
 
   user_management_update_user_info_args(const user_management_update_user_info_args&);
   user_management_update_user_info_args& operator=(const user_management_update_user_info_args&);
-  user_management_update_user_info_args() : ssid() {
+  user_management_update_user_info_args() : ssid(), verify_code() {
   }
 
   virtual ~user_management_update_user_info_args() noexcept;
   user_info info;
   std::string ssid;
+  std::string verify_code;
 
   _user_management_update_user_info_args__isset __isset;
 
@@ -358,11 +365,15 @@ class user_management_update_user_info_args {
 
   void __set_ssid(const std::string& val);
 
+  void __set_verify_code(const std::string& val);
+
   bool operator == (const user_management_update_user_info_args & rhs) const
   {
     if (!(info == rhs.info))
       return false;
     if (!(ssid == rhs.ssid))
+      return false;
+    if (!(verify_code == rhs.verify_code))
       return false;
     return true;
   }
@@ -385,6 +396,7 @@ class user_management_update_user_info_pargs {
   virtual ~user_management_update_user_info_pargs() noexcept;
   const user_info* info;
   const std::string* ssid;
+  const std::string* verify_code;
 
   uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
 
@@ -1605,6 +1617,125 @@ class user_management_bind_new_driver_presult {
 
 };
 
+typedef struct _user_management_send_sms_verify_args__isset {
+  _user_management_send_sms_verify_args__isset() : ssid(false), phone(false) {}
+  bool ssid :1;
+  bool phone :1;
+} _user_management_send_sms_verify_args__isset;
+
+class user_management_send_sms_verify_args {
+ public:
+
+  user_management_send_sms_verify_args(const user_management_send_sms_verify_args&);
+  user_management_send_sms_verify_args& operator=(const user_management_send_sms_verify_args&);
+  user_management_send_sms_verify_args() : ssid(), phone() {
+  }
+
+  virtual ~user_management_send_sms_verify_args() noexcept;
+  std::string ssid;
+  std::string phone;
+
+  _user_management_send_sms_verify_args__isset __isset;
+
+  void __set_ssid(const std::string& val);
+
+  void __set_phone(const std::string& val);
+
+  bool operator == (const user_management_send_sms_verify_args & rhs) const
+  {
+    if (!(ssid == rhs.ssid))
+      return false;
+    if (!(phone == rhs.phone))
+      return false;
+    return true;
+  }
+  bool operator != (const user_management_send_sms_verify_args &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const user_management_send_sms_verify_args & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+
+class user_management_send_sms_verify_pargs {
+ public:
+
+
+  virtual ~user_management_send_sms_verify_pargs() noexcept;
+  const std::string* ssid;
+  const std::string* phone;
+
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _user_management_send_sms_verify_result__isset {
+  _user_management_send_sms_verify_result__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _user_management_send_sms_verify_result__isset;
+
+class user_management_send_sms_verify_result {
+ public:
+
+  user_management_send_sms_verify_result(const user_management_send_sms_verify_result&);
+  user_management_send_sms_verify_result& operator=(const user_management_send_sms_verify_result&);
+  user_management_send_sms_verify_result() : success(0) {
+  }
+
+  virtual ~user_management_send_sms_verify_result() noexcept;
+  bool success;
+  gen_exp e;
+
+  _user_management_send_sms_verify_result__isset __isset;
+
+  void __set_success(const bool val);
+
+  void __set_e(const gen_exp& val);
+
+  bool operator == (const user_management_send_sms_verify_result & rhs) const
+  {
+    if (!(success == rhs.success))
+      return false;
+    if (!(e == rhs.e))
+      return false;
+    return true;
+  }
+  bool operator != (const user_management_send_sms_verify_result &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const user_management_send_sms_verify_result & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _user_management_send_sms_verify_presult__isset {
+  _user_management_send_sms_verify_presult__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _user_management_send_sms_verify_presult__isset;
+
+class user_management_send_sms_verify_presult {
+ public:
+
+
+  virtual ~user_management_send_sms_verify_presult() noexcept;
+  bool* success;
+  gen_exp e;
+
+  _user_management_send_sms_verify_presult__isset __isset;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+
+};
+
 class user_managementClient : virtual public user_managementIf {
  public:
   user_managementClient(std::shared_ptr< ::apache::thrift::protocol::TProtocol> prot) {
@@ -1636,8 +1767,8 @@ class user_managementClient : virtual public user_managementIf {
   void user_login(std::string& _return, const std::string& code);
   void send_user_login(const std::string& code);
   void recv_user_login(std::string& _return);
-  bool update_user_info(const user_info& info, const std::string& ssid);
-  void send_update_user_info(const user_info& info, const std::string& ssid);
+  bool update_user_info(const user_info& info, const std::string& ssid, const std::string& verify_code);
+  void send_update_user_info(const user_info& info, const std::string& ssid, const std::string& verify_code);
   bool recv_update_user_info();
   void logff_user(const std::string& ssid);
   void send_logff_user(const std::string& ssid);
@@ -1669,6 +1800,9 @@ class user_managementClient : virtual public user_managementIf {
   bool bind_new_driver(const std::string& ssid, const driver_info& driver);
   void send_bind_new_driver(const std::string& ssid, const driver_info& driver);
   bool recv_bind_new_driver();
+  bool send_sms_verify(const std::string& ssid, const std::string& phone);
+  void send_send_sms_verify(const std::string& ssid, const std::string& phone);
+  bool recv_send_sms_verify();
  protected:
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> piprot_;
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> poprot_;
@@ -1697,6 +1831,7 @@ class user_managementProcessor : public ::apache::thrift::TDispatchProcessor {
   void process_get_wx_api_signature(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
   void process_get_bound_driver_info(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
   void process_bind_new_driver(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
+  void process_send_sms_verify(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
  public:
   user_managementProcessor(::std::shared_ptr<user_managementIf> iface) :
     iface_(iface) {
@@ -1713,6 +1848,7 @@ class user_managementProcessor : public ::apache::thrift::TDispatchProcessor {
     processMap_["get_wx_api_signature"] = &user_managementProcessor::process_get_wx_api_signature;
     processMap_["get_bound_driver_info"] = &user_managementProcessor::process_get_bound_driver_info;
     processMap_["bind_new_driver"] = &user_managementProcessor::process_bind_new_driver;
+    processMap_["send_sms_verify"] = &user_managementProcessor::process_send_sms_verify;
   }
 
   virtual ~user_managementProcessor() {}
@@ -1761,13 +1897,13 @@ class user_managementMultiface : virtual public user_managementIf {
     return;
   }
 
-  bool update_user_info(const user_info& info, const std::string& ssid) {
+  bool update_user_info(const user_info& info, const std::string& ssid, const std::string& verify_code) {
     size_t sz = ifaces_.size();
     size_t i = 0;
     for (; i < (sz - 1); ++i) {
-      ifaces_[i]->update_user_info(info, ssid);
+      ifaces_[i]->update_user_info(info, ssid, verify_code);
     }
-    return ifaces_[i]->update_user_info(info, ssid);
+    return ifaces_[i]->update_user_info(info, ssid, verify_code);
   }
 
   void logff_user(const std::string& ssid) {
@@ -1864,6 +2000,15 @@ class user_managementMultiface : virtual public user_managementIf {
     return ifaces_[i]->bind_new_driver(ssid, driver);
   }
 
+  bool send_sms_verify(const std::string& ssid, const std::string& phone) {
+    size_t sz = ifaces_.size();
+    size_t i = 0;
+    for (; i < (sz - 1); ++i) {
+      ifaces_[i]->send_sms_verify(ssid, phone);
+    }
+    return ifaces_[i]->send_sms_verify(ssid, phone);
+  }
+
 };
 
 // The 'concurrent' client is a thread safe client that correctly handles
@@ -1902,8 +2047,8 @@ class user_managementConcurrentClient : virtual public user_managementIf {
   void user_login(std::string& _return, const std::string& code);
   int32_t send_user_login(const std::string& code);
   void recv_user_login(std::string& _return, const int32_t seqid);
-  bool update_user_info(const user_info& info, const std::string& ssid);
-  int32_t send_update_user_info(const user_info& info, const std::string& ssid);
+  bool update_user_info(const user_info& info, const std::string& ssid, const std::string& verify_code);
+  int32_t send_update_user_info(const user_info& info, const std::string& ssid, const std::string& verify_code);
   bool recv_update_user_info(const int32_t seqid);
   void logff_user(const std::string& ssid);
   int32_t send_logff_user(const std::string& ssid);
@@ -1935,6 +2080,9 @@ class user_managementConcurrentClient : virtual public user_managementIf {
   bool bind_new_driver(const std::string& ssid, const driver_info& driver);
   int32_t send_bind_new_driver(const std::string& ssid, const driver_info& driver);
   bool recv_bind_new_driver(const int32_t seqid);
+  bool send_sms_verify(const std::string& ssid, const std::string& phone);
+  int32_t send_send_sms_verify(const std::string& ssid, const std::string& phone);
+  bool recv_send_sms_verify(const int32_t seqid);
  protected:
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> piprot_;
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> poprot_;

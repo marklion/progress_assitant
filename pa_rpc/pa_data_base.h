@@ -255,4 +255,28 @@ public:
     }
 };
 
+class pa_sql_sms_verify:public sql_tree_base {
+public:
+    long timestamp = 0;
+    std::string verify_code;
+    pa_sql_sms_verify() {
+        add_parent_type<pa_sql_userinfo>("belong_user");
+    }
+    virtual std::vector<sqlite_orm_column> self_columns_defined()
+    {
+        std::vector<sqlite_orm_column> ret;
+        ret.push_back(sqlite_orm_column("timestamp", sqlite_orm_column::INTEGER, &timestamp));
+        ret.push_back(sqlite_orm_column("verify_code", sqlite_orm_column::STRING, &verify_code));
+
+        return ret;
+    }
+
+    virtual std::string table_name()
+    {
+        return "sms_verify_table";
+    }
+    void generate_code();
+    bool code_is_valid(const std::string &_code);
+};
+
 #endif // _PA_DATABSE_H_

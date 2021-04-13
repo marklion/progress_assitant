@@ -464,6 +464,14 @@ uint32_t user_management_update_user_info_args::read(::apache::thrift::protocol:
           xfer += iprot->skip(ftype);
         }
         break;
+      case 3:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->verify_code);
+          this->__isset.verify_code = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
       default:
         xfer += iprot->skip(ftype);
         break;
@@ -489,6 +497,10 @@ uint32_t user_management_update_user_info_args::write(::apache::thrift::protocol
   xfer += oprot->writeString(this->ssid);
   xfer += oprot->writeFieldEnd();
 
+  xfer += oprot->writeFieldBegin("verify_code", ::apache::thrift::protocol::T_STRING, 3);
+  xfer += oprot->writeString(this->verify_code);
+  xfer += oprot->writeFieldEnd();
+
   xfer += oprot->writeFieldStop();
   xfer += oprot->writeStructEnd();
   return xfer;
@@ -510,6 +522,10 @@ uint32_t user_management_update_user_info_pargs::write(::apache::thrift::protoco
 
   xfer += oprot->writeFieldBegin("ssid", ::apache::thrift::protocol::T_STRING, 2);
   xfer += oprot->writeString((*(this->ssid)));
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("verify_code", ::apache::thrift::protocol::T_STRING, 3);
+  xfer += oprot->writeString((*(this->verify_code)));
   xfer += oprot->writeFieldEnd();
 
   xfer += oprot->writeFieldStop();
@@ -2847,6 +2863,229 @@ uint32_t user_management_bind_new_driver_presult::read(::apache::thrift::protoco
   return xfer;
 }
 
+
+user_management_send_sms_verify_args::~user_management_send_sms_verify_args() noexcept {
+}
+
+
+uint32_t user_management_send_sms_verify_args::read(::apache::thrift::protocol::TProtocol* iprot) {
+
+  ::apache::thrift::protocol::TInputRecursionTracker tracker(*iprot);
+  uint32_t xfer = 0;
+  std::string fname;
+  ::apache::thrift::protocol::TType ftype;
+  int16_t fid;
+
+  xfer += iprot->readStructBegin(fname);
+
+  using ::apache::thrift::protocol::TProtocolException;
+
+
+  while (true)
+  {
+    xfer += iprot->readFieldBegin(fname, ftype, fid);
+    if (ftype == ::apache::thrift::protocol::T_STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 1:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->ssid);
+          this->__isset.ssid = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 2:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->phone);
+          this->__isset.phone = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      default:
+        xfer += iprot->skip(ftype);
+        break;
+    }
+    xfer += iprot->readFieldEnd();
+  }
+
+  xfer += iprot->readStructEnd();
+
+  return xfer;
+}
+
+uint32_t user_management_send_sms_verify_args::write(::apache::thrift::protocol::TProtocol* oprot) const {
+  uint32_t xfer = 0;
+  ::apache::thrift::protocol::TOutputRecursionTracker tracker(*oprot);
+  xfer += oprot->writeStructBegin("user_management_send_sms_verify_args");
+
+  xfer += oprot->writeFieldBegin("ssid", ::apache::thrift::protocol::T_STRING, 1);
+  xfer += oprot->writeString(this->ssid);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("phone", ::apache::thrift::protocol::T_STRING, 2);
+  xfer += oprot->writeString(this->phone);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldStop();
+  xfer += oprot->writeStructEnd();
+  return xfer;
+}
+
+
+user_management_send_sms_verify_pargs::~user_management_send_sms_verify_pargs() noexcept {
+}
+
+
+uint32_t user_management_send_sms_verify_pargs::write(::apache::thrift::protocol::TProtocol* oprot) const {
+  uint32_t xfer = 0;
+  ::apache::thrift::protocol::TOutputRecursionTracker tracker(*oprot);
+  xfer += oprot->writeStructBegin("user_management_send_sms_verify_pargs");
+
+  xfer += oprot->writeFieldBegin("ssid", ::apache::thrift::protocol::T_STRING, 1);
+  xfer += oprot->writeString((*(this->ssid)));
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("phone", ::apache::thrift::protocol::T_STRING, 2);
+  xfer += oprot->writeString((*(this->phone)));
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldStop();
+  xfer += oprot->writeStructEnd();
+  return xfer;
+}
+
+
+user_management_send_sms_verify_result::~user_management_send_sms_verify_result() noexcept {
+}
+
+
+uint32_t user_management_send_sms_verify_result::read(::apache::thrift::protocol::TProtocol* iprot) {
+
+  ::apache::thrift::protocol::TInputRecursionTracker tracker(*iprot);
+  uint32_t xfer = 0;
+  std::string fname;
+  ::apache::thrift::protocol::TType ftype;
+  int16_t fid;
+
+  xfer += iprot->readStructBegin(fname);
+
+  using ::apache::thrift::protocol::TProtocolException;
+
+
+  while (true)
+  {
+    xfer += iprot->readFieldBegin(fname, ftype, fid);
+    if (ftype == ::apache::thrift::protocol::T_STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 0:
+        if (ftype == ::apache::thrift::protocol::T_BOOL) {
+          xfer += iprot->readBool(this->success);
+          this->__isset.success = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 1:
+        if (ftype == ::apache::thrift::protocol::T_STRUCT) {
+          xfer += this->e.read(iprot);
+          this->__isset.e = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      default:
+        xfer += iprot->skip(ftype);
+        break;
+    }
+    xfer += iprot->readFieldEnd();
+  }
+
+  xfer += iprot->readStructEnd();
+
+  return xfer;
+}
+
+uint32_t user_management_send_sms_verify_result::write(::apache::thrift::protocol::TProtocol* oprot) const {
+
+  uint32_t xfer = 0;
+
+  xfer += oprot->writeStructBegin("user_management_send_sms_verify_result");
+
+  if (this->__isset.success) {
+    xfer += oprot->writeFieldBegin("success", ::apache::thrift::protocol::T_BOOL, 0);
+    xfer += oprot->writeBool(this->success);
+    xfer += oprot->writeFieldEnd();
+  } else if (this->__isset.e) {
+    xfer += oprot->writeFieldBegin("e", ::apache::thrift::protocol::T_STRUCT, 1);
+    xfer += this->e.write(oprot);
+    xfer += oprot->writeFieldEnd();
+  }
+  xfer += oprot->writeFieldStop();
+  xfer += oprot->writeStructEnd();
+  return xfer;
+}
+
+
+user_management_send_sms_verify_presult::~user_management_send_sms_verify_presult() noexcept {
+}
+
+
+uint32_t user_management_send_sms_verify_presult::read(::apache::thrift::protocol::TProtocol* iprot) {
+
+  ::apache::thrift::protocol::TInputRecursionTracker tracker(*iprot);
+  uint32_t xfer = 0;
+  std::string fname;
+  ::apache::thrift::protocol::TType ftype;
+  int16_t fid;
+
+  xfer += iprot->readStructBegin(fname);
+
+  using ::apache::thrift::protocol::TProtocolException;
+
+
+  while (true)
+  {
+    xfer += iprot->readFieldBegin(fname, ftype, fid);
+    if (ftype == ::apache::thrift::protocol::T_STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 0:
+        if (ftype == ::apache::thrift::protocol::T_BOOL) {
+          xfer += iprot->readBool((*(this->success)));
+          this->__isset.success = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 1:
+        if (ftype == ::apache::thrift::protocol::T_STRUCT) {
+          xfer += this->e.read(iprot);
+          this->__isset.e = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      default:
+        xfer += iprot->skip(ftype);
+        break;
+    }
+    xfer += iprot->readFieldEnd();
+  }
+
+  xfer += iprot->readStructEnd();
+
+  return xfer;
+}
+
 void user_managementClient::get_user_info(user_info& _return, const std::string& ssid)
 {
   send_get_user_info(ssid);
@@ -2969,13 +3208,13 @@ void user_managementClient::recv_user_login(std::string& _return)
   throw ::apache::thrift::TApplicationException(::apache::thrift::TApplicationException::MISSING_RESULT, "user_login failed: unknown result");
 }
 
-bool user_managementClient::update_user_info(const user_info& info, const std::string& ssid)
+bool user_managementClient::update_user_info(const user_info& info, const std::string& ssid, const std::string& verify_code)
 {
-  send_update_user_info(info, ssid);
+  send_update_user_info(info, ssid, verify_code);
   return recv_update_user_info();
 }
 
-void user_managementClient::send_update_user_info(const user_info& info, const std::string& ssid)
+void user_managementClient::send_update_user_info(const user_info& info, const std::string& ssid, const std::string& verify_code)
 {
   int32_t cseqid = 0;
   oprot_->writeMessageBegin("update_user_info", ::apache::thrift::protocol::T_CALL, cseqid);
@@ -2983,6 +3222,7 @@ void user_managementClient::send_update_user_info(const user_info& info, const s
   user_management_update_user_info_pargs args;
   args.info = &info;
   args.ssid = &ssid;
+  args.verify_code = &verify_code;
   args.write(oprot_);
 
   oprot_->writeMessageEnd();
@@ -3636,6 +3876,68 @@ bool user_managementClient::recv_bind_new_driver()
   throw ::apache::thrift::TApplicationException(::apache::thrift::TApplicationException::MISSING_RESULT, "bind_new_driver failed: unknown result");
 }
 
+bool user_managementClient::send_sms_verify(const std::string& ssid, const std::string& phone)
+{
+  send_send_sms_verify(ssid, phone);
+  return recv_send_sms_verify();
+}
+
+void user_managementClient::send_send_sms_verify(const std::string& ssid, const std::string& phone)
+{
+  int32_t cseqid = 0;
+  oprot_->writeMessageBegin("send_sms_verify", ::apache::thrift::protocol::T_CALL, cseqid);
+
+  user_management_send_sms_verify_pargs args;
+  args.ssid = &ssid;
+  args.phone = &phone;
+  args.write(oprot_);
+
+  oprot_->writeMessageEnd();
+  oprot_->getTransport()->writeEnd();
+  oprot_->getTransport()->flush();
+}
+
+bool user_managementClient::recv_send_sms_verify()
+{
+
+  int32_t rseqid = 0;
+  std::string fname;
+  ::apache::thrift::protocol::TMessageType mtype;
+
+  iprot_->readMessageBegin(fname, mtype, rseqid);
+  if (mtype == ::apache::thrift::protocol::T_EXCEPTION) {
+    ::apache::thrift::TApplicationException x;
+    x.read(iprot_);
+    iprot_->readMessageEnd();
+    iprot_->getTransport()->readEnd();
+    throw x;
+  }
+  if (mtype != ::apache::thrift::protocol::T_REPLY) {
+    iprot_->skip(::apache::thrift::protocol::T_STRUCT);
+    iprot_->readMessageEnd();
+    iprot_->getTransport()->readEnd();
+  }
+  if (fname.compare("send_sms_verify") != 0) {
+    iprot_->skip(::apache::thrift::protocol::T_STRUCT);
+    iprot_->readMessageEnd();
+    iprot_->getTransport()->readEnd();
+  }
+  bool _return;
+  user_management_send_sms_verify_presult result;
+  result.success = &_return;
+  result.read(iprot_);
+  iprot_->readMessageEnd();
+  iprot_->getTransport()->readEnd();
+
+  if (result.__isset.success) {
+    return _return;
+  }
+  if (result.__isset.e) {
+    throw result.e;
+  }
+  throw ::apache::thrift::TApplicationException(::apache::thrift::TApplicationException::MISSING_RESULT, "send_sms_verify failed: unknown result");
+}
+
 bool user_managementProcessor::dispatchCall(::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, const std::string& fname, int32_t seqid, void* callContext) {
   ProcessMap::iterator pfn;
   pfn = processMap_.find(fname);
@@ -3792,7 +4094,7 @@ void user_managementProcessor::process_update_user_info(int32_t seqid, ::apache:
 
   user_management_update_user_info_result result;
   try {
-    result.success = iface_->update_user_info(args.info, args.ssid);
+    result.success = iface_->update_user_info(args.info, args.ssid, args.verify_code);
     result.__isset.success = true;
   } catch (gen_exp &e) {
     result.e = e;
@@ -4391,6 +4693,63 @@ void user_managementProcessor::process_bind_new_driver(int32_t seqid, ::apache::
   }
 }
 
+void user_managementProcessor::process_send_sms_verify(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext)
+{
+  void* ctx = nullptr;
+  if (this->eventHandler_.get() != nullptr) {
+    ctx = this->eventHandler_->getContext("user_management.send_sms_verify", callContext);
+  }
+  ::apache::thrift::TProcessorContextFreer freer(this->eventHandler_.get(), ctx, "user_management.send_sms_verify");
+
+  if (this->eventHandler_.get() != nullptr) {
+    this->eventHandler_->preRead(ctx, "user_management.send_sms_verify");
+  }
+
+  user_management_send_sms_verify_args args;
+  args.read(iprot);
+  iprot->readMessageEnd();
+  uint32_t bytes = iprot->getTransport()->readEnd();
+
+  if (this->eventHandler_.get() != nullptr) {
+    this->eventHandler_->postRead(ctx, "user_management.send_sms_verify", bytes);
+  }
+
+  user_management_send_sms_verify_result result;
+  try {
+    result.success = iface_->send_sms_verify(args.ssid, args.phone);
+    result.__isset.success = true;
+  } catch (gen_exp &e) {
+    result.e = e;
+    result.__isset.e = true;
+  } catch (const std::exception& e) {
+    if (this->eventHandler_.get() != nullptr) {
+      this->eventHandler_->handlerError(ctx, "user_management.send_sms_verify");
+    }
+
+    ::apache::thrift::TApplicationException x(e.what());
+    oprot->writeMessageBegin("send_sms_verify", ::apache::thrift::protocol::T_EXCEPTION, seqid);
+    x.write(oprot);
+    oprot->writeMessageEnd();
+    oprot->getTransport()->writeEnd();
+    oprot->getTransport()->flush();
+    return;
+  }
+
+  if (this->eventHandler_.get() != nullptr) {
+    this->eventHandler_->preWrite(ctx, "user_management.send_sms_verify");
+  }
+
+  oprot->writeMessageBegin("send_sms_verify", ::apache::thrift::protocol::T_REPLY, seqid);
+  result.write(oprot);
+  oprot->writeMessageEnd();
+  bytes = oprot->getTransport()->writeEnd();
+  oprot->getTransport()->flush();
+
+  if (this->eventHandler_.get() != nullptr) {
+    this->eventHandler_->postWrite(ctx, "user_management.send_sms_verify", bytes);
+  }
+}
+
 ::std::shared_ptr< ::apache::thrift::TProcessor > user_managementProcessorFactory::getProcessor(const ::apache::thrift::TConnectionInfo& connInfo) {
   ::apache::thrift::ReleaseHandler< user_managementIfFactory > cleanup(handlerFactory_);
   ::std::shared_ptr< user_managementIf > handler(handlerFactory_->getHandler(connInfo), cleanup);
@@ -4574,13 +4933,13 @@ void user_managementConcurrentClient::recv_user_login(std::string& _return, cons
   } // end while(true)
 }
 
-bool user_managementConcurrentClient::update_user_info(const user_info& info, const std::string& ssid)
+bool user_managementConcurrentClient::update_user_info(const user_info& info, const std::string& ssid, const std::string& verify_code)
 {
-  int32_t seqid = send_update_user_info(info, ssid);
+  int32_t seqid = send_update_user_info(info, ssid, verify_code);
   return recv_update_user_info(seqid);
 }
 
-int32_t user_managementConcurrentClient::send_update_user_info(const user_info& info, const std::string& ssid)
+int32_t user_managementConcurrentClient::send_update_user_info(const user_info& info, const std::string& ssid, const std::string& verify_code)
 {
   int32_t cseqid = this->sync_->generateSeqId();
   ::apache::thrift::async::TConcurrentSendSentry sentry(this->sync_.get());
@@ -4589,6 +4948,7 @@ int32_t user_managementConcurrentClient::send_update_user_info(const user_info& 
   user_management_update_user_info_pargs args;
   args.info = &info;
   args.ssid = &ssid;
+  args.verify_code = &verify_code;
   args.write(oprot_);
 
   oprot_->writeMessageEnd();
@@ -5526,6 +5886,95 @@ bool user_managementConcurrentClient::recv_bind_new_driver(const int32_t seqid)
       }
       // in a bad state, don't commit
       throw ::apache::thrift::TApplicationException(::apache::thrift::TApplicationException::MISSING_RESULT, "bind_new_driver failed: unknown result");
+    }
+    // seqid != rseqid
+    this->sync_->updatePending(fname, mtype, rseqid);
+
+    // this will temporarily unlock the readMutex, and let other clients get work done
+    this->sync_->waitForWork(seqid);
+  } // end while(true)
+}
+
+bool user_managementConcurrentClient::send_sms_verify(const std::string& ssid, const std::string& phone)
+{
+  int32_t seqid = send_send_sms_verify(ssid, phone);
+  return recv_send_sms_verify(seqid);
+}
+
+int32_t user_managementConcurrentClient::send_send_sms_verify(const std::string& ssid, const std::string& phone)
+{
+  int32_t cseqid = this->sync_->generateSeqId();
+  ::apache::thrift::async::TConcurrentSendSentry sentry(this->sync_.get());
+  oprot_->writeMessageBegin("send_sms_verify", ::apache::thrift::protocol::T_CALL, cseqid);
+
+  user_management_send_sms_verify_pargs args;
+  args.ssid = &ssid;
+  args.phone = &phone;
+  args.write(oprot_);
+
+  oprot_->writeMessageEnd();
+  oprot_->getTransport()->writeEnd();
+  oprot_->getTransport()->flush();
+
+  sentry.commit();
+  return cseqid;
+}
+
+bool user_managementConcurrentClient::recv_send_sms_verify(const int32_t seqid)
+{
+
+  int32_t rseqid = 0;
+  std::string fname;
+  ::apache::thrift::protocol::TMessageType mtype;
+
+  // the read mutex gets dropped and reacquired as part of waitForWork()
+  // The destructor of this sentry wakes up other clients
+  ::apache::thrift::async::TConcurrentRecvSentry sentry(this->sync_.get(), seqid);
+
+  while(true) {
+    if(!this->sync_->getPending(fname, mtype, rseqid)) {
+      iprot_->readMessageBegin(fname, mtype, rseqid);
+    }
+    if(seqid == rseqid) {
+      if (mtype == ::apache::thrift::protocol::T_EXCEPTION) {
+        ::apache::thrift::TApplicationException x;
+        x.read(iprot_);
+        iprot_->readMessageEnd();
+        iprot_->getTransport()->readEnd();
+        sentry.commit();
+        throw x;
+      }
+      if (mtype != ::apache::thrift::protocol::T_REPLY) {
+        iprot_->skip(::apache::thrift::protocol::T_STRUCT);
+        iprot_->readMessageEnd();
+        iprot_->getTransport()->readEnd();
+      }
+      if (fname.compare("send_sms_verify") != 0) {
+        iprot_->skip(::apache::thrift::protocol::T_STRUCT);
+        iprot_->readMessageEnd();
+        iprot_->getTransport()->readEnd();
+
+        // in a bad state, don't commit
+        using ::apache::thrift::protocol::TProtocolException;
+        throw TProtocolException(TProtocolException::INVALID_DATA);
+      }
+      bool _return;
+      user_management_send_sms_verify_presult result;
+      result.success = &_return;
+      result.read(iprot_);
+      iprot_->readMessageEnd();
+      iprot_->getTransport()->readEnd();
+
+      if (result.__isset.success) {
+        sentry.commit();
+        return _return;
+      }
+      if (result.__isset.e) {
+        sentry.commit();
+        throw result.e;
+      }
+      // in a bad state, don't commit
+      throw ::apache::thrift::TApplicationException(::apache::thrift::TApplicationException::MISSING_RESULT, "send_sms_verify failed: unknown result");
     }
     // seqid != rseqid
     this->sync_->updatePending(fname, mtype, rseqid);

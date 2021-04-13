@@ -9,7 +9,22 @@
                 </van-uploader>
             </template>
         </van-field>
-        <van-field name="phone" v-model="userinfo.phone" label="手机号" placeholder="请填入手机号" :rules="[{ required: true, message: '请填写正确手机号', pattern: /^(13[0-9]|14[01456879]|15[0-35-9]|16[2567]|17[0-8]|18[0-9]|19[0-35-9])\d{8}$/ }]" />
+        <van-field name="phone" v-model="userinfo.phone" label="手机号" placeholder="请填入手机号" :rules="[{ required: true, message: '请填写正确手机号', pattern: /^(13[0-9]|14[01456879]|15[0-35-9]|16[2567]|17[0-8]|18[0-9]|19[0-35-9])\d{8}$/ }]">
+            <template #button v-if="userinfo.phone != $store.state.userinfo.phone || has_verify_code">
+                <van-button v-if="current_count_down>0" disabled size="small" type="primary" native-type="button" @click="send_sms">
+                    <van-row type="flex" justify="center" align="center" :gutter="5">
+                        <van-col>
+                            <van-count-down format="ss" :time="current_count_down" @finish="current_count_down = 0" />
+                        </van-col>
+                        <van-col>
+                            秒后再次发送
+                        </van-col>
+                    </van-row>
+                </van-button>
+                <van-button v-else size="small" type="primary" native-type="button" @click="send_sms">发送验证码</van-button>
+            </template>
+        </van-field>
+        <van-field v-if="has_verify_code" v-model="verify_code" name="验证码" label="验证码" placeholder="请输入验证码" :rules="[{ required: true, message: '请填写验证码' }]" />
         <van-field name="company_picker" v-model="userinfo.company" label="公司" placeholder="请填入所在公司" :rules="[{ required: true, message: '请填写所属公司' }]" />
         <van-field name="radio" label="身份">
             <template #input>
@@ -49,7 +64,17 @@ import {
     RadioGroup,
     Radio
 } from 'vant';
+import {
+    CountDown
+} from 'vant';
+import {
+    Col,
+    Row
+} from 'vant';
 
+Vue.use(Col);
+Vue.use(Row);
+Vue.use(CountDown);
 Vue.use(Radio);
 Vue.use(RadioGroup);
 Vue.use(Button);
@@ -77,6 +102,9 @@ export default {
                 phone: '',
             },
             admin: '',
+            verify_code: '',
+            has_verify_code: false,
+            current_count_down: 0,
         }
     },
     computed: {
@@ -88,21 +116,31 @@ export default {
                 this.userinfo.buyer = _value == '1' ? true : false;
             }
         },
+
     },
     beforeMount: function () {
-        this.userinfo = this.$store.state.userinfo;
+        this.userinfo = JSON.parse(JSON.stringify(this.$store.state.userinfo));
         this.logo[0].url = this.$remote_url + this.userinfo.logo;
     },
     watch: {
         "$store.state.userinfo": function (_new_value) {
-            this.userinfo = _new_value;
+            this.userinfo = JSON.parse(JSON.stringify(_new_value));
             this.logo[0].url = this.$remote_url + this.userinfo.logo;
         }
     },
     methods: {
+        send_sms: function () {
+            var vue_this = this;
+            vue_this.$call_remote_process("user_management", "send_sms_verify", [vue_this.$cookies.get('pa_ssid'), vue_this.userinfo.phone]).then(function (resp) {
+                if (resp) {
+                    vue_this.has_verify_code = true;
+                    vue_this.current_count_down = 60000;
+                }
+            });
+        },
         on_submit: function () {
             var vue_this = this;
-            vue_this.$call_remote_process("user_management", 'update_user_info', [vue_this.userinfo, vue_this.$cookies.get('pa_ssid')]).then(function (resp) {
+            vue_this.$call_remote_process("user_management", 'update_user_info', [vue_this.userinfo, vue_this.$cookies.get('pa_ssid'), vue_this.verify_code]).then(function (resp) {
                 if (resp == true) {
                     var ssid = vue_this.$cookies.get('pa_ssid');
                     vue_this.$call_remote_process('user_management', 'get_user_info', [ssid]).then(function (resp) {

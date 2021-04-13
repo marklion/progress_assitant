@@ -259,12 +259,16 @@ user_management_update_user_info_args = class {
   constructor(args) {
     this.info = null;
     this.ssid = null;
+    this.verify_code = null;
     if (args) {
       if (args.info !== undefined && args.info !== null) {
         this.info = new user_info(args.info);
       }
       if (args.ssid !== undefined && args.ssid !== null) {
         this.ssid = args.ssid;
+      }
+      if (args.verify_code !== undefined && args.verify_code !== null) {
+        this.verify_code = args.verify_code;
       }
     }
   }
@@ -294,6 +298,13 @@ user_management_update_user_info_args = class {
           input.skip(ftype);
         }
         break;
+        case 3:
+        if (ftype == Thrift.Type.STRING) {
+          this.verify_code = input.readString().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
         default:
           input.skip(ftype);
       }
@@ -313,6 +324,11 @@ user_management_update_user_info_args = class {
     if (this.ssid !== null && this.ssid !== undefined) {
       output.writeFieldBegin('ssid', Thrift.Type.STRING, 2);
       output.writeString(this.ssid);
+      output.writeFieldEnd();
+    }
+    if (this.verify_code !== null && this.verify_code !== undefined) {
+      output.writeFieldBegin('verify_code', Thrift.Type.STRING, 3);
+      output.writeString(this.verify_code);
       output.writeFieldEnd();
     }
     output.writeFieldStop();
@@ -1709,6 +1725,141 @@ user_management_bind_new_driver_result = class {
   }
 
 };
+user_management_send_sms_verify_args = class {
+  constructor(args) {
+    this.ssid = null;
+    this.phone = null;
+    if (args) {
+      if (args.ssid !== undefined && args.ssid !== null) {
+        this.ssid = args.ssid;
+      }
+      if (args.phone !== undefined && args.phone !== null) {
+        this.phone = args.phone;
+      }
+    }
+  }
+
+  read (input) {
+    input.readStructBegin();
+    while (true) {
+      const ret = input.readFieldBegin();
+      const ftype = ret.ftype;
+      const fid = ret.fid;
+      if (ftype == Thrift.Type.STOP) {
+        break;
+      }
+      switch (fid) {
+        case 1:
+        if (ftype == Thrift.Type.STRING) {
+          this.ssid = input.readString().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        case 2:
+        if (ftype == Thrift.Type.STRING) {
+          this.phone = input.readString().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        default:
+          input.skip(ftype);
+      }
+      input.readFieldEnd();
+    }
+    input.readStructEnd();
+    return;
+  }
+
+  write (output) {
+    output.writeStructBegin('user_management_send_sms_verify_args');
+    if (this.ssid !== null && this.ssid !== undefined) {
+      output.writeFieldBegin('ssid', Thrift.Type.STRING, 1);
+      output.writeString(this.ssid);
+      output.writeFieldEnd();
+    }
+    if (this.phone !== null && this.phone !== undefined) {
+      output.writeFieldBegin('phone', Thrift.Type.STRING, 2);
+      output.writeString(this.phone);
+      output.writeFieldEnd();
+    }
+    output.writeFieldStop();
+    output.writeStructEnd();
+    return;
+  }
+
+};
+user_management_send_sms_verify_result = class {
+  constructor(args) {
+    this.success = null;
+    this.e = null;
+    if (args instanceof gen_exp) {
+        this.e = args;
+        return;
+    }
+    if (args) {
+      if (args.success !== undefined && args.success !== null) {
+        this.success = args.success;
+      }
+      if (args.e !== undefined && args.e !== null) {
+        this.e = args.e;
+      }
+    }
+  }
+
+  read (input) {
+    input.readStructBegin();
+    while (true) {
+      const ret = input.readFieldBegin();
+      const ftype = ret.ftype;
+      const fid = ret.fid;
+      if (ftype == Thrift.Type.STOP) {
+        break;
+      }
+      switch (fid) {
+        case 0:
+        if (ftype == Thrift.Type.BOOL) {
+          this.success = input.readBool().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        case 1:
+        if (ftype == Thrift.Type.STRUCT) {
+          this.e = new gen_exp();
+          this.e.read(input);
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        default:
+          input.skip(ftype);
+      }
+      input.readFieldEnd();
+    }
+    input.readStructEnd();
+    return;
+  }
+
+  write (output) {
+    output.writeStructBegin('user_management_send_sms_verify_result');
+    if (this.success !== null && this.success !== undefined) {
+      output.writeFieldBegin('success', Thrift.Type.BOOL, 0);
+      output.writeBool(this.success);
+      output.writeFieldEnd();
+    }
+    if (this.e !== null && this.e !== undefined) {
+      output.writeFieldBegin('e', Thrift.Type.STRUCT, 1);
+      this.e.write(output);
+      output.writeFieldEnd();
+    }
+    output.writeFieldStop();
+    output.writeStructEnd();
+    return;
+  }
+
+};
 user_managementClient = class user_managementClient {
   constructor(input, output) {
     this.input = input;
@@ -1834,19 +1985,20 @@ user_managementClient = class user_managementClient {
     throw 'user_login failed: unknown result';
   }
 
-  update_user_info (info, ssid) {
+  update_user_info (info, ssid, verify_code) {
     const self = this;
     return new Promise((resolve, reject) => {
-      self.send_update_user_info(info, ssid, (error, result) => {
+      self.send_update_user_info(info, ssid, verify_code, (error, result) => {
         return error ? reject(error) : resolve(result);
       });
     });
   }
 
-  send_update_user_info (info, ssid, callback) {
+  send_update_user_info (info, ssid, verify_code, callback) {
     const params = {
       info: info,
-      ssid: ssid
+      ssid: ssid,
+      verify_code: verify_code
     };
     const args = new user_management_update_user_info_args(params);
     try {
@@ -2481,5 +2633,65 @@ user_managementClient = class user_managementClient {
       return result.success;
     }
     throw 'bind_new_driver failed: unknown result';
+  }
+
+  send_sms_verify (ssid, phone) {
+    const self = this;
+    return new Promise((resolve, reject) => {
+      self.send_send_sms_verify(ssid, phone, (error, result) => {
+        return error ? reject(error) : resolve(result);
+      });
+    });
+  }
+
+  send_send_sms_verify (ssid, phone, callback) {
+    const params = {
+      ssid: ssid,
+      phone: phone
+    };
+    const args = new user_management_send_sms_verify_args(params);
+    try {
+      this.output.writeMessageBegin('send_sms_verify', Thrift.MessageType.CALL, this.seqid);
+      args.write(this.output);
+      this.output.writeMessageEnd();
+      const self = this;
+      this.output.getTransport().flush(true, () => {
+        let error = null, result = null;
+        try {
+          result = self.recv_send_sms_verify();
+        } catch (e) {
+          error = e;
+        }
+        callback(error, result);
+      });
+    }
+    catch (e) {
+      if (typeof this.output.getTransport().reset === 'function') {
+        this.output.getTransport().reset();
+      }
+      throw e;
+    }
+  }
+
+  recv_send_sms_verify () {
+    const ret = this.input.readMessageBegin();
+    const mtype = ret.mtype;
+    if (mtype == Thrift.MessageType.EXCEPTION) {
+      const x = new Thrift.TApplicationException();
+      x.read(this.input);
+      this.input.readMessageEnd();
+      throw x;
+    }
+    const result = new user_management_send_sms_verify_result();
+    result.read(this.input);
+    this.input.readMessageEnd();
+
+    if (null !== result.e) {
+      throw result.e;
+    }
+    if (null !== result.success) {
+      return result.success;
+    }
+    throw 'send_sms_verify failed: unknown result';
   }
 };

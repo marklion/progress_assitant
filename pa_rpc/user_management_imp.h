@@ -87,13 +87,25 @@ public:
             }
         }
     }
-    virtual bool update_user_info(const user_info& info, const std::string& ssid)
+    virtual bool update_user_info(const user_info &info, const std::string &ssid, const std::string &verify_code)
     {
         bool ret = false;
 
         auto opt_user = PA_DATAOPT_get_online_user(ssid);
         if (opt_user && opt_user->get_pri_id() == info.user_id)
         {
+            if (opt_user->phone != info.phone)
+            {
+                auto verify_code_in_sql = opt_user->get_children<pa_sql_sms_verify>("belong_user");
+                if (verify_code_in_sql && verify_code_in_sql->code_is_valid(verify_code))
+                {
+                    verify_code_in_sql->remove_record();
+                }
+                else
+                {
+                    PA_RETURN_MSG("请输入正确的验证码");
+                }
+            }
             std::string orig_company_name = "";
             auto orig_company = opt_user->get_parent<pa_sql_company>("belong_company");
             if (orig_company)
@@ -343,6 +355,41 @@ public:
 
         return ret;
     }
+
+    virtual bool send_sms_verify(const std::string &ssid, const std::string &phone)
+    {
+        bool ret = false;
+        auto user = PA_DATAOPT_get_online_user(ssid);
+        if (user)
+        {
+            std::string send_cmd = "/script/send_sms.py " + phone;
+            pa_sql_sms_verify verify;
+            verify.generate_code();
+            verify.set_parent(*user, "belong_user");
+            send_cmd += " " + verify.verify_code;
+            if (0 == system(send_cmd.c_str()))
+            {
+                ret = true;
+                auto exist_verify = user->get_children<pa_sql_sms_verify>("belong_user");
+                if (exist_verify)
+                {
+                    exist_verify->verify_code = verify.verify_code;
+                    exist_verify->timestamp = verify.timestamp;
+                    exist_verify->update_record();
+                }
+                else
+                {
+                    verify.insert_record();
+                }
+            }
+            else
+            {
+                PA_RETURN_MSG("验证码发送失败");
+            }
+        }
+        return ret;
+    }
+
 };
 
 #endif // _USER_MANAGEMENT_IMP_H_

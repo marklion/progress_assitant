@@ -1,5 +1,6 @@
 #include "pa_data_base.h"
 #include "wechat_msg.h"
+#include <random>
 
 void pa_sql_plan::send_wechat_msg()
 {
@@ -18,4 +19,30 @@ void pa_sql_plan::send_wechat_msg()
         }
         PA_WECHAT_send_plan_msg(*created_user, *this);
     }
+}
+static std::default_random_engine e(time(nullptr));
+void pa_sql_sms_verify::generate_code() {
+    this->verify_code = "";
+    for (size_t i = 0; i < 6; i++)
+    {
+        int num = e() % 10;
+        verify_code.push_back('0' + num);
+    }
+    timestamp = time(nullptr)/60;
+}
+
+bool  pa_sql_sms_verify::code_is_valid(const std::string &_code)
+{
+    bool ret = false;
+    auto current_time = time(nullptr) / 60;
+
+    if (current_time - timestamp < 5 && current_time >= timestamp)
+    {
+        if (_code == verify_code)
+        {
+            ret = true;
+        }
+    }
+
+    return ret;
 }

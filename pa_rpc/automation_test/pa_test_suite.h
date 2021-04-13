@@ -17,7 +17,7 @@
 using namespace ::apache::thrift;
 using namespace ::apache::thrift::protocol;
 using namespace ::apache::thrift::transport;
-#define TEST_FORCE_TRUE(x) do {if (!(x)) {puts(#x);test_force_true(x);}} while (0)
+#define TEST_FORCE_TRUE(x) do {if (!(x)) {printf("%s:%d:%s\n", __FILE__, __LINE__, #x);test_force_true(x);}} while (0)
 #define THR_DEF_CIENT(x) x##Client *client = nullptr
 #define THR_CONNECT(x) std::shared_ptr<TTransport> transport(new THttpClient("localhost", 8123, "/pa_rpc"));std::shared_ptr<TProtocol> protocol(new TJSONProtocol(transport)); transport->open();  std::shared_ptr<TMultiplexedProtocol> mp(new TMultiplexedProtocol(protocol, #x)); client = new x##Client(mp)
 #define TRH_CLOSE() transport->close()

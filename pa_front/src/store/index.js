@@ -15,6 +15,7 @@ export default new Vuex.Store({
     },
     is_login:false,
     enter_company:false,
+    verify_count_down:0,
   },
   mutations: {
     set_userinfo(state, userinfo){
@@ -25,6 +26,9 @@ export default new Vuex.Store({
     },
     set_enter(state, _enter) {
       state.enter_company = _enter;
+    },
+    set_verify_count_down(state, _count_down) {
+      state.verify_count_down = _count_down;
     },
   },
   actions: {
