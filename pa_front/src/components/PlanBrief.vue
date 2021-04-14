@@ -45,6 +45,11 @@ export default {
             status: 0,
         };
     },
+    watch:{
+        plan_id:function () {
+            this.init_brief_data();
+        }
+    },
     computed: {
         cur_status: function () {
             var ret = "未确认";
@@ -90,28 +95,31 @@ export default {
             second = second < 10 ? ('0' + second) : second;
             return y + '-' + m + '-' + d + ' ' + h + ':' + minute + ':' + second;
         },
+        init_brief_data: function () {
+            var vue_this = this;
+            vue_this.$call_remote_process("stuff_plan_management", 'get_plan', [vue_this.plan_id]).then(function (resp) {
+                vue_this.plan_count = resp.count;
+                vue_this.plan_time = resp.plan_time;
+                resp.vichele_info.forEach((element, index) => {
+                    vue_this.$set(vue_this.vichele_info, index, element);
+                });
+                vue_this.created_time = vue_this.formatDateTime(new Date(resp.created_time * 1000));
+                vue_this.name = resp.name;
+                vue_this.status = resp.status;
+                if (false == vue_this.company_view) {
+                    vue_this.$call_remote_process("stuff_info", 'get_stuff_detail', [resp.type_id]).then(function (detail_resp) {
+                        vue_this.company = detail_resp.company;
+                    });
+                } else {
+                    vue_this.$call_remote_process("user_management", 'get_customer_info', [resp.created_by]).then(function (resp) {
+                        vue_this.company = resp;
+                    });
+                }
+            });
+        },
     },
     beforeMount: function () {
-        var vue_this = this;
-        vue_this.$call_remote_process("stuff_plan_management", 'get_plan', [vue_this.plan_id]).then(function (resp) {
-            vue_this.plan_count = resp.count;
-            vue_this.plan_time = resp.plan_time;
-            resp.vichele_info.forEach((element, index) => {
-                vue_this.$set(vue_this.vichele_info, index, element);
-            });
-            vue_this.created_time = vue_this.formatDateTime(new Date(resp.created_time * 1000));
-            vue_this.name = resp.name;
-            vue_this.status = resp.status;
-            if (false == vue_this.company_view) {
-                vue_this.$call_remote_process("stuff_info", 'get_stuff_detail', [resp.type_id]).then(function (detail_resp) {
-                    vue_this.company = detail_resp.company;
-                });
-            } else {
-                vue_this.$call_remote_process("user_management", 'get_customer_info', [resp.created_by]).then(function (resp) {
-                    vue_this.company = resp;
-                });
-            }
-        });
+        this.init_brief_data();
     },
 }
 </script>

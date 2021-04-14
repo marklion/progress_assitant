@@ -5,6 +5,7 @@ WECHAT_SECRET_INPUT="none"
 WECHAT_MP_SECRET_INPUT="none"
 ALI_KEY_ID_INPUT="none"
 ALI_KEY_SEC_INPUT="none"
+MAIL_PWD_INPUT="none"
 PORT=80
 DATA_BASE="pa.db"
 IMG_BED_INPUT="logo_res"
@@ -29,7 +30,7 @@ get_docker_image() {
 
 start_all_server() {
     line=`wc -l $0|awk '{print $1}'`
-    line=`expr $line - 94` 
+    line=`expr $line - 98` 
     tail -n $line $0 | tar zx  --skip-old-files -C /
     nginx -c /conf/nginx.conf
     pa_rpc &
@@ -40,14 +41,14 @@ start_docker_con() {
     local DATA_BASE_PATH=`realpath $DATA_BASE`
     local DATA_BASE_PATH=`dirname ${DATA_BASE_PATH}`
     local IMG_BED=`realpath $IMG_BED_INPUT`
-    local CON_ID=`docker create -ti --rm -p ${PORT}:80 -e WECHAT_SECRET="${WECHAT_SECRET_INPUT}" -e WECHAT_MP_SECRET="${WECHAT_MP_SECRET_INPUT}" -e ALI_KEY_ID="${ALI_KEY_ID_INPUT}" -e ALI_KEY_SEC="${ALI_KEY_SEC_INPUT}"  -v ${DATA_BASE_PATH}:/database -v ${IMG_BED}:/dist/logo_res ${DOCKER_IMG_NAME} /root/install.sh`
+    local CON_ID=`docker create -ti --rm -p ${PORT}:80 -e WECHAT_SECRET="${WECHAT_SECRET_INPUT}" -e WECHAT_MP_SECRET="${WECHAT_MP_SECRET_INPUT}" -e ALI_KEY_ID="${ALI_KEY_ID_INPUT}" -e ALI_KEY_SEC="${ALI_KEY_SEC_INPUT}" -e MAIL_PWD="${MAIL_PWD_INPUT}"  -v ${DATA_BASE_PATH}:/database -v ${IMG_BED}:/dist/logo_res ${DOCKER_IMG_NAME} /root/install.sh`
     docker cp $0 ${CON_ID}:/root/
     docker cp /etc/localtime ${CON_ID}:/etc/localtime
     docker cp /etc/timezone ${CON_ID}:/etc/timezone
     docker start -ai ${CON_ID}
 }
 
-while getopts "D:p:w:d:i:m:a:k:" arg
+while getopts "D:p:w:d:i:m:a:k:M:" arg
 do
     case $arg in
         D)
@@ -73,6 +74,9 @@ do
             ;;
         k)
             ALI_KEY_SEC_INPUT=${OPTARG}
+            ;;
+        M)
+            MAIL_PWD_INPUT=${OPTARG}
             ;;
         *)
             echo "invalid args"

@@ -4,6 +4,8 @@
 #include "gen_code/stuff_plan_management.h"
 #include "pa_utils.h"
 #include "wechat_msg.h"
+#include "writer.hpp"
+#include <Python.h>
 
 static std::vector<std::string> prepare_vichels(const std::string &_vicheles)
 {
@@ -16,7 +18,7 @@ static std::vector<std::string> prepare_vichels(const std::string &_vicheles)
         end = _vicheles.find('-', begin);
         if (end <= begin)
             break;
-        ret.push_back(_vicheles.substr(begin, end-begin));
+        ret.push_back(_vicheles.substr(begin, end - begin));
         begin = end + 1;
     }
 
@@ -38,7 +40,7 @@ class stuff_plan_management_handler : virtual public stuff_plan_managementIf
             PA_RETURN_NOSTUFF_MSG();
         }
         auto company = opt_user->get_parent<pa_sql_company>("belong_company");
-        if (! company)
+        if (!company)
         {
             PA_RETURN_NOCOMPANY_MSG();
         }
@@ -51,7 +53,7 @@ class stuff_plan_management_handler : virtual public stuff_plan_managementIf
             tmp.plan_time = plan.plan_time;
             tmp.price = stuff_type->price;
             tmp.status = 0;
-            for (auto &itr:plan.vichele_info)
+            for (auto &itr : plan.vichele_info)
             {
                 tmp.count += itr.count;
             }
@@ -59,7 +61,7 @@ class stuff_plan_management_handler : virtual public stuff_plan_managementIf
             tmp.set_parent(*stuff_type, "belong_stuff");
             tmp.comment = plan.comment;
             tmp.insert_record();
-            for (auto &itr:plan.vichele_info)
+            for (auto &itr : plan.vichele_info)
             {
                 auto main_vhichele = company->get_children<pa_sql_vichele>("belong_company", "number = '%s'", itr.main_vichele.c_str());
                 auto behind_vhichele = company->get_children<pa_sql_vichele_behind>("belong_company", "number = '%s'", itr.behind_vichele.c_str());
@@ -86,7 +88,8 @@ class stuff_plan_management_handler : virtual public stuff_plan_managementIf
         }
         return ret;
     }
-    virtual void get_created_plan(std::vector<plan_status> &_return, const std::string &ssid) {
+    virtual void get_created_plan(std::vector<plan_status> &_return, const std::string &ssid)
+    {
         auto opt_user = PA_DATAOPT_get_online_user(ssid);
         if (opt_user)
         {
@@ -94,7 +97,7 @@ class stuff_plan_management_handler : virtual public stuff_plan_managementIf
             plans.sort([](pa_sql_plan &s1, pa_sql_plan &s2) {
                 return s1.create_time > s2.create_time;
             });
-            for (auto &itr:plans)
+            for (auto &itr : plans)
             {
                 plan_status tmp;
                 tmp.plan_id = itr.get_pri_id();
@@ -107,7 +110,8 @@ class stuff_plan_management_handler : virtual public stuff_plan_managementIf
             PA_RETURN_UNLOGIN_MSG();
         }
     }
-    virtual void get_plan(stuff_plan &_return, const int64_t plan_id) {
+    virtual void get_plan(stuff_plan &_return, const int64_t plan_id)
+    {
         auto plan = sqlite_orm::search_record<pa_sql_plan>(plan_id);
         if (plan)
         {
@@ -150,7 +154,7 @@ class stuff_plan_management_handler : virtual public stuff_plan_managementIf
                 _return.type_id = belong_type->get_pri_id();
             }
             auto all_vichele_info = plan->get_all_children<pa_sql_single_vichele>("belong_plan");
-            for (auto &itr:all_vichele_info)
+            for (auto &itr : all_vichele_info)
             {
                 auto main_vichele = itr.get_parent<pa_sql_vichele>("main_vichele");
                 auto behind_vichele = itr.get_parent<pa_sql_vichele_behind>("behind_vichele");
@@ -174,7 +178,8 @@ class stuff_plan_management_handler : virtual public stuff_plan_managementIf
             PA_RETURN_NOPLAN_MSG();
         }
     }
-    virtual bool update_plan(const stuff_plan &plan, const std::string &ssid) {
+    virtual bool update_plan(const stuff_plan &plan, const std::string &ssid)
+    {
         bool ret = false;
 
         auto opt_user = PA_DATAOPT_get_online_user(ssid);
@@ -204,7 +209,7 @@ class stuff_plan_management_handler : virtual public stuff_plan_managementIf
                 plan_in_sql->count = 0;
                 plan_in_sql->plan_time = plan.plan_time;
                 auto orig_vichele_info = plan_in_sql->get_all_children<pa_sql_single_vichele>("belong_plan");
-                for (auto &itr:orig_vichele_info)
+                for (auto &itr : orig_vichele_info)
                 {
                     itr.remove_record();
                 }
@@ -242,7 +247,7 @@ class stuff_plan_management_handler : virtual public stuff_plan_managementIf
 
         return ret;
     }
-    virtual void get_company_plan(std::vector<plan_status> &_return, const std::string &ssid) 
+    virtual void get_company_plan(std::vector<plan_status> &_return, const std::string &ssid)
     {
         auto opt_user = PA_DATAOPT_get_online_user(ssid);
         if (opt_user && opt_user->buyer == false)
@@ -251,17 +256,18 @@ class stuff_plan_management_handler : virtual public stuff_plan_managementIf
             if (company)
             {
                 auto stuffs = company->get_all_children<pa_sql_stuff_info>("belong_company");
-                for (auto &itr:stuffs)
+                for (auto &itr : stuffs)
                 {
                     auto plans = itr.get_all_children<pa_sql_plan>("belong_stuff");
                     plans.sort([](pa_sql_plan &s1, pa_sql_plan &s2) {
                         return s1.create_time > s2.create_time;
                     });
-                    for (auto &single_plan:plans)
+                    for (auto &single_plan : plans)
                     {
                         plan_status tmp;
                         tmp.plan_id = single_plan.get_pri_id();
                         tmp.status = single_plan.status;
+                        tmp.plan_time = PA_DATAOPT_timestring_2_date(single_plan.plan_time);
                         _return.push_back(tmp);
                     }
                 }
@@ -276,7 +282,7 @@ class stuff_plan_management_handler : virtual public stuff_plan_managementIf
             PA_RETURN_MSG("用户未注册为卖家");
         }
     }
-    virtual bool confirm_plan(const int64_t plan_id, const std::string &ssid) 
+    virtual bool confirm_plan(const int64_t plan_id, const std::string &ssid)
     {
         bool ret = false;
         auto opt_user = PA_DATAOPT_get_online_user(ssid);
@@ -336,7 +342,7 @@ class stuff_plan_management_handler : virtual public stuff_plan_managementIf
             if (stuff && created_user)
             {
                 auto sales_company = stuff->get_parent<pa_sql_company>("belong_company");
-                if (sales_company )
+                if (sales_company)
                 {
                     switch (plan->status)
                     {
@@ -359,7 +365,7 @@ class stuff_plan_management_handler : virtual public stuff_plan_managementIf
                         }
                         break;
                     }
-                    
+
                     default:
                         break;
                     }
@@ -467,6 +473,116 @@ class stuff_plan_management_handler : virtual public stuff_plan_managementIf
         else
         {
             PA_RETURN_NOPRIVA_MSG();
+        }
+
+        return ret;
+    }
+
+    virtual bool export_plan_to_email(const std::string &ssid, const std::vector<int64_t> &plan_ids, const std::string &email)
+    {
+        bool ret = false;
+
+        auto user = PA_DATAOPT_get_online_user(ssid);
+        if (user)
+        {
+            std::string file_name_no_ext = "/tmp/plan_export" + std::to_string(time(NULL));
+            std::string file_name = file_name_no_ext + ".csv";
+            std::ofstream stream(file_name);
+            std::string csv_bom = {
+                (char)0xef, (char)0xbb, (char)0xbf};
+            stream << csv_bom;
+            csv2::Writer<csv2::delimiter<','>> writer(stream);
+            std::vector<std::string> table_header = {
+                "装液日期", "客户名称", "货名", "车牌", "车挂", "司机姓名", "司机电话", "卸车地点", "用途", "当前状态"};
+            writer.write_row(table_header);
+            for (auto &itr : plan_ids)
+            {
+                auto plan = sqlite_orm::search_record<pa_sql_plan>(itr);
+                if (plan)
+                {
+                    std::string company_name = "";
+                    auto created_user = plan->get_parent<pa_sql_userinfo>("created_by");
+                    if (created_user)
+                    {
+                        auto company = created_user->get_parent<pa_sql_company>("belong_company");
+                        if (company)
+                        {
+                            company_name = company->name;
+                        }
+                    }
+                    std::vector<std::string> single_rec_sample = {plan->plan_time, company_name, plan->name};
+                    auto all_vichele = plan->get_all_children<pa_sql_single_vichele>("belong_plan");
+                    for (auto &vichele_itr : all_vichele)
+                    {
+                        auto single_rec = single_rec_sample;
+                        auto main_vichele = vichele_itr.get_parent<pa_sql_vichele>("main_vichele");
+                        auto behind_vichele = vichele_itr.get_parent<pa_sql_vichele_behind>("behind_vichele");
+                        auto driver = vichele_itr.get_parent<pa_sql_driver>("driver");
+                        if (main_vichele && behind_vichele && driver)
+                        {
+                            single_rec.push_back(main_vichele->number);
+                            single_rec.push_back(behind_vichele->number);
+                            single_rec.push_back(driver->name);
+                            single_rec.push_back(driver->phone);
+                        }
+                        single_rec.push_back(vichele_itr.drop_address);
+                        single_rec.push_back(vichele_itr.use_for);
+                        std::string status_str;
+                        switch (plan->status)
+                        {
+                        case 0:
+                            status_str = "待确认计划";
+                            break;
+                        case 1:
+                            status_str = "已确认待付款";
+                            break;
+                        case 2:
+                            status_str = "已付款待收款确认";
+                            break;
+                        case 3:
+                            status_str = "已收款待提货";
+                            break;
+                        case 4:
+                            status_str = "已提货";
+                            break;
+                        default:
+                            break;
+                        }
+                        single_rec.push_back(status_str);
+                        writer.write_row(single_rec);
+                    }
+                }
+            }
+            stream.close();
+            std::string py_converter =
+                "import pandas as pd\n"
+                "import sys\n"
+                "csv = pd.read_csv('" +
+                file_name + "', encoding='utf-8')\n"
+                            "csv.to_excel('" +
+                file_name_no_ext + ".xlsx', sheet_name='data')\n";
+
+            if (Py_IsInitialized())
+            {
+                PyRun_SimpleString(py_converter.c_str());
+            }
+            else
+            {
+                PA_RETURN_MSG("导出失败");
+            }
+            std::string send_mail_cmd = "/script/send_mail.py " + email + " '计划导出表' " + " '尊敬的" + user->name + "先生，附件是您的计划导出表' " + file_name_no_ext + ".xlsx";
+            if (0 == system(send_mail_cmd.c_str()))
+            {
+                ret = true;
+            }
+            else
+            {
+                PA_RETURN_MSG("发送邮件失败");
+            }
+        }
+        else
+        {
+            PA_RETURN_UNLOGIN_MSG();
         }
 
         return ret;

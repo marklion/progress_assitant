@@ -1098,12 +1098,16 @@ plan_status = class {
   constructor(args) {
     this.plan_id = null;
     this.status = null;
+    this.plan_time = null;
     if (args) {
       if (args.plan_id !== undefined && args.plan_id !== null) {
         this.plan_id = args.plan_id;
       }
       if (args.status !== undefined && args.status !== null) {
         this.status = args.status;
+      }
+      if (args.plan_time !== undefined && args.plan_time !== null) {
+        this.plan_time = args.plan_time;
       }
     }
   }
@@ -1132,6 +1136,13 @@ plan_status = class {
           input.skip(ftype);
         }
         break;
+        case 3:
+        if (ftype == Thrift.Type.I64) {
+          this.plan_time = input.readI64().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
         default:
           input.skip(ftype);
       }
@@ -1151,6 +1162,11 @@ plan_status = class {
     if (this.status !== null && this.status !== undefined) {
       output.writeFieldBegin('status', Thrift.Type.I64, 2);
       output.writeI64(this.status);
+      output.writeFieldEnd();
+    }
+    if (this.plan_time !== null && this.plan_time !== undefined) {
+      output.writeFieldBegin('plan_time', Thrift.Type.I64, 3);
+      output.writeI64(this.plan_time);
       output.writeFieldEnd();
     }
     output.writeFieldStop();

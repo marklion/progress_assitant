@@ -112,7 +112,8 @@ struct stuff_plan {
 
 struct plan_status {
     1:i64 plan_id, 
-    2:i64 status
+    2:i64 status,
+    3:i64 plan_time
 }
 
 service stuff_plan_management {
@@ -126,4 +127,5 @@ service stuff_plan_management {
     bool upload_payinfo(1:i64 plan_id, 2:string ssid, 3:string content) throws (1:gen_exp e),
     bool confirm_pay(1:i64 plan_id, 2:string ssid) throws (1:gen_exp e),
     bool confirm_close(1:i64 plan_id, 2:string ssid) throws (1:gen_exp e),
+    bool export_plan_to_email(1:string ssid, 2:list<i64> plan_ids, 3:string email) throws (1:gen_exp e),
 }

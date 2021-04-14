@@ -27,6 +27,7 @@
 #include <sys/timerfd.h>
 #include <list>
 #include <iostream>
+#include <algorithm>
 
 class tdf_log
 {
@@ -57,8 +58,21 @@ class tdf_log
         {
             output.append(" [INFO] ");
         }
-        output.append(_msg);
-        output.append("\n");
+        std::string prefix = output;
+        output = "";
+
+        std::string content = _msg;
+        auto n_pos = content.find('\n');
+        while (n_pos != std::string::npos)
+        {
+            output.append(prefix + content.substr(0, n_pos) + "\n");
+            content.erase(0, n_pos + 1);
+            n_pos = content.find('\n');
+        }
+        if (content.length() > 0)
+        {
+            output.append(prefix + content + "\n");
+        }
 
         (void)write(_fd, output.c_str(), output.length());
     }

@@ -1664,6 +1664,10 @@ void plan_status::__set_plan_id(const int64_t val) {
 void plan_status::__set_status(const int64_t val) {
   this->status = val;
 }
+
+void plan_status::__set_plan_time(const int64_t val) {
+  this->plan_time = val;
+}
 std::ostream& operator<<(std::ostream& out, const plan_status& obj)
 {
   obj.printTo(out);
@@ -1708,6 +1712,14 @@ uint32_t plan_status::read(::apache::thrift::protocol::TProtocol* iprot) {
           xfer += iprot->skip(ftype);
         }
         break;
+      case 3:
+        if (ftype == ::apache::thrift::protocol::T_I64) {
+          xfer += iprot->readI64(this->plan_time);
+          this->__isset.plan_time = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
       default:
         xfer += iprot->skip(ftype);
         break;
@@ -1733,6 +1745,10 @@ uint32_t plan_status::write(::apache::thrift::protocol::TProtocol* oprot) const 
   xfer += oprot->writeI64(this->status);
   xfer += oprot->writeFieldEnd();
 
+  xfer += oprot->writeFieldBegin("plan_time", ::apache::thrift::protocol::T_I64, 3);
+  xfer += oprot->writeI64(this->plan_time);
+  xfer += oprot->writeFieldEnd();
+
   xfer += oprot->writeFieldStop();
   xfer += oprot->writeStructEnd();
   return xfer;
@@ -1742,17 +1758,20 @@ void swap(plan_status &a, plan_status &b) {
   using ::std::swap;
   swap(a.plan_id, b.plan_id);
   swap(a.status, b.status);
+  swap(a.plan_time, b.plan_time);
   swap(a.__isset, b.__isset);
 }
 
 plan_status::plan_status(const plan_status& other24) {
   plan_id = other24.plan_id;
   status = other24.status;
+  plan_time = other24.plan_time;
   __isset = other24.__isset;
 }
 plan_status& plan_status::operator=(const plan_status& other25) {
   plan_id = other25.plan_id;
   status = other25.status;
+  plan_time = other25.plan_time;
   __isset = other25.__isset;
   return *this;
 }
@@ -1761,6 +1780,7 @@ void plan_status::printTo(std::ostream& out) const {
   out << "plan_status(";
   out << "plan_id=" << to_string(plan_id);
   out << ", " << "status=" << to_string(status);
+  out << ", " << "plan_time=" << to_string(plan_time);
   out << ")";
 }
 

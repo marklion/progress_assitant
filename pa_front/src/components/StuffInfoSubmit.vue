@@ -8,7 +8,7 @@
         <van-field center name="comment" v-model="comment" label="备注" placeholder="请输入备注">
         </van-field>
         <van-popup v-model="show_time_picker" position="bottom">
-            <van-datetime-picker type="datetime" title="请选择时间" :min-date="min_time" @cancel="show_time_picker = false" @confirm="confirm_time" />
+            <van-datetime-picker type="datehour" title="请选择时间" :min-date="min_time" @cancel="show_time_picker = false" @confirm="confirm_time" />
         </van-popup>
         <van-row type="flex" justify="center" align="center">
             <van-col :span="20">
@@ -199,9 +199,7 @@ export default {
             d = d < 10 ? ('0' + d) : d;
             var h = date.getHours();
             h = h < 10 ? ('0' + h) : h;
-            var minute = date.getMinutes();
-            minute = minute < 10 ? ('0' + minute) : minute;
-            return y + '-' + m + '-' + d + ' ' + h + ':' + minute;
+            return y + '-' + m + '-' + d + ' ' + h;
         },
         confirm_time: function (_time) {
             this.plan_time = this.formatDateTime(_time);

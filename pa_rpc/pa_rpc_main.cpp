@@ -1,8 +1,10 @@
 
 #include <thrift/protocol/TBinaryProtocol.h>
+#include <thrift/concurrency/ThreadFactory.h>
 #include <thrift/protocol/TJSONProtocol.h>
 #include <thrift/server/TSimpleServer.h>
 #include <thrift/transport/TServerSocket.h>
+#include <thrift/transport/TNonblockingServerSocket.h>
 #include <thrift/transport/TBufferTransports.h>
 #include <thrift/transport/THttpServer.h>
 #include <thrift/processor/TMultiplexedProcessor.h>
@@ -10,6 +12,10 @@
 #include "stuff_info_imp.h"
 #include "stuff_plan_management_imp.h"
 #include "company_management_imp.h"
+#include <thrift/server/TNonblockingServer.h>
+#include <thrift/server/TThreadPoolServer.h>
+
+#include <thrift/concurrency/ThreadManager.h>
 
 using namespace ::apache::thrift;
 using namespace ::apache::thrift::protocol;
@@ -28,8 +34,13 @@ int main(int argc, char **argv)
     ::std::shared_ptr<TServerTransport> serverTransport(new TServerSocket(8123));
     ::std::shared_ptr<TTransportFactory> transportFactory(new THttpServerTransportFactory());
     ::std::shared_ptr<TProtocolFactory> protocolFactory(new TJSONProtocolFactory());
+    std::shared_ptr<ThreadManager> threadManager = ThreadManager::newSimpleThreadManager(16);
+    std::shared_ptr<ThreadFactory> threadFactory(new ThreadFactory());
+    threadManager->threadFactory(threadFactory);
+    threadManager->start();
 
-    TSimpleServer server(multi_processor, serverTransport, transportFactory, protocolFactory);
-    server.serve();
+    TThreadPoolServer tp_server(multi_processor, serverTransport, transportFactory, protocolFactory, threadManager);
+    tp_server.serve();
+
     return 0;
 }
