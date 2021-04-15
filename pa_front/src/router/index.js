@@ -50,15 +50,6 @@ const routes = [
     },
   },
   {
-    path: '/order',
-    name: 'Order',
-    component: () => import('../views/Order.vue'),
-    meta: {    
-        private_title: '订单',
-        has_go_back:false,
-    },
-  },
-  {
     path: '/company_order',
     name: 'CompanyOrder',
     component: () => import('../views/CompanyOrder.vue'),

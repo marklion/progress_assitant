@@ -191,6 +191,9 @@ void PA_WECHAT_send_plan_msg(pa_sql_userinfo &_touser, pa_sql_plan &_plan)
     case 4:
         status = "已提货";
         break;
+    case 5:
+        status = "已撤销";
+        break;
     default:
         break;
     }

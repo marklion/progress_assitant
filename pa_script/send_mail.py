@@ -14,7 +14,7 @@ def send_mail(_to_user, _title, _content, _attachments):
     try :
         smtpObj.login('postmaster@d8sis.cn', os.getenv('MAIL_PWD'))
         message = MIMEMultipart()
-        message['From'] = 'postmaster@d8sis.cn'   # 发送者
+        message['From'] = Header('掌易助理<postmaster@d8sis.cn>', 'utf-8')   # 发送者
         message['To'] = _to_user       # 接收者
         subject = _title
         message['Subject'] = Header(subject, 'utf-8')

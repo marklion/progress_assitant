@@ -1292,6 +1292,18 @@ void stuff_plan::__set_close_timestamp(const std::string& val) {
 void stuff_plan::__set_close_by(const std::string& val) {
   this->close_by = val;
 }
+
+void stuff_plan::__set_except_close_by(const std::string& val) {
+  this->except_close_by = val;
+}
+
+void stuff_plan::__set_except_close_timestamp(const std::string& val) {
+  this->except_close_timestamp = val;
+}
+
+void stuff_plan::__set_except_close_reason(const std::string& val) {
+  this->except_close_reason = val;
+}
 std::ostream& operator<<(std::ostream& out, const stuff_plan& obj)
 {
   obj.printTo(out);
@@ -1468,6 +1480,30 @@ uint32_t stuff_plan::read(::apache::thrift::protocol::TProtocol* iprot) {
           xfer += iprot->skip(ftype);
         }
         break;
+      case 18:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->except_close_by);
+          this->__isset.except_close_by = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 19:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->except_close_timestamp);
+          this->__isset.except_close_timestamp = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 20:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->except_close_reason);
+          this->__isset.except_close_reason = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
       default:
         xfer += iprot->skip(ftype);
         break;
@@ -1561,6 +1597,18 @@ uint32_t stuff_plan::write(::apache::thrift::protocol::TProtocol* oprot) const {
   xfer += oprot->writeString(this->close_by);
   xfer += oprot->writeFieldEnd();
 
+  xfer += oprot->writeFieldBegin("except_close_by", ::apache::thrift::protocol::T_STRING, 18);
+  xfer += oprot->writeString(this->except_close_by);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("except_close_timestamp", ::apache::thrift::protocol::T_STRING, 19);
+  xfer += oprot->writeString(this->except_close_timestamp);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("except_close_reason", ::apache::thrift::protocol::T_STRING, 20);
+  xfer += oprot->writeString(this->except_close_reason);
+  xfer += oprot->writeFieldEnd();
+
   xfer += oprot->writeFieldStop();
   xfer += oprot->writeStructEnd();
   return xfer;
@@ -1585,6 +1633,9 @@ void swap(stuff_plan &a, stuff_plan &b) {
   swap(a.pay_timestamp, b.pay_timestamp);
   swap(a.close_timestamp, b.close_timestamp);
   swap(a.close_by, b.close_by);
+  swap(a.except_close_by, b.except_close_by);
+  swap(a.except_close_timestamp, b.except_close_timestamp);
+  swap(a.except_close_reason, b.except_close_reason);
   swap(a.__isset, b.__isset);
 }
 
@@ -1606,6 +1657,9 @@ stuff_plan::stuff_plan(const stuff_plan& other22) {
   pay_timestamp = other22.pay_timestamp;
   close_timestamp = other22.close_timestamp;
   close_by = other22.close_by;
+  except_close_by = other22.except_close_by;
+  except_close_timestamp = other22.except_close_timestamp;
+  except_close_reason = other22.except_close_reason;
   __isset = other22.__isset;
 }
 stuff_plan& stuff_plan::operator=(const stuff_plan& other23) {
@@ -1626,6 +1680,9 @@ stuff_plan& stuff_plan::operator=(const stuff_plan& other23) {
   pay_timestamp = other23.pay_timestamp;
   close_timestamp = other23.close_timestamp;
   close_by = other23.close_by;
+  except_close_by = other23.except_close_by;
+  except_close_timestamp = other23.except_close_timestamp;
+  except_close_reason = other23.except_close_reason;
   __isset = other23.__isset;
   return *this;
 }
@@ -1649,6 +1706,9 @@ void stuff_plan::printTo(std::ostream& out) const {
   out << ", " << "pay_timestamp=" << to_string(pay_timestamp);
   out << ", " << "close_timestamp=" << to_string(close_timestamp);
   out << ", " << "close_by=" << to_string(close_by);
+  out << ", " << "except_close_by=" << to_string(except_close_by);
+  out << ", " << "except_close_timestamp=" << to_string(except_close_timestamp);
+  out << ", " << "except_close_reason=" << to_string(except_close_reason);
   out << ")";
 }
 

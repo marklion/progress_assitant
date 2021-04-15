@@ -108,6 +108,9 @@ struct stuff_plan {
     15:string pay_timestamp,
     16:string close_timestamp,
     17:string close_by,
+    18:string except_close_by,
+    19:string except_close_timestamp,
+    20:string except_close_reason,
 }
 
 struct plan_status {
@@ -128,4 +131,6 @@ service stuff_plan_management {
     bool confirm_pay(1:i64 plan_id, 2:string ssid) throws (1:gen_exp e),
     bool confirm_close(1:i64 plan_id, 2:string ssid) throws (1:gen_exp e),
     bool export_plan_to_email(1:string ssid, 2:list<i64> plan_ids, 3:string email) throws (1:gen_exp e),
+    bool except_close(1:i64 plan_id, 2:string ssid, 3:string reason) throws (1:gen_exp e),
+    string verify_plan(1:stuff_plan plan, 2:string ssid) throws (1:gen_exp e),
 }

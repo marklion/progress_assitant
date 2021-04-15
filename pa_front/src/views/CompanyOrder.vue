@@ -12,7 +12,7 @@
                     <van-button type="primary" block @click="show_export_plan(order_need_show)">导出</van-button>
                 </van-col>
             </van-row>
-            <plan-brief v-for="(single_plan, index) in order_need_show" :key="index" :plan_id="single_plan.plan_id" :company_view="true"></plan-brief>
+            <plan-brief v-for="(single_plan, index) in order_need_show" :key="index" :plan_id="single_plan.plan_id" :company_view="!$store.state.userinfo.buyer"></plan-brief>
         </van-tab>
     </van-tabs>
     <van-dialog v-model="ask_email_diag" title="请输入邮箱" show-cancel-button @confirm="export_plan">
@@ -95,6 +95,9 @@ export default {
             }, {
                 name: '已完成',
                 status: 4,
+            }, {
+                name: '已撤销',
+                status: 5,
             }],
             date_option: [{
                 text: '所有进厂时间',
@@ -110,9 +113,9 @@ export default {
                 value: 3
             }],
             date_filter: 0,
-            ask_email_diag:false,
-            export_email:'',
-            export_list:[],
+            ask_email_diag: false,
+            export_email: '',
+            export_list: [],
         }
     },
     computed: {
@@ -120,7 +123,11 @@ export default {
             var ret = [];
             var vue_this = this;
             if (vue_this.active == 0) {
-                ret = this.orders;
+                vue_this.orders.forEach((element) => {
+                    if (element.status != 5) {
+                        ret.push(element);
+                    }
+                });
             } else {
                 vue_this.orders.forEach((element) => {
                     if (element.status == vue_this.active - 1) {
@@ -184,21 +191,32 @@ export default {
             console.log(this.export_email);
             console.log(this.export_list);
             var vue_this = this;
-            vue_this.$call_remote_process("stuff_plan_management", "export_plan_to_email", [vue_this.$cookies.get('pa_ssid'), vue_this.export_list, vue_this.export_email]).then(function(resp) {
-                if (resp)
-                {
+            vue_this.$call_remote_process("stuff_plan_management", "export_plan_to_email", [vue_this.$cookies.get('pa_ssid'), vue_this.export_list, vue_this.export_email]).then(function (resp) {
+                if (resp) {
                     vue_this.$toast("邮件已发送");
                 }
             });
         },
+        init_orders: function (_is_buyer) {
+            var vue_this = this;
+            var func = "get_company_plan";
+            if (_is_buyer) {
+                func = "get_created_plan";
+            }
+            vue_this.$call_remote_process("stuff_plan_management", func, [vue_this.$cookies.get('pa_ssid')]).then(function (resp) {
+                resp.forEach((element, index) => {
+                    vue_this.$set(vue_this.orders, index, element);
+                });
+            });
+        },
+    },
+    watch: {
+        "$store.state.userinfo.buyer": function (_val) {
+            this.init_orders(_val);
+        },
     },
     beforeMount: function () {
-        var vue_this = this;
-        vue_this.$call_remote_process("stuff_plan_management", 'get_company_plan', [vue_this.$cookies.get('pa_ssid')]).then(function (resp) {
-            resp.forEach((element, index) => {
-                vue_this.$set(vue_this.orders, index, element);
-            });
-        });
+        this.init_orders(this.$store.state.userinfo.buyer);
     }
 }
 </script>

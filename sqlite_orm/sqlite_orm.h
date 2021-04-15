@@ -90,7 +90,7 @@ private:
                 break;
             
             case sqlite_orm_column::STRING:
-                sql_cmd.append("STRING ");
+                sql_cmd.append("TEXT ");
                 break;
             case sqlite_orm_column::REAL:
                 sql_cmd.append("REAL ");
@@ -148,7 +148,7 @@ private:
                         break;
 
                     case sqlite_orm_column::STRING:
-                        sql_cmd.append("STRING");
+                        sql_cmd.append("TEXT");
                         break;
                     case sqlite_orm_column::REAL:
                         sql_cmd.append("REAL");

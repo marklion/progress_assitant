@@ -205,40 +205,63 @@ export default {
             this.plan_time = this.formatDateTime(_time);
             this.show_time_picker = false;
         },
+        submit_plan_to_server: function () {
+            var vue_this = this;
+            if (this.is_create) {
+                this.$call_remote_process("stuff_plan_management", 'create_plan', [{
+                    count: this.plan_count,
+                    type_id: this.type_id,
+                    plan_time: this.plan_time,
+                    vichele_info: this.vichele_info,
+                    name: this.orig_name,
+                    price: this.orig_price,
+                    comment: this.comment,
+                }, this.$cookies.get("pa_ssid")]).then(function (resp) {
+                    if (resp > 0) {
+                        vue_this.$router.push({
+                            name: 'CompanyOrder',
+                        });
+                    }
+                });
+            } else {
+                vue_this.$call_remote_process("stuff_plan_management", 'update_plan', [{
+                    plan_id: vue_this.plan_id,
+                    count: this.plan_count,
+                    plan_time: this.plan_time,
+                    vichele_info: this.vichele_info,
+                    comment: this.comment,
+                }, this.$cookies.get('pa_ssid')]).then(function (resp) {
+                    if (resp) {
+                        vue_this.$router.back(-1);
+                    }
+                });
+            }
+        },
         submit_plan: function () {
             var vue_this = this;
             if (vue_this.vichele_info.length <= 0) {
                 vue_this.$toast("请添加车辆信息");
             } else {
-                if (this.is_create) {
-                    this.$call_remote_process("stuff_plan_management", 'create_plan', [{
-                        count: this.plan_count,
-                        type_id: this.type_id,
-                        plan_time: this.plan_time,
-                        vichele_info: this.vichele_info,
-                        name: this.orig_name,
-                        price: this.orig_price,
-                        comment: this.comment,
-                    }, this.$cookies.get("pa_ssid")]).then(function (resp) {
-                        if (resp > 0) {
-                            vue_this.$router.push({
-                                name: 'Order',
-                            });
-                        }
-                    });
-                } else {
-                    vue_this.$call_remote_process("stuff_plan_management", 'update_plan', [{
-                        plan_id: vue_this.plan_id,
-                        count: this.plan_count,
-                        plan_time: this.plan_time,
-                        vichele_info: this.vichele_info,
-                        comment: this.comment,
-                    }, this.$cookies.get('pa_ssid')]).then(function (resp) {
-                        if (resp) {
-                            vue_this.$router.back(-1);
-                        }
-                    });
-                }
+                vue_this.$call_remote_process("stuff_plan_management", "verify_plan", [{
+                    plan_time: vue_this.plan_time,
+                    vichele_info: vue_this.vichele_info,
+                }, vue_this.$cookies.get('pa_ssid')]).then(function (resp) {
+                    if (resp.length > 0) {
+                        console.log(resp);
+                        Dialog.confirm({
+                            title: '计划车辆冲突',
+                            message: resp,
+                            confirmButtonText:'继续上报',
+                            cancelButtonText:'再调整下'
+                        }).then(function () {
+                            vue_this.submit_plan_to_server();
+                        }).catch(function () {
+                            console.log();
+                        });
+                    } else {
+                        vue_this.submit_plan_to_server();
+                    }
+                });
 
             }
         }

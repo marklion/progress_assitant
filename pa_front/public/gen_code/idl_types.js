@@ -790,6 +790,9 @@ stuff_plan = class {
     this.pay_timestamp = null;
     this.close_timestamp = null;
     this.close_by = null;
+    this.except_close_by = null;
+    this.except_close_timestamp = null;
+    this.except_close_reason = null;
     if (args) {
       if (args.type_id !== undefined && args.type_id !== null) {
         this.type_id = args.type_id;
@@ -841,6 +844,15 @@ stuff_plan = class {
       }
       if (args.close_by !== undefined && args.close_by !== null) {
         this.close_by = args.close_by;
+      }
+      if (args.except_close_by !== undefined && args.except_close_by !== null) {
+        this.except_close_by = args.except_close_by;
+      }
+      if (args.except_close_timestamp !== undefined && args.except_close_timestamp !== null) {
+        this.except_close_timestamp = args.except_close_timestamp;
+      }
+      if (args.except_close_reason !== undefined && args.except_close_reason !== null) {
+        this.except_close_reason = args.except_close_reason;
       }
     }
   }
@@ -985,6 +997,27 @@ stuff_plan = class {
           input.skip(ftype);
         }
         break;
+        case 18:
+        if (ftype == Thrift.Type.STRING) {
+          this.except_close_by = input.readString().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        case 19:
+        if (ftype == Thrift.Type.STRING) {
+          this.except_close_timestamp = input.readString().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        case 20:
+        if (ftype == Thrift.Type.STRING) {
+          this.except_close_reason = input.readString().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
         default:
           input.skip(ftype);
       }
@@ -1086,6 +1119,21 @@ stuff_plan = class {
     if (this.close_by !== null && this.close_by !== undefined) {
       output.writeFieldBegin('close_by', Thrift.Type.STRING, 17);
       output.writeString(this.close_by);
+      output.writeFieldEnd();
+    }
+    if (this.except_close_by !== null && this.except_close_by !== undefined) {
+      output.writeFieldBegin('except_close_by', Thrift.Type.STRING, 18);
+      output.writeString(this.except_close_by);
+      output.writeFieldEnd();
+    }
+    if (this.except_close_timestamp !== null && this.except_close_timestamp !== undefined) {
+      output.writeFieldBegin('except_close_timestamp', Thrift.Type.STRING, 19);
+      output.writeString(this.except_close_timestamp);
+      output.writeFieldEnd();
+    }
+    if (this.except_close_reason !== null && this.except_close_reason !== undefined) {
+      output.writeFieldBegin('except_close_reason', Thrift.Type.STRING, 20);
+      output.writeString(this.except_close_reason);
       output.writeFieldEnd();
     }
     output.writeFieldStop();

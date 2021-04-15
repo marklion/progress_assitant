@@ -82,6 +82,9 @@ export default {
                 case 4:
                     ret = "已提货";
                     break;
+                case 5:
+                    ret = "已撤销";
+                    break;
                 default:
                     break;
             }

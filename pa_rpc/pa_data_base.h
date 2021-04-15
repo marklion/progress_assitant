@@ -118,7 +118,7 @@ public:
     virtual std::vector<sqlite_orm_column> self_columns_defined()
     {
         std::vector<sqlite_orm_column> ret;
-        ret.push_back(sqlite_orm_column("number", sqlite_orm_column::STRING, &number, SQLITE_ORM_COLUMN_LIMIT_UNIQ));
+        ret.push_back(sqlite_orm_column("number", sqlite_orm_column::STRING, &number));
 
         return ret;
     }
@@ -147,8 +147,8 @@ public:
     virtual std::vector<sqlite_orm_column> self_columns_defined()
     {
         std::vector<sqlite_orm_column> ret;
-        ret.push_back(sqlite_orm_column("name", sqlite_orm_column::STRING, &name, SQLITE_ORM_COLUMN_LIMIT_UNIQ));
-        ret.push_back(sqlite_orm_column("phone", sqlite_orm_column::STRING, &phone, SQLITE_ORM_COLUMN_LIMIT_UNIQ));
+        ret.push_back(sqlite_orm_column("name", sqlite_orm_column::STRING, &name));
+        ret.push_back(sqlite_orm_column("phone", sqlite_orm_column::STRING, &phone));
 
         return ret;
     }
@@ -175,12 +175,15 @@ public:
     std::string plan_confirm_timestamp;
     std::string pay_confirm_timestamp;
     std::string close_timestamp;
+    std::string close_reason;
+    std::string except_close_timestamp;
     pa_sql_plan() {
         add_parent_type<pa_sql_userinfo>("created_by");
         add_parent_type<pa_sql_stuff_info>("belong_stuff");
         add_parent_type<pa_sql_userinfo>("plan_confirm_by");
         add_parent_type<pa_sql_userinfo>("pay_confirm_by");
         add_parent_type<pa_sql_userinfo>("close_by");
+        add_parent_type<pa_sql_userinfo>("except_close_by");
     }
     virtual std::vector<sqlite_orm_column> self_columns_defined()
     {
@@ -197,6 +200,8 @@ public:
         ret.push_back(sqlite_orm_column("pay_timestamp", sqlite_orm_column::STRING, &pay_timestamp));
         ret.push_back(sqlite_orm_column("close_timestamp", sqlite_orm_column::STRING, &close_timestamp));
         ret.push_back(sqlite_orm_column("comment", sqlite_orm_column::STRING, &comment));
+        ret.push_back(sqlite_orm_column("close_reason", sqlite_orm_column::STRING, &close_reason));
+        ret.push_back(sqlite_orm_column("except_close_timestamp", sqlite_orm_column::STRING, &except_close_timestamp));
 
         return ret;
     }

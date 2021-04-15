@@ -1,6 +1,16 @@
 <template>
 <div class="plan_confirm_show">
     <van-cell-group title="计划内容">
+        <template #title>
+            <van-row type="flex" justify="space-between" align="center">
+                <van-col>
+                    计划内容
+                </van-col>
+                <van-col v-if="plan_detail.status != 5 && plan_detail.status != 4">
+                    <van-button type="danger" size="small" @click="reason_diag = true">撤销计划</van-button>
+                </van-col>
+            </van-row>
+        </template>
         <van-cell :title="plan_detail.name" :value="plan_detail.count + '吨'" />
         <van-cell title="单价" :value="plan_detail.unit_price" />
         <van-cell title="总价" :value="plan_detail.total_price" />
@@ -53,7 +63,19 @@
             <p>{{plan_detail.close_timestamp}}</p>
             <p>{{plan_detail.close_by}}</p>
         </van-step>
+        <van-step>
+            <h3>撤销</h3>
+            <p>{{plan_detail.except_close_timestamp}}</p>
+            <p>撤销原因：{{plan_detail.except_close_reason}}</p>
+            <p>撤销人：{{plan_detail.except_close_by}}</p>
+        </van-step>
     </van-steps>
+    <van-dialog v-model="reason_diag" title="确认撤销" closeOnClickOverlay :showConfirmButton="false">
+        <van-form @submit="except_close">
+            <van-field v-model="reason_input" name="关闭理由" label="撤销原因" placeholder="请输入撤销原因" :rules="[{ required: true, message: '请填写撤销原因' }]" />
+            <van-button plain block>确认</van-button>
+        </van-form>
+    </van-dialog>
 </div>
 </template>
 
@@ -85,7 +107,19 @@ import {
     Collapse,
     CollapseItem
 } from 'vant';
+import {
+    Dialog
+} from 'vant';
+import {
+    Form
+} from 'vant';
+import {
+    Field
+} from 'vant';
 
+Vue.use(Field);
+Vue.use(Form);
+Vue.use(Dialog);
 Vue.use(Collapse);
 Vue.use(CollapseItem);
 Vue.use(VanImage);
@@ -103,7 +137,9 @@ export default {
     },
     data: function () {
         return {
-            vichele_panel:[[]],
+            vichele_panel: [
+                []
+            ],
             plan_detail: {
                 plan_id: 0,
                 name: '',
@@ -123,14 +159,30 @@ export default {
                 pay_confirm_timestamp: '',
                 close_timestamp: '',
                 close_by: '',
+                except_close_by:'',
+                except_close_timestamp: '',
+                except_close_reason: '',
             },
             plan_owner_info: {
                 name: '',
                 company: '',
             },
+            reason_diag: false,
+            reason_input:''
         };
     },
     methods: {
+        except_close: function () {
+            console.log('close');
+            this.reason_diag = false;
+            var vue_this = this;
+            vue_this.$call_remote_process("stuff_plan_management",'except_close', [vue_this.plan_detail.plan_id, vue_this.$cookies.get('pa_ssid'), vue_this.reason_input]).then(function(resp) {
+                if (resp) {
+                    vue_this.$toast("计划已撤销");
+                    vue_this.$router.back();
+                }
+            });
+        },
         formatDateTime: function (date) {
             var y = date.getFullYear();
             var m = date.getMonth() + 1;
@@ -151,7 +203,7 @@ export default {
     },
     beforeMount: function () {
         var vue_this = this;
-        vue_this.$call_remote_process("stuff_plan_management",'get_plan', [parseInt(vue_this.$route.params.plan_id)]).then(function (resp) {
+        vue_this.$call_remote_process("stuff_plan_management", 'get_plan', [parseInt(vue_this.$route.params.plan_id)]).then(function (resp) {
             vue_this.plan_detail.plan_id = resp.plan_id;
             vue_this.plan_detail.name = resp.name;
             vue_this.plan_detail.count = resp.count;
@@ -169,11 +221,14 @@ export default {
             vue_this.plan_detail.pay_timestamp = resp.pay_timestamp;
             vue_this.plan_detail.close_timestamp = resp.close_timestamp;
             vue_this.plan_detail.close_by = resp.close_by;
+            vue_this.plan_detail.except_close_by= resp.except_close_by;
+            vue_this.plan_detail.except_close_timestamp= resp.except_close_timestamp;
+            vue_this.plan_detail.except_close_reason= resp.except_close_reason;
             resp.vichele_info.forEach((element, index) => {
                 vue_this.$set(vue_this.plan_detail.vichele_info, index, element);
                 vue_this.$set(vue_this.vichele_panel, index, ['0']);
             });
-            vue_this.$call_remote_process("user_management",'get_customer_info', [resp.created_by]).then(function (resp) {
+            vue_this.$call_remote_process("user_management", 'get_customer_info', [resp.created_by]).then(function (resp) {
                 vue_this.plan_owner_info.company = resp.split('(')[0];
                 vue_this.plan_owner_info.name = resp.split('(')[1].split(')')[0];
             });
