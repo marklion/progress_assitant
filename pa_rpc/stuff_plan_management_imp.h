@@ -590,6 +590,8 @@ class stuff_plan_management_handler : virtual public stuff_plan_managementIf
             {
                 PA_RETURN_MSG("导出失败");
             }
+            user->email = email;
+            user->update_record();
             std::string send_mail_cmd = "/script/send_mail.py " + email + " '计划导出表' " + " '尊敬的" + user->name + "先生，附件是您的计划导出表' " + file_name_no_ext + ".xlsx";
             if (0 == system(send_mail_cmd.c_str()))
             {

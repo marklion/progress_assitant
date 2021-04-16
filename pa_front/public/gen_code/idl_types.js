@@ -193,12 +193,16 @@ driver_info = class {
   constructor(args) {
     this.name = null;
     this.phone = null;
+    this.id = null;
     if (args) {
       if (args.name !== undefined && args.name !== null) {
         this.name = args.name;
       }
       if (args.phone !== undefined && args.phone !== null) {
         this.phone = args.phone;
+      }
+      if (args.id !== undefined && args.id !== null) {
+        this.id = args.id;
       }
     }
   }
@@ -227,6 +231,13 @@ driver_info = class {
           input.skip(ftype);
         }
         break;
+        case 3:
+        if (ftype == Thrift.Type.I64) {
+          this.id = input.readI64().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
         default:
           input.skip(ftype);
       }
@@ -246,6 +257,76 @@ driver_info = class {
     if (this.phone !== null && this.phone !== undefined) {
       output.writeFieldBegin('phone', Thrift.Type.STRING, 2);
       output.writeString(this.phone);
+      output.writeFieldEnd();
+    }
+    if (this.id !== null && this.id !== undefined) {
+      output.writeFieldBegin('id', Thrift.Type.I64, 3);
+      output.writeI64(this.id);
+      output.writeFieldEnd();
+    }
+    output.writeFieldStop();
+    output.writeStructEnd();
+    return;
+  }
+
+};
+vichele_info_t = class {
+  constructor(args) {
+    this.number = null;
+    this.id = null;
+    if (args) {
+      if (args.number !== undefined && args.number !== null) {
+        this.number = args.number;
+      }
+      if (args.id !== undefined && args.id !== null) {
+        this.id = args.id;
+      }
+    }
+  }
+
+  read (input) {
+    input.readStructBegin();
+    while (true) {
+      const ret = input.readFieldBegin();
+      const ftype = ret.ftype;
+      const fid = ret.fid;
+      if (ftype == Thrift.Type.STOP) {
+        break;
+      }
+      switch (fid) {
+        case 1:
+        if (ftype == Thrift.Type.STRING) {
+          this.number = input.readString().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        case 2:
+        if (ftype == Thrift.Type.I64) {
+          this.id = input.readI64().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        default:
+          input.skip(ftype);
+      }
+      input.readFieldEnd();
+    }
+    input.readStructEnd();
+    return;
+  }
+
+  write (output) {
+    output.writeStructBegin('vichele_info_t');
+    if (this.number !== null && this.number !== undefined) {
+      output.writeFieldBegin('number', Thrift.Type.STRING, 1);
+      output.writeString(this.number);
+      output.writeFieldEnd();
+    }
+    if (this.id !== null && this.id !== undefined) {
+      output.writeFieldBegin('id', Thrift.Type.I64, 2);
+      output.writeI64(this.id);
       output.writeFieldEnd();
     }
     output.writeFieldStop();

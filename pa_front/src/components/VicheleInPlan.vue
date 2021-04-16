@@ -4203,12 +4203,12 @@ export default {
             var vue_this = this;
             vue_this.$call_remote_process("user_management", 'get_bound_vichele', [vue_this.$cookies.get('pa_ssid'), true]).then(function (resp) {
                 resp.forEach((element, index) => {
-                    vue_this.$set(vue_this.main_vichele_pool, index, element);
+                    vue_this.$set(vue_this.main_vichele_pool, index, element.number);
                 });
             });
             vue_this.$call_remote_process("user_management", 'get_bound_vichele', [vue_this.$cookies.get('pa_ssid'), false]).then(function (resp) {
                 resp.forEach((element, index) => {
-                    vue_this.$set(vue_this.behind_vichele_pool, index, element);
+                    vue_this.$set(vue_this.behind_vichele_pool, index, element.number);
                 });
             });
         },

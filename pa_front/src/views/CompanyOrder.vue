@@ -188,8 +188,6 @@ export default {
             this.ask_email_diag = true;
         },
         export_plan: function () {
-            console.log(this.export_email);
-            console.log(this.export_list);
             var vue_this = this;
             vue_this.$call_remote_process("stuff_plan_management", "export_plan_to_email", [vue_this.$cookies.get('pa_ssid'), vue_this.export_list, vue_this.export_email]).then(function (resp) {
                 if (resp) {
@@ -217,6 +215,10 @@ export default {
     },
     beforeMount: function () {
         this.init_orders(this.$store.state.userinfo.buyer);
+        var vue_this = this;
+        vue_this.$call_remote_process("user_management", "get_user_email", [vue_this.$cookies.get('pa_ssid')]).then(function (resp) {
+            vue_this.export_email = resp;
+        });
     }
 }
 </script>

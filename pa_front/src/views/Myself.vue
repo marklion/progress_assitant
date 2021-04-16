@@ -19,6 +19,7 @@
         <van-cell-group>
             <van-cell v-if="is_admin" icon="manager-o" is-link :to="{name:'Admin'}" title="管理员菜单"></van-cell>
             <van-cell icon="records" is-link :to="{name:'Statistics'}" title="交易统计"></van-cell>
+            <van-cell icon="info-o" is-link :to="{name:'BoundInfo'}" title="公司数据"></van-cell>
         </van-cell-group>
         <van-divider />
         <van-button type="danger" @click="logoff" block>退出登录</van-button>

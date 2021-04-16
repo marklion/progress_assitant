@@ -36,6 +36,7 @@ public:
     std::string phone;
     std::string openid;
     int buyer = 1;
+    std::string email;
     pa_sql_userinfo()
     {
         add_parent_type<pa_sql_company>("belong_company");
@@ -48,6 +49,7 @@ public:
         ret.push_back(sqlite_orm_column("phone", sqlite_orm_column::STRING, &phone));
         ret.push_back(sqlite_orm_column("openid", sqlite_orm_column::STRING, &openid, SQLITE_ORM_COLUMN_LIMIT_UNIQ));
         ret.push_back(sqlite_orm_column("buyer", sqlite_orm_column::INTEGER, &buyer));
+        ret.push_back(sqlite_orm_column("email", sqlite_orm_column::STRING, &email));
 
         return ret;
     }
@@ -112,6 +114,7 @@ public:
 class pa_sql_vichele:public sql_tree_base {
 public:
     std::string number;
+    int is_drop = 0;
     pa_sql_vichele() {
         add_parent_type<pa_sql_company>("belong_company");
     }
@@ -119,6 +122,7 @@ public:
     {
         std::vector<sqlite_orm_column> ret;
         ret.push_back(sqlite_orm_column("number", sqlite_orm_column::STRING, &number));
+        ret.push_back(sqlite_orm_column("is_drop", sqlite_orm_column::INTEGER, &is_drop));
 
         return ret;
     }
@@ -141,6 +145,7 @@ class pa_sql_driver:public sql_tree_base {
 public:
     std::string name;
     std::string phone;
+    int is_drop = 0;
     pa_sql_driver() {
         add_parent_type<pa_sql_company>("belong_company");
     }
@@ -149,6 +154,7 @@ public:
         std::vector<sqlite_orm_column> ret;
         ret.push_back(sqlite_orm_column("name", sqlite_orm_column::STRING, &name));
         ret.push_back(sqlite_orm_column("phone", sqlite_orm_column::STRING, &phone));
+        ret.push_back(sqlite_orm_column("is_drop", sqlite_orm_column::INTEGER, &is_drop));
 
         return ret;
     }

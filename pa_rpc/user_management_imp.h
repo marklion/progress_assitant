@@ -166,7 +166,7 @@ public:
         }
     }
 
-    virtual void get_bound_vichele(std::vector<std::string> &_return, const std::string &ssid, const bool main_vichele) 
+    virtual void get_bound_vichele(std::vector<vichele_info_t> &_return, const std::string &ssid, const bool main_vichele)
     {
         auto user = PA_DATAOPT_get_online_user(ssid);
         if (user)
@@ -176,18 +176,24 @@ public:
             {
                 if (main_vichele)
                 {
-                    auto bound_vicheles = company->get_all_children<pa_sql_vichele>("belong_company");
+                    auto bound_vicheles = company->get_all_children<pa_sql_vichele>("belong_company", "is_drop != 1");
                     for (auto &itr : bound_vicheles)
                     {
-                        _return.push_back(itr.number);
+                        vichele_info_t tmp;
+                        tmp.number = itr.number;
+                        tmp.id = itr.get_pri_id();
+                        _return.push_back(tmp);
                     }
                 }
                 else
                 {
-                    auto bound_vicheles = company->get_all_children<pa_sql_vichele_behind>("belong_company");
+                    auto bound_vicheles = company->get_all_children<pa_sql_vichele_behind>("belong_company", "is_drop != 1");
                     for (auto &itr : bound_vicheles)
                     {
-                        _return.push_back(itr.number);
+                        vichele_info_t tmp;
+                        tmp.number = itr.number;
+                        tmp.id = itr.get_pri_id();
+                        _return.push_back(tmp);
                     }
                 }
             }
@@ -205,7 +211,7 @@ public:
             {
                 if (main_vichele)
                 {
-                    auto exist_vichele = company->get_children<pa_sql_vichele>("belong_company", "number = '%s'", vichele.c_str());
+                    auto exist_vichele = company->get_children<pa_sql_vichele>("belong_company", "is_drop != 1 AND number = '%s'", vichele.c_str());
                     if (!exist_vichele)
                     {
                         pa_sql_vichele tmp;
@@ -220,7 +226,7 @@ public:
                 }
                 else
                 {
-                    auto exist_vichele = company->get_children<pa_sql_vichele_behind>("belong_company", "number = '%s'", vichele.c_str());
+                    auto exist_vichele = company->get_children<pa_sql_vichele_behind>("belong_company", "is_drop != 1 AND number = '%s'", vichele.c_str());
                     if (!exist_vichele)
                     {
                         pa_sql_vichele_behind tmp;
@@ -238,8 +244,37 @@ public:
 
         return ret;
     }
-    virtual void remove_vichele(const std::string &ssid, const std::string &vichele)
+    virtual void remove_vichele(const std::string &ssid, const int64_t id, const bool main_vichele)
     {
+        auto opt_user = PA_DATAOPT_get_online_user(ssid);
+        if (!opt_user)
+        {
+            PA_RETURN_UNLOGIN_MSG();
+        }
+        auto company = opt_user->get_parent<pa_sql_company>("belong_company");
+        if (!company)
+        {
+            PA_RETURN_NOCOMPANY_MSG();
+        }
+        if (main_vichele)
+        {
+            auto vichele = company->get_children<pa_sql_vichele>("belong_company", "PRI_ID = %d", id);
+            if (vichele)
+            {
+                vichele->is_drop = 1;
+                vichele->update_record();
+            }
+        }
+        else
+        {
+            auto vichele = company->get_children<pa_sql_vichele_behind>("belong_company", "PRI_ID = %d", id);
+            if (vichele)
+            {
+                vichele->is_drop = 1;
+                vichele->update_record();
+            }
+        }
+
     }
 
     virtual bool update_logo(const std::string &content, const std::string &ssid)
@@ -301,12 +336,13 @@ public:
             auto company = user->get_parent<pa_sql_company>("belong_company");
             if (company)
             {
-                auto drivers = company->get_all_children<pa_sql_driver>("belong_company");
+                auto drivers = company->get_all_children<pa_sql_driver>("belong_company", "is_drop != 1");
                 for (auto &itr : drivers)
                 {
                     driver_info tmp;
                     tmp.name = itr.name;
                     tmp.phone = itr.phone;
+                    tmp.id = itr.get_pri_id();
                     _return.push_back(tmp);
                 }
             }
@@ -329,7 +365,7 @@ public:
             auto company = user->get_parent<pa_sql_company>("belong_company");
             if (company)
             {
-                auto exist_driver = company->get_children<pa_sql_driver>("belong_company", "name = '%s' AND phone = '%s'", driver.name.c_str(), driver.phone.c_str());
+                auto exist_driver = company->get_children<pa_sql_driver>("belong_company", "is_drop != 1 AND name = '%s' AND phone = '%s'", driver.name.c_str(), driver.phone.c_str());
                 if (!exist_driver)
                 {
                     pa_sql_driver tmp;
@@ -356,6 +392,26 @@ public:
         return ret;
     }
 
+    virtual void remove_driver(const std::string &ssid, const int64_t id) 
+    {
+        auto opt_user = PA_DATAOPT_get_online_user(ssid);
+        if (!opt_user)
+        {
+            PA_RETURN_UNLOGIN_MSG();
+        }
+        auto company = opt_user->get_parent<pa_sql_company>("belong_company");
+        if (!company)
+        {
+            PA_RETURN_NOCOMPANY_MSG();
+        }
+        auto driver = company->get_children<pa_sql_driver>("belong_company", "PRI_ID = %d", id);
+        if (driver)
+        {
+            driver->is_drop = 1;
+            driver->update_record();
+        }
+
+    }
     virtual bool send_sms_verify(const std::string &ssid, const std::string &phone)
     {
         bool ret = false;
@@ -390,6 +446,15 @@ public:
         return ret;
     }
 
+    virtual void get_user_email(std::string &_return, const std::string &ssid)
+    {
+        auto opt_user = PA_DATAOPT_get_online_user(ssid);
+        if (!opt_user)
+        {
+            PA_RETURN_UNLOGIN_MSG();
+        }
+        _return = opt_user->email;
+    }
 };
 
 #endif // _USER_MANAGEMENT_IMP_H_

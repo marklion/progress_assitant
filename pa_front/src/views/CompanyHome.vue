@@ -50,7 +50,7 @@
         </van-form>
     </van-dialog>
     <van-divider>当前公告</van-divider>
-    <van-field v-model="notice" rows="2" autosize type="textarea" maxlength="50" placeholder="请输入公告" show-word-limit />
+    <van-field v-model="notice" rows="2" autosize type="textarea" maxlength="300" placeholder="请输入公告" show-word-limit />
     <van-row type="flex" justify="center" align="center" :gutter="10">
         <van-col :span="10">
             <van-button round block type="danger" @click="submit_notice(false)">清除</van-button>

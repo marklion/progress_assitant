@@ -27,6 +27,8 @@ class user_info;
 
 class driver_info;
 
+class vichele_info_t;
+
 class stuff_detail;
 
 class user_apply;
@@ -158,9 +160,10 @@ void swap(user_info &a, user_info &b);
 std::ostream& operator<<(std::ostream& out, const user_info& obj);
 
 typedef struct _driver_info__isset {
-  _driver_info__isset() : name(false), phone(false) {}
+  _driver_info__isset() : name(false), phone(false), id(false) {}
   bool name :1;
   bool phone :1;
+  bool id :1;
 } _driver_info__isset;
 
 class driver_info : public virtual ::apache::thrift::TBase {
@@ -168,12 +171,13 @@ class driver_info : public virtual ::apache::thrift::TBase {
 
   driver_info(const driver_info&);
   driver_info& operator=(const driver_info&);
-  driver_info() : name(), phone() {
+  driver_info() : name(), phone(), id(0) {
   }
 
   virtual ~driver_info() noexcept;
   std::string name;
   std::string phone;
+  int64_t id;
 
   _driver_info__isset __isset;
 
@@ -181,11 +185,15 @@ class driver_info : public virtual ::apache::thrift::TBase {
 
   void __set_phone(const std::string& val);
 
+  void __set_id(const int64_t val);
+
   bool operator == (const driver_info & rhs) const
   {
     if (!(name == rhs.name))
       return false;
     if (!(phone == rhs.phone))
+      return false;
+    if (!(id == rhs.id))
       return false;
     return true;
   }
@@ -204,6 +212,54 @@ class driver_info : public virtual ::apache::thrift::TBase {
 void swap(driver_info &a, driver_info &b);
 
 std::ostream& operator<<(std::ostream& out, const driver_info& obj);
+
+typedef struct _vichele_info_t__isset {
+  _vichele_info_t__isset() : number(false), id(false) {}
+  bool number :1;
+  bool id :1;
+} _vichele_info_t__isset;
+
+class vichele_info_t : public virtual ::apache::thrift::TBase {
+ public:
+
+  vichele_info_t(const vichele_info_t&);
+  vichele_info_t& operator=(const vichele_info_t&);
+  vichele_info_t() : number(), id(0) {
+  }
+
+  virtual ~vichele_info_t() noexcept;
+  std::string number;
+  int64_t id;
+
+  _vichele_info_t__isset __isset;
+
+  void __set_number(const std::string& val);
+
+  void __set_id(const int64_t val);
+
+  bool operator == (const vichele_info_t & rhs) const
+  {
+    if (!(number == rhs.number))
+      return false;
+    if (!(id == rhs.id))
+      return false;
+    return true;
+  }
+  bool operator != (const vichele_info_t &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const vichele_info_t & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+  virtual void printTo(std::ostream& out) const;
+};
+
+void swap(vichele_info_t &a, vichele_info_t &b);
+
+std::ostream& operator<<(std::ostream& out, const vichele_info_t& obj);
 
 typedef struct _stuff_detail__isset {
   _stuff_detail__isset() : name(false), last(false), price(false), company(false), type_id(false), saling(false) {}

@@ -112,6 +112,15 @@ const routes = [
         has_go_back:true,
     },
   },
+  {
+    path: '/bound_info',
+    name: 'BoundInfo',
+    component: () => import('../views/BoundInfo.vue'),
+    meta: {    
+        private_title: '公司数据',
+        has_go_back:true,
+    },
+  },
 ]
 
 const router = new VueRouter({
