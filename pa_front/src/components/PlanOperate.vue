@@ -4,7 +4,7 @@
         <template #title>
             <van-row type="flex" justify="space-between" align="center">
                 <van-col>当前状态</van-col>
-                <van-col v-if="$store.state.userinfo.buyer">
+                <van-col v-if="$store.state.userinfo.buyer || is_proxy">
                     <van-button v-if="status == 0" size="small" type="warning" :to="{name:'PlanUpdate', params:{plan_id:plan_id}}">修改计划</van-button>
                     <van-uploader v-else-if="status == 2 || status == 1" :max-count="1" :after-read="upload_payinfo">
                         <van-button icon="plus" type="primary" size="small">上传付款凭证</van-button>
@@ -22,6 +22,7 @@
     <div style="margin: 16px;" v-if="has_pri">
         <van-button v-if="status == 0" round block type="primary" @click="submit_confirm">确认计划</van-button>
         <van-button v-if="status == 2" round block type="primary" @click="submit_confirm_pay">确认收款</van-button>
+        <van-button v-if="status == 3 && is_proxy" round block type="primary" :to="{name:'ClosePlan', params:{plan_id:plan_id}}">确认收货</van-button>
     </div>
     <van-dialog v-model="show_qr" title="提货码">
         <van-row type="flex" justify="center" align="center">
@@ -62,6 +63,7 @@ export default {
     props: {
         plan_id: Number,
         status: Number,
+        is_proxy:Boolean,
     },
     components: {
         "vue-qr": vueQr,

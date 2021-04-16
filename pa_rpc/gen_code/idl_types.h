@@ -518,7 +518,7 @@ void swap(vichele_in_plan &a, vichele_in_plan &b);
 std::ostream& operator<<(std::ostream& out, const vichele_in_plan& obj);
 
 typedef struct _stuff_plan__isset {
-  _stuff_plan__isset() : type_id(false), count(false), vichele_info(false), plan_id(false), created_by(false), plan_time(false), created_time(false), name(false), price(false), status(false), comment(false), plan_confirm(false), pay_confirm(false), pay_info(false), pay_timestamp(false), close_timestamp(false), close_by(false), except_close_by(false), except_close_timestamp(false), except_close_reason(false) {}
+  _stuff_plan__isset() : type_id(false), count(false), vichele_info(false), plan_id(false), created_by(false), plan_time(false), created_time(false), name(false), price(false), status(false), comment(false), plan_confirm(false), pay_confirm(false), pay_info(false), pay_timestamp(false), close_timestamp(false), close_by(false), except_close_by(false), except_close_timestamp(false), except_close_reason(false), proxy_company(false) {}
   bool type_id :1;
   bool count :1;
   bool vichele_info :1;
@@ -539,6 +539,7 @@ typedef struct _stuff_plan__isset {
   bool except_close_by :1;
   bool except_close_timestamp :1;
   bool except_close_reason :1;
+  bool proxy_company :1;
 } _stuff_plan__isset;
 
 class stuff_plan : public virtual ::apache::thrift::TBase {
@@ -546,7 +547,7 @@ class stuff_plan : public virtual ::apache::thrift::TBase {
 
   stuff_plan(const stuff_plan&);
   stuff_plan& operator=(const stuff_plan&);
-  stuff_plan() : type_id(0), count(0), plan_id(0), created_by(0), plan_time(), created_time(0), name(), price(0), status(0), comment(), pay_info(), pay_timestamp(), close_timestamp(), close_by(), except_close_by(), except_close_timestamp(), except_close_reason() {
+  stuff_plan() : type_id(0), count(0), plan_id(0), created_by(0), plan_time(), created_time(0), name(), price(0), status(0), comment(), pay_info(), pay_timestamp(), close_timestamp(), close_by(), except_close_by(), except_close_timestamp(), except_close_reason(), proxy_company() {
   }
 
   virtual ~stuff_plan() noexcept;
@@ -570,6 +571,7 @@ class stuff_plan : public virtual ::apache::thrift::TBase {
   std::string except_close_by;
   std::string except_close_timestamp;
   std::string except_close_reason;
+  std::string proxy_company;
 
   _stuff_plan__isset __isset;
 
@@ -613,6 +615,8 @@ class stuff_plan : public virtual ::apache::thrift::TBase {
 
   void __set_except_close_reason(const std::string& val);
 
+  void __set_proxy_company(const std::string& val);
+
   bool operator == (const stuff_plan & rhs) const
   {
     if (!(type_id == rhs.type_id))
@@ -654,6 +658,8 @@ class stuff_plan : public virtual ::apache::thrift::TBase {
     if (!(except_close_timestamp == rhs.except_close_timestamp))
       return false;
     if (!(except_close_reason == rhs.except_close_reason))
+      return false;
+    if (!(proxy_company == rhs.proxy_company))
       return false;
     return true;
   }

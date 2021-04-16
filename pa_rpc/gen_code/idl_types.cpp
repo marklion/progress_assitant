@@ -1304,6 +1304,10 @@ void stuff_plan::__set_except_close_timestamp(const std::string& val) {
 void stuff_plan::__set_except_close_reason(const std::string& val) {
   this->except_close_reason = val;
 }
+
+void stuff_plan::__set_proxy_company(const std::string& val) {
+  this->proxy_company = val;
+}
 std::ostream& operator<<(std::ostream& out, const stuff_plan& obj)
 {
   obj.printTo(out);
@@ -1504,6 +1508,14 @@ uint32_t stuff_plan::read(::apache::thrift::protocol::TProtocol* iprot) {
           xfer += iprot->skip(ftype);
         }
         break;
+      case 21:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->proxy_company);
+          this->__isset.proxy_company = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
       default:
         xfer += iprot->skip(ftype);
         break;
@@ -1609,6 +1621,10 @@ uint32_t stuff_plan::write(::apache::thrift::protocol::TProtocol* oprot) const {
   xfer += oprot->writeString(this->except_close_reason);
   xfer += oprot->writeFieldEnd();
 
+  xfer += oprot->writeFieldBegin("proxy_company", ::apache::thrift::protocol::T_STRING, 21);
+  xfer += oprot->writeString(this->proxy_company);
+  xfer += oprot->writeFieldEnd();
+
   xfer += oprot->writeFieldStop();
   xfer += oprot->writeStructEnd();
   return xfer;
@@ -1636,6 +1652,7 @@ void swap(stuff_plan &a, stuff_plan &b) {
   swap(a.except_close_by, b.except_close_by);
   swap(a.except_close_timestamp, b.except_close_timestamp);
   swap(a.except_close_reason, b.except_close_reason);
+  swap(a.proxy_company, b.proxy_company);
   swap(a.__isset, b.__isset);
 }
 
@@ -1660,6 +1677,7 @@ stuff_plan::stuff_plan(const stuff_plan& other22) {
   except_close_by = other22.except_close_by;
   except_close_timestamp = other22.except_close_timestamp;
   except_close_reason = other22.except_close_reason;
+  proxy_company = other22.proxy_company;
   __isset = other22.__isset;
 }
 stuff_plan& stuff_plan::operator=(const stuff_plan& other23) {
@@ -1683,6 +1701,7 @@ stuff_plan& stuff_plan::operator=(const stuff_plan& other23) {
   except_close_by = other23.except_close_by;
   except_close_timestamp = other23.except_close_timestamp;
   except_close_reason = other23.except_close_reason;
+  proxy_company = other23.proxy_company;
   __isset = other23.__isset;
   return *this;
 }
@@ -1709,6 +1728,7 @@ void stuff_plan::printTo(std::ostream& out) const {
   out << ", " << "except_close_by=" << to_string(except_close_by);
   out << ", " << "except_close_timestamp=" << to_string(except_close_timestamp);
   out << ", " << "except_close_reason=" << to_string(except_close_reason);
+  out << ", " << "proxy_company=" << to_string(proxy_company);
   out << ")";
 }
 

@@ -26,7 +26,7 @@ static std::vector<std::string> prepare_vichels(const std::string &_vicheles)
 }
 class stuff_plan_management_handler : virtual public stuff_plan_managementIf
 {
-    virtual int64_t create_plan(const stuff_plan &plan, const std::string &ssid)
+    virtual int64_t create_plan(const stuff_plan &plan, const std::string &ssid, const std::string &proxy_company)
     {
         int64_t ret = 0;
         auto opt_user = PA_DATAOPT_get_online_user(ssid);
@@ -52,6 +52,7 @@ class stuff_plan_management_handler : virtual public stuff_plan_managementIf
             tmp.name = stuff_type->name;
             tmp.plan_time = plan.plan_time;
             tmp.price = stuff_type->price;
+            tmp.proxy_company = proxy_company;
             tmp.status = 0;
             for (auto &itr : plan.vichele_info)
             {
@@ -129,6 +130,7 @@ class stuff_plan_management_handler : virtual public stuff_plan_managementIf
             _return.price = plan->price;
             _return.status = plan->status;
             _return.comment = plan->comment;
+            _return.proxy_company = plan->proxy_company;
             auto pay_confirm_user = plan->get_parent<pa_sql_userinfo>("pay_confirm_by");
             auto plan_confirm_user = plan->get_parent<pa_sql_userinfo>("plan_confirm_by");
             auto close_user = plan->get_parent<pa_sql_userinfo>("close_by");
@@ -509,13 +511,20 @@ class stuff_plan_management_handler : virtual public stuff_plan_managementIf
                 if (plan)
                 {
                     std::string company_name = "";
-                    auto created_user = plan->get_parent<pa_sql_userinfo>("created_by");
-                    if (created_user)
+                    if (plan->proxy_company.length() > 0)
                     {
-                        auto company = created_user->get_parent<pa_sql_company>("belong_company");
-                        if (company)
+                        company_name = plan->proxy_company;
+                    }
+                    else
+                    {
+                        auto created_user = plan->get_parent<pa_sql_userinfo>("created_by");
+                        if (created_user)
                         {
-                            company_name = company->name;
+                            auto company = created_user->get_parent<pa_sql_company>("belong_company");
+                            if (company)
+                            {
+                                company_name = company->name;
+                            }
                         }
                     }
                     std::vector<std::string> single_rec_sample = {plan->plan_time, company_name, plan->name};
@@ -665,9 +674,9 @@ class stuff_plan_management_handler : virtual public stuff_plan_managementIf
         return ret;
     }
 
-    std::string get_vichele_verify_result(pa_sql_vichele &single_vichele, std::string plan_time_day) {
+    std::string get_vichele_verify_result(pa_sql_vichele &single_vichele, std::string plan_time_day, int64_t self_plan_id) {
         std::string ret;
-        auto all_related_plan = sqlite_orm::search_record_all<pa_sql_plan>("plan_time LIKE '%s%%' AND status != 5", plan_time_day.c_str());
+        auto all_related_plan = sqlite_orm::search_record_all<pa_sql_plan>("plan_time LIKE '%s%%' AND status != 5 AND PRI_ID != %d", plan_time_day.c_str(), self_plan_id);
         for (auto &itr:all_related_plan)
         {
             auto all_related_vichele_info = itr.get_all_children<pa_sql_single_vichele>("belong_plan");
@@ -675,8 +684,13 @@ class stuff_plan_management_handler : virtual public stuff_plan_managementIf
             {
                 auto main_vichele_in_info = single_vhichele_info.get_parent<pa_sql_vichele>("main_vichele");
                 auto behind_vichele_in_info = single_vhichele_info.get_parent<pa_sql_vichele_behind>("behind_vichele");
-                if (single_vichele.table_name() == "vichele_table" && main_vichele_in_info && single_vichele.get_pri_id() == main_vichele_in_info->get_pri_id()) {
-                    std::string company_name;
+                std::string company_name;
+                if (itr.proxy_company.length() > 0)
+                {
+                    company_name = itr.proxy_company;
+                }
+                else
+                {
                     auto created_user = itr.get_parent<pa_sql_userinfo>("created_by");
                     if (created_user)
                     {
@@ -686,20 +700,13 @@ class stuff_plan_management_handler : virtual public stuff_plan_managementIf
                             company_name = company->name;
                         }
                     }
+                }
+                if (single_vichele.table_name() == "vichele_table" && main_vichele_in_info && single_vichele.get_pri_id() == main_vichele_in_info->get_pri_id())
+                {
                     ret.append("您的计划中的主车 " + single_vichele.number + " 与" + company_name + "的计划时间冲突, 都是" + plan_time_day + "\n");
                 }
-                if (single_vichele.table_name() == "vichele_behind_table" && behind_vichele_in_info && single_vichele.get_pri_id() == behind_vichele_in_info->get_pri_id()) {
-                    std::string company_name;
-                    auto created_user = itr.get_parent<pa_sql_userinfo>("created_by");
-                    if (created_user)
-                    {
-                        auto company = created_user->get_parent<pa_sql_company>("belong_company");
-                        if (company)
-                        {
-                            company_name = company->name;
-                        }
-                    }
- 
+                if (single_vichele.table_name() == "vichele_behind_table" && behind_vichele_in_info && single_vichele.get_pri_id() == behind_vichele_in_info->get_pri_id())
+                {
                     ret.append("您的计划中的挂车 " + single_vichele.number + " 与" + company_name + "的计划时间冲突, 都是" + plan_time_day + "\n");
                 }
             }   
@@ -726,13 +733,13 @@ class stuff_plan_management_handler : virtual public stuff_plan_managementIf
             auto main_vhicheles_in_sql = sqlite_orm::search_record_all<pa_sql_vichele>("number = '%s'", itr.main_vichele.c_str());
             for (auto &single_vichele : main_vhicheles_in_sql)
             {
-                _return.append(get_vichele_verify_result(single_vichele, plan_time_day));
+                _return.append(get_vichele_verify_result(single_vichele, plan_time_day, plan.plan_id));
             }
             
             auto behind_vhicheles_in_sql = sqlite_orm::search_record_all<pa_sql_vichele_behind>("number = '%s'", itr.behind_vichele.c_str());
             for (auto &single_vichele : behind_vhicheles_in_sql)
             {
-                _return.append(get_vichele_verify_result(single_vichele, plan_time_day));
+                _return.append(get_vichele_verify_result(single_vichele, plan_time_day, plan.plan_id));
             }
         }
     }

@@ -50,6 +50,14 @@ uint32_t stuff_plan_management_create_plan_args::read(::apache::thrift::protocol
           xfer += iprot->skip(ftype);
         }
         break;
+      case 3:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->proxy_company);
+          this->__isset.proxy_company = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
       default:
         xfer += iprot->skip(ftype);
         break;
@@ -75,6 +83,10 @@ uint32_t stuff_plan_management_create_plan_args::write(::apache::thrift::protoco
   xfer += oprot->writeString(this->ssid);
   xfer += oprot->writeFieldEnd();
 
+  xfer += oprot->writeFieldBegin("proxy_company", ::apache::thrift::protocol::T_STRING, 3);
+  xfer += oprot->writeString(this->proxy_company);
+  xfer += oprot->writeFieldEnd();
+
   xfer += oprot->writeFieldStop();
   xfer += oprot->writeStructEnd();
   return xfer;
@@ -96,6 +108,10 @@ uint32_t stuff_plan_management_create_plan_pargs::write(::apache::thrift::protoc
 
   xfer += oprot->writeFieldBegin("ssid", ::apache::thrift::protocol::T_STRING, 2);
   xfer += oprot->writeString((*(this->ssid)));
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("proxy_company", ::apache::thrift::protocol::T_STRING, 3);
+  xfer += oprot->writeString((*(this->proxy_company)));
   xfer += oprot->writeFieldEnd();
 
   xfer += oprot->writeFieldStop();
@@ -2999,13 +3015,13 @@ uint32_t stuff_plan_management_verify_plan_presult::read(::apache::thrift::proto
   return xfer;
 }
 
-int64_t stuff_plan_managementClient::create_plan(const stuff_plan& plan, const std::string& ssid)
+int64_t stuff_plan_managementClient::create_plan(const stuff_plan& plan, const std::string& ssid, const std::string& proxy_company)
 {
-  send_create_plan(plan, ssid);
+  send_create_plan(plan, ssid, proxy_company);
   return recv_create_plan();
 }
 
-void stuff_plan_managementClient::send_create_plan(const stuff_plan& plan, const std::string& ssid)
+void stuff_plan_managementClient::send_create_plan(const stuff_plan& plan, const std::string& ssid, const std::string& proxy_company)
 {
   int32_t cseqid = 0;
   oprot_->writeMessageBegin("create_plan", ::apache::thrift::protocol::T_CALL, cseqid);
@@ -3013,6 +3029,7 @@ void stuff_plan_managementClient::send_create_plan(const stuff_plan& plan, const
   stuff_plan_management_create_plan_pargs args;
   args.plan = &plan;
   args.ssid = &ssid;
+  args.proxy_company = &proxy_company;
   args.write(oprot_);
 
   oprot_->writeMessageEnd();
@@ -3847,7 +3864,7 @@ void stuff_plan_managementProcessor::process_create_plan(int32_t seqid, ::apache
 
   stuff_plan_management_create_plan_result result;
   try {
-    result.success = iface_->create_plan(args.plan, args.ssid);
+    result.success = iface_->create_plan(args.plan, args.ssid, args.proxy_company);
     result.__isset.success = true;
   } catch (gen_exp &e) {
     result.e = e;
@@ -4572,13 +4589,13 @@ void stuff_plan_managementProcessor::process_verify_plan(int32_t seqid, ::apache
   return processor;
 }
 
-int64_t stuff_plan_managementConcurrentClient::create_plan(const stuff_plan& plan, const std::string& ssid)
+int64_t stuff_plan_managementConcurrentClient::create_plan(const stuff_plan& plan, const std::string& ssid, const std::string& proxy_company)
 {
-  int32_t seqid = send_create_plan(plan, ssid);
+  int32_t seqid = send_create_plan(plan, ssid, proxy_company);
   return recv_create_plan(seqid);
 }
 
-int32_t stuff_plan_managementConcurrentClient::send_create_plan(const stuff_plan& plan, const std::string& ssid)
+int32_t stuff_plan_managementConcurrentClient::send_create_plan(const stuff_plan& plan, const std::string& ssid, const std::string& proxy_company)
 {
   int32_t cseqid = this->sync_->generateSeqId();
   ::apache::thrift::async::TConcurrentSendSentry sentry(this->sync_.get());
@@ -4587,6 +4604,7 @@ int32_t stuff_plan_managementConcurrentClient::send_create_plan(const stuff_plan
   stuff_plan_management_create_plan_pargs args;
   args.plan = &plan;
   args.ssid = &ssid;
+  args.proxy_company = &proxy_company;
   args.write(oprot_);
 
   oprot_->writeMessageEnd();

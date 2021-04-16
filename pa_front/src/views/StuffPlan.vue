@@ -2,7 +2,7 @@
 <div class="stuff_plan_show">
     <van-notice-bar v-if="company_notice" left-icon="volume-o" :text="company_notice" />
     <van-cell :value="stuff_brief.name" title="计划货品" :label="stuff_brief.company"></van-cell>
-    <stuff-info-submit :type_id="stuff_brief.type_id" :is_create="true" :min_time="min_time" :orig_name="stuff_brief.name" :orig_price="stuff_brief.price"></stuff-info-submit>
+    <stuff-info-submit :proxy_company="$route.query.proxy_company" :type_id="stuff_brief.type_id" :is_create="true" :min_time="min_time" :orig_name="stuff_brief.name" :orig_price="stuff_brief.price"></stuff-info-submit>
 </div>
 </template>
 

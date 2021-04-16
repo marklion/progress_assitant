@@ -101,6 +101,7 @@ export default {
         orig_name: String,
         orig_price: Number,
         orig_comment: String,
+        proxy_company:String,
     },
     components: {
         "vichele-in-plan": VicheleInPlan,
@@ -216,7 +217,7 @@ export default {
                     name: this.orig_name,
                     price: this.orig_price,
                     comment: this.comment,
-                }, this.$cookies.get("pa_ssid")]).then(function (resp) {
+                }, this.$cookies.get("pa_ssid"),vue_this.proxy_company]).then(function (resp) {
                     if (resp > 0) {
                         vue_this.$router.push({
                             name: 'CompanyOrder',
@@ -245,6 +246,7 @@ export default {
                 vue_this.$call_remote_process("stuff_plan_management", "verify_plan", [{
                     plan_time: vue_this.plan_time,
                     vichele_info: vue_this.vichele_info,
+                    plan_id: vue_this.plan_id,
                 }, vue_this.$cookies.get('pa_ssid')]).then(function (resp) {
                     if (resp.length > 0) {
                         console.log(resp);

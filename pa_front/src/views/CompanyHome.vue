@@ -18,15 +18,11 @@
         </template>
         <van-cell v-for="(single_type, index) in all_type" center :key="index" :icon="stuff_status(single_type)" :value="'¥' + single_type.price" :title="single_type.name">
             <template #extra>
-                <van-row type="flex" justify="center" align="center" :gutter="5">
-                    <van-col>
-                        <van-button size="small" type="info" @click="show_out_edit_diag(single_type)">编辑</van-button>
-                    </van-col>
-                    <van-col>
-                        <van-button v-if="single_type.saling == 1" size="small" type="danger" @click="show_out_remove_diag(single_type)">下架</van-button>
-                        <van-button v-else size="small" type="primary" @click="readd_stuff(single_type)">上架</van-button>
-                    </van-col>
-                </van-row>
+                <van-popover v-model="show_operate[index]" trigger="click" :actions="support_operate" @select="do_operate" @open="open_operate(single_type)" @close="focus_type = 0">
+                    <template #reference>
+                        <van-button type="primary">操作</van-button>
+                    </template>
+                </van-popover>
             </template>
             <template #label>
                 <van-tag plain type="danger">{{single_type.last}}</van-tag>
@@ -63,6 +59,14 @@
             <van-button round block type="primary" @click="submit_notice(true)">发布</van-button>
         </van-col>
     </van-row>
+    <van-dialog v-model="show_proxy_company_diag" title="代提客户" :showConfirmButton="false" closeOnClickOverlay>
+        <van-form @submit="submit_proxy_company">
+            <van-field v-model="proxy_company" name="客户" label="客户公司" placeholder="请输入客户名称" :rules="[{ required: true, message: '请填写客户名称' }]" />
+            <div style="margin: 16px;">
+                <van-button round block type="info" native-type="submit">提交</van-button>
+            </div>
+        </van-form>
+    </van-dialog>
 </div>
 </template>
 
@@ -103,7 +107,11 @@ import {
 import {
     Divider
 } from 'vant';
+import {
+    Popover
+} from 'vant';
 
+Vue.use(Popover);
 Vue.use(Divider);
 Vue.use(Icon);
 Vue.use(Tag);
@@ -142,6 +150,11 @@ export default {
                 return ret;
             },
             notice: '',
+            show_operate: [false],
+            show_proxy_company_diag: false,
+            focus_type: 0,
+            proxy_company: '',
+            proxy_type_id: 0,
         };
     },
     computed: {
@@ -152,9 +165,52 @@ export default {
             }
             return ret;
         },
-
+        support_operate: function () {
+            var ret = [{
+                text: '编辑',
+                operate: this.show_out_edit_diag
+            }];
+            if (this.focus_type.saling) {
+                ret.push({
+                    text: '下架',
+                    operate: this.show_out_remove_diag
+                });
+            } else {
+                ret.push({
+                    text: '上架',
+                    operate: this.readd_stuff
+                })
+            }
+            ret.push({
+                text: '手工提单',
+                operate: this.submit_proxy,
+            })
+            return ret;
+        }
     },
     methods: {
+        submit_proxy_company: function () {
+            this.show_proxy_company_diag = false;
+            this.$router.push({
+                name: 'StuffPlan',
+                params: {
+                    type_id: this.proxy_type_id
+                },
+                query: {
+                    proxy_company: this.proxy_company
+                }
+            });
+        },
+        open_operate: function (_single_type) {
+            this.focus_type = _single_type;
+        },
+        submit_proxy: function (_type) {
+            this.show_proxy_company_diag = true;
+            this.proxy_type_id = _type.type_id;
+        },
+        do_operate: function (_op) {
+            _op.operate(this.focus_type);
+        },
         submit_notice: function (_val) {
             var vue_this = this;
             if (_val) {
@@ -274,8 +330,10 @@ export default {
         init_company_data: function () {
             var vue_this = this;
             vue_this.$call_remote_process("company_management", 'get_all_type', [vue_this.$cookies.get('pa_ssid')]).then(function (resp) {
+                vue_this.show_operate = [];
                 resp.forEach(function (element) {
                     vue_this.get_type_detail(element);
+                    vue_this.show_operate.push(false);
                 });
             });
             if (vue_this.$store.state.userinfo.company) {

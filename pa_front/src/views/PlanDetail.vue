@@ -32,7 +32,7 @@
         </van-collapse>
     </van-cell-group>
 
-    <plan-operate :plan_id="plan_detail.plan_id" :status="plan_detail.status"></plan-operate>
+    <plan-operate :is_proxy="is_proxy" :plan_id="plan_detail.plan_id" :status="plan_detail.status"></plan-operate>
 
     <van-steps direction="vertical" :active="plan_detail.status">
         <van-step>
@@ -63,7 +63,7 @@
             <p>{{plan_detail.close_timestamp}}</p>
             <p>{{plan_detail.close_by}}</p>
         </van-step>
-        <van-step>
+        <van-step v-if="plan_detail.except_close_timestamp">
             <h3>撤销</h3>
             <p>{{plan_detail.except_close_timestamp}}</p>
             <p>撤销原因：{{plan_detail.except_close_reason}}</p>
@@ -159,7 +159,7 @@ export default {
                 pay_confirm_timestamp: '',
                 close_timestamp: '',
                 close_by: '',
-                except_close_by:'',
+                except_close_by: '',
                 except_close_timestamp: '',
                 except_close_reason: '',
             },
@@ -168,7 +168,8 @@ export default {
                 company: '',
             },
             reason_diag: false,
-            reason_input:''
+            reason_input: '',
+            is_proxy: false,
         };
     },
     methods: {
@@ -176,7 +177,7 @@ export default {
             console.log('close');
             this.reason_diag = false;
             var vue_this = this;
-            vue_this.$call_remote_process("stuff_plan_management",'except_close', [vue_this.plan_detail.plan_id, vue_this.$cookies.get('pa_ssid'), vue_this.reason_input]).then(function(resp) {
+            vue_this.$call_remote_process("stuff_plan_management", 'except_close', [vue_this.plan_detail.plan_id, vue_this.$cookies.get('pa_ssid'), vue_this.reason_input]).then(function (resp) {
                 if (resp) {
                     vue_this.$toast("计划已撤销");
                     vue_this.$router.back();
@@ -221,16 +222,23 @@ export default {
             vue_this.plan_detail.pay_timestamp = resp.pay_timestamp;
             vue_this.plan_detail.close_timestamp = resp.close_timestamp;
             vue_this.plan_detail.close_by = resp.close_by;
-            vue_this.plan_detail.except_close_by= resp.except_close_by;
-            vue_this.plan_detail.except_close_timestamp= resp.except_close_timestamp;
-            vue_this.plan_detail.except_close_reason= resp.except_close_reason;
+            vue_this.plan_detail.except_close_by = resp.except_close_by;
+            vue_this.plan_detail.except_close_timestamp = resp.except_close_timestamp;
+            vue_this.plan_detail.except_close_reason = resp.except_close_reason;
             resp.vichele_info.forEach((element, index) => {
                 vue_this.$set(vue_this.plan_detail.vichele_info, index, element);
                 vue_this.$set(vue_this.vichele_panel, index, ['0']);
             });
+            var proxy_company = resp.proxy_company;
             vue_this.$call_remote_process("user_management", 'get_customer_info', [resp.created_by]).then(function (resp) {
-                vue_this.plan_owner_info.company = resp.split('(')[0];
-                vue_this.plan_owner_info.name = resp.split('(')[1].split(')')[0];
+                if (proxy_company.length > 0) {
+                    vue_this.plan_owner_info.company = proxy_company;
+                    vue_this.plan_owner_info.name = resp.split('(')[1].split(')')[0] + '(手工提单)';
+                    vue_this.is_proxy = true;
+                } else {
+                    vue_this.plan_owner_info.company = resp.split('(')[0];
+                    vue_this.plan_owner_info.name = resp.split('(')[1].split(')')[0];
+                }
             });
         });
     },

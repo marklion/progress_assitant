@@ -14,12 +14,16 @@ stuff_plan_management_create_plan_args = class {
   constructor(args) {
     this.plan = null;
     this.ssid = null;
+    this.proxy_company = null;
     if (args) {
       if (args.plan !== undefined && args.plan !== null) {
         this.plan = new stuff_plan(args.plan);
       }
       if (args.ssid !== undefined && args.ssid !== null) {
         this.ssid = args.ssid;
+      }
+      if (args.proxy_company !== undefined && args.proxy_company !== null) {
+        this.proxy_company = args.proxy_company;
       }
     }
   }
@@ -49,6 +53,13 @@ stuff_plan_management_create_plan_args = class {
           input.skip(ftype);
         }
         break;
+        case 3:
+        if (ftype == Thrift.Type.STRING) {
+          this.proxy_company = input.readString().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
         default:
           input.skip(ftype);
       }
@@ -68,6 +79,11 @@ stuff_plan_management_create_plan_args = class {
     if (this.ssid !== null && this.ssid !== undefined) {
       output.writeFieldBegin('ssid', Thrift.Type.STRING, 2);
       output.writeString(this.ssid);
+      output.writeFieldEnd();
+    }
+    if (this.proxy_company !== null && this.proxy_company !== undefined) {
+      output.writeFieldBegin('proxy_company', Thrift.Type.STRING, 3);
+      output.writeString(this.proxy_company);
       output.writeFieldEnd();
     }
     output.writeFieldStop();
@@ -1832,19 +1848,20 @@ stuff_plan_managementClient = class stuff_plan_managementClient {
     this.seqid = 0;
   }
 
-  create_plan (plan, ssid) {
+  create_plan (plan, ssid, proxy_company) {
     const self = this;
     return new Promise((resolve, reject) => {
-      self.send_create_plan(plan, ssid, (error, result) => {
+      self.send_create_plan(plan, ssid, proxy_company, (error, result) => {
         return error ? reject(error) : resolve(result);
       });
     });
   }
 
-  send_create_plan (plan, ssid, callback) {
+  send_create_plan (plan, ssid, proxy_company, callback) {
     const params = {
       plan: plan,
-      ssid: ssid
+      ssid: ssid,
+      proxy_company: proxy_company
     };
     const args = new stuff_plan_management_create_plan_args(params);
     try {

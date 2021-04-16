@@ -793,6 +793,7 @@ stuff_plan = class {
     this.except_close_by = null;
     this.except_close_timestamp = null;
     this.except_close_reason = null;
+    this.proxy_company = null;
     if (args) {
       if (args.type_id !== undefined && args.type_id !== null) {
         this.type_id = args.type_id;
@@ -853,6 +854,9 @@ stuff_plan = class {
       }
       if (args.except_close_reason !== undefined && args.except_close_reason !== null) {
         this.except_close_reason = args.except_close_reason;
+      }
+      if (args.proxy_company !== undefined && args.proxy_company !== null) {
+        this.proxy_company = args.proxy_company;
       }
     }
   }
@@ -1018,6 +1022,13 @@ stuff_plan = class {
           input.skip(ftype);
         }
         break;
+        case 21:
+        if (ftype == Thrift.Type.STRING) {
+          this.proxy_company = input.readString().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
         default:
           input.skip(ftype);
       }
@@ -1134,6 +1145,11 @@ stuff_plan = class {
     if (this.except_close_reason !== null && this.except_close_reason !== undefined) {
       output.writeFieldBegin('except_close_reason', Thrift.Type.STRING, 20);
       output.writeString(this.except_close_reason);
+      output.writeFieldEnd();
+    }
+    if (this.proxy_company !== null && this.proxy_company !== undefined) {
+      output.writeFieldBegin('proxy_company', Thrift.Type.STRING, 21);
+      output.writeString(this.proxy_company);
       output.writeFieldEnd();
     }
     output.writeFieldStop();

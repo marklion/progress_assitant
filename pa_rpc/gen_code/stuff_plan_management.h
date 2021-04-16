@@ -22,7 +22,7 @@
 class stuff_plan_managementIf {
  public:
   virtual ~stuff_plan_managementIf() {}
-  virtual int64_t create_plan(const stuff_plan& plan, const std::string& ssid) = 0;
+  virtual int64_t create_plan(const stuff_plan& plan, const std::string& ssid, const std::string& proxy_company) = 0;
   virtual void get_created_plan(std::vector<plan_status> & _return, const std::string& ssid) = 0;
   virtual void get_company_plan(std::vector<plan_status> & _return, const std::string& ssid) = 0;
   virtual void get_plan(stuff_plan& _return, const int64_t plan_id) = 0;
@@ -64,7 +64,7 @@ class stuff_plan_managementIfSingletonFactory : virtual public stuff_plan_manage
 class stuff_plan_managementNull : virtual public stuff_plan_managementIf {
  public:
   virtual ~stuff_plan_managementNull() {}
-  int64_t create_plan(const stuff_plan& /* plan */, const std::string& /* ssid */) {
+  int64_t create_plan(const stuff_plan& /* plan */, const std::string& /* ssid */, const std::string& /* proxy_company */) {
     int64_t _return = 0;
     return _return;
   }
@@ -115,9 +115,10 @@ class stuff_plan_managementNull : virtual public stuff_plan_managementIf {
 };
 
 typedef struct _stuff_plan_management_create_plan_args__isset {
-  _stuff_plan_management_create_plan_args__isset() : plan(false), ssid(false) {}
+  _stuff_plan_management_create_plan_args__isset() : plan(false), ssid(false), proxy_company(false) {}
   bool plan :1;
   bool ssid :1;
+  bool proxy_company :1;
 } _stuff_plan_management_create_plan_args__isset;
 
 class stuff_plan_management_create_plan_args {
@@ -125,12 +126,13 @@ class stuff_plan_management_create_plan_args {
 
   stuff_plan_management_create_plan_args(const stuff_plan_management_create_plan_args&);
   stuff_plan_management_create_plan_args& operator=(const stuff_plan_management_create_plan_args&);
-  stuff_plan_management_create_plan_args() : ssid() {
+  stuff_plan_management_create_plan_args() : ssid(), proxy_company() {
   }
 
   virtual ~stuff_plan_management_create_plan_args() noexcept;
   stuff_plan plan;
   std::string ssid;
+  std::string proxy_company;
 
   _stuff_plan_management_create_plan_args__isset __isset;
 
@@ -138,11 +140,15 @@ class stuff_plan_management_create_plan_args {
 
   void __set_ssid(const std::string& val);
 
+  void __set_proxy_company(const std::string& val);
+
   bool operator == (const stuff_plan_management_create_plan_args & rhs) const
   {
     if (!(plan == rhs.plan))
       return false;
     if (!(ssid == rhs.ssid))
+      return false;
+    if (!(proxy_company == rhs.proxy_company))
       return false;
     return true;
   }
@@ -165,6 +171,7 @@ class stuff_plan_management_create_plan_pargs {
   virtual ~stuff_plan_management_create_plan_pargs() noexcept;
   const stuff_plan* plan;
   const std::string* ssid;
+  const std::string* proxy_company;
 
   uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
 
@@ -1686,8 +1693,8 @@ class stuff_plan_managementClient : virtual public stuff_plan_managementIf {
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> getOutputProtocol() {
     return poprot_;
   }
-  int64_t create_plan(const stuff_plan& plan, const std::string& ssid);
-  void send_create_plan(const stuff_plan& plan, const std::string& ssid);
+  int64_t create_plan(const stuff_plan& plan, const std::string& ssid, const std::string& proxy_company);
+  void send_create_plan(const stuff_plan& plan, const std::string& ssid, const std::string& proxy_company);
   int64_t recv_create_plan();
   void get_created_plan(std::vector<plan_status> & _return, const std::string& ssid);
   void send_get_created_plan(const std::string& ssid);
@@ -1797,13 +1804,13 @@ class stuff_plan_managementMultiface : virtual public stuff_plan_managementIf {
     ifaces_.push_back(iface);
   }
  public:
-  int64_t create_plan(const stuff_plan& plan, const std::string& ssid) {
+  int64_t create_plan(const stuff_plan& plan, const std::string& ssid, const std::string& proxy_company) {
     size_t sz = ifaces_.size();
     size_t i = 0;
     for (; i < (sz - 1); ++i) {
-      ifaces_[i]->create_plan(plan, ssid);
+      ifaces_[i]->create_plan(plan, ssid, proxy_company);
     }
-    return ifaces_[i]->create_plan(plan, ssid);
+    return ifaces_[i]->create_plan(plan, ssid, proxy_company);
   }
 
   void get_created_plan(std::vector<plan_status> & _return, const std::string& ssid) {
@@ -1950,8 +1957,8 @@ class stuff_plan_managementConcurrentClient : virtual public stuff_plan_manageme
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> getOutputProtocol() {
     return poprot_;
   }
-  int64_t create_plan(const stuff_plan& plan, const std::string& ssid);
-  int32_t send_create_plan(const stuff_plan& plan, const std::string& ssid);
+  int64_t create_plan(const stuff_plan& plan, const std::string& ssid, const std::string& proxy_company);
+  int32_t send_create_plan(const stuff_plan& plan, const std::string& ssid, const std::string& proxy_company);
   int64_t recv_create_plan(const int32_t seqid);
   void get_created_plan(std::vector<plan_status> & _return, const std::string& ssid);
   int32_t send_get_created_plan(const std::string& ssid);

@@ -45,8 +45,8 @@ export default {
             status: 0,
         };
     },
-    watch:{
-        plan_id:function () {
+    watch: {
+        plan_id: function () {
             this.init_brief_data();
         }
     },
@@ -114,9 +114,13 @@ export default {
                         vue_this.company = detail_resp.company;
                     });
                 } else {
-                    vue_this.$call_remote_process("user_management", 'get_customer_info', [resp.created_by]).then(function (resp) {
-                        vue_this.company = resp;
-                    });
+                    if (resp.proxy_company.length > 0) {
+                        vue_this.company = resp.proxy_company;
+                    } else {
+                        vue_this.$call_remote_process("user_management", 'get_customer_info', [resp.created_by]).then(function (resp) {
+                            vue_this.company = resp;
+                        });
+                    }
                 }
             });
         },

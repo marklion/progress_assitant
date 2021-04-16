@@ -111,6 +111,7 @@ struct stuff_plan {
     18:string except_close_by,
     19:string except_close_timestamp,
     20:string except_close_reason,
+    21:string proxy_company,
 }
 
 struct plan_status {
@@ -120,7 +121,7 @@ struct plan_status {
 }
 
 service stuff_plan_management {
-    i64 create_plan(1:stuff_plan plan, 2:string ssid) throws (1:gen_exp e),
+    i64 create_plan(1:stuff_plan plan, 2:string ssid, 3:string proxy_company) throws (1:gen_exp e),
     list<plan_status> get_created_plan(1:string ssid) throws (1:gen_exp e),
     list<plan_status> get_company_plan(1:string ssid) throws (1:gen_exp e),
     stuff_plan get_plan(1:i64 plan_id) throws (1:gen_exp e),
