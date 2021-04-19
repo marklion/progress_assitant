@@ -1,0 +1,13 @@
+language:cpp
+install:
+  - DEBIAN_FRONTEND=noninteractive apt-get install -y npm nodejs sqlite3 libsqlite3-dev uuid uuid-dev libcurl4-openssl-dev automake bison flex g++ git libboost-all-dev libevent-dev libssl-dev libtool make pkg-config
+  - mkdir thrift_dir
+  - cp depend_docker/thrift-0.14.1.tar.gz ./thrift_dir/
+  - pushd thrift_dir
+  - tar xf thrift-0.14.1.tar.gz
+  - pushd thrift-0.14.1
+  - ./configure --prefix=/usr && make -j 8 && make install
+  - popd
+  - popd
+
+  script: ./build.sh -bf -m build
