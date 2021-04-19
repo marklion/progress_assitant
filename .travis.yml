@@ -10,4 +10,4 @@ install:
   - popd
   - popd
 
-  script: ./build.sh -bf -m build
+script: ./build.sh -bf -m build
