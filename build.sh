@@ -44,7 +44,7 @@ then
         SUB_FOLDER="$SRC_DIR/${SUB_FOLDER}"
         [ -d ${BUILD_DIR}/${COMP_NAME} ] || mkdir $BUILD_DIR/$COMP_NAME
         pushd $BUILD_DIR/$COMP_NAME
-        [ -f Makefile ] || cmake $SUB_FOLDER -D PRJ_INTERNAL_BUILD=${BUILD_DIR}
+        [ -f Makefile ] || cmake -D PRJ_INTERNAL_BUILD=${BUILD_DIR} $SUB_FOLDER
 
         [ $? == "0" ] && make -j 8 || exit -1
         popd
