@@ -1,14 +1,26 @@
 dist: focal
-install:
-- DEBIAN_FRONTEND=noninteractive sudo apt-get install -y libpython3-dev npm nodejs sqlite3 libsqlite3-dev uuid uuid-dev libcurl4-openssl-dev automake bison flex g++ git libboost-all-dev libevent-dev libssl-dev libtool make pkg-config
-- mkdir thrift_dir
-- cp depend_docker/thrift-0.14.1.tar.gz ./thrift_dir/
-- pushd thrift_dir
-- tar xf thrift-0.14.1.tar.gz
-- pushd thrift-0.14.1
-- ./configure --prefix=/usr --without-ruby --without-java --without-go --without-erlang --without-perl --without-qt5 --without-lua --without-php --without-nodejs --without-php_extension && make -j 8 && sudo make install
-- popd
-- popd
+env:
+  global:
+  - secure: "RCXJuQPYa5LqhN7Oq2sZSk5Nye/GIWKfPbfbE13bgQ9m2Ij/ynVWcpy5MrmzBt1WujG3XnRtQfGqAHH9O2ZDSra+Vd5I5osr61kxEV0oFlicP0fwp+JTwo5XwsVIQ1+MSia85V0TUIv0qQtnOjplEz7V1fogOxp187NzY/c3PUvt1hH9VUj8Egoj0QO1yavxa3ixlh8M2/WvHbS4Q2x+TngJ8btiTVmY3/huUJYybiKqBfd3OBrTznIsWQg/GR7HRL7Qt8Mf5MA6fFyappq47voQnFY1nKbrJ7typfrIt4+ssdoxBBaqp9638ASZ21Amsby//OVoOoeua8nKSnkEFRYJB5qtJGZaIbqPY1pyijdAENcH2EC/WwvVEnIqVjymgIqp+ym1Ls00yPllT5f4mwmQLYwqYPb/hfnEse70uOK7QNXCd0V9aagVGF279K6zyNuERd+j5mEBc8qUbm646tpLeKAnA0G1Xoj/4rz8pBpxWuDy8n+pGpFbkwmN+ksYVASvTI8xcajj28IVAL1WP5d6FG+25CQZedVImgyEDobAYLgtsmoA+Bb0DqFPz67gblvepvijs2dmWSHiCHRtzvINqkjxfWM80vNYRhFv6IhygJb1oBS7ctzfZfGSEX59QLUpnUO2lZ9Dt1J7kZkuVbmldm5boyM9XI1r0jHEeLs="
 
-script: 
-- ./build.sh -bf -m build
+before_install:
+  - echo -n | openssl s_client -connect https://scan.coverity.com:443 | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' | sudo tee -a /etc/ssl/certs/ca-
+  - DEBIAN_FRONTEND=noninteractive sudo apt-get install -y libpython3-dev npm nodejs sqlite3 libsqlite3-dev uuid uuid-dev libcurl4-openssl-dev automake bison flex g++ git libboost-all-dev libevent-dev libssl-dev libtool make pkg-config
+  - mkdir thrift_dir
+  - cp depend_docker/thrift-0.14.1.tar.gz ./thrift_dir/
+  - pushd thrift_dir
+  - tar xf thrift-0.14.1.tar.gz
+  - pushd thrift-0.14.1
+  - ./configure --prefix=/usr --without-ruby --without-java --without-go --without-erlang --without-perl --without-qt5 --without-lua --without-php --without-nodejs --without-php_extension && make -j 8 && sudo make install
+  - popd
+  - popd
+
+addons:
+  coverity_scan:
+    project:
+      name: "marklion/progress_assitant"
+      description: "cov_build"
+    notification_email: marklion@sina.com
+    build_command_prepend: ""
+    build_command: "./build.sh -bf -m build"
+    branch_pattern: main
