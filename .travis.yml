@@ -12,3 +12,13 @@ install:
 
 script: 
 - ./build.sh -bf -m build
+
+deploy:
+  provider: releases
+  skip_cleanup: true
+  file: "build/install.sh"
+  api_key:
+    secure: "$API_KEY"
+  on:
+    tags: true #发布  tag版 时才进行发包   
+    draft: false # 不发表drafs
