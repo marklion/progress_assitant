@@ -21,6 +21,6 @@ before_deploy:
 deploy:
   provider: releases
   skip_cleanup: true
-  file: "$TRAVIS_BUILD_DIR/build/install.sh"
-  api_key:
-    secure: "$API_KEY"
+  file: "${TRAVIS_BUILD_DIR}/build/install.sh"
+  api_key: ${API_KEY}
+  draft: true
