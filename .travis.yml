@@ -1,11 +1,11 @@
 install:
-- DEBIAN_FRONTEND=noninteractive apt-get install -y npm nodejs sqlite3 libsqlite3-dev uuid uuid-dev libcurl4-openssl-dev automake bison flex g++ git libboost-all-dev libevent-dev libssl-dev libtool make pkg-config
+- DEBIAN_FRONTEND=noninteractive sudo apt-get install -y npm nodejs sqlite3 libsqlite3-dev uuid uuid-dev libcurl4-openssl-dev automake bison flex g++ git libboost-all-dev libevent-dev libssl-dev libtool make pkg-config
 - mkdir thrift_dir
 - cp depend_docker/thrift-0.14.1.tar.gz ./thrift_dir/
 - pushd thrift_dir
 - tar xf thrift-0.14.1.tar.gz
 - pushd thrift-0.14.1
-- ./configure --prefix=/usr && make -j 8 && make install
+- ./configure --prefix=/usr && make -j 8 && sudo make install
 - popd
 - popd
 
