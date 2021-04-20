@@ -1388,20 +1388,16 @@ stuff_plan_management_confirm_close_result = class {
   }
 
 };
-stuff_plan_management_export_plan_to_email_args = class {
+stuff_plan_management_export_plan_args = class {
   constructor(args) {
     this.ssid = null;
     this.plan_ids = null;
-    this.email = null;
     if (args) {
       if (args.ssid !== undefined && args.ssid !== null) {
         this.ssid = args.ssid;
       }
       if (args.plan_ids !== undefined && args.plan_ids !== null) {
         this.plan_ids = Thrift.copyList(args.plan_ids, [null]);
-      }
-      if (args.email !== undefined && args.email !== null) {
-        this.email = args.email;
       }
     }
   }
@@ -1438,13 +1434,6 @@ stuff_plan_management_export_plan_to_email_args = class {
           input.skip(ftype);
         }
         break;
-        case 3:
-        if (ftype == Thrift.Type.STRING) {
-          this.email = input.readString().value;
-        } else {
-          input.skip(ftype);
-        }
-        break;
         default:
           input.skip(ftype);
       }
@@ -1455,7 +1444,7 @@ stuff_plan_management_export_plan_to_email_args = class {
   }
 
   write (output) {
-    output.writeStructBegin('stuff_plan_management_export_plan_to_email_args');
+    output.writeStructBegin('stuff_plan_management_export_plan_args');
     if (this.ssid !== null && this.ssid !== undefined) {
       output.writeFieldBegin('ssid', Thrift.Type.STRING, 1);
       output.writeString(this.ssid);
@@ -1473,18 +1462,13 @@ stuff_plan_management_export_plan_to_email_args = class {
       output.writeListEnd();
       output.writeFieldEnd();
     }
-    if (this.email !== null && this.email !== undefined) {
-      output.writeFieldBegin('email', Thrift.Type.STRING, 3);
-      output.writeString(this.email);
-      output.writeFieldEnd();
-    }
     output.writeFieldStop();
     output.writeStructEnd();
     return;
   }
 
 };
-stuff_plan_management_export_plan_to_email_result = class {
+stuff_plan_management_export_plan_result = class {
   constructor(args) {
     this.success = null;
     this.e = null;
@@ -1513,8 +1497,8 @@ stuff_plan_management_export_plan_to_email_result = class {
       }
       switch (fid) {
         case 0:
-        if (ftype == Thrift.Type.BOOL) {
-          this.success = input.readBool().value;
+        if (ftype == Thrift.Type.STRING) {
+          this.success = input.readString().value;
         } else {
           input.skip(ftype);
         }
@@ -1537,10 +1521,10 @@ stuff_plan_management_export_plan_to_email_result = class {
   }
 
   write (output) {
-    output.writeStructBegin('stuff_plan_management_export_plan_to_email_result');
+    output.writeStructBegin('stuff_plan_management_export_plan_result');
     if (this.success !== null && this.success !== undefined) {
-      output.writeFieldBegin('success', Thrift.Type.BOOL, 0);
-      output.writeBool(this.success);
+      output.writeFieldBegin('success', Thrift.Type.STRING, 0);
+      output.writeString(this.success);
       output.writeFieldEnd();
     }
     if (this.e !== null && this.e !== undefined) {
@@ -1828,6 +1812,157 @@ stuff_plan_management_verify_plan_result = class {
     if (this.success !== null && this.success !== undefined) {
       output.writeFieldBegin('success', Thrift.Type.STRING, 0);
       output.writeString(this.success);
+      output.writeFieldEnd();
+    }
+    if (this.e !== null && this.e !== undefined) {
+      output.writeFieldBegin('e', Thrift.Type.STRUCT, 1);
+      this.e.write(output);
+      output.writeFieldEnd();
+    }
+    output.writeFieldStop();
+    output.writeStructEnd();
+    return;
+  }
+
+};
+stuff_plan_management_send_file_via_email_args = class {
+  constructor(args) {
+    this.ssid = null;
+    this.filepath = null;
+    this.email = null;
+    if (args) {
+      if (args.ssid !== undefined && args.ssid !== null) {
+        this.ssid = args.ssid;
+      }
+      if (args.filepath !== undefined && args.filepath !== null) {
+        this.filepath = args.filepath;
+      }
+      if (args.email !== undefined && args.email !== null) {
+        this.email = args.email;
+      }
+    }
+  }
+
+  read (input) {
+    input.readStructBegin();
+    while (true) {
+      const ret = input.readFieldBegin();
+      const ftype = ret.ftype;
+      const fid = ret.fid;
+      if (ftype == Thrift.Type.STOP) {
+        break;
+      }
+      switch (fid) {
+        case 1:
+        if (ftype == Thrift.Type.STRING) {
+          this.ssid = input.readString().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        case 2:
+        if (ftype == Thrift.Type.STRING) {
+          this.filepath = input.readString().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        case 3:
+        if (ftype == Thrift.Type.STRING) {
+          this.email = input.readString().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        default:
+          input.skip(ftype);
+      }
+      input.readFieldEnd();
+    }
+    input.readStructEnd();
+    return;
+  }
+
+  write (output) {
+    output.writeStructBegin('stuff_plan_management_send_file_via_email_args');
+    if (this.ssid !== null && this.ssid !== undefined) {
+      output.writeFieldBegin('ssid', Thrift.Type.STRING, 1);
+      output.writeString(this.ssid);
+      output.writeFieldEnd();
+    }
+    if (this.filepath !== null && this.filepath !== undefined) {
+      output.writeFieldBegin('filepath', Thrift.Type.STRING, 2);
+      output.writeString(this.filepath);
+      output.writeFieldEnd();
+    }
+    if (this.email !== null && this.email !== undefined) {
+      output.writeFieldBegin('email', Thrift.Type.STRING, 3);
+      output.writeString(this.email);
+      output.writeFieldEnd();
+    }
+    output.writeFieldStop();
+    output.writeStructEnd();
+    return;
+  }
+
+};
+stuff_plan_management_send_file_via_email_result = class {
+  constructor(args) {
+    this.success = null;
+    this.e = null;
+    if (args instanceof gen_exp) {
+        this.e = args;
+        return;
+    }
+    if (args) {
+      if (args.success !== undefined && args.success !== null) {
+        this.success = args.success;
+      }
+      if (args.e !== undefined && args.e !== null) {
+        this.e = args.e;
+      }
+    }
+  }
+
+  read (input) {
+    input.readStructBegin();
+    while (true) {
+      const ret = input.readFieldBegin();
+      const ftype = ret.ftype;
+      const fid = ret.fid;
+      if (ftype == Thrift.Type.STOP) {
+        break;
+      }
+      switch (fid) {
+        case 0:
+        if (ftype == Thrift.Type.BOOL) {
+          this.success = input.readBool().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        case 1:
+        if (ftype == Thrift.Type.STRUCT) {
+          this.e = new gen_exp();
+          this.e.read(input);
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        default:
+          input.skip(ftype);
+      }
+      input.readFieldEnd();
+    }
+    input.readStructEnd();
+    return;
+  }
+
+  write (output) {
+    output.writeStructBegin('stuff_plan_management_send_file_via_email_result');
+    if (this.success !== null && this.success !== undefined) {
+      output.writeFieldBegin('success', Thrift.Type.BOOL, 0);
+      output.writeBool(this.success);
       output.writeFieldEnd();
     }
     if (this.e !== null && this.e !== undefined) {
@@ -2447,31 +2582,30 @@ stuff_plan_managementClient = class stuff_plan_managementClient {
     throw 'confirm_close failed: unknown result';
   }
 
-  export_plan_to_email (ssid, plan_ids, email) {
+  export_plan (ssid, plan_ids) {
     const self = this;
     return new Promise((resolve, reject) => {
-      self.send_export_plan_to_email(ssid, plan_ids, email, (error, result) => {
+      self.send_export_plan(ssid, plan_ids, (error, result) => {
         return error ? reject(error) : resolve(result);
       });
     });
   }
 
-  send_export_plan_to_email (ssid, plan_ids, email, callback) {
+  send_export_plan (ssid, plan_ids, callback) {
     const params = {
       ssid: ssid,
-      plan_ids: plan_ids,
-      email: email
+      plan_ids: plan_ids
     };
-    const args = new stuff_plan_management_export_plan_to_email_args(params);
+    const args = new stuff_plan_management_export_plan_args(params);
     try {
-      this.output.writeMessageBegin('export_plan_to_email', Thrift.MessageType.CALL, this.seqid);
+      this.output.writeMessageBegin('export_plan', Thrift.MessageType.CALL, this.seqid);
       args.write(this.output);
       this.output.writeMessageEnd();
       const self = this;
       this.output.getTransport().flush(true, () => {
         let error = null, result = null;
         try {
-          result = self.recv_export_plan_to_email();
+          result = self.recv_export_plan();
         } catch (e) {
           error = e;
         }
@@ -2486,7 +2620,7 @@ stuff_plan_managementClient = class stuff_plan_managementClient {
     }
   }
 
-  recv_export_plan_to_email () {
+  recv_export_plan () {
     const ret = this.input.readMessageBegin();
     const mtype = ret.mtype;
     if (mtype == Thrift.MessageType.EXCEPTION) {
@@ -2495,7 +2629,7 @@ stuff_plan_managementClient = class stuff_plan_managementClient {
       this.input.readMessageEnd();
       throw x;
     }
-    const result = new stuff_plan_management_export_plan_to_email_result();
+    const result = new stuff_plan_management_export_plan_result();
     result.read(this.input);
     this.input.readMessageEnd();
 
@@ -2505,7 +2639,7 @@ stuff_plan_managementClient = class stuff_plan_managementClient {
     if (null !== result.success) {
       return result.success;
     }
-    throw 'export_plan_to_email failed: unknown result';
+    throw 'export_plan failed: unknown result';
   }
 
   except_close (plan_id, ssid, reason) {
@@ -2627,5 +2761,66 @@ stuff_plan_managementClient = class stuff_plan_managementClient {
       return result.success;
     }
     throw 'verify_plan failed: unknown result';
+  }
+
+  send_file_via_email (ssid, filepath, email) {
+    const self = this;
+    return new Promise((resolve, reject) => {
+      self.send_send_file_via_email(ssid, filepath, email, (error, result) => {
+        return error ? reject(error) : resolve(result);
+      });
+    });
+  }
+
+  send_send_file_via_email (ssid, filepath, email, callback) {
+    const params = {
+      ssid: ssid,
+      filepath: filepath,
+      email: email
+    };
+    const args = new stuff_plan_management_send_file_via_email_args(params);
+    try {
+      this.output.writeMessageBegin('send_file_via_email', Thrift.MessageType.CALL, this.seqid);
+      args.write(this.output);
+      this.output.writeMessageEnd();
+      const self = this;
+      this.output.getTransport().flush(true, () => {
+        let error = null, result = null;
+        try {
+          result = self.recv_send_file_via_email();
+        } catch (e) {
+          error = e;
+        }
+        callback(error, result);
+      });
+    }
+    catch (e) {
+      if (typeof this.output.getTransport().reset === 'function') {
+        this.output.getTransport().reset();
+      }
+      throw e;
+    }
+  }
+
+  recv_send_file_via_email () {
+    const ret = this.input.readMessageBegin();
+    const mtype = ret.mtype;
+    if (mtype == Thrift.MessageType.EXCEPTION) {
+      const x = new Thrift.TApplicationException();
+      x.read(this.input);
+      this.input.readMessageEnd();
+      throw x;
+    }
+    const result = new stuff_plan_management_send_file_via_email_result();
+    result.read(this.input);
+    this.input.readMessageEnd();
+
+    if (null !== result.e) {
+      throw result.e;
+    }
+    if (null !== result.success) {
+      return result.success;
+    }
+    throw 'send_file_via_email failed: unknown result';
   }
 };

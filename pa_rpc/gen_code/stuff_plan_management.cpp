@@ -2287,11 +2287,11 @@ uint32_t stuff_plan_management_confirm_close_presult::read(::apache::thrift::pro
 }
 
 
-stuff_plan_management_export_plan_to_email_args::~stuff_plan_management_export_plan_to_email_args() noexcept {
+stuff_plan_management_export_plan_args::~stuff_plan_management_export_plan_args() noexcept {
 }
 
 
-uint32_t stuff_plan_management_export_plan_to_email_args::read(::apache::thrift::protocol::TProtocol* iprot) {
+uint32_t stuff_plan_management_export_plan_args::read(::apache::thrift::protocol::TProtocol* iprot) {
 
   ::apache::thrift::protocol::TInputRecursionTracker tracker(*iprot);
   uint32_t xfer = 0;
@@ -2340,14 +2340,6 @@ uint32_t stuff_plan_management_export_plan_to_email_args::read(::apache::thrift:
           xfer += iprot->skip(ftype);
         }
         break;
-      case 3:
-        if (ftype == ::apache::thrift::protocol::T_STRING) {
-          xfer += iprot->readString(this->email);
-          this->__isset.email = true;
-        } else {
-          xfer += iprot->skip(ftype);
-        }
-        break;
       default:
         xfer += iprot->skip(ftype);
         break;
@@ -2360,10 +2352,10 @@ uint32_t stuff_plan_management_export_plan_to_email_args::read(::apache::thrift:
   return xfer;
 }
 
-uint32_t stuff_plan_management_export_plan_to_email_args::write(::apache::thrift::protocol::TProtocol* oprot) const {
+uint32_t stuff_plan_management_export_plan_args::write(::apache::thrift::protocol::TProtocol* oprot) const {
   uint32_t xfer = 0;
   ::apache::thrift::protocol::TOutputRecursionTracker tracker(*oprot);
-  xfer += oprot->writeStructBegin("stuff_plan_management_export_plan_to_email_args");
+  xfer += oprot->writeStructBegin("stuff_plan_management_export_plan_args");
 
   xfer += oprot->writeFieldBegin("ssid", ::apache::thrift::protocol::T_STRING, 1);
   xfer += oprot->writeString(this->ssid);
@@ -2381,24 +2373,20 @@ uint32_t stuff_plan_management_export_plan_to_email_args::write(::apache::thrift
   }
   xfer += oprot->writeFieldEnd();
 
-  xfer += oprot->writeFieldBegin("email", ::apache::thrift::protocol::T_STRING, 3);
-  xfer += oprot->writeString(this->email);
-  xfer += oprot->writeFieldEnd();
-
   xfer += oprot->writeFieldStop();
   xfer += oprot->writeStructEnd();
   return xfer;
 }
 
 
-stuff_plan_management_export_plan_to_email_pargs::~stuff_plan_management_export_plan_to_email_pargs() noexcept {
+stuff_plan_management_export_plan_pargs::~stuff_plan_management_export_plan_pargs() noexcept {
 }
 
 
-uint32_t stuff_plan_management_export_plan_to_email_pargs::write(::apache::thrift::protocol::TProtocol* oprot) const {
+uint32_t stuff_plan_management_export_plan_pargs::write(::apache::thrift::protocol::TProtocol* oprot) const {
   uint32_t xfer = 0;
   ::apache::thrift::protocol::TOutputRecursionTracker tracker(*oprot);
-  xfer += oprot->writeStructBegin("stuff_plan_management_export_plan_to_email_pargs");
+  xfer += oprot->writeStructBegin("stuff_plan_management_export_plan_pargs");
 
   xfer += oprot->writeFieldBegin("ssid", ::apache::thrift::protocol::T_STRING, 1);
   xfer += oprot->writeString((*(this->ssid)));
@@ -2416,21 +2404,17 @@ uint32_t stuff_plan_management_export_plan_to_email_pargs::write(::apache::thrif
   }
   xfer += oprot->writeFieldEnd();
 
-  xfer += oprot->writeFieldBegin("email", ::apache::thrift::protocol::T_STRING, 3);
-  xfer += oprot->writeString((*(this->email)));
-  xfer += oprot->writeFieldEnd();
-
   xfer += oprot->writeFieldStop();
   xfer += oprot->writeStructEnd();
   return xfer;
 }
 
 
-stuff_plan_management_export_plan_to_email_result::~stuff_plan_management_export_plan_to_email_result() noexcept {
+stuff_plan_management_export_plan_result::~stuff_plan_management_export_plan_result() noexcept {
 }
 
 
-uint32_t stuff_plan_management_export_plan_to_email_result::read(::apache::thrift::protocol::TProtocol* iprot) {
+uint32_t stuff_plan_management_export_plan_result::read(::apache::thrift::protocol::TProtocol* iprot) {
 
   ::apache::thrift::protocol::TInputRecursionTracker tracker(*iprot);
   uint32_t xfer = 0;
@@ -2452,8 +2436,8 @@ uint32_t stuff_plan_management_export_plan_to_email_result::read(::apache::thrif
     switch (fid)
     {
       case 0:
-        if (ftype == ::apache::thrift::protocol::T_BOOL) {
-          xfer += iprot->readBool(this->success);
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->success);
           this->__isset.success = true;
         } else {
           xfer += iprot->skip(ftype);
@@ -2479,15 +2463,15 @@ uint32_t stuff_plan_management_export_plan_to_email_result::read(::apache::thrif
   return xfer;
 }
 
-uint32_t stuff_plan_management_export_plan_to_email_result::write(::apache::thrift::protocol::TProtocol* oprot) const {
+uint32_t stuff_plan_management_export_plan_result::write(::apache::thrift::protocol::TProtocol* oprot) const {
 
   uint32_t xfer = 0;
 
-  xfer += oprot->writeStructBegin("stuff_plan_management_export_plan_to_email_result");
+  xfer += oprot->writeStructBegin("stuff_plan_management_export_plan_result");
 
   if (this->__isset.success) {
-    xfer += oprot->writeFieldBegin("success", ::apache::thrift::protocol::T_BOOL, 0);
-    xfer += oprot->writeBool(this->success);
+    xfer += oprot->writeFieldBegin("success", ::apache::thrift::protocol::T_STRING, 0);
+    xfer += oprot->writeString(this->success);
     xfer += oprot->writeFieldEnd();
   } else if (this->__isset.e) {
     xfer += oprot->writeFieldBegin("e", ::apache::thrift::protocol::T_STRUCT, 1);
@@ -2500,11 +2484,11 @@ uint32_t stuff_plan_management_export_plan_to_email_result::write(::apache::thri
 }
 
 
-stuff_plan_management_export_plan_to_email_presult::~stuff_plan_management_export_plan_to_email_presult() noexcept {
+stuff_plan_management_export_plan_presult::~stuff_plan_management_export_plan_presult() noexcept {
 }
 
 
-uint32_t stuff_plan_management_export_plan_to_email_presult::read(::apache::thrift::protocol::TProtocol* iprot) {
+uint32_t stuff_plan_management_export_plan_presult::read(::apache::thrift::protocol::TProtocol* iprot) {
 
   ::apache::thrift::protocol::TInputRecursionTracker tracker(*iprot);
   uint32_t xfer = 0;
@@ -2526,8 +2510,8 @@ uint32_t stuff_plan_management_export_plan_to_email_presult::read(::apache::thri
     switch (fid)
     {
       case 0:
-        if (ftype == ::apache::thrift::protocol::T_BOOL) {
-          xfer += iprot->readBool((*(this->success)));
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString((*(this->success)));
           this->__isset.success = true;
         } else {
           xfer += iprot->skip(ftype);
@@ -2990,6 +2974,245 @@ uint32_t stuff_plan_management_verify_plan_presult::read(::apache::thrift::proto
       case 0:
         if (ftype == ::apache::thrift::protocol::T_STRING) {
           xfer += iprot->readString((*(this->success)));
+          this->__isset.success = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 1:
+        if (ftype == ::apache::thrift::protocol::T_STRUCT) {
+          xfer += this->e.read(iprot);
+          this->__isset.e = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      default:
+        xfer += iprot->skip(ftype);
+        break;
+    }
+    xfer += iprot->readFieldEnd();
+  }
+
+  xfer += iprot->readStructEnd();
+
+  return xfer;
+}
+
+
+stuff_plan_management_send_file_via_email_args::~stuff_plan_management_send_file_via_email_args() noexcept {
+}
+
+
+uint32_t stuff_plan_management_send_file_via_email_args::read(::apache::thrift::protocol::TProtocol* iprot) {
+
+  ::apache::thrift::protocol::TInputRecursionTracker tracker(*iprot);
+  uint32_t xfer = 0;
+  std::string fname;
+  ::apache::thrift::protocol::TType ftype;
+  int16_t fid;
+
+  xfer += iprot->readStructBegin(fname);
+
+  using ::apache::thrift::protocol::TProtocolException;
+
+
+  while (true)
+  {
+    xfer += iprot->readFieldBegin(fname, ftype, fid);
+    if (ftype == ::apache::thrift::protocol::T_STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 1:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->ssid);
+          this->__isset.ssid = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 2:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->filepath);
+          this->__isset.filepath = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 3:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->email);
+          this->__isset.email = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      default:
+        xfer += iprot->skip(ftype);
+        break;
+    }
+    xfer += iprot->readFieldEnd();
+  }
+
+  xfer += iprot->readStructEnd();
+
+  return xfer;
+}
+
+uint32_t stuff_plan_management_send_file_via_email_args::write(::apache::thrift::protocol::TProtocol* oprot) const {
+  uint32_t xfer = 0;
+  ::apache::thrift::protocol::TOutputRecursionTracker tracker(*oprot);
+  xfer += oprot->writeStructBegin("stuff_plan_management_send_file_via_email_args");
+
+  xfer += oprot->writeFieldBegin("ssid", ::apache::thrift::protocol::T_STRING, 1);
+  xfer += oprot->writeString(this->ssid);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("filepath", ::apache::thrift::protocol::T_STRING, 2);
+  xfer += oprot->writeString(this->filepath);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("email", ::apache::thrift::protocol::T_STRING, 3);
+  xfer += oprot->writeString(this->email);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldStop();
+  xfer += oprot->writeStructEnd();
+  return xfer;
+}
+
+
+stuff_plan_management_send_file_via_email_pargs::~stuff_plan_management_send_file_via_email_pargs() noexcept {
+}
+
+
+uint32_t stuff_plan_management_send_file_via_email_pargs::write(::apache::thrift::protocol::TProtocol* oprot) const {
+  uint32_t xfer = 0;
+  ::apache::thrift::protocol::TOutputRecursionTracker tracker(*oprot);
+  xfer += oprot->writeStructBegin("stuff_plan_management_send_file_via_email_pargs");
+
+  xfer += oprot->writeFieldBegin("ssid", ::apache::thrift::protocol::T_STRING, 1);
+  xfer += oprot->writeString((*(this->ssid)));
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("filepath", ::apache::thrift::protocol::T_STRING, 2);
+  xfer += oprot->writeString((*(this->filepath)));
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("email", ::apache::thrift::protocol::T_STRING, 3);
+  xfer += oprot->writeString((*(this->email)));
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldStop();
+  xfer += oprot->writeStructEnd();
+  return xfer;
+}
+
+
+stuff_plan_management_send_file_via_email_result::~stuff_plan_management_send_file_via_email_result() noexcept {
+}
+
+
+uint32_t stuff_plan_management_send_file_via_email_result::read(::apache::thrift::protocol::TProtocol* iprot) {
+
+  ::apache::thrift::protocol::TInputRecursionTracker tracker(*iprot);
+  uint32_t xfer = 0;
+  std::string fname;
+  ::apache::thrift::protocol::TType ftype;
+  int16_t fid;
+
+  xfer += iprot->readStructBegin(fname);
+
+  using ::apache::thrift::protocol::TProtocolException;
+
+
+  while (true)
+  {
+    xfer += iprot->readFieldBegin(fname, ftype, fid);
+    if (ftype == ::apache::thrift::protocol::T_STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 0:
+        if (ftype == ::apache::thrift::protocol::T_BOOL) {
+          xfer += iprot->readBool(this->success);
+          this->__isset.success = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 1:
+        if (ftype == ::apache::thrift::protocol::T_STRUCT) {
+          xfer += this->e.read(iprot);
+          this->__isset.e = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      default:
+        xfer += iprot->skip(ftype);
+        break;
+    }
+    xfer += iprot->readFieldEnd();
+  }
+
+  xfer += iprot->readStructEnd();
+
+  return xfer;
+}
+
+uint32_t stuff_plan_management_send_file_via_email_result::write(::apache::thrift::protocol::TProtocol* oprot) const {
+
+  uint32_t xfer = 0;
+
+  xfer += oprot->writeStructBegin("stuff_plan_management_send_file_via_email_result");
+
+  if (this->__isset.success) {
+    xfer += oprot->writeFieldBegin("success", ::apache::thrift::protocol::T_BOOL, 0);
+    xfer += oprot->writeBool(this->success);
+    xfer += oprot->writeFieldEnd();
+  } else if (this->__isset.e) {
+    xfer += oprot->writeFieldBegin("e", ::apache::thrift::protocol::T_STRUCT, 1);
+    xfer += this->e.write(oprot);
+    xfer += oprot->writeFieldEnd();
+  }
+  xfer += oprot->writeFieldStop();
+  xfer += oprot->writeStructEnd();
+  return xfer;
+}
+
+
+stuff_plan_management_send_file_via_email_presult::~stuff_plan_management_send_file_via_email_presult() noexcept {
+}
+
+
+uint32_t stuff_plan_management_send_file_via_email_presult::read(::apache::thrift::protocol::TProtocol* iprot) {
+
+  ::apache::thrift::protocol::TInputRecursionTracker tracker(*iprot);
+  uint32_t xfer = 0;
+  std::string fname;
+  ::apache::thrift::protocol::TType ftype;
+  int16_t fid;
+
+  xfer += iprot->readStructBegin(fname);
+
+  using ::apache::thrift::protocol::TProtocolException;
+
+
+  while (true)
+  {
+    xfer += iprot->readFieldBegin(fname, ftype, fid);
+    if (ftype == ::apache::thrift::protocol::T_STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 0:
+        if (ftype == ::apache::thrift::protocol::T_BOOL) {
+          xfer += iprot->readBool((*(this->success)));
           this->__isset.success = true;
         } else {
           xfer += iprot->skip(ftype);
@@ -3634,21 +3857,20 @@ bool stuff_plan_managementClient::recv_confirm_close()
   throw ::apache::thrift::TApplicationException(::apache::thrift::TApplicationException::MISSING_RESULT, "confirm_close failed: unknown result");
 }
 
-bool stuff_plan_managementClient::export_plan_to_email(const std::string& ssid, const std::vector<int64_t> & plan_ids, const std::string& email)
+void stuff_plan_managementClient::export_plan(std::string& _return, const std::string& ssid, const std::vector<int64_t> & plan_ids)
 {
-  send_export_plan_to_email(ssid, plan_ids, email);
-  return recv_export_plan_to_email();
+  send_export_plan(ssid, plan_ids);
+  recv_export_plan(_return);
 }
 
-void stuff_plan_managementClient::send_export_plan_to_email(const std::string& ssid, const std::vector<int64_t> & plan_ids, const std::string& email)
+void stuff_plan_managementClient::send_export_plan(const std::string& ssid, const std::vector<int64_t> & plan_ids)
 {
   int32_t cseqid = 0;
-  oprot_->writeMessageBegin("export_plan_to_email", ::apache::thrift::protocol::T_CALL, cseqid);
+  oprot_->writeMessageBegin("export_plan", ::apache::thrift::protocol::T_CALL, cseqid);
 
-  stuff_plan_management_export_plan_to_email_pargs args;
+  stuff_plan_management_export_plan_pargs args;
   args.ssid = &ssid;
   args.plan_ids = &plan_ids;
-  args.email = &email;
   args.write(oprot_);
 
   oprot_->writeMessageEnd();
@@ -3656,7 +3878,7 @@ void stuff_plan_managementClient::send_export_plan_to_email(const std::string& s
   oprot_->getTransport()->flush();
 }
 
-bool stuff_plan_managementClient::recv_export_plan_to_email()
+void stuff_plan_managementClient::recv_export_plan(std::string& _return)
 {
 
   int32_t rseqid = 0;
@@ -3676,25 +3898,25 @@ bool stuff_plan_managementClient::recv_export_plan_to_email()
     iprot_->readMessageEnd();
     iprot_->getTransport()->readEnd();
   }
-  if (fname.compare("export_plan_to_email") != 0) {
+  if (fname.compare("export_plan") != 0) {
     iprot_->skip(::apache::thrift::protocol::T_STRUCT);
     iprot_->readMessageEnd();
     iprot_->getTransport()->readEnd();
   }
-  bool _return;
-  stuff_plan_management_export_plan_to_email_presult result;
+  stuff_plan_management_export_plan_presult result;
   result.success = &_return;
   result.read(iprot_);
   iprot_->readMessageEnd();
   iprot_->getTransport()->readEnd();
 
   if (result.__isset.success) {
-    return _return;
+    // _return pointer has now been filled
+    return;
   }
   if (result.__isset.e) {
     throw result.e;
   }
-  throw ::apache::thrift::TApplicationException(::apache::thrift::TApplicationException::MISSING_RESULT, "export_plan_to_email failed: unknown result");
+  throw ::apache::thrift::TApplicationException(::apache::thrift::TApplicationException::MISSING_RESULT, "export_plan failed: unknown result");
 }
 
 bool stuff_plan_managementClient::except_close(const int64_t plan_id, const std::string& ssid, const std::string& reason)
@@ -3820,6 +4042,69 @@ void stuff_plan_managementClient::recv_verify_plan(std::string& _return)
     throw result.e;
   }
   throw ::apache::thrift::TApplicationException(::apache::thrift::TApplicationException::MISSING_RESULT, "verify_plan failed: unknown result");
+}
+
+bool stuff_plan_managementClient::send_file_via_email(const std::string& ssid, const std::string& filepath, const std::string& email)
+{
+  send_send_file_via_email(ssid, filepath, email);
+  return recv_send_file_via_email();
+}
+
+void stuff_plan_managementClient::send_send_file_via_email(const std::string& ssid, const std::string& filepath, const std::string& email)
+{
+  int32_t cseqid = 0;
+  oprot_->writeMessageBegin("send_file_via_email", ::apache::thrift::protocol::T_CALL, cseqid);
+
+  stuff_plan_management_send_file_via_email_pargs args;
+  args.ssid = &ssid;
+  args.filepath = &filepath;
+  args.email = &email;
+  args.write(oprot_);
+
+  oprot_->writeMessageEnd();
+  oprot_->getTransport()->writeEnd();
+  oprot_->getTransport()->flush();
+}
+
+bool stuff_plan_managementClient::recv_send_file_via_email()
+{
+
+  int32_t rseqid = 0;
+  std::string fname;
+  ::apache::thrift::protocol::TMessageType mtype;
+
+  iprot_->readMessageBegin(fname, mtype, rseqid);
+  if (mtype == ::apache::thrift::protocol::T_EXCEPTION) {
+    ::apache::thrift::TApplicationException x;
+    x.read(iprot_);
+    iprot_->readMessageEnd();
+    iprot_->getTransport()->readEnd();
+    throw x;
+  }
+  if (mtype != ::apache::thrift::protocol::T_REPLY) {
+    iprot_->skip(::apache::thrift::protocol::T_STRUCT);
+    iprot_->readMessageEnd();
+    iprot_->getTransport()->readEnd();
+  }
+  if (fname.compare("send_file_via_email") != 0) {
+    iprot_->skip(::apache::thrift::protocol::T_STRUCT);
+    iprot_->readMessageEnd();
+    iprot_->getTransport()->readEnd();
+  }
+  bool _return;
+  stuff_plan_management_send_file_via_email_presult result;
+  result.success = &_return;
+  result.read(iprot_);
+  iprot_->readMessageEnd();
+  iprot_->getTransport()->readEnd();
+
+  if (result.__isset.success) {
+    return _return;
+  }
+  if (result.__isset.e) {
+    throw result.e;
+  }
+  throw ::apache::thrift::TApplicationException(::apache::thrift::TApplicationException::MISSING_RESULT, "send_file_via_email failed: unknown result");
 }
 
 bool stuff_plan_managementProcessor::dispatchCall(::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, const std::string& fname, int32_t seqid, void* callContext) {
@@ -4411,41 +4696,41 @@ void stuff_plan_managementProcessor::process_confirm_close(int32_t seqid, ::apac
   }
 }
 
-void stuff_plan_managementProcessor::process_export_plan_to_email(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext)
+void stuff_plan_managementProcessor::process_export_plan(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext)
 {
   void* ctx = nullptr;
   if (this->eventHandler_.get() != nullptr) {
-    ctx = this->eventHandler_->getContext("stuff_plan_management.export_plan_to_email", callContext);
+    ctx = this->eventHandler_->getContext("stuff_plan_management.export_plan", callContext);
   }
-  ::apache::thrift::TProcessorContextFreer freer(this->eventHandler_.get(), ctx, "stuff_plan_management.export_plan_to_email");
+  ::apache::thrift::TProcessorContextFreer freer(this->eventHandler_.get(), ctx, "stuff_plan_management.export_plan");
 
   if (this->eventHandler_.get() != nullptr) {
-    this->eventHandler_->preRead(ctx, "stuff_plan_management.export_plan_to_email");
+    this->eventHandler_->preRead(ctx, "stuff_plan_management.export_plan");
   }
 
-  stuff_plan_management_export_plan_to_email_args args;
+  stuff_plan_management_export_plan_args args;
   args.read(iprot);
   iprot->readMessageEnd();
   uint32_t bytes = iprot->getTransport()->readEnd();
 
   if (this->eventHandler_.get() != nullptr) {
-    this->eventHandler_->postRead(ctx, "stuff_plan_management.export_plan_to_email", bytes);
+    this->eventHandler_->postRead(ctx, "stuff_plan_management.export_plan", bytes);
   }
 
-  stuff_plan_management_export_plan_to_email_result result;
+  stuff_plan_management_export_plan_result result;
   try {
-    result.success = iface_->export_plan_to_email(args.ssid, args.plan_ids, args.email);
+    iface_->export_plan(result.success, args.ssid, args.plan_ids);
     result.__isset.success = true;
   } catch (gen_exp &e) {
     result.e = e;
     result.__isset.e = true;
   } catch (const std::exception& e) {
     if (this->eventHandler_.get() != nullptr) {
-      this->eventHandler_->handlerError(ctx, "stuff_plan_management.export_plan_to_email");
+      this->eventHandler_->handlerError(ctx, "stuff_plan_management.export_plan");
     }
 
     ::apache::thrift::TApplicationException x(e.what());
-    oprot->writeMessageBegin("export_plan_to_email", ::apache::thrift::protocol::T_EXCEPTION, seqid);
+    oprot->writeMessageBegin("export_plan", ::apache::thrift::protocol::T_EXCEPTION, seqid);
     x.write(oprot);
     oprot->writeMessageEnd();
     oprot->getTransport()->writeEnd();
@@ -4454,17 +4739,17 @@ void stuff_plan_managementProcessor::process_export_plan_to_email(int32_t seqid,
   }
 
   if (this->eventHandler_.get() != nullptr) {
-    this->eventHandler_->preWrite(ctx, "stuff_plan_management.export_plan_to_email");
+    this->eventHandler_->preWrite(ctx, "stuff_plan_management.export_plan");
   }
 
-  oprot->writeMessageBegin("export_plan_to_email", ::apache::thrift::protocol::T_REPLY, seqid);
+  oprot->writeMessageBegin("export_plan", ::apache::thrift::protocol::T_REPLY, seqid);
   result.write(oprot);
   oprot->writeMessageEnd();
   bytes = oprot->getTransport()->writeEnd();
   oprot->getTransport()->flush();
 
   if (this->eventHandler_.get() != nullptr) {
-    this->eventHandler_->postWrite(ctx, "stuff_plan_management.export_plan_to_email", bytes);
+    this->eventHandler_->postWrite(ctx, "stuff_plan_management.export_plan", bytes);
   }
 }
 
@@ -4579,6 +4864,63 @@ void stuff_plan_managementProcessor::process_verify_plan(int32_t seqid, ::apache
 
   if (this->eventHandler_.get() != nullptr) {
     this->eventHandler_->postWrite(ctx, "stuff_plan_management.verify_plan", bytes);
+  }
+}
+
+void stuff_plan_managementProcessor::process_send_file_via_email(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext)
+{
+  void* ctx = nullptr;
+  if (this->eventHandler_.get() != nullptr) {
+    ctx = this->eventHandler_->getContext("stuff_plan_management.send_file_via_email", callContext);
+  }
+  ::apache::thrift::TProcessorContextFreer freer(this->eventHandler_.get(), ctx, "stuff_plan_management.send_file_via_email");
+
+  if (this->eventHandler_.get() != nullptr) {
+    this->eventHandler_->preRead(ctx, "stuff_plan_management.send_file_via_email");
+  }
+
+  stuff_plan_management_send_file_via_email_args args;
+  args.read(iprot);
+  iprot->readMessageEnd();
+  uint32_t bytes = iprot->getTransport()->readEnd();
+
+  if (this->eventHandler_.get() != nullptr) {
+    this->eventHandler_->postRead(ctx, "stuff_plan_management.send_file_via_email", bytes);
+  }
+
+  stuff_plan_management_send_file_via_email_result result;
+  try {
+    result.success = iface_->send_file_via_email(args.ssid, args.filepath, args.email);
+    result.__isset.success = true;
+  } catch (gen_exp &e) {
+    result.e = e;
+    result.__isset.e = true;
+  } catch (const std::exception& e) {
+    if (this->eventHandler_.get() != nullptr) {
+      this->eventHandler_->handlerError(ctx, "stuff_plan_management.send_file_via_email");
+    }
+
+    ::apache::thrift::TApplicationException x(e.what());
+    oprot->writeMessageBegin("send_file_via_email", ::apache::thrift::protocol::T_EXCEPTION, seqid);
+    x.write(oprot);
+    oprot->writeMessageEnd();
+    oprot->getTransport()->writeEnd();
+    oprot->getTransport()->flush();
+    return;
+  }
+
+  if (this->eventHandler_.get() != nullptr) {
+    this->eventHandler_->preWrite(ctx, "stuff_plan_management.send_file_via_email");
+  }
+
+  oprot->writeMessageBegin("send_file_via_email", ::apache::thrift::protocol::T_REPLY, seqid);
+  result.write(oprot);
+  oprot->writeMessageEnd();
+  bytes = oprot->getTransport()->writeEnd();
+  oprot->getTransport()->flush();
+
+  if (this->eventHandler_.get() != nullptr) {
+    this->eventHandler_->postWrite(ctx, "stuff_plan_management.send_file_via_email", bytes);
   }
 }
 
@@ -5478,22 +5820,21 @@ bool stuff_plan_managementConcurrentClient::recv_confirm_close(const int32_t seq
   } // end while(true)
 }
 
-bool stuff_plan_managementConcurrentClient::export_plan_to_email(const std::string& ssid, const std::vector<int64_t> & plan_ids, const std::string& email)
+void stuff_plan_managementConcurrentClient::export_plan(std::string& _return, const std::string& ssid, const std::vector<int64_t> & plan_ids)
 {
-  int32_t seqid = send_export_plan_to_email(ssid, plan_ids, email);
-  return recv_export_plan_to_email(seqid);
+  int32_t seqid = send_export_plan(ssid, plan_ids);
+  recv_export_plan(_return, seqid);
 }
 
-int32_t stuff_plan_managementConcurrentClient::send_export_plan_to_email(const std::string& ssid, const std::vector<int64_t> & plan_ids, const std::string& email)
+int32_t stuff_plan_managementConcurrentClient::send_export_plan(const std::string& ssid, const std::vector<int64_t> & plan_ids)
 {
   int32_t cseqid = this->sync_->generateSeqId();
   ::apache::thrift::async::TConcurrentSendSentry sentry(this->sync_.get());
-  oprot_->writeMessageBegin("export_plan_to_email", ::apache::thrift::protocol::T_CALL, cseqid);
+  oprot_->writeMessageBegin("export_plan", ::apache::thrift::protocol::T_CALL, cseqid);
 
-  stuff_plan_management_export_plan_to_email_pargs args;
+  stuff_plan_management_export_plan_pargs args;
   args.ssid = &ssid;
   args.plan_ids = &plan_ids;
-  args.email = &email;
   args.write(oprot_);
 
   oprot_->writeMessageEnd();
@@ -5504,7 +5845,7 @@ int32_t stuff_plan_managementConcurrentClient::send_export_plan_to_email(const s
   return cseqid;
 }
 
-bool stuff_plan_managementConcurrentClient::recv_export_plan_to_email(const int32_t seqid)
+void stuff_plan_managementConcurrentClient::recv_export_plan(std::string& _return, const int32_t seqid)
 {
 
   int32_t rseqid = 0;
@@ -5533,7 +5874,7 @@ bool stuff_plan_managementConcurrentClient::recv_export_plan_to_email(const int3
         iprot_->readMessageEnd();
         iprot_->getTransport()->readEnd();
       }
-      if (fname.compare("export_plan_to_email") != 0) {
+      if (fname.compare("export_plan") != 0) {
         iprot_->skip(::apache::thrift::protocol::T_STRUCT);
         iprot_->readMessageEnd();
         iprot_->getTransport()->readEnd();
@@ -5542,23 +5883,23 @@ bool stuff_plan_managementConcurrentClient::recv_export_plan_to_email(const int3
         using ::apache::thrift::protocol::TProtocolException;
         throw TProtocolException(TProtocolException::INVALID_DATA);
       }
-      bool _return;
-      stuff_plan_management_export_plan_to_email_presult result;
+      stuff_plan_management_export_plan_presult result;
       result.success = &_return;
       result.read(iprot_);
       iprot_->readMessageEnd();
       iprot_->getTransport()->readEnd();
 
       if (result.__isset.success) {
+        // _return pointer has now been filled
         sentry.commit();
-        return _return;
+        return;
       }
       if (result.__isset.e) {
         sentry.commit();
         throw result.e;
       }
       // in a bad state, don't commit
-      throw ::apache::thrift::TApplicationException(::apache::thrift::TApplicationException::MISSING_RESULT, "export_plan_to_email failed: unknown result");
+      throw ::apache::thrift::TApplicationException(::apache::thrift::TApplicationException::MISSING_RESULT, "export_plan failed: unknown result");
     }
     // seqid != rseqid
     this->sync_->updatePending(fname, mtype, rseqid);
@@ -5738,6 +6079,96 @@ void stuff_plan_managementConcurrentClient::recv_verify_plan(std::string& _retur
       }
       // in a bad state, don't commit
       throw ::apache::thrift::TApplicationException(::apache::thrift::TApplicationException::MISSING_RESULT, "verify_plan failed: unknown result");
+    }
+    // seqid != rseqid
+    this->sync_->updatePending(fname, mtype, rseqid);
+
+    // this will temporarily unlock the readMutex, and let other clients get work done
+    this->sync_->waitForWork(seqid);
+  } // end while(true)
+}
+
+bool stuff_plan_managementConcurrentClient::send_file_via_email(const std::string& ssid, const std::string& filepath, const std::string& email)
+{
+  int32_t seqid = send_send_file_via_email(ssid, filepath, email);
+  return recv_send_file_via_email(seqid);
+}
+
+int32_t stuff_plan_managementConcurrentClient::send_send_file_via_email(const std::string& ssid, const std::string& filepath, const std::string& email)
+{
+  int32_t cseqid = this->sync_->generateSeqId();
+  ::apache::thrift::async::TConcurrentSendSentry sentry(this->sync_.get());
+  oprot_->writeMessageBegin("send_file_via_email", ::apache::thrift::protocol::T_CALL, cseqid);
+
+  stuff_plan_management_send_file_via_email_pargs args;
+  args.ssid = &ssid;
+  args.filepath = &filepath;
+  args.email = &email;
+  args.write(oprot_);
+
+  oprot_->writeMessageEnd();
+  oprot_->getTransport()->writeEnd();
+  oprot_->getTransport()->flush();
+
+  sentry.commit();
+  return cseqid;
+}
+
+bool stuff_plan_managementConcurrentClient::recv_send_file_via_email(const int32_t seqid)
+{
+
+  int32_t rseqid = 0;
+  std::string fname;
+  ::apache::thrift::protocol::TMessageType mtype;
+
+  // the read mutex gets dropped and reacquired as part of waitForWork()
+  // The destructor of this sentry wakes up other clients
+  ::apache::thrift::async::TConcurrentRecvSentry sentry(this->sync_.get(), seqid);
+
+  while(true) {
+    if(!this->sync_->getPending(fname, mtype, rseqid)) {
+      iprot_->readMessageBegin(fname, mtype, rseqid);
+    }
+    if(seqid == rseqid) {
+      if (mtype == ::apache::thrift::protocol::T_EXCEPTION) {
+        ::apache::thrift::TApplicationException x;
+        x.read(iprot_);
+        iprot_->readMessageEnd();
+        iprot_->getTransport()->readEnd();
+        sentry.commit();
+        throw x;
+      }
+      if (mtype != ::apache::thrift::protocol::T_REPLY) {
+        iprot_->skip(::apache::thrift::protocol::T_STRUCT);
+        iprot_->readMessageEnd();
+        iprot_->getTransport()->readEnd();
+      }
+      if (fname.compare("send_file_via_email") != 0) {
+        iprot_->skip(::apache::thrift::protocol::T_STRUCT);
+        iprot_->readMessageEnd();
+        iprot_->getTransport()->readEnd();
+
+        // in a bad state, don't commit
+        using ::apache::thrift::protocol::TProtocolException;
+        throw TProtocolException(TProtocolException::INVALID_DATA);
+      }
+      bool _return;
+      stuff_plan_management_send_file_via_email_presult result;
+      result.success = &_return;
+      result.read(iprot_);
+      iprot_->readMessageEnd();
+      iprot_->getTransport()->readEnd();
+
+      if (result.__isset.success) {
+        sentry.commit();
+        return _return;
+      }
+      if (result.__isset.e) {
+        sentry.commit();
+        throw result.e;
+      }
+      // in a bad state, don't commit
+      throw ::apache::thrift::TApplicationException(::apache::thrift::TApplicationException::MISSING_RESULT, "send_file_via_email failed: unknown result");
     }
     // seqid != rseqid
     this->sync_->updatePending(fname, mtype, rseqid);

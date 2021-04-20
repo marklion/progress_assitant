@@ -1,14 +1,11 @@
 <template>
 <div class="statistics_show">
     <van-cell title="选择日期区间" :value="date" @click="show_date = true" />
-    <van-calendar  v-model="show_date" get-container="body" position="right" type="range" @confirm="onConfirm" :min-date="minDate" :max-date="maxDate" />
-    <div v-if="download_url">
-        <van-divider>请以下链接复制到浏览器下载</van-divider>
-        <van-cell  :value="download_url"></van-cell>
-    </div>
+    <van-calendar v-model="show_date" get-container="body" position="right" type="range" @confirm="onConfirm" :min-date="minDate" :max-date="maxDate" />
     <div style="margin: 16px;">
         <van-button type="info" round block @click="generate">生成统计表</van-button>
     </div>
+    <export-file :remote_file="download_url" v-model="show_export_file"></export-file>
 </div>
 </template>
 
@@ -24,13 +21,16 @@ import {
 import {
     Button
 } from 'vant';
-import { Divider } from 'vant';
+import {
+    Divider
+} from 'vant';
 
 Vue.use(Divider);
 Vue.use(Button);
 Vue.use(Cell);
 Vue.use(CellGroup);
 Vue.use(Calendar);
+import ExportFile from '../components/ExportFile.vue'
 export default {
     name: 'Statistics',
     data: function () {
@@ -41,15 +41,20 @@ export default {
             show_date: false,
             minDate: new Date(),
             maxDate: new Date(),
-            download_url:'',
+            download_url: '',
+            show_export_file: false,
         };
+    },
+    components: {
+        "export-file": ExportFile,
     },
     methods: {
         generate: function () {
             var vue_this = this;
-            vue_this.$call_remote_process("company_management",'generate_statistics', [vue_this.$cookies.get('pa_ssid'), vue_this.begin_date, vue_this.end_date]).then(function (resp) {
+            vue_this.$call_remote_process("company_management", 'generate_statistics', [vue_this.$cookies.get('pa_ssid'), vue_this.begin_date, vue_this.end_date]).then(function (resp) {
                 if (resp) {
                     vue_this.download_url = vue_this.$remote_url + resp;
+                    vue_this.show_export_file = true;
                 } else {
                     vue_this.$toast("无交易信息");
                 }
@@ -60,7 +65,7 @@ export default {
             const [start, end] = _date;
             this.show_date = false;
             this.begin_date = start.valueOf() / 1000;
-            this.end_date = end.valueOf() / 1000 + 60*60*24;
+            this.end_date = end.valueOf() / 1000 + 60 * 60 * 24;
             this.date = `${start.getFullYear()}/${start.getMonth() + 1}/${start.getDate()}-${end.getFullYear()}/${end.getMonth() + 1}/${end.getDate()}`
         },
     },

@@ -488,15 +488,13 @@ class stuff_plan_management_handler : virtual public stuff_plan_managementIf
         return ret;
     }
 
-    virtual bool export_plan_to_email(const std::string &ssid, const std::vector<int64_t> &plan_ids, const std::string &email)
+    virtual void export_plan(std::string &_return, const std::string &ssid, const std::vector<int64_t> &plan_ids)
     {
-        bool ret = false;
-
         auto user = PA_DATAOPT_get_online_user(ssid);
         if (user)
         {
-            std::string file_name_no_ext = "/tmp/plan_export" + std::to_string(time(NULL));
-            std::string file_name = file_name_no_ext + ".csv";
+            std::string file_name_no_ext = "plan_export" + std::to_string(time(NULL));
+            std::string file_name = "/dist/logo_res/" + file_name_no_ext + ".csv";
             std::ofstream stream(file_name);
             std::string csv_bom = {
                 (char)0xef, (char)0xbb, (char)0xbf};
@@ -579,27 +577,17 @@ class stuff_plan_management_handler : virtual public stuff_plan_managementIf
                 "import sys\n"
                 "csv = pd.read_csv('" +
                 file_name + "', encoding='utf-8')\n"
-                            "csv.to_excel('" +
+                            "csv.to_excel('/dist/logo_res/" +
                 file_name_no_ext + ".xlsx', sheet_name='data')\n";
 
             if (Py_IsInitialized())
             {
                 PyRun_SimpleString(py_converter.c_str());
+                _return = "/logo_res/" + file_name_no_ext + ".xlsx";
             }
             else
             {
                 PA_RETURN_MSG("导出失败");
-            }
-            user->email = email;
-            user->update_record();
-            std::string send_mail_cmd = "/script/send_mail.py " + email + " '计划导出表' " + " '尊敬的" + user->name + "先生，附件是您的计划导出表' " + file_name_no_ext + ".xlsx";
-            if (0 == system(send_mail_cmd.c_str()))
-            {
-                ret = true;
-            }
-            else
-            {
-                PA_RETURN_MSG("发送邮件失败");
             }
         }
         else
@@ -607,7 +595,6 @@ class stuff_plan_management_handler : virtual public stuff_plan_managementIf
             PA_RETURN_UNLOGIN_MSG();
         }
 
-        return ret;
     }
 
     virtual bool except_close(const int64_t plan_id, const std::string &ssid, const std::string &reason)
@@ -744,6 +731,31 @@ class stuff_plan_management_handler : virtual public stuff_plan_managementIf
                 _return.append(get_vichele_verify_result(single_vichele, plan_time_day, plan.plan_id));
             }
         }
+    }
+
+    virtual bool send_file_via_email(const std::string &ssid, const std::string &filepath, const std::string &email)
+    {
+        bool ret = false;
+        auto file_name_begin = filepath.find("/logo_res/");
+        auto file_name = "/dist" + filepath.substr(file_name_begin, filepath.length() - file_name_begin);
+
+        auto user = PA_DATAOPT_get_online_user(ssid);
+        if (!user)
+        {
+            PA_RETURN_UNLOGIN_MSG();
+        }
+        user->email = email;
+        user->update_record();
+        std::string send_mail_cmd = "/script/send_mail.py " + email + " '附件导出' " + " '尊敬的" + user->name + "先生，附件是您的导出附件' " + file_name;
+        if (0 == system(send_mail_cmd.c_str()))
+        {
+            ret = true;
+        }
+        else
+        {
+            PA_RETURN_MSG("发送邮件失败");
+        }
+        return ret;
     }
 };
 

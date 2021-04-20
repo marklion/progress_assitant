@@ -9,15 +9,13 @@
                     </van-dropdown-menu>
                 </van-col>
                 <van-col :span="4">
-                    <van-button type="primary" block @click="show_export_plan(order_need_show)">导出</van-button>
+                    <van-button type="primary" block @click="export_plan(order_need_show)">导出</van-button>
                 </van-col>
             </van-row>
             <plan-brief v-for="(single_plan, index) in order_need_show" :key="index" :plan_id="single_plan.plan_id" :company_view="!$store.state.userinfo.buyer"></plan-brief>
         </van-tab>
     </van-tabs>
-    <van-dialog v-model="ask_email_diag" title="请输入邮箱" show-cancel-button @confirm="export_plan">
-        <van-field v-model="export_email" label="邮箱" placeholder="请输入邮箱" />
-    </van-dialog>
+    <export-file :remote_file="export_file_path" v-model="show_export_email"></export-file>
 </div>
 </template>
 
@@ -56,6 +54,7 @@ Vue.use(DropdownItem);
 Vue.use(Tab);
 Vue.use(Tabs);
 import PlanBrief from '../components/PlanBrief.vue'
+import ExportFile from '../components/ExportFile.vue'
 export default {
     name: 'CompanyOrder',
     data: function () {
@@ -113,9 +112,8 @@ export default {
                 value: 3
             }],
             date_filter: 0,
-            ask_email_diag: false,
-            export_email: '',
-            export_list: [],
+            show_export_email: false,
+            export_file_path: '',
         }
     },
     computed: {
@@ -177,22 +175,18 @@ export default {
     },
     components: {
         "plan-brief": PlanBrief,
+        "export-file": ExportFile,
     },
     methods: {
-        show_export_plan: function (_plans) {
+        export_plan: function (_plans) {
             var plan_ids = [];
             _plans.forEach((element) => {
                 plan_ids.push(element.plan_id);
             });
-            this.export_list = plan_ids;
-            this.ask_email_diag = true;
-        },
-        export_plan: function () {
             var vue_this = this;
-            vue_this.$call_remote_process("stuff_plan_management", "export_plan_to_email", [vue_this.$cookies.get('pa_ssid'), vue_this.export_list, vue_this.export_email]).then(function (resp) {
-                if (resp) {
-                    vue_this.$toast("邮件已发送");
-                }
+            vue_this.$call_remote_process("stuff_plan_management", "export_plan", [vue_this.$cookies.get('pa_ssid'), plan_ids]).then(function (resp) {
+                vue_this.export_file_path = vue_this.$remote_url + resp;
+                vue_this.show_export_email = true;
             });
         },
         init_orders: function (_is_buyer) {
@@ -215,10 +209,7 @@ export default {
     },
     beforeMount: function () {
         this.init_orders(this.$store.state.userinfo.buyer);
-        var vue_this = this;
-        vue_this.$call_remote_process("user_management", "get_user_email", [vue_this.$cookies.get('pa_ssid')]).then(function (resp) {
-            vue_this.export_email = resp;
-        });
+
     }
 }
 </script>

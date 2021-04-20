@@ -18,6 +18,5 @@ deploy:
   skip_cleanup: true
   file: "${TRAVIS_BUILD_DIR}/build/install.sh"
   api_key: ${API_KEY}
-  draft: true
   on: 
     tags: true

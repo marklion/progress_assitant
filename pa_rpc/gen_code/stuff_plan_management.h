@@ -32,9 +32,10 @@ class stuff_plan_managementIf {
   virtual bool upload_payinfo(const int64_t plan_id, const std::string& ssid, const std::string& content) = 0;
   virtual bool confirm_pay(const int64_t plan_id, const std::string& ssid) = 0;
   virtual bool confirm_close(const int64_t plan_id, const std::string& ssid) = 0;
-  virtual bool export_plan_to_email(const std::string& ssid, const std::vector<int64_t> & plan_ids, const std::string& email) = 0;
+  virtual void export_plan(std::string& _return, const std::string& ssid, const std::vector<int64_t> & plan_ids) = 0;
   virtual bool except_close(const int64_t plan_id, const std::string& ssid, const std::string& reason) = 0;
   virtual void verify_plan(std::string& _return, const stuff_plan& plan, const std::string& ssid) = 0;
+  virtual bool send_file_via_email(const std::string& ssid, const std::string& filepath, const std::string& email) = 0;
 };
 
 class stuff_plan_managementIfFactory {
@@ -101,9 +102,8 @@ class stuff_plan_managementNull : virtual public stuff_plan_managementIf {
     bool _return = false;
     return _return;
   }
-  bool export_plan_to_email(const std::string& /* ssid */, const std::vector<int64_t> & /* plan_ids */, const std::string& /* email */) {
-    bool _return = false;
-    return _return;
+  void export_plan(std::string& /* _return */, const std::string& /* ssid */, const std::vector<int64_t> & /* plan_ids */) {
+    return;
   }
   bool except_close(const int64_t /* plan_id */, const std::string& /* ssid */, const std::string& /* reason */) {
     bool _return = false;
@@ -111,6 +111,10 @@ class stuff_plan_managementNull : virtual public stuff_plan_managementIf {
   }
   void verify_plan(std::string& /* _return */, const stuff_plan& /* plan */, const std::string& /* ssid */) {
     return;
+  }
+  bool send_file_via_email(const std::string& /* ssid */, const std::string& /* filepath */, const std::string& /* email */) {
+    bool _return = false;
+    return _return;
   }
 };
 
@@ -1297,49 +1301,43 @@ class stuff_plan_management_confirm_close_presult {
 
 };
 
-typedef struct _stuff_plan_management_export_plan_to_email_args__isset {
-  _stuff_plan_management_export_plan_to_email_args__isset() : ssid(false), plan_ids(false), email(false) {}
+typedef struct _stuff_plan_management_export_plan_args__isset {
+  _stuff_plan_management_export_plan_args__isset() : ssid(false), plan_ids(false) {}
   bool ssid :1;
   bool plan_ids :1;
-  bool email :1;
-} _stuff_plan_management_export_plan_to_email_args__isset;
+} _stuff_plan_management_export_plan_args__isset;
 
-class stuff_plan_management_export_plan_to_email_args {
+class stuff_plan_management_export_plan_args {
  public:
 
-  stuff_plan_management_export_plan_to_email_args(const stuff_plan_management_export_plan_to_email_args&);
-  stuff_plan_management_export_plan_to_email_args& operator=(const stuff_plan_management_export_plan_to_email_args&);
-  stuff_plan_management_export_plan_to_email_args() : ssid(), email() {
+  stuff_plan_management_export_plan_args(const stuff_plan_management_export_plan_args&);
+  stuff_plan_management_export_plan_args& operator=(const stuff_plan_management_export_plan_args&);
+  stuff_plan_management_export_plan_args() : ssid() {
   }
 
-  virtual ~stuff_plan_management_export_plan_to_email_args() noexcept;
+  virtual ~stuff_plan_management_export_plan_args() noexcept;
   std::string ssid;
   std::vector<int64_t>  plan_ids;
-  std::string email;
 
-  _stuff_plan_management_export_plan_to_email_args__isset __isset;
+  _stuff_plan_management_export_plan_args__isset __isset;
 
   void __set_ssid(const std::string& val);
 
   void __set_plan_ids(const std::vector<int64_t> & val);
 
-  void __set_email(const std::string& val);
-
-  bool operator == (const stuff_plan_management_export_plan_to_email_args & rhs) const
+  bool operator == (const stuff_plan_management_export_plan_args & rhs) const
   {
     if (!(ssid == rhs.ssid))
       return false;
     if (!(plan_ids == rhs.plan_ids))
       return false;
-    if (!(email == rhs.email))
-      return false;
     return true;
   }
-  bool operator != (const stuff_plan_management_export_plan_to_email_args &rhs) const {
+  bool operator != (const stuff_plan_management_export_plan_args &rhs) const {
     return !(*this == rhs);
   }
 
-  bool operator < (const stuff_plan_management_export_plan_to_email_args & ) const;
+  bool operator < (const stuff_plan_management_export_plan_args & ) const;
 
   uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
   uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
@@ -1347,44 +1345,43 @@ class stuff_plan_management_export_plan_to_email_args {
 };
 
 
-class stuff_plan_management_export_plan_to_email_pargs {
+class stuff_plan_management_export_plan_pargs {
  public:
 
 
-  virtual ~stuff_plan_management_export_plan_to_email_pargs() noexcept;
+  virtual ~stuff_plan_management_export_plan_pargs() noexcept;
   const std::string* ssid;
   const std::vector<int64_t> * plan_ids;
-  const std::string* email;
 
   uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
 
 };
 
-typedef struct _stuff_plan_management_export_plan_to_email_result__isset {
-  _stuff_plan_management_export_plan_to_email_result__isset() : success(false), e(false) {}
+typedef struct _stuff_plan_management_export_plan_result__isset {
+  _stuff_plan_management_export_plan_result__isset() : success(false), e(false) {}
   bool success :1;
   bool e :1;
-} _stuff_plan_management_export_plan_to_email_result__isset;
+} _stuff_plan_management_export_plan_result__isset;
 
-class stuff_plan_management_export_plan_to_email_result {
+class stuff_plan_management_export_plan_result {
  public:
 
-  stuff_plan_management_export_plan_to_email_result(const stuff_plan_management_export_plan_to_email_result&);
-  stuff_plan_management_export_plan_to_email_result& operator=(const stuff_plan_management_export_plan_to_email_result&);
-  stuff_plan_management_export_plan_to_email_result() : success(0) {
+  stuff_plan_management_export_plan_result(const stuff_plan_management_export_plan_result&);
+  stuff_plan_management_export_plan_result& operator=(const stuff_plan_management_export_plan_result&);
+  stuff_plan_management_export_plan_result() : success() {
   }
 
-  virtual ~stuff_plan_management_export_plan_to_email_result() noexcept;
-  bool success;
+  virtual ~stuff_plan_management_export_plan_result() noexcept;
+  std::string success;
   gen_exp e;
 
-  _stuff_plan_management_export_plan_to_email_result__isset __isset;
+  _stuff_plan_management_export_plan_result__isset __isset;
 
-  void __set_success(const bool val);
+  void __set_success(const std::string& val);
 
   void __set_e(const gen_exp& val);
 
-  bool operator == (const stuff_plan_management_export_plan_to_email_result & rhs) const
+  bool operator == (const stuff_plan_management_export_plan_result & rhs) const
   {
     if (!(success == rhs.success))
       return false;
@@ -1392,32 +1389,32 @@ class stuff_plan_management_export_plan_to_email_result {
       return false;
     return true;
   }
-  bool operator != (const stuff_plan_management_export_plan_to_email_result &rhs) const {
+  bool operator != (const stuff_plan_management_export_plan_result &rhs) const {
     return !(*this == rhs);
   }
 
-  bool operator < (const stuff_plan_management_export_plan_to_email_result & ) const;
+  bool operator < (const stuff_plan_management_export_plan_result & ) const;
 
   uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
   uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
 
 };
 
-typedef struct _stuff_plan_management_export_plan_to_email_presult__isset {
-  _stuff_plan_management_export_plan_to_email_presult__isset() : success(false), e(false) {}
+typedef struct _stuff_plan_management_export_plan_presult__isset {
+  _stuff_plan_management_export_plan_presult__isset() : success(false), e(false) {}
   bool success :1;
   bool e :1;
-} _stuff_plan_management_export_plan_to_email_presult__isset;
+} _stuff_plan_management_export_plan_presult__isset;
 
-class stuff_plan_management_export_plan_to_email_presult {
+class stuff_plan_management_export_plan_presult {
  public:
 
 
-  virtual ~stuff_plan_management_export_plan_to_email_presult() noexcept;
-  bool* success;
+  virtual ~stuff_plan_management_export_plan_presult() noexcept;
+  std::string* success;
   gen_exp e;
 
-  _stuff_plan_management_export_plan_to_email_presult__isset __isset;
+  _stuff_plan_management_export_plan_presult__isset __isset;
 
   uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
 
@@ -1668,6 +1665,132 @@ class stuff_plan_management_verify_plan_presult {
 
 };
 
+typedef struct _stuff_plan_management_send_file_via_email_args__isset {
+  _stuff_plan_management_send_file_via_email_args__isset() : ssid(false), filepath(false), email(false) {}
+  bool ssid :1;
+  bool filepath :1;
+  bool email :1;
+} _stuff_plan_management_send_file_via_email_args__isset;
+
+class stuff_plan_management_send_file_via_email_args {
+ public:
+
+  stuff_plan_management_send_file_via_email_args(const stuff_plan_management_send_file_via_email_args&);
+  stuff_plan_management_send_file_via_email_args& operator=(const stuff_plan_management_send_file_via_email_args&);
+  stuff_plan_management_send_file_via_email_args() : ssid(), filepath(), email() {
+  }
+
+  virtual ~stuff_plan_management_send_file_via_email_args() noexcept;
+  std::string ssid;
+  std::string filepath;
+  std::string email;
+
+  _stuff_plan_management_send_file_via_email_args__isset __isset;
+
+  void __set_ssid(const std::string& val);
+
+  void __set_filepath(const std::string& val);
+
+  void __set_email(const std::string& val);
+
+  bool operator == (const stuff_plan_management_send_file_via_email_args & rhs) const
+  {
+    if (!(ssid == rhs.ssid))
+      return false;
+    if (!(filepath == rhs.filepath))
+      return false;
+    if (!(email == rhs.email))
+      return false;
+    return true;
+  }
+  bool operator != (const stuff_plan_management_send_file_via_email_args &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const stuff_plan_management_send_file_via_email_args & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+
+class stuff_plan_management_send_file_via_email_pargs {
+ public:
+
+
+  virtual ~stuff_plan_management_send_file_via_email_pargs() noexcept;
+  const std::string* ssid;
+  const std::string* filepath;
+  const std::string* email;
+
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _stuff_plan_management_send_file_via_email_result__isset {
+  _stuff_plan_management_send_file_via_email_result__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _stuff_plan_management_send_file_via_email_result__isset;
+
+class stuff_plan_management_send_file_via_email_result {
+ public:
+
+  stuff_plan_management_send_file_via_email_result(const stuff_plan_management_send_file_via_email_result&);
+  stuff_plan_management_send_file_via_email_result& operator=(const stuff_plan_management_send_file_via_email_result&);
+  stuff_plan_management_send_file_via_email_result() : success(0) {
+  }
+
+  virtual ~stuff_plan_management_send_file_via_email_result() noexcept;
+  bool success;
+  gen_exp e;
+
+  _stuff_plan_management_send_file_via_email_result__isset __isset;
+
+  void __set_success(const bool val);
+
+  void __set_e(const gen_exp& val);
+
+  bool operator == (const stuff_plan_management_send_file_via_email_result & rhs) const
+  {
+    if (!(success == rhs.success))
+      return false;
+    if (!(e == rhs.e))
+      return false;
+    return true;
+  }
+  bool operator != (const stuff_plan_management_send_file_via_email_result &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const stuff_plan_management_send_file_via_email_result & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _stuff_plan_management_send_file_via_email_presult__isset {
+  _stuff_plan_management_send_file_via_email_presult__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _stuff_plan_management_send_file_via_email_presult__isset;
+
+class stuff_plan_management_send_file_via_email_presult {
+ public:
+
+
+  virtual ~stuff_plan_management_send_file_via_email_presult() noexcept;
+  bool* success;
+  gen_exp e;
+
+  _stuff_plan_management_send_file_via_email_presult__isset __isset;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+
+};
+
 class stuff_plan_managementClient : virtual public stuff_plan_managementIf {
  public:
   stuff_plan_managementClient(std::shared_ptr< ::apache::thrift::protocol::TProtocol> prot) {
@@ -1723,15 +1846,18 @@ class stuff_plan_managementClient : virtual public stuff_plan_managementIf {
   bool confirm_close(const int64_t plan_id, const std::string& ssid);
   void send_confirm_close(const int64_t plan_id, const std::string& ssid);
   bool recv_confirm_close();
-  bool export_plan_to_email(const std::string& ssid, const std::vector<int64_t> & plan_ids, const std::string& email);
-  void send_export_plan_to_email(const std::string& ssid, const std::vector<int64_t> & plan_ids, const std::string& email);
-  bool recv_export_plan_to_email();
+  void export_plan(std::string& _return, const std::string& ssid, const std::vector<int64_t> & plan_ids);
+  void send_export_plan(const std::string& ssid, const std::vector<int64_t> & plan_ids);
+  void recv_export_plan(std::string& _return);
   bool except_close(const int64_t plan_id, const std::string& ssid, const std::string& reason);
   void send_except_close(const int64_t plan_id, const std::string& ssid, const std::string& reason);
   bool recv_except_close();
   void verify_plan(std::string& _return, const stuff_plan& plan, const std::string& ssid);
   void send_verify_plan(const stuff_plan& plan, const std::string& ssid);
   void recv_verify_plan(std::string& _return);
+  bool send_file_via_email(const std::string& ssid, const std::string& filepath, const std::string& email);
+  void send_send_file_via_email(const std::string& ssid, const std::string& filepath, const std::string& email);
+  bool recv_send_file_via_email();
  protected:
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> piprot_;
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> poprot_;
@@ -1757,9 +1883,10 @@ class stuff_plan_managementProcessor : public ::apache::thrift::TDispatchProcess
   void process_upload_payinfo(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
   void process_confirm_pay(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
   void process_confirm_close(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
-  void process_export_plan_to_email(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
+  void process_export_plan(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
   void process_except_close(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
   void process_verify_plan(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
+  void process_send_file_via_email(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
  public:
   stuff_plan_managementProcessor(::std::shared_ptr<stuff_plan_managementIf> iface) :
     iface_(iface) {
@@ -1773,9 +1900,10 @@ class stuff_plan_managementProcessor : public ::apache::thrift::TDispatchProcess
     processMap_["upload_payinfo"] = &stuff_plan_managementProcessor::process_upload_payinfo;
     processMap_["confirm_pay"] = &stuff_plan_managementProcessor::process_confirm_pay;
     processMap_["confirm_close"] = &stuff_plan_managementProcessor::process_confirm_close;
-    processMap_["export_plan_to_email"] = &stuff_plan_managementProcessor::process_export_plan_to_email;
+    processMap_["export_plan"] = &stuff_plan_managementProcessor::process_export_plan;
     processMap_["except_close"] = &stuff_plan_managementProcessor::process_except_close;
     processMap_["verify_plan"] = &stuff_plan_managementProcessor::process_verify_plan;
+    processMap_["send_file_via_email"] = &stuff_plan_managementProcessor::process_send_file_via_email;
   }
 
   virtual ~stuff_plan_managementProcessor() {}
@@ -1897,13 +2025,14 @@ class stuff_plan_managementMultiface : virtual public stuff_plan_managementIf {
     return ifaces_[i]->confirm_close(plan_id, ssid);
   }
 
-  bool export_plan_to_email(const std::string& ssid, const std::vector<int64_t> & plan_ids, const std::string& email) {
+  void export_plan(std::string& _return, const std::string& ssid, const std::vector<int64_t> & plan_ids) {
     size_t sz = ifaces_.size();
     size_t i = 0;
     for (; i < (sz - 1); ++i) {
-      ifaces_[i]->export_plan_to_email(ssid, plan_ids, email);
+      ifaces_[i]->export_plan(_return, ssid, plan_ids);
     }
-    return ifaces_[i]->export_plan_to_email(ssid, plan_ids, email);
+    ifaces_[i]->export_plan(_return, ssid, plan_ids);
+    return;
   }
 
   bool except_close(const int64_t plan_id, const std::string& ssid, const std::string& reason) {
@@ -1923,6 +2052,15 @@ class stuff_plan_managementMultiface : virtual public stuff_plan_managementIf {
     }
     ifaces_[i]->verify_plan(_return, plan, ssid);
     return;
+  }
+
+  bool send_file_via_email(const std::string& ssid, const std::string& filepath, const std::string& email) {
+    size_t sz = ifaces_.size();
+    size_t i = 0;
+    for (; i < (sz - 1); ++i) {
+      ifaces_[i]->send_file_via_email(ssid, filepath, email);
+    }
+    return ifaces_[i]->send_file_via_email(ssid, filepath, email);
   }
 
 };
@@ -1987,15 +2125,18 @@ class stuff_plan_managementConcurrentClient : virtual public stuff_plan_manageme
   bool confirm_close(const int64_t plan_id, const std::string& ssid);
   int32_t send_confirm_close(const int64_t plan_id, const std::string& ssid);
   bool recv_confirm_close(const int32_t seqid);
-  bool export_plan_to_email(const std::string& ssid, const std::vector<int64_t> & plan_ids, const std::string& email);
-  int32_t send_export_plan_to_email(const std::string& ssid, const std::vector<int64_t> & plan_ids, const std::string& email);
-  bool recv_export_plan_to_email(const int32_t seqid);
+  void export_plan(std::string& _return, const std::string& ssid, const std::vector<int64_t> & plan_ids);
+  int32_t send_export_plan(const std::string& ssid, const std::vector<int64_t> & plan_ids);
+  void recv_export_plan(std::string& _return, const int32_t seqid);
   bool except_close(const int64_t plan_id, const std::string& ssid, const std::string& reason);
   int32_t send_except_close(const int64_t plan_id, const std::string& ssid, const std::string& reason);
   bool recv_except_close(const int32_t seqid);
   void verify_plan(std::string& _return, const stuff_plan& plan, const std::string& ssid);
   int32_t send_verify_plan(const stuff_plan& plan, const std::string& ssid);
   void recv_verify_plan(std::string& _return, const int32_t seqid);
+  bool send_file_via_email(const std::string& ssid, const std::string& filepath, const std::string& email);
+  int32_t send_send_file_via_email(const std::string& ssid, const std::string& filepath, const std::string& email);
+  bool recv_send_file_via_email(const int32_t seqid);
  protected:
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> piprot_;
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> poprot_;

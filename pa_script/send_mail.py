@@ -23,7 +23,7 @@ def send_mail(_to_user, _title, _content, _attachments):
         with open(_attachments, 'rb') as f:
             att_file = f.read()
         file_content = MIMEApplication(att_file)
-        file_content.add_header('Content-Disposition', 'attachment',  filename="计划导出表.xlsx")
+        file_content.add_header('Content-Disposition', 'attachment',  filename="导出表.xlsx")
         message.attach(file_content)
 
         smtpObj.sendmail('postmaster@d8sis.cn',
