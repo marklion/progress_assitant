@@ -94,6 +94,12 @@ public:
         auto opt_user = PA_DATAOPT_get_online_user(ssid);
         if (opt_user && opt_user->get_pri_id() == info.user_id)
         {
+            auto relead_plans = opt_user->get_all_children<pa_sql_plan>("created_by", "status < 4");
+            if (relead_plans.size() > 0)
+            {
+                PA_RETURN_RELATED_PLAN_OPEN();
+            }
+
             if (opt_user->phone != info.phone)
             {
                 auto verify_code_in_sql = opt_user->get_children<pa_sql_sms_verify>("belong_user");
