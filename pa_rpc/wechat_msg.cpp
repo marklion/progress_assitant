@@ -120,7 +120,7 @@ std::string PA_WECHAT_wx_sign(const std::string& nonceStr, long timestamp, const
     
     return ret;
 }
-static void send_msg_to_wechat(const std::string &_touser, const std::string &_tmp_id, const std::string &_first, const std::vector<std::string> &_keywords, const std::string &_remark)
+static void send_msg_to_wechat(const std::string &_touser, const std::string &_tmp_id, const std::string &_first, const std::vector<std::string> &_keywords, const std::string &_remark, const std::string &_url = "/")
 {
     std::string acc_tok = g_acc_tok.get_content();
 
@@ -131,11 +131,11 @@ static void send_msg_to_wechat(const std::string &_touser, const std::string &_t
     neb::CJsonObject template_msg;
     template_msg.Add("appid","wxa390f8b6f68e9c6d");
     template_msg.Add("template_id", _tmp_id);
-    template_msg.Add("url", "https://www.d8sis.cn/pa_web");
+    template_msg.Add("url", "https://www.d8sis.cn/pa_web" + _url);
 
     neb::CJsonObject miniprogram_info;
     miniprogram_info.Add("appid", "wxfbf41c757510dc4c");
-    miniprogram_info.Add("pagepath", "/pages/index/index");
+    miniprogram_info.Add("pagepath", "/pages/index/index?enter_url=" + _url);
 
     template_msg.Add("miniprogram", miniprogram_info);
 
@@ -204,7 +204,7 @@ void PA_WECHAT_send_plan_msg(pa_sql_userinfo &_touser, pa_sql_plan &_plan)
     keywords.push_back(total_price);
     keywords.push_back(status);
 
-    send_msg_to_wechat(_touser.openid, "TCYUdQCuq4TpOYpRPXn-WBcBL5O64xWUgkSoIaiIMN4", "计划更新", keywords, ""); 
+    send_msg_to_wechat(_touser.openid, "TCYUdQCuq4TpOYpRPXn-WBcBL5O64xWUgkSoIaiIMN4", "计划更新", keywords, "", "/plan_detail/" + std::to_string(_plan.get_pri_id())); 
 }
 
 void PA_WECHAT_send_create_apply_msg(pa_sql_userinfo &_touser, pa_sql_user_apply &_apply)
@@ -227,7 +227,7 @@ void PA_WECHAT_send_create_apply_msg(pa_sql_userinfo &_touser, pa_sql_user_apply
     time_string = std::to_string(st_time->tm_year + 1900) + "-" + std::to_string(st_time->tm_mon + 1) + "-" + std::to_string(st_time->tm_mday) + " " + std::to_string(st_time->tm_hour) + ":" + std::to_string(st_time->tm_min) + ":" + std::to_string(st_time->tm_sec);
     keywords.push_back(time_string);
 
-    send_msg_to_wechat(_touser.openid, "8h1UuQg3LlKoSvVyD43kdZa_d3khIhjwJsxn3IOW33M", "您好，有新员工加入公司，请审批", keywords, "");
+    send_msg_to_wechat(_touser.openid, "8h1UuQg3LlKoSvVyD43kdZa_d3khIhjwJsxn3IOW33M", "您好，有新员工加入公司，请审批", keywords, "", "/admin");
 }
 void PA_WECHAT_send_process_apply_msg(pa_sql_userinfo &_touser, pa_sql_user_apply &_apply)
 {
