@@ -230,16 +230,13 @@ export default {
                 vue_this.$set(vue_this.vichele_panel, index, ['0']);
             });
             var proxy_company = resp.proxy_company;
-            vue_this.$call_remote_process("user_management", 'get_customer_info', [resp.created_by]).then(function (resp) {
-                if (proxy_company.length > 0) {
-                    vue_this.plan_owner_info.company = proxy_company;
-                    vue_this.plan_owner_info.name = resp.split('(')[1].split(')')[0] + '(手工提单)';
-                    vue_this.is_proxy = true;
-                } else {
-                    vue_this.plan_owner_info.company = resp.split('(')[0];
-                    vue_this.plan_owner_info.name = resp.split('(')[1].split(')')[0];
-                }
-            });
+            vue_this.plan_owner_info.company = resp.buy_company;
+            if (proxy_company.length > 0) {
+                vue_this.plan_owner_info.name = resp.created_user_name + '(手工提单)';
+                vue_this.is_proxy = true;
+            } else {
+                vue_this.plan_owner_info.name = resp.created_user_name;
+            }
         });
     },
 }

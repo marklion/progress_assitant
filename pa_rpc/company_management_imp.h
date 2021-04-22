@@ -251,7 +251,7 @@ public:
         {
             if (opt_user->buyer)
             {
-                statistics_plan = opt_user->get_all_children<pa_sql_plan>("created_by", "create_time >= %d AND create_time <= %d", begin_date, end_date);
+                statistics_plan = opt_user->get_all_children<pa_sql_plan>("created_by", "create_time >= %d AND create_time <= %d AND status = 4", begin_date, end_date);
             }
             else
             {
@@ -289,15 +289,13 @@ public:
             writer.write_row(table_header);
             for (auto &itr : statistics_plan)
             {
-                std::string created_user;
-                auto created_by = itr.get_parent<pa_sql_userinfo>("created_by");
-                if (created_by)
+                auto archive_plan = itr.get_parent<pa_sql_archive_plan>("archived");
+                if (archive_plan)
                 {
-                    created_user = created_by->name;
+                    std::vector<std::string> one_record = {
+                        archive_plan->plan_number, archive_plan->stuff_name, archive_plan->count, archive_plan->total_price, archive_plan->created_user, archive_plan->plan_time, archive_plan->pay_time, archive_plan->close_time};
+                    writer.write_row(one_record);
                 }
-                std::vector<std::string> one_record = {
-                    std::to_string(itr.create_time) + std::to_string(itr.get_pri_id()), itr.name, std::to_string(itr.count), std::to_string(itr.count * itr.price), created_user, itr.plan_time, itr.pay_timestamp, itr.close_timestamp};
-                writer.write_row(one_record);
             }
             stream.close();
 

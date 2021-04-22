@@ -110,16 +110,13 @@ export default {
                 vue_this.name = resp.name;
                 vue_this.status = resp.status;
                 if (false == vue_this.company_view) {
-                    vue_this.$call_remote_process("stuff_info", 'get_stuff_detail', [resp.type_id]).then(function (detail_resp) {
-                        vue_this.company = detail_resp.company;
-                    });
+                    vue_this.company = resp.sale_company;
                 } else {
+                    vue_this.company = resp.buy_company;
                     if (resp.proxy_company.length > 0) {
-                        vue_this.company = resp.proxy_company + '(手工)';
+                        vue_this.company = vue_this.company + '(手工)';
                     } else {
-                        vue_this.$call_remote_process("user_management", 'get_customer_info', [resp.created_by]).then(function (resp) {
-                            vue_this.company = resp;
-                        });
+                        vue_this.company = vue_this.company + '(' + resp.created_user_name + ')';
                     }
                 }
             });
