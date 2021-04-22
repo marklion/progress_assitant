@@ -99,7 +99,14 @@ public:
             {
                 PA_RETURN_RELATED_PLAN_OPEN();
             }
-
+            if (!opt_user->buyer)
+            {
+                auto orig_company = opt_user->get_parent<pa_sql_company>("belong_company");
+                if (orig_company && orig_company->name != info.company)
+                {
+                    PA_RETURN_MSG("请联系公司管理员修改");
+                }
+            }
             if (opt_user->phone != info.phone)
             {
                 auto verify_code_in_sql = opt_user->get_children<pa_sql_sms_verify>("belong_user");

@@ -33,6 +33,8 @@ class company_managementIf {
   virtual bool set_notice(const std::string& ssid, const std::string& notice) = 0;
   virtual void get_notice(std::string& _return, const std::string& company_name) = 0;
   virtual void clear_notice(const std::string& ssid) = 0;
+  virtual void get_all_compay_user(std::vector<user_info> & _return, const std::string& ssid) = 0;
+  virtual bool remove_user_from_company(const std::string& ssid, const int64_t user_id) = 0;
 };
 
 class company_managementIfFactory {
@@ -99,6 +101,13 @@ class company_managementNull : virtual public company_managementIf {
   }
   void clear_notice(const std::string& /* ssid */) {
     return;
+  }
+  void get_all_compay_user(std::vector<user_info> & /* _return */, const std::string& /* ssid */) {
+    return;
+  }
+  bool remove_user_from_company(const std::string& /* ssid */, const int64_t /* user_id */) {
+    bool _return = false;
+    return _return;
   }
 };
 
@@ -1395,6 +1404,237 @@ class company_management_clear_notice_presult {
 
 };
 
+typedef struct _company_management_get_all_compay_user_args__isset {
+  _company_management_get_all_compay_user_args__isset() : ssid(false) {}
+  bool ssid :1;
+} _company_management_get_all_compay_user_args__isset;
+
+class company_management_get_all_compay_user_args {
+ public:
+
+  company_management_get_all_compay_user_args(const company_management_get_all_compay_user_args&);
+  company_management_get_all_compay_user_args& operator=(const company_management_get_all_compay_user_args&);
+  company_management_get_all_compay_user_args() : ssid() {
+  }
+
+  virtual ~company_management_get_all_compay_user_args() noexcept;
+  std::string ssid;
+
+  _company_management_get_all_compay_user_args__isset __isset;
+
+  void __set_ssid(const std::string& val);
+
+  bool operator == (const company_management_get_all_compay_user_args & rhs) const
+  {
+    if (!(ssid == rhs.ssid))
+      return false;
+    return true;
+  }
+  bool operator != (const company_management_get_all_compay_user_args &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const company_management_get_all_compay_user_args & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+
+class company_management_get_all_compay_user_pargs {
+ public:
+
+
+  virtual ~company_management_get_all_compay_user_pargs() noexcept;
+  const std::string* ssid;
+
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _company_management_get_all_compay_user_result__isset {
+  _company_management_get_all_compay_user_result__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _company_management_get_all_compay_user_result__isset;
+
+class company_management_get_all_compay_user_result {
+ public:
+
+  company_management_get_all_compay_user_result(const company_management_get_all_compay_user_result&);
+  company_management_get_all_compay_user_result& operator=(const company_management_get_all_compay_user_result&);
+  company_management_get_all_compay_user_result() {
+  }
+
+  virtual ~company_management_get_all_compay_user_result() noexcept;
+  std::vector<user_info>  success;
+  gen_exp e;
+
+  _company_management_get_all_compay_user_result__isset __isset;
+
+  void __set_success(const std::vector<user_info> & val);
+
+  void __set_e(const gen_exp& val);
+
+  bool operator == (const company_management_get_all_compay_user_result & rhs) const
+  {
+    if (!(success == rhs.success))
+      return false;
+    if (!(e == rhs.e))
+      return false;
+    return true;
+  }
+  bool operator != (const company_management_get_all_compay_user_result &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const company_management_get_all_compay_user_result & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _company_management_get_all_compay_user_presult__isset {
+  _company_management_get_all_compay_user_presult__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _company_management_get_all_compay_user_presult__isset;
+
+class company_management_get_all_compay_user_presult {
+ public:
+
+
+  virtual ~company_management_get_all_compay_user_presult() noexcept;
+  std::vector<user_info> * success;
+  gen_exp e;
+
+  _company_management_get_all_compay_user_presult__isset __isset;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+
+};
+
+typedef struct _company_management_remove_user_from_company_args__isset {
+  _company_management_remove_user_from_company_args__isset() : ssid(false), user_id(false) {}
+  bool ssid :1;
+  bool user_id :1;
+} _company_management_remove_user_from_company_args__isset;
+
+class company_management_remove_user_from_company_args {
+ public:
+
+  company_management_remove_user_from_company_args(const company_management_remove_user_from_company_args&);
+  company_management_remove_user_from_company_args& operator=(const company_management_remove_user_from_company_args&);
+  company_management_remove_user_from_company_args() : ssid(), user_id(0) {
+  }
+
+  virtual ~company_management_remove_user_from_company_args() noexcept;
+  std::string ssid;
+  int64_t user_id;
+
+  _company_management_remove_user_from_company_args__isset __isset;
+
+  void __set_ssid(const std::string& val);
+
+  void __set_user_id(const int64_t val);
+
+  bool operator == (const company_management_remove_user_from_company_args & rhs) const
+  {
+    if (!(ssid == rhs.ssid))
+      return false;
+    if (!(user_id == rhs.user_id))
+      return false;
+    return true;
+  }
+  bool operator != (const company_management_remove_user_from_company_args &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const company_management_remove_user_from_company_args & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+
+class company_management_remove_user_from_company_pargs {
+ public:
+
+
+  virtual ~company_management_remove_user_from_company_pargs() noexcept;
+  const std::string* ssid;
+  const int64_t* user_id;
+
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _company_management_remove_user_from_company_result__isset {
+  _company_management_remove_user_from_company_result__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _company_management_remove_user_from_company_result__isset;
+
+class company_management_remove_user_from_company_result {
+ public:
+
+  company_management_remove_user_from_company_result(const company_management_remove_user_from_company_result&);
+  company_management_remove_user_from_company_result& operator=(const company_management_remove_user_from_company_result&);
+  company_management_remove_user_from_company_result() : success(0) {
+  }
+
+  virtual ~company_management_remove_user_from_company_result() noexcept;
+  bool success;
+  gen_exp e;
+
+  _company_management_remove_user_from_company_result__isset __isset;
+
+  void __set_success(const bool val);
+
+  void __set_e(const gen_exp& val);
+
+  bool operator == (const company_management_remove_user_from_company_result & rhs) const
+  {
+    if (!(success == rhs.success))
+      return false;
+    if (!(e == rhs.e))
+      return false;
+    return true;
+  }
+  bool operator != (const company_management_remove_user_from_company_result &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const company_management_remove_user_from_company_result & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _company_management_remove_user_from_company_presult__isset {
+  _company_management_remove_user_from_company_presult__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _company_management_remove_user_from_company_presult__isset;
+
+class company_management_remove_user_from_company_presult {
+ public:
+
+
+  virtual ~company_management_remove_user_from_company_presult() noexcept;
+  bool* success;
+  gen_exp e;
+
+  _company_management_remove_user_from_company_presult__isset __isset;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+
+};
+
 class company_managementClient : virtual public company_managementIf {
  public:
   company_managementClient(std::shared_ptr< ::apache::thrift::protocol::TProtocol> prot) {
@@ -1453,6 +1693,12 @@ class company_managementClient : virtual public company_managementIf {
   void clear_notice(const std::string& ssid);
   void send_clear_notice(const std::string& ssid);
   void recv_clear_notice();
+  void get_all_compay_user(std::vector<user_info> & _return, const std::string& ssid);
+  void send_get_all_compay_user(const std::string& ssid);
+  void recv_get_all_compay_user(std::vector<user_info> & _return);
+  bool remove_user_from_company(const std::string& ssid, const int64_t user_id);
+  void send_remove_user_from_company(const std::string& ssid, const int64_t user_id);
+  bool recv_remove_user_from_company();
  protected:
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> piprot_;
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> poprot_;
@@ -1479,6 +1725,8 @@ class company_managementProcessor : public ::apache::thrift::TDispatchProcessor 
   void process_set_notice(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
   void process_get_notice(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
   void process_clear_notice(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
+  void process_get_all_compay_user(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
+  void process_remove_user_from_company(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
  public:
   company_managementProcessor(::std::shared_ptr<company_managementIf> iface) :
     iface_(iface) {
@@ -1493,6 +1741,8 @@ class company_managementProcessor : public ::apache::thrift::TDispatchProcessor 
     processMap_["set_notice"] = &company_managementProcessor::process_set_notice;
     processMap_["get_notice"] = &company_managementProcessor::process_get_notice;
     processMap_["clear_notice"] = &company_managementProcessor::process_clear_notice;
+    processMap_["get_all_compay_user"] = &company_managementProcessor::process_get_all_compay_user;
+    processMap_["remove_user_from_company"] = &company_managementProcessor::process_remove_user_from_company;
   }
 
   virtual ~company_managementProcessor() {}
@@ -1624,6 +1874,25 @@ class company_managementMultiface : virtual public company_managementIf {
     ifaces_[i]->clear_notice(ssid);
   }
 
+  void get_all_compay_user(std::vector<user_info> & _return, const std::string& ssid) {
+    size_t sz = ifaces_.size();
+    size_t i = 0;
+    for (; i < (sz - 1); ++i) {
+      ifaces_[i]->get_all_compay_user(_return, ssid);
+    }
+    ifaces_[i]->get_all_compay_user(_return, ssid);
+    return;
+  }
+
+  bool remove_user_from_company(const std::string& ssid, const int64_t user_id) {
+    size_t sz = ifaces_.size();
+    size_t i = 0;
+    for (; i < (sz - 1); ++i) {
+      ifaces_[i]->remove_user_from_company(ssid, user_id);
+    }
+    return ifaces_[i]->remove_user_from_company(ssid, user_id);
+  }
+
 };
 
 // The 'concurrent' client is a thread safe client that correctly handles
@@ -1689,6 +1958,12 @@ class company_managementConcurrentClient : virtual public company_managementIf {
   void clear_notice(const std::string& ssid);
   int32_t send_clear_notice(const std::string& ssid);
   void recv_clear_notice(const int32_t seqid);
+  void get_all_compay_user(std::vector<user_info> & _return, const std::string& ssid);
+  int32_t send_get_all_compay_user(const std::string& ssid);
+  void recv_get_all_compay_user(std::vector<user_info> & _return, const int32_t seqid);
+  bool remove_user_from_company(const std::string& ssid, const int64_t user_id);
+  int32_t send_remove_user_from_company(const std::string& ssid, const int64_t user_id);
+  bool recv_remove_user_from_company(const int32_t seqid);
  protected:
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> piprot_;
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> poprot_;

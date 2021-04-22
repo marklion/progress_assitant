@@ -356,5 +356,64 @@ public:
     {
         set_notice(ssid, "");
     }
+    virtual void get_all_compay_user(std::vector<user_info> &_return, const std::string &ssid)
+    {
+        auto user = PA_DATAOPT_get_online_user(ssid);
+        if (!user)
+        {
+            PA_RETURN_UNLOGIN_MSG();
+        }
+
+        auto company = user->get_parent<pa_sql_company>("belong_company");
+        if (!company)
+        {
+            PA_RETURN_NOCOMPANY_MSG();
+        }
+
+        auto all_users = company->get_all_children<pa_sql_userinfo>("belong_company");
+        for (auto &itr:all_users)
+        {
+            user_info tmp;
+            tmp.buyer = itr.buyer;
+            tmp.company = company->name;
+            tmp.logo = itr.logo;
+            tmp.name = itr.name;
+            tmp.phone = itr.phone;
+            tmp.user_id = itr.get_pri_id();
+            _return.push_back(tmp);
+        }
+    }
+
+    virtual bool remove_user_from_company(const std::string &ssid, const int64_t user_id) 
+    {
+        auto user = PA_DATAOPT_get_online_user(ssid);
+        if (!user)
+        {
+            PA_RETURN_UNLOGIN_MSG();
+        }
+        auto company = user->get_parent<pa_sql_company>("belong_company");
+        if (!company)
+        {
+            PA_RETURN_NOCOMPANY_MSG();
+        }
+        auto user_need_remove = company->get_children<pa_sql_userinfo>("belong_company", "PRI_ID = %d", user_id);
+        if (!user_need_remove)
+        {
+            PA_RETURN_MSG("用户不存在");
+        }
+        auto related_plan = user_need_remove->get_all_children<pa_sql_plan>("created_by", "status < 4");
+        if (related_plan.size() > 0)
+        {
+            PA_RETURN_RELATED_PLAN_OPEN();
+        }
+        auto login_user = user_need_remove->get_children<pa_sql_userlogin>("online_user");
+        if (login_user)
+        {
+            login_user->remove_record();
+        }
+        user_need_remove->remove_record();
+
+        return true;
+    }
 };
 #endif // _COMPANY_MANAGEMENT_IMP_H_

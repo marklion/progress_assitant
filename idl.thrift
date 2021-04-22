@@ -71,6 +71,8 @@ service company_management {
     bool set_notice(1:string ssid, 2:string notice) throws (1:gen_exp e),
     string get_notice(1:string company_name) throws (1:gen_exp e),
     void clear_notice(1:string ssid) throws (1:gen_exp e),
+    list<user_info> get_all_compay_user(1:string ssid) throws (1:gen_exp e),
+    bool remove_user_from_company(1:string ssid, 2:i64 user_id) throws (1:gen_exp e)
 }
 
 service stuff_info {
