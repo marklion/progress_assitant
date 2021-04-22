@@ -11,7 +11,7 @@ void pa_sql_plan::send_wechat_msg()
         auto company = stuff->get_parent<pa_sql_company>("belong_company");
         if (company)
         {
-            auto all_user_in_company = company->get_all_children<pa_sql_userinfo>("belong_company");
+            auto all_user_in_company = company->get_all_children<pa_sql_userinfo>("belong_company", "PRI_ID != %d", created_user->get_pri_id());
             for (auto &itr:all_user_in_company)
             {
                 PA_WECHAT_send_plan_msg(itr, *this);
