@@ -12,6 +12,7 @@ public:
     std::string name;
     std::string logo;
     std::string notice;
+    int is_sale = 0;
 
     virtual std::vector<sqlite_orm_column> self_columns_defined()
     {
@@ -19,6 +20,7 @@ public:
         ret.push_back(sqlite_orm_column("name", sqlite_orm_column::STRING, &name));
         ret.push_back(sqlite_orm_column("logo", sqlite_orm_column::STRING, &logo));
         ret.push_back(sqlite_orm_column("notice", sqlite_orm_column::STRING, &notice));
+        ret.push_back(sqlite_orm_column("is_sale", sqlite_orm_column::INTEGER, &is_sale));
 
         return ret;
     }

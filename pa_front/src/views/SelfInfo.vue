@@ -26,14 +26,6 @@
         </van-field>
         <van-field v-if="has_verify_code" v-model="verify_code" name="验证码" label="验证码" placeholder="请输入验证码" :rules="[{ required: true, message: '请填写验证码' }]" />
         <van-field name="company_picker" v-model="userinfo.company" label="公司" placeholder="请填入所在公司" :rules="[{ required: true, message: '请填写所属公司' }]" />
-        <van-field name="radio" label="身份">
-            <template #input>
-                <van-radio-group v-model="user_role" direction="horizontal">
-                    <van-radio name="1">买方</van-radio>
-                    <van-radio name="2">卖方</van-radio>
-                </van-radio-group>
-            </template>
-        </van-field>
         <div style="margin: 16px;">
             <van-button round block type="info" native-type="submit">提交</van-button>
         </div>
@@ -106,17 +98,6 @@ export default {
             has_verify_code: false,
             current_count_down: 0,
         }
-    },
-    computed: {
-        user_role: {
-            get() {
-                return this.userinfo.buyer ? '1' : '2';
-            },
-            set(_value) {
-                this.userinfo.buyer = _value == '1' ? true : false;
-            }
-        },
-
     },
     beforeMount: function () {
         this.userinfo = JSON.parse(JSON.stringify(this.$store.state.userinfo));
