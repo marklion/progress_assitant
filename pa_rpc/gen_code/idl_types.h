@@ -574,12 +574,11 @@ void swap(vichele_in_plan &a, vichele_in_plan &b);
 std::ostream& operator<<(std::ostream& out, const vichele_in_plan& obj);
 
 typedef struct _stuff_plan__isset {
-  _stuff_plan__isset() : type_id(false), count(false), vichele_info(false), plan_id(false), created_by(false), plan_time(false), created_time(false), name(false), price(false), status(false), comment(false), plan_confirm(false), pay_confirm(false), pay_info(false), pay_timestamp(false), close_timestamp(false), close_by(false), except_close_by(false), except_close_timestamp(false), except_close_reason(false), proxy_company(false) {}
+  _stuff_plan__isset() : type_id(false), count(false), vichele_info(false), plan_id(false), plan_time(false), created_time(false), name(false), price(false), status(false), comment(false), plan_confirm(false), pay_confirm(false), pay_info(false), pay_timestamp(false), close_timestamp(false), close_by(false), except_close_by(false), except_close_timestamp(false), except_close_reason(false), proxy_company(false), created_user_name(false), buy_company(false), sale_company(false) {}
   bool type_id :1;
   bool count :1;
   bool vichele_info :1;
   bool plan_id :1;
-  bool created_by :1;
   bool plan_time :1;
   bool created_time :1;
   bool name :1;
@@ -596,6 +595,9 @@ typedef struct _stuff_plan__isset {
   bool except_close_timestamp :1;
   bool except_close_reason :1;
   bool proxy_company :1;
+  bool created_user_name :1;
+  bool buy_company :1;
+  bool sale_company :1;
 } _stuff_plan__isset;
 
 class stuff_plan : public virtual ::apache::thrift::TBase {
@@ -603,7 +605,7 @@ class stuff_plan : public virtual ::apache::thrift::TBase {
 
   stuff_plan(const stuff_plan&);
   stuff_plan& operator=(const stuff_plan&);
-  stuff_plan() : type_id(0), count(0), plan_id(0), created_by(0), plan_time(), created_time(0), name(), price(0), status(0), comment(), pay_info(), pay_timestamp(), close_timestamp(), close_by(), except_close_by(), except_close_timestamp(), except_close_reason(), proxy_company() {
+  stuff_plan() : type_id(0), count(0), plan_id(0), plan_time(), created_time(0), name(), price(0), status(0), comment(), pay_info(), pay_timestamp(), close_timestamp(), close_by(), except_close_by(), except_close_timestamp(), except_close_reason(), proxy_company(), created_user_name(), buy_company(), sale_company() {
   }
 
   virtual ~stuff_plan() noexcept;
@@ -611,7 +613,6 @@ class stuff_plan : public virtual ::apache::thrift::TBase {
   double count;
   std::vector<vichele_in_plan>  vichele_info;
   int64_t plan_id;
-  int64_t created_by;
   std::string plan_time;
   int64_t created_time;
   std::string name;
@@ -628,6 +629,9 @@ class stuff_plan : public virtual ::apache::thrift::TBase {
   std::string except_close_timestamp;
   std::string except_close_reason;
   std::string proxy_company;
+  std::string created_user_name;
+  std::string buy_company;
+  std::string sale_company;
 
   _stuff_plan__isset __isset;
 
@@ -638,8 +642,6 @@ class stuff_plan : public virtual ::apache::thrift::TBase {
   void __set_vichele_info(const std::vector<vichele_in_plan> & val);
 
   void __set_plan_id(const int64_t val);
-
-  void __set_created_by(const int64_t val);
 
   void __set_plan_time(const std::string& val);
 
@@ -673,6 +675,12 @@ class stuff_plan : public virtual ::apache::thrift::TBase {
 
   void __set_proxy_company(const std::string& val);
 
+  void __set_created_user_name(const std::string& val);
+
+  void __set_buy_company(const std::string& val);
+
+  void __set_sale_company(const std::string& val);
+
   bool operator == (const stuff_plan & rhs) const
   {
     if (!(type_id == rhs.type_id))
@@ -682,8 +690,6 @@ class stuff_plan : public virtual ::apache::thrift::TBase {
     if (!(vichele_info == rhs.vichele_info))
       return false;
     if (!(plan_id == rhs.plan_id))
-      return false;
-    if (!(created_by == rhs.created_by))
       return false;
     if (!(plan_time == rhs.plan_time))
       return false;
@@ -716,6 +722,12 @@ class stuff_plan : public virtual ::apache::thrift::TBase {
     if (!(except_close_reason == rhs.except_close_reason))
       return false;
     if (!(proxy_company == rhs.proxy_company))
+      return false;
+    if (!(created_user_name == rhs.created_user_name))
+      return false;
+    if (!(buy_company == rhs.buy_company))
+      return false;
+    if (!(sale_company == rhs.sale_company))
       return false;
     return true;
   }

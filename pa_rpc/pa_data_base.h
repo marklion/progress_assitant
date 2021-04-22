@@ -165,7 +165,7 @@ public:
     }
 };
 
-
+class pa_sql_archive_plan;
 
 class pa_sql_plan:public sql_tree_base {
 public:
@@ -191,6 +191,7 @@ public:
         add_parent_type<pa_sql_userinfo>("pay_confirm_by");
         add_parent_type<pa_sql_userinfo>("close_by");
         add_parent_type<pa_sql_userinfo>("except_close_by");
+        add_parent_type<pa_sql_archive_plan>("archived");
     }
     virtual std::vector<sqlite_orm_column> self_columns_defined()
     {
@@ -291,5 +292,100 @@ public:
     void generate_code();
     bool code_is_valid(const std::string &_code);
 };
+
+
+
+class pa_sql_archive_plan:public sql_tree_base {
+public:
+    std::string plan_number;
+    std::string created_time;
+    std::string created_user;
+    std::string stuff_name;
+    std::string total_price;
+    std::string unit_price;
+    std::string count;
+    std::string plan_time;
+    std::string close_reason;
+    std::string payinfo;
+    std::string plan_confirm_time;
+    std::string pay_confirm_time;
+    std::string pay_time;
+    std::string close_time;
+    std::string comment;
+    std::string sale_company;
+    std::string buy_company;
+    std::string deliver_close_by;
+    std::string except_close_by;
+    std::string pay_confirm_by;
+    std::string plan_confirm_by;
+    virtual std::vector<sqlite_orm_column> self_columns_defined()
+    {
+        std::vector<sqlite_orm_column> ret;
+        ret.push_back(sqlite_orm_column("plan_number", sqlite_orm_column::STRING, &plan_number));
+        ret.push_back(sqlite_orm_column("created_time", sqlite_orm_column::STRING, &created_time));
+        ret.push_back(sqlite_orm_column("created_user", sqlite_orm_column::STRING, &created_user));
+        ret.push_back(sqlite_orm_column("stuff_name", sqlite_orm_column::STRING, &stuff_name));
+        ret.push_back(sqlite_orm_column("total_price", sqlite_orm_column::STRING, &total_price));
+        ret.push_back(sqlite_orm_column("unit_price", sqlite_orm_column::STRING, &unit_price));
+        ret.push_back(sqlite_orm_column("count", sqlite_orm_column::STRING, &count));
+        ret.push_back(sqlite_orm_column("plan_time", sqlite_orm_column::STRING, &plan_time));
+        ret.push_back(sqlite_orm_column("close_reason", sqlite_orm_column::STRING, &close_reason));
+        ret.push_back(sqlite_orm_column("payinfo", sqlite_orm_column::STRING, &payinfo));
+        ret.push_back(sqlite_orm_column("plan_confirm_time", sqlite_orm_column::STRING, &plan_confirm_time));
+        ret.push_back(sqlite_orm_column("pay_confirm_time", sqlite_orm_column::STRING, &pay_confirm_time));
+        ret.push_back(sqlite_orm_column("pay_time", sqlite_orm_column::STRING, &pay_time));
+        ret.push_back(sqlite_orm_column("close_time", sqlite_orm_column::STRING, &close_time));
+        ret.push_back(sqlite_orm_column("comment", sqlite_orm_column::STRING, &comment));
+        ret.push_back(sqlite_orm_column("sale_company", sqlite_orm_column::STRING, &sale_company));
+        ret.push_back(sqlite_orm_column("buy_company", sqlite_orm_column::STRING, &buy_company));
+        ret.push_back(sqlite_orm_column("deliver_close_by", sqlite_orm_column::STRING, &deliver_close_by));
+        ret.push_back(sqlite_orm_column("except_close_by", sqlite_orm_column::STRING, &except_close_by));
+        ret.push_back(sqlite_orm_column("pay_confirm_by", sqlite_orm_column::STRING, &pay_confirm_by));
+        ret.push_back(sqlite_orm_column("plan_confirm_by", sqlite_orm_column::STRING, &plan_confirm_by));
+
+        return ret;
+    }
+
+    virtual std::string table_name()
+    {
+        return "archive_plan_table";
+    }
+
+    void translate_from_plan(pa_sql_plan &_plan);
+};
+
+class pa_sql_archive_vichele_plan:public sql_tree_base {
+public:
+    std::string main_vichele;
+    std::string behind_vichele;
+    std::string driver_name;
+    std::string driver_phone;
+    std::string drop_address;
+    std::string use_for;
+    std::string count;
+    pa_sql_archive_vichele_plan() 
+    {
+        add_parent_type<pa_sql_archive_plan>("belong_plan");
+    }
+    virtual std::vector<sqlite_orm_column> self_columns_defined()
+    {
+        std::vector<sqlite_orm_column> ret;
+        ret.push_back(sqlite_orm_column("main_vichele", sqlite_orm_column::STRING, &main_vichele));
+        ret.push_back(sqlite_orm_column("behind_vichele", sqlite_orm_column::STRING, &behind_vichele));
+        ret.push_back(sqlite_orm_column("driver_name", sqlite_orm_column::STRING, &driver_name));
+        ret.push_back(sqlite_orm_column("driver_phone", sqlite_orm_column::STRING, &driver_phone));
+        ret.push_back(sqlite_orm_column("drop_address", sqlite_orm_column::STRING, &drop_address));
+        ret.push_back(sqlite_orm_column("use_for", sqlite_orm_column::STRING, &use_for));
+        ret.push_back(sqlite_orm_column("count", sqlite_orm_column::STRING, &count));
+
+        return ret;
+    }
+
+    virtual std::string table_name()
+    {
+        return "archive_vichele_plan_table";
+    }
+};
+
 
 #endif // _PA_DATABSE_H_

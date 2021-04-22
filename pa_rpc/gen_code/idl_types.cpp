@@ -1373,10 +1373,6 @@ void stuff_plan::__set_plan_id(const int64_t val) {
   this->plan_id = val;
 }
 
-void stuff_plan::__set_created_by(const int64_t val) {
-  this->created_by = val;
-}
-
 void stuff_plan::__set_plan_time(const std::string& val) {
   this->plan_time = val;
 }
@@ -1439,6 +1435,18 @@ void stuff_plan::__set_except_close_reason(const std::string& val) {
 
 void stuff_plan::__set_proxy_company(const std::string& val) {
   this->proxy_company = val;
+}
+
+void stuff_plan::__set_created_user_name(const std::string& val) {
+  this->created_user_name = val;
+}
+
+void stuff_plan::__set_buy_company(const std::string& val) {
+  this->buy_company = val;
+}
+
+void stuff_plan::__set_sale_company(const std::string& val) {
+  this->sale_company = val;
 }
 std::ostream& operator<<(std::ostream& out, const stuff_plan& obj)
 {
@@ -1513,14 +1521,6 @@ uint32_t stuff_plan::read(::apache::thrift::protocol::TProtocol* iprot) {
         }
         break;
       case 5:
-        if (ftype == ::apache::thrift::protocol::T_I64) {
-          xfer += iprot->readI64(this->created_by);
-          this->__isset.created_by = true;
-        } else {
-          xfer += iprot->skip(ftype);
-        }
-        break;
-      case 6:
         if (ftype == ::apache::thrift::protocol::T_STRING) {
           xfer += iprot->readString(this->plan_time);
           this->__isset.plan_time = true;
@@ -1528,7 +1528,7 @@ uint32_t stuff_plan::read(::apache::thrift::protocol::TProtocol* iprot) {
           xfer += iprot->skip(ftype);
         }
         break;
-      case 7:
+      case 6:
         if (ftype == ::apache::thrift::protocol::T_I64) {
           xfer += iprot->readI64(this->created_time);
           this->__isset.created_time = true;
@@ -1536,7 +1536,7 @@ uint32_t stuff_plan::read(::apache::thrift::protocol::TProtocol* iprot) {
           xfer += iprot->skip(ftype);
         }
         break;
-      case 8:
+      case 7:
         if (ftype == ::apache::thrift::protocol::T_STRING) {
           xfer += iprot->readString(this->name);
           this->__isset.name = true;
@@ -1544,7 +1544,7 @@ uint32_t stuff_plan::read(::apache::thrift::protocol::TProtocol* iprot) {
           xfer += iprot->skip(ftype);
         }
         break;
-      case 9:
+      case 8:
         if (ftype == ::apache::thrift::protocol::T_DOUBLE) {
           xfer += iprot->readDouble(this->price);
           this->__isset.price = true;
@@ -1552,7 +1552,7 @@ uint32_t stuff_plan::read(::apache::thrift::protocol::TProtocol* iprot) {
           xfer += iprot->skip(ftype);
         }
         break;
-      case 10:
+      case 9:
         if (ftype == ::apache::thrift::protocol::T_I64) {
           xfer += iprot->readI64(this->status);
           this->__isset.status = true;
@@ -1560,7 +1560,7 @@ uint32_t stuff_plan::read(::apache::thrift::protocol::TProtocol* iprot) {
           xfer += iprot->skip(ftype);
         }
         break;
-      case 11:
+      case 10:
         if (ftype == ::apache::thrift::protocol::T_STRING) {
           xfer += iprot->readString(this->comment);
           this->__isset.comment = true;
@@ -1568,7 +1568,7 @@ uint32_t stuff_plan::read(::apache::thrift::protocol::TProtocol* iprot) {
           xfer += iprot->skip(ftype);
         }
         break;
-      case 12:
+      case 11:
         if (ftype == ::apache::thrift::protocol::T_STRUCT) {
           xfer += this->plan_confirm.read(iprot);
           this->__isset.plan_confirm = true;
@@ -1576,7 +1576,7 @@ uint32_t stuff_plan::read(::apache::thrift::protocol::TProtocol* iprot) {
           xfer += iprot->skip(ftype);
         }
         break;
-      case 13:
+      case 12:
         if (ftype == ::apache::thrift::protocol::T_STRUCT) {
           xfer += this->pay_confirm.read(iprot);
           this->__isset.pay_confirm = true;
@@ -1584,7 +1584,7 @@ uint32_t stuff_plan::read(::apache::thrift::protocol::TProtocol* iprot) {
           xfer += iprot->skip(ftype);
         }
         break;
-      case 14:
+      case 13:
         if (ftype == ::apache::thrift::protocol::T_STRING) {
           xfer += iprot->readString(this->pay_info);
           this->__isset.pay_info = true;
@@ -1592,7 +1592,7 @@ uint32_t stuff_plan::read(::apache::thrift::protocol::TProtocol* iprot) {
           xfer += iprot->skip(ftype);
         }
         break;
-      case 15:
+      case 14:
         if (ftype == ::apache::thrift::protocol::T_STRING) {
           xfer += iprot->readString(this->pay_timestamp);
           this->__isset.pay_timestamp = true;
@@ -1600,7 +1600,7 @@ uint32_t stuff_plan::read(::apache::thrift::protocol::TProtocol* iprot) {
           xfer += iprot->skip(ftype);
         }
         break;
-      case 16:
+      case 15:
         if (ftype == ::apache::thrift::protocol::T_STRING) {
           xfer += iprot->readString(this->close_timestamp);
           this->__isset.close_timestamp = true;
@@ -1608,7 +1608,7 @@ uint32_t stuff_plan::read(::apache::thrift::protocol::TProtocol* iprot) {
           xfer += iprot->skip(ftype);
         }
         break;
-      case 17:
+      case 16:
         if (ftype == ::apache::thrift::protocol::T_STRING) {
           xfer += iprot->readString(this->close_by);
           this->__isset.close_by = true;
@@ -1616,7 +1616,7 @@ uint32_t stuff_plan::read(::apache::thrift::protocol::TProtocol* iprot) {
           xfer += iprot->skip(ftype);
         }
         break;
-      case 18:
+      case 17:
         if (ftype == ::apache::thrift::protocol::T_STRING) {
           xfer += iprot->readString(this->except_close_by);
           this->__isset.except_close_by = true;
@@ -1624,7 +1624,7 @@ uint32_t stuff_plan::read(::apache::thrift::protocol::TProtocol* iprot) {
           xfer += iprot->skip(ftype);
         }
         break;
-      case 19:
+      case 18:
         if (ftype == ::apache::thrift::protocol::T_STRING) {
           xfer += iprot->readString(this->except_close_timestamp);
           this->__isset.except_close_timestamp = true;
@@ -1632,7 +1632,7 @@ uint32_t stuff_plan::read(::apache::thrift::protocol::TProtocol* iprot) {
           xfer += iprot->skip(ftype);
         }
         break;
-      case 20:
+      case 19:
         if (ftype == ::apache::thrift::protocol::T_STRING) {
           xfer += iprot->readString(this->except_close_reason);
           this->__isset.except_close_reason = true;
@@ -1640,10 +1640,34 @@ uint32_t stuff_plan::read(::apache::thrift::protocol::TProtocol* iprot) {
           xfer += iprot->skip(ftype);
         }
         break;
-      case 21:
+      case 20:
         if (ftype == ::apache::thrift::protocol::T_STRING) {
           xfer += iprot->readString(this->proxy_company);
           this->__isset.proxy_company = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 21:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->created_user_name);
+          this->__isset.created_user_name = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 22:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->buy_company);
+          this->__isset.buy_company = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 23:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->sale_company);
+          this->__isset.sale_company = true;
         } else {
           xfer += iprot->skip(ftype);
         }
@@ -1689,72 +1713,80 @@ uint32_t stuff_plan::write(::apache::thrift::protocol::TProtocol* oprot) const {
   xfer += oprot->writeI64(this->plan_id);
   xfer += oprot->writeFieldEnd();
 
-  xfer += oprot->writeFieldBegin("created_by", ::apache::thrift::protocol::T_I64, 5);
-  xfer += oprot->writeI64(this->created_by);
-  xfer += oprot->writeFieldEnd();
-
-  xfer += oprot->writeFieldBegin("plan_time", ::apache::thrift::protocol::T_STRING, 6);
+  xfer += oprot->writeFieldBegin("plan_time", ::apache::thrift::protocol::T_STRING, 5);
   xfer += oprot->writeString(this->plan_time);
   xfer += oprot->writeFieldEnd();
 
-  xfer += oprot->writeFieldBegin("created_time", ::apache::thrift::protocol::T_I64, 7);
+  xfer += oprot->writeFieldBegin("created_time", ::apache::thrift::protocol::T_I64, 6);
   xfer += oprot->writeI64(this->created_time);
   xfer += oprot->writeFieldEnd();
 
-  xfer += oprot->writeFieldBegin("name", ::apache::thrift::protocol::T_STRING, 8);
+  xfer += oprot->writeFieldBegin("name", ::apache::thrift::protocol::T_STRING, 7);
   xfer += oprot->writeString(this->name);
   xfer += oprot->writeFieldEnd();
 
-  xfer += oprot->writeFieldBegin("price", ::apache::thrift::protocol::T_DOUBLE, 9);
+  xfer += oprot->writeFieldBegin("price", ::apache::thrift::protocol::T_DOUBLE, 8);
   xfer += oprot->writeDouble(this->price);
   xfer += oprot->writeFieldEnd();
 
-  xfer += oprot->writeFieldBegin("status", ::apache::thrift::protocol::T_I64, 10);
+  xfer += oprot->writeFieldBegin("status", ::apache::thrift::protocol::T_I64, 9);
   xfer += oprot->writeI64(this->status);
   xfer += oprot->writeFieldEnd();
 
-  xfer += oprot->writeFieldBegin("comment", ::apache::thrift::protocol::T_STRING, 11);
+  xfer += oprot->writeFieldBegin("comment", ::apache::thrift::protocol::T_STRING, 10);
   xfer += oprot->writeString(this->comment);
   xfer += oprot->writeFieldEnd();
 
-  xfer += oprot->writeFieldBegin("plan_confirm", ::apache::thrift::protocol::T_STRUCT, 12);
+  xfer += oprot->writeFieldBegin("plan_confirm", ::apache::thrift::protocol::T_STRUCT, 11);
   xfer += this->plan_confirm.write(oprot);
   xfer += oprot->writeFieldEnd();
 
-  xfer += oprot->writeFieldBegin("pay_confirm", ::apache::thrift::protocol::T_STRUCT, 13);
+  xfer += oprot->writeFieldBegin("pay_confirm", ::apache::thrift::protocol::T_STRUCT, 12);
   xfer += this->pay_confirm.write(oprot);
   xfer += oprot->writeFieldEnd();
 
-  xfer += oprot->writeFieldBegin("pay_info", ::apache::thrift::protocol::T_STRING, 14);
+  xfer += oprot->writeFieldBegin("pay_info", ::apache::thrift::protocol::T_STRING, 13);
   xfer += oprot->writeString(this->pay_info);
   xfer += oprot->writeFieldEnd();
 
-  xfer += oprot->writeFieldBegin("pay_timestamp", ::apache::thrift::protocol::T_STRING, 15);
+  xfer += oprot->writeFieldBegin("pay_timestamp", ::apache::thrift::protocol::T_STRING, 14);
   xfer += oprot->writeString(this->pay_timestamp);
   xfer += oprot->writeFieldEnd();
 
-  xfer += oprot->writeFieldBegin("close_timestamp", ::apache::thrift::protocol::T_STRING, 16);
+  xfer += oprot->writeFieldBegin("close_timestamp", ::apache::thrift::protocol::T_STRING, 15);
   xfer += oprot->writeString(this->close_timestamp);
   xfer += oprot->writeFieldEnd();
 
-  xfer += oprot->writeFieldBegin("close_by", ::apache::thrift::protocol::T_STRING, 17);
+  xfer += oprot->writeFieldBegin("close_by", ::apache::thrift::protocol::T_STRING, 16);
   xfer += oprot->writeString(this->close_by);
   xfer += oprot->writeFieldEnd();
 
-  xfer += oprot->writeFieldBegin("except_close_by", ::apache::thrift::protocol::T_STRING, 18);
+  xfer += oprot->writeFieldBegin("except_close_by", ::apache::thrift::protocol::T_STRING, 17);
   xfer += oprot->writeString(this->except_close_by);
   xfer += oprot->writeFieldEnd();
 
-  xfer += oprot->writeFieldBegin("except_close_timestamp", ::apache::thrift::protocol::T_STRING, 19);
+  xfer += oprot->writeFieldBegin("except_close_timestamp", ::apache::thrift::protocol::T_STRING, 18);
   xfer += oprot->writeString(this->except_close_timestamp);
   xfer += oprot->writeFieldEnd();
 
-  xfer += oprot->writeFieldBegin("except_close_reason", ::apache::thrift::protocol::T_STRING, 20);
+  xfer += oprot->writeFieldBegin("except_close_reason", ::apache::thrift::protocol::T_STRING, 19);
   xfer += oprot->writeString(this->except_close_reason);
   xfer += oprot->writeFieldEnd();
 
-  xfer += oprot->writeFieldBegin("proxy_company", ::apache::thrift::protocol::T_STRING, 21);
+  xfer += oprot->writeFieldBegin("proxy_company", ::apache::thrift::protocol::T_STRING, 20);
   xfer += oprot->writeString(this->proxy_company);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("created_user_name", ::apache::thrift::protocol::T_STRING, 21);
+  xfer += oprot->writeString(this->created_user_name);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("buy_company", ::apache::thrift::protocol::T_STRING, 22);
+  xfer += oprot->writeString(this->buy_company);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("sale_company", ::apache::thrift::protocol::T_STRING, 23);
+  xfer += oprot->writeString(this->sale_company);
   xfer += oprot->writeFieldEnd();
 
   xfer += oprot->writeFieldStop();
@@ -1768,7 +1800,6 @@ void swap(stuff_plan &a, stuff_plan &b) {
   swap(a.count, b.count);
   swap(a.vichele_info, b.vichele_info);
   swap(a.plan_id, b.plan_id);
-  swap(a.created_by, b.created_by);
   swap(a.plan_time, b.plan_time);
   swap(a.created_time, b.created_time);
   swap(a.name, b.name);
@@ -1785,6 +1816,9 @@ void swap(stuff_plan &a, stuff_plan &b) {
   swap(a.except_close_timestamp, b.except_close_timestamp);
   swap(a.except_close_reason, b.except_close_reason);
   swap(a.proxy_company, b.proxy_company);
+  swap(a.created_user_name, b.created_user_name);
+  swap(a.buy_company, b.buy_company);
+  swap(a.sale_company, b.sale_company);
   swap(a.__isset, b.__isset);
 }
 
@@ -1793,7 +1827,6 @@ stuff_plan::stuff_plan(const stuff_plan& other24) {
   count = other24.count;
   vichele_info = other24.vichele_info;
   plan_id = other24.plan_id;
-  created_by = other24.created_by;
   plan_time = other24.plan_time;
   created_time = other24.created_time;
   name = other24.name;
@@ -1810,6 +1843,9 @@ stuff_plan::stuff_plan(const stuff_plan& other24) {
   except_close_timestamp = other24.except_close_timestamp;
   except_close_reason = other24.except_close_reason;
   proxy_company = other24.proxy_company;
+  created_user_name = other24.created_user_name;
+  buy_company = other24.buy_company;
+  sale_company = other24.sale_company;
   __isset = other24.__isset;
 }
 stuff_plan& stuff_plan::operator=(const stuff_plan& other25) {
@@ -1817,7 +1853,6 @@ stuff_plan& stuff_plan::operator=(const stuff_plan& other25) {
   count = other25.count;
   vichele_info = other25.vichele_info;
   plan_id = other25.plan_id;
-  created_by = other25.created_by;
   plan_time = other25.plan_time;
   created_time = other25.created_time;
   name = other25.name;
@@ -1834,6 +1869,9 @@ stuff_plan& stuff_plan::operator=(const stuff_plan& other25) {
   except_close_timestamp = other25.except_close_timestamp;
   except_close_reason = other25.except_close_reason;
   proxy_company = other25.proxy_company;
+  created_user_name = other25.created_user_name;
+  buy_company = other25.buy_company;
+  sale_company = other25.sale_company;
   __isset = other25.__isset;
   return *this;
 }
@@ -1844,7 +1882,6 @@ void stuff_plan::printTo(std::ostream& out) const {
   out << ", " << "count=" << to_string(count);
   out << ", " << "vichele_info=" << to_string(vichele_info);
   out << ", " << "plan_id=" << to_string(plan_id);
-  out << ", " << "created_by=" << to_string(created_by);
   out << ", " << "plan_time=" << to_string(plan_time);
   out << ", " << "created_time=" << to_string(created_time);
   out << ", " << "name=" << to_string(name);
@@ -1861,6 +1898,9 @@ void stuff_plan::printTo(std::ostream& out) const {
   out << ", " << "except_close_timestamp=" << to_string(except_close_timestamp);
   out << ", " << "except_close_reason=" << to_string(except_close_reason);
   out << ", " << "proxy_company=" << to_string(proxy_company);
+  out << ", " << "created_user_name=" << to_string(created_user_name);
+  out << ", " << "buy_company=" << to_string(buy_company);
+  out << ", " << "sale_company=" << to_string(sale_company);
   out << ")";
 }
 

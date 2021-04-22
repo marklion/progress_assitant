@@ -117,69 +117,145 @@ class stuff_plan_management_handler : virtual public stuff_plan_managementIf
         auto plan = sqlite_orm::search_record<pa_sql_plan>(plan_id);
         if (plan)
         {
-            _return.count = plan->count;
-            auto create_user = plan->get_parent<pa_sql_userinfo>("created_by");
-            if (create_user)
+            if (plan->status == 4 || plan->status == 5)
             {
-                _return.created_by = create_user->get_pri_id();
-            }
-            _return.created_time = plan->create_time;
-            _return.name = plan->name;
-            _return.plan_id = plan->get_pri_id();
-            _return.plan_time = plan->plan_time;
-            _return.price = plan->price;
-            _return.status = plan->status;
-            _return.comment = plan->comment;
-            _return.proxy_company = plan->proxy_company;
-            auto pay_confirm_user = plan->get_parent<pa_sql_userinfo>("pay_confirm_by");
-            auto plan_confirm_user = plan->get_parent<pa_sql_userinfo>("plan_confirm_by");
-            auto close_user = plan->get_parent<pa_sql_userinfo>("close_by");
-            auto except_close_user = plan->get_parent<pa_sql_userinfo>("except_close_by");
-            if (pay_confirm_user)
-            {
-                _return.pay_confirm.name = pay_confirm_user->name;
-                _return.pay_confirm.timestamp = plan->pay_confirm_timestamp;
-            }
-            if (plan_confirm_user)
-            {
-                _return.plan_confirm.name = plan_confirm_user->name;
-                _return.plan_confirm.timestamp = plan->plan_confirm_timestamp;
-            }
-            if (close_user)
-            {
-                _return.close_timestamp = plan->close_timestamp;
-                _return.close_by = close_user->name;
-            }
-            if (except_close_user)
-            {
-                _return.except_close_by = except_close_user->name;
-                _return.except_close_reason = plan->close_reason;
-                _return.except_close_timestamp = plan->except_close_timestamp;
-            }
-            _return.pay_info = plan->payinfo;
-            _return.pay_timestamp = plan->pay_timestamp;
-            auto belong_type = plan->get_parent<pa_sql_stuff_info>("belong_stuff");
-            if (belong_type)
-            {
-                _return.type_id = belong_type->get_pri_id();
-            }
-            auto all_vichele_info = plan->get_all_children<pa_sql_single_vichele>("belong_plan");
-            for (auto &itr : all_vichele_info)
-            {
-                auto main_vichele = itr.get_parent<pa_sql_vichele>("main_vichele");
-                auto behind_vichele = itr.get_parent<pa_sql_vichele_behind>("behind_vichele");
-                auto driver = itr.get_parent<pa_sql_driver>("driver");
-                if (main_vichele && behind_vichele && driver)
+                auto archive_plan = plan->get_parent<pa_sql_archive_plan>("archived");
+                if (archive_plan)
                 {
-                    vichele_in_plan tmp;
-                    tmp.behind_vichele = behind_vichele->number;
-                    tmp.count = itr.count;
-                    tmp.driver_name = driver->name;
-                    tmp.driver_phone = driver->phone;
-                    tmp.drop_address = itr.drop_address;
-                    tmp.main_vichele = main_vichele->number;
-                    tmp.use_for = itr.use_for;
-                    _return.vichele_info.push_back(tmp);
+                    _return.buy_company = archive_plan->buy_company;
+                    _return.close_by = archive_plan->deliver_close_by;
+                    _return.comment = archive_plan->comment;
+                    _return.count = plan->count;
+                    _return.created_time = plan->create_time;
+                    _return.created_user_name = archive_plan->created_user;
+                    _return.except_close_by = archive_plan->except_close_by;
+                    _return.except_close_reason = archive_plan->close_reason;
+                    if (archive_plan->except_close_by.length() > 0)
+                    {
+                        _return.except_close_timestamp = archive_plan->close_time;
+                    }
+                    else
+                    {
+                        _return.close_timestamp = archive_plan->close_time;
+                    }
+                    _return.name = archive_plan->stuff_name;
+                    _return.pay_confirm.name = archive_plan->pay_confirm_by;
+                    _return.pay_confirm.timestamp = archive_plan->pay_confirm_time;
+                    _return.pay_info = archive_plan->payinfo;
+                    _return.pay_timestamp = archive_plan->pay_time;
+                    _return.plan_confirm.name = archive_plan->plan_confirm_by;
+                    _return.plan_confirm.timestamp = archive_plan->plan_confirm_time;
+                    _return.plan_id = plan->get_pri_id();
+                    _return.plan_time = archive_plan->plan_time;
+                    _return.price = plan->price;
+                    _return.proxy_company = plan->proxy_company;
+                    _return.sale_company = archive_plan->sale_company;
+                    _return.status = plan->status;
+                    auto belong_type = plan->get_parent<pa_sql_stuff_info>("belong_stuff");
+                    if (belong_type)
+                    {
+                        _return.type_id = belong_type->get_pri_id();
+                    }
+                    auto archive_vichele = archive_plan->get_all_children<pa_sql_archive_vichele_plan>("belong_plan");
+                    for (auto &itr:archive_vichele)
+                    {
+                        vichele_in_plan tmp;
+                        tmp.behind_vichele = itr.behind_vichele;
+                        tmp.count = std::stod(itr.count);
+                        tmp.driver_name = itr.driver_name;
+                        tmp.driver_phone = itr.driver_phone;
+                        tmp.drop_address = itr.drop_address;
+                        tmp.main_vichele = itr.main_vichele;
+                        tmp.use_for = itr.use_for;
+                        _return.vichele_info.push_back(tmp);
+                    }
+                }
+                else
+                {
+                    PA_RETURN_NOPLAN_MSG();
+                }
+            }
+            else
+            {
+                _return.count = plan->count;
+                auto create_user = plan->get_parent<pa_sql_userinfo>("created_by");
+                if (create_user)
+                {
+                    _return.created_user_name = create_user->name;
+                    auto buy_company = create_user->get_parent<pa_sql_company>("belong_company");
+                    if (buy_company)
+                    {
+                        _return.buy_company = buy_company->name;
+                    }
+                }
+
+                if (plan->proxy_company.length() > 0)
+                {
+                    _return.buy_company = plan->proxy_company;
+                    _return.proxy_company = plan->proxy_company;
+                }
+                _return.created_time = plan->create_time;
+                _return.name = plan->name;
+                _return.plan_id = plan->get_pri_id();
+                _return.plan_time = plan->plan_time;
+                _return.price = plan->price;
+                _return.status = plan->status;
+                _return.comment = plan->comment;
+                auto pay_confirm_user = plan->get_parent<pa_sql_userinfo>("pay_confirm_by");
+                auto plan_confirm_user = plan->get_parent<pa_sql_userinfo>("plan_confirm_by");
+                auto close_user = plan->get_parent<pa_sql_userinfo>("close_by");
+                auto except_close_user = plan->get_parent<pa_sql_userinfo>("except_close_by");
+                if (pay_confirm_user)
+                {
+                    _return.pay_confirm.name = pay_confirm_user->name;
+                    _return.pay_confirm.timestamp = plan->pay_confirm_timestamp;
+                }
+                if (plan_confirm_user)
+                {
+                    _return.plan_confirm.name = plan_confirm_user->name;
+                    _return.plan_confirm.timestamp = plan->plan_confirm_timestamp;
+                }
+                if (close_user)
+                {
+                    _return.close_timestamp = plan->close_timestamp;
+                    _return.close_by = close_user->name;
+                }
+                if (except_close_user)
+                {
+                    _return.except_close_by = except_close_user->name;
+                    _return.except_close_reason = plan->close_reason;
+                    _return.except_close_timestamp = plan->except_close_timestamp;
+                }
+                _return.pay_info = plan->payinfo;
+                _return.pay_timestamp = plan->pay_timestamp;
+                auto belong_type = plan->get_parent<pa_sql_stuff_info>("belong_stuff");
+                if (belong_type)
+                {
+                    _return.type_id = belong_type->get_pri_id();
+                    auto sale_company = belong_type->get_parent<pa_sql_company>("belong_company");
+                    if (sale_company)
+                    {
+                        _return.sale_company = sale_company->name;
+                    }
+                }
+                auto all_vichele_info = plan->get_all_children<pa_sql_single_vichele>("belong_plan");
+                for (auto &itr : all_vichele_info)
+                {
+                    auto main_vichele = itr.get_parent<pa_sql_vichele>("main_vichele");
+                    auto behind_vichele = itr.get_parent<pa_sql_vichele_behind>("behind_vichele");
+                    auto driver = itr.get_parent<pa_sql_driver>("driver");
+                    if (main_vichele && behind_vichele && driver)
+                    {
+                        vichele_in_plan tmp;
+                        tmp.behind_vichele = behind_vichele->number;
+                        tmp.count = itr.count;
+                        tmp.driver_name = driver->name;
+                        tmp.driver_phone = driver->phone;
+                        tmp.drop_address = itr.drop_address;
+                        tmp.main_vichele = main_vichele->number;
+                        tmp.use_for = itr.use_for;
+                        _return.vichele_info.push_back(tmp);
+                    }
                 }
             }
         }
@@ -472,6 +548,10 @@ class stuff_plan_management_handler : virtual public stuff_plan_managementIf
                 ret = plan->update_record();
                 if (ret)
                 {
+                    pa_sql_archive_plan archive_plan;
+                    archive_plan.translate_from_plan(*plan);
+                    plan->set_parent(archive_plan, "archived");
+                    plan->update_record();
                     plan->send_wechat_msg();
                 }
             }
@@ -508,66 +588,108 @@ class stuff_plan_management_handler : virtual public stuff_plan_managementIf
                 auto plan = sqlite_orm::search_record<pa_sql_plan>(itr);
                 if (plan)
                 {
-                    std::string company_name = "";
-                    if (plan->proxy_company.length() > 0)
+                    std::unique_ptr<pa_sql_archive_plan> archive_plan;
+                    if (plan->status == 4 || plan->status == 5)
                     {
-                        company_name = plan->proxy_company;
+                        archive_plan.reset(plan->get_parent<pa_sql_archive_plan>("archived").release());
+                        if (!archive_plan)
+                        {
+                            PA_RETURN_NOPLAN_MSG();
+                        }
+                    }
+                    std::string company_name = "";
+                    if (archive_plan)
+                    {
+                        company_name = archive_plan->buy_company;
                     }
                     else
                     {
-                        auto created_user = plan->get_parent<pa_sql_userinfo>("created_by");
-                        if (created_user)
+                        if (plan->proxy_company.length() > 0)
                         {
-                            auto company = created_user->get_parent<pa_sql_company>("belong_company");
-                            if (company)
+                            company_name = plan->proxy_company;
+                        }
+                        else
+                        {
+                            auto created_user = plan->get_parent<pa_sql_userinfo>("created_by");
+                            if (created_user)
                             {
-                                company_name = company->name;
+                                auto company = created_user->get_parent<pa_sql_company>("belong_company");
+                                if (company)
+                                {
+                                    company_name = company->name;
+                                }
                             }
                         }
                     }
                     std::vector<std::string> single_rec_sample = {plan->plan_time, company_name, plan->name};
-                    auto all_vichele = plan->get_all_children<pa_sql_single_vichele>("belong_plan");
-                    for (auto &vichele_itr : all_vichele)
+                    if (archive_plan)
                     {
-                        auto single_rec = single_rec_sample;
-                        auto main_vichele = vichele_itr.get_parent<pa_sql_vichele>("main_vichele");
-                        auto behind_vichele = vichele_itr.get_parent<pa_sql_vichele_behind>("behind_vichele");
-                        auto driver = vichele_itr.get_parent<pa_sql_driver>("driver");
-                        if (main_vichele && behind_vichele && driver)
+                        auto archive_vichele = archive_plan->get_all_children<pa_sql_archive_vichele_plan>("belong_plan");
+                        for (auto &itr:archive_vichele)
                         {
-                            single_rec.push_back(main_vichele->number);
-                            single_rec.push_back(behind_vichele->number);
-                            single_rec.push_back(driver->name);
-                            single_rec.push_back(driver->phone);
+                            auto single_rec = single_rec_sample;
+                            single_rec.push_back(itr.main_vichele);
+                            single_rec.push_back(itr.behind_vichele);
+                            single_rec.push_back(itr.driver_name);
+                            single_rec.push_back(itr.driver_phone);
+                            single_rec.push_back(itr.drop_address);
+                            single_rec.push_back(itr.use_for);
+                            if (plan->status == 4)
+                            {
+                                single_rec.push_back("已提货");
+                            }
+                            else if (plan->status == 5)
+                            {
+                                single_rec.push_back("已撤销");
+                            }
+                            writer.write_row(single_rec);
                         }
-                        single_rec.push_back(vichele_itr.drop_address);
-                        single_rec.push_back(vichele_itr.use_for);
-                        std::string status_str;
-                        switch (plan->status)
+                    }
+                    else
+                    {
+                        auto all_vichele = plan->get_all_children<pa_sql_single_vichele>("belong_plan");
+                        for (auto &vichele_itr : all_vichele)
                         {
-                        case 0:
-                            status_str = "待确认计划";
-                            break;
-                        case 1:
-                            status_str = "已确认待付款";
-                            break;
-                        case 2:
-                            status_str = "已付款待收款确认";
-                            break;
-                        case 3:
-                            status_str = "已收款待提货";
-                            break;
-                        case 4:
-                            status_str = "已提货";
-                            break;
-                        case 5:
-                            status_str = "已撤销";
-                            break;
-                        default:
-                            break;
+                            auto single_rec = single_rec_sample;
+                            auto main_vichele = vichele_itr.get_parent<pa_sql_vichele>("main_vichele");
+                            auto behind_vichele = vichele_itr.get_parent<pa_sql_vichele_behind>("behind_vichele");
+                            auto driver = vichele_itr.get_parent<pa_sql_driver>("driver");
+                            if (main_vichele && behind_vichele && driver)
+                            {
+                                single_rec.push_back(main_vichele->number);
+                                single_rec.push_back(behind_vichele->number);
+                                single_rec.push_back(driver->name);
+                                single_rec.push_back(driver->phone);
+                            }
+                            single_rec.push_back(vichele_itr.drop_address);
+                            single_rec.push_back(vichele_itr.use_for);
+                            std::string status_str;
+                            switch (plan->status)
+                            {
+                            case 0:
+                                status_str = "待确认计划";
+                                break;
+                            case 1:
+                                status_str = "已确认待付款";
+                                break;
+                            case 2:
+                                status_str = "已付款待收款确认";
+                                break;
+                            case 3:
+                                status_str = "已收款待提货";
+                                break;
+                            case 4:
+                                status_str = "已提货";
+                                break;
+                            case 5:
+                                status_str = "已撤销";
+                                break;
+                            default:
+                                break;
+                            }
+                            single_rec.push_back(status_str);
+                            writer.write_row(single_rec);
                         }
-                        single_rec.push_back(status_str);
-                        writer.write_row(single_rec);
                     }
                 }
             }
@@ -594,7 +716,6 @@ class stuff_plan_management_handler : virtual public stuff_plan_managementIf
         {
             PA_RETURN_UNLOGIN_MSG();
         }
-
     }
 
     virtual bool except_close(const int64_t plan_id, const std::string &ssid, const std::string &reason)
@@ -653,7 +774,14 @@ class stuff_plan_management_handler : virtual public stuff_plan_managementIf
             plan->except_close_timestamp = PA_DATAOPT_current_time();
             plan->set_parent(*opt_user, "except_close_by");
             ret = plan->update_record();
-            plan->send_wechat_msg();
+            if (ret)
+            {
+                plan->send_wechat_msg();
+                pa_sql_archive_plan tmp;
+                tmp.translate_from_plan(*plan);
+                plan->set_parent(tmp, "archived");
+                plan->update_record();
+            }
         }
         else
         {

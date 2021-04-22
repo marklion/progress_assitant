@@ -33,11 +33,9 @@ export default {
             resp.vichele_info.forEach((element, index) => {
                 vue_this.$set(vue_this.vichele_info, index, element);
             });
-            vue_this.$call_remote_process("stuff_info", 'get_stuff_detail', [resp.type_id]).then(function (detail_resp) {
-                vue_this.name = detail_resp.name;
-                vue_this.company = detail_resp.company;
-                vue_this.price = detail_resp.price;
-            });
+            vue_this.name = resp.name;
+            vue_this.company = resp.sale_company;
+            vue_this.price = resp.price;
         });
     },
 }

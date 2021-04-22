@@ -60,9 +60,7 @@ export default {
             vue_this.plan_id = resp.plan_id;
             vue_this.count = resp.count;
             vue_this.name = resp.name;
-            vue_this.$call_remote_process("user_management",'get_customer_info', [resp.created_by]).then(function (resp) {
-                vue_this.user_name = resp;
-            });
+            vue_this.user_name = resp.buy_company + '(' + resp.created_user_name + ')';
         });
     },
 }
