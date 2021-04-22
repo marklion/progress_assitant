@@ -165,6 +165,7 @@ void PA_DATAOPT_init_config()
         {
             company_from_sql->name = company_name;
             company_from_sql->logo = company_logo;
+            company_from_sql->is_sale = 1;
             company_from_sql->update_record();
         }
         else
@@ -172,6 +173,7 @@ void PA_DATAOPT_init_config()
             pa_sql_company tmp;
             tmp.name = company_name;
             tmp.logo = company_logo;
+            tmp.is_sale = 1;
             tmp.insert_record();
         }
     }

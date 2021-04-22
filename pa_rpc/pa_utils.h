@@ -13,6 +13,7 @@
 #define PA_RETURN_NOPRIVA_MSG() PA_RETURN_MSG("无权限")
 #define PA_RETURN_NOSTUFF_MSG() PA_RETURN_MSG("货品不存在")
 #define PA_RETURN_NOPLAN_MSG() PA_RETURN_MSG("计划不存在")
+#define PA_RETURN_RELATED_PLAN_OPEN() PA_RETURN_MSG("计划未关闭无法操作")
 
 std::unique_ptr<pa_sql_userinfo> PA_DATAOPT_get_online_user(const std::string &_ssid);
 std::string PA_DATAOPT_store_logo_to_file(const std::string &_logo, const std::string &_upid);

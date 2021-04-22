@@ -94,6 +94,19 @@ public:
         auto opt_user = PA_DATAOPT_get_online_user(ssid);
         if (opt_user && opt_user->get_pri_id() == info.user_id)
         {
+            auto relead_plans = opt_user->get_all_children<pa_sql_plan>("created_by", "status < 4");
+            if (relead_plans.size() > 0)
+            {
+                PA_RETURN_RELATED_PLAN_OPEN();
+            }
+            if (!opt_user->buyer)
+            {
+                auto orig_company = opt_user->get_parent<pa_sql_company>("belong_company");
+                if (orig_company && orig_company->name != info.company)
+                {
+                    PA_RETURN_MSG("请联系公司管理员修改");
+                }
+            }
             if (opt_user->phone != info.phone)
             {
                 auto verify_code_in_sql = opt_user->get_children<pa_sql_sms_verify>("belong_user");
@@ -106,45 +119,33 @@ public:
                     PA_RETURN_MSG("请输入正确的验证码");
                 }
             }
-            std::string orig_company_name = "";
-            auto orig_company = opt_user->get_parent<pa_sql_company>("belong_company");
-            if (orig_company)
-            {
-                orig_company_name = orig_company->name;
-            }
-            auto orig_buyer = opt_user->buyer;
-            opt_user->buyer = info.buyer;
             opt_user->logo = info.logo;
             opt_user->name = info.name;
             opt_user->phone = info.phone;
             ret = opt_user->update_record();
-            if (info.buyer)
+
+            auto company = PA_DATAOPT_fetch_company(info.company);
+            if (company)
             {
-                auto company = PA_DATAOPT_fetch_company(info.company);
-                if (company)
+                if (company->is_sale)
                 {
-                    opt_user->set_parent(*company, "belong_company");
-                }
-            }
-            else
-            {
-                if (PA_DATAOPT_is_admin(info.phone, info.company))
-                {
-                    auto company = PA_DATAOPT_fetch_company(info.company);
-                    if (company)
+                    opt_user->buyer = 0;
+                    if (PA_DATAOPT_is_admin(info.phone, info.company))
                     {
                         opt_user->set_parent(*company, "belong_company");
                     }
-                }
-                else if (orig_company_name != info.company || orig_buyer)
-                {
-                    pa_sql_company empty;
-                    opt_user->set_parent(empty, "belong_company");
-                    auto all_admin = PA_DATAOPT_get_admin(info.company);
-                    for (auto &itr:all_admin)
+                    else 
                     {
-                        PA_DATAOPT_create_user_apply(itr, opt_user->phone);
+                        auto all_admin = PA_DATAOPT_get_admin(info.company);
+                        for (auto &itr : all_admin)
+                        {
+                            PA_DATAOPT_create_user_apply(itr, opt_user->phone);
+                        }
                     }
+                }
+                else
+                {
+                    opt_user->set_parent(*company, "belong_company");
                 }
             }
 
