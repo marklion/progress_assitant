@@ -20,7 +20,14 @@
         <van-cell :value="cur_status" />
     </van-cell-group>
     <div style="margin: 16px;" v-if="has_pri">
-        <van-button v-if="status == 0" round block type="primary" @click="submit_confirm">确认计划</van-button>
+        <van-row type="flex" justify="center" align="center" :gutter="10" v-if="status == 0">
+            <van-col :span="12">
+                <van-button round block type="danger" @click="show_reject_reason_diag = true">驳回计划</van-button>
+            </van-col>
+            <van-col :span="12">
+                <van-button round block type="primary" @click="submit_confirm">确认计划</van-button>
+            </van-col>
+        </van-row>
         <van-button v-if="status == 2" round block type="primary" @click="submit_confirm_pay">确认收款</van-button>
         <van-button v-if="status == 3 && is_proxy" round block type="primary" :to="{name:'ClosePlan', params:{plan_id:plan_id}}">确认收货</van-button>
     </div>
@@ -28,6 +35,12 @@
         <van-row type="flex" justify="center" align="center">
             <vue-qr :text="$remote_url + '/close_plan/' + plan_id" :margin="0" colorDark="#f67b29" colorLight="#fff" :logoScale="0.3" :size="200"></vue-qr>
         </van-row>
+    </van-dialog>
+    <van-dialog v-model="show_reject_reason_diag" title="确认驳回" closeOnClickOverlay :showConfirmButton="false">
+        <van-form @submit="reject_plan">
+            <van-field v-model="reject_reason" name="驳回原因" label="驳回原因" placeholder="请输入驳回原因" :rules="[{ required: true, message: '请填写驳回原因' }]" />
+            <van-button plain block>确认</van-button>
+        </van-form>
     </van-dialog>
 </div>
 </template>
@@ -46,7 +59,20 @@ import {
 import {
     Uploader
 } from 'vant';
+import {
+    Form
+} from 'vant';
+import {
+    Field
+} from 'vant';
+import {
+    Dialog
+} from 'vant';
 
+// 全局注册
+Vue.use(Dialog);
+Vue.use(Field);
+Vue.use(Form);
 Vue.use(Uploader);
 Vue.use(Cell);
 Vue.use(CellGroup);
@@ -58,12 +84,14 @@ export default {
         return {
             has_pri: false,
             show_qr: false,
+            show_reject_reason_diag: false,
+            reject_reason: '',
         };
     },
     props: {
         plan_id: Number,
         status: Number,
-        is_proxy:Boolean,
+        is_proxy: Boolean,
     },
     components: {
         "vue-qr": vueQr,
@@ -100,6 +128,15 @@ export default {
         },
     },
     methods: {
+        reject_plan: function () {
+            var vue_this = this;
+            vue_this.$call_remote_process("stuff_plan_management", "reject_plan", [vue_this.plan_id, vue_this.$cookies.get('pa_ssid'), vue_this.reject_reason]).then(function (resp) {
+                if (resp) {
+                    vue_this.show_reject_reason_diag = false;
+                    vue_this.$router.go(0);
+                }
+            });
+        },
         randomString: function (len) {
             len = len || 32;
             var $chars = 'ABCDEFGHJKMNPQRSTWXYZabcdefhijkmnprstwxyz2345678'; /****默认去掉了容易混淆的字符oOLl,9gq,Vv,Uu,I1****/
@@ -134,8 +171,8 @@ export default {
         },
         confirm_close: function () {
             wx.scanQRCode({
-                needResult:1,
-                success:function(res) {
+                needResult: 1,
+                success: function (res) {
                     var dest_url = res.resultStr;
                     window.location.href = dest_url;
                 }
@@ -296,7 +333,7 @@ export default {
         postImg(base64) {
             var file_content = base64.split(';base64,')[1];
             var vue_this = this;
-            this.$call_remote_process("stuff_plan_management",'upload_payinfo', [vue_this.plan_id, vue_this.$cookies.get('pa_ssid'), file_content]).
+            this.$call_remote_process("stuff_plan_management", 'upload_payinfo', [vue_this.plan_id, vue_this.$cookies.get('pa_ssid'), file_content]).
             then(function (resp) {
                 if (resp) {
                     vue_this.$router.go(0);
@@ -307,13 +344,13 @@ export default {
         },
         get_priv: function (_id) {
             var vue_this = this;
-            vue_this.$call_remote_process("stuff_plan_management",'has_priv_edit', [_id, vue_this.$cookies.get('pa_ssid')]).then(function (resp) {
+            vue_this.$call_remote_process("stuff_plan_management", 'has_priv_edit', [_id, vue_this.$cookies.get('pa_ssid')]).then(function (resp) {
                 vue_this.has_pri = resp;
             });
         },
         submit_confirm: function () {
             var vue_this = this;
-            vue_this.$call_remote_process("stuff_plan_management",'confirm_plan',[vue_this.plan_id, vue_this.$cookies.get('pa_ssid')]).then(function (resp) {
+            vue_this.$call_remote_process("stuff_plan_management", 'confirm_plan', [vue_this.plan_id, vue_this.$cookies.get('pa_ssid')]).then(function (resp) {
                 if (resp) {
                     vue_this.$router.go(0);
                 }
@@ -321,7 +358,7 @@ export default {
         },
         submit_confirm_pay: function () {
             var vue_this = this;
-            vue_this.$call_remote_process("stuff_plan_management",'confirm_pay',[vue_this.plan_id, vue_this.$cookies.get('pa_ssid')]).then(function (resp) {
+            vue_this.$call_remote_process("stuff_plan_management", 'confirm_pay', [vue_this.plan_id, vue_this.$cookies.get('pa_ssid')]).then(function (resp) {
                 if (resp) {
                     vue_this.$router.go(0);
                 }

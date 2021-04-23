@@ -574,7 +574,7 @@ void swap(vichele_in_plan &a, vichele_in_plan &b);
 std::ostream& operator<<(std::ostream& out, const vichele_in_plan& obj);
 
 typedef struct _stuff_plan__isset {
-  _stuff_plan__isset() : type_id(false), count(false), vichele_info(false), plan_id(false), plan_time(false), created_time(false), name(false), price(false), status(false), comment(false), plan_confirm(false), pay_confirm(false), pay_info(false), pay_timestamp(false), close_timestamp(false), close_by(false), except_close_by(false), except_close_timestamp(false), except_close_reason(false), proxy_company(false), created_user_name(false), buy_company(false), sale_company(false) {}
+  _stuff_plan__isset() : type_id(false), count(false), vichele_info(false), plan_id(false), plan_time(false), created_time(false), name(false), price(false), status(false), comment(false), plan_confirm(false), pay_confirm(false), pay_info(false), pay_timestamp(false), close_timestamp(false), close_by(false), except_close_by(false), except_close_timestamp(false), except_close_reason(false), proxy_company(false), created_user_name(false), buy_company(false), sale_company(false), reject_reason(false) {}
   bool type_id :1;
   bool count :1;
   bool vichele_info :1;
@@ -598,6 +598,7 @@ typedef struct _stuff_plan__isset {
   bool created_user_name :1;
   bool buy_company :1;
   bool sale_company :1;
+  bool reject_reason :1;
 } _stuff_plan__isset;
 
 class stuff_plan : public virtual ::apache::thrift::TBase {
@@ -605,7 +606,7 @@ class stuff_plan : public virtual ::apache::thrift::TBase {
 
   stuff_plan(const stuff_plan&);
   stuff_plan& operator=(const stuff_plan&);
-  stuff_plan() : type_id(0), count(0), plan_id(0), plan_time(), created_time(0), name(), price(0), status(0), comment(), pay_info(), pay_timestamp(), close_timestamp(), close_by(), except_close_by(), except_close_timestamp(), except_close_reason(), proxy_company(), created_user_name(), buy_company(), sale_company() {
+  stuff_plan() : type_id(0), count(0), plan_id(0), plan_time(), created_time(0), name(), price(0), status(0), comment(), pay_info(), pay_timestamp(), close_timestamp(), close_by(), except_close_by(), except_close_timestamp(), except_close_reason(), proxy_company(), created_user_name(), buy_company(), sale_company(), reject_reason() {
   }
 
   virtual ~stuff_plan() noexcept;
@@ -632,6 +633,7 @@ class stuff_plan : public virtual ::apache::thrift::TBase {
   std::string created_user_name;
   std::string buy_company;
   std::string sale_company;
+  std::string reject_reason;
 
   _stuff_plan__isset __isset;
 
@@ -681,6 +683,8 @@ class stuff_plan : public virtual ::apache::thrift::TBase {
 
   void __set_sale_company(const std::string& val);
 
+  void __set_reject_reason(const std::string& val);
+
   bool operator == (const stuff_plan & rhs) const
   {
     if (!(type_id == rhs.type_id))
@@ -728,6 +732,8 @@ class stuff_plan : public virtual ::apache::thrift::TBase {
     if (!(buy_company == rhs.buy_company))
       return false;
     if (!(sale_company == rhs.sale_company))
+      return false;
+    if (!(reject_reason == rhs.reject_reason))
       return false;
     return true;
   }
