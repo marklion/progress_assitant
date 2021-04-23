@@ -1448,6 +1448,10 @@ void stuff_plan::__set_buy_company(const std::string& val) {
 void stuff_plan::__set_sale_company(const std::string& val) {
   this->sale_company = val;
 }
+
+void stuff_plan::__set_reject_reason(const std::string& val) {
+  this->reject_reason = val;
+}
 std::ostream& operator<<(std::ostream& out, const stuff_plan& obj)
 {
   obj.printTo(out);
@@ -1672,6 +1676,14 @@ uint32_t stuff_plan::read(::apache::thrift::protocol::TProtocol* iprot) {
           xfer += iprot->skip(ftype);
         }
         break;
+      case 24:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->reject_reason);
+          this->__isset.reject_reason = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
       default:
         xfer += iprot->skip(ftype);
         break;
@@ -1789,6 +1801,10 @@ uint32_t stuff_plan::write(::apache::thrift::protocol::TProtocol* oprot) const {
   xfer += oprot->writeString(this->sale_company);
   xfer += oprot->writeFieldEnd();
 
+  xfer += oprot->writeFieldBegin("reject_reason", ::apache::thrift::protocol::T_STRING, 24);
+  xfer += oprot->writeString(this->reject_reason);
+  xfer += oprot->writeFieldEnd();
+
   xfer += oprot->writeFieldStop();
   xfer += oprot->writeStructEnd();
   return xfer;
@@ -1819,6 +1835,7 @@ void swap(stuff_plan &a, stuff_plan &b) {
   swap(a.created_user_name, b.created_user_name);
   swap(a.buy_company, b.buy_company);
   swap(a.sale_company, b.sale_company);
+  swap(a.reject_reason, b.reject_reason);
   swap(a.__isset, b.__isset);
 }
 
@@ -1846,6 +1863,7 @@ stuff_plan::stuff_plan(const stuff_plan& other24) {
   created_user_name = other24.created_user_name;
   buy_company = other24.buy_company;
   sale_company = other24.sale_company;
+  reject_reason = other24.reject_reason;
   __isset = other24.__isset;
 }
 stuff_plan& stuff_plan::operator=(const stuff_plan& other25) {
@@ -1872,6 +1890,7 @@ stuff_plan& stuff_plan::operator=(const stuff_plan& other25) {
   created_user_name = other25.created_user_name;
   buy_company = other25.buy_company;
   sale_company = other25.sale_company;
+  reject_reason = other25.reject_reason;
   __isset = other25.__isset;
   return *this;
 }
@@ -1901,6 +1920,7 @@ void stuff_plan::printTo(std::ostream& out) const {
   out << ", " << "created_user_name=" << to_string(created_user_name);
   out << ", " << "buy_company=" << to_string(buy_company);
   out << ", " << "sale_company=" << to_string(sale_company);
+  out << ", " << "reject_reason=" << to_string(reject_reason);
   out << ")";
 }
 

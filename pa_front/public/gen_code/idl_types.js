@@ -877,6 +877,7 @@ stuff_plan = class {
     this.created_user_name = null;
     this.buy_company = null;
     this.sale_company = null;
+    this.reject_reason = null;
     if (args) {
       if (args.type_id !== undefined && args.type_id !== null) {
         this.type_id = args.type_id;
@@ -946,6 +947,9 @@ stuff_plan = class {
       }
       if (args.sale_company !== undefined && args.sale_company !== null) {
         this.sale_company = args.sale_company;
+      }
+      if (args.reject_reason !== undefined && args.reject_reason !== null) {
+        this.reject_reason = args.reject_reason;
       }
     }
   }
@@ -1132,6 +1136,13 @@ stuff_plan = class {
           input.skip(ftype);
         }
         break;
+        case 24:
+        if (ftype == Thrift.Type.STRING) {
+          this.reject_reason = input.readString().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
         default:
           input.skip(ftype);
       }
@@ -1263,6 +1274,11 @@ stuff_plan = class {
     if (this.sale_company !== null && this.sale_company !== undefined) {
       output.writeFieldBegin('sale_company', Thrift.Type.STRING, 23);
       output.writeString(this.sale_company);
+      output.writeFieldEnd();
+    }
+    if (this.reject_reason !== null && this.reject_reason !== undefined) {
+      output.writeFieldBegin('reject_reason', Thrift.Type.STRING, 24);
+      output.writeString(this.reject_reason);
       output.writeFieldEnd();
     }
     output.writeFieldStop();

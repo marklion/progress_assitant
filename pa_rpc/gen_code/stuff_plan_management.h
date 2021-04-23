@@ -36,6 +36,7 @@ class stuff_plan_managementIf {
   virtual bool except_close(const int64_t plan_id, const std::string& ssid, const std::string& reason) = 0;
   virtual void verify_plan(std::string& _return, const stuff_plan& plan, const std::string& ssid) = 0;
   virtual bool send_file_via_email(const std::string& ssid, const std::string& filepath, const std::string& email) = 0;
+  virtual bool reject_plan(const int64_t plan_id, const std::string& ssid, const std::string& reject_reason) = 0;
 };
 
 class stuff_plan_managementIfFactory {
@@ -113,6 +114,10 @@ class stuff_plan_managementNull : virtual public stuff_plan_managementIf {
     return;
   }
   bool send_file_via_email(const std::string& /* ssid */, const std::string& /* filepath */, const std::string& /* email */) {
+    bool _return = false;
+    return _return;
+  }
+  bool reject_plan(const int64_t /* plan_id */, const std::string& /* ssid */, const std::string& /* reject_reason */) {
     bool _return = false;
     return _return;
   }
@@ -1791,6 +1796,132 @@ class stuff_plan_management_send_file_via_email_presult {
 
 };
 
+typedef struct _stuff_plan_management_reject_plan_args__isset {
+  _stuff_plan_management_reject_plan_args__isset() : plan_id(false), ssid(false), reject_reason(false) {}
+  bool plan_id :1;
+  bool ssid :1;
+  bool reject_reason :1;
+} _stuff_plan_management_reject_plan_args__isset;
+
+class stuff_plan_management_reject_plan_args {
+ public:
+
+  stuff_plan_management_reject_plan_args(const stuff_plan_management_reject_plan_args&);
+  stuff_plan_management_reject_plan_args& operator=(const stuff_plan_management_reject_plan_args&);
+  stuff_plan_management_reject_plan_args() : plan_id(0), ssid(), reject_reason() {
+  }
+
+  virtual ~stuff_plan_management_reject_plan_args() noexcept;
+  int64_t plan_id;
+  std::string ssid;
+  std::string reject_reason;
+
+  _stuff_plan_management_reject_plan_args__isset __isset;
+
+  void __set_plan_id(const int64_t val);
+
+  void __set_ssid(const std::string& val);
+
+  void __set_reject_reason(const std::string& val);
+
+  bool operator == (const stuff_plan_management_reject_plan_args & rhs) const
+  {
+    if (!(plan_id == rhs.plan_id))
+      return false;
+    if (!(ssid == rhs.ssid))
+      return false;
+    if (!(reject_reason == rhs.reject_reason))
+      return false;
+    return true;
+  }
+  bool operator != (const stuff_plan_management_reject_plan_args &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const stuff_plan_management_reject_plan_args & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+
+class stuff_plan_management_reject_plan_pargs {
+ public:
+
+
+  virtual ~stuff_plan_management_reject_plan_pargs() noexcept;
+  const int64_t* plan_id;
+  const std::string* ssid;
+  const std::string* reject_reason;
+
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _stuff_plan_management_reject_plan_result__isset {
+  _stuff_plan_management_reject_plan_result__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _stuff_plan_management_reject_plan_result__isset;
+
+class stuff_plan_management_reject_plan_result {
+ public:
+
+  stuff_plan_management_reject_plan_result(const stuff_plan_management_reject_plan_result&);
+  stuff_plan_management_reject_plan_result& operator=(const stuff_plan_management_reject_plan_result&);
+  stuff_plan_management_reject_plan_result() : success(0) {
+  }
+
+  virtual ~stuff_plan_management_reject_plan_result() noexcept;
+  bool success;
+  gen_exp e;
+
+  _stuff_plan_management_reject_plan_result__isset __isset;
+
+  void __set_success(const bool val);
+
+  void __set_e(const gen_exp& val);
+
+  bool operator == (const stuff_plan_management_reject_plan_result & rhs) const
+  {
+    if (!(success == rhs.success))
+      return false;
+    if (!(e == rhs.e))
+      return false;
+    return true;
+  }
+  bool operator != (const stuff_plan_management_reject_plan_result &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const stuff_plan_management_reject_plan_result & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _stuff_plan_management_reject_plan_presult__isset {
+  _stuff_plan_management_reject_plan_presult__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _stuff_plan_management_reject_plan_presult__isset;
+
+class stuff_plan_management_reject_plan_presult {
+ public:
+
+
+  virtual ~stuff_plan_management_reject_plan_presult() noexcept;
+  bool* success;
+  gen_exp e;
+
+  _stuff_plan_management_reject_plan_presult__isset __isset;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+
+};
+
 class stuff_plan_managementClient : virtual public stuff_plan_managementIf {
  public:
   stuff_plan_managementClient(std::shared_ptr< ::apache::thrift::protocol::TProtocol> prot) {
@@ -1858,6 +1989,9 @@ class stuff_plan_managementClient : virtual public stuff_plan_managementIf {
   bool send_file_via_email(const std::string& ssid, const std::string& filepath, const std::string& email);
   void send_send_file_via_email(const std::string& ssid, const std::string& filepath, const std::string& email);
   bool recv_send_file_via_email();
+  bool reject_plan(const int64_t plan_id, const std::string& ssid, const std::string& reject_reason);
+  void send_reject_plan(const int64_t plan_id, const std::string& ssid, const std::string& reject_reason);
+  bool recv_reject_plan();
  protected:
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> piprot_;
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> poprot_;
@@ -1887,6 +2021,7 @@ class stuff_plan_managementProcessor : public ::apache::thrift::TDispatchProcess
   void process_except_close(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
   void process_verify_plan(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
   void process_send_file_via_email(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
+  void process_reject_plan(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
  public:
   stuff_plan_managementProcessor(::std::shared_ptr<stuff_plan_managementIf> iface) :
     iface_(iface) {
@@ -1904,6 +2039,7 @@ class stuff_plan_managementProcessor : public ::apache::thrift::TDispatchProcess
     processMap_["except_close"] = &stuff_plan_managementProcessor::process_except_close;
     processMap_["verify_plan"] = &stuff_plan_managementProcessor::process_verify_plan;
     processMap_["send_file_via_email"] = &stuff_plan_managementProcessor::process_send_file_via_email;
+    processMap_["reject_plan"] = &stuff_plan_managementProcessor::process_reject_plan;
   }
 
   virtual ~stuff_plan_managementProcessor() {}
@@ -2063,6 +2199,15 @@ class stuff_plan_managementMultiface : virtual public stuff_plan_managementIf {
     return ifaces_[i]->send_file_via_email(ssid, filepath, email);
   }
 
+  bool reject_plan(const int64_t plan_id, const std::string& ssid, const std::string& reject_reason) {
+    size_t sz = ifaces_.size();
+    size_t i = 0;
+    for (; i < (sz - 1); ++i) {
+      ifaces_[i]->reject_plan(plan_id, ssid, reject_reason);
+    }
+    return ifaces_[i]->reject_plan(plan_id, ssid, reject_reason);
+  }
+
 };
 
 // The 'concurrent' client is a thread safe client that correctly handles
@@ -2137,6 +2282,9 @@ class stuff_plan_managementConcurrentClient : virtual public stuff_plan_manageme
   bool send_file_via_email(const std::string& ssid, const std::string& filepath, const std::string& email);
   int32_t send_send_file_via_email(const std::string& ssid, const std::string& filepath, const std::string& email);
   bool recv_send_file_via_email(const int32_t seqid);
+  bool reject_plan(const int64_t plan_id, const std::string& ssid, const std::string& reject_reason);
+  int32_t send_reject_plan(const int64_t plan_id, const std::string& ssid, const std::string& reject_reason);
+  bool recv_reject_plan(const int32_t seqid);
  protected:
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> piprot_;
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> poprot_;

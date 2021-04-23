@@ -186,6 +186,7 @@ public:
     std::string close_reason;
     std::string except_close_timestamp;
     std::string proxy_company;
+    std::string reject_reason;
     pa_sql_plan() {
         add_parent_type<pa_sql_userinfo>("created_by");
         add_parent_type<pa_sql_stuff_info>("belong_stuff");
@@ -213,6 +214,7 @@ public:
         ret.push_back(sqlite_orm_column("close_reason", sqlite_orm_column::STRING, &close_reason));
         ret.push_back(sqlite_orm_column("except_close_timestamp", sqlite_orm_column::STRING, &except_close_timestamp));
         ret.push_back(sqlite_orm_column("proxy_company", sqlite_orm_column::STRING, &proxy_company));
+        ret.push_back(sqlite_orm_column("reject_reason", sqlite_orm_column::STRING, &reject_reason));
 
         return ret;
     }

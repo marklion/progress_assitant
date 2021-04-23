@@ -201,6 +201,7 @@ class stuff_plan_management_handler : virtual public stuff_plan_managementIf
                 _return.price = plan->price;
                 _return.status = plan->status;
                 _return.comment = plan->comment;
+                _return.reject_reason = plan->reject_reason;
                 auto pay_confirm_user = plan->get_parent<pa_sql_userinfo>("pay_confirm_by");
                 auto plan_confirm_user = plan->get_parent<pa_sql_userinfo>("plan_confirm_by");
                 auto close_user = plan->get_parent<pa_sql_userinfo>("close_by");
@@ -319,6 +320,10 @@ class stuff_plan_management_handler : virtual public stuff_plan_managementIf
                     }
                 }
                 plan_in_sql->comment = plan.comment;
+                plan_in_sql->reject_reason = "";
+                plan_in_sql->plan_confirm_timestamp = "";
+                pa_sql_userinfo empty;
+                plan_in_sql->set_parent(empty, "plan_confirm_by");
                 ret = plan_in_sql->update_record();
                 if (ret)
                 {
@@ -387,6 +392,7 @@ class stuff_plan_management_handler : virtual public stuff_plan_managementIf
                         plan->status = 1;
                         plan->set_parent(*opt_user, "plan_confirm_by");
                         plan->plan_confirm_timestamp = PA_DATAOPT_current_time();
+                        plan->reject_reason = "";
                         ret = plan->update_record();
                         if (ret)
                         {
@@ -883,6 +889,50 @@ class stuff_plan_management_handler : virtual public stuff_plan_managementIf
         {
             PA_RETURN_MSG("发送邮件失败");
         }
+        return ret;
+    }
+
+    virtual bool reject_plan(const int64_t plan_id, const std::string &ssid, const std::string &reject_reason)
+    {
+        bool ret = false;
+        auto user = PA_DATAOPT_get_online_user(ssid);
+        if (!user)
+        {
+            PA_RETURN_UNLOGIN_MSG();
+        }
+        auto company = user->get_parent<pa_sql_company>("belong_company");
+        if (!company)
+        {
+            PA_RETURN_NOCOMPANY_MSG();
+        }
+        auto plan = sqlite_orm::search_record<pa_sql_plan>(plan_id);
+        if (!plan)
+        {
+            PA_RETURN_NOPLAN_MSG();
+        }
+        auto stuff_info = plan->get_parent<pa_sql_stuff_info>("belong_stuff");
+        if (!stuff_info)
+        {
+            PA_RETURN_NOSTUFF_MSG();
+        }
+
+        auto belong_company = stuff_info->get_parent<pa_sql_company>("belong_company");
+        if (belong_company && belong_company->get_pri_id() == company->get_pri_id() && plan->status == 0)
+        {
+            plan->reject_reason = reject_reason;
+            plan->plan_confirm_timestamp = PA_DATAOPT_current_time();
+            plan->set_parent(*user, "plan_confirm_by");
+            ret = plan->update_record();
+            if (ret)
+            {
+                plan->send_wechat_msg();
+            }
+        }
+        else
+        {
+            PA_RETURN_NOPRIVA_MSG();
+        }
+
         return ret;
     }
 };

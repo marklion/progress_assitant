@@ -44,6 +44,9 @@
             <h3>计划确认</h3>
             <p>{{plan_detail.plan_confirm_timestamp}}</p>
             <p>{{plan_detail.plan_confirm_by}}</p>
+            <p v-if="plan_detail.reject_reason && plan_detail.status == 0">
+                驳回原因：{{plan_detail.reject_reason}}
+            </p>
         </van-step>
         <van-step>
             <h3>付款</h3>
@@ -162,6 +165,7 @@ export default {
                 except_close_by: '',
                 except_close_timestamp: '',
                 except_close_reason: '',
+                reject_reason:'',
             },
             plan_owner_info: {
                 name: '',
@@ -225,6 +229,7 @@ export default {
             vue_this.plan_detail.except_close_by = resp.except_close_by;
             vue_this.plan_detail.except_close_timestamp = resp.except_close_timestamp;
             vue_this.plan_detail.except_close_reason = resp.except_close_reason;
+            vue_this.plan_detail.reject_reason = resp.reject_reason;
             resp.vichele_info.forEach((element, index) => {
                 vue_this.$set(vue_this.plan_detail.vichele_info, index, element);
                 vue_this.$set(vue_this.vichele_panel, index, ['0']);
@@ -236,6 +241,13 @@ export default {
                 vue_this.is_proxy = true;
             } else {
                 vue_this.plan_owner_info.name = resp.created_user_name;
+            }
+            
+            if (vue_this.plan_detail.reject_reason && (vue_this.is_proxy || vue_this.$store.state.userinfo.buyer))
+            {
+                Dialog({
+                    message: '卖方拒绝了您的计划\n原因：' + vue_this.plan_detail.reject_reason,
+                });
             }
         });
     },

@@ -124,6 +124,7 @@ struct stuff_plan {
     21:string created_user_name,
     22:string buy_company,
     23:string sale_company,
+    24:string reject_reason,
 }
 
 struct plan_status {
@@ -147,4 +148,5 @@ service stuff_plan_management {
     bool except_close(1:i64 plan_id, 2:string ssid, 3:string reason) throws (1:gen_exp e),
     string verify_plan(1:stuff_plan plan, 2:string ssid) throws (1:gen_exp e),
     bool send_file_via_email(1:string ssid, 2:string filepath, 3:string email) throws (1:gen_exp e),
+    bool reject_plan(1:i64 plan_id, 2:string ssid, 3:string reject_reason) throws (1:gen_exp e),
 }
