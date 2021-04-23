@@ -28,7 +28,14 @@
                 <van-button round block type="primary" @click="submit_confirm">确认计划</van-button>
             </van-col>
         </van-row>
-        <van-button v-if="status == 2" round block type="primary" @click="submit_confirm_pay">确认收款</van-button>
+        <van-row type="flex" justify="center" align="center" :gutter="10" v-if="status == 2">
+            <van-col :span="12">
+                <van-button round block type="danger" @click="show_reject_reason_diag = true">驳回付款</van-button>
+            </van-col>
+            <van-col :span="12">
+                <van-button round block type="primary" @click="submit_confirm_pay">确认收款</van-button>
+            </van-col>
+        </van-row>
         <van-button v-if="status == 3 && is_proxy" round block type="primary" :to="{name:'ClosePlan', params:{plan_id:plan_id}}">确认收货</van-button>
     </div>
     <van-dialog v-model="show_qr" title="提货码">

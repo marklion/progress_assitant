@@ -487,6 +487,10 @@ class stuff_plan_management_handler : virtual public stuff_plan_managementIf
                     plan->payinfo = pay_info;
                     plan->pay_timestamp = PA_DATAOPT_current_time();
                     plan->status = 2;
+                    plan->pay_confirm_timestamp = "";
+                    pa_sql_userinfo empty;
+                    plan->set_parent(empty, "pay_confirm_by");
+                    plan->reject_reason = "";
                     ret = plan->update_record();
                     if (ret)
                     {
@@ -518,6 +522,7 @@ class stuff_plan_management_handler : virtual public stuff_plan_managementIf
             {
                 plan->status = 3;
                 plan->pay_confirm_timestamp = PA_DATAOPT_current_time();
+                plan->reject_reason = "";
                 plan->set_parent(*opt_user, "pay_confirm_by");
                 ret = plan->update_record();
                 if (ret)
@@ -917,11 +922,20 @@ class stuff_plan_management_handler : virtual public stuff_plan_managementIf
         }
 
         auto belong_company = stuff_info->get_parent<pa_sql_company>("belong_company");
-        if (belong_company && belong_company->get_pri_id() == company->get_pri_id() && plan->status == 0)
+        if (belong_company && belong_company->get_pri_id() == company->get_pri_id() && (plan->status == 0 || plan->status == 2))
         {
+            if (plan->status == 0)
+            {
+                plan->plan_confirm_timestamp = PA_DATAOPT_current_time();
+                plan->set_parent(*user, "plan_confirm_by");
+            }
+            else if (plan->status == 2)
+            {
+                plan->pay_confirm_timestamp = PA_DATAOPT_current_time();
+                plan->set_parent(*user, "pay_confirm_by");
+                plan->status = 1;
+            }
             plan->reject_reason = reject_reason;
-            plan->plan_confirm_timestamp = PA_DATAOPT_current_time();
-            plan->set_parent(*user, "plan_confirm_by");
             ret = plan->update_record();
             if (ret)
             {
