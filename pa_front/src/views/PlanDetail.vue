@@ -60,6 +60,9 @@
             <h3>收款确认</h3>
             <p>{{plan_detail.pay_confirm_timestamp}}</p>
             <p>{{plan_detail.pay_confirm_by}}</p>
+            <p v-if="plan_detail.reject_reason && plan_detail.status == 1">
+                驳回原因：{{plan_detail.reject_reason}}
+            </p>
         </van-step>
         <van-step>
             <h3>提货结束</h3>
@@ -165,7 +168,7 @@ export default {
                 except_close_by: '',
                 except_close_timestamp: '',
                 except_close_reason: '',
-                reject_reason:'',
+                reject_reason: '',
             },
             plan_owner_info: {
                 name: '',
@@ -242,11 +245,10 @@ export default {
             } else {
                 vue_this.plan_owner_info.name = resp.created_user_name;
             }
-            
-            if (vue_this.plan_detail.reject_reason && (vue_this.is_proxy || vue_this.$store.state.userinfo.buyer))
-            {
+
+            if (vue_this.plan_detail.reject_reason && (vue_this.is_proxy || vue_this.$store.state.userinfo.buyer)) {
                 Dialog({
-                    message: '卖方拒绝了您的计划\n原因：' + vue_this.plan_detail.reject_reason,
+                    message: '卖方驳回了您的计划\n原因：' + vue_this.plan_detail.reject_reason,
                 });
             }
         });
