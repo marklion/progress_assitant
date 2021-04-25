@@ -11,7 +11,7 @@
         </template>
         <van-cell v-for="(single_main_vichele, index) in main_vichele" :key="index" :value="single_main_vichele.number">
             <template #right-icon>
-                <van-button size="small" plain type="danger" @click="remove_vichele(single_main_vichele.id, true)" icon="cross"></van-button>
+                <van-button size="small" plain type="danger" @click="remove_vichele(single_main_vichele.id, true)" hairline icon="delete-o"></van-button>
             </template>
         </van-cell>
     </van-cell-group>
@@ -26,7 +26,7 @@
         </template>
         <van-cell v-for="(single_behind_vichele, index) in behind_vichele" :key="index" :value="single_behind_vichele.number">
             <template #right-icon>
-                <van-button size="small" plain type="danger" @click="remove_vichele(single_behind_vichele.id, false)" icon="cross"></van-button>
+                <van-button size="small" plain type="danger" @click="remove_vichele(single_behind_vichele.id, false)" hairline icon="delete-o"></van-button>
             </template>
         </van-cell>
     </van-cell-group>
@@ -41,7 +41,7 @@
         </template>
         <van-cell v-for="(single_driver_info, index) in driver" :key="index" :title="single_driver_info.name" :value="single_driver_info.phone">
             <template #right-icon>
-                <van-button size="small" plain type="danger" @click="remove_driver(single_driver_info.id)" icon="cross"></van-button>
+                <van-button style="margin-left:15px;" size="small" plain type="danger" @click="remove_driver(single_driver_info.id)" hairline icon="delete-o"></van-button>
             </template>
         </van-cell>
     </van-cell-group>

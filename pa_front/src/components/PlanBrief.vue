@@ -1,6 +1,6 @@
 <template>
 <div class="plan_brief_show">
-    <van-card :desc="company" :title="name" @click="nav_to_detail">
+    <van-card class="stuff_card_show" :desc="company" :title="name" @click="nav_to_detail">
         <template #num>
             {{plan_count}}吨
         </template>
@@ -128,6 +128,13 @@ export default {
 }
 </script>
 
-<style>
-
+<style scoped>
+.stuff_card_show /deep/ .van-card__title {
+    font-size:18px;
+    line-height: 20px;
+}
+.stuff_card_show /deep/ .van-card__desc {
+    font-size: 16px;
+    font-weight: bold;
+}
 </style>

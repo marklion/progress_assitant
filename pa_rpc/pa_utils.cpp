@@ -279,6 +279,11 @@ bool PA_DATAOPT_create_user_apply(const std::string &_assignee, const std::strin
         auto assigner_user = sqlite_orm::search_record<pa_sql_userinfo>("phone = '%s'", _assigner.c_str());
         if (assigner_user && assignee_user)
         {
+            auto exist_apply = assigner_user->get_children<pa_sql_user_apply>("assigner", "status = 0");
+            if (exist_apply)
+            {
+                exist_apply->remove_record();
+            }
             pa_sql_user_apply tmp;
             tmp.status = 0;
             tmp.set_parent(*assignee_user, "assignee");

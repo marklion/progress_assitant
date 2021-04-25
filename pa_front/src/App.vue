@@ -1,6 +1,6 @@
 <template>
 <div id="app">
-    <van-nav-bar :left-arrow="has_go_back" :title="bar_title" @click-left="onClickLeft" @click-right="onClickRight">
+    <van-nav-bar class="nav_bar_show" :left-arrow="has_go_back" :title="bar_title" @click-left="onClickLeft" @click-right="onClickRight">
         <template #right>
             <van-icon name="share-o" size="20"></van-icon>
         </template>
@@ -138,5 +138,13 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
+.nav_bar_show {
+    background-color: #43dbba;
+}
+
+.nav_bar_show /deep/ .van-nav-bar__title {
+    font-size: 20px;
+    font-weight: bold;
+}
 </style>

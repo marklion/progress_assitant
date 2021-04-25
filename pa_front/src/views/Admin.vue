@@ -109,6 +109,7 @@ export default {
         },
         init_all_user: function () {
             var vue_this = this;
+            vue_this.all_user = [];
             vue_this.$call_remote_process("company_management", "get_all_compay_user", [vue_this.$cookies.get('pa_ssid')]).then(function (resp) {
                 resp.forEach((element, index) => {
                     vue_this.$set(vue_this.all_user, index, element);
