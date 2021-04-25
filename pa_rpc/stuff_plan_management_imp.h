@@ -885,7 +885,7 @@ class stuff_plan_management_handler : virtual public stuff_plan_managementIf
         }
         user->email = email;
         user->update_record();
-        std::string send_mail_cmd = "/script/send_mail.py " + email + " '附件导出' " + " '尊敬的" + user->name + "先生，附件是您的导出附件' " + file_name;
+        std::string send_mail_cmd = "/script/send_mail.py " + email + " '附件导出' " + " '尊敬的" + user->name + "，附件是您的导出附件' " + file_name;
         if (0 == system(send_mail_cmd.c_str()))
         {
             ret = true;

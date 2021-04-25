@@ -38,6 +38,7 @@ class user_managementIf {
   virtual void remove_driver(const std::string& ssid, const int64_t id) = 0;
   virtual bool send_sms_verify(const std::string& ssid, const std::string& phone) = 0;
   virtual void get_user_email(std::string& _return, const std::string& ssid) = 0;
+  virtual bool has_apply(const std::string& ssid) = 0;
 };
 
 class user_managementIfFactory {
@@ -120,6 +121,10 @@ class user_managementNull : virtual public user_managementIf {
   }
   void get_user_email(std::string& /* _return */, const std::string& /* ssid */) {
     return;
+  }
+  bool has_apply(const std::string& /* ssid */) {
+    bool _return = false;
+    return _return;
   }
 };
 
@@ -1974,6 +1979,118 @@ class user_management_get_user_email_presult {
 
 };
 
+typedef struct _user_management_has_apply_args__isset {
+  _user_management_has_apply_args__isset() : ssid(false) {}
+  bool ssid :1;
+} _user_management_has_apply_args__isset;
+
+class user_management_has_apply_args {
+ public:
+
+  user_management_has_apply_args(const user_management_has_apply_args&);
+  user_management_has_apply_args& operator=(const user_management_has_apply_args&);
+  user_management_has_apply_args() : ssid() {
+  }
+
+  virtual ~user_management_has_apply_args() noexcept;
+  std::string ssid;
+
+  _user_management_has_apply_args__isset __isset;
+
+  void __set_ssid(const std::string& val);
+
+  bool operator == (const user_management_has_apply_args & rhs) const
+  {
+    if (!(ssid == rhs.ssid))
+      return false;
+    return true;
+  }
+  bool operator != (const user_management_has_apply_args &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const user_management_has_apply_args & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+
+class user_management_has_apply_pargs {
+ public:
+
+
+  virtual ~user_management_has_apply_pargs() noexcept;
+  const std::string* ssid;
+
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _user_management_has_apply_result__isset {
+  _user_management_has_apply_result__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _user_management_has_apply_result__isset;
+
+class user_management_has_apply_result {
+ public:
+
+  user_management_has_apply_result(const user_management_has_apply_result&);
+  user_management_has_apply_result& operator=(const user_management_has_apply_result&);
+  user_management_has_apply_result() : success(0) {
+  }
+
+  virtual ~user_management_has_apply_result() noexcept;
+  bool success;
+  gen_exp e;
+
+  _user_management_has_apply_result__isset __isset;
+
+  void __set_success(const bool val);
+
+  void __set_e(const gen_exp& val);
+
+  bool operator == (const user_management_has_apply_result & rhs) const
+  {
+    if (!(success == rhs.success))
+      return false;
+    if (!(e == rhs.e))
+      return false;
+    return true;
+  }
+  bool operator != (const user_management_has_apply_result &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const user_management_has_apply_result & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _user_management_has_apply_presult__isset {
+  _user_management_has_apply_presult__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _user_management_has_apply_presult__isset;
+
+class user_management_has_apply_presult {
+ public:
+
+
+  virtual ~user_management_has_apply_presult() noexcept;
+  bool* success;
+  gen_exp e;
+
+  _user_management_has_apply_presult__isset __isset;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+
+};
+
 class user_managementClient : virtual public user_managementIf {
  public:
   user_managementClient(std::shared_ptr< ::apache::thrift::protocol::TProtocol> prot) {
@@ -2047,6 +2164,9 @@ class user_managementClient : virtual public user_managementIf {
   void get_user_email(std::string& _return, const std::string& ssid);
   void send_get_user_email(const std::string& ssid);
   void recv_get_user_email(std::string& _return);
+  bool has_apply(const std::string& ssid);
+  void send_has_apply(const std::string& ssid);
+  bool recv_has_apply();
  protected:
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> piprot_;
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> poprot_;
@@ -2078,6 +2198,7 @@ class user_managementProcessor : public ::apache::thrift::TDispatchProcessor {
   void process_remove_driver(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
   void process_send_sms_verify(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
   void process_get_user_email(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
+  void process_has_apply(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
  public:
   user_managementProcessor(::std::shared_ptr<user_managementIf> iface) :
     iface_(iface) {
@@ -2097,6 +2218,7 @@ class user_managementProcessor : public ::apache::thrift::TDispatchProcessor {
     processMap_["remove_driver"] = &user_managementProcessor::process_remove_driver;
     processMap_["send_sms_verify"] = &user_managementProcessor::process_send_sms_verify;
     processMap_["get_user_email"] = &user_managementProcessor::process_get_user_email;
+    processMap_["has_apply"] = &user_managementProcessor::process_has_apply;
   }
 
   virtual ~user_managementProcessor() {}
@@ -2276,6 +2398,15 @@ class user_managementMultiface : virtual public user_managementIf {
     return;
   }
 
+  bool has_apply(const std::string& ssid) {
+    size_t sz = ifaces_.size();
+    size_t i = 0;
+    for (; i < (sz - 1); ++i) {
+      ifaces_[i]->has_apply(ssid);
+    }
+    return ifaces_[i]->has_apply(ssid);
+  }
+
 };
 
 // The 'concurrent' client is a thread safe client that correctly handles
@@ -2356,6 +2487,9 @@ class user_managementConcurrentClient : virtual public user_managementIf {
   void get_user_email(std::string& _return, const std::string& ssid);
   int32_t send_get_user_email(const std::string& ssid);
   void recv_get_user_email(std::string& _return, const int32_t seqid);
+  bool has_apply(const std::string& ssid);
+  int32_t send_has_apply(const std::string& ssid);
+  bool recv_has_apply(const int32_t seqid);
  protected:
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> piprot_;
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> poprot_;

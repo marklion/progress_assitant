@@ -129,9 +129,9 @@ public:
             {
                 if (company->is_sale)
                 {
-                    opt_user->buyer = 0;
                     if (PA_DATAOPT_is_admin(info.phone, info.company))
                     {
+                        opt_user->buyer = 0;
                         opt_user->set_parent(*company, "belong_company");
                     }
                     else 
@@ -455,6 +455,24 @@ public:
             PA_RETURN_UNLOGIN_MSG();
         }
         _return = opt_user->email;
+    }
+
+    virtual bool has_apply(const std::string &ssid)
+    {
+        bool ret = false;
+
+        auto user = PA_DATAOPT_get_online_user(ssid);
+        if (!user)
+        {
+            PA_RETURN_UNLOGIN_MSG();
+        }
+        auto apply = user->get_children<pa_sql_user_apply>("assigner", "status = 0");
+        if (apply)
+        {
+            ret = true;
+        }
+
+        return ret;
     }
 };
 

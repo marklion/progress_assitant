@@ -40,6 +40,7 @@ service user_management{
     void remove_driver(1:string ssid, 2:i64 id) throws (1:gen_exp e),
     bool send_sms_verify(1:string ssid, 2:string phone) throws (1:gen_exp e),
     string get_user_email(1:string ssid) throws (1:gen_exp e),
+    bool has_apply(1:string ssid) throws (1:gen_exp e),
 }
 
 struct stuff_detail {
@@ -72,7 +73,8 @@ service company_management {
     string get_notice(1:string company_name) throws (1:gen_exp e),
     void clear_notice(1:string ssid) throws (1:gen_exp e),
     list<user_info> get_all_compay_user(1:string ssid) throws (1:gen_exp e),
-    bool remove_user_from_company(1:string ssid, 2:i64 user_id) throws (1:gen_exp e)
+    bool remove_user_from_company(1:string ssid, 2:i64 user_id) throws (1:gen_exp e),
+    string get_company_logo(1:string ssid) throws (1:gen_exp e),
 }
 
 service stuff_info {

@@ -1,20 +1,22 @@
 <template>
 <div class="myself_show">
     <div v-if="$store.state.is_login" class="login_show">
-        <van-row type="flex" justify="center" align="center">
-            <van-image round width="80px" height="80px" fit="cover" :src="$remote_url +  $store.state.userinfo.logo" />
-        </van-row>
-        <van-row type="flex" justify="center" align="center">
-            <van-col>
-                <h3>{{$store.state.userinfo.name}}</h3>
-            </van-col>
-            <van-col>
-                <van-button icon="edit" round size="small" :to="{name: 'SelfInfo'}" />
-            </van-col>
-        </van-row>
-        <van-row type="flex" justify="center" align="center">
-            <div class="role_show">{{$store.state.userinfo.company}}</div>
-        </van-row>
+        <div class="login_user_show">
+            <van-row type="flex" align="center" :gutter="5">
+                <van-col :offset="2">
+                    <van-image round width="80px" height="80px" fit="cover" :src="$remote_url +  $store.state.userinfo.logo" />
+                </van-col>
+                <van-col>
+                    <h3>{{$store.state.userinfo.name}}</h3>
+                </van-col>
+                <van-col>
+                    <div class="role_show">{{$store.state.userinfo.company}}</div>
+                </van-col>
+                <van-col>
+                    <van-button icon="edit" plain round size="small" :to="{name: 'SelfInfo'}" />
+                </van-col>
+            </van-row>
+        </div>
         <van-divider />
         <van-cell-group>
             <van-cell v-if="is_admin" icon="manager-o" is-link :to="{name:'Admin'}" title="管理员菜单"></van-cell>
@@ -22,7 +24,7 @@
             <van-cell icon="info-o" is-link :to="{name:'BoundInfo'}" title="公司数据"></van-cell>
         </van-cell-group>
         <van-divider />
-        <van-button type="danger" @click="logoff" block>退出登录</van-button>
+        <van-button type="danger" plain @click="logoff" block>退出登录</van-button>
     </div>
     <div v-else class="unlogin_show">
         <van-row type="flex" justify="center" align="center">
@@ -77,7 +79,7 @@ export default {
     methods: {
         logoff: function () {
             var vue_this = this;
-            vue_this.$call_remote_process("user_management",'logff_user', [vue_this.$cookies.get('pa_ssid')]).finally(function () {
+            vue_this.$call_remote_process("user_management", 'logff_user', [vue_this.$cookies.get('pa_ssid')]).finally(function () {
                 history.go(0);
             });
         },
@@ -87,7 +89,7 @@ export default {
     },
     beforeMount: function () {
         var vue_this = this;
-        vue_this.$call_remote_process("user_management",'is_admin', [vue_this.$cookies.get('pa_ssid')]).then(function (resp) {
+        vue_this.$call_remote_process("user_management", 'is_admin', [vue_this.$cookies.get('pa_ssid')]).then(function (resp) {
             vue_this.is_admin = resp;
         });
     },
@@ -96,10 +98,10 @@ export default {
 
 <style scoped>
 .unlogin_show {
-    margin-top:100px;
+    margin-top: 100px;
 }
-.login_show {
-    margin-top:60px;
+
+.login_user_show {
+    background-color: #43dbba;
 }
 </style>>
-

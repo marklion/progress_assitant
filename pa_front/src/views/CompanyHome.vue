@@ -1,26 +1,28 @@
 <template>
 <div class="company_home_show">
-    <div v-if="!enter_company">
-        <van-notice-bar scrollable text="请等待管理员批准加入公司" />
-        <van-row type="flex" justify="center" align="center">
-            <van-button round type="info" icon="replay" @click="refresh_page">刷新</van-button>
-        </van-row>
-    </div>
     <van-button plain round icon="scan" class="scan_button_show" @click="confirm_close"></van-button>
+    <van-row type="flex" align="center" :gutter="10">
+        <van-col :offset="2">
+            <van-image round width="80px" height="80px" fit="cover" :src="$remote_url +  company_logo" />
+        </van-col>
+        <van-col>
+            <h3>{{$store.state.userinfo.company}}</h3>
+        </van-col>
+    </van-row>
     <van-cell-group>
         <template #title>
             <van-row type="flex" justify="space-between" align="center">
                 <van-col>今日报价</van-col>
                 <van-col>
-                    <van-button type="primary" round icon="plus" @click="show_add_stuff = true">增加商品</van-button>
+                    <van-button type="primary" size="small" round icon="plus" @click="show_add_stuff = true">增加商品</van-button>
                 </van-col>
             </van-row>
         </template>
-        <van-cell v-for="(single_type, index) in all_type" center :key="index" :icon="stuff_status(single_type)" :value="'¥' + single_type.price" :title="single_type.name">
+        <van-cell v-for="(single_type, index) in all_type" center :key="index" :value="'¥' + single_type.price" :title="single_type.name">
             <template #extra>
                 <van-popover v-model="show_operate[index]" trigger="click" :actions="support_operate" @select="do_operate" @open="open_operate(single_type)" @close="focus_type = 0">
                     <template #reference>
-                        <van-button type="primary">操作</van-button>
+                        <van-button size="small" round plain type="primary" class="opt_btn_show">操作</van-button>
                     </template>
                 </van-popover>
             </template>
@@ -49,14 +51,14 @@
             </div>
         </van-form>
     </van-dialog>
-    <van-divider>当前公告</van-divider>
+    <van-divider class="notice_show">当前公告</van-divider>
     <van-field v-model="notice" rows="2" autosize type="textarea" maxlength="300" placeholder="请输入公告" show-word-limit />
     <van-row type="flex" justify="center" align="center" :gutter="10">
         <van-col :span="10">
-            <van-button round block type="danger" @click="submit_notice(false)">清除</van-button>
+            <van-button size="small" round block type="danger" @click="submit_notice(false)">清除</van-button>
         </van-col>
         <van-col :span="10">
-            <van-button round block type="primary" @click="submit_notice(true)">发布</van-button>
+            <van-button size="small" round block type="primary" @click="submit_notice(true)">发布</van-button>
         </van-col>
     </van-row>
     <van-dialog v-model="show_proxy_company_diag" title="代提客户" :showConfirmButton="false" closeOnClickOverlay>
@@ -110,7 +112,11 @@ import {
 import {
     Popover
 } from 'vant';
+import {
+    Image as VanImage
+} from 'vant';
 
+Vue.use(VanImage);
 Vue.use(Popover);
 Vue.use(Divider);
 Vue.use(Icon);
@@ -155,6 +161,7 @@ export default {
             focus_type: 0,
             proxy_company: '',
             proxy_type_id: 0,
+            company_logo:'',
         };
     },
     computed: {
@@ -274,9 +281,7 @@ export default {
                 }
             });
         },
-        refresh_page: function () {
-            this.$router.go(0);
-        },
+        
         edit_stuff: function () {
             var vue_this = this;
             var stuff = Object.create(vue_this.stuff_in_edit);
@@ -346,6 +351,10 @@ export default {
     beforeMount: function () {
         this.init_company_data();
         this.config_with_wx();
+        var vue_this = this;
+        vue_this.$call_remote_process("company_management", 'get_company_logo', [vue_this.$cookies.get('pa_ssid')]).then(function(resp) {
+            vue_this.company_logo = resp;
+        });
     },
     watch: {
         "$store.state.userinfo.company": function (_val) {
@@ -365,5 +374,15 @@ export default {
     left: 10%;
     color: rgb(183, 196, 64);
     background-color: rgb(133, 228, 220);
+}
+
+.opt_btn_show {
+    margin-left: 15px;
+}
+
+.notice_show {
+    color: red;
+    border-color: red;
+    font-size: 16px;
 }
 </style>

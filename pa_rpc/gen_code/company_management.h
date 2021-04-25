@@ -35,6 +35,7 @@ class company_managementIf {
   virtual void clear_notice(const std::string& ssid) = 0;
   virtual void get_all_compay_user(std::vector<user_info> & _return, const std::string& ssid) = 0;
   virtual bool remove_user_from_company(const std::string& ssid, const int64_t user_id) = 0;
+  virtual void get_company_logo(std::string& _return, const std::string& ssid) = 0;
 };
 
 class company_managementIfFactory {
@@ -108,6 +109,9 @@ class company_managementNull : virtual public company_managementIf {
   bool remove_user_from_company(const std::string& /* ssid */, const int64_t /* user_id */) {
     bool _return = false;
     return _return;
+  }
+  void get_company_logo(std::string& /* _return */, const std::string& /* ssid */) {
+    return;
   }
 };
 
@@ -1635,6 +1639,118 @@ class company_management_remove_user_from_company_presult {
 
 };
 
+typedef struct _company_management_get_company_logo_args__isset {
+  _company_management_get_company_logo_args__isset() : ssid(false) {}
+  bool ssid :1;
+} _company_management_get_company_logo_args__isset;
+
+class company_management_get_company_logo_args {
+ public:
+
+  company_management_get_company_logo_args(const company_management_get_company_logo_args&);
+  company_management_get_company_logo_args& operator=(const company_management_get_company_logo_args&);
+  company_management_get_company_logo_args() : ssid() {
+  }
+
+  virtual ~company_management_get_company_logo_args() noexcept;
+  std::string ssid;
+
+  _company_management_get_company_logo_args__isset __isset;
+
+  void __set_ssid(const std::string& val);
+
+  bool operator == (const company_management_get_company_logo_args & rhs) const
+  {
+    if (!(ssid == rhs.ssid))
+      return false;
+    return true;
+  }
+  bool operator != (const company_management_get_company_logo_args &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const company_management_get_company_logo_args & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+
+class company_management_get_company_logo_pargs {
+ public:
+
+
+  virtual ~company_management_get_company_logo_pargs() noexcept;
+  const std::string* ssid;
+
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _company_management_get_company_logo_result__isset {
+  _company_management_get_company_logo_result__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _company_management_get_company_logo_result__isset;
+
+class company_management_get_company_logo_result {
+ public:
+
+  company_management_get_company_logo_result(const company_management_get_company_logo_result&);
+  company_management_get_company_logo_result& operator=(const company_management_get_company_logo_result&);
+  company_management_get_company_logo_result() : success() {
+  }
+
+  virtual ~company_management_get_company_logo_result() noexcept;
+  std::string success;
+  gen_exp e;
+
+  _company_management_get_company_logo_result__isset __isset;
+
+  void __set_success(const std::string& val);
+
+  void __set_e(const gen_exp& val);
+
+  bool operator == (const company_management_get_company_logo_result & rhs) const
+  {
+    if (!(success == rhs.success))
+      return false;
+    if (!(e == rhs.e))
+      return false;
+    return true;
+  }
+  bool operator != (const company_management_get_company_logo_result &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const company_management_get_company_logo_result & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _company_management_get_company_logo_presult__isset {
+  _company_management_get_company_logo_presult__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _company_management_get_company_logo_presult__isset;
+
+class company_management_get_company_logo_presult {
+ public:
+
+
+  virtual ~company_management_get_company_logo_presult() noexcept;
+  std::string* success;
+  gen_exp e;
+
+  _company_management_get_company_logo_presult__isset __isset;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+
+};
+
 class company_managementClient : virtual public company_managementIf {
  public:
   company_managementClient(std::shared_ptr< ::apache::thrift::protocol::TProtocol> prot) {
@@ -1699,6 +1815,9 @@ class company_managementClient : virtual public company_managementIf {
   bool remove_user_from_company(const std::string& ssid, const int64_t user_id);
   void send_remove_user_from_company(const std::string& ssid, const int64_t user_id);
   bool recv_remove_user_from_company();
+  void get_company_logo(std::string& _return, const std::string& ssid);
+  void send_get_company_logo(const std::string& ssid);
+  void recv_get_company_logo(std::string& _return);
  protected:
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> piprot_;
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> poprot_;
@@ -1727,6 +1846,7 @@ class company_managementProcessor : public ::apache::thrift::TDispatchProcessor 
   void process_clear_notice(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
   void process_get_all_compay_user(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
   void process_remove_user_from_company(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
+  void process_get_company_logo(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
  public:
   company_managementProcessor(::std::shared_ptr<company_managementIf> iface) :
     iface_(iface) {
@@ -1743,6 +1863,7 @@ class company_managementProcessor : public ::apache::thrift::TDispatchProcessor 
     processMap_["clear_notice"] = &company_managementProcessor::process_clear_notice;
     processMap_["get_all_compay_user"] = &company_managementProcessor::process_get_all_compay_user;
     processMap_["remove_user_from_company"] = &company_managementProcessor::process_remove_user_from_company;
+    processMap_["get_company_logo"] = &company_managementProcessor::process_get_company_logo;
   }
 
   virtual ~company_managementProcessor() {}
@@ -1893,6 +2014,16 @@ class company_managementMultiface : virtual public company_managementIf {
     return ifaces_[i]->remove_user_from_company(ssid, user_id);
   }
 
+  void get_company_logo(std::string& _return, const std::string& ssid) {
+    size_t sz = ifaces_.size();
+    size_t i = 0;
+    for (; i < (sz - 1); ++i) {
+      ifaces_[i]->get_company_logo(_return, ssid);
+    }
+    ifaces_[i]->get_company_logo(_return, ssid);
+    return;
+  }
+
 };
 
 // The 'concurrent' client is a thread safe client that correctly handles
@@ -1964,6 +2095,9 @@ class company_managementConcurrentClient : virtual public company_managementIf {
   bool remove_user_from_company(const std::string& ssid, const int64_t user_id);
   int32_t send_remove_user_from_company(const std::string& ssid, const int64_t user_id);
   bool recv_remove_user_from_company(const int32_t seqid);
+  void get_company_logo(std::string& _return, const std::string& ssid);
+  int32_t send_get_company_logo(const std::string& ssid);
+  void recv_get_company_logo(std::string& _return, const int32_t seqid);
  protected:
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> piprot_;
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> poprot_;

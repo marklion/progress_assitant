@@ -9,7 +9,7 @@ import sys
 import os
 
 def send_mail(_to_user, _title, _content, _attachments):
-    smtpObj = smtplib.SMTP_SSL('smtp.qiye.aliyun.com', 465)
+    smtpObj = smtplib.SMTP_SSL('smtp.mxhichina.com', 465)
     ret = False
     try :
         smtpObj.login('postmaster@d8sis.cn', os.getenv('MAIL_PWD'))

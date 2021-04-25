@@ -184,6 +184,7 @@ public:
                 if (approve)
                 {
                     assigner->set_parent(*company, "belong_company");
+                    assigner->buyer = 0;
                     ret = assigner->update_record();
                     apply->status = 1;
                     ret &= apply->update_record();
@@ -261,7 +262,7 @@ public:
                     auto stuffs = company->get_all_children<pa_sql_stuff_info>("belong_company");
                     for (auto &itr : stuffs)
                     {
-                        auto plans = itr.get_all_children<pa_sql_plan>("belong_stuff", "create_time >= %d AND create_time <= %d", begin_date, end_date);
+                        auto plans = itr.get_all_children<pa_sql_plan>("belong_stuff", "create_time >= %d AND create_time <= %d AND status = 4", begin_date, end_date);
                         statistics_plan.insert(statistics_plan.begin(), plans.begin(), plans.end());
                     }
                 }
@@ -414,6 +415,21 @@ public:
         user_need_remove->remove_record();
 
         return true;
+    }
+
+    virtual void get_company_logo(std::string &_return, const std::string &ssid)
+    {
+        auto user = PA_DATAOPT_get_online_user(ssid);
+        if (!user)
+        {
+            PA_RETURN_NOCOMPANY_MSG();
+        }
+        auto company = user->get_parent<pa_sql_company>("belong_company");
+        if (!company)
+        {
+            PA_RETURN_NOCOMPANY_MSG();
+        }
+        _return = company->logo;
     }
 };
 #endif // _COMPANY_MANAGEMENT_IMP_H_
