@@ -12,7 +12,7 @@
                     <van-button type="primary" block @click="export_plan(order_need_show)">导出</van-button>
                 </van-col>
             </van-row>
-            <plan-brief v-for="(single_plan, index) in order_need_show" :key="index" :plan_id="single_plan.plan_id" :company_view="!$store.state.userinfo.buyer"></plan-brief>
+            <plan-brief v-for="(single_plan, index) in order_need_show" :key="index" :conflict_reason="single_plan.conflict_reason" :plan_id="single_plan.plan_id" :company_view="!$store.state.userinfo.buyer"></plan-brief>
         </van-tab>
     </van-tabs>
     <export-file :remote_file="export_file_path" v-model="show_export_email"></export-file>

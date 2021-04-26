@@ -13,6 +13,9 @@
         <template #footer>
             创建时间:{{created_time}}
         </template>
+        <template #bottom v-if="conflict_reason">
+            <p class="conflict_show">{{conflict_reason}}</p>
+        </template>
     </van-card>
 </div>
 </template>
@@ -33,6 +36,7 @@ export default {
     props: {
         plan_id: Number,
         company_view: Boolean,
+        conflict_reason: String,
     },
     data: function () {
         return {
@@ -136,5 +140,8 @@ export default {
 .stuff_card_show /deep/ .van-card__desc {
     font-size: 16px;
     font-weight: bold;
+}
+.conflict_show {
+    color:red;
 }
 </style>

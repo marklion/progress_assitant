@@ -1940,6 +1940,10 @@ void plan_status::__set_status(const int64_t val) {
 void plan_status::__set_plan_time(const int64_t val) {
   this->plan_time = val;
 }
+
+void plan_status::__set_conflict_reason(const std::string& val) {
+  this->conflict_reason = val;
+}
 std::ostream& operator<<(std::ostream& out, const plan_status& obj)
 {
   obj.printTo(out);
@@ -1992,6 +1996,14 @@ uint32_t plan_status::read(::apache::thrift::protocol::TProtocol* iprot) {
           xfer += iprot->skip(ftype);
         }
         break;
+      case 4:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->conflict_reason);
+          this->__isset.conflict_reason = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
       default:
         xfer += iprot->skip(ftype);
         break;
@@ -2021,6 +2033,10 @@ uint32_t plan_status::write(::apache::thrift::protocol::TProtocol* oprot) const 
   xfer += oprot->writeI64(this->plan_time);
   xfer += oprot->writeFieldEnd();
 
+  xfer += oprot->writeFieldBegin("conflict_reason", ::apache::thrift::protocol::T_STRING, 4);
+  xfer += oprot->writeString(this->conflict_reason);
+  xfer += oprot->writeFieldEnd();
+
   xfer += oprot->writeFieldStop();
   xfer += oprot->writeStructEnd();
   return xfer;
@@ -2031,6 +2047,7 @@ void swap(plan_status &a, plan_status &b) {
   swap(a.plan_id, b.plan_id);
   swap(a.status, b.status);
   swap(a.plan_time, b.plan_time);
+  swap(a.conflict_reason, b.conflict_reason);
   swap(a.__isset, b.__isset);
 }
 
@@ -2038,12 +2055,14 @@ plan_status::plan_status(const plan_status& other26) {
   plan_id = other26.plan_id;
   status = other26.status;
   plan_time = other26.plan_time;
+  conflict_reason = other26.conflict_reason;
   __isset = other26.__isset;
 }
 plan_status& plan_status::operator=(const plan_status& other27) {
   plan_id = other27.plan_id;
   status = other27.status;
   plan_time = other27.plan_time;
+  conflict_reason = other27.conflict_reason;
   __isset = other27.__isset;
   return *this;
 }
@@ -2053,6 +2072,7 @@ void plan_status::printTo(std::ostream& out) const {
   out << "plan_id=" << to_string(plan_id);
   out << ", " << "status=" << to_string(status);
   out << ", " << "plan_time=" << to_string(plan_time);
+  out << ", " << "conflict_reason=" << to_string(conflict_reason);
   out << ")";
 }
 
