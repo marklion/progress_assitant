@@ -53,7 +53,6 @@ fi
 
 [ -d ${BUILD_DIR}/conf ] || mkdir ${BUILD_DIR}/conf
 cp ${SRC_DIR}/pa_conf/nginx.conf ${BUILD_DIR}/conf
-cp ${SRC_DIR}/pa_conf/data_config.json ${BUILD_DIR}/conf
 
 [ -d ${BUILD_DIR}/script ] || mkdir ${BUILD_DIR}/script
 cp ${SRC_DIR}/pa_script/* ${BUILD_DIR}/script/

@@ -1,6 +1,8 @@
 #include "pa_utils.h"
 #include "wechat_msg.h"
 
+#define SALE_CONFIG_FILE "/conf/data_config.json"
+
 static tdf_log g_log("pa util");
 static size_t pa_proc_curl(void *ptr, size_t size, size_t nmemb, void *user_data)
 {
@@ -150,7 +152,7 @@ std::unique_ptr<pa_sql_userinfo> PA_DATAOPT_get_online_user(const std::string &_
 
 void PA_DATAOPT_init_config()
 {
-    std::ifstream config_file("/conf/data_config.json", std::ios::in);
+    std::ifstream config_file(SALE_CONFIG_FILE, std::ios::in);
     std::istreambuf_iterator<char> beg(config_file), end;
     std::string config_string(beg, end);
     neb::CJsonObject config(config_string);
@@ -183,7 +185,7 @@ void PA_DATAOPT_init_config()
 bool PA_DATAOPT_is_admin(const std::string &_phone, const std::string &_company)
 {
     bool ret = false;
-    std::ifstream config_file("/conf/data_config.json", std::ios::in);
+    std::ifstream config_file(SALE_CONFIG_FILE, std::ios::in);
     std::istreambuf_iterator<char> beg(config_file), end;
     std::string config_string(beg, end);
     neb::CJsonObject config(config_string);
@@ -214,7 +216,7 @@ bool PA_DATAOPT_is_admin(const std::string &_phone, const std::string &_company)
 std::vector<std::string> PA_DATAOPT_get_admin(const std::string &_company)
 {
     std::vector<std::string> ret;
-    std::ifstream config_file("/conf/data_config.json", std::ios::in);
+    std::ifstream config_file(SALE_CONFIG_FILE, std::ios::in);
     std::istreambuf_iterator<char> beg(config_file), end;
     std::string config_string(beg, end);
     neb::CJsonObject config(config_string);
@@ -241,7 +243,7 @@ std::string PA_DATAOPT_get_company_by_assignee(const std::string &_assignee)
 {
     std::string ret;
 
-    std::ifstream config_file("/conf/data_config.json", std::ios::in);
+    std::ifstream config_file(SALE_CONFIG_FILE, std::ios::in);
     std::istreambuf_iterator<char> beg(config_file), end;
     std::string config_string(beg, end);
     neb::CJsonObject config(config_string);
