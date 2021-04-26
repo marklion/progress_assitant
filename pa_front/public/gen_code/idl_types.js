@@ -1292,6 +1292,7 @@ plan_status = class {
     this.plan_id = null;
     this.status = null;
     this.plan_time = null;
+    this.conflict_reason = null;
     if (args) {
       if (args.plan_id !== undefined && args.plan_id !== null) {
         this.plan_id = args.plan_id;
@@ -1301,6 +1302,9 @@ plan_status = class {
       }
       if (args.plan_time !== undefined && args.plan_time !== null) {
         this.plan_time = args.plan_time;
+      }
+      if (args.conflict_reason !== undefined && args.conflict_reason !== null) {
+        this.conflict_reason = args.conflict_reason;
       }
     }
   }
@@ -1336,6 +1340,13 @@ plan_status = class {
           input.skip(ftype);
         }
         break;
+        case 4:
+        if (ftype == Thrift.Type.STRING) {
+          this.conflict_reason = input.readString().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
         default:
           input.skip(ftype);
       }
@@ -1360,6 +1371,11 @@ plan_status = class {
     if (this.plan_time !== null && this.plan_time !== undefined) {
       output.writeFieldBegin('plan_time', Thrift.Type.I64, 3);
       output.writeI64(this.plan_time);
+      output.writeFieldEnd();
+    }
+    if (this.conflict_reason !== null && this.conflict_reason !== undefined) {
+      output.writeFieldBegin('conflict_reason', Thrift.Type.STRING, 4);
+      output.writeString(this.conflict_reason);
       output.writeFieldEnd();
     }
     output.writeFieldStop();

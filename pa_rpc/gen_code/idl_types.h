@@ -754,10 +754,11 @@ void swap(stuff_plan &a, stuff_plan &b);
 std::ostream& operator<<(std::ostream& out, const stuff_plan& obj);
 
 typedef struct _plan_status__isset {
-  _plan_status__isset() : plan_id(false), status(false), plan_time(false) {}
+  _plan_status__isset() : plan_id(false), status(false), plan_time(false), conflict_reason(false) {}
   bool plan_id :1;
   bool status :1;
   bool plan_time :1;
+  bool conflict_reason :1;
 } _plan_status__isset;
 
 class plan_status : public virtual ::apache::thrift::TBase {
@@ -765,13 +766,14 @@ class plan_status : public virtual ::apache::thrift::TBase {
 
   plan_status(const plan_status&);
   plan_status& operator=(const plan_status&);
-  plan_status() : plan_id(0), status(0), plan_time(0) {
+  plan_status() : plan_id(0), status(0), plan_time(0), conflict_reason() {
   }
 
   virtual ~plan_status() noexcept;
   int64_t plan_id;
   int64_t status;
   int64_t plan_time;
+  std::string conflict_reason;
 
   _plan_status__isset __isset;
 
@@ -781,6 +783,8 @@ class plan_status : public virtual ::apache::thrift::TBase {
 
   void __set_plan_time(const int64_t val);
 
+  void __set_conflict_reason(const std::string& val);
+
   bool operator == (const plan_status & rhs) const
   {
     if (!(plan_id == rhs.plan_id))
@@ -788,6 +792,8 @@ class plan_status : public virtual ::apache::thrift::TBase {
     if (!(status == rhs.status))
       return false;
     if (!(plan_time == rhs.plan_time))
+      return false;
+    if (!(conflict_reason == rhs.conflict_reason))
       return false;
     return true;
   }

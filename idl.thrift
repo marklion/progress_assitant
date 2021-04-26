@@ -132,7 +132,8 @@ struct stuff_plan {
 struct plan_status {
     1:i64 plan_id, 
     2:i64 status,
-    3:i64 plan_time
+    3:i64 plan_time,
+    4:string conflict_reason,
 }
 
 service stuff_plan_management {

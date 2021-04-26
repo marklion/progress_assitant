@@ -61,6 +61,9 @@ class stuff_plan_management_handler : virtual public stuff_plan_managementIf
             tmp.set_parent(*opt_user, "created_by");
             tmp.set_parent(*stuff_type, "belong_stuff");
             tmp.comment = plan.comment;
+            std::string conflict_reason;
+            this->verify_plan(conflict_reason, plan, ssid);
+            tmp.conflict_reason = conflict_reason;
             tmp.insert_record();
             for (auto &itr : plan.vichele_info)
             {
@@ -104,6 +107,7 @@ class stuff_plan_management_handler : virtual public stuff_plan_managementIf
                 tmp.plan_id = itr.get_pri_id();
                 tmp.status = itr.status;
                 tmp.plan_time = PA_DATAOPT_timestring_2_date(itr.plan_time);
+                tmp.conflict_reason = itr.conflict_reason;
                 _return.push_back(tmp);
             }
         }
@@ -324,6 +328,9 @@ class stuff_plan_management_handler : virtual public stuff_plan_managementIf
                 plan_in_sql->plan_confirm_timestamp = "";
                 pa_sql_userinfo empty;
                 plan_in_sql->set_parent(empty, "plan_confirm_by");
+                std::string conflict_reason;
+                this->verify_plan(conflict_reason, plan, ssid);
+                plan_in_sql->conflict_reason = conflict_reason;
                 ret = plan_in_sql->update_record();
                 if (ret)
                 {
@@ -359,6 +366,7 @@ class stuff_plan_management_handler : virtual public stuff_plan_managementIf
                         tmp.plan_id = single_plan.get_pri_id();
                         tmp.status = single_plan.status;
                         tmp.plan_time = PA_DATAOPT_timestring_2_date(single_plan.plan_time);
+                        tmp.conflict_reason = single_plan.conflict_reason;
                         _return.push_back(tmp);
                     }
                 }
@@ -393,6 +401,7 @@ class stuff_plan_management_handler : virtual public stuff_plan_managementIf
                         plan->set_parent(*opt_user, "plan_confirm_by");
                         plan->plan_confirm_timestamp = PA_DATAOPT_current_time();
                         plan->reject_reason = "";
+                        plan->conflict_reason = "";
                         ret = plan->update_record();
                         if (ret)
                         {
@@ -831,11 +840,11 @@ class stuff_plan_management_handler : virtual public stuff_plan_managementIf
                 }
                 if (single_vichele.table_name() == "vichele_table" && main_vichele_in_info && single_vichele.get_pri_id() == main_vichele_in_info->get_pri_id())
                 {
-                    ret.append("您的计划中的主车 " + single_vichele.number + " 与" + company_name + "的计划时间冲突, 都是" + plan_time_day + "\n");
+                    ret.append("计划中的主车 " + single_vichele.number + " 与" + company_name + "的计划时间冲突, 都是" + plan_time_day + "\n");
                 }
                 if (single_vichele.table_name() == "vichele_behind_table" && behind_vichele_in_info && single_vichele.get_pri_id() == behind_vichele_in_info->get_pri_id())
                 {
-                    ret.append("您的计划中的挂车 " + single_vichele.number + " 与" + company_name + "的计划时间冲突, 都是" + plan_time_day + "\n");
+                    ret.append("计划中的挂车 " + single_vichele.number + " 与" + company_name + "的计划时间冲突, 都是" + plan_time_day + "\n");
                 }
             }   
         }
