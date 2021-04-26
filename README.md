@@ -3,4 +3,4 @@
 
 > 需要完善
 
-项目管理页面：https://d8sis.atlassian.net/jira/software/projects/ZYZL/boards/1
+项目管理页面：https://d8sis.atlassian.net/wiki/spaces/ZYZLDOC/overview
