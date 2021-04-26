@@ -490,7 +490,7 @@ class stuff_plan_management_handler : virtual public stuff_plan_managementIf
             {
                 std::string file_content;
                 Base64::Decode(content, &file_content);
-                auto pay_info = PA_DATAOPT_store_logo_to_file(file_content, std::to_string(plan->create_time));
+                auto pay_info = PA_DATAOPT_store_logo_to_file(file_content, std::to_string(plan->create_time) + std::to_string(plan->get_pri_id()));
                 if (pay_info.length() > 0)
                 {
                     plan->payinfo = pay_info;
