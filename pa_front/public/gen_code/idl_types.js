@@ -343,6 +343,8 @@ stuff_detail = class {
     this.company = null;
     this.type_id = null;
     this.saling = null;
+    this.company_address = null;
+    this.company_contact = null;
     if (args) {
       if (args.name !== undefined && args.name !== null) {
         this.name = args.name;
@@ -361,6 +363,12 @@ stuff_detail = class {
       }
       if (args.saling !== undefined && args.saling !== null) {
         this.saling = args.saling;
+      }
+      if (args.company_address !== undefined && args.company_address !== null) {
+        this.company_address = args.company_address;
+      }
+      if (args.company_contact !== undefined && args.company_contact !== null) {
+        this.company_contact = args.company_contact;
       }
     }
   }
@@ -417,6 +425,20 @@ stuff_detail = class {
           input.skip(ftype);
         }
         break;
+        case 7:
+        if (ftype == Thrift.Type.STRING) {
+          this.company_address = input.readString().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        case 8:
+        if (ftype == Thrift.Type.STRING) {
+          this.company_contact = input.readString().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
         default:
           input.skip(ftype);
       }
@@ -456,6 +478,16 @@ stuff_detail = class {
     if (this.saling !== null && this.saling !== undefined) {
       output.writeFieldBegin('saling', Thrift.Type.BOOL, 6);
       output.writeBool(this.saling);
+      output.writeFieldEnd();
+    }
+    if (this.company_address !== null && this.company_address !== undefined) {
+      output.writeFieldBegin('company_address', Thrift.Type.STRING, 7);
+      output.writeString(this.company_address);
+      output.writeFieldEnd();
+    }
+    if (this.company_contact !== null && this.company_contact !== undefined) {
+      output.writeFieldBegin('company_contact', Thrift.Type.STRING, 8);
+      output.writeString(this.company_contact);
       output.writeFieldEnd();
     }
     output.writeFieldStop();
@@ -569,6 +601,71 @@ user_apply = class {
     if (this.status !== null && this.status !== undefined) {
       output.writeFieldBegin('status', Thrift.Type.I64, 5);
       output.writeI64(this.status);
+      output.writeFieldEnd();
+    }
+    output.writeFieldStop();
+    output.writeStructEnd();
+    return;
+  }
+
+};
+company_address_contact_info = class {
+  constructor(args) {
+    this.address = null;
+    this.contact = null;
+    if (args) {
+      if (args.address !== undefined && args.address !== null) {
+        this.address = args.address;
+      }
+      if (args.contact !== undefined && args.contact !== null) {
+        this.contact = args.contact;
+      }
+    }
+  }
+
+  read (input) {
+    input.readStructBegin();
+    while (true) {
+      const ret = input.readFieldBegin();
+      const ftype = ret.ftype;
+      const fid = ret.fid;
+      if (ftype == Thrift.Type.STOP) {
+        break;
+      }
+      switch (fid) {
+        case 1:
+        if (ftype == Thrift.Type.STRING) {
+          this.address = input.readString().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        case 2:
+        if (ftype == Thrift.Type.STRING) {
+          this.contact = input.readString().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        default:
+          input.skip(ftype);
+      }
+      input.readFieldEnd();
+    }
+    input.readStructEnd();
+    return;
+  }
+
+  write (output) {
+    output.writeStructBegin('company_address_contact_info');
+    if (this.address !== null && this.address !== undefined) {
+      output.writeFieldBegin('address', Thrift.Type.STRING, 1);
+      output.writeString(this.address);
+      output.writeFieldEnd();
+    }
+    if (this.contact !== null && this.contact !== undefined) {
+      output.writeFieldBegin('contact', Thrift.Type.STRING, 2);
+      output.writeString(this.contact);
       output.writeFieldEnd();
     }
     output.writeFieldStop();

@@ -50,6 +50,8 @@ struct stuff_detail {
     4:string company,
     5:i64 type_id,
     6:bool saling,
+    7:string company_address,
+    8:string company_contact,
 }
 
 struct user_apply {
@@ -58,6 +60,11 @@ struct user_apply {
     3:string logo,
     4:i64 apply_id,
     5:i64 status,
+}
+
+struct company_address_contact_info {
+    1:string address,
+    2:string contact,
 }
 
 service company_management {
@@ -75,6 +82,11 @@ service company_management {
     list<user_info> get_all_compay_user(1:string ssid) throws (1:gen_exp e),
     bool remove_user_from_company(1:string ssid, 2:i64 user_id) throws (1:gen_exp e),
     string get_company_logo(1:string ssid) throws (1:gen_exp e),
+    bool set_address(1:string ssid, 2:string address) throws (1:gen_exp e),
+    string get_address(1:string ssid) throws (1:gen_exp e),
+    bool set_contact(1:string ssid, 2:string contact) throws (1:gen_exp e),
+    string get_contact(1:string ssid) throws (1:gen_exp e),
+    company_address_contact_info get_address_contact(1:string company_name) throws (1:gen_exp e),
 }
 
 service stuff_info {

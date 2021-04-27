@@ -4,6 +4,10 @@
     <van-dialog v-model="show_notice_diag" v-if="company_notice" title="公告" :message="company_notice">
     </van-dialog>
     <van-cell :value="stuff_brief.name" title="计划货品" :label="stuff_brief.company"></van-cell>
+    <van-field v-model="stuff_brief.company_address" rows="1" autosize label="公司地址" type="textarea" readonly>
+    </van-field>
+    <van-field v-model="stuff_brief.company_contact" rows="1" autosize label="联系方式" type="textarea" readonly>
+    </van-field>
     <stuff-info-submit :proxy_company="$route.query.proxy_company" :type_id="stuff_brief.type_id" :is_create="true" :min_time="min_time" :orig_name="stuff_brief.name" :orig_price="stuff_brief.price"></stuff-info-submit>
 </div>
 </template>
@@ -21,7 +25,11 @@ import {
     Dialog
 } from 'vant';
 
-// 全局注册
+import {
+    Field
+} from 'vant';
+
+Vue.use(Field);
 Vue.use(Dialog);
 Vue.use(NoticeBar);
 Vue.use(Cell);
@@ -39,6 +47,8 @@ export default {
                 company: '',
                 price: 0.0,
                 type_id: 0,
+                company_address: '',
+                company_contact: '',
             },
             min_time: {},
             company_notice: '',
@@ -52,6 +62,8 @@ export default {
             vue_this.stuff_brief.company = resp.company;
             vue_this.stuff_brief.price = resp.price;
             vue_this.stuff_brief.type_id = resp.type_id;
+            vue_this.stuff_brief.company_address = resp.company_address;
+            vue_this.stuff_brief.company_contact = resp.company_contact;
             vue_this.$call_remote_process("company_management", 'get_notice', [resp.company]).then(function (resp) {
                 vue_this.company_notice = resp;
             });

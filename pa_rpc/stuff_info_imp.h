@@ -38,6 +38,8 @@ public:
                 _return.price = stuff_info->price;
                 _return.type_id = type_id;
                 _return.saling = stuff_info->saling == 1?true:false;
+                _return.company_address = company->address;
+                _return.company_contact = company->contact;
             }
         }
     }

@@ -36,6 +36,11 @@ class company_managementIf {
   virtual void get_all_compay_user(std::vector<user_info> & _return, const std::string& ssid) = 0;
   virtual bool remove_user_from_company(const std::string& ssid, const int64_t user_id) = 0;
   virtual void get_company_logo(std::string& _return, const std::string& ssid) = 0;
+  virtual bool set_address(const std::string& ssid, const std::string& address) = 0;
+  virtual void get_address(std::string& _return, const std::string& ssid) = 0;
+  virtual bool set_contact(const std::string& ssid, const std::string& contact) = 0;
+  virtual void get_contact(std::string& _return, const std::string& ssid) = 0;
+  virtual void get_address_contact(company_address_contact_info& _return, const std::string& company_name) = 0;
 };
 
 class company_managementIfFactory {
@@ -111,6 +116,23 @@ class company_managementNull : virtual public company_managementIf {
     return _return;
   }
   void get_company_logo(std::string& /* _return */, const std::string& /* ssid */) {
+    return;
+  }
+  bool set_address(const std::string& /* ssid */, const std::string& /* address */) {
+    bool _return = false;
+    return _return;
+  }
+  void get_address(std::string& /* _return */, const std::string& /* ssid */) {
+    return;
+  }
+  bool set_contact(const std::string& /* ssid */, const std::string& /* contact */) {
+    bool _return = false;
+    return _return;
+  }
+  void get_contact(std::string& /* _return */, const std::string& /* ssid */) {
+    return;
+  }
+  void get_address_contact(company_address_contact_info& /* _return */, const std::string& /* company_name */) {
     return;
   }
 };
@@ -1751,6 +1773,580 @@ class company_management_get_company_logo_presult {
 
 };
 
+typedef struct _company_management_set_address_args__isset {
+  _company_management_set_address_args__isset() : ssid(false), address(false) {}
+  bool ssid :1;
+  bool address :1;
+} _company_management_set_address_args__isset;
+
+class company_management_set_address_args {
+ public:
+
+  company_management_set_address_args(const company_management_set_address_args&);
+  company_management_set_address_args& operator=(const company_management_set_address_args&);
+  company_management_set_address_args() : ssid(), address() {
+  }
+
+  virtual ~company_management_set_address_args() noexcept;
+  std::string ssid;
+  std::string address;
+
+  _company_management_set_address_args__isset __isset;
+
+  void __set_ssid(const std::string& val);
+
+  void __set_address(const std::string& val);
+
+  bool operator == (const company_management_set_address_args & rhs) const
+  {
+    if (!(ssid == rhs.ssid))
+      return false;
+    if (!(address == rhs.address))
+      return false;
+    return true;
+  }
+  bool operator != (const company_management_set_address_args &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const company_management_set_address_args & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+
+class company_management_set_address_pargs {
+ public:
+
+
+  virtual ~company_management_set_address_pargs() noexcept;
+  const std::string* ssid;
+  const std::string* address;
+
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _company_management_set_address_result__isset {
+  _company_management_set_address_result__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _company_management_set_address_result__isset;
+
+class company_management_set_address_result {
+ public:
+
+  company_management_set_address_result(const company_management_set_address_result&);
+  company_management_set_address_result& operator=(const company_management_set_address_result&);
+  company_management_set_address_result() : success(0) {
+  }
+
+  virtual ~company_management_set_address_result() noexcept;
+  bool success;
+  gen_exp e;
+
+  _company_management_set_address_result__isset __isset;
+
+  void __set_success(const bool val);
+
+  void __set_e(const gen_exp& val);
+
+  bool operator == (const company_management_set_address_result & rhs) const
+  {
+    if (!(success == rhs.success))
+      return false;
+    if (!(e == rhs.e))
+      return false;
+    return true;
+  }
+  bool operator != (const company_management_set_address_result &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const company_management_set_address_result & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _company_management_set_address_presult__isset {
+  _company_management_set_address_presult__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _company_management_set_address_presult__isset;
+
+class company_management_set_address_presult {
+ public:
+
+
+  virtual ~company_management_set_address_presult() noexcept;
+  bool* success;
+  gen_exp e;
+
+  _company_management_set_address_presult__isset __isset;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+
+};
+
+typedef struct _company_management_get_address_args__isset {
+  _company_management_get_address_args__isset() : ssid(false) {}
+  bool ssid :1;
+} _company_management_get_address_args__isset;
+
+class company_management_get_address_args {
+ public:
+
+  company_management_get_address_args(const company_management_get_address_args&);
+  company_management_get_address_args& operator=(const company_management_get_address_args&);
+  company_management_get_address_args() : ssid() {
+  }
+
+  virtual ~company_management_get_address_args() noexcept;
+  std::string ssid;
+
+  _company_management_get_address_args__isset __isset;
+
+  void __set_ssid(const std::string& val);
+
+  bool operator == (const company_management_get_address_args & rhs) const
+  {
+    if (!(ssid == rhs.ssid))
+      return false;
+    return true;
+  }
+  bool operator != (const company_management_get_address_args &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const company_management_get_address_args & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+
+class company_management_get_address_pargs {
+ public:
+
+
+  virtual ~company_management_get_address_pargs() noexcept;
+  const std::string* ssid;
+
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _company_management_get_address_result__isset {
+  _company_management_get_address_result__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _company_management_get_address_result__isset;
+
+class company_management_get_address_result {
+ public:
+
+  company_management_get_address_result(const company_management_get_address_result&);
+  company_management_get_address_result& operator=(const company_management_get_address_result&);
+  company_management_get_address_result() : success() {
+  }
+
+  virtual ~company_management_get_address_result() noexcept;
+  std::string success;
+  gen_exp e;
+
+  _company_management_get_address_result__isset __isset;
+
+  void __set_success(const std::string& val);
+
+  void __set_e(const gen_exp& val);
+
+  bool operator == (const company_management_get_address_result & rhs) const
+  {
+    if (!(success == rhs.success))
+      return false;
+    if (!(e == rhs.e))
+      return false;
+    return true;
+  }
+  bool operator != (const company_management_get_address_result &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const company_management_get_address_result & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _company_management_get_address_presult__isset {
+  _company_management_get_address_presult__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _company_management_get_address_presult__isset;
+
+class company_management_get_address_presult {
+ public:
+
+
+  virtual ~company_management_get_address_presult() noexcept;
+  std::string* success;
+  gen_exp e;
+
+  _company_management_get_address_presult__isset __isset;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+
+};
+
+typedef struct _company_management_set_contact_args__isset {
+  _company_management_set_contact_args__isset() : ssid(false), contact(false) {}
+  bool ssid :1;
+  bool contact :1;
+} _company_management_set_contact_args__isset;
+
+class company_management_set_contact_args {
+ public:
+
+  company_management_set_contact_args(const company_management_set_contact_args&);
+  company_management_set_contact_args& operator=(const company_management_set_contact_args&);
+  company_management_set_contact_args() : ssid(), contact() {
+  }
+
+  virtual ~company_management_set_contact_args() noexcept;
+  std::string ssid;
+  std::string contact;
+
+  _company_management_set_contact_args__isset __isset;
+
+  void __set_ssid(const std::string& val);
+
+  void __set_contact(const std::string& val);
+
+  bool operator == (const company_management_set_contact_args & rhs) const
+  {
+    if (!(ssid == rhs.ssid))
+      return false;
+    if (!(contact == rhs.contact))
+      return false;
+    return true;
+  }
+  bool operator != (const company_management_set_contact_args &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const company_management_set_contact_args & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+
+class company_management_set_contact_pargs {
+ public:
+
+
+  virtual ~company_management_set_contact_pargs() noexcept;
+  const std::string* ssid;
+  const std::string* contact;
+
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _company_management_set_contact_result__isset {
+  _company_management_set_contact_result__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _company_management_set_contact_result__isset;
+
+class company_management_set_contact_result {
+ public:
+
+  company_management_set_contact_result(const company_management_set_contact_result&);
+  company_management_set_contact_result& operator=(const company_management_set_contact_result&);
+  company_management_set_contact_result() : success(0) {
+  }
+
+  virtual ~company_management_set_contact_result() noexcept;
+  bool success;
+  gen_exp e;
+
+  _company_management_set_contact_result__isset __isset;
+
+  void __set_success(const bool val);
+
+  void __set_e(const gen_exp& val);
+
+  bool operator == (const company_management_set_contact_result & rhs) const
+  {
+    if (!(success == rhs.success))
+      return false;
+    if (!(e == rhs.e))
+      return false;
+    return true;
+  }
+  bool operator != (const company_management_set_contact_result &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const company_management_set_contact_result & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _company_management_set_contact_presult__isset {
+  _company_management_set_contact_presult__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _company_management_set_contact_presult__isset;
+
+class company_management_set_contact_presult {
+ public:
+
+
+  virtual ~company_management_set_contact_presult() noexcept;
+  bool* success;
+  gen_exp e;
+
+  _company_management_set_contact_presult__isset __isset;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+
+};
+
+typedef struct _company_management_get_contact_args__isset {
+  _company_management_get_contact_args__isset() : ssid(false) {}
+  bool ssid :1;
+} _company_management_get_contact_args__isset;
+
+class company_management_get_contact_args {
+ public:
+
+  company_management_get_contact_args(const company_management_get_contact_args&);
+  company_management_get_contact_args& operator=(const company_management_get_contact_args&);
+  company_management_get_contact_args() : ssid() {
+  }
+
+  virtual ~company_management_get_contact_args() noexcept;
+  std::string ssid;
+
+  _company_management_get_contact_args__isset __isset;
+
+  void __set_ssid(const std::string& val);
+
+  bool operator == (const company_management_get_contact_args & rhs) const
+  {
+    if (!(ssid == rhs.ssid))
+      return false;
+    return true;
+  }
+  bool operator != (const company_management_get_contact_args &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const company_management_get_contact_args & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+
+class company_management_get_contact_pargs {
+ public:
+
+
+  virtual ~company_management_get_contact_pargs() noexcept;
+  const std::string* ssid;
+
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _company_management_get_contact_result__isset {
+  _company_management_get_contact_result__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _company_management_get_contact_result__isset;
+
+class company_management_get_contact_result {
+ public:
+
+  company_management_get_contact_result(const company_management_get_contact_result&);
+  company_management_get_contact_result& operator=(const company_management_get_contact_result&);
+  company_management_get_contact_result() : success() {
+  }
+
+  virtual ~company_management_get_contact_result() noexcept;
+  std::string success;
+  gen_exp e;
+
+  _company_management_get_contact_result__isset __isset;
+
+  void __set_success(const std::string& val);
+
+  void __set_e(const gen_exp& val);
+
+  bool operator == (const company_management_get_contact_result & rhs) const
+  {
+    if (!(success == rhs.success))
+      return false;
+    if (!(e == rhs.e))
+      return false;
+    return true;
+  }
+  bool operator != (const company_management_get_contact_result &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const company_management_get_contact_result & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _company_management_get_contact_presult__isset {
+  _company_management_get_contact_presult__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _company_management_get_contact_presult__isset;
+
+class company_management_get_contact_presult {
+ public:
+
+
+  virtual ~company_management_get_contact_presult() noexcept;
+  std::string* success;
+  gen_exp e;
+
+  _company_management_get_contact_presult__isset __isset;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+
+};
+
+typedef struct _company_management_get_address_contact_args__isset {
+  _company_management_get_address_contact_args__isset() : company_name(false) {}
+  bool company_name :1;
+} _company_management_get_address_contact_args__isset;
+
+class company_management_get_address_contact_args {
+ public:
+
+  company_management_get_address_contact_args(const company_management_get_address_contact_args&);
+  company_management_get_address_contact_args& operator=(const company_management_get_address_contact_args&);
+  company_management_get_address_contact_args() : company_name() {
+  }
+
+  virtual ~company_management_get_address_contact_args() noexcept;
+  std::string company_name;
+
+  _company_management_get_address_contact_args__isset __isset;
+
+  void __set_company_name(const std::string& val);
+
+  bool operator == (const company_management_get_address_contact_args & rhs) const
+  {
+    if (!(company_name == rhs.company_name))
+      return false;
+    return true;
+  }
+  bool operator != (const company_management_get_address_contact_args &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const company_management_get_address_contact_args & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+
+class company_management_get_address_contact_pargs {
+ public:
+
+
+  virtual ~company_management_get_address_contact_pargs() noexcept;
+  const std::string* company_name;
+
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _company_management_get_address_contact_result__isset {
+  _company_management_get_address_contact_result__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _company_management_get_address_contact_result__isset;
+
+class company_management_get_address_contact_result {
+ public:
+
+  company_management_get_address_contact_result(const company_management_get_address_contact_result&);
+  company_management_get_address_contact_result& operator=(const company_management_get_address_contact_result&);
+  company_management_get_address_contact_result() {
+  }
+
+  virtual ~company_management_get_address_contact_result() noexcept;
+  company_address_contact_info success;
+  gen_exp e;
+
+  _company_management_get_address_contact_result__isset __isset;
+
+  void __set_success(const company_address_contact_info& val);
+
+  void __set_e(const gen_exp& val);
+
+  bool operator == (const company_management_get_address_contact_result & rhs) const
+  {
+    if (!(success == rhs.success))
+      return false;
+    if (!(e == rhs.e))
+      return false;
+    return true;
+  }
+  bool operator != (const company_management_get_address_contact_result &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const company_management_get_address_contact_result & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _company_management_get_address_contact_presult__isset {
+  _company_management_get_address_contact_presult__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _company_management_get_address_contact_presult__isset;
+
+class company_management_get_address_contact_presult {
+ public:
+
+
+  virtual ~company_management_get_address_contact_presult() noexcept;
+  company_address_contact_info* success;
+  gen_exp e;
+
+  _company_management_get_address_contact_presult__isset __isset;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+
+};
+
 class company_managementClient : virtual public company_managementIf {
  public:
   company_managementClient(std::shared_ptr< ::apache::thrift::protocol::TProtocol> prot) {
@@ -1818,6 +2414,21 @@ class company_managementClient : virtual public company_managementIf {
   void get_company_logo(std::string& _return, const std::string& ssid);
   void send_get_company_logo(const std::string& ssid);
   void recv_get_company_logo(std::string& _return);
+  bool set_address(const std::string& ssid, const std::string& address);
+  void send_set_address(const std::string& ssid, const std::string& address);
+  bool recv_set_address();
+  void get_address(std::string& _return, const std::string& ssid);
+  void send_get_address(const std::string& ssid);
+  void recv_get_address(std::string& _return);
+  bool set_contact(const std::string& ssid, const std::string& contact);
+  void send_set_contact(const std::string& ssid, const std::string& contact);
+  bool recv_set_contact();
+  void get_contact(std::string& _return, const std::string& ssid);
+  void send_get_contact(const std::string& ssid);
+  void recv_get_contact(std::string& _return);
+  void get_address_contact(company_address_contact_info& _return, const std::string& company_name);
+  void send_get_address_contact(const std::string& company_name);
+  void recv_get_address_contact(company_address_contact_info& _return);
  protected:
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> piprot_;
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> poprot_;
@@ -1847,6 +2458,11 @@ class company_managementProcessor : public ::apache::thrift::TDispatchProcessor 
   void process_get_all_compay_user(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
   void process_remove_user_from_company(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
   void process_get_company_logo(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
+  void process_set_address(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
+  void process_get_address(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
+  void process_set_contact(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
+  void process_get_contact(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
+  void process_get_address_contact(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
  public:
   company_managementProcessor(::std::shared_ptr<company_managementIf> iface) :
     iface_(iface) {
@@ -1864,6 +2480,11 @@ class company_managementProcessor : public ::apache::thrift::TDispatchProcessor 
     processMap_["get_all_compay_user"] = &company_managementProcessor::process_get_all_compay_user;
     processMap_["remove_user_from_company"] = &company_managementProcessor::process_remove_user_from_company;
     processMap_["get_company_logo"] = &company_managementProcessor::process_get_company_logo;
+    processMap_["set_address"] = &company_managementProcessor::process_set_address;
+    processMap_["get_address"] = &company_managementProcessor::process_get_address;
+    processMap_["set_contact"] = &company_managementProcessor::process_set_contact;
+    processMap_["get_contact"] = &company_managementProcessor::process_get_contact;
+    processMap_["get_address_contact"] = &company_managementProcessor::process_get_address_contact;
   }
 
   virtual ~company_managementProcessor() {}
@@ -2024,6 +2645,54 @@ class company_managementMultiface : virtual public company_managementIf {
     return;
   }
 
+  bool set_address(const std::string& ssid, const std::string& address) {
+    size_t sz = ifaces_.size();
+    size_t i = 0;
+    for (; i < (sz - 1); ++i) {
+      ifaces_[i]->set_address(ssid, address);
+    }
+    return ifaces_[i]->set_address(ssid, address);
+  }
+
+  void get_address(std::string& _return, const std::string& ssid) {
+    size_t sz = ifaces_.size();
+    size_t i = 0;
+    for (; i < (sz - 1); ++i) {
+      ifaces_[i]->get_address(_return, ssid);
+    }
+    ifaces_[i]->get_address(_return, ssid);
+    return;
+  }
+
+  bool set_contact(const std::string& ssid, const std::string& contact) {
+    size_t sz = ifaces_.size();
+    size_t i = 0;
+    for (; i < (sz - 1); ++i) {
+      ifaces_[i]->set_contact(ssid, contact);
+    }
+    return ifaces_[i]->set_contact(ssid, contact);
+  }
+
+  void get_contact(std::string& _return, const std::string& ssid) {
+    size_t sz = ifaces_.size();
+    size_t i = 0;
+    for (; i < (sz - 1); ++i) {
+      ifaces_[i]->get_contact(_return, ssid);
+    }
+    ifaces_[i]->get_contact(_return, ssid);
+    return;
+  }
+
+  void get_address_contact(company_address_contact_info& _return, const std::string& company_name) {
+    size_t sz = ifaces_.size();
+    size_t i = 0;
+    for (; i < (sz - 1); ++i) {
+      ifaces_[i]->get_address_contact(_return, company_name);
+    }
+    ifaces_[i]->get_address_contact(_return, company_name);
+    return;
+  }
+
 };
 
 // The 'concurrent' client is a thread safe client that correctly handles
@@ -2098,6 +2767,21 @@ class company_managementConcurrentClient : virtual public company_managementIf {
   void get_company_logo(std::string& _return, const std::string& ssid);
   int32_t send_get_company_logo(const std::string& ssid);
   void recv_get_company_logo(std::string& _return, const int32_t seqid);
+  bool set_address(const std::string& ssid, const std::string& address);
+  int32_t send_set_address(const std::string& ssid, const std::string& address);
+  bool recv_set_address(const int32_t seqid);
+  void get_address(std::string& _return, const std::string& ssid);
+  int32_t send_get_address(const std::string& ssid);
+  void recv_get_address(std::string& _return, const int32_t seqid);
+  bool set_contact(const std::string& ssid, const std::string& contact);
+  int32_t send_set_contact(const std::string& ssid, const std::string& contact);
+  bool recv_set_contact(const int32_t seqid);
+  void get_contact(std::string& _return, const std::string& ssid);
+  int32_t send_get_contact(const std::string& ssid);
+  void recv_get_contact(std::string& _return, const int32_t seqid);
+  void get_address_contact(company_address_contact_info& _return, const std::string& company_name);
+  int32_t send_get_address_contact(const std::string& company_name);
+  void recv_get_address_contact(company_address_contact_info& _return, const int32_t seqid);
  protected:
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> piprot_;
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> poprot_;
