@@ -33,6 +33,8 @@ class stuff_detail;
 
 class user_apply;
 
+class company_address_contact_info;
+
 class plan_confirm_info;
 
 class pay_confirm_info;
@@ -262,13 +264,15 @@ void swap(vichele_info_t &a, vichele_info_t &b);
 std::ostream& operator<<(std::ostream& out, const vichele_info_t& obj);
 
 typedef struct _stuff_detail__isset {
-  _stuff_detail__isset() : name(false), last(false), price(false), company(false), type_id(false), saling(false) {}
+  _stuff_detail__isset() : name(false), last(false), price(false), company(false), type_id(false), saling(false), company_address(false), company_contact(false) {}
   bool name :1;
   bool last :1;
   bool price :1;
   bool company :1;
   bool type_id :1;
   bool saling :1;
+  bool company_address :1;
+  bool company_contact :1;
 } _stuff_detail__isset;
 
 class stuff_detail : public virtual ::apache::thrift::TBase {
@@ -276,7 +280,7 @@ class stuff_detail : public virtual ::apache::thrift::TBase {
 
   stuff_detail(const stuff_detail&);
   stuff_detail& operator=(const stuff_detail&);
-  stuff_detail() : name(), last(), price(0), company(), type_id(0), saling(0) {
+  stuff_detail() : name(), last(), price(0), company(), type_id(0), saling(0), company_address(), company_contact() {
   }
 
   virtual ~stuff_detail() noexcept;
@@ -286,6 +290,8 @@ class stuff_detail : public virtual ::apache::thrift::TBase {
   std::string company;
   int64_t type_id;
   bool saling;
+  std::string company_address;
+  std::string company_contact;
 
   _stuff_detail__isset __isset;
 
@@ -301,6 +307,10 @@ class stuff_detail : public virtual ::apache::thrift::TBase {
 
   void __set_saling(const bool val);
 
+  void __set_company_address(const std::string& val);
+
+  void __set_company_contact(const std::string& val);
+
   bool operator == (const stuff_detail & rhs) const
   {
     if (!(name == rhs.name))
@@ -314,6 +324,10 @@ class stuff_detail : public virtual ::apache::thrift::TBase {
     if (!(type_id == rhs.type_id))
       return false;
     if (!(saling == rhs.saling))
+      return false;
+    if (!(company_address == rhs.company_address))
+      return false;
+    if (!(company_contact == rhs.company_contact))
       return false;
     return true;
   }
@@ -398,6 +412,54 @@ class user_apply : public virtual ::apache::thrift::TBase {
 void swap(user_apply &a, user_apply &b);
 
 std::ostream& operator<<(std::ostream& out, const user_apply& obj);
+
+typedef struct _company_address_contact_info__isset {
+  _company_address_contact_info__isset() : address(false), contact(false) {}
+  bool address :1;
+  bool contact :1;
+} _company_address_contact_info__isset;
+
+class company_address_contact_info : public virtual ::apache::thrift::TBase {
+ public:
+
+  company_address_contact_info(const company_address_contact_info&);
+  company_address_contact_info& operator=(const company_address_contact_info&);
+  company_address_contact_info() : address(), contact() {
+  }
+
+  virtual ~company_address_contact_info() noexcept;
+  std::string address;
+  std::string contact;
+
+  _company_address_contact_info__isset __isset;
+
+  void __set_address(const std::string& val);
+
+  void __set_contact(const std::string& val);
+
+  bool operator == (const company_address_contact_info & rhs) const
+  {
+    if (!(address == rhs.address))
+      return false;
+    if (!(contact == rhs.contact))
+      return false;
+    return true;
+  }
+  bool operator != (const company_address_contact_info &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const company_address_contact_info & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+  virtual void printTo(std::ostream& out) const;
+};
+
+void swap(company_address_contact_info &a, company_address_contact_info &b);
+
+std::ostream& operator<<(std::ostream& out, const company_address_contact_info& obj);
 
 typedef struct _plan_confirm_info__isset {
   _plan_confirm_info__isset() : timestamp(false), name(false) {}

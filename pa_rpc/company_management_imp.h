@@ -431,5 +431,55 @@ public:
         }
         _return = company->logo;
     }
+
+    std::unique_ptr<pa_sql_company> get_belong_company(const std::string &ssid)
+    {
+        auto user = PA_DATAOPT_get_online_user(ssid);
+        if (!user)
+        {
+            PA_RETURN_UNLOGIN_MSG();
+        }
+        auto company = user->get_parent<pa_sql_company>("belong_company");
+        if (!company)
+        {
+            PA_RETURN_NOCOMPANY_MSG();
+        }
+
+        return company;
+    }
+
+    virtual bool set_address(const std::string &ssid, const std::string &address)
+    {
+        auto company = get_belong_company(ssid);
+        company->address = address;
+        return company->update_record();
+    }
+    virtual void get_address(std::string &_return, const std::string &ssid)
+    {
+        auto company = get_belong_company(ssid);
+        _return = company->address;
+    }
+    virtual bool set_contact(const std::string &ssid, const std::string &contact)
+    {
+        auto company = get_belong_company(ssid);
+        company->contact = contact;
+        return company->update_record();
+    }
+    virtual void get_contact(std::string &_return, const std::string &ssid)
+    {
+        auto company = get_belong_company(ssid);
+        _return = company->contact;
+    }
+
+    virtual void get_address_contact(company_address_contact_info &_return, const std::string &company_name)
+    {
+        auto company = sqlite_orm::search_record<pa_sql_company>("name = '%s'", company_name.c_str());
+        if (!company)
+        {
+            PA_RETURN_NOCOMPANY_MSG();
+        }
+        _return.address = company->address;
+        _return.contact = company->contact;
+    }
 };
 #endif // _COMPANY_MANAGEMENT_IMP_H_

@@ -11,7 +11,14 @@
                 </van-col>
             </van-row>
         </template>
-        <van-cell :title="plan_detail.name" :value="plan_detail.count + '吨'" />
+        <van-collapse v-model="extern_company_info">
+            <van-collapse-item :title="plan_detail.name" :value="plan_detail.count + '吨'" name="1" :label="plan_detail.sale_company">
+                <van-field v-model="company_address" rows="1" autosize label="公司地址" type="textarea" readonly>
+                </van-field>
+                <van-field v-model="company_contact" rows="1" autosize label="联系方式" type="textarea" readonly>
+                </van-field>
+            </van-collapse-item>
+        </van-collapse>
         <van-cell title="单价" :value="plan_detail.unit_price" />
         <van-cell title="总价" :value="plan_detail.total_price" />
         <van-cell title="计划到厂" :value="plan_detail.plan_time" />
@@ -169,6 +176,7 @@ export default {
                 except_close_timestamp: '',
                 except_close_reason: '',
                 reject_reason: '',
+                sale_company: ''
             },
             plan_owner_info: {
                 name: '',
@@ -177,6 +185,9 @@ export default {
             reason_diag: false,
             reason_input: '',
             is_proxy: false,
+            extern_company_info: [],
+            company_address: '',
+            company_contact: '',
         };
     },
     methods: {
@@ -233,6 +244,11 @@ export default {
             vue_this.plan_detail.except_close_timestamp = resp.except_close_timestamp;
             vue_this.plan_detail.except_close_reason = resp.except_close_reason;
             vue_this.plan_detail.reject_reason = resp.reject_reason;
+            vue_this.plan_detail.sale_company = resp.sale_company;
+            vue_this.$call_remote_process("company_management", "get_address_contact", [resp.sale_company]).then(function (company_resp) {
+                vue_this.company_address = company_resp.address;
+                vue_this.company_contact = company_resp.contact;
+            });
             resp.vichele_info.forEach((element, index) => {
                 vue_this.$set(vue_this.plan_detail.vichele_info, index, element);
                 vue_this.$set(vue_this.vichele_panel, index, ['0']);

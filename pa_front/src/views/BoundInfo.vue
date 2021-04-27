@@ -1,5 +1,15 @@
 <template>
 <div class="bound_info_show">
+    <van-field v-model="address" rows="1" autosize label="公司地址" type="textarea" placeholder="请输入公司地址">
+        <template #button>
+            <van-button size="small" type="primary" @click="update_address">更新</van-button>
+        </template>
+    </van-field>
+    <van-field v-model="contact" rows="1" autosize label="联系方式" type="textarea" placeholder="请输入联系方式">
+        <template #button>
+            <van-button size="small" type="primary" @click="update_contact">更新</van-button>
+        </template>
+    </van-field>
     <van-cell-group>
         <template #title>
             <van-row type="flex" justify="space-between" align="center">
@@ -121,9 +131,29 @@ export default {
             new_driver_phone: '',
             vichele_number_patten: /^(京[A-HJ-NPQY]|沪[A-HJ-N]|津[A-HJ-NPQR]|渝[A-DFGHN]|冀[A-HJRST]|晋[A-FHJ-M]|蒙[A-HJKLM]|辽[A-HJ-NP]|吉[A-HJK]|黑[A-HJ-NPR]|苏[A-HJ-N]|浙[A-HJKL]|皖[A-HJ-NP-S]|闽[A-HJK]|赣[A-HJKLMS]|鲁[A-HJ-NP-SUVWY]|豫[A-HJ-NP-SU]|鄂[A-HJ-NP-S]|湘[A-HJ-NSU]|粤[A-HJ-NP-Y]|桂[A-HJ-NPR]|琼[A-F]|川[A-HJ-MQ-Z]|贵[A-HJ]|云[AC-HJ-NP-SV]|藏[A-HJ]|陕[A-HJKV]|甘[A-HJ-NP]|青[A-H]|宁[A-E]|新[A-HJ-NP-S])([0-9A-HJ-NP-Z]{4}[0-9A-HJ-NP-Z挂试]|[0-9]{4}学|[A-D0-9][0-9]{3}警|[DF][0-9A-HJ-NP-Z][0-9]{4}|[0-9]{5}[DF])$|^WJ[京沪津渝冀晋蒙辽吉黑苏浙皖闽赣鲁豫鄂湘粤桂琼川贵云藏陕甘青宁新]?[0-9]{4}[0-9JBXTHSD]$|^(V[A-GKMORTV]|K[A-HJ-NORUZ]|H[A-GLOR]|[BCGJLNS][A-DKMNORVY]|G[JS])[0-9]{5}$|^[0-9]{6}使$|^([沪粤川渝辽云桂鄂湘陕藏黑]A|闽D|鲁B|蒙[AEH])[0-9]{4}领$|^粤Z[0-9A-HJ-NP-Z][0-9]{3}[港澳]$/i,
             phone_pattern: /^(13[0-9]|14[01456879]|15[0-35-9]|16[2567]|17[0-8]|18[0-9]|19[0-35-9])\d{8}$/,
+            address: '',
+            contact: '',
         };
     },
     methods: {
+        update_address: function () {
+            var vue_this = this;
+            vue_this.$call_remote_process("company_management", "set_address", [vue_this.$cookies.get('pa_ssid'), vue_this.address]).then(function (resp) {
+                if (resp) {
+                    vue_this.init_address_contact();
+                    vue_this.$toast("已更新");
+                }
+            });
+        },
+        update_contact: function () {
+            var vue_this = this;
+            vue_this.$call_remote_process("company_management", "set_contact", [vue_this.$cookies.get('pa_ssid'), vue_this.contact]).then(function (resp) {
+                if (resp) {
+                    vue_this.init_address_contact();
+                    vue_this.$toast("已更新");
+                }
+            });
+        },
         add_driver: function () {
             var vue_this = this;
             vue_this.$call_remote_process("user_management", "bind_new_driver", [vue_this.$cookies.get('pa_ssid'), {
@@ -193,11 +223,21 @@ export default {
                 });
             });
         },
+        init_address_contact: function () {
+            var vue_this = this;
+            vue_this.$call_remote_process("company_management", "get_address", [vue_this.$cookies.get('pa_ssid')]).then(function (resp) {
+                vue_this.address = resp;
+            });
+            vue_this.$call_remote_process("company_management", "get_contact", [vue_this.$cookies.get('pa_ssid')]).then(function (resp) {
+                vue_this.contact = resp;
+            });
+        },
     },
     beforeMount: function () {
         this.init_behind_vichele();
         this.init_main_vichele();
         this.init_driver();
+        this.init_address_contact();
     },
 }
 </script>
