@@ -17,6 +17,7 @@
                 </van-field>
                 <van-field v-model="company_contact" rows="1" autosize label="联系方式" type="textarea" readonly>
                 </van-field>
+                <van-cell is-link @click="preview_sale_attach">查看卖方资质</van-cell>
             </van-collapse-item>
         </van-collapse>
         <van-cell title="单价" :value="plan_detail.unit_price" />
@@ -25,7 +26,11 @@
     </van-cell-group>
     <van-cell-group title="提交人信息">
         <van-cell title="提交人" :value="plan_owner_info.name"></van-cell>
-        <van-cell title="公司" :value="plan_owner_info.company"></van-cell>
+        <van-cell title="公司" :value="plan_owner_info.company" center>
+            <template #right-icon v-if="!is_proxy">
+                <van-button class="preview_btn_show" size="small" type="info" plain @click="preview_buy_attach">查看买方资质</van-button>
+            </template>
+        </van-cell>
     </van-cell-group>
     <van-cell-group title="车辆信息">
         <van-collapse v-for="(single_vichele, index) in plan_detail.vichele_info" :key="index" v-model="vichele_panel[index]">
@@ -129,7 +134,7 @@ import {
 import {
     Field
 } from 'vant';
-
+import { Notify } from 'vant';
 Vue.use(Field);
 Vue.use(Form);
 Vue.use(Dialog);
@@ -191,6 +196,22 @@ export default {
         };
     },
     methods: {
+        preview_buy_attach: function () {
+            var vue_this = this;
+            vue_this.$call_remote_process("company_management", "get_attachment", [vue_this.plan_owner_info.company]).then(function (resp) {
+                if (resp) {
+                    ImagePreview([vue_this.$remote_url + resp]);
+                }
+            });
+        },
+        preview_sale_attach: function () {
+            var vue_this = this;
+            vue_this.$call_remote_process("company_management", "get_attachment", [vue_this.plan_detail.sale_company]).then(function (resp) {
+                if (resp) {
+                    ImagePreview([vue_this.$remote_url + resp]);
+                }
+            });
+        },
         except_close: function () {
             console.log('close');
             this.reason_diag = false;
@@ -267,11 +288,17 @@ export default {
                     message: '卖方驳回了您的计划\n原因：' + vue_this.plan_detail.reject_reason,
                 });
             }
+            if (vue_this.is_proxy)
+            {
+                Notify("此单为手工单，请自行确认买方资质");
+            }
         });
     },
 }
 </script>
 
-<style>
-
+<style scoped>
+.preview_btn_show {
+    margin-left: 15px;
+}
 </style>

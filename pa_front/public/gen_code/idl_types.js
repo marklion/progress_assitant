@@ -674,6 +674,87 @@ company_address_contact_info = class {
   }
 
 };
+company_attachment = class {
+  constructor(args) {
+    this.id = null;
+    this.path = null;
+    this.pic_path = null;
+    if (args) {
+      if (args.id !== undefined && args.id !== null) {
+        this.id = args.id;
+      }
+      if (args.path !== undefined && args.path !== null) {
+        this.path = args.path;
+      }
+      if (args.pic_path !== undefined && args.pic_path !== null) {
+        this.pic_path = args.pic_path;
+      }
+    }
+  }
+
+  read (input) {
+    input.readStructBegin();
+    while (true) {
+      const ret = input.readFieldBegin();
+      const ftype = ret.ftype;
+      const fid = ret.fid;
+      if (ftype == Thrift.Type.STOP) {
+        break;
+      }
+      switch (fid) {
+        case 1:
+        if (ftype == Thrift.Type.I64) {
+          this.id = input.readI64().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        case 2:
+        if (ftype == Thrift.Type.STRING) {
+          this.path = input.readString().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        case 3:
+        if (ftype == Thrift.Type.STRING) {
+          this.pic_path = input.readString().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        default:
+          input.skip(ftype);
+      }
+      input.readFieldEnd();
+    }
+    input.readStructEnd();
+    return;
+  }
+
+  write (output) {
+    output.writeStructBegin('company_attachment');
+    if (this.id !== null && this.id !== undefined) {
+      output.writeFieldBegin('id', Thrift.Type.I64, 1);
+      output.writeI64(this.id);
+      output.writeFieldEnd();
+    }
+    if (this.path !== null && this.path !== undefined) {
+      output.writeFieldBegin('path', Thrift.Type.STRING, 2);
+      output.writeString(this.path);
+      output.writeFieldEnd();
+    }
+    if (this.pic_path !== null && this.pic_path !== undefined) {
+      output.writeFieldBegin('pic_path', Thrift.Type.STRING, 3);
+      output.writeString(this.pic_path);
+      output.writeFieldEnd();
+    }
+    output.writeFieldStop();
+    output.writeStructEnd();
+    return;
+  }
+
+};
 plan_confirm_info = class {
   constructor(args) {
     this.timestamp = null;

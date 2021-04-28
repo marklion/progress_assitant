@@ -4,3 +4,7 @@ RUN  apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y nginx g
 RUN pip3 install pandas
 RUN pip3 install openpyxl
 RUN pip3 install alibabacloud_dysmsapi20170525==2.0.2
+RUN  apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y imagemagick
+RUN sed -i '/domain="resource" name="height"/d' /etc/ImageMagick-6/policy.xml
+RUN sed -i '/domain="resource" name="width"/d' /etc/ImageMagick-6/policy.xml
+COPY mutool /bin/

@@ -15,6 +15,7 @@ public:
     int is_sale = 0;
     std::string address;
     std::string contact;
+    std::string attachment_picture;
 
     virtual std::vector<sqlite_orm_column> self_columns_defined()
     {
@@ -25,12 +26,33 @@ public:
         ret.push_back(sqlite_orm_column("is_sale", sqlite_orm_column::INTEGER, &is_sale));
         ret.push_back(sqlite_orm_column("address", sqlite_orm_column::STRING, &address));
         ret.push_back(sqlite_orm_column("contact", sqlite_orm_column::STRING, &contact));
+        ret.push_back(sqlite_orm_column("attachment_picture", sqlite_orm_column::STRING, &attachment_picture));
 
         return ret;
     }
     virtual std::string table_name()
     {
         return "company_table";
+    }
+};
+
+class pa_sql_company_attachment:public sql_tree_base {
+public:
+    std::string res_path;
+    std::string pic_path;
+    pa_sql_company_attachment() {
+        add_parent_type<pa_sql_company>("belong_company");
+    }
+    virtual std::vector<sqlite_orm_column> self_columns_defined()
+    {
+        std::vector<sqlite_orm_column> ret;
+        ret.push_back(sqlite_orm_column("res_path", sqlite_orm_column::STRING, &res_path));
+        ret.push_back(sqlite_orm_column("pic_path", sqlite_orm_column::STRING, &pic_path));
+        return ret;
+    }
+    virtual std::string table_name()
+    {
+        return "company_attachment_table";
     }
 };
 

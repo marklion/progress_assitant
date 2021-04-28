@@ -11,7 +11,7 @@
         <van-dropdown-item v-model="stuff_filter" :options="stuff_option" />
     </van-dropdown-menu>
     <van-card class="stuff_card_show" v-for="(single_stuff, index) in stuff_need_show" :key="index" :price="single_stuff.price" :desc="single_stuff.company" :title="single_stuff.name">
-        <template #tags>
+        <template #tags v-if="single_stuff.last">
             <van-tag plain type="danger">{{single_stuff.last}}</van-tag>
         </template>
         <template #num>
@@ -40,7 +40,9 @@ import {
     DropdownMenu,
     DropdownItem
 } from 'vant';
-import { NoticeBar } from 'vant';
+import {
+    NoticeBar
+} from 'vant';
 
 Vue.use(NoticeBar);
 Vue.use(DropdownMenu);
@@ -148,11 +150,21 @@ export default {
             });
         },
         nav_to_plan: function (_type_id) {
+            var vue_this = this;
             if (this.$store.state.is_login) {
-                this.$router.push({
-                    name: 'StuffPlan',
-                    params: {
-                        type_id: _type_id
+                vue_this.$call_remote_process("company_management", "get_all_attachment", [vue_this.$cookies.get('pa_ssid')]).then(function (resp) {
+                    if (resp.length > 0) {
+                        vue_this.$router.push({
+                            name: 'StuffPlan',
+                            params: {
+                                type_id: _type_id
+                            }
+                        });
+
+                    } else {
+                        vue_this.$router.push({
+                            name: 'BoundInfo'
+                        });
                     }
                 });
             } else {

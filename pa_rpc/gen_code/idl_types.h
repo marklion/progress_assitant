@@ -35,6 +35,8 @@ class user_apply;
 
 class company_address_contact_info;
 
+class company_attachment;
+
 class plan_confirm_info;
 
 class pay_confirm_info;
@@ -460,6 +462,60 @@ class company_address_contact_info : public virtual ::apache::thrift::TBase {
 void swap(company_address_contact_info &a, company_address_contact_info &b);
 
 std::ostream& operator<<(std::ostream& out, const company_address_contact_info& obj);
+
+typedef struct _company_attachment__isset {
+  _company_attachment__isset() : id(false), path(false), pic_path(false) {}
+  bool id :1;
+  bool path :1;
+  bool pic_path :1;
+} _company_attachment__isset;
+
+class company_attachment : public virtual ::apache::thrift::TBase {
+ public:
+
+  company_attachment(const company_attachment&);
+  company_attachment& operator=(const company_attachment&);
+  company_attachment() : id(0), path(), pic_path() {
+  }
+
+  virtual ~company_attachment() noexcept;
+  int64_t id;
+  std::string path;
+  std::string pic_path;
+
+  _company_attachment__isset __isset;
+
+  void __set_id(const int64_t val);
+
+  void __set_path(const std::string& val);
+
+  void __set_pic_path(const std::string& val);
+
+  bool operator == (const company_attachment & rhs) const
+  {
+    if (!(id == rhs.id))
+      return false;
+    if (!(path == rhs.path))
+      return false;
+    if (!(pic_path == rhs.pic_path))
+      return false;
+    return true;
+  }
+  bool operator != (const company_attachment &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const company_attachment & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+  virtual void printTo(std::ostream& out) const;
+};
+
+void swap(company_attachment &a, company_attachment &b);
+
+std::ostream& operator<<(std::ostream& out, const company_attachment& obj);
 
 typedef struct _plan_confirm_info__isset {
   _plan_confirm_info__isset() : timestamp(false), name(false) {}

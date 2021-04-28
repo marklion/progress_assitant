@@ -67,6 +67,12 @@ struct company_address_contact_info {
     2:string contact,
 }
 
+struct company_attachment {
+    1:i64 id,
+    2:string path,
+    3:string pic_path,
+}
+
 service company_management {
     list<i64> get_all_type(1:string ssid) throws (1:gen_exp e),
     i64 add_type(1:string name, 2:i64 price, 3:string last,  4:string ssid) throws (1:gen_exp e),
@@ -87,6 +93,10 @@ service company_management {
     bool set_contact(1:string ssid, 2:string contact) throws (1:gen_exp e),
     string get_contact(1:string ssid) throws (1:gen_exp e),
     company_address_contact_info get_address_contact(1:string company_name) throws (1:gen_exp e),
+    bool add_attachment(1:string ssid, 2:binary base64content, 3:bool is_pdf) throws (1:gen_exp e),
+    void del_attachment(1:string ssid, 2:i64 id) throws (1:gen_exp e),
+    list<company_attachment> get_all_attachment(1:string ssid) throws (1:gen_exp e),
+    string get_attachment(1:string company_name) throws (1:gen_exp e),
 }
 
 service stuff_info {

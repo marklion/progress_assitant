@@ -45,6 +45,36 @@ std::string PA_DATAOPT_rest_req(const std::string &_req)
 
     return in_buff;
 }
+std::string PA_DATAOPT_store_attach_file(const std::string &_content, bool _is_pdf, const std::string &_name)
+{
+    std::string ret;
+    std::string file_name("/dist/logo_res/logo_");
+    file_name.append(_name);
+    if (_is_pdf)
+    {
+        file_name.append(".pdf");
+    }
+    else
+    {
+        file_name.append(".jpg");
+    }
+
+    std::fstream out_file;
+    out_file.open(file_name.c_str(), std::ios::binary | std::ios::out | std::ios::trunc);
+    if (out_file.is_open())
+    {
+        out_file.write(_content.data(), _content.length());
+        ret = file_name;
+        ret.erase(ret.begin(), ret.begin() + 5);
+        out_file.close();
+    }
+    else
+    {
+        g_log.err("attach store file openned failed");
+    }
+
+    return ret;
+}
 
 std::string PA_DATAOPT_store_logo_to_file(const std::string &_logo, const std::string &_upid)
 {
@@ -179,7 +209,6 @@ void PA_DATAOPT_init_config()
             tmp.insert_record();
         }
     }
-    
 }
 
 bool PA_DATAOPT_is_admin(const std::string &_phone, const std::string &_company)
@@ -208,7 +237,6 @@ bool PA_DATAOPT_is_admin(const std::string &_phone, const std::string &_company)
             break;
         }
     }
-    
 
     return ret;
 }
@@ -317,30 +345,31 @@ std::unique_ptr<pa_sql_company> PA_DATAOPT_fetch_company(const std::string &_com
     }
 }
 
-std::string PA_DATAOPT_current_time() {
+std::string PA_DATAOPT_current_time()
+{
     std::string time_string;
     time_t cur_time;
     time(&cur_time);
 
     auto st_time = localtime(&cur_time);
     time_string = std::to_string(st_time->tm_year + 1900) + "-" + std::to_string(st_time->tm_mon + 1) + "-" + std::to_string(st_time->tm_mday) + " " + std::to_string(st_time->tm_hour) + ":" + std::to_string(st_time->tm_min) + ":" + std::to_string(st_time->tm_sec);
-    
+
     return time_string;
 }
 
 int64_t PA_DATAOPT_timestring_2_date(const std::string &_str)
 {
-    const char *cha = _str.data();                                                 // 将string转换成char*。
-    tm tm_ = {0};                                                                         // 定义tm结构体。
-    int year, month, day, hour;                                     // 定义时间的各个int临时变量。
+    const char *cha = _str.data();                           // 将string转换成char*。
+    tm tm_ = {0};                                            // 定义tm结构体。
+    int year, month, day, hour;                              // 定义时间的各个int临时变量。
     sscanf(cha, "%d-%d-%d %d:", &year, &month, &day, &hour); // 将string存储的日期时间，转换为int临时变量。
-    tm_.tm_year = year - 1900;                                                      // 年，由于tm结构体存储的是从1900年开始的时间，所以tm_year为int临时变量减去1900。
-    tm_.tm_mon = month - 1;                                                         // 月，由于tm结构体的月份存储范围为0-11，所以tm_mon为int临时变量减去1。
-    tm_.tm_mday = day;                                                              // 日。
-    tm_.tm_hour = hour;                                                             // 时。
-    tm_.tm_isdst = 0;                                                               // 非夏令时。
-    time_t t_ = mktime(&tm_);                                                       // 将tm结构体转换成time_t格式。
-    return t_;                                                                      // 返回值。
+    tm_.tm_year = year - 1900;                               // 年，由于tm结构体存储的是从1900年开始的时间，所以tm_year为int临时变量减去1900。
+    tm_.tm_mon = month - 1;                                  // 月，由于tm结构体的月份存储范围为0-11，所以tm_mon为int临时变量减去1。
+    tm_.tm_mday = day;                                       // 日。
+    tm_.tm_hour = hour;                                      // 时。
+    tm_.tm_isdst = 0;                                        // 非夏令时。
+    time_t t_ = mktime(&tm_);                                // 将tm结构体转换成time_t格式。
+    return t_;                                               // 返回值。
 }
 
 std::string PA_DATAOPT_date_2_timestring(int64_t _date)
@@ -350,6 +379,6 @@ std::string PA_DATAOPT_date_2_timestring(int64_t _date)
 
     auto st_time = localtime(&cur_time);
     time_string = std::to_string(st_time->tm_year + 1900) + "-" + std::to_string(st_time->tm_mon + 1) + "-" + std::to_string(st_time->tm_mday) + " " + std::to_string(st_time->tm_hour) + ":" + std::to_string(st_time->tm_min) + ":" + std::to_string(st_time->tm_sec);
-    
+
     return time_string;
 }
