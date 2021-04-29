@@ -152,7 +152,7 @@ export default {
         upload_to_wx(file) {
             this.logo.splice(0, 1);
             var vue_this = this;
-            compressAccurately(file.file, 100).then(function (res) {
+            compressAccurately(file.file, 400).then(function (res) {
                 var reader = new FileReader();
                 reader.readAsDataURL(res);
                 reader.onloadend = function () {
