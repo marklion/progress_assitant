@@ -158,6 +158,11 @@ struct plan_status {
     4:string conflict_reason,
 }
 
+struct plan_number_id{
+    1:i64 id,
+    2:string number,
+}
+
 service stuff_plan_management {
     i64 create_plan(1:stuff_plan plan, 2:string ssid, 3:string proxy_company) throws (1:gen_exp e),
     list<plan_status> get_created_plan(1:string ssid) throws (1:gen_exp e),
@@ -174,4 +179,5 @@ service stuff_plan_management {
     string verify_plan(1:stuff_plan plan, 2:string ssid) throws (1:gen_exp e),
     bool send_file_via_email(1:string ssid, 2:string filepath, 3:string email) throws (1:gen_exp e),
     bool reject_plan(1:i64 plan_id, 2:string ssid, 3:string reject_reason) throws (1:gen_exp e),
+    list<plan_number_id> search_plan_by_driver_phone(1:string phone) throws (1:gen_exp e),
 }

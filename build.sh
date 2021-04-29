@@ -55,7 +55,7 @@ fi
 cp ${SRC_DIR}/pa_conf/nginx.conf ${BUILD_DIR}/conf
 
 [ -d ${BUILD_DIR}/script ] || mkdir ${BUILD_DIR}/script
-cp ${SRC_DIR}/pa_script/* ${BUILD_DIR}/script/
+cp -a ${SRC_DIR}/pa_script/* ${BUILD_DIR}/script/
 chmod +x ${BUILD_DIR}/script/*
 
 if [ ${BUILD_FRONT_END} == 'y' ]

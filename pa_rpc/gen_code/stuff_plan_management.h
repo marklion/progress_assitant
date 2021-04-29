@@ -37,6 +37,7 @@ class stuff_plan_managementIf {
   virtual void verify_plan(std::string& _return, const stuff_plan& plan, const std::string& ssid) = 0;
   virtual bool send_file_via_email(const std::string& ssid, const std::string& filepath, const std::string& email) = 0;
   virtual bool reject_plan(const int64_t plan_id, const std::string& ssid, const std::string& reject_reason) = 0;
+  virtual void search_plan_by_driver_phone(std::vector<plan_number_id> & _return, const std::string& phone) = 0;
 };
 
 class stuff_plan_managementIfFactory {
@@ -120,6 +121,9 @@ class stuff_plan_managementNull : virtual public stuff_plan_managementIf {
   bool reject_plan(const int64_t /* plan_id */, const std::string& /* ssid */, const std::string& /* reject_reason */) {
     bool _return = false;
     return _return;
+  }
+  void search_plan_by_driver_phone(std::vector<plan_number_id> & /* _return */, const std::string& /* phone */) {
+    return;
   }
 };
 
@@ -1922,6 +1926,118 @@ class stuff_plan_management_reject_plan_presult {
 
 };
 
+typedef struct _stuff_plan_management_search_plan_by_driver_phone_args__isset {
+  _stuff_plan_management_search_plan_by_driver_phone_args__isset() : phone(false) {}
+  bool phone :1;
+} _stuff_plan_management_search_plan_by_driver_phone_args__isset;
+
+class stuff_plan_management_search_plan_by_driver_phone_args {
+ public:
+
+  stuff_plan_management_search_plan_by_driver_phone_args(const stuff_plan_management_search_plan_by_driver_phone_args&);
+  stuff_plan_management_search_plan_by_driver_phone_args& operator=(const stuff_plan_management_search_plan_by_driver_phone_args&);
+  stuff_plan_management_search_plan_by_driver_phone_args() : phone() {
+  }
+
+  virtual ~stuff_plan_management_search_plan_by_driver_phone_args() noexcept;
+  std::string phone;
+
+  _stuff_plan_management_search_plan_by_driver_phone_args__isset __isset;
+
+  void __set_phone(const std::string& val);
+
+  bool operator == (const stuff_plan_management_search_plan_by_driver_phone_args & rhs) const
+  {
+    if (!(phone == rhs.phone))
+      return false;
+    return true;
+  }
+  bool operator != (const stuff_plan_management_search_plan_by_driver_phone_args &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const stuff_plan_management_search_plan_by_driver_phone_args & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+
+class stuff_plan_management_search_plan_by_driver_phone_pargs {
+ public:
+
+
+  virtual ~stuff_plan_management_search_plan_by_driver_phone_pargs() noexcept;
+  const std::string* phone;
+
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _stuff_plan_management_search_plan_by_driver_phone_result__isset {
+  _stuff_plan_management_search_plan_by_driver_phone_result__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _stuff_plan_management_search_plan_by_driver_phone_result__isset;
+
+class stuff_plan_management_search_plan_by_driver_phone_result {
+ public:
+
+  stuff_plan_management_search_plan_by_driver_phone_result(const stuff_plan_management_search_plan_by_driver_phone_result&);
+  stuff_plan_management_search_plan_by_driver_phone_result& operator=(const stuff_plan_management_search_plan_by_driver_phone_result&);
+  stuff_plan_management_search_plan_by_driver_phone_result() {
+  }
+
+  virtual ~stuff_plan_management_search_plan_by_driver_phone_result() noexcept;
+  std::vector<plan_number_id>  success;
+  gen_exp e;
+
+  _stuff_plan_management_search_plan_by_driver_phone_result__isset __isset;
+
+  void __set_success(const std::vector<plan_number_id> & val);
+
+  void __set_e(const gen_exp& val);
+
+  bool operator == (const stuff_plan_management_search_plan_by_driver_phone_result & rhs) const
+  {
+    if (!(success == rhs.success))
+      return false;
+    if (!(e == rhs.e))
+      return false;
+    return true;
+  }
+  bool operator != (const stuff_plan_management_search_plan_by_driver_phone_result &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const stuff_plan_management_search_plan_by_driver_phone_result & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _stuff_plan_management_search_plan_by_driver_phone_presult__isset {
+  _stuff_plan_management_search_plan_by_driver_phone_presult__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _stuff_plan_management_search_plan_by_driver_phone_presult__isset;
+
+class stuff_plan_management_search_plan_by_driver_phone_presult {
+ public:
+
+
+  virtual ~stuff_plan_management_search_plan_by_driver_phone_presult() noexcept;
+  std::vector<plan_number_id> * success;
+  gen_exp e;
+
+  _stuff_plan_management_search_plan_by_driver_phone_presult__isset __isset;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+
+};
+
 class stuff_plan_managementClient : virtual public stuff_plan_managementIf {
  public:
   stuff_plan_managementClient(std::shared_ptr< ::apache::thrift::protocol::TProtocol> prot) {
@@ -1992,6 +2108,9 @@ class stuff_plan_managementClient : virtual public stuff_plan_managementIf {
   bool reject_plan(const int64_t plan_id, const std::string& ssid, const std::string& reject_reason);
   void send_reject_plan(const int64_t plan_id, const std::string& ssid, const std::string& reject_reason);
   bool recv_reject_plan();
+  void search_plan_by_driver_phone(std::vector<plan_number_id> & _return, const std::string& phone);
+  void send_search_plan_by_driver_phone(const std::string& phone);
+  void recv_search_plan_by_driver_phone(std::vector<plan_number_id> & _return);
  protected:
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> piprot_;
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> poprot_;
@@ -2022,6 +2141,7 @@ class stuff_plan_managementProcessor : public ::apache::thrift::TDispatchProcess
   void process_verify_plan(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
   void process_send_file_via_email(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
   void process_reject_plan(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
+  void process_search_plan_by_driver_phone(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
  public:
   stuff_plan_managementProcessor(::std::shared_ptr<stuff_plan_managementIf> iface) :
     iface_(iface) {
@@ -2040,6 +2160,7 @@ class stuff_plan_managementProcessor : public ::apache::thrift::TDispatchProcess
     processMap_["verify_plan"] = &stuff_plan_managementProcessor::process_verify_plan;
     processMap_["send_file_via_email"] = &stuff_plan_managementProcessor::process_send_file_via_email;
     processMap_["reject_plan"] = &stuff_plan_managementProcessor::process_reject_plan;
+    processMap_["search_plan_by_driver_phone"] = &stuff_plan_managementProcessor::process_search_plan_by_driver_phone;
   }
 
   virtual ~stuff_plan_managementProcessor() {}
@@ -2208,6 +2329,16 @@ class stuff_plan_managementMultiface : virtual public stuff_plan_managementIf {
     return ifaces_[i]->reject_plan(plan_id, ssid, reject_reason);
   }
 
+  void search_plan_by_driver_phone(std::vector<plan_number_id> & _return, const std::string& phone) {
+    size_t sz = ifaces_.size();
+    size_t i = 0;
+    for (; i < (sz - 1); ++i) {
+      ifaces_[i]->search_plan_by_driver_phone(_return, phone);
+    }
+    ifaces_[i]->search_plan_by_driver_phone(_return, phone);
+    return;
+  }
+
 };
 
 // The 'concurrent' client is a thread safe client that correctly handles
@@ -2285,6 +2416,9 @@ class stuff_plan_managementConcurrentClient : virtual public stuff_plan_manageme
   bool reject_plan(const int64_t plan_id, const std::string& ssid, const std::string& reject_reason);
   int32_t send_reject_plan(const int64_t plan_id, const std::string& ssid, const std::string& reject_reason);
   bool recv_reject_plan(const int32_t seqid);
+  void search_plan_by_driver_phone(std::vector<plan_number_id> & _return, const std::string& phone);
+  int32_t send_search_plan_by_driver_phone(const std::string& phone);
+  void recv_search_plan_by_driver_phone(std::vector<plan_number_id> & _return, const int32_t seqid);
  protected:
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> piprot_;
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> poprot_;

@@ -958,6 +958,26 @@ class stuff_plan_management_handler : virtual public stuff_plan_managementIf
 
         return ret;
     }
+
+    virtual void search_plan_by_driver_phone(std::vector<plan_number_id> &_return, const std::string &phone)
+    {
+        auto drivers = sqlite_orm::search_record_all<pa_sql_driver>("phone = '%s'", phone.c_str());
+        for (auto &itr:drivers)
+        {
+            auto related_vichele_infos = itr.get_all_children<pa_sql_single_vichele>("driver");
+            for (auto &single_vichele:related_vichele_infos)
+            {
+                auto plan = single_vichele.get_parent<pa_sql_plan>("belong_plan");
+                if (plan && plan->status < 4)
+                {
+                    plan_number_id tmp;
+                    tmp.id = plan->get_pri_id();
+                    tmp.number = std::to_string(plan->create_time) + std::to_string(plan->get_pri_id());
+                    _return.push_back(tmp);
+                }
+            }
+        }
+    }
 };
 
 #endif // _STUFF_PLAN_MANAGEMENT_H_

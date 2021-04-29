@@ -356,14 +356,14 @@ uint32_t stuff_plan_management_get_created_plan_result::read(::apache::thrift::p
         if (ftype == ::apache::thrift::protocol::T_LIST) {
           {
             this->success.clear();
-            uint32_t _size109;
-            ::apache::thrift::protocol::TType _etype112;
-            xfer += iprot->readListBegin(_etype112, _size109);
-            this->success.resize(_size109);
-            uint32_t _i113;
-            for (_i113 = 0; _i113 < _size109; ++_i113)
+            uint32_t _size111;
+            ::apache::thrift::protocol::TType _etype114;
+            xfer += iprot->readListBegin(_etype114, _size111);
+            this->success.resize(_size111);
+            uint32_t _i115;
+            for (_i115 = 0; _i115 < _size111; ++_i115)
             {
-              xfer += this->success[_i113].read(iprot);
+              xfer += this->success[_i115].read(iprot);
             }
             xfer += iprot->readListEnd();
           }
@@ -402,10 +402,10 @@ uint32_t stuff_plan_management_get_created_plan_result::write(::apache::thrift::
     xfer += oprot->writeFieldBegin("success", ::apache::thrift::protocol::T_LIST, 0);
     {
       xfer += oprot->writeListBegin(::apache::thrift::protocol::T_STRUCT, static_cast<uint32_t>(this->success.size()));
-      std::vector<plan_status> ::const_iterator _iter114;
-      for (_iter114 = this->success.begin(); _iter114 != this->success.end(); ++_iter114)
+      std::vector<plan_status> ::const_iterator _iter116;
+      for (_iter116 = this->success.begin(); _iter116 != this->success.end(); ++_iter116)
       {
-        xfer += (*_iter114).write(oprot);
+        xfer += (*_iter116).write(oprot);
       }
       xfer += oprot->writeListEnd();
     }
@@ -450,14 +450,14 @@ uint32_t stuff_plan_management_get_created_plan_presult::read(::apache::thrift::
         if (ftype == ::apache::thrift::protocol::T_LIST) {
           {
             (*(this->success)).clear();
-            uint32_t _size115;
-            ::apache::thrift::protocol::TType _etype118;
-            xfer += iprot->readListBegin(_etype118, _size115);
-            (*(this->success)).resize(_size115);
-            uint32_t _i119;
-            for (_i119 = 0; _i119 < _size115; ++_i119)
+            uint32_t _size117;
+            ::apache::thrift::protocol::TType _etype120;
+            xfer += iprot->readListBegin(_etype120, _size117);
+            (*(this->success)).resize(_size117);
+            uint32_t _i121;
+            for (_i121 = 0; _i121 < _size117; ++_i121)
             {
-              xfer += (*(this->success))[_i119].read(iprot);
+              xfer += (*(this->success))[_i121].read(iprot);
             }
             xfer += iprot->readListEnd();
           }
@@ -595,14 +595,14 @@ uint32_t stuff_plan_management_get_company_plan_result::read(::apache::thrift::p
         if (ftype == ::apache::thrift::protocol::T_LIST) {
           {
             this->success.clear();
-            uint32_t _size120;
-            ::apache::thrift::protocol::TType _etype123;
-            xfer += iprot->readListBegin(_etype123, _size120);
-            this->success.resize(_size120);
-            uint32_t _i124;
-            for (_i124 = 0; _i124 < _size120; ++_i124)
+            uint32_t _size122;
+            ::apache::thrift::protocol::TType _etype125;
+            xfer += iprot->readListBegin(_etype125, _size122);
+            this->success.resize(_size122);
+            uint32_t _i126;
+            for (_i126 = 0; _i126 < _size122; ++_i126)
             {
-              xfer += this->success[_i124].read(iprot);
+              xfer += this->success[_i126].read(iprot);
             }
             xfer += iprot->readListEnd();
           }
@@ -641,10 +641,10 @@ uint32_t stuff_plan_management_get_company_plan_result::write(::apache::thrift::
     xfer += oprot->writeFieldBegin("success", ::apache::thrift::protocol::T_LIST, 0);
     {
       xfer += oprot->writeListBegin(::apache::thrift::protocol::T_STRUCT, static_cast<uint32_t>(this->success.size()));
-      std::vector<plan_status> ::const_iterator _iter125;
-      for (_iter125 = this->success.begin(); _iter125 != this->success.end(); ++_iter125)
+      std::vector<plan_status> ::const_iterator _iter127;
+      for (_iter127 = this->success.begin(); _iter127 != this->success.end(); ++_iter127)
       {
-        xfer += (*_iter125).write(oprot);
+        xfer += (*_iter127).write(oprot);
       }
       xfer += oprot->writeListEnd();
     }
@@ -689,14 +689,14 @@ uint32_t stuff_plan_management_get_company_plan_presult::read(::apache::thrift::
         if (ftype == ::apache::thrift::protocol::T_LIST) {
           {
             (*(this->success)).clear();
-            uint32_t _size126;
-            ::apache::thrift::protocol::TType _etype129;
-            xfer += iprot->readListBegin(_etype129, _size126);
-            (*(this->success)).resize(_size126);
-            uint32_t _i130;
-            for (_i130 = 0; _i130 < _size126; ++_i130)
+            uint32_t _size128;
+            ::apache::thrift::protocol::TType _etype131;
+            xfer += iprot->readListBegin(_etype131, _size128);
+            (*(this->success)).resize(_size128);
+            uint32_t _i132;
+            for (_i132 = 0; _i132 < _size128; ++_i132)
             {
-              xfer += (*(this->success))[_i130].read(iprot);
+              xfer += (*(this->success))[_i132].read(iprot);
             }
             xfer += iprot->readListEnd();
           }
@@ -2324,14 +2324,14 @@ uint32_t stuff_plan_management_export_plan_args::read(::apache::thrift::protocol
         if (ftype == ::apache::thrift::protocol::T_LIST) {
           {
             this->plan_ids.clear();
-            uint32_t _size131;
-            ::apache::thrift::protocol::TType _etype134;
-            xfer += iprot->readListBegin(_etype134, _size131);
-            this->plan_ids.resize(_size131);
-            uint32_t _i135;
-            for (_i135 = 0; _i135 < _size131; ++_i135)
+            uint32_t _size133;
+            ::apache::thrift::protocol::TType _etype136;
+            xfer += iprot->readListBegin(_etype136, _size133);
+            this->plan_ids.resize(_size133);
+            uint32_t _i137;
+            for (_i137 = 0; _i137 < _size133; ++_i137)
             {
-              xfer += iprot->readI64(this->plan_ids[_i135]);
+              xfer += iprot->readI64(this->plan_ids[_i137]);
             }
             xfer += iprot->readListEnd();
           }
@@ -2364,10 +2364,10 @@ uint32_t stuff_plan_management_export_plan_args::write(::apache::thrift::protoco
   xfer += oprot->writeFieldBegin("plan_ids", ::apache::thrift::protocol::T_LIST, 2);
   {
     xfer += oprot->writeListBegin(::apache::thrift::protocol::T_I64, static_cast<uint32_t>(this->plan_ids.size()));
-    std::vector<int64_t> ::const_iterator _iter136;
-    for (_iter136 = this->plan_ids.begin(); _iter136 != this->plan_ids.end(); ++_iter136)
+    std::vector<int64_t> ::const_iterator _iter138;
+    for (_iter138 = this->plan_ids.begin(); _iter138 != this->plan_ids.end(); ++_iter138)
     {
-      xfer += oprot->writeI64((*_iter136));
+      xfer += oprot->writeI64((*_iter138));
     }
     xfer += oprot->writeListEnd();
   }
@@ -2395,10 +2395,10 @@ uint32_t stuff_plan_management_export_plan_pargs::write(::apache::thrift::protoc
   xfer += oprot->writeFieldBegin("plan_ids", ::apache::thrift::protocol::T_LIST, 2);
   {
     xfer += oprot->writeListBegin(::apache::thrift::protocol::T_I64, static_cast<uint32_t>((*(this->plan_ids)).size()));
-    std::vector<int64_t> ::const_iterator _iter137;
-    for (_iter137 = (*(this->plan_ids)).begin(); _iter137 != (*(this->plan_ids)).end(); ++_iter137)
+    std::vector<int64_t> ::const_iterator _iter139;
+    for (_iter139 = (*(this->plan_ids)).begin(); _iter139 != (*(this->plan_ids)).end(); ++_iter139)
     {
-      xfer += oprot->writeI64((*_iter137));
+      xfer += oprot->writeI64((*_iter139));
     }
     xfer += oprot->writeListEnd();
   }
@@ -3477,6 +3477,245 @@ uint32_t stuff_plan_management_reject_plan_presult::read(::apache::thrift::proto
   return xfer;
 }
 
+
+stuff_plan_management_search_plan_by_driver_phone_args::~stuff_plan_management_search_plan_by_driver_phone_args() noexcept {
+}
+
+
+uint32_t stuff_plan_management_search_plan_by_driver_phone_args::read(::apache::thrift::protocol::TProtocol* iprot) {
+
+  ::apache::thrift::protocol::TInputRecursionTracker tracker(*iprot);
+  uint32_t xfer = 0;
+  std::string fname;
+  ::apache::thrift::protocol::TType ftype;
+  int16_t fid;
+
+  xfer += iprot->readStructBegin(fname);
+
+  using ::apache::thrift::protocol::TProtocolException;
+
+
+  while (true)
+  {
+    xfer += iprot->readFieldBegin(fname, ftype, fid);
+    if (ftype == ::apache::thrift::protocol::T_STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 1:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->phone);
+          this->__isset.phone = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      default:
+        xfer += iprot->skip(ftype);
+        break;
+    }
+    xfer += iprot->readFieldEnd();
+  }
+
+  xfer += iprot->readStructEnd();
+
+  return xfer;
+}
+
+uint32_t stuff_plan_management_search_plan_by_driver_phone_args::write(::apache::thrift::protocol::TProtocol* oprot) const {
+  uint32_t xfer = 0;
+  ::apache::thrift::protocol::TOutputRecursionTracker tracker(*oprot);
+  xfer += oprot->writeStructBegin("stuff_plan_management_search_plan_by_driver_phone_args");
+
+  xfer += oprot->writeFieldBegin("phone", ::apache::thrift::protocol::T_STRING, 1);
+  xfer += oprot->writeString(this->phone);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldStop();
+  xfer += oprot->writeStructEnd();
+  return xfer;
+}
+
+
+stuff_plan_management_search_plan_by_driver_phone_pargs::~stuff_plan_management_search_plan_by_driver_phone_pargs() noexcept {
+}
+
+
+uint32_t stuff_plan_management_search_plan_by_driver_phone_pargs::write(::apache::thrift::protocol::TProtocol* oprot) const {
+  uint32_t xfer = 0;
+  ::apache::thrift::protocol::TOutputRecursionTracker tracker(*oprot);
+  xfer += oprot->writeStructBegin("stuff_plan_management_search_plan_by_driver_phone_pargs");
+
+  xfer += oprot->writeFieldBegin("phone", ::apache::thrift::protocol::T_STRING, 1);
+  xfer += oprot->writeString((*(this->phone)));
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldStop();
+  xfer += oprot->writeStructEnd();
+  return xfer;
+}
+
+
+stuff_plan_management_search_plan_by_driver_phone_result::~stuff_plan_management_search_plan_by_driver_phone_result() noexcept {
+}
+
+
+uint32_t stuff_plan_management_search_plan_by_driver_phone_result::read(::apache::thrift::protocol::TProtocol* iprot) {
+
+  ::apache::thrift::protocol::TInputRecursionTracker tracker(*iprot);
+  uint32_t xfer = 0;
+  std::string fname;
+  ::apache::thrift::protocol::TType ftype;
+  int16_t fid;
+
+  xfer += iprot->readStructBegin(fname);
+
+  using ::apache::thrift::protocol::TProtocolException;
+
+
+  while (true)
+  {
+    xfer += iprot->readFieldBegin(fname, ftype, fid);
+    if (ftype == ::apache::thrift::protocol::T_STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 0:
+        if (ftype == ::apache::thrift::protocol::T_LIST) {
+          {
+            this->success.clear();
+            uint32_t _size140;
+            ::apache::thrift::protocol::TType _etype143;
+            xfer += iprot->readListBegin(_etype143, _size140);
+            this->success.resize(_size140);
+            uint32_t _i144;
+            for (_i144 = 0; _i144 < _size140; ++_i144)
+            {
+              xfer += this->success[_i144].read(iprot);
+            }
+            xfer += iprot->readListEnd();
+          }
+          this->__isset.success = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 1:
+        if (ftype == ::apache::thrift::protocol::T_STRUCT) {
+          xfer += this->e.read(iprot);
+          this->__isset.e = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      default:
+        xfer += iprot->skip(ftype);
+        break;
+    }
+    xfer += iprot->readFieldEnd();
+  }
+
+  xfer += iprot->readStructEnd();
+
+  return xfer;
+}
+
+uint32_t stuff_plan_management_search_plan_by_driver_phone_result::write(::apache::thrift::protocol::TProtocol* oprot) const {
+
+  uint32_t xfer = 0;
+
+  xfer += oprot->writeStructBegin("stuff_plan_management_search_plan_by_driver_phone_result");
+
+  if (this->__isset.success) {
+    xfer += oprot->writeFieldBegin("success", ::apache::thrift::protocol::T_LIST, 0);
+    {
+      xfer += oprot->writeListBegin(::apache::thrift::protocol::T_STRUCT, static_cast<uint32_t>(this->success.size()));
+      std::vector<plan_number_id> ::const_iterator _iter145;
+      for (_iter145 = this->success.begin(); _iter145 != this->success.end(); ++_iter145)
+      {
+        xfer += (*_iter145).write(oprot);
+      }
+      xfer += oprot->writeListEnd();
+    }
+    xfer += oprot->writeFieldEnd();
+  } else if (this->__isset.e) {
+    xfer += oprot->writeFieldBegin("e", ::apache::thrift::protocol::T_STRUCT, 1);
+    xfer += this->e.write(oprot);
+    xfer += oprot->writeFieldEnd();
+  }
+  xfer += oprot->writeFieldStop();
+  xfer += oprot->writeStructEnd();
+  return xfer;
+}
+
+
+stuff_plan_management_search_plan_by_driver_phone_presult::~stuff_plan_management_search_plan_by_driver_phone_presult() noexcept {
+}
+
+
+uint32_t stuff_plan_management_search_plan_by_driver_phone_presult::read(::apache::thrift::protocol::TProtocol* iprot) {
+
+  ::apache::thrift::protocol::TInputRecursionTracker tracker(*iprot);
+  uint32_t xfer = 0;
+  std::string fname;
+  ::apache::thrift::protocol::TType ftype;
+  int16_t fid;
+
+  xfer += iprot->readStructBegin(fname);
+
+  using ::apache::thrift::protocol::TProtocolException;
+
+
+  while (true)
+  {
+    xfer += iprot->readFieldBegin(fname, ftype, fid);
+    if (ftype == ::apache::thrift::protocol::T_STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 0:
+        if (ftype == ::apache::thrift::protocol::T_LIST) {
+          {
+            (*(this->success)).clear();
+            uint32_t _size146;
+            ::apache::thrift::protocol::TType _etype149;
+            xfer += iprot->readListBegin(_etype149, _size146);
+            (*(this->success)).resize(_size146);
+            uint32_t _i150;
+            for (_i150 = 0; _i150 < _size146; ++_i150)
+            {
+              xfer += (*(this->success))[_i150].read(iprot);
+            }
+            xfer += iprot->readListEnd();
+          }
+          this->__isset.success = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 1:
+        if (ftype == ::apache::thrift::protocol::T_STRUCT) {
+          xfer += this->e.read(iprot);
+          this->__isset.e = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      default:
+        xfer += iprot->skip(ftype);
+        break;
+    }
+    xfer += iprot->readFieldEnd();
+  }
+
+  xfer += iprot->readStructEnd();
+
+  return xfer;
+}
+
 int64_t stuff_plan_managementClient::create_plan(const stuff_plan& plan, const std::string& ssid, const std::string& proxy_company)
 {
   send_create_plan(plan, ssid, proxy_company);
@@ -4409,6 +4648,67 @@ bool stuff_plan_managementClient::recv_reject_plan()
   throw ::apache::thrift::TApplicationException(::apache::thrift::TApplicationException::MISSING_RESULT, "reject_plan failed: unknown result");
 }
 
+void stuff_plan_managementClient::search_plan_by_driver_phone(std::vector<plan_number_id> & _return, const std::string& phone)
+{
+  send_search_plan_by_driver_phone(phone);
+  recv_search_plan_by_driver_phone(_return);
+}
+
+void stuff_plan_managementClient::send_search_plan_by_driver_phone(const std::string& phone)
+{
+  int32_t cseqid = 0;
+  oprot_->writeMessageBegin("search_plan_by_driver_phone", ::apache::thrift::protocol::T_CALL, cseqid);
+
+  stuff_plan_management_search_plan_by_driver_phone_pargs args;
+  args.phone = &phone;
+  args.write(oprot_);
+
+  oprot_->writeMessageEnd();
+  oprot_->getTransport()->writeEnd();
+  oprot_->getTransport()->flush();
+}
+
+void stuff_plan_managementClient::recv_search_plan_by_driver_phone(std::vector<plan_number_id> & _return)
+{
+
+  int32_t rseqid = 0;
+  std::string fname;
+  ::apache::thrift::protocol::TMessageType mtype;
+
+  iprot_->readMessageBegin(fname, mtype, rseqid);
+  if (mtype == ::apache::thrift::protocol::T_EXCEPTION) {
+    ::apache::thrift::TApplicationException x;
+    x.read(iprot_);
+    iprot_->readMessageEnd();
+    iprot_->getTransport()->readEnd();
+    throw x;
+  }
+  if (mtype != ::apache::thrift::protocol::T_REPLY) {
+    iprot_->skip(::apache::thrift::protocol::T_STRUCT);
+    iprot_->readMessageEnd();
+    iprot_->getTransport()->readEnd();
+  }
+  if (fname.compare("search_plan_by_driver_phone") != 0) {
+    iprot_->skip(::apache::thrift::protocol::T_STRUCT);
+    iprot_->readMessageEnd();
+    iprot_->getTransport()->readEnd();
+  }
+  stuff_plan_management_search_plan_by_driver_phone_presult result;
+  result.success = &_return;
+  result.read(iprot_);
+  iprot_->readMessageEnd();
+  iprot_->getTransport()->readEnd();
+
+  if (result.__isset.success) {
+    // _return pointer has now been filled
+    return;
+  }
+  if (result.__isset.e) {
+    throw result.e;
+  }
+  throw ::apache::thrift::TApplicationException(::apache::thrift::TApplicationException::MISSING_RESULT, "search_plan_by_driver_phone failed: unknown result");
+}
+
 bool stuff_plan_managementProcessor::dispatchCall(::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, const std::string& fname, int32_t seqid, void* callContext) {
   ProcessMap::iterator pfn;
   pfn = processMap_.find(fname);
@@ -5280,6 +5580,63 @@ void stuff_plan_managementProcessor::process_reject_plan(int32_t seqid, ::apache
 
   if (this->eventHandler_.get() != nullptr) {
     this->eventHandler_->postWrite(ctx, "stuff_plan_management.reject_plan", bytes);
+  }
+}
+
+void stuff_plan_managementProcessor::process_search_plan_by_driver_phone(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext)
+{
+  void* ctx = nullptr;
+  if (this->eventHandler_.get() != nullptr) {
+    ctx = this->eventHandler_->getContext("stuff_plan_management.search_plan_by_driver_phone", callContext);
+  }
+  ::apache::thrift::TProcessorContextFreer freer(this->eventHandler_.get(), ctx, "stuff_plan_management.search_plan_by_driver_phone");
+
+  if (this->eventHandler_.get() != nullptr) {
+    this->eventHandler_->preRead(ctx, "stuff_plan_management.search_plan_by_driver_phone");
+  }
+
+  stuff_plan_management_search_plan_by_driver_phone_args args;
+  args.read(iprot);
+  iprot->readMessageEnd();
+  uint32_t bytes = iprot->getTransport()->readEnd();
+
+  if (this->eventHandler_.get() != nullptr) {
+    this->eventHandler_->postRead(ctx, "stuff_plan_management.search_plan_by_driver_phone", bytes);
+  }
+
+  stuff_plan_management_search_plan_by_driver_phone_result result;
+  try {
+    iface_->search_plan_by_driver_phone(result.success, args.phone);
+    result.__isset.success = true;
+  } catch (gen_exp &e) {
+    result.e = e;
+    result.__isset.e = true;
+  } catch (const std::exception& e) {
+    if (this->eventHandler_.get() != nullptr) {
+      this->eventHandler_->handlerError(ctx, "stuff_plan_management.search_plan_by_driver_phone");
+    }
+
+    ::apache::thrift::TApplicationException x(e.what());
+    oprot->writeMessageBegin("search_plan_by_driver_phone", ::apache::thrift::protocol::T_EXCEPTION, seqid);
+    x.write(oprot);
+    oprot->writeMessageEnd();
+    oprot->getTransport()->writeEnd();
+    oprot->getTransport()->flush();
+    return;
+  }
+
+  if (this->eventHandler_.get() != nullptr) {
+    this->eventHandler_->preWrite(ctx, "stuff_plan_management.search_plan_by_driver_phone");
+  }
+
+  oprot->writeMessageBegin("search_plan_by_driver_phone", ::apache::thrift::protocol::T_REPLY, seqid);
+  result.write(oprot);
+  oprot->writeMessageEnd();
+  bytes = oprot->getTransport()->writeEnd();
+  oprot->getTransport()->flush();
+
+  if (this->eventHandler_.get() != nullptr) {
+    this->eventHandler_->postWrite(ctx, "stuff_plan_management.search_plan_by_driver_phone", bytes);
   }
 }
 
@@ -6618,6 +6975,94 @@ bool stuff_plan_managementConcurrentClient::recv_reject_plan(const int32_t seqid
       }
       // in a bad state, don't commit
       throw ::apache::thrift::TApplicationException(::apache::thrift::TApplicationException::MISSING_RESULT, "reject_plan failed: unknown result");
+    }
+    // seqid != rseqid
+    this->sync_->updatePending(fname, mtype, rseqid);
+
+    // this will temporarily unlock the readMutex, and let other clients get work done
+    this->sync_->waitForWork(seqid);
+  } // end while(true)
+}
+
+void stuff_plan_managementConcurrentClient::search_plan_by_driver_phone(std::vector<plan_number_id> & _return, const std::string& phone)
+{
+  int32_t seqid = send_search_plan_by_driver_phone(phone);
+  recv_search_plan_by_driver_phone(_return, seqid);
+}
+
+int32_t stuff_plan_managementConcurrentClient::send_search_plan_by_driver_phone(const std::string& phone)
+{
+  int32_t cseqid = this->sync_->generateSeqId();
+  ::apache::thrift::async::TConcurrentSendSentry sentry(this->sync_.get());
+  oprot_->writeMessageBegin("search_plan_by_driver_phone", ::apache::thrift::protocol::T_CALL, cseqid);
+
+  stuff_plan_management_search_plan_by_driver_phone_pargs args;
+  args.phone = &phone;
+  args.write(oprot_);
+
+  oprot_->writeMessageEnd();
+  oprot_->getTransport()->writeEnd();
+  oprot_->getTransport()->flush();
+
+  sentry.commit();
+  return cseqid;
+}
+
+void stuff_plan_managementConcurrentClient::recv_search_plan_by_driver_phone(std::vector<plan_number_id> & _return, const int32_t seqid)
+{
+
+  int32_t rseqid = 0;
+  std::string fname;
+  ::apache::thrift::protocol::TMessageType mtype;
+
+  // the read mutex gets dropped and reacquired as part of waitForWork()
+  // The destructor of this sentry wakes up other clients
+  ::apache::thrift::async::TConcurrentRecvSentry sentry(this->sync_.get(), seqid);
+
+  while(true) {
+    if(!this->sync_->getPending(fname, mtype, rseqid)) {
+      iprot_->readMessageBegin(fname, mtype, rseqid);
+    }
+    if(seqid == rseqid) {
+      if (mtype == ::apache::thrift::protocol::T_EXCEPTION) {
+        ::apache::thrift::TApplicationException x;
+        x.read(iprot_);
+        iprot_->readMessageEnd();
+        iprot_->getTransport()->readEnd();
+        sentry.commit();
+        throw x;
+      }
+      if (mtype != ::apache::thrift::protocol::T_REPLY) {
+        iprot_->skip(::apache::thrift::protocol::T_STRUCT);
+        iprot_->readMessageEnd();
+        iprot_->getTransport()->readEnd();
+      }
+      if (fname.compare("search_plan_by_driver_phone") != 0) {
+        iprot_->skip(::apache::thrift::protocol::T_STRUCT);
+        iprot_->readMessageEnd();
+        iprot_->getTransport()->readEnd();
+
+        // in a bad state, don't commit
+        using ::apache::thrift::protocol::TProtocolException;
+        throw TProtocolException(TProtocolException::INVALID_DATA);
+      }
+      stuff_plan_management_search_plan_by_driver_phone_presult result;
+      result.success = &_return;
+      result.read(iprot_);
+      iprot_->readMessageEnd();
+      iprot_->getTransport()->readEnd();
+
+      if (result.__isset.success) {
+        // _return pointer has now been filled
+        sentry.commit();
+        return;
+      }
+      if (result.__isset.e) {
+        sentry.commit();
+        throw result.e;
+      }
+      // in a bad state, don't commit
+      throw ::apache::thrift::TApplicationException(::apache::thrift::TApplicationException::MISSING_RESULT, "search_plan_by_driver_phone failed: unknown result");
     }
     // seqid != rseqid
     this->sync_->updatePending(fname, mtype, rseqid);
