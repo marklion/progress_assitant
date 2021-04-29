@@ -13,6 +13,24 @@
     <van-cell-group>
         <template #title>
             <van-row type="flex" justify="space-between" align="center">
+                <van-col>资质证明</van-col>
+                <van-col>
+                    <van-uploader :after-read="upload_attachment" accept="image/*,.pdf">
+                        <van-button icon="plus" size="small" type="primary">上传文件</van-button>
+                    </van-uploader>
+                </van-col>
+            </van-row>
+        </template>
+        <van-cell v-for="(single_attach, index) in attachment" :key="index" :title="'证明' + (index + 1)">
+            <template #right-icon>
+                <van-button size="small" type="info" @click="pre_view_attach(single_attach.pic_path)" >预览</van-button>
+                <van-button size="small" type="danger" @click="remove_attach(single_attach)">删除</van-button>
+            </template>
+        </van-cell>
+    </van-cell-group>
+    <van-cell-group>
+        <template #title>
+            <van-row type="flex" justify="space-between" align="center">
                 <van-col>主车</van-col>
                 <van-col>
                     <van-button size="small" type="primary" @click="show_main_vichele_add_diag = true">新增</van-button>
@@ -107,7 +125,12 @@ import {
 import {
     Field
 } from 'vant';
+import {
+    Uploader
+} from 'vant';
+import { ImagePreview } from 'vant';
 
+Vue.use(Uploader);
 Vue.use(Field);
 Vue.use(Form);
 Vue.use(Dialog);
@@ -133,9 +156,41 @@ export default {
             phone_pattern: /^(13[0-9]|14[01456879]|15[0-35-9]|16[2567]|17[0-8]|18[0-9]|19[0-35-9])\d{8}$/,
             address: '',
             contact: '',
+            attachment: [],
         };
     },
     methods: {
+        remove_attach: function (_attach) {
+            var vue_this = this;
+            Dialog.confirm({
+                message:"确认要删除证明文件" + (vue_this.attachment.indexOf(_attach) + 1) + "吗?",
+            }).then(function() {
+                vue_this.$call_remote_process("company_management", "del_attachment", [vue_this.$cookies.get('pa_ssid'), _attach.id]).then(function () {
+                    vue_this.init_attachment();
+                });
+            });
+        },
+        pre_view_attach: function (_remote_path) {
+            ImagePreview([this.$remote_url + _remote_path]);
+        },
+        upload_attachment: function (_file) {
+            var vue_this = this;
+            var reader = new FileReader();
+            reader.readAsDataURL(_file.file);
+            reader.onloadend = function () {
+                var result = this.result;
+                var file_is_pdf = true;
+                if (/^image/.test(_file.file.type)) {
+                    file_is_pdf = false;
+                }
+                var file_content = result.split(';base64,')[1];
+                vue_this.$call_remote_process("company_management", "add_attachment", [vue_this.$cookies.get('pa_ssid'), file_content, file_is_pdf]).then(function (resp) {
+                    if (resp) {
+                        vue_this.init_attachment();
+                    }
+                });
+            };
+        },
         update_address: function () {
             var vue_this = this;
             vue_this.$call_remote_process("company_management", "set_address", [vue_this.$cookies.get('pa_ssid'), vue_this.address]).then(function (resp) {
@@ -232,12 +287,28 @@ export default {
                 vue_this.contact = resp;
             });
         },
+        init_attachment: function () {
+            var vue_this = this;
+            vue_this.attachment = [];
+            vue_this.$call_remote_process("company_management", "get_all_attachment", [vue_this.$cookies.get('pa_ssid')]).then(function (resp) {
+                resp.forEach((element, index) => {
+                    vue_this.$set(vue_this.attachment, index, element);
+                });
+                if (vue_this.attachment.length == 0)
+                {
+                    Dialog({
+                        message:'请上传资质证明，支持图片和pdf格式',
+                    });
+                }
+            });
+        },
     },
     beforeMount: function () {
         this.init_behind_vichele();
         this.init_main_vichele();
         this.init_driver();
         this.init_address_contact();
+        this.init_attachment();
     },
 }
 </script>

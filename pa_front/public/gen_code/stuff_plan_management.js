@@ -245,13 +245,13 @@ stuff_plan_management_get_created_plan_result = class {
         case 0:
         if (ftype == Thrift.Type.LIST) {
           this.success = [];
-          const _rtmp336 = input.readListBegin();
-          const _size35 = _rtmp336.size || 0;
-          for (let _i37 = 0; _i37 < _size35; ++_i37) {
-            let elem38 = null;
-            elem38 = new plan_status();
-            elem38.read(input);
-            this.success.push(elem38);
+          const _rtmp341 = input.readListBegin();
+          const _size40 = _rtmp341.size || 0;
+          for (let _i42 = 0; _i42 < _size40; ++_i42) {
+            let elem43 = null;
+            elem43 = new plan_status();
+            elem43.read(input);
+            this.success.push(elem43);
           }
           input.readListEnd();
         } else {
@@ -280,10 +280,10 @@ stuff_plan_management_get_created_plan_result = class {
     if (this.success !== null && this.success !== undefined) {
       output.writeFieldBegin('success', Thrift.Type.LIST, 0);
       output.writeListBegin(Thrift.Type.STRUCT, this.success.length);
-      for (let iter39 in this.success) {
-        if (this.success.hasOwnProperty(iter39)) {
-          iter39 = this.success[iter39];
-          iter39.write(output);
+      for (let iter44 in this.success) {
+        if (this.success.hasOwnProperty(iter44)) {
+          iter44 = this.success[iter44];
+          iter44.write(output);
         }
       }
       output.writeListEnd();
@@ -383,13 +383,13 @@ stuff_plan_management_get_company_plan_result = class {
         case 0:
         if (ftype == Thrift.Type.LIST) {
           this.success = [];
-          const _rtmp341 = input.readListBegin();
-          const _size40 = _rtmp341.size || 0;
-          for (let _i42 = 0; _i42 < _size40; ++_i42) {
-            let elem43 = null;
-            elem43 = new plan_status();
-            elem43.read(input);
-            this.success.push(elem43);
+          const _rtmp346 = input.readListBegin();
+          const _size45 = _rtmp346.size || 0;
+          for (let _i47 = 0; _i47 < _size45; ++_i47) {
+            let elem48 = null;
+            elem48 = new plan_status();
+            elem48.read(input);
+            this.success.push(elem48);
           }
           input.readListEnd();
         } else {
@@ -418,10 +418,10 @@ stuff_plan_management_get_company_plan_result = class {
     if (this.success !== null && this.success !== undefined) {
       output.writeFieldBegin('success', Thrift.Type.LIST, 0);
       output.writeListBegin(Thrift.Type.STRUCT, this.success.length);
-      for (let iter44 in this.success) {
-        if (this.success.hasOwnProperty(iter44)) {
-          iter44 = this.success[iter44];
-          iter44.write(output);
+      for (let iter49 in this.success) {
+        if (this.success.hasOwnProperty(iter49)) {
+          iter49 = this.success[iter49];
+          iter49.write(output);
         }
       }
       output.writeListEnd();
@@ -1422,12 +1422,12 @@ stuff_plan_management_export_plan_args = class {
         case 2:
         if (ftype == Thrift.Type.LIST) {
           this.plan_ids = [];
-          const _rtmp346 = input.readListBegin();
-          const _size45 = _rtmp346.size || 0;
-          for (let _i47 = 0; _i47 < _size45; ++_i47) {
-            let elem48 = null;
-            elem48 = input.readI64().value;
-            this.plan_ids.push(elem48);
+          const _rtmp351 = input.readListBegin();
+          const _size50 = _rtmp351.size || 0;
+          for (let _i52 = 0; _i52 < _size50; ++_i52) {
+            let elem53 = null;
+            elem53 = input.readI64().value;
+            this.plan_ids.push(elem53);
           }
           input.readListEnd();
         } else {
@@ -1453,10 +1453,10 @@ stuff_plan_management_export_plan_args = class {
     if (this.plan_ids !== null && this.plan_ids !== undefined) {
       output.writeFieldBegin('plan_ids', Thrift.Type.LIST, 2);
       output.writeListBegin(Thrift.Type.I64, this.plan_ids.length);
-      for (let iter49 in this.plan_ids) {
-        if (this.plan_ids.hasOwnProperty(iter49)) {
-          iter49 = this.plan_ids[iter49];
-          output.writeI64(iter49);
+      for (let iter54 in this.plan_ids) {
+        if (this.plan_ids.hasOwnProperty(iter54)) {
+          iter54 = this.plan_ids[iter54];
+          output.writeI64(iter54);
         }
       }
       output.writeListEnd();

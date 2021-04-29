@@ -41,6 +41,10 @@ class company_managementIf {
   virtual bool set_contact(const std::string& ssid, const std::string& contact) = 0;
   virtual void get_contact(std::string& _return, const std::string& ssid) = 0;
   virtual void get_address_contact(company_address_contact_info& _return, const std::string& company_name) = 0;
+  virtual bool add_attachment(const std::string& ssid, const std::string& base64content, const bool is_pdf) = 0;
+  virtual void del_attachment(const std::string& ssid, const int64_t id) = 0;
+  virtual void get_all_attachment(std::vector<company_attachment> & _return, const std::string& ssid) = 0;
+  virtual void get_attachment(std::string& _return, const std::string& company_name) = 0;
 };
 
 class company_managementIfFactory {
@@ -133,6 +137,19 @@ class company_managementNull : virtual public company_managementIf {
     return;
   }
   void get_address_contact(company_address_contact_info& /* _return */, const std::string& /* company_name */) {
+    return;
+  }
+  bool add_attachment(const std::string& /* ssid */, const std::string& /* base64content */, const bool /* is_pdf */) {
+    bool _return = false;
+    return _return;
+  }
+  void del_attachment(const std::string& /* ssid */, const int64_t /* id */) {
+    return;
+  }
+  void get_all_attachment(std::vector<company_attachment> & /* _return */, const std::string& /* ssid */) {
+    return;
+  }
+  void get_attachment(std::string& /* _return */, const std::string& /* company_name */) {
     return;
   }
 };
@@ -2347,6 +2364,467 @@ class company_management_get_address_contact_presult {
 
 };
 
+typedef struct _company_management_add_attachment_args__isset {
+  _company_management_add_attachment_args__isset() : ssid(false), base64content(false), is_pdf(false) {}
+  bool ssid :1;
+  bool base64content :1;
+  bool is_pdf :1;
+} _company_management_add_attachment_args__isset;
+
+class company_management_add_attachment_args {
+ public:
+
+  company_management_add_attachment_args(const company_management_add_attachment_args&);
+  company_management_add_attachment_args& operator=(const company_management_add_attachment_args&);
+  company_management_add_attachment_args() : ssid(), base64content(), is_pdf(0) {
+  }
+
+  virtual ~company_management_add_attachment_args() noexcept;
+  std::string ssid;
+  std::string base64content;
+  bool is_pdf;
+
+  _company_management_add_attachment_args__isset __isset;
+
+  void __set_ssid(const std::string& val);
+
+  void __set_base64content(const std::string& val);
+
+  void __set_is_pdf(const bool val);
+
+  bool operator == (const company_management_add_attachment_args & rhs) const
+  {
+    if (!(ssid == rhs.ssid))
+      return false;
+    if (!(base64content == rhs.base64content))
+      return false;
+    if (!(is_pdf == rhs.is_pdf))
+      return false;
+    return true;
+  }
+  bool operator != (const company_management_add_attachment_args &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const company_management_add_attachment_args & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+
+class company_management_add_attachment_pargs {
+ public:
+
+
+  virtual ~company_management_add_attachment_pargs() noexcept;
+  const std::string* ssid;
+  const std::string* base64content;
+  const bool* is_pdf;
+
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _company_management_add_attachment_result__isset {
+  _company_management_add_attachment_result__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _company_management_add_attachment_result__isset;
+
+class company_management_add_attachment_result {
+ public:
+
+  company_management_add_attachment_result(const company_management_add_attachment_result&);
+  company_management_add_attachment_result& operator=(const company_management_add_attachment_result&);
+  company_management_add_attachment_result() : success(0) {
+  }
+
+  virtual ~company_management_add_attachment_result() noexcept;
+  bool success;
+  gen_exp e;
+
+  _company_management_add_attachment_result__isset __isset;
+
+  void __set_success(const bool val);
+
+  void __set_e(const gen_exp& val);
+
+  bool operator == (const company_management_add_attachment_result & rhs) const
+  {
+    if (!(success == rhs.success))
+      return false;
+    if (!(e == rhs.e))
+      return false;
+    return true;
+  }
+  bool operator != (const company_management_add_attachment_result &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const company_management_add_attachment_result & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _company_management_add_attachment_presult__isset {
+  _company_management_add_attachment_presult__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _company_management_add_attachment_presult__isset;
+
+class company_management_add_attachment_presult {
+ public:
+
+
+  virtual ~company_management_add_attachment_presult() noexcept;
+  bool* success;
+  gen_exp e;
+
+  _company_management_add_attachment_presult__isset __isset;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+
+};
+
+typedef struct _company_management_del_attachment_args__isset {
+  _company_management_del_attachment_args__isset() : ssid(false), id(false) {}
+  bool ssid :1;
+  bool id :1;
+} _company_management_del_attachment_args__isset;
+
+class company_management_del_attachment_args {
+ public:
+
+  company_management_del_attachment_args(const company_management_del_attachment_args&);
+  company_management_del_attachment_args& operator=(const company_management_del_attachment_args&);
+  company_management_del_attachment_args() : ssid(), id(0) {
+  }
+
+  virtual ~company_management_del_attachment_args() noexcept;
+  std::string ssid;
+  int64_t id;
+
+  _company_management_del_attachment_args__isset __isset;
+
+  void __set_ssid(const std::string& val);
+
+  void __set_id(const int64_t val);
+
+  bool operator == (const company_management_del_attachment_args & rhs) const
+  {
+    if (!(ssid == rhs.ssid))
+      return false;
+    if (!(id == rhs.id))
+      return false;
+    return true;
+  }
+  bool operator != (const company_management_del_attachment_args &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const company_management_del_attachment_args & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+
+class company_management_del_attachment_pargs {
+ public:
+
+
+  virtual ~company_management_del_attachment_pargs() noexcept;
+  const std::string* ssid;
+  const int64_t* id;
+
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _company_management_del_attachment_result__isset {
+  _company_management_del_attachment_result__isset() : e(false) {}
+  bool e :1;
+} _company_management_del_attachment_result__isset;
+
+class company_management_del_attachment_result {
+ public:
+
+  company_management_del_attachment_result(const company_management_del_attachment_result&);
+  company_management_del_attachment_result& operator=(const company_management_del_attachment_result&);
+  company_management_del_attachment_result() {
+  }
+
+  virtual ~company_management_del_attachment_result() noexcept;
+  gen_exp e;
+
+  _company_management_del_attachment_result__isset __isset;
+
+  void __set_e(const gen_exp& val);
+
+  bool operator == (const company_management_del_attachment_result & rhs) const
+  {
+    if (!(e == rhs.e))
+      return false;
+    return true;
+  }
+  bool operator != (const company_management_del_attachment_result &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const company_management_del_attachment_result & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _company_management_del_attachment_presult__isset {
+  _company_management_del_attachment_presult__isset() : e(false) {}
+  bool e :1;
+} _company_management_del_attachment_presult__isset;
+
+class company_management_del_attachment_presult {
+ public:
+
+
+  virtual ~company_management_del_attachment_presult() noexcept;
+  gen_exp e;
+
+  _company_management_del_attachment_presult__isset __isset;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+
+};
+
+typedef struct _company_management_get_all_attachment_args__isset {
+  _company_management_get_all_attachment_args__isset() : ssid(false) {}
+  bool ssid :1;
+} _company_management_get_all_attachment_args__isset;
+
+class company_management_get_all_attachment_args {
+ public:
+
+  company_management_get_all_attachment_args(const company_management_get_all_attachment_args&);
+  company_management_get_all_attachment_args& operator=(const company_management_get_all_attachment_args&);
+  company_management_get_all_attachment_args() : ssid() {
+  }
+
+  virtual ~company_management_get_all_attachment_args() noexcept;
+  std::string ssid;
+
+  _company_management_get_all_attachment_args__isset __isset;
+
+  void __set_ssid(const std::string& val);
+
+  bool operator == (const company_management_get_all_attachment_args & rhs) const
+  {
+    if (!(ssid == rhs.ssid))
+      return false;
+    return true;
+  }
+  bool operator != (const company_management_get_all_attachment_args &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const company_management_get_all_attachment_args & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+
+class company_management_get_all_attachment_pargs {
+ public:
+
+
+  virtual ~company_management_get_all_attachment_pargs() noexcept;
+  const std::string* ssid;
+
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _company_management_get_all_attachment_result__isset {
+  _company_management_get_all_attachment_result__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _company_management_get_all_attachment_result__isset;
+
+class company_management_get_all_attachment_result {
+ public:
+
+  company_management_get_all_attachment_result(const company_management_get_all_attachment_result&);
+  company_management_get_all_attachment_result& operator=(const company_management_get_all_attachment_result&);
+  company_management_get_all_attachment_result() {
+  }
+
+  virtual ~company_management_get_all_attachment_result() noexcept;
+  std::vector<company_attachment>  success;
+  gen_exp e;
+
+  _company_management_get_all_attachment_result__isset __isset;
+
+  void __set_success(const std::vector<company_attachment> & val);
+
+  void __set_e(const gen_exp& val);
+
+  bool operator == (const company_management_get_all_attachment_result & rhs) const
+  {
+    if (!(success == rhs.success))
+      return false;
+    if (!(e == rhs.e))
+      return false;
+    return true;
+  }
+  bool operator != (const company_management_get_all_attachment_result &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const company_management_get_all_attachment_result & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _company_management_get_all_attachment_presult__isset {
+  _company_management_get_all_attachment_presult__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _company_management_get_all_attachment_presult__isset;
+
+class company_management_get_all_attachment_presult {
+ public:
+
+
+  virtual ~company_management_get_all_attachment_presult() noexcept;
+  std::vector<company_attachment> * success;
+  gen_exp e;
+
+  _company_management_get_all_attachment_presult__isset __isset;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+
+};
+
+typedef struct _company_management_get_attachment_args__isset {
+  _company_management_get_attachment_args__isset() : company_name(false) {}
+  bool company_name :1;
+} _company_management_get_attachment_args__isset;
+
+class company_management_get_attachment_args {
+ public:
+
+  company_management_get_attachment_args(const company_management_get_attachment_args&);
+  company_management_get_attachment_args& operator=(const company_management_get_attachment_args&);
+  company_management_get_attachment_args() : company_name() {
+  }
+
+  virtual ~company_management_get_attachment_args() noexcept;
+  std::string company_name;
+
+  _company_management_get_attachment_args__isset __isset;
+
+  void __set_company_name(const std::string& val);
+
+  bool operator == (const company_management_get_attachment_args & rhs) const
+  {
+    if (!(company_name == rhs.company_name))
+      return false;
+    return true;
+  }
+  bool operator != (const company_management_get_attachment_args &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const company_management_get_attachment_args & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+
+class company_management_get_attachment_pargs {
+ public:
+
+
+  virtual ~company_management_get_attachment_pargs() noexcept;
+  const std::string* company_name;
+
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _company_management_get_attachment_result__isset {
+  _company_management_get_attachment_result__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _company_management_get_attachment_result__isset;
+
+class company_management_get_attachment_result {
+ public:
+
+  company_management_get_attachment_result(const company_management_get_attachment_result&);
+  company_management_get_attachment_result& operator=(const company_management_get_attachment_result&);
+  company_management_get_attachment_result() : success() {
+  }
+
+  virtual ~company_management_get_attachment_result() noexcept;
+  std::string success;
+  gen_exp e;
+
+  _company_management_get_attachment_result__isset __isset;
+
+  void __set_success(const std::string& val);
+
+  void __set_e(const gen_exp& val);
+
+  bool operator == (const company_management_get_attachment_result & rhs) const
+  {
+    if (!(success == rhs.success))
+      return false;
+    if (!(e == rhs.e))
+      return false;
+    return true;
+  }
+  bool operator != (const company_management_get_attachment_result &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const company_management_get_attachment_result & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _company_management_get_attachment_presult__isset {
+  _company_management_get_attachment_presult__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _company_management_get_attachment_presult__isset;
+
+class company_management_get_attachment_presult {
+ public:
+
+
+  virtual ~company_management_get_attachment_presult() noexcept;
+  std::string* success;
+  gen_exp e;
+
+  _company_management_get_attachment_presult__isset __isset;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+
+};
+
 class company_managementClient : virtual public company_managementIf {
  public:
   company_managementClient(std::shared_ptr< ::apache::thrift::protocol::TProtocol> prot) {
@@ -2429,6 +2907,18 @@ class company_managementClient : virtual public company_managementIf {
   void get_address_contact(company_address_contact_info& _return, const std::string& company_name);
   void send_get_address_contact(const std::string& company_name);
   void recv_get_address_contact(company_address_contact_info& _return);
+  bool add_attachment(const std::string& ssid, const std::string& base64content, const bool is_pdf);
+  void send_add_attachment(const std::string& ssid, const std::string& base64content, const bool is_pdf);
+  bool recv_add_attachment();
+  void del_attachment(const std::string& ssid, const int64_t id);
+  void send_del_attachment(const std::string& ssid, const int64_t id);
+  void recv_del_attachment();
+  void get_all_attachment(std::vector<company_attachment> & _return, const std::string& ssid);
+  void send_get_all_attachment(const std::string& ssid);
+  void recv_get_all_attachment(std::vector<company_attachment> & _return);
+  void get_attachment(std::string& _return, const std::string& company_name);
+  void send_get_attachment(const std::string& company_name);
+  void recv_get_attachment(std::string& _return);
  protected:
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> piprot_;
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> poprot_;
@@ -2463,6 +2953,10 @@ class company_managementProcessor : public ::apache::thrift::TDispatchProcessor 
   void process_set_contact(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
   void process_get_contact(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
   void process_get_address_contact(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
+  void process_add_attachment(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
+  void process_del_attachment(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
+  void process_get_all_attachment(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
+  void process_get_attachment(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
  public:
   company_managementProcessor(::std::shared_ptr<company_managementIf> iface) :
     iface_(iface) {
@@ -2485,6 +2979,10 @@ class company_managementProcessor : public ::apache::thrift::TDispatchProcessor 
     processMap_["set_contact"] = &company_managementProcessor::process_set_contact;
     processMap_["get_contact"] = &company_managementProcessor::process_get_contact;
     processMap_["get_address_contact"] = &company_managementProcessor::process_get_address_contact;
+    processMap_["add_attachment"] = &company_managementProcessor::process_add_attachment;
+    processMap_["del_attachment"] = &company_managementProcessor::process_del_attachment;
+    processMap_["get_all_attachment"] = &company_managementProcessor::process_get_all_attachment;
+    processMap_["get_attachment"] = &company_managementProcessor::process_get_attachment;
   }
 
   virtual ~company_managementProcessor() {}
@@ -2693,6 +3191,44 @@ class company_managementMultiface : virtual public company_managementIf {
     return;
   }
 
+  bool add_attachment(const std::string& ssid, const std::string& base64content, const bool is_pdf) {
+    size_t sz = ifaces_.size();
+    size_t i = 0;
+    for (; i < (sz - 1); ++i) {
+      ifaces_[i]->add_attachment(ssid, base64content, is_pdf);
+    }
+    return ifaces_[i]->add_attachment(ssid, base64content, is_pdf);
+  }
+
+  void del_attachment(const std::string& ssid, const int64_t id) {
+    size_t sz = ifaces_.size();
+    size_t i = 0;
+    for (; i < (sz - 1); ++i) {
+      ifaces_[i]->del_attachment(ssid, id);
+    }
+    ifaces_[i]->del_attachment(ssid, id);
+  }
+
+  void get_all_attachment(std::vector<company_attachment> & _return, const std::string& ssid) {
+    size_t sz = ifaces_.size();
+    size_t i = 0;
+    for (; i < (sz - 1); ++i) {
+      ifaces_[i]->get_all_attachment(_return, ssid);
+    }
+    ifaces_[i]->get_all_attachment(_return, ssid);
+    return;
+  }
+
+  void get_attachment(std::string& _return, const std::string& company_name) {
+    size_t sz = ifaces_.size();
+    size_t i = 0;
+    for (; i < (sz - 1); ++i) {
+      ifaces_[i]->get_attachment(_return, company_name);
+    }
+    ifaces_[i]->get_attachment(_return, company_name);
+    return;
+  }
+
 };
 
 // The 'concurrent' client is a thread safe client that correctly handles
@@ -2782,6 +3318,18 @@ class company_managementConcurrentClient : virtual public company_managementIf {
   void get_address_contact(company_address_contact_info& _return, const std::string& company_name);
   int32_t send_get_address_contact(const std::string& company_name);
   void recv_get_address_contact(company_address_contact_info& _return, const int32_t seqid);
+  bool add_attachment(const std::string& ssid, const std::string& base64content, const bool is_pdf);
+  int32_t send_add_attachment(const std::string& ssid, const std::string& base64content, const bool is_pdf);
+  bool recv_add_attachment(const int32_t seqid);
+  void del_attachment(const std::string& ssid, const int64_t id);
+  int32_t send_del_attachment(const std::string& ssid, const int64_t id);
+  void recv_del_attachment(const int32_t seqid);
+  void get_all_attachment(std::vector<company_attachment> & _return, const std::string& ssid);
+  int32_t send_get_all_attachment(const std::string& ssid);
+  void recv_get_all_attachment(std::vector<company_attachment> & _return, const int32_t seqid);
+  void get_attachment(std::string& _return, const std::string& company_name);
+  int32_t send_get_attachment(const std::string& company_name);
+  void recv_get_attachment(std::string& _return, const int32_t seqid);
  protected:
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> piprot_;
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> poprot_;

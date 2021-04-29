@@ -14,7 +14,7 @@
             <van-row type="flex" justify="space-between" align="center">
                 <van-col>今日报价</van-col>
                 <van-col>
-                    <van-button type="primary" size="small" round icon="plus" @click="show_add_stuff = true">增加商品</van-button>
+                    <van-button type="primary" size="small" round icon="plus" @click="open_add_type">增加商品</van-button>
                 </van-col>
             </van-row>
         </template>
@@ -26,7 +26,7 @@
                     </template>
                 </van-popover>
             </template>
-            <template #label>
+            <template #label v-if="single_type.last">
                 <van-tag plain type="danger">{{single_type.last}}</van-tag>
             </template>
         </van-cell>
@@ -35,7 +35,7 @@
         <van-form @submit="add_stuff">
             <van-field v-model="add_stuff_name" name="商品名" label="商品名" placeholder="请输入商品名" :rules="[{ required: true, message: '请填写商品名' }]" />
             <van-field v-model="add_stuff_price" type="number" name="价格" label="价格" placeholder="请输入价格" :rules="[{ required: true, message: '请填写价格' }]" />
-            <van-field v-model="add_stuff_last" name="存量" label="存量" placeholder="请输入存量信息" />
+            <van-field v-model="add_stuff_last" name="存量" label="备注" placeholder="请输入备注信息" />
             <div style="margin: 16px;">
                 <van-button round block type="info" native-type="submit">确认</van-button>
             </div>
@@ -45,7 +45,7 @@
         <van-form @submit="edit_stuff">
             <van-field v-model="stuff_in_edit.name" name="商品名" label="商品名" readonly />
             <van-field v-model="stuff_in_edit.price" name="价格" label="价格" placeholder="请输入价格" :rules="[{ required: true, message: '请填写价格' }]" />
-            <van-field v-model="stuff_in_edit.last" name="存量" label="存量" placeholder="请输入存量信息" />
+            <van-field v-model="stuff_in_edit.last" name="存量" label="备注" placeholder="请输入备注信息" />
             <div style="margin: 16px;">
                 <van-button round block type="info" native-type="submit">确认</van-button>
             </div>
@@ -161,7 +161,7 @@ export default {
             focus_type: 0,
             proxy_company: '',
             proxy_type_id: 0,
-            company_logo:'',
+            company_logo: '',
         };
     },
     computed: {
@@ -196,6 +196,18 @@ export default {
         }
     },
     methods: {
+        open_add_type: function () {
+            var vue_this = this;
+            vue_this.$call_remote_process("company_management", "get_all_attachment", [vue_this.$cookies.get('pa_ssid')]).then(function (resp) {
+                if (resp.length > 0) {
+                    vue_this.show_add_stuff = true;
+                } else {
+                    vue_this.$router.push({
+                        name: 'BoundInfo'
+                    });
+                }
+            });
+        },
         submit_proxy_company: function () {
             this.show_proxy_company_diag = false;
             this.$router.push({
@@ -281,7 +293,7 @@ export default {
                 }
             });
         },
-        
+
         edit_stuff: function () {
             var vue_this = this;
             var stuff = Object.create(vue_this.stuff_in_edit);
@@ -352,7 +364,7 @@ export default {
         this.init_company_data();
         this.config_with_wx();
         var vue_this = this;
-        vue_this.$call_remote_process("company_management", 'get_company_logo', [vue_this.$cookies.get('pa_ssid')]).then(function(resp) {
+        vue_this.$call_remote_process("company_management", 'get_company_logo', [vue_this.$cookies.get('pa_ssid')]).then(function (resp) {
             vue_this.company_logo = resp;
         });
     },

@@ -6,6 +6,7 @@
 #include "pa_utils.h"
 #include <algorithm>
 #include "writer.hpp"
+#include "Base64.h"
 class company_management_handler : virtual public company_managementIf
 {
 public:
@@ -481,5 +482,121 @@ public:
         _return.address = company->address;
         _return.contact = company->contact;
     }
+
+    void update_company_attachment_pic(pa_sql_company &_company) { 
+        auto attachments = _company.get_all_children<pa_sql_company_attachment>("belong_company");
+        std::string params;
+        for (auto &itr:attachments)
+        {
+            params += "/dist" + itr.pic_path + " ";
+        }
+        std::string cmd = "flock /tmp/script_lock -c \"/script/long_pic_make.sh "  + params + "\"";
+        auto fp = popen(cmd.c_str(), "r");
+        if (fp)
+        {
+            char buff[1024];
+            std::string content;
+            unsigned int read_len = 0;
+            while (0 < (read_len =  fread(buff, 1, sizeof(buff), fp)))
+            {
+                content.append(buff, read_len);
+            }
+            if (content.length() > 0)
+            {
+                _company.attachment_picture = PA_DATAOPT_store_logo_to_file(content, std::to_string(_company.get_pri_id()) + "attach");
+            }
+            else
+            {
+                _company.attachment_picture = "";
+            }
+            _company.update_record();
+
+            pclose(fp);
+        }
+    }
+
+    virtual bool add_attachment(const std::string &ssid, const std::string &base64content, const bool is_pdf)
+    {
+        bool ret = false;
+        auto company = get_belong_company(ssid);
+        std::string content;
+
+        Base64::Decode(base64content, &content);
+        if (content.length() > 0)
+        {
+            pa_sql_company_attachment tmp;
+            tmp.set_parent(*company, "belong_company");
+            ret = tmp.insert_record();
+            auto file_name = std::to_string(company->get_pri_id()) + std::to_string(tmp.get_pri_id()) + "single_attach";
+
+            tmp.res_path = PA_DATAOPT_store_attach_file(content, is_pdf, file_name);
+            if (is_pdf)
+            {
+                std::string cmd = "flock /tmp/script_lock -c \"/script/long_pic_make.sh /dist" + tmp.res_path + "\"";
+                auto fp = popen(cmd.c_str(), "r");
+                if (fp)
+                {
+                    char buff[1024];
+                    std::string content;
+                    unsigned int read_len = 0;
+                    while (0 < (read_len = fread(buff, 1, sizeof(buff), fp)))
+                    {
+                        content.append(buff, read_len);
+                    }
+                    tmp.pic_path = PA_DATAOPT_store_attach_file(content, false, file_name);
+                    pclose(fp);
+                }
+            }
+            else
+            {
+                tmp.pic_path = tmp.res_path;
+            }
+
+            ret = tmp.update_record();
+            if (ret)
+            {
+                update_company_attachment_pic(*company);
+            }
+        }
+
+        return ret;
+    }
+    virtual void del_attachment(const std::string &ssid, const int64_t id)
+    {
+        auto company = get_belong_company(ssid);
+        auto attach = company->get_children<pa_sql_company_attachment>("belong_company", "PRI_ID = %d", id);
+        if (attach)
+        {
+            attach->remove_record();
+            update_company_attachment_pic(*company);
+        }
+    }
+    virtual void get_all_attachment(std::vector<company_attachment> &_return, const std::string &ssid)
+    {
+        auto company = get_belong_company(ssid);
+        auto all_attach = company->get_all_children<pa_sql_company_attachment>("belong_company");
+        for (auto &itr:all_attach)
+        {
+            company_attachment tmp;
+            tmp.id = itr.get_pri_id();
+            tmp.path = itr.res_path;
+            tmp.pic_path = itr.pic_path;
+            _return.push_back(tmp);
+        }
+    }
+    virtual void get_attachment(std::string &_return, const std::string &company_name)
+    {
+        auto company = sqlite_orm::search_record<pa_sql_company>("name = '%s'", company_name.c_str());
+        if (!company)
+        {
+            PA_RETURN_NOCOMPANY_MSG();
+        }
+        if (company->attachment_picture.length() == 0)
+        {
+            PA_RETURN_MSG("无资质证明");
+        }
+        _return = company->attachment_picture;
+    }
+
 };
 #endif // _COMPANY_MANAGEMENT_IMP_H_
