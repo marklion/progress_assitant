@@ -200,7 +200,7 @@ export default {
             if (file_is_pdf) {
                 vue_this.convert_2_base64_send(_file.file, true);
             } else {
-                compressAccurately(_file.file, 100).then(function (res) {
+                compressAccurately(_file.file, 400).then(function (res) {
                     vue_this.convert_2_base64_send(res, false);
                 });
 

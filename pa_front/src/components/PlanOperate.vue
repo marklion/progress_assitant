@@ -189,7 +189,7 @@ export default {
         },
         upload_payinfo: function (_file) {
             var vue_this = this;
-            compressAccurately(_file.file, 100).then(function (res) {
+            compressAccurately(_file.file, 400).then(function (res) {
                 var reader = new FileReader();
                 reader.readAsDataURL(res);
                 reader.onloadend = function () {
