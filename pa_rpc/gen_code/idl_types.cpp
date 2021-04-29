@@ -2361,3 +2361,115 @@ void plan_status::printTo(std::ostream& out) const {
 }
 
 
+plan_number_id::~plan_number_id() noexcept {
+}
+
+
+void plan_number_id::__set_id(const int64_t val) {
+  this->id = val;
+}
+
+void plan_number_id::__set_number(const std::string& val) {
+  this->number = val;
+}
+std::ostream& operator<<(std::ostream& out, const plan_number_id& obj)
+{
+  obj.printTo(out);
+  return out;
+}
+
+
+uint32_t plan_number_id::read(::apache::thrift::protocol::TProtocol* iprot) {
+
+  ::apache::thrift::protocol::TInputRecursionTracker tracker(*iprot);
+  uint32_t xfer = 0;
+  std::string fname;
+  ::apache::thrift::protocol::TType ftype;
+  int16_t fid;
+
+  xfer += iprot->readStructBegin(fname);
+
+  using ::apache::thrift::protocol::TProtocolException;
+
+
+  while (true)
+  {
+    xfer += iprot->readFieldBegin(fname, ftype, fid);
+    if (ftype == ::apache::thrift::protocol::T_STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 1:
+        if (ftype == ::apache::thrift::protocol::T_I64) {
+          xfer += iprot->readI64(this->id);
+          this->__isset.id = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 2:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->number);
+          this->__isset.number = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      default:
+        xfer += iprot->skip(ftype);
+        break;
+    }
+    xfer += iprot->readFieldEnd();
+  }
+
+  xfer += iprot->readStructEnd();
+
+  return xfer;
+}
+
+uint32_t plan_number_id::write(::apache::thrift::protocol::TProtocol* oprot) const {
+  uint32_t xfer = 0;
+  ::apache::thrift::protocol::TOutputRecursionTracker tracker(*oprot);
+  xfer += oprot->writeStructBegin("plan_number_id");
+
+  xfer += oprot->writeFieldBegin("id", ::apache::thrift::protocol::T_I64, 1);
+  xfer += oprot->writeI64(this->id);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("number", ::apache::thrift::protocol::T_STRING, 2);
+  xfer += oprot->writeString(this->number);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldStop();
+  xfer += oprot->writeStructEnd();
+  return xfer;
+}
+
+void swap(plan_number_id &a, plan_number_id &b) {
+  using ::std::swap;
+  swap(a.id, b.id);
+  swap(a.number, b.number);
+  swap(a.__isset, b.__isset);
+}
+
+plan_number_id::plan_number_id(const plan_number_id& other32) {
+  id = other32.id;
+  number = other32.number;
+  __isset = other32.__isset;
+}
+plan_number_id& plan_number_id::operator=(const plan_number_id& other33) {
+  id = other33.id;
+  number = other33.number;
+  __isset = other33.__isset;
+  return *this;
+}
+void plan_number_id::printTo(std::ostream& out) const {
+  using ::apache::thrift::to_string;
+  out << "plan_number_id(";
+  out << "id=" << to_string(id);
+  out << ", " << "number=" << to_string(number);
+  out << ")";
+}
+
+

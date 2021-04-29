@@ -47,6 +47,8 @@ class stuff_plan;
 
 class plan_status;
 
+class plan_number_id;
+
 typedef struct _gen_exp__isset {
   _gen_exp__isset() : msg(false) {}
   bool msg :1;
@@ -930,6 +932,54 @@ class plan_status : public virtual ::apache::thrift::TBase {
 void swap(plan_status &a, plan_status &b);
 
 std::ostream& operator<<(std::ostream& out, const plan_status& obj);
+
+typedef struct _plan_number_id__isset {
+  _plan_number_id__isset() : id(false), number(false) {}
+  bool id :1;
+  bool number :1;
+} _plan_number_id__isset;
+
+class plan_number_id : public virtual ::apache::thrift::TBase {
+ public:
+
+  plan_number_id(const plan_number_id&);
+  plan_number_id& operator=(const plan_number_id&);
+  plan_number_id() : id(0), number() {
+  }
+
+  virtual ~plan_number_id() noexcept;
+  int64_t id;
+  std::string number;
+
+  _plan_number_id__isset __isset;
+
+  void __set_id(const int64_t val);
+
+  void __set_number(const std::string& val);
+
+  bool operator == (const plan_number_id & rhs) const
+  {
+    if (!(id == rhs.id))
+      return false;
+    if (!(number == rhs.number))
+      return false;
+    return true;
+  }
+  bool operator != (const plan_number_id &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const plan_number_id & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+  virtual void printTo(std::ostream& out) const;
+};
+
+void swap(plan_number_id &a, plan_number_id &b);
+
+std::ostream& operator<<(std::ostream& out, const plan_number_id& obj);
 
 
 
