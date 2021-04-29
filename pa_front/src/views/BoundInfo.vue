@@ -23,7 +23,7 @@
         </template>
         <van-cell v-for="(single_attach, index) in attachment" :key="index" :title="'证明' + (index + 1)">
             <template #right-icon>
-                <van-button size="small" type="info" @click="pre_view_attach(single_attach.pic_path)" >预览</van-button>
+                <van-button size="small" type="info" @click="pre_view_attach(single_attach.pic_path)">预览</van-button>
                 <van-button size="small" type="danger" @click="remove_attach(single_attach)">删除</van-button>
             </template>
         </van-cell>
@@ -128,8 +128,12 @@ import {
 import {
     Uploader
 } from 'vant';
-import { ImagePreview } from 'vant';
-
+import {
+    ImagePreview
+} from 'vant';
+import {
+    compressAccurately
+} from 'image-conversion';
 Vue.use(Uploader);
 Vue.use(Field);
 Vue.use(Form);
@@ -163,8 +167,8 @@ export default {
         remove_attach: function (_attach) {
             var vue_this = this;
             Dialog.confirm({
-                message:"确认要删除证明文件" + (vue_this.attachment.indexOf(_attach) + 1) + "吗?",
-            }).then(function() {
+                message: "确认要删除证明文件" + (vue_this.attachment.indexOf(_attach) + 1) + "吗?",
+            }).then(function () {
                 vue_this.$call_remote_process("company_management", "del_attachment", [vue_this.$cookies.get('pa_ssid'), _attach.id]).then(function () {
                     vue_this.init_attachment();
                 });
@@ -173,23 +177,34 @@ export default {
         pre_view_attach: function (_remote_path) {
             ImagePreview([this.$remote_url + _remote_path]);
         },
-        upload_attachment: function (_file) {
+        convert_2_base64_send: function (_file, _is_pdf) {
             var vue_this = this;
             var reader = new FileReader();
-            reader.readAsDataURL(_file.file);
+            reader.readAsDataURL(_file);
             reader.onloadend = function () {
                 var result = this.result;
-                var file_is_pdf = true;
-                if (/^image/.test(_file.file.type)) {
-                    file_is_pdf = false;
-                }
                 var file_content = result.split(';base64,')[1];
-                vue_this.$call_remote_process("company_management", "add_attachment", [vue_this.$cookies.get('pa_ssid'), file_content, file_is_pdf]).then(function (resp) {
+                vue_this.$call_remote_process("company_management", "add_attachment", [vue_this.$cookies.get('pa_ssid'), file_content, _is_pdf]).then(function (resp) {
                     if (resp) {
                         vue_this.init_attachment();
                     }
                 });
             };
+        },
+        upload_attachment: function (_file) {
+            var vue_this = this;
+            var file_is_pdf = true;
+            if (/^image/.test(_file.file.type)) {
+                file_is_pdf = false;
+            }
+            if (file_is_pdf) {
+                vue_this.convert_2_base64_send(_file.file, true);
+            } else {
+                compressAccurately(_file.file, 100).then(function (res) {
+                    vue_this.convert_2_base64_send(res, false);
+                });
+
+            }
         },
         update_address: function () {
             var vue_this = this;
@@ -294,10 +309,9 @@ export default {
                 resp.forEach((element, index) => {
                     vue_this.$set(vue_this.attachment, index, element);
                 });
-                if (vue_this.attachment.length == 0)
-                {
+                if (vue_this.attachment.length == 0) {
                     Dialog({
-                        message:'请上传资质证明，支持图片和pdf格式',
+                        message: '请上传资质证明，支持图片和pdf格式',
                     });
                 }
             });
