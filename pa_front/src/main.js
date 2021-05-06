@@ -7,12 +7,15 @@ import cookies from 'vue-cookies'
 import {
     get_client, call_remote_process
 } from '@/plugins/rpc_helper.js'
+import less from 'less'
 
 Vue.prototype.$cookies = cookies;
 Vue.prototype.$get_client= get_client;
 Vue.prototype.$call_remote_process = call_remote_process;
 Vue.prototype.$remote_url = process.env.VUE_APP_BACK_END_URL;
 Vue.config.productionTip = false
+
+Vue.use(less)
 
 new Vue({
   router,
