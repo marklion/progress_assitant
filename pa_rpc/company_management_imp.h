@@ -253,7 +253,7 @@ public:
         {
             if (opt_user->buyer)
             {
-                statistics_plan = opt_user->get_all_children<pa_sql_plan>("created_by", "create_time >= %d AND create_time <= %d AND status = 4", begin_date, end_date);
+                statistics_plan = opt_user->get_all_children<pa_sql_plan>("created_by", "create_time >= %ld AND create_time <= %ld AND status = 4", begin_date, end_date);
             }
             else
             {
@@ -263,7 +263,7 @@ public:
                     auto stuffs = company->get_all_children<pa_sql_stuff_info>("belong_company");
                     for (auto &itr : stuffs)
                     {
-                        auto plans = itr.get_all_children<pa_sql_plan>("belong_stuff", "create_time >= %d AND create_time <= %d AND status = 4", begin_date, end_date);
+                        auto plans = itr.get_all_children<pa_sql_plan>("belong_stuff", "create_time >= %ld AND create_time <= %ld AND status = 4", begin_date, end_date);
                         statistics_plan.insert(statistics_plan.begin(), plans.begin(), plans.end());
                     }
                 }
@@ -398,7 +398,7 @@ public:
         {
             PA_RETURN_NOCOMPANY_MSG();
         }
-        auto user_need_remove = company->get_children<pa_sql_userinfo>("belong_company", "PRI_ID = %d", user_id);
+        auto user_need_remove = company->get_children<pa_sql_userinfo>("belong_company", "PRI_ID = %ld", user_id);
         if (!user_need_remove)
         {
             PA_RETURN_MSG("用户不存在");
@@ -564,7 +564,7 @@ public:
     virtual void del_attachment(const std::string &ssid, const int64_t id)
     {
         auto company = get_belong_company(ssid);
-        auto attach = company->get_children<pa_sql_company_attachment>("belong_company", "PRI_ID = %d", id);
+        auto attach = company->get_children<pa_sql_company_attachment>("belong_company", "PRI_ID = %ld", id);
         if (attach)
         {
             attach->remove_record();

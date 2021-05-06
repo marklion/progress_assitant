@@ -53,7 +53,7 @@ public:
 
         if (oJson.KeyExist("errcode"))
         {
-            m_log.err("failed to get openid: %s", oJson("errmsg"));
+            m_log.err("failed to get openid: %s", oJson("errmsg").c_str());
             PA_RETURN_MSG("微信登陆失败");
         }
         else
@@ -259,7 +259,7 @@ public:
         }
         if (main_vichele)
         {
-            auto vichele = company->get_children<pa_sql_vichele>("belong_company", "PRI_ID = %d", id);
+            auto vichele = company->get_children<pa_sql_vichele>("belong_company", "PRI_ID = %ld", id);
             if (vichele)
             {
                 vichele->is_drop = 1;
@@ -268,7 +268,7 @@ public:
         }
         else
         {
-            auto vichele = company->get_children<pa_sql_vichele_behind>("belong_company", "PRI_ID = %d", id);
+            auto vichele = company->get_children<pa_sql_vichele_behind>("belong_company", "PRI_ID = %ld", id);
             if (vichele)
             {
                 vichele->is_drop = 1;
@@ -405,7 +405,7 @@ public:
         {
             PA_RETURN_NOCOMPANY_MSG();
         }
-        auto driver = company->get_children<pa_sql_driver>("belong_company", "PRI_ID = %d", id);
+        auto driver = company->get_children<pa_sql_driver>("belong_company", "PRI_ID = %ld", id);
         if (driver)
         {
             driver->is_drop = 1;

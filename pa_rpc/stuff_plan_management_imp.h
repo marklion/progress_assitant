@@ -813,7 +813,7 @@ class stuff_plan_management_handler : virtual public stuff_plan_managementIf
 
     std::string get_vichele_verify_result(pa_sql_vichele &single_vichele, std::string plan_time_day, int64_t self_plan_id) {
         std::string ret;
-        auto all_related_plan = sqlite_orm::search_record_all<pa_sql_plan>("plan_time LIKE '%s%%' AND status != 5 AND PRI_ID != %d", plan_time_day.c_str(), self_plan_id);
+        auto all_related_plan = sqlite_orm::search_record_all<pa_sql_plan>("plan_time LIKE '%s%%' AND status != 5 AND PRI_ID != %ld", plan_time_day.c_str(), self_plan_id);
         for (auto &itr:all_related_plan)
         {
             auto all_related_vichele_info = itr.get_all_children<pa_sql_single_vichele>("belong_plan");
