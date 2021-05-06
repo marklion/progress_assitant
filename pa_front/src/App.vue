@@ -1,8 +1,8 @@
 <template>
 <div id="app">
-    <van-nav-bar class="nav_bar_show" :left-arrow="has_go_back" :title="bar_title" @click-left="onClickLeft" @click-right="onClickRight">
+    <van-nav-bar class="nav_bar_show" :left-arrow="has_go_back" :left-text="get_left_text" :title="bar_title" @click-left="onClickLeft" @click-right="onClickRight">
         <template #right>
-            <van-icon name="share-o" size="20"></van-icon>
+            <van-icon name="share" size="20"></van-icon>
         </template>
     </van-nav-bar>
     <van-pull-refresh v-model="isLoading" @refresh="onRefresh">
@@ -72,6 +72,16 @@ export default {
             show_share: false,
             isLoading: false,
         }
+    },
+    computed: {
+        get_left_text: function () {
+            var ret = "";
+            if (this.has_go_back) {
+                ret = "返回";
+            }
+
+            return ret;
+        },
     },
     beforeMount: function () {
         var vue_this = this;

@@ -12,6 +12,8 @@
     "core-js": "^3.6.5",
     "exif-js": "^2.3.0",
     "image-conversion": "^2.1.1",
+    "less": "^4.1.1",
+    "less-loader": "^7.3.0",
     "node-int64": "^0.4.0",
     "vant": "^2.12.6",
     "vue": "^2.6.11",
