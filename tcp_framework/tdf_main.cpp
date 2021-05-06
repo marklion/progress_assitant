@@ -227,6 +227,10 @@ public:
                     ret = true;
                 }
             }
+            if (ret == false)
+            {
+                close(fd);
+            }
         }
 
         return ret;

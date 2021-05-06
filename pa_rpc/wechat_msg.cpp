@@ -41,7 +41,7 @@ struct acc_tok_from_wx:content_from_wx {
 
         if (oJson.KeyExist("errcode"))
         {
-            g_log.err("failed when req acc_tok:%s", oJson("errmsg"));
+            g_log.err("failed when req acc_tok:%s", oJson("errmsg").c_str());
         }
         else
         {
@@ -62,7 +62,7 @@ struct acc_tok_pub_from_wx:content_from_wx {
 
         if (oJson.KeyExist("errcode"))
         {
-            g_log.err("failed when req acc_tok:%s", oJson("errmsg"));
+            g_log.err("failed when req acc_tok:%s", oJson("errmsg").c_str());
         }
         else
         {
@@ -82,7 +82,7 @@ struct jsapi_ticket_from_wx:content_from_wx {
 
         if ("0" != oJson("errcode"))
         {
-            g_log.err("failed when req js_ticket:%s", oJson("errmsg"));
+            g_log.err("failed when req js_ticket:%s", oJson("errmsg").c_str());
         }
         else
         {

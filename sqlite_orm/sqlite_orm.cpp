@@ -15,10 +15,10 @@ extern bool execute_sql_cmd(const std::string& _sql_cmd, const std::string& _sql
             usleep(10000);
             if (_count>20)
             {
-                g_log.err("max retry times arrived: %s", _priv);
+                g_log.err("max retry times arrived: %s", (char *)_priv);
                 return 0;
             }
-            g_log.log("retry sql :%s for %d times", _priv, _count);
+            g_log.log("retry sql :%s for %d times", (char *)_priv, _count);
             return 1;
         }, (void*)(_sql_cmd.c_str()));
         char *errmsg = nullptr;
