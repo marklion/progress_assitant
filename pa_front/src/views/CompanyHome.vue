@@ -1,12 +1,22 @@
 <template>
 <div class="company_home_show">
-    <van-button plain round icon="scan" class="scan_button_show" @click="confirm_close"></van-button>
     <van-row type="flex" align="center" :gutter="10">
         <van-col :offset="2">
             <van-image round width="80px" height="80px" fit="cover" :src="$remote_url +  company_logo" />
         </van-col>
         <van-col>
-            <h3>{{$store.state.userinfo.company}}</h3>
+            <div class="company_name_show">
+                {{$store.state.userinfo.company}}
+            </div>
+            <van-row type="flex"  align="center" :gutter="10">
+                <van-col>
+                    <van-icon name="scan" size="25" color="#1989fa" @click="confirm_close" />
+                </van-col>
+                <van-col>
+                    <van-icon name="setting-o" size="25" color="#1989fa" @click="nav_to_company_data" />
+                </van-col>
+            </van-row>
+
         </van-col>
     </van-row>
     <van-cell-group>
@@ -196,6 +206,11 @@ export default {
         }
     },
     methods: {
+        nav_to_company_data: function () {
+            this.$router.push({
+                name: 'BoundInfo'
+            });
+        },
         open_add_type: function () {
             var vue_this = this;
             vue_this.$call_remote_process("company_management", "get_all_attachment", [vue_this.$cookies.get('pa_ssid')]).then(function (resp) {
@@ -396,5 +411,12 @@ export default {
     color: red;
     border-color: red;
     font-size: 16px;
+}
+
+.company_name_show {
+    font-size: 25px;
+    font-weight: bold;
+    margin-top: 10px;
+    margin-bottom: 10px;
 }
 </style>
