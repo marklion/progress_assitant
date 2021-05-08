@@ -8,7 +8,8 @@
     <van-pull-refresh v-model="isLoading" @refresh="onRefresh">
         <router-view />
     </van-pull-refresh>
-    <van-tabbar route fixed placeholder>
+    <div style="height: 4rem;"></div>
+    <van-tabbar route fixed>
         <van-tabbar-item v-if="$store.state.userinfo.buyer" replace :to="{name:'Home'}" icon="home-o">主页</van-tabbar-item>
         <van-tabbar-item v-else replace :to="{name:'CompanyHome'}" icon="home-o">主页</van-tabbar-item>
         <van-tabbar-item replace :to="{name:'CompanyOrder'}" icon="orders-o">订单</van-tabbar-item>
