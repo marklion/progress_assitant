@@ -8,7 +8,7 @@
             <div class="company_name_show">
                 {{$store.state.userinfo.company}}
             </div>
-            <van-row type="flex"  align="center" :gutter="10">
+            <van-row type="flex" align="center" :gutter="10">
                 <van-col>
                     <van-icon name="scan" size="25" color="#1989fa" @click="confirm_close" />
                 </van-col>
@@ -38,6 +38,11 @@
             </template>
             <template #label v-if="single_type.last">
                 <van-tag plain type="danger">{{single_type.last}}</van-tag>
+            </template>
+            <template #icon v-if="!single_type.saling">
+                <div class="saling_tag_show">
+                    已下架
+                </div>
             </template>
         </van-cell>
     </van-cell-group>
@@ -418,5 +423,12 @@ export default {
     font-weight: bold;
     margin-top: 10px;
     margin-bottom: 10px;
+}
+
+.saling_tag_show {
+    margin: 0 auto;
+    width: 20px;
+    line-height: 15px;
+    color:red;
 }
 </style>
