@@ -6,7 +6,7 @@
                 <van-col>
                     计划内容
                 </van-col>
-                <van-col v-if="plan_detail.status != 5 && plan_detail.status != 4">
+                <van-col v-if="status_change_rule[4]">
                     <van-button type="danger" size="small" @click="reason_diag = true">撤销计划</van-button>
                 </van-col>
             </van-row>
@@ -44,48 +44,14 @@
         </van-collapse>
     </van-cell-group>
 
-    <plan-operate :is_proxy="is_proxy" :plan_id="plan_detail.plan_id" :status="plan_detail.status"></plan-operate>
+    <plan-operate v-if="plan_detail.plan_id != 0" :is_proxy="is_proxy" :plan_id="plan_detail.plan_id" :status="plan_detail.status" :prompt="status_prompt"></plan-operate>
 
     <van-steps direction="vertical" :active="plan_detail.status">
-        <van-step>
-            <h3>创建计划</h3>
-            <p>{{plan_detail.created_time}}</p>
-            <p>备注：{{plan_detail.comment}}</p>
-        </van-step>
-        <van-step>
-            <h3>计划确认</h3>
-            <p>{{plan_detail.plan_confirm_timestamp}}</p>
-            <p>{{plan_detail.plan_confirm_by}}</p>
-            <p v-if="plan_detail.reject_reason && plan_detail.status == 0">
-                驳回原因：{{plan_detail.reject_reason}}
-            </p>
-        </van-step>
-        <van-step>
-            <h3>付款</h3>
-            <p>{{plan_detail.pay_timestamp}}</p>
-            <div v-if="plan_detail.pay_timestamp">
-                <p>付款信息：</p>
-                <van-image width="100" height="100" :src="$remote_url +  plan_detail.pay_info" @click="preview_pay" />
-            </div>
-        </van-step>
-        <van-step>
-            <h3>收款确认</h3>
-            <p>{{plan_detail.pay_confirm_timestamp}}</p>
-            <p>{{plan_detail.pay_confirm_by}}</p>
-            <p v-if="plan_detail.reject_reason && plan_detail.status == 1">
-                驳回原因：{{plan_detail.reject_reason}}
-            </p>
-        </van-step>
-        <van-step>
-            <h3>提货结束</h3>
-            <p>{{plan_detail.close_timestamp}}</p>
-            <p>{{plan_detail.close_by}}</p>
-        </van-step>
-        <van-step v-if="plan_detail.except_close_timestamp">
-            <h3>撤销</h3>
-            <p>{{plan_detail.except_close_timestamp}}</p>
-            <p>撤销原因：{{plan_detail.except_close_reason}}</p>
-            <p>撤销人：{{plan_detail.except_close_by}}</p>
+        <van-step v-for="(single_status, index) in status_in_plan" :key="index">
+            <h3>{{single_status.name}}</h3>
+            <p v-if="single_status.timestamp">更新时间：{{single_status.timestamp}}</p>
+            <p v-if="single_status.comment">备注：{{single_status.comment}}</p>
+            <p v-if="single_status.author">提交人：{{single_status.author}}</p>
         </van-step>
     </van-steps>
     <van-dialog v-model="reason_diag" title="确认撤销" closeOnClickOverlay :showConfirmButton="false">
@@ -134,7 +100,9 @@ import {
 import {
     Field
 } from 'vant';
-import { Notify } from 'vant';
+import {
+    Notify
+} from 'vant';
 Vue.use(Field);
 Vue.use(Form);
 Vue.use(Dialog);
@@ -168,19 +136,6 @@ export default {
                 created_time: '',
                 status: 0,
                 vichele_info: [],
-                comment: '',
-                plan_confirm_by: '',
-                plan_confirm_timestamp: '',
-                pay_info: '',
-                pay_timestamp: '',
-                pay_confirm_by: '',
-                pay_confirm_timestamp: '',
-                close_timestamp: '',
-                close_by: '',
-                except_close_by: '',
-                except_close_timestamp: '',
-                except_close_reason: '',
-                reject_reason: '',
                 sale_company: ''
             },
             plan_owner_info: {
@@ -193,7 +148,19 @@ export default {
             extern_company_info: [],
             company_address: '',
             company_contact: '',
+            status_in_plan: [],
+            status_change_rule: [],
         };
+    },
+    computed: {
+        status_prompt: function () {
+            var ret = "";
+            if (this.status_in_plan[this.plan_detail.status]) {
+                ret = this.status_in_plan[this.plan_detail.status].prompt;
+            }
+
+            return ret;
+        }
     },
     methods: {
         preview_buy_attach: function () {
@@ -237,8 +204,26 @@ export default {
             second = second < 10 ? ('0' + second) : second;
             return y + '-' + m + '-' + d + ' ' + h + ':' + minute + ':' + second;
         },
-        preview_pay: function () {
-            ImagePreview([this.$remote_url + this.plan_detail.pay_info]);
+        get_status_in_plan: function () {
+            var vue_this = this;
+            vue_this.$call_remote_process("stuff_plan_management", "get_status_rule", [parseInt(vue_this.$route.params.plan_id)]).then(function (resp) {
+                resp.forEach((element, index) => {
+                    vue_this.$set(vue_this.status_in_plan, index, element);
+                });
+                if (vue_this.plan_detail.status == 0 && vue_this.status_in_plan[1].comment) {
+                    Dialog({
+                        message: '卖方驳回了您的计划\n原因：' + vue_this.status_in_plan[1].comment,
+                    });
+                }
+            });
+        },
+        get_change_rule: function () {
+            var vue_this = this;
+            vue_this.$call_remote_process("stuff_plan_management", 'get_change_rule', [vue_this.$cookies.get('pa_ssid'), parseInt(vue_this.$route.params.plan_id)]).then(function (resp) {
+                resp.forEach((element, index) => {
+                    vue_this.$set(vue_this.status_change_rule, index, element);
+                });
+            });
         },
     },
     beforeMount: function () {
@@ -252,19 +237,6 @@ export default {
             vue_this.plan_detail.plan_time = resp.plan_time;
             vue_this.plan_detail.created_time = vue_this.formatDateTime(new Date(resp.created_time * 1000));
             vue_this.plan_detail.status = resp.status;
-            vue_this.plan_detail.comment = resp.comment;
-            vue_this.plan_detail.plan_confirm_by = resp.plan_confirm.name;
-            vue_this.plan_detail.plan_confirm_timestamp = resp.plan_confirm.timestamp;
-            vue_this.plan_detail.pay_info = resp.pay_info;
-            vue_this.plan_detail.pay_confirm_by = resp.pay_confirm.name;
-            vue_this.plan_detail.pay_confirm_timestamp = resp.pay_confirm.timestamp;
-            vue_this.plan_detail.pay_timestamp = resp.pay_timestamp;
-            vue_this.plan_detail.close_timestamp = resp.close_timestamp;
-            vue_this.plan_detail.close_by = resp.close_by;
-            vue_this.plan_detail.except_close_by = resp.except_close_by;
-            vue_this.plan_detail.except_close_timestamp = resp.except_close_timestamp;
-            vue_this.plan_detail.except_close_reason = resp.except_close_reason;
-            vue_this.plan_detail.reject_reason = resp.reject_reason;
             vue_this.plan_detail.sale_company = resp.sale_company;
             vue_this.$call_remote_process("company_management", "get_address_contact", [resp.sale_company]).then(function (company_resp) {
                 vue_this.company_address = company_resp.address;
@@ -282,16 +254,12 @@ export default {
             } else {
                 vue_this.plan_owner_info.name = resp.created_user_name;
             }
-
-            if (vue_this.plan_detail.reject_reason && (vue_this.is_proxy || vue_this.$store.state.userinfo.buyer)) {
-                Dialog({
-                    message: '卖方驳回了您的计划\n原因：' + vue_this.plan_detail.reject_reason,
-                });
-            }
-            if (vue_this.is_proxy)
-            {
+            if (vue_this.is_proxy) {
                 Notify("此单为手工单，请自行确认买方资质");
             }
+
+            vue_this.get_status_in_plan();
+            vue_this.get_change_rule();
         });
     },
 }

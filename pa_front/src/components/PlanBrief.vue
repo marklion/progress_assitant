@@ -8,7 +8,7 @@
             <div>
                 进厂时间：{{plan_time}}
             </div>
-            <van-tag plain type="danger">{{cur_status}}</van-tag>
+            <van-tag plain type="danger">{{status_prompt}}</van-tag>
         </template>
         <template #footer>
             创建时间:{{created_time}}
@@ -37,6 +37,7 @@ export default {
         plan_id: Number,
         company_view: Boolean,
         conflict_reason: String,
+        status_prompt: String,
     },
     data: function () {
         return {
@@ -55,29 +56,6 @@ export default {
         }
     },
     computed: {
-        cur_status: function () {
-            var ret = "未确认";
-            switch (this.status) {
-                case 1:
-                    ret = "待付款"
-                    break;
-                case 2:
-                    ret = "已付款待确认";
-                    break;
-                case 3:
-                    ret = "已收款待提货";
-                    break;
-                case 4:
-                    ret = "已提货";
-                    break;
-                case 5:
-                    ret = "已撤销";
-                    break;
-                default:
-                    break;
-            }
-            return ret;
-        },
     },
     methods: {
         nav_to_detail: function () {

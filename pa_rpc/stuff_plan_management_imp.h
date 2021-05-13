@@ -4,8 +4,10 @@
 #include "gen_code/stuff_plan_management.h"
 #include "pa_utils.h"
 #include "wechat_msg.h"
+#include <iterator>
 #include "writer.hpp"
 #include <Python.h>
+#include "pa_status_rule.h"
 
 static std::vector<std::string> prepare_vichels(const std::string &_vicheles)
 {
@@ -26,6 +28,7 @@ static std::vector<std::string> prepare_vichels(const std::string &_vicheles)
 }
 class stuff_plan_management_handler : virtual public stuff_plan_managementIf
 {
+public:
     virtual int64_t create_plan(const stuff_plan &plan, const std::string &ssid, const std::string &proxy_company)
     {
         int64_t ret = 0;
@@ -44,51 +47,49 @@ class stuff_plan_management_handler : virtual public stuff_plan_managementIf
         {
             PA_RETURN_NOCOMPANY_MSG();
         }
-        if (opt_user && stuff_type && company)
+        pa_sql_plan tmp;
+        tmp.count = 0;
+        tmp.create_time = time(NULL);
+        tmp.name = stuff_type->name;
+        tmp.plan_time = plan.plan_time;
+        tmp.price = stuff_type->price;
+        tmp.proxy_company = proxy_company;
+        tmp.status = 0;
+        for (auto &itr : plan.vichele_info)
         {
-            pa_sql_plan tmp;
-            tmp.count = 0;
-            tmp.create_time = time(NULL);
-            tmp.name = stuff_type->name;
-            tmp.plan_time = plan.plan_time;
-            tmp.price = stuff_type->price;
-            tmp.proxy_company = proxy_company;
-            tmp.status = 0;
-            for (auto &itr : plan.vichele_info)
+            tmp.count += itr.count;
+        }
+        tmp.set_parent(*opt_user, "created_by");
+        tmp.set_parent(*stuff_type, "belong_stuff");
+        std::string conflict_reason;
+        this->verify_plan(conflict_reason, plan, ssid);
+        tmp.conflict_reason = conflict_reason;
+        tmp.insert_record();
+        PA_STATUS_RULE_action(tmp, *opt_user, PA_DATAOPT_date_2_timestring(tmp.create_time), plan.comment);
+        PA_STATUS_RULE_change_status(tmp, *opt_user);
+        for (auto &itr : plan.vichele_info)
+        {
+            auto main_vhichele = company->get_children<pa_sql_vichele>("belong_company", "number = '%s'", itr.main_vichele.c_str());
+            auto behind_vhichele = company->get_children<pa_sql_vichele_behind>("belong_company", "number = '%s'", itr.behind_vichele.c_str());
+            auto driver = company->get_children<pa_sql_driver>("belong_company", "name = '%s' AND phone = '%s'", itr.driver_name.c_str(), itr.driver_phone.c_str());
+            if (main_vhichele && behind_vhichele && driver)
             {
-                tmp.count += itr.count;
+                pa_sql_single_vichele tmp_single;
+                tmp_single.count = itr.count;
+                tmp_single.drop_address = itr.drop_address;
+                tmp_single.use_for = itr.use_for;
+                tmp_single.set_parent(*main_vhichele, "main_vichele");
+                tmp_single.set_parent(*behind_vhichele, "behind_vichele");
+                tmp_single.set_parent(*driver, "driver");
+                tmp_single.set_parent(tmp, "belong_plan");
+                tmp_single.insert_record();
             }
-            tmp.set_parent(*opt_user, "created_by");
-            tmp.set_parent(*stuff_type, "belong_stuff");
-            tmp.comment = plan.comment;
-            std::string conflict_reason;
-            this->verify_plan(conflict_reason, plan, ssid);
-            tmp.conflict_reason = conflict_reason;
-            tmp.insert_record();
-            for (auto &itr : plan.vichele_info)
-            {
-                auto main_vhichele = company->get_children<pa_sql_vichele>("belong_company", "number = '%s'", itr.main_vichele.c_str());
-                auto behind_vhichele = company->get_children<pa_sql_vichele_behind>("belong_company", "number = '%s'", itr.behind_vichele.c_str());
-                auto driver = company->get_children<pa_sql_driver>("belong_company", "name = '%s' AND phone = '%s'", itr.driver_name.c_str(), itr.driver_phone.c_str());
-                if (main_vhichele && behind_vhichele && driver)
-                {
-                    pa_sql_single_vichele tmp_single;
-                    tmp_single.count = itr.count;
-                    tmp_single.drop_address = itr.drop_address;
-                    tmp_single.use_for = itr.use_for;
-                    tmp_single.set_parent(*main_vhichele, "main_vichele");
-                    tmp_single.set_parent(*behind_vhichele, "behind_vichele");
-                    tmp_single.set_parent(*driver, "driver");
-                    tmp_single.set_parent(tmp, "belong_plan");
-                    tmp_single.insert_record();
-                }
-            }
+        }
 
-            ret = tmp.get_pri_id();
-            if (ret > 0)
-            {
-                tmp.send_wechat_msg();
-            }
+        ret = tmp.get_pri_id();
+        if (ret > 0)
+        {
+            tmp.send_wechat_msg();
         }
         return ret;
     }
@@ -108,6 +109,14 @@ class stuff_plan_management_handler : virtual public stuff_plan_managementIf
                 tmp.status = itr.status;
                 tmp.plan_time = PA_DATAOPT_timestring_2_date(itr.plan_time);
                 tmp.conflict_reason = itr.conflict_reason;
+                std::string status_prompt = "";
+                auto statuses = PA_STATUS_RULE_get_all();
+                if (statuses[itr.status])
+                {
+                    status_prompt = statuses[itr.status]->get_prompt();
+                }
+                tmp.status_prompt = status_prompt;
+
                 _return.push_back(tmp);
             }
         }
@@ -121,34 +130,17 @@ class stuff_plan_management_handler : virtual public stuff_plan_managementIf
         auto plan = sqlite_orm::search_record<pa_sql_plan>(plan_id);
         if (plan)
         {
-            if (plan->status == 4 || plan->status == 5)
+            if (plan->status == 4)
             {
                 auto archive_plan = plan->get_parent<pa_sql_archive_plan>("archived");
                 if (archive_plan)
                 {
                     _return.buy_company = archive_plan->buy_company;
-                    _return.close_by = archive_plan->deliver_close_by;
-                    _return.comment = archive_plan->comment;
                     _return.count = plan->count;
                     _return.created_time = plan->create_time;
                     _return.created_user_name = archive_plan->created_user;
-                    _return.except_close_by = archive_plan->except_close_by;
-                    _return.except_close_reason = archive_plan->close_reason;
-                    if (archive_plan->except_close_by.length() > 0)
-                    {
-                        _return.except_close_timestamp = archive_plan->close_time;
-                    }
-                    else
-                    {
-                        _return.close_timestamp = archive_plan->close_time;
-                    }
+                    
                     _return.name = archive_plan->stuff_name;
-                    _return.pay_confirm.name = archive_plan->pay_confirm_by;
-                    _return.pay_confirm.timestamp = archive_plan->pay_confirm_time;
-                    _return.pay_info = archive_plan->payinfo;
-                    _return.pay_timestamp = archive_plan->pay_time;
-                    _return.plan_confirm.name = archive_plan->plan_confirm_by;
-                    _return.plan_confirm.timestamp = archive_plan->plan_confirm_time;
                     _return.plan_id = plan->get_pri_id();
                     _return.plan_time = archive_plan->plan_time;
                     _return.price = plan->price;
@@ -171,6 +163,7 @@ class stuff_plan_management_handler : virtual public stuff_plan_managementIf
                         tmp.drop_address = itr.drop_address;
                         tmp.main_vichele = itr.main_vichele;
                         tmp.use_for = itr.use_for;
+                        tmp.finish = itr.finish == 0?false:true;
                         _return.vichele_info.push_back(tmp);
                     }
                 }
@@ -204,35 +197,6 @@ class stuff_plan_management_handler : virtual public stuff_plan_managementIf
                 _return.plan_time = plan->plan_time;
                 _return.price = plan->price;
                 _return.status = plan->status;
-                _return.comment = plan->comment;
-                _return.reject_reason = plan->reject_reason;
-                auto pay_confirm_user = plan->get_parent<pa_sql_userinfo>("pay_confirm_by");
-                auto plan_confirm_user = plan->get_parent<pa_sql_userinfo>("plan_confirm_by");
-                auto close_user = plan->get_parent<pa_sql_userinfo>("close_by");
-                auto except_close_user = plan->get_parent<pa_sql_userinfo>("except_close_by");
-                if (pay_confirm_user)
-                {
-                    _return.pay_confirm.name = pay_confirm_user->name;
-                    _return.pay_confirm.timestamp = plan->pay_confirm_timestamp;
-                }
-                if (plan_confirm_user)
-                {
-                    _return.plan_confirm.name = plan_confirm_user->name;
-                    _return.plan_confirm.timestamp = plan->plan_confirm_timestamp;
-                }
-                if (close_user)
-                {
-                    _return.close_timestamp = plan->close_timestamp;
-                    _return.close_by = close_user->name;
-                }
-                if (except_close_user)
-                {
-                    _return.except_close_by = except_close_user->name;
-                    _return.except_close_reason = plan->close_reason;
-                    _return.except_close_timestamp = plan->except_close_timestamp;
-                }
-                _return.pay_info = plan->payinfo;
-                _return.pay_timestamp = plan->pay_timestamp;
                 auto belong_type = plan->get_parent<pa_sql_stuff_info>("belong_stuff");
                 if (belong_type)
                 {
@@ -259,6 +223,8 @@ class stuff_plan_management_handler : virtual public stuff_plan_managementIf
                         tmp.drop_address = itr.drop_address;
                         tmp.main_vichele = main_vichele->number;
                         tmp.use_for = itr.use_for;
+                        tmp.vichele_id = itr.get_pri_id();
+                        tmp.finish = itr.finish == 0?false:true;
                         _return.vichele_info.push_back(tmp);
                     }
                 }
@@ -283,64 +249,55 @@ class stuff_plan_management_handler : virtual public stuff_plan_managementIf
         {
             PA_RETURN_NOPLAN_MSG();
         }
-        if (plan_in_sql && plan_in_sql->status != 0)
-        {
-            PA_RETURN_MSG("计划无法修改");
-        }
+        
         auto company = opt_user->get_parent<pa_sql_company>("belong_company");
         if (!company)
         {
             PA_RETURN_NOCOMPANY_MSG();
         }
-        if (opt_user && plan_in_sql)
+        auto created_user = plan_in_sql->get_parent<pa_sql_userinfo>("created_by");
+        if (created_user && created_user->get_pri_id() == opt_user->get_pri_id() && PA_STATUS_RULE_change_status(*plan_in_sql, 0, *opt_user))
         {
-            auto created_user = plan_in_sql->get_parent<pa_sql_userinfo>("created_by");
-            if (created_user && created_user->get_pri_id() == opt_user->get_pri_id())
+            plan_in_sql->count = 0;
+            plan_in_sql->plan_time = plan.plan_time;
+            auto orig_vichele_info = plan_in_sql->get_all_children<pa_sql_single_vichele>("belong_plan");
+            for (auto &itr : orig_vichele_info)
             {
-                plan_in_sql->count = 0;
-                plan_in_sql->plan_time = plan.plan_time;
-                auto orig_vichele_info = plan_in_sql->get_all_children<pa_sql_single_vichele>("belong_plan");
-                for (auto &itr : orig_vichele_info)
+                itr.remove_record();
+            }
+            for (auto &itr : plan.vichele_info)
+            {
+                auto main_vhichele = company->get_children<pa_sql_vichele>("belong_company", "number = '%s'", itr.main_vichele.c_str());
+                auto behind_vhichele = company->get_children<pa_sql_vichele_behind>("belong_company", "number = '%s'", itr.behind_vichele.c_str());
+                auto driver = company->get_children<pa_sql_driver>("belong_company", "name = '%s' AND phone = '%s'", itr.driver_name.c_str(), itr.driver_phone.c_str());
+                if (main_vhichele && behind_vhichele && driver)
                 {
-                    itr.remove_record();
-                }
-                for (auto &itr : plan.vichele_info)
-                {
-                    auto main_vhichele = company->get_children<pa_sql_vichele>("belong_company", "number = '%s'", itr.main_vichele.c_str());
-                    auto behind_vhichele = company->get_children<pa_sql_vichele_behind>("belong_company", "number = '%s'", itr.behind_vichele.c_str());
-                    auto driver = company->get_children<pa_sql_driver>("belong_company", "name = '%s' AND phone = '%s'", itr.driver_name.c_str(), itr.driver_phone.c_str());
-                    if (main_vhichele && behind_vhichele && driver)
-                    {
-                        pa_sql_single_vichele tmp_single;
-                        tmp_single.count = itr.count;
-                        tmp_single.drop_address = itr.drop_address;
-                        tmp_single.use_for = itr.use_for;
-                        tmp_single.set_parent(*main_vhichele, "main_vichele");
-                        tmp_single.set_parent(*behind_vhichele, "behind_vichele");
-                        tmp_single.set_parent(*driver, "driver");
-                        tmp_single.set_parent(*plan_in_sql, "belong_plan");
-                        tmp_single.insert_record();
-                        plan_in_sql->count += itr.count;
-                    }
-                }
-                plan_in_sql->comment = plan.comment;
-                plan_in_sql->reject_reason = "";
-                plan_in_sql->plan_confirm_timestamp = "";
-                pa_sql_userinfo empty;
-                plan_in_sql->set_parent(empty, "plan_confirm_by");
-                std::string conflict_reason;
-                this->verify_plan(conflict_reason, plan, ssid);
-                plan_in_sql->conflict_reason = conflict_reason;
-                ret = plan_in_sql->update_record();
-                if (ret)
-                {
-                    plan_in_sql->send_wechat_msg();
+                    pa_sql_single_vichele tmp_single;
+                    tmp_single.count = itr.count;
+                    tmp_single.drop_address = itr.drop_address;
+                    tmp_single.use_for = itr.use_for;
+                    tmp_single.set_parent(*main_vhichele, "main_vichele");
+                    tmp_single.set_parent(*behind_vhichele, "behind_vichele");
+                    tmp_single.set_parent(*driver, "driver");
+                    tmp_single.set_parent(*plan_in_sql, "belong_plan");
+                    tmp_single.insert_record();
+                    plan_in_sql->count += itr.count;
                 }
             }
-            else
+            PA_STATUS_RULE_action(*plan_in_sql, *opt_user, PA_DATAOPT_current_time(), plan.comment);
+            PA_STATUS_RULE_change_status(*plan_in_sql, *opt_user);
+            std::string conflict_reason;
+            this->verify_plan(conflict_reason, plan, ssid);
+            plan_in_sql->conflict_reason = conflict_reason;
+            ret = plan_in_sql->update_record();
+            if (ret)
             {
-                PA_RETURN_NOPRIVA_MSG();
+                plan_in_sql->send_wechat_msg();
             }
+        }
+        else
+        {
+            PA_RETURN_NOPRIVA_MSG();
         }
 
         return ret;
@@ -367,6 +324,13 @@ class stuff_plan_management_handler : virtual public stuff_plan_managementIf
                         tmp.status = single_plan.status;
                         tmp.plan_time = PA_DATAOPT_timestring_2_date(single_plan.plan_time);
                         tmp.conflict_reason = single_plan.conflict_reason;
+                        std::string status_prompt = "";
+                        auto statuses = PA_STATUS_RULE_get_all();
+                        if (statuses[single_plan.status])
+                        {
+                            status_prompt = statuses[single_plan.status]->get_prompt();
+                        }
+                        tmp.status_prompt = status_prompt;
                         _return.push_back(tmp);
                     }
                 }
@@ -385,163 +349,44 @@ class stuff_plan_management_handler : virtual public stuff_plan_managementIf
     {
         bool ret = false;
         auto opt_user = PA_DATAOPT_get_online_user(ssid);
-        if (opt_user)
-        {
-            auto company = opt_user->get_parent<pa_sql_company>("belong_company");
-            if (company)
-            {
-                auto plan = sqlite_orm::search_record<pa_sql_plan>(plan_id);
-                if (plan)
-                {
-                    auto stuff_info = plan->get_parent<pa_sql_stuff_info>("belong_stuff");
-                    auto belong_company = stuff_info->get_parent<pa_sql_company>("belong_company");
-                    if (belong_company && belong_company->get_pri_id() == company->get_pri_id() && plan->status == 0)
-                    {
-                        plan->status = 1;
-                        plan->set_parent(*opt_user, "plan_confirm_by");
-                        plan->plan_confirm_timestamp = PA_DATAOPT_current_time();
-                        plan->reject_reason = "";
-                        plan->conflict_reason = "";
-                        ret = plan->update_record();
-                        if (ret)
-                        {
-                            plan->send_wechat_msg();
-                        }
-                    }
-                    else
-                    {
-                        PA_RETURN_NOPRIVA_MSG();
-                    }
-                }
-                else
-                {
-                    PA_RETURN_NOPLAN_MSG();
-                }
-            }
-            else
-            {
-                PA_RETURN_NOCOMPANY_MSG();
-            }
-        }
-        else
+        if (!opt_user)
         {
             PA_RETURN_UNLOGIN_MSG();
         }
-
-        return ret;
-    }
-    virtual bool has_priv_edit(const int64_t plan_id, const std::string &ssid)
-    {
-        bool ret = false;
-
         auto plan = sqlite_orm::search_record<pa_sql_plan>(plan_id);
-        auto opt_user = PA_DATAOPT_get_online_user(ssid);
-        if (plan && opt_user)
+        if (!plan)
         {
-            auto stuff = plan->get_parent<pa_sql_stuff_info>("belong_stuff");
-            auto created_user = plan->get_parent<pa_sql_userinfo>("created_by");
-            if (stuff && created_user)
-            {
-                auto sales_company = stuff->get_parent<pa_sql_company>("belong_company");
-                if (sales_company)
-                {
-                    switch (plan->status)
-                    {
-                    case 0:
-                    case 2:
-                    case 3:
-                    {
-                        auto opt_company = opt_user->get_parent<pa_sql_company>("belong_company");
-                        if (opt_company && opt_company->get_pri_id() == sales_company->get_pri_id())
-                        {
-                            ret = true;
-                        }
-                        break;
-                    }
-                    case 1:
-                    {
-                        if (created_user->get_pri_id() == opt_user->get_pri_id())
-                        {
-                            ret = true;
-                        }
-                        break;
-                    }
-
-                    default:
-                        break;
-                    }
-                }
-            }
+            PA_RETURN_NOPLAN_MSG();
         }
 
-        return ret;
-    }
-
-    virtual bool upload_payinfo(const int64_t plan_id, const std::string &ssid, const std::string &content)
-    {
-        bool ret = false;
-
-        auto opt_user = PA_DATAOPT_get_online_user(ssid);
-        auto plan = sqlite_orm::search_record<pa_sql_plan>(plan_id);
-        if (opt_user && plan)
-        {
-            auto created_user = plan->get_parent<pa_sql_userinfo>("created_by");
-            if ((plan->status == 1 || plan->status == 2) && created_user && created_user->get_pri_id() == opt_user->get_pri_id())
-            {
-                std::string file_content;
-                Base64::Decode(content, &file_content);
-                auto pay_info = PA_DATAOPT_store_logo_to_file(file_content, std::to_string(plan->create_time) + std::to_string(plan->get_pri_id()));
-                if (pay_info.length() > 0)
-                {
-                    plan->payinfo = pay_info;
-                    plan->pay_timestamp = PA_DATAOPT_current_time();
-                    plan->status = 2;
-                    plan->pay_confirm_timestamp = "";
-                    pa_sql_userinfo empty;
-                    plan->set_parent(empty, "pay_confirm_by");
-                    plan->reject_reason = "";
-                    ret = plan->update_record();
-                    if (ret)
-                    {
-                        plan->send_wechat_msg();
-                    }
-                }
-            }
-            else
-            {
-                PA_RETURN_MSG("该计划单无法上传付款信息");
-            }
-        }
-        else
+        if (plan->status != 1 || !PA_STATUS_RULE_can_be_change(*plan, *opt_user, 2))
         {
             PA_RETURN_NOPRIVA_MSG();
         }
+        plan->conflict_reason = "";
+        ret = PA_STATUS_RULE_action(*plan, *opt_user, PA_DATAOPT_current_time(), "OK");
+        ret &= PA_STATUS_RULE_change_status(*plan, *opt_user);
+        if (ret)
+        {
+            plan->send_wechat_msg();
+        }
 
         return ret;
     }
+
     virtual bool confirm_pay(const int64_t plan_id, const std::string &ssid)
     {
         bool ret = false;
 
         auto opt_user = PA_DATAOPT_get_online_user(ssid);
         auto plan = sqlite_orm::search_record<pa_sql_plan>(plan_id);
-        if (plan && opt_user)
+        if (plan && opt_user && plan->status == 2 && PA_STATUS_RULE_can_be_change(*plan, *opt_user, 3))
         {
-            if (has_priv_edit(plan_id, ssid) && plan->status == 2)
+            ret = PA_STATUS_RULE_action(*plan, *opt_user, PA_DATAOPT_current_time(), "OK");
+            ret &= PA_STATUS_RULE_change_status(*plan, *opt_user);
+            if (ret)
             {
-                plan->status = 3;
-                plan->pay_confirm_timestamp = PA_DATAOPT_current_time();
-                plan->reject_reason = "";
-                plan->set_parent(*opt_user, "pay_confirm_by");
-                ret = plan->update_record();
-                if (ret)
-                {
-                    plan->send_wechat_msg();
-                }
-            }
-            else
-            {
-                PA_RETURN_NOPRIVA_MSG();
+                plan->send_wechat_msg();
             }
         }
         else
@@ -552,32 +397,49 @@ class stuff_plan_management_handler : virtual public stuff_plan_managementIf
         return ret;
     }
 
-    virtual bool confirm_close(const int64_t plan_id, const std::string &ssid)
+    virtual bool confirm_deliver(const int64_t plan_id, const std::string &ssid, const std::vector<int64_t> &vichele_id, const std::string &reason)
     {
         bool ret = false;
 
         auto opt_user = PA_DATAOPT_get_online_user(ssid);
         auto plan = sqlite_orm::search_record<pa_sql_plan>(plan_id);
-        if (plan && opt_user)
+        if (plan && opt_user && plan->status == 3 && PA_STATUS_RULE_can_be_change(*plan, *opt_user, 4))
         {
-            if (has_priv_edit(plan_id, ssid) && plan->status == 3)
+            for (auto &itr : vichele_id)
             {
-                plan->status = 4;
-                plan->close_timestamp = PA_DATAOPT_current_time();
-                plan->set_parent(*opt_user, "close_by");
-                ret = plan->update_record();
-                if (ret)
+                auto found_vichele_info = plan->get_children<pa_sql_single_vichele>("belong_plan", "PRI_ID = %ld AND finish = 0", itr);
+                if (!found_vichele_info)
                 {
-                    pa_sql_archive_plan archive_plan;
-                    archive_plan.translate_from_plan(*plan);
-                    plan->set_parent(archive_plan, "archived");
-                    plan->update_record();
-                    plan->send_wechat_msg();
+                    PA_RETURN_MSG("车辆信息错误");
                 }
+                found_vichele_info->finish = 1;
+                found_vichele_info->update_record();
             }
-            else
+            auto total_count = plan->get_all_children<pa_sql_single_vichele>("belong_plan").size();
+            auto deliver_count = plan->get_all_children<pa_sql_single_vichele>("belong_plan", "finish = 1").size();
+
+            ret = PA_STATUS_RULE_action(*plan, *opt_user, PA_DATAOPT_current_time(), "已出货" + std::to_string(deliver_count) + "车/共" + std::to_string(total_count) + "车");
+            if (deliver_count == total_count)
             {
-                PA_RETURN_NOPRIVA_MSG();
+                ret &= PA_STATUS_RULE_change_status(*plan, *opt_user);
+                ret &= PA_STATUS_RULE_action(*plan, *get_sysadmin_user(), PA_DATAOPT_current_time(), "全部出货，自动归档");
+                pa_sql_archive_plan archive_plan;
+                archive_plan.translate_from_plan(*plan);
+                plan->set_parent(archive_plan, "archived");
+                plan->update_record();
+            }
+            else if (reason.length() > 0)
+            {
+                ret &= PA_STATUS_RULE_change_status(*plan, *opt_user);
+                ret &= PA_STATUS_RULE_action(*plan, *opt_user, PA_DATAOPT_current_time(), reason);
+                pa_sql_archive_plan archive_plan;
+                archive_plan.translate_from_plan(*plan);
+                plan->set_parent(archive_plan, "archived");
+                plan->update_record();
+            }
+            if (ret)
+            {
+                plan->send_wechat_msg();
             }
         }
         else
@@ -609,7 +471,7 @@ class stuff_plan_management_handler : virtual public stuff_plan_managementIf
                 if (plan)
                 {
                     std::unique_ptr<pa_sql_archive_plan> archive_plan;
-                    if (plan->status == 4 || plan->status == 5)
+                    if (plan->status == 4)
                     {
                         archive_plan.reset(plan->get_parent<pa_sql_archive_plan>("archived").release());
                         if (!archive_plan)
@@ -645,7 +507,7 @@ class stuff_plan_management_handler : virtual public stuff_plan_managementIf
                     if (archive_plan)
                     {
                         auto archive_vichele = archive_plan->get_all_children<pa_sql_archive_vichele_plan>("belong_plan");
-                        for (auto &itr:archive_vichele)
+                        for (auto &itr : archive_vichele)
                         {
                             auto single_rec = single_rec_sample;
                             single_rec.push_back(itr.main_vichele);
@@ -654,14 +516,13 @@ class stuff_plan_management_handler : virtual public stuff_plan_managementIf
                             single_rec.push_back(itr.driver_phone);
                             single_rec.push_back(itr.drop_address);
                             single_rec.push_back(itr.use_for);
-                            if (plan->status == 4)
+                            auto status_string = "已提货";
+                            if (itr.finish == 0)
                             {
-                                single_rec.push_back("已提货");
+                                status_string = "未提货";
                             }
-                            else if (plan->status == 5)
-                            {
-                                single_rec.push_back("已撤销");
-                            }
+                            single_rec.push_back(status_string);
+
                             writer.write_row(single_rec);
                         }
                     }
@@ -683,29 +544,15 @@ class stuff_plan_management_handler : virtual public stuff_plan_managementIf
                             }
                             single_rec.push_back(vichele_itr.drop_address);
                             single_rec.push_back(vichele_itr.use_for);
-                            std::string status_str;
-                            switch (plan->status)
+                            std::string status_str = "未提货";
+                            auto status_rule = PA_STATUS_RULE_get_all();
+                            if (plan->status >= 0 && plan->status < 3 && status_rule[plan->status])
                             {
-                            case 0:
-                                status_str = "待确认计划";
-                                break;
-                            case 1:
-                                status_str = "已确认待付款";
-                                break;
-                            case 2:
-                                status_str = "已付款待收款确认";
-                                break;
-                            case 3:
-                                status_str = "已收款待提货";
-                                break;
-                            case 4:
+                                status_str = status_rule[plan->status]->get_name();
+                            }
+                            else if (vichele_itr.finish != 0)
+                            {
                                 status_str = "已提货";
-                                break;
-                            case 5:
-                                status_str = "已撤销";
-                                break;
-                            default:
-                                break;
                             }
                             single_rec.push_back(status_str);
                             writer.write_row(single_rec);
@@ -738,6 +585,28 @@ class stuff_plan_management_handler : virtual public stuff_plan_managementIf
         }
     }
 
+    bool my_except_close(pa_sql_plan &plan, pa_sql_userinfo &opt_user, const std::string &reason)
+    {
+        bool ret = false;
+        if (PA_STATUS_RULE_can_be_change(plan, opt_user, 4))
+        {
+            plan.conflict_reason = "";
+            if (PA_STATUS_RULE_change_status(plan, 4, opt_user))
+            {
+                ret = PA_STATUS_RULE_action(plan, opt_user, PA_DATAOPT_current_time(), reason);
+                if (ret)
+                {
+                    plan.send_wechat_msg();
+                    pa_sql_archive_plan tmp;
+                    tmp.translate_from_plan(plan);
+                    plan.set_parent(tmp, "archived");
+                    plan.update_record();
+                }
+            }
+        }
+        return ret;
+    }
+
     virtual bool except_close(const int64_t plan_id, const std::string &ssid, const std::string &reason)
     {
         bool ret = false;
@@ -752,56 +621,9 @@ class stuff_plan_management_handler : virtual public stuff_plan_managementIf
         {
             PA_RETURN_NOPLAN_MSG();
         }
-        auto plan_creator = plan->get_parent<pa_sql_userinfo>("created_by");
-        if (!plan_creator)
+        if (my_except_close(*plan, *opt_user, "手动撤销，原因：" + reason))
         {
-            PA_RETURN_MSG("计划异常");
-        }
-        if (plan->status == 4)
-        {
-            PA_RETURN_NOPRIVA_MSG();
-        }
-
-        bool cando = false;
-
-        if (opt_user->get_pri_id() == plan_creator->get_pri_id())
-        {
-            cando = true;
-        }
-        else
-        {
-            auto stuff = plan->get_parent<pa_sql_stuff_info>("belong_stuff");
-            if (!stuff)
-            {
-                PA_RETURN_NOSTUFF_MSG();
-            }
-            auto company = stuff->get_parent<pa_sql_company>("belong_company");
-            auto opt_company = opt_user->get_parent<pa_sql_company>("belong_company");
-            if (!company || !opt_company)
-            {
-                PA_RETURN_NOCOMPANY_MSG();
-            }
-            if (company->get_pri_id() == opt_company->get_pri_id())
-            {
-                cando = true;
-            }
-        }
-
-        if (cando)
-        {
-            plan->status = 5;
-            plan->close_reason = reason;
-            plan->except_close_timestamp = PA_DATAOPT_current_time();
-            plan->set_parent(*opt_user, "except_close_by");
-            ret = plan->update_record();
-            if (ret)
-            {
-                plan->send_wechat_msg();
-                pa_sql_archive_plan tmp;
-                tmp.translate_from_plan(*plan);
-                plan->set_parent(tmp, "archived");
-                plan->update_record();
-            }
+            ret = true;
         }
         else
         {
@@ -811,13 +633,14 @@ class stuff_plan_management_handler : virtual public stuff_plan_managementIf
         return ret;
     }
 
-    std::string get_vichele_verify_result(pa_sql_vichele &single_vichele, std::string plan_time_day, int64_t self_plan_id) {
+    std::string get_vichele_verify_result(pa_sql_vichele &single_vichele, std::string plan_time_day, int64_t self_plan_id)
+    {
         std::string ret;
         auto all_related_plan = sqlite_orm::search_record_all<pa_sql_plan>("plan_time LIKE '%s%%' AND status != 5 AND PRI_ID != %ld", plan_time_day.c_str(), self_plan_id);
-        for (auto &itr:all_related_plan)
+        for (auto &itr : all_related_plan)
         {
             auto all_related_vichele_info = itr.get_all_children<pa_sql_single_vichele>("belong_plan");
-            for (auto &single_vhichele_info:all_related_vichele_info)
+            for (auto &single_vhichele_info : all_related_vichele_info)
             {
                 auto main_vichele_in_info = single_vhichele_info.get_parent<pa_sql_vichele>("main_vichele");
                 auto behind_vichele_in_info = single_vhichele_info.get_parent<pa_sql_vichele_behind>("behind_vichele");
@@ -846,9 +669,9 @@ class stuff_plan_management_handler : virtual public stuff_plan_managementIf
                 {
                     ret.append("计划中的挂车 " + single_vichele.number + " 与" + company_name + "的计划时间冲突, 都是" + plan_time_day + "\n");
                 }
-            }   
+            }
         }
-        
+
         return ret;
     }
 
@@ -865,14 +688,14 @@ class stuff_plan_management_handler : virtual public stuff_plan_managementIf
             PA_RETURN_NOCOMPANY_MSG();
         }
         auto plan_time_day = plan.plan_time.substr(0, 10);
-        for (auto &itr:plan.vichele_info)
+        for (auto &itr : plan.vichele_info)
         {
             auto main_vhicheles_in_sql = sqlite_orm::search_record_all<pa_sql_vichele>("number = '%s'", itr.main_vichele.c_str());
             for (auto &single_vichele : main_vhicheles_in_sql)
             {
                 _return.append(get_vichele_verify_result(single_vichele, plan_time_day, plan.plan_id));
             }
-            
+
             auto behind_vhicheles_in_sql = sqlite_orm::search_record_all<pa_sql_vichele_behind>("number = '%s'", itr.behind_vichele.c_str());
             for (auto &single_vichele : behind_vhicheles_in_sql)
             {
@@ -914,38 +737,17 @@ class stuff_plan_management_handler : virtual public stuff_plan_managementIf
         {
             PA_RETURN_UNLOGIN_MSG();
         }
-        auto company = user->get_parent<pa_sql_company>("belong_company");
-        if (!company)
-        {
-            PA_RETURN_NOCOMPANY_MSG();
-        }
+
         auto plan = sqlite_orm::search_record<pa_sql_plan>(plan_id);
         if (!plan)
         {
             PA_RETURN_NOPLAN_MSG();
         }
-        auto stuff_info = plan->get_parent<pa_sql_stuff_info>("belong_stuff");
-        if (!stuff_info)
-        {
-            PA_RETURN_NOSTUFF_MSG();
-        }
 
-        auto belong_company = stuff_info->get_parent<pa_sql_company>("belong_company");
-        if (belong_company && belong_company->get_pri_id() == company->get_pri_id() && (plan->status == 0 || plan->status == 2))
+        if ((plan->status == 1 || plan->status == 2) && PA_STATUS_RULE_can_be_change(*plan, *user, plan->status - 1))
         {
-            if (plan->status == 0)
-            {
-                plan->plan_confirm_timestamp = PA_DATAOPT_current_time();
-                plan->set_parent(*user, "plan_confirm_by");
-            }
-            else if (plan->status == 2)
-            {
-                plan->pay_confirm_timestamp = PA_DATAOPT_current_time();
-                plan->set_parent(*user, "pay_confirm_by");
-                plan->status = 1;
-            }
-            plan->reject_reason = reject_reason;
-            ret = plan->update_record();
+            ret = PA_STATUS_RULE_action(*plan, *user, PA_DATAOPT_current_time(), reject_reason);
+            ret &= PA_STATUS_RULE_change_status(*plan, plan->status - 1, *user);
             if (ret)
             {
                 plan->send_wechat_msg();
@@ -962,10 +764,10 @@ class stuff_plan_management_handler : virtual public stuff_plan_managementIf
     virtual void search_plan_by_driver_phone(std::vector<plan_number_id> &_return, const std::string &phone)
     {
         auto drivers = sqlite_orm::search_record_all<pa_sql_driver>("phone = '%s'", phone.c_str());
-        for (auto &itr:drivers)
+        for (auto &itr : drivers)
         {
             auto related_vichele_infos = itr.get_all_children<pa_sql_single_vichele>("driver");
-            for (auto &single_vichele:related_vichele_infos)
+            for (auto &single_vichele : related_vichele_infos)
             {
                 auto plan = single_vichele.get_parent<pa_sql_plan>("belong_plan");
                 if (plan && plan->status < 4)
@@ -976,6 +778,89 @@ class stuff_plan_management_handler : virtual public stuff_plan_managementIf
                     _return.push_back(tmp);
                 }
             }
+        }
+    }
+
+    virtual void get_status_rule(std::vector<plan_status_rule> &_return, const int64_t plan_id)
+    {
+        auto plan = sqlite_orm::search_record<pa_sql_plan>(plan_id);
+        if (!plan)
+        {
+            PA_RETURN_NOPLAN_MSG();
+        }
+
+        auto statuses = PA_STATUS_RULE_get_status(*plan);
+        auto rules = PA_STATUS_RULE_get_all();
+        std::list<pa_sql_archive_status_in_plan> archive_status;
+        auto archive_plan = plan->get_parent<pa_sql_archive_plan>("archived");
+        if (archive_plan)
+        {
+            archive_status = archive_plan->get_all_children<pa_sql_archive_status_in_plan>("belong_plan");
+        }
+        for (auto &itr : rules)
+        {
+            plan_status_rule tmp;
+            tmp.name = itr->get_name();
+            tmp.prompt = itr->get_prompt();
+            tmp.index = itr->get_index();
+            if (archive_plan)
+            {
+                for (auto &single_archive_status : archive_status)
+                {
+                    if (single_archive_status.status_index == tmp.index)
+                    {
+                        tmp.author = single_archive_status.author;
+                        tmp.comment = single_archive_status.comment;
+                        tmp.timestamp = single_archive_status.timestamp;
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                auto status_in_plan = statuses[tmp.index];
+                if (status_in_plan)
+                {
+                    auto author = status_in_plan->get_parent<pa_sql_userinfo>("author");
+                    if (author)
+                    {
+                        tmp.author = author->name;
+                    }
+                    tmp.comment = status_in_plan->comment;
+                    tmp.timestamp = status_in_plan->timestamp;
+                }
+            }
+            _return.push_back(tmp);
+        }
+    }
+
+    virtual void get_change_rule(std::vector<bool> &_return, const std::string &ssid, const int64_t plan_id)
+    {
+        auto user = PA_DATAOPT_get_online_user(ssid);
+        auto plan = sqlite_orm::search_record<pa_sql_plan>(plan_id);
+        if (!user)
+        {
+            PA_RETURN_UNLOGIN_MSG();
+        }
+        if (!plan)
+        {
+            PA_RETURN_NOPLAN_MSG();
+        }
+        auto all_status = PA_STATUS_RULE_get_all();
+        for (auto &itr : all_status)
+        {
+            _return.push_back(PA_STATUS_RULE_can_be_change(*plan, *user, itr->get_index()));
+        }
+    }
+
+    virtual void clean_unclose_plan()
+    {
+        auto current_date = PA_DATAOPT_current_time();
+        auto current_day = current_date.substr(0,10);
+        auto plans_need_close = sqlite_orm::search_record_all<pa_sql_plan>("status != 4 AND plan_time LIKE '%s%%'", current_day.c_str());
+        for (auto &itr : plans_need_close)
+        {
+            my_except_close(itr, *get_sysadmin_user(), "超过计划日期，自动关闭");
         }
     }
 };

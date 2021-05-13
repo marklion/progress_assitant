@@ -95,12 +95,12 @@ const routes = [
     },
   },
   {
-    path: '/close_plan/:plan_id',
-    name: 'ClosePlan',
-    component: () => import('../views/ClosePlan.vue'),
+    path: '/deliver_plan/:plan_id',
+    name: 'DeliverPlan',
+    component: () => import('../views/DeliverPlan.vue'),
     meta: {    
-        private_title: '提货关闭',
-        has_go_back:false,
+        private_title: '出货',
+        has_go_back:true,
     },
   },
   {

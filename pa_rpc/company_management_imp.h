@@ -7,6 +7,7 @@
 #include <algorithm>
 #include "writer.hpp"
 #include "Base64.h"
+#include "pa_status_rule.h"
 class company_management_handler : virtual public company_managementIf
 {
 public:
@@ -287,15 +288,21 @@ public:
             stream << csv_bom;
             csv2::Writer<csv2::delimiter<','>> writer(stream);
             std::vector<std::string> table_header = {
-                "计划单号", "货品名称", "计划量", "总价", "计划人", "计划到厂", "付款时间", "提货时间"};
+                "计划单号", "货品名称", "计划量", "总价", "计划人", "计划到厂", "提货时间"};
             writer.write_row(table_header);
             for (auto &itr : statistics_plan)
             {
                 auto archive_plan = itr.get_parent<pa_sql_archive_plan>("archived");
                 if (archive_plan)
                 {
+                    auto archive_status = archive_plan->get_children<pa_sql_archive_status_in_plan>("belong_plan", "status_index = 3");
+                    std::string deliver_time = "未提货";
+                    if (archive_status)
+                    {
+                        deliver_time = archive_status->timestamp;
+                    }
                     std::vector<std::string> one_record = {
-                        archive_plan->plan_number, archive_plan->stuff_name, archive_plan->count, archive_plan->total_price, archive_plan->created_user, archive_plan->plan_time, archive_plan->pay_time, archive_plan->close_time};
+                        archive_plan->plan_number, archive_plan->stuff_name, archive_plan->count, archive_plan->total_price, archive_plan->created_user, archive_plan->plan_time, deliver_time};
                     writer.write_row(one_record);
                 }
             }

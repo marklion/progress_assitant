@@ -1,5 +1,7 @@
 #include "pa_data_base.h"
 #include "wechat_msg.h"
+#include "pa_status_rule.h"
+#include "stuff_plan_management_imp.h"
 #include <random>
 
 void pa_sql_plan::send_wechat_msg()
@@ -49,18 +51,6 @@ bool  pa_sql_sms_verify::code_is_valid(const std::string &_code)
 
 void pa_sql_archive_plan::translate_from_plan(pa_sql_plan &_plan)
 {
-    if (_plan.except_close_timestamp.length() > 0)
-    {
-        this->close_reason = _plan.close_reason;
-        this->close_time = _plan.except_close_timestamp;
-    }
-    else
-    {
-        this->close_reason = "提货关闭";
-        this->close_time = _plan.close_timestamp;
-    }
-    this->comment = _plan.comment;
-    
     auto created_user = _plan.get_parent<pa_sql_userinfo>("created_by");
     if (created_user)
     {
@@ -84,32 +74,7 @@ void pa_sql_archive_plan::translate_from_plan(pa_sql_plan &_plan)
     }
     this->count = std::to_string(_plan.count);
     this->created_time = PA_DATAOPT_date_2_timestring(_plan.create_time);
-    auto deliver_close_by = _plan.get_parent<pa_sql_userinfo>("close_by");
-    if (deliver_close_by)
-    {
-        this->deliver_close_by = deliver_close_by->name;
-    }
-    auto except_close_by = _plan.get_parent<pa_sql_userinfo>("except_close_by");
-    if (except_close_by)
-    {
-        this->except_close_by = except_close_by->name;
-    }
-    auto pay_confirm_by = _plan.get_parent<pa_sql_userinfo>("pay_confirm_by");
-    if (pay_confirm_by)
-    {
-        this->pay_confirm_by = pay_confirm_by->name;
-        this->pay_confirm_time = _plan.pay_confirm_timestamp;
-    }
-
-    this->pay_time = _plan.pay_timestamp;
-    this->payinfo = _plan.payinfo;
-
-    auto plan_confirm_by = _plan.get_parent<pa_sql_userinfo>("plan_confirm_by");
-    if (plan_confirm_by)
-    {
-        this->plan_confirm_by = plan_confirm_by->name;
-        this->plan_confirm_time = _plan.plan_confirm_timestamp;
-    }
+    
     this->plan_number = std::to_string(_plan.create_time) + std::to_string(_plan.get_pri_id());
     this->plan_time = _plan.plan_time;
     auto stuff_info = _plan.get_parent<pa_sql_stuff_info>("belong_stuff");
@@ -149,7 +114,30 @@ void pa_sql_archive_plan::translate_from_plan(pa_sql_plan &_plan)
         tmp.count = std::to_string(itr.count);
         tmp.drop_address = itr.drop_address;
         tmp.use_for = itr.use_for;
+        tmp.finish = itr.finish;
         tmp.set_parent(*this, "belong_plan");
         tmp.insert_record();
     }
+    stuff_plan_management_handler hd;
+    std::vector<plan_status_rule> status_in_plan;
+    hd.get_status_rule(status_in_plan, _plan.get_pri_id());
+    for (auto &itr:status_in_plan)
+    {
+        pa_sql_archive_status_in_plan tmp;
+        tmp.author = itr.author;
+        tmp.comment = itr.comment;
+        tmp.status_index = itr.index;
+        tmp.timestamp = itr.timestamp;
+        tmp.set_parent(*this, "belong_plan");
+        tmp.insert_record();
+    }
+}
+
+std::unique_ptr<pa_sql_userinfo> get_sysadmin_user()
+{
+    std::unique_ptr<pa_sql_userinfo> ret(new pa_sql_userinfo());
+    ret->name = "自动提交";
+    ret->is_sys_admin = true;
+
+    return ret;
 }

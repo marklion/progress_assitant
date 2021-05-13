@@ -356,14 +356,14 @@ uint32_t stuff_plan_management_get_created_plan_result::read(::apache::thrift::p
         if (ftype == ::apache::thrift::protocol::T_LIST) {
           {
             this->success.clear();
-            uint32_t _size111;
-            ::apache::thrift::protocol::TType _etype114;
-            xfer += iprot->readListBegin(_etype114, _size111);
-            this->success.resize(_size111);
-            uint32_t _i115;
-            for (_i115 = 0; _i115 < _size111; ++_i115)
+            uint32_t _size113;
+            ::apache::thrift::protocol::TType _etype116;
+            xfer += iprot->readListBegin(_etype116, _size113);
+            this->success.resize(_size113);
+            uint32_t _i117;
+            for (_i117 = 0; _i117 < _size113; ++_i117)
             {
-              xfer += this->success[_i115].read(iprot);
+              xfer += this->success[_i117].read(iprot);
             }
             xfer += iprot->readListEnd();
           }
@@ -402,10 +402,10 @@ uint32_t stuff_plan_management_get_created_plan_result::write(::apache::thrift::
     xfer += oprot->writeFieldBegin("success", ::apache::thrift::protocol::T_LIST, 0);
     {
       xfer += oprot->writeListBegin(::apache::thrift::protocol::T_STRUCT, static_cast<uint32_t>(this->success.size()));
-      std::vector<plan_status> ::const_iterator _iter116;
-      for (_iter116 = this->success.begin(); _iter116 != this->success.end(); ++_iter116)
+      std::vector<plan_status> ::const_iterator _iter118;
+      for (_iter118 = this->success.begin(); _iter118 != this->success.end(); ++_iter118)
       {
-        xfer += (*_iter116).write(oprot);
+        xfer += (*_iter118).write(oprot);
       }
       xfer += oprot->writeListEnd();
     }
@@ -450,14 +450,14 @@ uint32_t stuff_plan_management_get_created_plan_presult::read(::apache::thrift::
         if (ftype == ::apache::thrift::protocol::T_LIST) {
           {
             (*(this->success)).clear();
-            uint32_t _size117;
-            ::apache::thrift::protocol::TType _etype120;
-            xfer += iprot->readListBegin(_etype120, _size117);
-            (*(this->success)).resize(_size117);
-            uint32_t _i121;
-            for (_i121 = 0; _i121 < _size117; ++_i121)
+            uint32_t _size119;
+            ::apache::thrift::protocol::TType _etype122;
+            xfer += iprot->readListBegin(_etype122, _size119);
+            (*(this->success)).resize(_size119);
+            uint32_t _i123;
+            for (_i123 = 0; _i123 < _size119; ++_i123)
             {
-              xfer += (*(this->success))[_i121].read(iprot);
+              xfer += (*(this->success))[_i123].read(iprot);
             }
             xfer += iprot->readListEnd();
           }
@@ -595,14 +595,14 @@ uint32_t stuff_plan_management_get_company_plan_result::read(::apache::thrift::p
         if (ftype == ::apache::thrift::protocol::T_LIST) {
           {
             this->success.clear();
-            uint32_t _size122;
-            ::apache::thrift::protocol::TType _etype125;
-            xfer += iprot->readListBegin(_etype125, _size122);
-            this->success.resize(_size122);
-            uint32_t _i126;
-            for (_i126 = 0; _i126 < _size122; ++_i126)
+            uint32_t _size124;
+            ::apache::thrift::protocol::TType _etype127;
+            xfer += iprot->readListBegin(_etype127, _size124);
+            this->success.resize(_size124);
+            uint32_t _i128;
+            for (_i128 = 0; _i128 < _size124; ++_i128)
             {
-              xfer += this->success[_i126].read(iprot);
+              xfer += this->success[_i128].read(iprot);
             }
             xfer += iprot->readListEnd();
           }
@@ -641,10 +641,10 @@ uint32_t stuff_plan_management_get_company_plan_result::write(::apache::thrift::
     xfer += oprot->writeFieldBegin("success", ::apache::thrift::protocol::T_LIST, 0);
     {
       xfer += oprot->writeListBegin(::apache::thrift::protocol::T_STRUCT, static_cast<uint32_t>(this->success.size()));
-      std::vector<plan_status> ::const_iterator _iter127;
-      for (_iter127 = this->success.begin(); _iter127 != this->success.end(); ++_iter127)
+      std::vector<plan_status> ::const_iterator _iter129;
+      for (_iter129 = this->success.begin(); _iter129 != this->success.end(); ++_iter129)
       {
-        xfer += (*_iter127).write(oprot);
+        xfer += (*_iter129).write(oprot);
       }
       xfer += oprot->writeListEnd();
     }
@@ -689,14 +689,14 @@ uint32_t stuff_plan_management_get_company_plan_presult::read(::apache::thrift::
         if (ftype == ::apache::thrift::protocol::T_LIST) {
           {
             (*(this->success)).clear();
-            uint32_t _size128;
-            ::apache::thrift::protocol::TType _etype131;
-            xfer += iprot->readListBegin(_etype131, _size128);
-            (*(this->success)).resize(_size128);
-            uint32_t _i132;
-            for (_i132 = 0; _i132 < _size128; ++_i132)
+            uint32_t _size130;
+            ::apache::thrift::protocol::TType _etype133;
+            xfer += iprot->readListBegin(_etype133, _size130);
+            (*(this->success)).resize(_size130);
+            uint32_t _i134;
+            for (_i134 = 0; _i134 < _size130; ++_i134)
             {
-              xfer += (*(this->success))[_i132].read(iprot);
+              xfer += (*(this->success))[_i134].read(iprot);
             }
             xfer += iprot->readListEnd();
           }
@@ -1379,468 +1379,6 @@ uint32_t stuff_plan_management_confirm_plan_presult::read(::apache::thrift::prot
 }
 
 
-stuff_plan_management_has_priv_edit_args::~stuff_plan_management_has_priv_edit_args() noexcept {
-}
-
-
-uint32_t stuff_plan_management_has_priv_edit_args::read(::apache::thrift::protocol::TProtocol* iprot) {
-
-  ::apache::thrift::protocol::TInputRecursionTracker tracker(*iprot);
-  uint32_t xfer = 0;
-  std::string fname;
-  ::apache::thrift::protocol::TType ftype;
-  int16_t fid;
-
-  xfer += iprot->readStructBegin(fname);
-
-  using ::apache::thrift::protocol::TProtocolException;
-
-
-  while (true)
-  {
-    xfer += iprot->readFieldBegin(fname, ftype, fid);
-    if (ftype == ::apache::thrift::protocol::T_STOP) {
-      break;
-    }
-    switch (fid)
-    {
-      case 1:
-        if (ftype == ::apache::thrift::protocol::T_I64) {
-          xfer += iprot->readI64(this->plan_id);
-          this->__isset.plan_id = true;
-        } else {
-          xfer += iprot->skip(ftype);
-        }
-        break;
-      case 2:
-        if (ftype == ::apache::thrift::protocol::T_STRING) {
-          xfer += iprot->readString(this->ssid);
-          this->__isset.ssid = true;
-        } else {
-          xfer += iprot->skip(ftype);
-        }
-        break;
-      default:
-        xfer += iprot->skip(ftype);
-        break;
-    }
-    xfer += iprot->readFieldEnd();
-  }
-
-  xfer += iprot->readStructEnd();
-
-  return xfer;
-}
-
-uint32_t stuff_plan_management_has_priv_edit_args::write(::apache::thrift::protocol::TProtocol* oprot) const {
-  uint32_t xfer = 0;
-  ::apache::thrift::protocol::TOutputRecursionTracker tracker(*oprot);
-  xfer += oprot->writeStructBegin("stuff_plan_management_has_priv_edit_args");
-
-  xfer += oprot->writeFieldBegin("plan_id", ::apache::thrift::protocol::T_I64, 1);
-  xfer += oprot->writeI64(this->plan_id);
-  xfer += oprot->writeFieldEnd();
-
-  xfer += oprot->writeFieldBegin("ssid", ::apache::thrift::protocol::T_STRING, 2);
-  xfer += oprot->writeString(this->ssid);
-  xfer += oprot->writeFieldEnd();
-
-  xfer += oprot->writeFieldStop();
-  xfer += oprot->writeStructEnd();
-  return xfer;
-}
-
-
-stuff_plan_management_has_priv_edit_pargs::~stuff_plan_management_has_priv_edit_pargs() noexcept {
-}
-
-
-uint32_t stuff_plan_management_has_priv_edit_pargs::write(::apache::thrift::protocol::TProtocol* oprot) const {
-  uint32_t xfer = 0;
-  ::apache::thrift::protocol::TOutputRecursionTracker tracker(*oprot);
-  xfer += oprot->writeStructBegin("stuff_plan_management_has_priv_edit_pargs");
-
-  xfer += oprot->writeFieldBegin("plan_id", ::apache::thrift::protocol::T_I64, 1);
-  xfer += oprot->writeI64((*(this->plan_id)));
-  xfer += oprot->writeFieldEnd();
-
-  xfer += oprot->writeFieldBegin("ssid", ::apache::thrift::protocol::T_STRING, 2);
-  xfer += oprot->writeString((*(this->ssid)));
-  xfer += oprot->writeFieldEnd();
-
-  xfer += oprot->writeFieldStop();
-  xfer += oprot->writeStructEnd();
-  return xfer;
-}
-
-
-stuff_plan_management_has_priv_edit_result::~stuff_plan_management_has_priv_edit_result() noexcept {
-}
-
-
-uint32_t stuff_plan_management_has_priv_edit_result::read(::apache::thrift::protocol::TProtocol* iprot) {
-
-  ::apache::thrift::protocol::TInputRecursionTracker tracker(*iprot);
-  uint32_t xfer = 0;
-  std::string fname;
-  ::apache::thrift::protocol::TType ftype;
-  int16_t fid;
-
-  xfer += iprot->readStructBegin(fname);
-
-  using ::apache::thrift::protocol::TProtocolException;
-
-
-  while (true)
-  {
-    xfer += iprot->readFieldBegin(fname, ftype, fid);
-    if (ftype == ::apache::thrift::protocol::T_STOP) {
-      break;
-    }
-    switch (fid)
-    {
-      case 0:
-        if (ftype == ::apache::thrift::protocol::T_BOOL) {
-          xfer += iprot->readBool(this->success);
-          this->__isset.success = true;
-        } else {
-          xfer += iprot->skip(ftype);
-        }
-        break;
-      case 1:
-        if (ftype == ::apache::thrift::protocol::T_STRUCT) {
-          xfer += this->e.read(iprot);
-          this->__isset.e = true;
-        } else {
-          xfer += iprot->skip(ftype);
-        }
-        break;
-      default:
-        xfer += iprot->skip(ftype);
-        break;
-    }
-    xfer += iprot->readFieldEnd();
-  }
-
-  xfer += iprot->readStructEnd();
-
-  return xfer;
-}
-
-uint32_t stuff_plan_management_has_priv_edit_result::write(::apache::thrift::protocol::TProtocol* oprot) const {
-
-  uint32_t xfer = 0;
-
-  xfer += oprot->writeStructBegin("stuff_plan_management_has_priv_edit_result");
-
-  if (this->__isset.success) {
-    xfer += oprot->writeFieldBegin("success", ::apache::thrift::protocol::T_BOOL, 0);
-    xfer += oprot->writeBool(this->success);
-    xfer += oprot->writeFieldEnd();
-  } else if (this->__isset.e) {
-    xfer += oprot->writeFieldBegin("e", ::apache::thrift::protocol::T_STRUCT, 1);
-    xfer += this->e.write(oprot);
-    xfer += oprot->writeFieldEnd();
-  }
-  xfer += oprot->writeFieldStop();
-  xfer += oprot->writeStructEnd();
-  return xfer;
-}
-
-
-stuff_plan_management_has_priv_edit_presult::~stuff_plan_management_has_priv_edit_presult() noexcept {
-}
-
-
-uint32_t stuff_plan_management_has_priv_edit_presult::read(::apache::thrift::protocol::TProtocol* iprot) {
-
-  ::apache::thrift::protocol::TInputRecursionTracker tracker(*iprot);
-  uint32_t xfer = 0;
-  std::string fname;
-  ::apache::thrift::protocol::TType ftype;
-  int16_t fid;
-
-  xfer += iprot->readStructBegin(fname);
-
-  using ::apache::thrift::protocol::TProtocolException;
-
-
-  while (true)
-  {
-    xfer += iprot->readFieldBegin(fname, ftype, fid);
-    if (ftype == ::apache::thrift::protocol::T_STOP) {
-      break;
-    }
-    switch (fid)
-    {
-      case 0:
-        if (ftype == ::apache::thrift::protocol::T_BOOL) {
-          xfer += iprot->readBool((*(this->success)));
-          this->__isset.success = true;
-        } else {
-          xfer += iprot->skip(ftype);
-        }
-        break;
-      case 1:
-        if (ftype == ::apache::thrift::protocol::T_STRUCT) {
-          xfer += this->e.read(iprot);
-          this->__isset.e = true;
-        } else {
-          xfer += iprot->skip(ftype);
-        }
-        break;
-      default:
-        xfer += iprot->skip(ftype);
-        break;
-    }
-    xfer += iprot->readFieldEnd();
-  }
-
-  xfer += iprot->readStructEnd();
-
-  return xfer;
-}
-
-
-stuff_plan_management_upload_payinfo_args::~stuff_plan_management_upload_payinfo_args() noexcept {
-}
-
-
-uint32_t stuff_plan_management_upload_payinfo_args::read(::apache::thrift::protocol::TProtocol* iprot) {
-
-  ::apache::thrift::protocol::TInputRecursionTracker tracker(*iprot);
-  uint32_t xfer = 0;
-  std::string fname;
-  ::apache::thrift::protocol::TType ftype;
-  int16_t fid;
-
-  xfer += iprot->readStructBegin(fname);
-
-  using ::apache::thrift::protocol::TProtocolException;
-
-
-  while (true)
-  {
-    xfer += iprot->readFieldBegin(fname, ftype, fid);
-    if (ftype == ::apache::thrift::protocol::T_STOP) {
-      break;
-    }
-    switch (fid)
-    {
-      case 1:
-        if (ftype == ::apache::thrift::protocol::T_I64) {
-          xfer += iprot->readI64(this->plan_id);
-          this->__isset.plan_id = true;
-        } else {
-          xfer += iprot->skip(ftype);
-        }
-        break;
-      case 2:
-        if (ftype == ::apache::thrift::protocol::T_STRING) {
-          xfer += iprot->readString(this->ssid);
-          this->__isset.ssid = true;
-        } else {
-          xfer += iprot->skip(ftype);
-        }
-        break;
-      case 3:
-        if (ftype == ::apache::thrift::protocol::T_STRING) {
-          xfer += iprot->readString(this->content);
-          this->__isset.content = true;
-        } else {
-          xfer += iprot->skip(ftype);
-        }
-        break;
-      default:
-        xfer += iprot->skip(ftype);
-        break;
-    }
-    xfer += iprot->readFieldEnd();
-  }
-
-  xfer += iprot->readStructEnd();
-
-  return xfer;
-}
-
-uint32_t stuff_plan_management_upload_payinfo_args::write(::apache::thrift::protocol::TProtocol* oprot) const {
-  uint32_t xfer = 0;
-  ::apache::thrift::protocol::TOutputRecursionTracker tracker(*oprot);
-  xfer += oprot->writeStructBegin("stuff_plan_management_upload_payinfo_args");
-
-  xfer += oprot->writeFieldBegin("plan_id", ::apache::thrift::protocol::T_I64, 1);
-  xfer += oprot->writeI64(this->plan_id);
-  xfer += oprot->writeFieldEnd();
-
-  xfer += oprot->writeFieldBegin("ssid", ::apache::thrift::protocol::T_STRING, 2);
-  xfer += oprot->writeString(this->ssid);
-  xfer += oprot->writeFieldEnd();
-
-  xfer += oprot->writeFieldBegin("content", ::apache::thrift::protocol::T_STRING, 3);
-  xfer += oprot->writeString(this->content);
-  xfer += oprot->writeFieldEnd();
-
-  xfer += oprot->writeFieldStop();
-  xfer += oprot->writeStructEnd();
-  return xfer;
-}
-
-
-stuff_plan_management_upload_payinfo_pargs::~stuff_plan_management_upload_payinfo_pargs() noexcept {
-}
-
-
-uint32_t stuff_plan_management_upload_payinfo_pargs::write(::apache::thrift::protocol::TProtocol* oprot) const {
-  uint32_t xfer = 0;
-  ::apache::thrift::protocol::TOutputRecursionTracker tracker(*oprot);
-  xfer += oprot->writeStructBegin("stuff_plan_management_upload_payinfo_pargs");
-
-  xfer += oprot->writeFieldBegin("plan_id", ::apache::thrift::protocol::T_I64, 1);
-  xfer += oprot->writeI64((*(this->plan_id)));
-  xfer += oprot->writeFieldEnd();
-
-  xfer += oprot->writeFieldBegin("ssid", ::apache::thrift::protocol::T_STRING, 2);
-  xfer += oprot->writeString((*(this->ssid)));
-  xfer += oprot->writeFieldEnd();
-
-  xfer += oprot->writeFieldBegin("content", ::apache::thrift::protocol::T_STRING, 3);
-  xfer += oprot->writeString((*(this->content)));
-  xfer += oprot->writeFieldEnd();
-
-  xfer += oprot->writeFieldStop();
-  xfer += oprot->writeStructEnd();
-  return xfer;
-}
-
-
-stuff_plan_management_upload_payinfo_result::~stuff_plan_management_upload_payinfo_result() noexcept {
-}
-
-
-uint32_t stuff_plan_management_upload_payinfo_result::read(::apache::thrift::protocol::TProtocol* iprot) {
-
-  ::apache::thrift::protocol::TInputRecursionTracker tracker(*iprot);
-  uint32_t xfer = 0;
-  std::string fname;
-  ::apache::thrift::protocol::TType ftype;
-  int16_t fid;
-
-  xfer += iprot->readStructBegin(fname);
-
-  using ::apache::thrift::protocol::TProtocolException;
-
-
-  while (true)
-  {
-    xfer += iprot->readFieldBegin(fname, ftype, fid);
-    if (ftype == ::apache::thrift::protocol::T_STOP) {
-      break;
-    }
-    switch (fid)
-    {
-      case 0:
-        if (ftype == ::apache::thrift::protocol::T_BOOL) {
-          xfer += iprot->readBool(this->success);
-          this->__isset.success = true;
-        } else {
-          xfer += iprot->skip(ftype);
-        }
-        break;
-      case 1:
-        if (ftype == ::apache::thrift::protocol::T_STRUCT) {
-          xfer += this->e.read(iprot);
-          this->__isset.e = true;
-        } else {
-          xfer += iprot->skip(ftype);
-        }
-        break;
-      default:
-        xfer += iprot->skip(ftype);
-        break;
-    }
-    xfer += iprot->readFieldEnd();
-  }
-
-  xfer += iprot->readStructEnd();
-
-  return xfer;
-}
-
-uint32_t stuff_plan_management_upload_payinfo_result::write(::apache::thrift::protocol::TProtocol* oprot) const {
-
-  uint32_t xfer = 0;
-
-  xfer += oprot->writeStructBegin("stuff_plan_management_upload_payinfo_result");
-
-  if (this->__isset.success) {
-    xfer += oprot->writeFieldBegin("success", ::apache::thrift::protocol::T_BOOL, 0);
-    xfer += oprot->writeBool(this->success);
-    xfer += oprot->writeFieldEnd();
-  } else if (this->__isset.e) {
-    xfer += oprot->writeFieldBegin("e", ::apache::thrift::protocol::T_STRUCT, 1);
-    xfer += this->e.write(oprot);
-    xfer += oprot->writeFieldEnd();
-  }
-  xfer += oprot->writeFieldStop();
-  xfer += oprot->writeStructEnd();
-  return xfer;
-}
-
-
-stuff_plan_management_upload_payinfo_presult::~stuff_plan_management_upload_payinfo_presult() noexcept {
-}
-
-
-uint32_t stuff_plan_management_upload_payinfo_presult::read(::apache::thrift::protocol::TProtocol* iprot) {
-
-  ::apache::thrift::protocol::TInputRecursionTracker tracker(*iprot);
-  uint32_t xfer = 0;
-  std::string fname;
-  ::apache::thrift::protocol::TType ftype;
-  int16_t fid;
-
-  xfer += iprot->readStructBegin(fname);
-
-  using ::apache::thrift::protocol::TProtocolException;
-
-
-  while (true)
-  {
-    xfer += iprot->readFieldBegin(fname, ftype, fid);
-    if (ftype == ::apache::thrift::protocol::T_STOP) {
-      break;
-    }
-    switch (fid)
-    {
-      case 0:
-        if (ftype == ::apache::thrift::protocol::T_BOOL) {
-          xfer += iprot->readBool((*(this->success)));
-          this->__isset.success = true;
-        } else {
-          xfer += iprot->skip(ftype);
-        }
-        break;
-      case 1:
-        if (ftype == ::apache::thrift::protocol::T_STRUCT) {
-          xfer += this->e.read(iprot);
-          this->__isset.e = true;
-        } else {
-          xfer += iprot->skip(ftype);
-        }
-        break;
-      default:
-        xfer += iprot->skip(ftype);
-        break;
-    }
-    xfer += iprot->readFieldEnd();
-  }
-
-  xfer += iprot->readStructEnd();
-
-  return xfer;
-}
-
-
 stuff_plan_management_confirm_pay_args::~stuff_plan_management_confirm_pay_args() noexcept {
 }
 
@@ -2064,11 +1602,11 @@ uint32_t stuff_plan_management_confirm_pay_presult::read(::apache::thrift::proto
 }
 
 
-stuff_plan_management_confirm_close_args::~stuff_plan_management_confirm_close_args() noexcept {
+stuff_plan_management_confirm_deliver_args::~stuff_plan_management_confirm_deliver_args() noexcept {
 }
 
 
-uint32_t stuff_plan_management_confirm_close_args::read(::apache::thrift::protocol::TProtocol* iprot) {
+uint32_t stuff_plan_management_confirm_deliver_args::read(::apache::thrift::protocol::TProtocol* iprot) {
 
   ::apache::thrift::protocol::TInputRecursionTracker tracker(*iprot);
   uint32_t xfer = 0;
@@ -2105,6 +1643,34 @@ uint32_t stuff_plan_management_confirm_close_args::read(::apache::thrift::protoc
           xfer += iprot->skip(ftype);
         }
         break;
+      case 3:
+        if (ftype == ::apache::thrift::protocol::T_LIST) {
+          {
+            this->vichele_id.clear();
+            uint32_t _size135;
+            ::apache::thrift::protocol::TType _etype138;
+            xfer += iprot->readListBegin(_etype138, _size135);
+            this->vichele_id.resize(_size135);
+            uint32_t _i139;
+            for (_i139 = 0; _i139 < _size135; ++_i139)
+            {
+              xfer += iprot->readI64(this->vichele_id[_i139]);
+            }
+            xfer += iprot->readListEnd();
+          }
+          this->__isset.vichele_id = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 4:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->reason);
+          this->__isset.reason = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
       default:
         xfer += iprot->skip(ftype);
         break;
@@ -2117,10 +1683,10 @@ uint32_t stuff_plan_management_confirm_close_args::read(::apache::thrift::protoc
   return xfer;
 }
 
-uint32_t stuff_plan_management_confirm_close_args::write(::apache::thrift::protocol::TProtocol* oprot) const {
+uint32_t stuff_plan_management_confirm_deliver_args::write(::apache::thrift::protocol::TProtocol* oprot) const {
   uint32_t xfer = 0;
   ::apache::thrift::protocol::TOutputRecursionTracker tracker(*oprot);
-  xfer += oprot->writeStructBegin("stuff_plan_management_confirm_close_args");
+  xfer += oprot->writeStructBegin("stuff_plan_management_confirm_deliver_args");
 
   xfer += oprot->writeFieldBegin("plan_id", ::apache::thrift::protocol::T_I64, 1);
   xfer += oprot->writeI64(this->plan_id);
@@ -2130,20 +1696,36 @@ uint32_t stuff_plan_management_confirm_close_args::write(::apache::thrift::proto
   xfer += oprot->writeString(this->ssid);
   xfer += oprot->writeFieldEnd();
 
+  xfer += oprot->writeFieldBegin("vichele_id", ::apache::thrift::protocol::T_LIST, 3);
+  {
+    xfer += oprot->writeListBegin(::apache::thrift::protocol::T_I64, static_cast<uint32_t>(this->vichele_id.size()));
+    std::vector<int64_t> ::const_iterator _iter140;
+    for (_iter140 = this->vichele_id.begin(); _iter140 != this->vichele_id.end(); ++_iter140)
+    {
+      xfer += oprot->writeI64((*_iter140));
+    }
+    xfer += oprot->writeListEnd();
+  }
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("reason", ::apache::thrift::protocol::T_STRING, 4);
+  xfer += oprot->writeString(this->reason);
+  xfer += oprot->writeFieldEnd();
+
   xfer += oprot->writeFieldStop();
   xfer += oprot->writeStructEnd();
   return xfer;
 }
 
 
-stuff_plan_management_confirm_close_pargs::~stuff_plan_management_confirm_close_pargs() noexcept {
+stuff_plan_management_confirm_deliver_pargs::~stuff_plan_management_confirm_deliver_pargs() noexcept {
 }
 
 
-uint32_t stuff_plan_management_confirm_close_pargs::write(::apache::thrift::protocol::TProtocol* oprot) const {
+uint32_t stuff_plan_management_confirm_deliver_pargs::write(::apache::thrift::protocol::TProtocol* oprot) const {
   uint32_t xfer = 0;
   ::apache::thrift::protocol::TOutputRecursionTracker tracker(*oprot);
-  xfer += oprot->writeStructBegin("stuff_plan_management_confirm_close_pargs");
+  xfer += oprot->writeStructBegin("stuff_plan_management_confirm_deliver_pargs");
 
   xfer += oprot->writeFieldBegin("plan_id", ::apache::thrift::protocol::T_I64, 1);
   xfer += oprot->writeI64((*(this->plan_id)));
@@ -2153,17 +1735,33 @@ uint32_t stuff_plan_management_confirm_close_pargs::write(::apache::thrift::prot
   xfer += oprot->writeString((*(this->ssid)));
   xfer += oprot->writeFieldEnd();
 
+  xfer += oprot->writeFieldBegin("vichele_id", ::apache::thrift::protocol::T_LIST, 3);
+  {
+    xfer += oprot->writeListBegin(::apache::thrift::protocol::T_I64, static_cast<uint32_t>((*(this->vichele_id)).size()));
+    std::vector<int64_t> ::const_iterator _iter141;
+    for (_iter141 = (*(this->vichele_id)).begin(); _iter141 != (*(this->vichele_id)).end(); ++_iter141)
+    {
+      xfer += oprot->writeI64((*_iter141));
+    }
+    xfer += oprot->writeListEnd();
+  }
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("reason", ::apache::thrift::protocol::T_STRING, 4);
+  xfer += oprot->writeString((*(this->reason)));
+  xfer += oprot->writeFieldEnd();
+
   xfer += oprot->writeFieldStop();
   xfer += oprot->writeStructEnd();
   return xfer;
 }
 
 
-stuff_plan_management_confirm_close_result::~stuff_plan_management_confirm_close_result() noexcept {
+stuff_plan_management_confirm_deliver_result::~stuff_plan_management_confirm_deliver_result() noexcept {
 }
 
 
-uint32_t stuff_plan_management_confirm_close_result::read(::apache::thrift::protocol::TProtocol* iprot) {
+uint32_t stuff_plan_management_confirm_deliver_result::read(::apache::thrift::protocol::TProtocol* iprot) {
 
   ::apache::thrift::protocol::TInputRecursionTracker tracker(*iprot);
   uint32_t xfer = 0;
@@ -2212,11 +1810,11 @@ uint32_t stuff_plan_management_confirm_close_result::read(::apache::thrift::prot
   return xfer;
 }
 
-uint32_t stuff_plan_management_confirm_close_result::write(::apache::thrift::protocol::TProtocol* oprot) const {
+uint32_t stuff_plan_management_confirm_deliver_result::write(::apache::thrift::protocol::TProtocol* oprot) const {
 
   uint32_t xfer = 0;
 
-  xfer += oprot->writeStructBegin("stuff_plan_management_confirm_close_result");
+  xfer += oprot->writeStructBegin("stuff_plan_management_confirm_deliver_result");
 
   if (this->__isset.success) {
     xfer += oprot->writeFieldBegin("success", ::apache::thrift::protocol::T_BOOL, 0);
@@ -2233,11 +1831,11 @@ uint32_t stuff_plan_management_confirm_close_result::write(::apache::thrift::pro
 }
 
 
-stuff_plan_management_confirm_close_presult::~stuff_plan_management_confirm_close_presult() noexcept {
+stuff_plan_management_confirm_deliver_presult::~stuff_plan_management_confirm_deliver_presult() noexcept {
 }
 
 
-uint32_t stuff_plan_management_confirm_close_presult::read(::apache::thrift::protocol::TProtocol* iprot) {
+uint32_t stuff_plan_management_confirm_deliver_presult::read(::apache::thrift::protocol::TProtocol* iprot) {
 
   ::apache::thrift::protocol::TInputRecursionTracker tracker(*iprot);
   uint32_t xfer = 0;
@@ -2324,14 +1922,14 @@ uint32_t stuff_plan_management_export_plan_args::read(::apache::thrift::protocol
         if (ftype == ::apache::thrift::protocol::T_LIST) {
           {
             this->plan_ids.clear();
-            uint32_t _size133;
-            ::apache::thrift::protocol::TType _etype136;
-            xfer += iprot->readListBegin(_etype136, _size133);
-            this->plan_ids.resize(_size133);
-            uint32_t _i137;
-            for (_i137 = 0; _i137 < _size133; ++_i137)
+            uint32_t _size142;
+            ::apache::thrift::protocol::TType _etype145;
+            xfer += iprot->readListBegin(_etype145, _size142);
+            this->plan_ids.resize(_size142);
+            uint32_t _i146;
+            for (_i146 = 0; _i146 < _size142; ++_i146)
             {
-              xfer += iprot->readI64(this->plan_ids[_i137]);
+              xfer += iprot->readI64(this->plan_ids[_i146]);
             }
             xfer += iprot->readListEnd();
           }
@@ -2364,10 +1962,10 @@ uint32_t stuff_plan_management_export_plan_args::write(::apache::thrift::protoco
   xfer += oprot->writeFieldBegin("plan_ids", ::apache::thrift::protocol::T_LIST, 2);
   {
     xfer += oprot->writeListBegin(::apache::thrift::protocol::T_I64, static_cast<uint32_t>(this->plan_ids.size()));
-    std::vector<int64_t> ::const_iterator _iter138;
-    for (_iter138 = this->plan_ids.begin(); _iter138 != this->plan_ids.end(); ++_iter138)
+    std::vector<int64_t> ::const_iterator _iter147;
+    for (_iter147 = this->plan_ids.begin(); _iter147 != this->plan_ids.end(); ++_iter147)
     {
-      xfer += oprot->writeI64((*_iter138));
+      xfer += oprot->writeI64((*_iter147));
     }
     xfer += oprot->writeListEnd();
   }
@@ -2395,10 +1993,10 @@ uint32_t stuff_plan_management_export_plan_pargs::write(::apache::thrift::protoc
   xfer += oprot->writeFieldBegin("plan_ids", ::apache::thrift::protocol::T_LIST, 2);
   {
     xfer += oprot->writeListBegin(::apache::thrift::protocol::T_I64, static_cast<uint32_t>((*(this->plan_ids)).size()));
-    std::vector<int64_t> ::const_iterator _iter139;
-    for (_iter139 = (*(this->plan_ids)).begin(); _iter139 != (*(this->plan_ids)).end(); ++_iter139)
+    std::vector<int64_t> ::const_iterator _iter148;
+    for (_iter148 = (*(this->plan_ids)).begin(); _iter148 != (*(this->plan_ids)).end(); ++_iter148)
     {
-      xfer += oprot->writeI64((*_iter139));
+      xfer += oprot->writeI64((*_iter148));
     }
     xfer += oprot->writeListEnd();
   }
@@ -3586,14 +3184,14 @@ uint32_t stuff_plan_management_search_plan_by_driver_phone_result::read(::apache
         if (ftype == ::apache::thrift::protocol::T_LIST) {
           {
             this->success.clear();
-            uint32_t _size140;
-            ::apache::thrift::protocol::TType _etype143;
-            xfer += iprot->readListBegin(_etype143, _size140);
-            this->success.resize(_size140);
-            uint32_t _i144;
-            for (_i144 = 0; _i144 < _size140; ++_i144)
+            uint32_t _size149;
+            ::apache::thrift::protocol::TType _etype152;
+            xfer += iprot->readListBegin(_etype152, _size149);
+            this->success.resize(_size149);
+            uint32_t _i153;
+            for (_i153 = 0; _i153 < _size149; ++_i153)
             {
-              xfer += this->success[_i144].read(iprot);
+              xfer += this->success[_i153].read(iprot);
             }
             xfer += iprot->readListEnd();
           }
@@ -3632,10 +3230,10 @@ uint32_t stuff_plan_management_search_plan_by_driver_phone_result::write(::apach
     xfer += oprot->writeFieldBegin("success", ::apache::thrift::protocol::T_LIST, 0);
     {
       xfer += oprot->writeListBegin(::apache::thrift::protocol::T_STRUCT, static_cast<uint32_t>(this->success.size()));
-      std::vector<plan_number_id> ::const_iterator _iter145;
-      for (_iter145 = this->success.begin(); _iter145 != this->success.end(); ++_iter145)
+      std::vector<plan_number_id> ::const_iterator _iter154;
+      for (_iter154 = this->success.begin(); _iter154 != this->success.end(); ++_iter154)
       {
-        xfer += (*_iter145).write(oprot);
+        xfer += (*_iter154).write(oprot);
       }
       xfer += oprot->writeListEnd();
     }
@@ -3680,14 +3278,14 @@ uint32_t stuff_plan_management_search_plan_by_driver_phone_presult::read(::apach
         if (ftype == ::apache::thrift::protocol::T_LIST) {
           {
             (*(this->success)).clear();
-            uint32_t _size146;
-            ::apache::thrift::protocol::TType _etype149;
-            xfer += iprot->readListBegin(_etype149, _size146);
-            (*(this->success)).resize(_size146);
-            uint32_t _i150;
-            for (_i150 = 0; _i150 < _size146; ++_i150)
+            uint32_t _size155;
+            ::apache::thrift::protocol::TType _etype158;
+            xfer += iprot->readListBegin(_etype158, _size155);
+            (*(this->success)).resize(_size155);
+            uint32_t _i159;
+            for (_i159 = 0; _i159 < _size155; ++_i159)
             {
-              xfer += (*(this->success))[_i150].read(iprot);
+              xfer += (*(this->success))[_i159].read(iprot);
             }
             xfer += iprot->readListEnd();
           }
@@ -3696,6 +3294,666 @@ uint32_t stuff_plan_management_search_plan_by_driver_phone_presult::read(::apach
           xfer += iprot->skip(ftype);
         }
         break;
+      case 1:
+        if (ftype == ::apache::thrift::protocol::T_STRUCT) {
+          xfer += this->e.read(iprot);
+          this->__isset.e = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      default:
+        xfer += iprot->skip(ftype);
+        break;
+    }
+    xfer += iprot->readFieldEnd();
+  }
+
+  xfer += iprot->readStructEnd();
+
+  return xfer;
+}
+
+
+stuff_plan_management_get_status_rule_args::~stuff_plan_management_get_status_rule_args() noexcept {
+}
+
+
+uint32_t stuff_plan_management_get_status_rule_args::read(::apache::thrift::protocol::TProtocol* iprot) {
+
+  ::apache::thrift::protocol::TInputRecursionTracker tracker(*iprot);
+  uint32_t xfer = 0;
+  std::string fname;
+  ::apache::thrift::protocol::TType ftype;
+  int16_t fid;
+
+  xfer += iprot->readStructBegin(fname);
+
+  using ::apache::thrift::protocol::TProtocolException;
+
+
+  while (true)
+  {
+    xfer += iprot->readFieldBegin(fname, ftype, fid);
+    if (ftype == ::apache::thrift::protocol::T_STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 1:
+        if (ftype == ::apache::thrift::protocol::T_I64) {
+          xfer += iprot->readI64(this->plan_id);
+          this->__isset.plan_id = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      default:
+        xfer += iprot->skip(ftype);
+        break;
+    }
+    xfer += iprot->readFieldEnd();
+  }
+
+  xfer += iprot->readStructEnd();
+
+  return xfer;
+}
+
+uint32_t stuff_plan_management_get_status_rule_args::write(::apache::thrift::protocol::TProtocol* oprot) const {
+  uint32_t xfer = 0;
+  ::apache::thrift::protocol::TOutputRecursionTracker tracker(*oprot);
+  xfer += oprot->writeStructBegin("stuff_plan_management_get_status_rule_args");
+
+  xfer += oprot->writeFieldBegin("plan_id", ::apache::thrift::protocol::T_I64, 1);
+  xfer += oprot->writeI64(this->plan_id);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldStop();
+  xfer += oprot->writeStructEnd();
+  return xfer;
+}
+
+
+stuff_plan_management_get_status_rule_pargs::~stuff_plan_management_get_status_rule_pargs() noexcept {
+}
+
+
+uint32_t stuff_plan_management_get_status_rule_pargs::write(::apache::thrift::protocol::TProtocol* oprot) const {
+  uint32_t xfer = 0;
+  ::apache::thrift::protocol::TOutputRecursionTracker tracker(*oprot);
+  xfer += oprot->writeStructBegin("stuff_plan_management_get_status_rule_pargs");
+
+  xfer += oprot->writeFieldBegin("plan_id", ::apache::thrift::protocol::T_I64, 1);
+  xfer += oprot->writeI64((*(this->plan_id)));
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldStop();
+  xfer += oprot->writeStructEnd();
+  return xfer;
+}
+
+
+stuff_plan_management_get_status_rule_result::~stuff_plan_management_get_status_rule_result() noexcept {
+}
+
+
+uint32_t stuff_plan_management_get_status_rule_result::read(::apache::thrift::protocol::TProtocol* iprot) {
+
+  ::apache::thrift::protocol::TInputRecursionTracker tracker(*iprot);
+  uint32_t xfer = 0;
+  std::string fname;
+  ::apache::thrift::protocol::TType ftype;
+  int16_t fid;
+
+  xfer += iprot->readStructBegin(fname);
+
+  using ::apache::thrift::protocol::TProtocolException;
+
+
+  while (true)
+  {
+    xfer += iprot->readFieldBegin(fname, ftype, fid);
+    if (ftype == ::apache::thrift::protocol::T_STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 0:
+        if (ftype == ::apache::thrift::protocol::T_LIST) {
+          {
+            this->success.clear();
+            uint32_t _size160;
+            ::apache::thrift::protocol::TType _etype163;
+            xfer += iprot->readListBegin(_etype163, _size160);
+            this->success.resize(_size160);
+            uint32_t _i164;
+            for (_i164 = 0; _i164 < _size160; ++_i164)
+            {
+              xfer += this->success[_i164].read(iprot);
+            }
+            xfer += iprot->readListEnd();
+          }
+          this->__isset.success = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 1:
+        if (ftype == ::apache::thrift::protocol::T_STRUCT) {
+          xfer += this->e.read(iprot);
+          this->__isset.e = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      default:
+        xfer += iprot->skip(ftype);
+        break;
+    }
+    xfer += iprot->readFieldEnd();
+  }
+
+  xfer += iprot->readStructEnd();
+
+  return xfer;
+}
+
+uint32_t stuff_plan_management_get_status_rule_result::write(::apache::thrift::protocol::TProtocol* oprot) const {
+
+  uint32_t xfer = 0;
+
+  xfer += oprot->writeStructBegin("stuff_plan_management_get_status_rule_result");
+
+  if (this->__isset.success) {
+    xfer += oprot->writeFieldBegin("success", ::apache::thrift::protocol::T_LIST, 0);
+    {
+      xfer += oprot->writeListBegin(::apache::thrift::protocol::T_STRUCT, static_cast<uint32_t>(this->success.size()));
+      std::vector<plan_status_rule> ::const_iterator _iter165;
+      for (_iter165 = this->success.begin(); _iter165 != this->success.end(); ++_iter165)
+      {
+        xfer += (*_iter165).write(oprot);
+      }
+      xfer += oprot->writeListEnd();
+    }
+    xfer += oprot->writeFieldEnd();
+  } else if (this->__isset.e) {
+    xfer += oprot->writeFieldBegin("e", ::apache::thrift::protocol::T_STRUCT, 1);
+    xfer += this->e.write(oprot);
+    xfer += oprot->writeFieldEnd();
+  }
+  xfer += oprot->writeFieldStop();
+  xfer += oprot->writeStructEnd();
+  return xfer;
+}
+
+
+stuff_plan_management_get_status_rule_presult::~stuff_plan_management_get_status_rule_presult() noexcept {
+}
+
+
+uint32_t stuff_plan_management_get_status_rule_presult::read(::apache::thrift::protocol::TProtocol* iprot) {
+
+  ::apache::thrift::protocol::TInputRecursionTracker tracker(*iprot);
+  uint32_t xfer = 0;
+  std::string fname;
+  ::apache::thrift::protocol::TType ftype;
+  int16_t fid;
+
+  xfer += iprot->readStructBegin(fname);
+
+  using ::apache::thrift::protocol::TProtocolException;
+
+
+  while (true)
+  {
+    xfer += iprot->readFieldBegin(fname, ftype, fid);
+    if (ftype == ::apache::thrift::protocol::T_STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 0:
+        if (ftype == ::apache::thrift::protocol::T_LIST) {
+          {
+            (*(this->success)).clear();
+            uint32_t _size166;
+            ::apache::thrift::protocol::TType _etype169;
+            xfer += iprot->readListBegin(_etype169, _size166);
+            (*(this->success)).resize(_size166);
+            uint32_t _i170;
+            for (_i170 = 0; _i170 < _size166; ++_i170)
+            {
+              xfer += (*(this->success))[_i170].read(iprot);
+            }
+            xfer += iprot->readListEnd();
+          }
+          this->__isset.success = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 1:
+        if (ftype == ::apache::thrift::protocol::T_STRUCT) {
+          xfer += this->e.read(iprot);
+          this->__isset.e = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      default:
+        xfer += iprot->skip(ftype);
+        break;
+    }
+    xfer += iprot->readFieldEnd();
+  }
+
+  xfer += iprot->readStructEnd();
+
+  return xfer;
+}
+
+
+stuff_plan_management_get_change_rule_args::~stuff_plan_management_get_change_rule_args() noexcept {
+}
+
+
+uint32_t stuff_plan_management_get_change_rule_args::read(::apache::thrift::protocol::TProtocol* iprot) {
+
+  ::apache::thrift::protocol::TInputRecursionTracker tracker(*iprot);
+  uint32_t xfer = 0;
+  std::string fname;
+  ::apache::thrift::protocol::TType ftype;
+  int16_t fid;
+
+  xfer += iprot->readStructBegin(fname);
+
+  using ::apache::thrift::protocol::TProtocolException;
+
+
+  while (true)
+  {
+    xfer += iprot->readFieldBegin(fname, ftype, fid);
+    if (ftype == ::apache::thrift::protocol::T_STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 1:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->ssid);
+          this->__isset.ssid = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 2:
+        if (ftype == ::apache::thrift::protocol::T_I64) {
+          xfer += iprot->readI64(this->plan_id);
+          this->__isset.plan_id = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      default:
+        xfer += iprot->skip(ftype);
+        break;
+    }
+    xfer += iprot->readFieldEnd();
+  }
+
+  xfer += iprot->readStructEnd();
+
+  return xfer;
+}
+
+uint32_t stuff_plan_management_get_change_rule_args::write(::apache::thrift::protocol::TProtocol* oprot) const {
+  uint32_t xfer = 0;
+  ::apache::thrift::protocol::TOutputRecursionTracker tracker(*oprot);
+  xfer += oprot->writeStructBegin("stuff_plan_management_get_change_rule_args");
+
+  xfer += oprot->writeFieldBegin("ssid", ::apache::thrift::protocol::T_STRING, 1);
+  xfer += oprot->writeString(this->ssid);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("plan_id", ::apache::thrift::protocol::T_I64, 2);
+  xfer += oprot->writeI64(this->plan_id);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldStop();
+  xfer += oprot->writeStructEnd();
+  return xfer;
+}
+
+
+stuff_plan_management_get_change_rule_pargs::~stuff_plan_management_get_change_rule_pargs() noexcept {
+}
+
+
+uint32_t stuff_plan_management_get_change_rule_pargs::write(::apache::thrift::protocol::TProtocol* oprot) const {
+  uint32_t xfer = 0;
+  ::apache::thrift::protocol::TOutputRecursionTracker tracker(*oprot);
+  xfer += oprot->writeStructBegin("stuff_plan_management_get_change_rule_pargs");
+
+  xfer += oprot->writeFieldBegin("ssid", ::apache::thrift::protocol::T_STRING, 1);
+  xfer += oprot->writeString((*(this->ssid)));
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("plan_id", ::apache::thrift::protocol::T_I64, 2);
+  xfer += oprot->writeI64((*(this->plan_id)));
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldStop();
+  xfer += oprot->writeStructEnd();
+  return xfer;
+}
+
+
+stuff_plan_management_get_change_rule_result::~stuff_plan_management_get_change_rule_result() noexcept {
+}
+
+
+uint32_t stuff_plan_management_get_change_rule_result::read(::apache::thrift::protocol::TProtocol* iprot) {
+
+  ::apache::thrift::protocol::TInputRecursionTracker tracker(*iprot);
+  uint32_t xfer = 0;
+  std::string fname;
+  ::apache::thrift::protocol::TType ftype;
+  int16_t fid;
+
+  xfer += iprot->readStructBegin(fname);
+
+  using ::apache::thrift::protocol::TProtocolException;
+
+
+  while (true)
+  {
+    xfer += iprot->readFieldBegin(fname, ftype, fid);
+    if (ftype == ::apache::thrift::protocol::T_STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 0:
+        if (ftype == ::apache::thrift::protocol::T_LIST) {
+          {
+            this->success.clear();
+            uint32_t _size171;
+            ::apache::thrift::protocol::TType _etype174;
+            xfer += iprot->readListBegin(_etype174, _size171);
+            this->success.resize(_size171);
+            uint32_t _i175;
+            for (_i175 = 0; _i175 < _size171; ++_i175)
+            {
+              xfer += iprot->readBool(this->success[_i175]);
+            }
+            xfer += iprot->readListEnd();
+          }
+          this->__isset.success = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 1:
+        if (ftype == ::apache::thrift::protocol::T_STRUCT) {
+          xfer += this->e.read(iprot);
+          this->__isset.e = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      default:
+        xfer += iprot->skip(ftype);
+        break;
+    }
+    xfer += iprot->readFieldEnd();
+  }
+
+  xfer += iprot->readStructEnd();
+
+  return xfer;
+}
+
+uint32_t stuff_plan_management_get_change_rule_result::write(::apache::thrift::protocol::TProtocol* oprot) const {
+
+  uint32_t xfer = 0;
+
+  xfer += oprot->writeStructBegin("stuff_plan_management_get_change_rule_result");
+
+  if (this->__isset.success) {
+    xfer += oprot->writeFieldBegin("success", ::apache::thrift::protocol::T_LIST, 0);
+    {
+      xfer += oprot->writeListBegin(::apache::thrift::protocol::T_BOOL, static_cast<uint32_t>(this->success.size()));
+      std::vector<bool> ::const_iterator _iter176;
+      for (_iter176 = this->success.begin(); _iter176 != this->success.end(); ++_iter176)
+      {
+        xfer += oprot->writeBool((*_iter176));
+      }
+      xfer += oprot->writeListEnd();
+    }
+    xfer += oprot->writeFieldEnd();
+  } else if (this->__isset.e) {
+    xfer += oprot->writeFieldBegin("e", ::apache::thrift::protocol::T_STRUCT, 1);
+    xfer += this->e.write(oprot);
+    xfer += oprot->writeFieldEnd();
+  }
+  xfer += oprot->writeFieldStop();
+  xfer += oprot->writeStructEnd();
+  return xfer;
+}
+
+
+stuff_plan_management_get_change_rule_presult::~stuff_plan_management_get_change_rule_presult() noexcept {
+}
+
+
+uint32_t stuff_plan_management_get_change_rule_presult::read(::apache::thrift::protocol::TProtocol* iprot) {
+
+  ::apache::thrift::protocol::TInputRecursionTracker tracker(*iprot);
+  uint32_t xfer = 0;
+  std::string fname;
+  ::apache::thrift::protocol::TType ftype;
+  int16_t fid;
+
+  xfer += iprot->readStructBegin(fname);
+
+  using ::apache::thrift::protocol::TProtocolException;
+
+
+  while (true)
+  {
+    xfer += iprot->readFieldBegin(fname, ftype, fid);
+    if (ftype == ::apache::thrift::protocol::T_STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 0:
+        if (ftype == ::apache::thrift::protocol::T_LIST) {
+          {
+            (*(this->success)).clear();
+            uint32_t _size177;
+            ::apache::thrift::protocol::TType _etype180;
+            xfer += iprot->readListBegin(_etype180, _size177);
+            (*(this->success)).resize(_size177);
+            uint32_t _i181;
+            for (_i181 = 0; _i181 < _size177; ++_i181)
+            {
+              xfer += iprot->readBool((*(this->success))[_i181]);
+            }
+            xfer += iprot->readListEnd();
+          }
+          this->__isset.success = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 1:
+        if (ftype == ::apache::thrift::protocol::T_STRUCT) {
+          xfer += this->e.read(iprot);
+          this->__isset.e = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      default:
+        xfer += iprot->skip(ftype);
+        break;
+    }
+    xfer += iprot->readFieldEnd();
+  }
+
+  xfer += iprot->readStructEnd();
+
+  return xfer;
+}
+
+
+stuff_plan_management_clean_unclose_plan_args::~stuff_plan_management_clean_unclose_plan_args() noexcept {
+}
+
+
+uint32_t stuff_plan_management_clean_unclose_plan_args::read(::apache::thrift::protocol::TProtocol* iprot) {
+
+  ::apache::thrift::protocol::TInputRecursionTracker tracker(*iprot);
+  uint32_t xfer = 0;
+  std::string fname;
+  ::apache::thrift::protocol::TType ftype;
+  int16_t fid;
+
+  xfer += iprot->readStructBegin(fname);
+
+  using ::apache::thrift::protocol::TProtocolException;
+
+
+  while (true)
+  {
+    xfer += iprot->readFieldBegin(fname, ftype, fid);
+    if (ftype == ::apache::thrift::protocol::T_STOP) {
+      break;
+    }
+    xfer += iprot->skip(ftype);
+    xfer += iprot->readFieldEnd();
+  }
+
+  xfer += iprot->readStructEnd();
+
+  return xfer;
+}
+
+uint32_t stuff_plan_management_clean_unclose_plan_args::write(::apache::thrift::protocol::TProtocol* oprot) const {
+  uint32_t xfer = 0;
+  ::apache::thrift::protocol::TOutputRecursionTracker tracker(*oprot);
+  xfer += oprot->writeStructBegin("stuff_plan_management_clean_unclose_plan_args");
+
+  xfer += oprot->writeFieldStop();
+  xfer += oprot->writeStructEnd();
+  return xfer;
+}
+
+
+stuff_plan_management_clean_unclose_plan_pargs::~stuff_plan_management_clean_unclose_plan_pargs() noexcept {
+}
+
+
+uint32_t stuff_plan_management_clean_unclose_plan_pargs::write(::apache::thrift::protocol::TProtocol* oprot) const {
+  uint32_t xfer = 0;
+  ::apache::thrift::protocol::TOutputRecursionTracker tracker(*oprot);
+  xfer += oprot->writeStructBegin("stuff_plan_management_clean_unclose_plan_pargs");
+
+  xfer += oprot->writeFieldStop();
+  xfer += oprot->writeStructEnd();
+  return xfer;
+}
+
+
+stuff_plan_management_clean_unclose_plan_result::~stuff_plan_management_clean_unclose_plan_result() noexcept {
+}
+
+
+uint32_t stuff_plan_management_clean_unclose_plan_result::read(::apache::thrift::protocol::TProtocol* iprot) {
+
+  ::apache::thrift::protocol::TInputRecursionTracker tracker(*iprot);
+  uint32_t xfer = 0;
+  std::string fname;
+  ::apache::thrift::protocol::TType ftype;
+  int16_t fid;
+
+  xfer += iprot->readStructBegin(fname);
+
+  using ::apache::thrift::protocol::TProtocolException;
+
+
+  while (true)
+  {
+    xfer += iprot->readFieldBegin(fname, ftype, fid);
+    if (ftype == ::apache::thrift::protocol::T_STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 1:
+        if (ftype == ::apache::thrift::protocol::T_STRUCT) {
+          xfer += this->e.read(iprot);
+          this->__isset.e = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      default:
+        xfer += iprot->skip(ftype);
+        break;
+    }
+    xfer += iprot->readFieldEnd();
+  }
+
+  xfer += iprot->readStructEnd();
+
+  return xfer;
+}
+
+uint32_t stuff_plan_management_clean_unclose_plan_result::write(::apache::thrift::protocol::TProtocol* oprot) const {
+
+  uint32_t xfer = 0;
+
+  xfer += oprot->writeStructBegin("stuff_plan_management_clean_unclose_plan_result");
+
+  if (this->__isset.e) {
+    xfer += oprot->writeFieldBegin("e", ::apache::thrift::protocol::T_STRUCT, 1);
+    xfer += this->e.write(oprot);
+    xfer += oprot->writeFieldEnd();
+  }
+  xfer += oprot->writeFieldStop();
+  xfer += oprot->writeStructEnd();
+  return xfer;
+}
+
+
+stuff_plan_management_clean_unclose_plan_presult::~stuff_plan_management_clean_unclose_plan_presult() noexcept {
+}
+
+
+uint32_t stuff_plan_management_clean_unclose_plan_presult::read(::apache::thrift::protocol::TProtocol* iprot) {
+
+  ::apache::thrift::protocol::TInputRecursionTracker tracker(*iprot);
+  uint32_t xfer = 0;
+  std::string fname;
+  ::apache::thrift::protocol::TType ftype;
+  int16_t fid;
+
+  xfer += iprot->readStructBegin(fname);
+
+  using ::apache::thrift::protocol::TProtocolException;
+
+
+  while (true)
+  {
+    xfer += iprot->readFieldBegin(fname, ftype, fid);
+    if (ftype == ::apache::thrift::protocol::T_STOP) {
+      break;
+    }
+    switch (fid)
+    {
       case 1:
         if (ftype == ::apache::thrift::protocol::T_STRUCT) {
           xfer += this->e.read(iprot);
@@ -4086,131 +4344,6 @@ bool stuff_plan_managementClient::recv_confirm_plan()
   throw ::apache::thrift::TApplicationException(::apache::thrift::TApplicationException::MISSING_RESULT, "confirm_plan failed: unknown result");
 }
 
-bool stuff_plan_managementClient::has_priv_edit(const int64_t plan_id, const std::string& ssid)
-{
-  send_has_priv_edit(plan_id, ssid);
-  return recv_has_priv_edit();
-}
-
-void stuff_plan_managementClient::send_has_priv_edit(const int64_t plan_id, const std::string& ssid)
-{
-  int32_t cseqid = 0;
-  oprot_->writeMessageBegin("has_priv_edit", ::apache::thrift::protocol::T_CALL, cseqid);
-
-  stuff_plan_management_has_priv_edit_pargs args;
-  args.plan_id = &plan_id;
-  args.ssid = &ssid;
-  args.write(oprot_);
-
-  oprot_->writeMessageEnd();
-  oprot_->getTransport()->writeEnd();
-  oprot_->getTransport()->flush();
-}
-
-bool stuff_plan_managementClient::recv_has_priv_edit()
-{
-
-  int32_t rseqid = 0;
-  std::string fname;
-  ::apache::thrift::protocol::TMessageType mtype;
-
-  iprot_->readMessageBegin(fname, mtype, rseqid);
-  if (mtype == ::apache::thrift::protocol::T_EXCEPTION) {
-    ::apache::thrift::TApplicationException x;
-    x.read(iprot_);
-    iprot_->readMessageEnd();
-    iprot_->getTransport()->readEnd();
-    throw x;
-  }
-  if (mtype != ::apache::thrift::protocol::T_REPLY) {
-    iprot_->skip(::apache::thrift::protocol::T_STRUCT);
-    iprot_->readMessageEnd();
-    iprot_->getTransport()->readEnd();
-  }
-  if (fname.compare("has_priv_edit") != 0) {
-    iprot_->skip(::apache::thrift::protocol::T_STRUCT);
-    iprot_->readMessageEnd();
-    iprot_->getTransport()->readEnd();
-  }
-  bool _return;
-  stuff_plan_management_has_priv_edit_presult result;
-  result.success = &_return;
-  result.read(iprot_);
-  iprot_->readMessageEnd();
-  iprot_->getTransport()->readEnd();
-
-  if (result.__isset.success) {
-    return _return;
-  }
-  if (result.__isset.e) {
-    throw result.e;
-  }
-  throw ::apache::thrift::TApplicationException(::apache::thrift::TApplicationException::MISSING_RESULT, "has_priv_edit failed: unknown result");
-}
-
-bool stuff_plan_managementClient::upload_payinfo(const int64_t plan_id, const std::string& ssid, const std::string& content)
-{
-  send_upload_payinfo(plan_id, ssid, content);
-  return recv_upload_payinfo();
-}
-
-void stuff_plan_managementClient::send_upload_payinfo(const int64_t plan_id, const std::string& ssid, const std::string& content)
-{
-  int32_t cseqid = 0;
-  oprot_->writeMessageBegin("upload_payinfo", ::apache::thrift::protocol::T_CALL, cseqid);
-
-  stuff_plan_management_upload_payinfo_pargs args;
-  args.plan_id = &plan_id;
-  args.ssid = &ssid;
-  args.content = &content;
-  args.write(oprot_);
-
-  oprot_->writeMessageEnd();
-  oprot_->getTransport()->writeEnd();
-  oprot_->getTransport()->flush();
-}
-
-bool stuff_plan_managementClient::recv_upload_payinfo()
-{
-
-  int32_t rseqid = 0;
-  std::string fname;
-  ::apache::thrift::protocol::TMessageType mtype;
-
-  iprot_->readMessageBegin(fname, mtype, rseqid);
-  if (mtype == ::apache::thrift::protocol::T_EXCEPTION) {
-    ::apache::thrift::TApplicationException x;
-    x.read(iprot_);
-    iprot_->readMessageEnd();
-    iprot_->getTransport()->readEnd();
-    throw x;
-  }
-  if (mtype != ::apache::thrift::protocol::T_REPLY) {
-    iprot_->skip(::apache::thrift::protocol::T_STRUCT);
-    iprot_->readMessageEnd();
-    iprot_->getTransport()->readEnd();
-  }
-  if (fname.compare("upload_payinfo") != 0) {
-    iprot_->skip(::apache::thrift::protocol::T_STRUCT);
-    iprot_->readMessageEnd();
-    iprot_->getTransport()->readEnd();
-  }
-  bool _return;
-  stuff_plan_management_upload_payinfo_presult result;
-  result.success = &_return;
-  result.read(iprot_);
-  iprot_->readMessageEnd();
-  iprot_->getTransport()->readEnd();
-
-  if (result.__isset.success) {
-    return _return;
-  }
-  if (result.__isset.e) {
-    throw result.e;
-  }
-  throw ::apache::thrift::TApplicationException(::apache::thrift::TApplicationException::MISSING_RESULT, "upload_payinfo failed: unknown result");
-}
-
 bool stuff_plan_managementClient::confirm_pay(const int64_t plan_id, const std::string& ssid)
 {
   send_confirm_pay(plan_id, ssid);
@@ -4273,20 +4406,22 @@ bool stuff_plan_managementClient::recv_confirm_pay()
   throw ::apache::thrift::TApplicationException(::apache::thrift::TApplicationException::MISSING_RESULT, "confirm_pay failed: unknown result");
 }
 
-bool stuff_plan_managementClient::confirm_close(const int64_t plan_id, const std::string& ssid)
+bool stuff_plan_managementClient::confirm_deliver(const int64_t plan_id, const std::string& ssid, const std::vector<int64_t> & vichele_id, const std::string& reason)
 {
-  send_confirm_close(plan_id, ssid);
-  return recv_confirm_close();
+  send_confirm_deliver(plan_id, ssid, vichele_id, reason);
+  return recv_confirm_deliver();
 }
 
-void stuff_plan_managementClient::send_confirm_close(const int64_t plan_id, const std::string& ssid)
+void stuff_plan_managementClient::send_confirm_deliver(const int64_t plan_id, const std::string& ssid, const std::vector<int64_t> & vichele_id, const std::string& reason)
 {
   int32_t cseqid = 0;
-  oprot_->writeMessageBegin("confirm_close", ::apache::thrift::protocol::T_CALL, cseqid);
+  oprot_->writeMessageBegin("confirm_deliver", ::apache::thrift::protocol::T_CALL, cseqid);
 
-  stuff_plan_management_confirm_close_pargs args;
+  stuff_plan_management_confirm_deliver_pargs args;
   args.plan_id = &plan_id;
   args.ssid = &ssid;
+  args.vichele_id = &vichele_id;
+  args.reason = &reason;
   args.write(oprot_);
 
   oprot_->writeMessageEnd();
@@ -4294,7 +4429,7 @@ void stuff_plan_managementClient::send_confirm_close(const int64_t plan_id, cons
   oprot_->getTransport()->flush();
 }
 
-bool stuff_plan_managementClient::recv_confirm_close()
+bool stuff_plan_managementClient::recv_confirm_deliver()
 {
 
   int32_t rseqid = 0;
@@ -4314,13 +4449,13 @@ bool stuff_plan_managementClient::recv_confirm_close()
     iprot_->readMessageEnd();
     iprot_->getTransport()->readEnd();
   }
-  if (fname.compare("confirm_close") != 0) {
+  if (fname.compare("confirm_deliver") != 0) {
     iprot_->skip(::apache::thrift::protocol::T_STRUCT);
     iprot_->readMessageEnd();
     iprot_->getTransport()->readEnd();
   }
   bool _return;
-  stuff_plan_management_confirm_close_presult result;
+  stuff_plan_management_confirm_deliver_presult result;
   result.success = &_return;
   result.read(iprot_);
   iprot_->readMessageEnd();
@@ -4332,7 +4467,7 @@ bool stuff_plan_managementClient::recv_confirm_close()
   if (result.__isset.e) {
     throw result.e;
   }
-  throw ::apache::thrift::TApplicationException(::apache::thrift::TApplicationException::MISSING_RESULT, "confirm_close failed: unknown result");
+  throw ::apache::thrift::TApplicationException(::apache::thrift::TApplicationException::MISSING_RESULT, "confirm_deliver failed: unknown result");
 }
 
 void stuff_plan_managementClient::export_plan(std::string& _return, const std::string& ssid, const std::vector<int64_t> & plan_ids)
@@ -4709,6 +4844,184 @@ void stuff_plan_managementClient::recv_search_plan_by_driver_phone(std::vector<p
   throw ::apache::thrift::TApplicationException(::apache::thrift::TApplicationException::MISSING_RESULT, "search_plan_by_driver_phone failed: unknown result");
 }
 
+void stuff_plan_managementClient::get_status_rule(std::vector<plan_status_rule> & _return, const int64_t plan_id)
+{
+  send_get_status_rule(plan_id);
+  recv_get_status_rule(_return);
+}
+
+void stuff_plan_managementClient::send_get_status_rule(const int64_t plan_id)
+{
+  int32_t cseqid = 0;
+  oprot_->writeMessageBegin("get_status_rule", ::apache::thrift::protocol::T_CALL, cseqid);
+
+  stuff_plan_management_get_status_rule_pargs args;
+  args.plan_id = &plan_id;
+  args.write(oprot_);
+
+  oprot_->writeMessageEnd();
+  oprot_->getTransport()->writeEnd();
+  oprot_->getTransport()->flush();
+}
+
+void stuff_plan_managementClient::recv_get_status_rule(std::vector<plan_status_rule> & _return)
+{
+
+  int32_t rseqid = 0;
+  std::string fname;
+  ::apache::thrift::protocol::TMessageType mtype;
+
+  iprot_->readMessageBegin(fname, mtype, rseqid);
+  if (mtype == ::apache::thrift::protocol::T_EXCEPTION) {
+    ::apache::thrift::TApplicationException x;
+    x.read(iprot_);
+    iprot_->readMessageEnd();
+    iprot_->getTransport()->readEnd();
+    throw x;
+  }
+  if (mtype != ::apache::thrift::protocol::T_REPLY) {
+    iprot_->skip(::apache::thrift::protocol::T_STRUCT);
+    iprot_->readMessageEnd();
+    iprot_->getTransport()->readEnd();
+  }
+  if (fname.compare("get_status_rule") != 0) {
+    iprot_->skip(::apache::thrift::protocol::T_STRUCT);
+    iprot_->readMessageEnd();
+    iprot_->getTransport()->readEnd();
+  }
+  stuff_plan_management_get_status_rule_presult result;
+  result.success = &_return;
+  result.read(iprot_);
+  iprot_->readMessageEnd();
+  iprot_->getTransport()->readEnd();
+
+  if (result.__isset.success) {
+    // _return pointer has now been filled
+    return;
+  }
+  if (result.__isset.e) {
+    throw result.e;
+  }
+  throw ::apache::thrift::TApplicationException(::apache::thrift::TApplicationException::MISSING_RESULT, "get_status_rule failed: unknown result");
+}
+
+void stuff_plan_managementClient::get_change_rule(std::vector<bool> & _return, const std::string& ssid, const int64_t plan_id)
+{
+  send_get_change_rule(ssid, plan_id);
+  recv_get_change_rule(_return);
+}
+
+void stuff_plan_managementClient::send_get_change_rule(const std::string& ssid, const int64_t plan_id)
+{
+  int32_t cseqid = 0;
+  oprot_->writeMessageBegin("get_change_rule", ::apache::thrift::protocol::T_CALL, cseqid);
+
+  stuff_plan_management_get_change_rule_pargs args;
+  args.ssid = &ssid;
+  args.plan_id = &plan_id;
+  args.write(oprot_);
+
+  oprot_->writeMessageEnd();
+  oprot_->getTransport()->writeEnd();
+  oprot_->getTransport()->flush();
+}
+
+void stuff_plan_managementClient::recv_get_change_rule(std::vector<bool> & _return)
+{
+
+  int32_t rseqid = 0;
+  std::string fname;
+  ::apache::thrift::protocol::TMessageType mtype;
+
+  iprot_->readMessageBegin(fname, mtype, rseqid);
+  if (mtype == ::apache::thrift::protocol::T_EXCEPTION) {
+    ::apache::thrift::TApplicationException x;
+    x.read(iprot_);
+    iprot_->readMessageEnd();
+    iprot_->getTransport()->readEnd();
+    throw x;
+  }
+  if (mtype != ::apache::thrift::protocol::T_REPLY) {
+    iprot_->skip(::apache::thrift::protocol::T_STRUCT);
+    iprot_->readMessageEnd();
+    iprot_->getTransport()->readEnd();
+  }
+  if (fname.compare("get_change_rule") != 0) {
+    iprot_->skip(::apache::thrift::protocol::T_STRUCT);
+    iprot_->readMessageEnd();
+    iprot_->getTransport()->readEnd();
+  }
+  stuff_plan_management_get_change_rule_presult result;
+  result.success = &_return;
+  result.read(iprot_);
+  iprot_->readMessageEnd();
+  iprot_->getTransport()->readEnd();
+
+  if (result.__isset.success) {
+    // _return pointer has now been filled
+    return;
+  }
+  if (result.__isset.e) {
+    throw result.e;
+  }
+  throw ::apache::thrift::TApplicationException(::apache::thrift::TApplicationException::MISSING_RESULT, "get_change_rule failed: unknown result");
+}
+
+void stuff_plan_managementClient::clean_unclose_plan()
+{
+  send_clean_unclose_plan();
+  recv_clean_unclose_plan();
+}
+
+void stuff_plan_managementClient::send_clean_unclose_plan()
+{
+  int32_t cseqid = 0;
+  oprot_->writeMessageBegin("clean_unclose_plan", ::apache::thrift::protocol::T_CALL, cseqid);
+
+  stuff_plan_management_clean_unclose_plan_pargs args;
+  args.write(oprot_);
+
+  oprot_->writeMessageEnd();
+  oprot_->getTransport()->writeEnd();
+  oprot_->getTransport()->flush();
+}
+
+void stuff_plan_managementClient::recv_clean_unclose_plan()
+{
+
+  int32_t rseqid = 0;
+  std::string fname;
+  ::apache::thrift::protocol::TMessageType mtype;
+
+  iprot_->readMessageBegin(fname, mtype, rseqid);
+  if (mtype == ::apache::thrift::protocol::T_EXCEPTION) {
+    ::apache::thrift::TApplicationException x;
+    x.read(iprot_);
+    iprot_->readMessageEnd();
+    iprot_->getTransport()->readEnd();
+    throw x;
+  }
+  if (mtype != ::apache::thrift::protocol::T_REPLY) {
+    iprot_->skip(::apache::thrift::protocol::T_STRUCT);
+    iprot_->readMessageEnd();
+    iprot_->getTransport()->readEnd();
+  }
+  if (fname.compare("clean_unclose_plan") != 0) {
+    iprot_->skip(::apache::thrift::protocol::T_STRUCT);
+    iprot_->readMessageEnd();
+    iprot_->getTransport()->readEnd();
+  }
+  stuff_plan_management_clean_unclose_plan_presult result;
+  result.read(iprot_);
+  iprot_->readMessageEnd();
+  iprot_->getTransport()->readEnd();
+
+  if (result.__isset.e) {
+    throw result.e;
+  }
+  return;
+}
+
 bool stuff_plan_managementProcessor::dispatchCall(::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, const std::string& fname, int32_t seqid, void* callContext) {
   ProcessMap::iterator pfn;
   pfn = processMap_.find(fname);
@@ -5070,120 +5383,6 @@ void stuff_plan_managementProcessor::process_confirm_plan(int32_t seqid, ::apach
   }
 }
 
-void stuff_plan_managementProcessor::process_has_priv_edit(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext)
-{
-  void* ctx = nullptr;
-  if (this->eventHandler_.get() != nullptr) {
-    ctx = this->eventHandler_->getContext("stuff_plan_management.has_priv_edit", callContext);
-  }
-  ::apache::thrift::TProcessorContextFreer freer(this->eventHandler_.get(), ctx, "stuff_plan_management.has_priv_edit");
-
-  if (this->eventHandler_.get() != nullptr) {
-    this->eventHandler_->preRead(ctx, "stuff_plan_management.has_priv_edit");
-  }
-
-  stuff_plan_management_has_priv_edit_args args;
-  args.read(iprot);
-  iprot->readMessageEnd();
-  uint32_t bytes = iprot->getTransport()->readEnd();
-
-  if (this->eventHandler_.get() != nullptr) {
-    this->eventHandler_->postRead(ctx, "stuff_plan_management.has_priv_edit", bytes);
-  }
-
-  stuff_plan_management_has_priv_edit_result result;
-  try {
-    result.success = iface_->has_priv_edit(args.plan_id, args.ssid);
-    result.__isset.success = true;
-  } catch (gen_exp &e) {
-    result.e = e;
-    result.__isset.e = true;
-  } catch (const std::exception& e) {
-    if (this->eventHandler_.get() != nullptr) {
-      this->eventHandler_->handlerError(ctx, "stuff_plan_management.has_priv_edit");
-    }
-
-    ::apache::thrift::TApplicationException x(e.what());
-    oprot->writeMessageBegin("has_priv_edit", ::apache::thrift::protocol::T_EXCEPTION, seqid);
-    x.write(oprot);
-    oprot->writeMessageEnd();
-    oprot->getTransport()->writeEnd();
-    oprot->getTransport()->flush();
-    return;
-  }
-
-  if (this->eventHandler_.get() != nullptr) {
-    this->eventHandler_->preWrite(ctx, "stuff_plan_management.has_priv_edit");
-  }
-
-  oprot->writeMessageBegin("has_priv_edit", ::apache::thrift::protocol::T_REPLY, seqid);
-  result.write(oprot);
-  oprot->writeMessageEnd();
-  bytes = oprot->getTransport()->writeEnd();
-  oprot->getTransport()->flush();
-
-  if (this->eventHandler_.get() != nullptr) {
-    this->eventHandler_->postWrite(ctx, "stuff_plan_management.has_priv_edit", bytes);
-  }
-}
-
-void stuff_plan_managementProcessor::process_upload_payinfo(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext)
-{
-  void* ctx = nullptr;
-  if (this->eventHandler_.get() != nullptr) {
-    ctx = this->eventHandler_->getContext("stuff_plan_management.upload_payinfo", callContext);
-  }
-  ::apache::thrift::TProcessorContextFreer freer(this->eventHandler_.get(), ctx, "stuff_plan_management.upload_payinfo");
-
-  if (this->eventHandler_.get() != nullptr) {
-    this->eventHandler_->preRead(ctx, "stuff_plan_management.upload_payinfo");
-  }
-
-  stuff_plan_management_upload_payinfo_args args;
-  args.read(iprot);
-  iprot->readMessageEnd();
-  uint32_t bytes = iprot->getTransport()->readEnd();
-
-  if (this->eventHandler_.get() != nullptr) {
-    this->eventHandler_->postRead(ctx, "stuff_plan_management.upload_payinfo", bytes);
-  }
-
-  stuff_plan_management_upload_payinfo_result result;
-  try {
-    result.success = iface_->upload_payinfo(args.plan_id, args.ssid, args.content);
-    result.__isset.success = true;
-  } catch (gen_exp &e) {
-    result.e = e;
-    result.__isset.e = true;
-  } catch (const std::exception& e) {
-    if (this->eventHandler_.get() != nullptr) {
-      this->eventHandler_->handlerError(ctx, "stuff_plan_management.upload_payinfo");
-    }
-
-    ::apache::thrift::TApplicationException x(e.what());
-    oprot->writeMessageBegin("upload_payinfo", ::apache::thrift::protocol::T_EXCEPTION, seqid);
-    x.write(oprot);
-    oprot->writeMessageEnd();
-    oprot->getTransport()->writeEnd();
-    oprot->getTransport()->flush();
-    return;
-  }
-
-  if (this->eventHandler_.get() != nullptr) {
-    this->eventHandler_->preWrite(ctx, "stuff_plan_management.upload_payinfo");
-  }
-
-  oprot->writeMessageBegin("upload_payinfo", ::apache::thrift::protocol::T_REPLY, seqid);
-  result.write(oprot);
-  oprot->writeMessageEnd();
-  bytes = oprot->getTransport()->writeEnd();
-  oprot->getTransport()->flush();
-
-  if (this->eventHandler_.get() != nullptr) {
-    this->eventHandler_->postWrite(ctx, "stuff_plan_management.upload_payinfo", bytes);
-  }
-}
-
 void stuff_plan_managementProcessor::process_confirm_pay(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext)
 {
   void* ctx = nullptr;
@@ -5241,41 +5440,41 @@ void stuff_plan_managementProcessor::process_confirm_pay(int32_t seqid, ::apache
   }
 }
 
-void stuff_plan_managementProcessor::process_confirm_close(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext)
+void stuff_plan_managementProcessor::process_confirm_deliver(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext)
 {
   void* ctx = nullptr;
   if (this->eventHandler_.get() != nullptr) {
-    ctx = this->eventHandler_->getContext("stuff_plan_management.confirm_close", callContext);
+    ctx = this->eventHandler_->getContext("stuff_plan_management.confirm_deliver", callContext);
   }
-  ::apache::thrift::TProcessorContextFreer freer(this->eventHandler_.get(), ctx, "stuff_plan_management.confirm_close");
+  ::apache::thrift::TProcessorContextFreer freer(this->eventHandler_.get(), ctx, "stuff_plan_management.confirm_deliver");
 
   if (this->eventHandler_.get() != nullptr) {
-    this->eventHandler_->preRead(ctx, "stuff_plan_management.confirm_close");
+    this->eventHandler_->preRead(ctx, "stuff_plan_management.confirm_deliver");
   }
 
-  stuff_plan_management_confirm_close_args args;
+  stuff_plan_management_confirm_deliver_args args;
   args.read(iprot);
   iprot->readMessageEnd();
   uint32_t bytes = iprot->getTransport()->readEnd();
 
   if (this->eventHandler_.get() != nullptr) {
-    this->eventHandler_->postRead(ctx, "stuff_plan_management.confirm_close", bytes);
+    this->eventHandler_->postRead(ctx, "stuff_plan_management.confirm_deliver", bytes);
   }
 
-  stuff_plan_management_confirm_close_result result;
+  stuff_plan_management_confirm_deliver_result result;
   try {
-    result.success = iface_->confirm_close(args.plan_id, args.ssid);
+    result.success = iface_->confirm_deliver(args.plan_id, args.ssid, args.vichele_id, args.reason);
     result.__isset.success = true;
   } catch (gen_exp &e) {
     result.e = e;
     result.__isset.e = true;
   } catch (const std::exception& e) {
     if (this->eventHandler_.get() != nullptr) {
-      this->eventHandler_->handlerError(ctx, "stuff_plan_management.confirm_close");
+      this->eventHandler_->handlerError(ctx, "stuff_plan_management.confirm_deliver");
     }
 
     ::apache::thrift::TApplicationException x(e.what());
-    oprot->writeMessageBegin("confirm_close", ::apache::thrift::protocol::T_EXCEPTION, seqid);
+    oprot->writeMessageBegin("confirm_deliver", ::apache::thrift::protocol::T_EXCEPTION, seqid);
     x.write(oprot);
     oprot->writeMessageEnd();
     oprot->getTransport()->writeEnd();
@@ -5284,17 +5483,17 @@ void stuff_plan_managementProcessor::process_confirm_close(int32_t seqid, ::apac
   }
 
   if (this->eventHandler_.get() != nullptr) {
-    this->eventHandler_->preWrite(ctx, "stuff_plan_management.confirm_close");
+    this->eventHandler_->preWrite(ctx, "stuff_plan_management.confirm_deliver");
   }
 
-  oprot->writeMessageBegin("confirm_close", ::apache::thrift::protocol::T_REPLY, seqid);
+  oprot->writeMessageBegin("confirm_deliver", ::apache::thrift::protocol::T_REPLY, seqid);
   result.write(oprot);
   oprot->writeMessageEnd();
   bytes = oprot->getTransport()->writeEnd();
   oprot->getTransport()->flush();
 
   if (this->eventHandler_.get() != nullptr) {
-    this->eventHandler_->postWrite(ctx, "stuff_plan_management.confirm_close", bytes);
+    this->eventHandler_->postWrite(ctx, "stuff_plan_management.confirm_deliver", bytes);
   }
 }
 
@@ -5637,6 +5836,176 @@ void stuff_plan_managementProcessor::process_search_plan_by_driver_phone(int32_t
 
   if (this->eventHandler_.get() != nullptr) {
     this->eventHandler_->postWrite(ctx, "stuff_plan_management.search_plan_by_driver_phone", bytes);
+  }
+}
+
+void stuff_plan_managementProcessor::process_get_status_rule(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext)
+{
+  void* ctx = nullptr;
+  if (this->eventHandler_.get() != nullptr) {
+    ctx = this->eventHandler_->getContext("stuff_plan_management.get_status_rule", callContext);
+  }
+  ::apache::thrift::TProcessorContextFreer freer(this->eventHandler_.get(), ctx, "stuff_plan_management.get_status_rule");
+
+  if (this->eventHandler_.get() != nullptr) {
+    this->eventHandler_->preRead(ctx, "stuff_plan_management.get_status_rule");
+  }
+
+  stuff_plan_management_get_status_rule_args args;
+  args.read(iprot);
+  iprot->readMessageEnd();
+  uint32_t bytes = iprot->getTransport()->readEnd();
+
+  if (this->eventHandler_.get() != nullptr) {
+    this->eventHandler_->postRead(ctx, "stuff_plan_management.get_status_rule", bytes);
+  }
+
+  stuff_plan_management_get_status_rule_result result;
+  try {
+    iface_->get_status_rule(result.success, args.plan_id);
+    result.__isset.success = true;
+  } catch (gen_exp &e) {
+    result.e = e;
+    result.__isset.e = true;
+  } catch (const std::exception& e) {
+    if (this->eventHandler_.get() != nullptr) {
+      this->eventHandler_->handlerError(ctx, "stuff_plan_management.get_status_rule");
+    }
+
+    ::apache::thrift::TApplicationException x(e.what());
+    oprot->writeMessageBegin("get_status_rule", ::apache::thrift::protocol::T_EXCEPTION, seqid);
+    x.write(oprot);
+    oprot->writeMessageEnd();
+    oprot->getTransport()->writeEnd();
+    oprot->getTransport()->flush();
+    return;
+  }
+
+  if (this->eventHandler_.get() != nullptr) {
+    this->eventHandler_->preWrite(ctx, "stuff_plan_management.get_status_rule");
+  }
+
+  oprot->writeMessageBegin("get_status_rule", ::apache::thrift::protocol::T_REPLY, seqid);
+  result.write(oprot);
+  oprot->writeMessageEnd();
+  bytes = oprot->getTransport()->writeEnd();
+  oprot->getTransport()->flush();
+
+  if (this->eventHandler_.get() != nullptr) {
+    this->eventHandler_->postWrite(ctx, "stuff_plan_management.get_status_rule", bytes);
+  }
+}
+
+void stuff_plan_managementProcessor::process_get_change_rule(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext)
+{
+  void* ctx = nullptr;
+  if (this->eventHandler_.get() != nullptr) {
+    ctx = this->eventHandler_->getContext("stuff_plan_management.get_change_rule", callContext);
+  }
+  ::apache::thrift::TProcessorContextFreer freer(this->eventHandler_.get(), ctx, "stuff_plan_management.get_change_rule");
+
+  if (this->eventHandler_.get() != nullptr) {
+    this->eventHandler_->preRead(ctx, "stuff_plan_management.get_change_rule");
+  }
+
+  stuff_plan_management_get_change_rule_args args;
+  args.read(iprot);
+  iprot->readMessageEnd();
+  uint32_t bytes = iprot->getTransport()->readEnd();
+
+  if (this->eventHandler_.get() != nullptr) {
+    this->eventHandler_->postRead(ctx, "stuff_plan_management.get_change_rule", bytes);
+  }
+
+  stuff_plan_management_get_change_rule_result result;
+  try {
+    iface_->get_change_rule(result.success, args.ssid, args.plan_id);
+    result.__isset.success = true;
+  } catch (gen_exp &e) {
+    result.e = e;
+    result.__isset.e = true;
+  } catch (const std::exception& e) {
+    if (this->eventHandler_.get() != nullptr) {
+      this->eventHandler_->handlerError(ctx, "stuff_plan_management.get_change_rule");
+    }
+
+    ::apache::thrift::TApplicationException x(e.what());
+    oprot->writeMessageBegin("get_change_rule", ::apache::thrift::protocol::T_EXCEPTION, seqid);
+    x.write(oprot);
+    oprot->writeMessageEnd();
+    oprot->getTransport()->writeEnd();
+    oprot->getTransport()->flush();
+    return;
+  }
+
+  if (this->eventHandler_.get() != nullptr) {
+    this->eventHandler_->preWrite(ctx, "stuff_plan_management.get_change_rule");
+  }
+
+  oprot->writeMessageBegin("get_change_rule", ::apache::thrift::protocol::T_REPLY, seqid);
+  result.write(oprot);
+  oprot->writeMessageEnd();
+  bytes = oprot->getTransport()->writeEnd();
+  oprot->getTransport()->flush();
+
+  if (this->eventHandler_.get() != nullptr) {
+    this->eventHandler_->postWrite(ctx, "stuff_plan_management.get_change_rule", bytes);
+  }
+}
+
+void stuff_plan_managementProcessor::process_clean_unclose_plan(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext)
+{
+  void* ctx = nullptr;
+  if (this->eventHandler_.get() != nullptr) {
+    ctx = this->eventHandler_->getContext("stuff_plan_management.clean_unclose_plan", callContext);
+  }
+  ::apache::thrift::TProcessorContextFreer freer(this->eventHandler_.get(), ctx, "stuff_plan_management.clean_unclose_plan");
+
+  if (this->eventHandler_.get() != nullptr) {
+    this->eventHandler_->preRead(ctx, "stuff_plan_management.clean_unclose_plan");
+  }
+
+  stuff_plan_management_clean_unclose_plan_args args;
+  args.read(iprot);
+  iprot->readMessageEnd();
+  uint32_t bytes = iprot->getTransport()->readEnd();
+
+  if (this->eventHandler_.get() != nullptr) {
+    this->eventHandler_->postRead(ctx, "stuff_plan_management.clean_unclose_plan", bytes);
+  }
+
+  stuff_plan_management_clean_unclose_plan_result result;
+  try {
+    iface_->clean_unclose_plan();
+  } catch (gen_exp &e) {
+    result.e = e;
+    result.__isset.e = true;
+  } catch (const std::exception& e) {
+    if (this->eventHandler_.get() != nullptr) {
+      this->eventHandler_->handlerError(ctx, "stuff_plan_management.clean_unclose_plan");
+    }
+
+    ::apache::thrift::TApplicationException x(e.what());
+    oprot->writeMessageBegin("clean_unclose_plan", ::apache::thrift::protocol::T_EXCEPTION, seqid);
+    x.write(oprot);
+    oprot->writeMessageEnd();
+    oprot->getTransport()->writeEnd();
+    oprot->getTransport()->flush();
+    return;
+  }
+
+  if (this->eventHandler_.get() != nullptr) {
+    this->eventHandler_->preWrite(ctx, "stuff_plan_management.clean_unclose_plan");
+  }
+
+  oprot->writeMessageBegin("clean_unclose_plan", ::apache::thrift::protocol::T_REPLY, seqid);
+  result.write(oprot);
+  oprot->writeMessageEnd();
+  bytes = oprot->getTransport()->writeEnd();
+  oprot->getTransport()->flush();
+
+  if (this->eventHandler_.get() != nullptr) {
+    this->eventHandler_->postWrite(ctx, "stuff_plan_management.clean_unclose_plan", bytes);
   }
 }
 
@@ -6179,185 +6548,6 @@ bool stuff_plan_managementConcurrentClient::recv_confirm_plan(const int32_t seqi
   } // end while(true)
 }
 
-bool stuff_plan_managementConcurrentClient::has_priv_edit(const int64_t plan_id, const std::string& ssid)
-{
-  int32_t seqid = send_has_priv_edit(plan_id, ssid);
-  return recv_has_priv_edit(seqid);
-}
-
-int32_t stuff_plan_managementConcurrentClient::send_has_priv_edit(const int64_t plan_id, const std::string& ssid)
-{
-  int32_t cseqid = this->sync_->generateSeqId();
-  ::apache::thrift::async::TConcurrentSendSentry sentry(this->sync_.get());
-  oprot_->writeMessageBegin("has_priv_edit", ::apache::thrift::protocol::T_CALL, cseqid);
-
-  stuff_plan_management_has_priv_edit_pargs args;
-  args.plan_id = &plan_id;
-  args.ssid = &ssid;
-  args.write(oprot_);
-
-  oprot_->writeMessageEnd();
-  oprot_->getTransport()->writeEnd();
-  oprot_->getTransport()->flush();
-
-  sentry.commit();
-  return cseqid;
-}
-
-bool stuff_plan_managementConcurrentClient::recv_has_priv_edit(const int32_t seqid)
-{
-
-  int32_t rseqid = 0;
-  std::string fname;
-  ::apache::thrift::protocol::TMessageType mtype;
-
-  // the read mutex gets dropped and reacquired as part of waitForWork()
-  // The destructor of this sentry wakes up other clients
-  ::apache::thrift::async::TConcurrentRecvSentry sentry(this->sync_.get(), seqid);
-
-  while(true) {
-    if(!this->sync_->getPending(fname, mtype, rseqid)) {
-      iprot_->readMessageBegin(fname, mtype, rseqid);
-    }
-    if(seqid == rseqid) {
-      if (mtype == ::apache::thrift::protocol::T_EXCEPTION) {
-        ::apache::thrift::TApplicationException x;
-        x.read(iprot_);
-        iprot_->readMessageEnd();
-        iprot_->getTransport()->readEnd();
-        sentry.commit();
-        throw x;
-      }
-      if (mtype != ::apache::thrift::protocol::T_REPLY) {
-        iprot_->skip(::apache::thrift::protocol::T_STRUCT);
-        iprot_->readMessageEnd();
-        iprot_->getTransport()->readEnd();
-      }
-      if (fname.compare("has_priv_edit") != 0) {
-        iprot_->skip(::apache::thrift::protocol::T_STRUCT);
-        iprot_->readMessageEnd();
-        iprot_->getTransport()->readEnd();
-
-        // in a bad state, don't commit
-        using ::apache::thrift::protocol::TProtocolException;
-        throw TProtocolException(TProtocolException::INVALID_DATA);
-      }
-      bool _return;
-      stuff_plan_management_has_priv_edit_presult result;
-      result.success = &_return;
-      result.read(iprot_);
-      iprot_->readMessageEnd();
-      iprot_->getTransport()->readEnd();
-
-      if (result.__isset.success) {
-        sentry.commit();
-        return _return;
-      }
-      if (result.__isset.e) {
-        sentry.commit();
-        throw result.e;
-      }
-      // in a bad state, don't commit
-      throw ::apache::thrift::TApplicationException(::apache::thrift::TApplicationException::MISSING_RESULT, "has_priv_edit failed: unknown result");
-    }
-    // seqid != rseqid
-    this->sync_->updatePending(fname, mtype, rseqid);
-
-    // this will temporarily unlock the readMutex, and let other clients get work done
-    this->sync_->waitForWork(seqid);
-  } // end while(true)
-}
-
-bool stuff_plan_managementConcurrentClient::upload_payinfo(const int64_t plan_id, const std::string& ssid, const std::string& content)
-{
-  int32_t seqid = send_upload_payinfo(plan_id, ssid, content);
-  return recv_upload_payinfo(seqid);
-}
-
-int32_t stuff_plan_managementConcurrentClient::send_upload_payinfo(const int64_t plan_id, const std::string& ssid, const std::string& content)
-{
-  int32_t cseqid = this->sync_->generateSeqId();
-  ::apache::thrift::async::TConcurrentSendSentry sentry(this->sync_.get());
-  oprot_->writeMessageBegin("upload_payinfo", ::apache::thrift::protocol::T_CALL, cseqid);
-
-  stuff_plan_management_upload_payinfo_pargs args;
-  args.plan_id = &plan_id;
-  args.ssid = &ssid;
-  args.content = &content;
-  args.write(oprot_);
-
-  oprot_->writeMessageEnd();
-  oprot_->getTransport()->writeEnd();
-  oprot_->getTransport()->flush();
-
-  sentry.commit();
-  return cseqid;
-}
-
-bool stuff_plan_managementConcurrentClient::recv_upload_payinfo(const int32_t seqid)
-{
-
-  int32_t rseqid = 0;
-  std::string fname;
-  ::apache::thrift::protocol::TMessageType mtype;
-
-  // the read mutex gets dropped and reacquired as part of waitForWork()
-  // The destructor of this sentry wakes up other clients
-  ::apache::thrift::async::TConcurrentRecvSentry sentry(this->sync_.get(), seqid);
-
-  while(true) {
-    if(!this->sync_->getPending(fname, mtype, rseqid)) {
-      iprot_->readMessageBegin(fname, mtype, rseqid);
-    }
-    if(seqid == rseqid) {
-      if (mtype == ::apache::thrift::protocol::T_EXCEPTION) {
-        ::apache::thrift::TApplicationException x;
-        x.read(iprot_);
-        iprot_->readMessageEnd();
-        iprot_->getTransport()->readEnd();
-        sentry.commit();
-        throw x;
-      }
-      if (mtype != ::apache::thrift::protocol::T_REPLY) {
-        iprot_->skip(::apache::thrift::protocol::T_STRUCT);
-        iprot_->readMessageEnd();
-        iprot_->getTransport()->readEnd();
-      }
-      if (fname.compare("upload_payinfo") != 0) {
-        iprot_->skip(::apache::thrift::protocol::T_STRUCT);
-        iprot_->readMessageEnd();
-        iprot_->getTransport()->readEnd();
-
-        // in a bad state, don't commit
-        using ::apache::thrift::protocol::TProtocolException;
-        throw TProtocolException(TProtocolException::INVALID_DATA);
-      }
-      bool _return;
-      stuff_plan_management_upload_payinfo_presult result;
-      result.success = &_return;
-      result.read(iprot_);
-      iprot_->readMessageEnd();
-      iprot_->getTransport()->readEnd();
-
-      if (result.__isset.success) {
-        sentry.commit();
-        return _return;
-      }
-      if (result.__isset.e) {
-        sentry.commit();
-        throw result.e;
-      }
-      // in a bad state, don't commit
-      throw ::apache::thrift::TApplicationException(::apache::thrift::TApplicationException::MISSING_RESULT, "upload_payinfo failed: unknown result");
-    }
-    // seqid != rseqid
-    this->sync_->updatePending(fname, mtype, rseqid);
-
-    // this will temporarily unlock the readMutex, and let other clients get work done
-    this->sync_->waitForWork(seqid);
-  } // end while(true)
-}
-
 bool stuff_plan_managementConcurrentClient::confirm_pay(const int64_t plan_id, const std::string& ssid)
 {
   int32_t seqid = send_confirm_pay(plan_id, ssid);
@@ -6447,21 +6637,23 @@ bool stuff_plan_managementConcurrentClient::recv_confirm_pay(const int32_t seqid
   } // end while(true)
 }
 
-bool stuff_plan_managementConcurrentClient::confirm_close(const int64_t plan_id, const std::string& ssid)
+bool stuff_plan_managementConcurrentClient::confirm_deliver(const int64_t plan_id, const std::string& ssid, const std::vector<int64_t> & vichele_id, const std::string& reason)
 {
-  int32_t seqid = send_confirm_close(plan_id, ssid);
-  return recv_confirm_close(seqid);
+  int32_t seqid = send_confirm_deliver(plan_id, ssid, vichele_id, reason);
+  return recv_confirm_deliver(seqid);
 }
 
-int32_t stuff_plan_managementConcurrentClient::send_confirm_close(const int64_t plan_id, const std::string& ssid)
+int32_t stuff_plan_managementConcurrentClient::send_confirm_deliver(const int64_t plan_id, const std::string& ssid, const std::vector<int64_t> & vichele_id, const std::string& reason)
 {
   int32_t cseqid = this->sync_->generateSeqId();
   ::apache::thrift::async::TConcurrentSendSentry sentry(this->sync_.get());
-  oprot_->writeMessageBegin("confirm_close", ::apache::thrift::protocol::T_CALL, cseqid);
+  oprot_->writeMessageBegin("confirm_deliver", ::apache::thrift::protocol::T_CALL, cseqid);
 
-  stuff_plan_management_confirm_close_pargs args;
+  stuff_plan_management_confirm_deliver_pargs args;
   args.plan_id = &plan_id;
   args.ssid = &ssid;
+  args.vichele_id = &vichele_id;
+  args.reason = &reason;
   args.write(oprot_);
 
   oprot_->writeMessageEnd();
@@ -6472,7 +6664,7 @@ int32_t stuff_plan_managementConcurrentClient::send_confirm_close(const int64_t 
   return cseqid;
 }
 
-bool stuff_plan_managementConcurrentClient::recv_confirm_close(const int32_t seqid)
+bool stuff_plan_managementConcurrentClient::recv_confirm_deliver(const int32_t seqid)
 {
 
   int32_t rseqid = 0;
@@ -6501,7 +6693,7 @@ bool stuff_plan_managementConcurrentClient::recv_confirm_close(const int32_t seq
         iprot_->readMessageEnd();
         iprot_->getTransport()->readEnd();
       }
-      if (fname.compare("confirm_close") != 0) {
+      if (fname.compare("confirm_deliver") != 0) {
         iprot_->skip(::apache::thrift::protocol::T_STRUCT);
         iprot_->readMessageEnd();
         iprot_->getTransport()->readEnd();
@@ -6511,7 +6703,7 @@ bool stuff_plan_managementConcurrentClient::recv_confirm_close(const int32_t seq
         throw TProtocolException(TProtocolException::INVALID_DATA);
       }
       bool _return;
-      stuff_plan_management_confirm_close_presult result;
+      stuff_plan_management_confirm_deliver_presult result;
       result.success = &_return;
       result.read(iprot_);
       iprot_->readMessageEnd();
@@ -6526,7 +6718,7 @@ bool stuff_plan_managementConcurrentClient::recv_confirm_close(const int32_t seq
         throw result.e;
       }
       // in a bad state, don't commit
-      throw ::apache::thrift::TApplicationException(::apache::thrift::TApplicationException::MISSING_RESULT, "confirm_close failed: unknown result");
+      throw ::apache::thrift::TApplicationException(::apache::thrift::TApplicationException::MISSING_RESULT, "confirm_deliver failed: unknown result");
     }
     // seqid != rseqid
     this->sync_->updatePending(fname, mtype, rseqid);
@@ -7063,6 +7255,264 @@ void stuff_plan_managementConcurrentClient::recv_search_plan_by_driver_phone(std
       }
       // in a bad state, don't commit
       throw ::apache::thrift::TApplicationException(::apache::thrift::TApplicationException::MISSING_RESULT, "search_plan_by_driver_phone failed: unknown result");
+    }
+    // seqid != rseqid
+    this->sync_->updatePending(fname, mtype, rseqid);
+
+    // this will temporarily unlock the readMutex, and let other clients get work done
+    this->sync_->waitForWork(seqid);
+  } // end while(true)
+}
+
+void stuff_plan_managementConcurrentClient::get_status_rule(std::vector<plan_status_rule> & _return, const int64_t plan_id)
+{
+  int32_t seqid = send_get_status_rule(plan_id);
+  recv_get_status_rule(_return, seqid);
+}
+
+int32_t stuff_plan_managementConcurrentClient::send_get_status_rule(const int64_t plan_id)
+{
+  int32_t cseqid = this->sync_->generateSeqId();
+  ::apache::thrift::async::TConcurrentSendSentry sentry(this->sync_.get());
+  oprot_->writeMessageBegin("get_status_rule", ::apache::thrift::protocol::T_CALL, cseqid);
+
+  stuff_plan_management_get_status_rule_pargs args;
+  args.plan_id = &plan_id;
+  args.write(oprot_);
+
+  oprot_->writeMessageEnd();
+  oprot_->getTransport()->writeEnd();
+  oprot_->getTransport()->flush();
+
+  sentry.commit();
+  return cseqid;
+}
+
+void stuff_plan_managementConcurrentClient::recv_get_status_rule(std::vector<plan_status_rule> & _return, const int32_t seqid)
+{
+
+  int32_t rseqid = 0;
+  std::string fname;
+  ::apache::thrift::protocol::TMessageType mtype;
+
+  // the read mutex gets dropped and reacquired as part of waitForWork()
+  // The destructor of this sentry wakes up other clients
+  ::apache::thrift::async::TConcurrentRecvSentry sentry(this->sync_.get(), seqid);
+
+  while(true) {
+    if(!this->sync_->getPending(fname, mtype, rseqid)) {
+      iprot_->readMessageBegin(fname, mtype, rseqid);
+    }
+    if(seqid == rseqid) {
+      if (mtype == ::apache::thrift::protocol::T_EXCEPTION) {
+        ::apache::thrift::TApplicationException x;
+        x.read(iprot_);
+        iprot_->readMessageEnd();
+        iprot_->getTransport()->readEnd();
+        sentry.commit();
+        throw x;
+      }
+      if (mtype != ::apache::thrift::protocol::T_REPLY) {
+        iprot_->skip(::apache::thrift::protocol::T_STRUCT);
+        iprot_->readMessageEnd();
+        iprot_->getTransport()->readEnd();
+      }
+      if (fname.compare("get_status_rule") != 0) {
+        iprot_->skip(::apache::thrift::protocol::T_STRUCT);
+        iprot_->readMessageEnd();
+        iprot_->getTransport()->readEnd();
+
+        // in a bad state, don't commit
+        using ::apache::thrift::protocol::TProtocolException;
+        throw TProtocolException(TProtocolException::INVALID_DATA);
+      }
+      stuff_plan_management_get_status_rule_presult result;
+      result.success = &_return;
+      result.read(iprot_);
+      iprot_->readMessageEnd();
+      iprot_->getTransport()->readEnd();
+
+      if (result.__isset.success) {
+        // _return pointer has now been filled
+        sentry.commit();
+        return;
+      }
+      if (result.__isset.e) {
+        sentry.commit();
+        throw result.e;
+      }
+      // in a bad state, don't commit
+      throw ::apache::thrift::TApplicationException(::apache::thrift::TApplicationException::MISSING_RESULT, "get_status_rule failed: unknown result");
+    }
+    // seqid != rseqid
+    this->sync_->updatePending(fname, mtype, rseqid);
+
+    // this will temporarily unlock the readMutex, and let other clients get work done
+    this->sync_->waitForWork(seqid);
+  } // end while(true)
+}
+
+void stuff_plan_managementConcurrentClient::get_change_rule(std::vector<bool> & _return, const std::string& ssid, const int64_t plan_id)
+{
+  int32_t seqid = send_get_change_rule(ssid, plan_id);
+  recv_get_change_rule(_return, seqid);
+}
+
+int32_t stuff_plan_managementConcurrentClient::send_get_change_rule(const std::string& ssid, const int64_t plan_id)
+{
+  int32_t cseqid = this->sync_->generateSeqId();
+  ::apache::thrift::async::TConcurrentSendSentry sentry(this->sync_.get());
+  oprot_->writeMessageBegin("get_change_rule", ::apache::thrift::protocol::T_CALL, cseqid);
+
+  stuff_plan_management_get_change_rule_pargs args;
+  args.ssid = &ssid;
+  args.plan_id = &plan_id;
+  args.write(oprot_);
+
+  oprot_->writeMessageEnd();
+  oprot_->getTransport()->writeEnd();
+  oprot_->getTransport()->flush();
+
+  sentry.commit();
+  return cseqid;
+}
+
+void stuff_plan_managementConcurrentClient::recv_get_change_rule(std::vector<bool> & _return, const int32_t seqid)
+{
+
+  int32_t rseqid = 0;
+  std::string fname;
+  ::apache::thrift::protocol::TMessageType mtype;
+
+  // the read mutex gets dropped and reacquired as part of waitForWork()
+  // The destructor of this sentry wakes up other clients
+  ::apache::thrift::async::TConcurrentRecvSentry sentry(this->sync_.get(), seqid);
+
+  while(true) {
+    if(!this->sync_->getPending(fname, mtype, rseqid)) {
+      iprot_->readMessageBegin(fname, mtype, rseqid);
+    }
+    if(seqid == rseqid) {
+      if (mtype == ::apache::thrift::protocol::T_EXCEPTION) {
+        ::apache::thrift::TApplicationException x;
+        x.read(iprot_);
+        iprot_->readMessageEnd();
+        iprot_->getTransport()->readEnd();
+        sentry.commit();
+        throw x;
+      }
+      if (mtype != ::apache::thrift::protocol::T_REPLY) {
+        iprot_->skip(::apache::thrift::protocol::T_STRUCT);
+        iprot_->readMessageEnd();
+        iprot_->getTransport()->readEnd();
+      }
+      if (fname.compare("get_change_rule") != 0) {
+        iprot_->skip(::apache::thrift::protocol::T_STRUCT);
+        iprot_->readMessageEnd();
+        iprot_->getTransport()->readEnd();
+
+        // in a bad state, don't commit
+        using ::apache::thrift::protocol::TProtocolException;
+        throw TProtocolException(TProtocolException::INVALID_DATA);
+      }
+      stuff_plan_management_get_change_rule_presult result;
+      result.success = &_return;
+      result.read(iprot_);
+      iprot_->readMessageEnd();
+      iprot_->getTransport()->readEnd();
+
+      if (result.__isset.success) {
+        // _return pointer has now been filled
+        sentry.commit();
+        return;
+      }
+      if (result.__isset.e) {
+        sentry.commit();
+        throw result.e;
+      }
+      // in a bad state, don't commit
+      throw ::apache::thrift::TApplicationException(::apache::thrift::TApplicationException::MISSING_RESULT, "get_change_rule failed: unknown result");
+    }
+    // seqid != rseqid
+    this->sync_->updatePending(fname, mtype, rseqid);
+
+    // this will temporarily unlock the readMutex, and let other clients get work done
+    this->sync_->waitForWork(seqid);
+  } // end while(true)
+}
+
+void stuff_plan_managementConcurrentClient::clean_unclose_plan()
+{
+  int32_t seqid = send_clean_unclose_plan();
+  recv_clean_unclose_plan(seqid);
+}
+
+int32_t stuff_plan_managementConcurrentClient::send_clean_unclose_plan()
+{
+  int32_t cseqid = this->sync_->generateSeqId();
+  ::apache::thrift::async::TConcurrentSendSentry sentry(this->sync_.get());
+  oprot_->writeMessageBegin("clean_unclose_plan", ::apache::thrift::protocol::T_CALL, cseqid);
+
+  stuff_plan_management_clean_unclose_plan_pargs args;
+  args.write(oprot_);
+
+  oprot_->writeMessageEnd();
+  oprot_->getTransport()->writeEnd();
+  oprot_->getTransport()->flush();
+
+  sentry.commit();
+  return cseqid;
+}
+
+void stuff_plan_managementConcurrentClient::recv_clean_unclose_plan(const int32_t seqid)
+{
+
+  int32_t rseqid = 0;
+  std::string fname;
+  ::apache::thrift::protocol::TMessageType mtype;
+
+  // the read mutex gets dropped and reacquired as part of waitForWork()
+  // The destructor of this sentry wakes up other clients
+  ::apache::thrift::async::TConcurrentRecvSentry sentry(this->sync_.get(), seqid);
+
+  while(true) {
+    if(!this->sync_->getPending(fname, mtype, rseqid)) {
+      iprot_->readMessageBegin(fname, mtype, rseqid);
+    }
+    if(seqid == rseqid) {
+      if (mtype == ::apache::thrift::protocol::T_EXCEPTION) {
+        ::apache::thrift::TApplicationException x;
+        x.read(iprot_);
+        iprot_->readMessageEnd();
+        iprot_->getTransport()->readEnd();
+        sentry.commit();
+        throw x;
+      }
+      if (mtype != ::apache::thrift::protocol::T_REPLY) {
+        iprot_->skip(::apache::thrift::protocol::T_STRUCT);
+        iprot_->readMessageEnd();
+        iprot_->getTransport()->readEnd();
+      }
+      if (fname.compare("clean_unclose_plan") != 0) {
+        iprot_->skip(::apache::thrift::protocol::T_STRUCT);
+        iprot_->readMessageEnd();
+        iprot_->getTransport()->readEnd();
+
+        // in a bad state, don't commit
+        using ::apache::thrift::protocol::TProtocolException;
+        throw TProtocolException(TProtocolException::INVALID_DATA);
+      }
+      stuff_plan_management_clean_unclose_plan_presult result;
+      result.read(iprot_);
+      iprot_->readMessageEnd();
+      iprot_->getTransport()->readEnd();
+
+      if (result.__isset.e) {
+        sentry.commit();
+        throw result.e;
+      }
+      sentry.commit();
+      return;
     }
     // seqid != rseqid
     this->sync_->updatePending(fname, mtype, rseqid);

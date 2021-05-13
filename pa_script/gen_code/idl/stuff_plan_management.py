@@ -71,25 +71,6 @@ class Iface(object):
         """
         pass
 
-    def has_priv_edit(self, plan_id, ssid):
-        """
-        Parameters:
-         - plan_id
-         - ssid
-
-        """
-        pass
-
-    def upload_payinfo(self, plan_id, ssid, content):
-        """
-        Parameters:
-         - plan_id
-         - ssid
-         - content
-
-        """
-        pass
-
     def confirm_pay(self, plan_id, ssid):
         """
         Parameters:
@@ -99,11 +80,13 @@ class Iface(object):
         """
         pass
 
-    def confirm_close(self, plan_id, ssid):
+    def confirm_deliver(self, plan_id, ssid, vichele_id, reason):
         """
         Parameters:
          - plan_id
          - ssid
+         - vichele_id
+         - reason
 
         """
         pass
@@ -162,6 +145,26 @@ class Iface(object):
          - phone
 
         """
+        pass
+
+    def get_status_rule(self, plan_id):
+        """
+        Parameters:
+         - plan_id
+
+        """
+        pass
+
+    def get_change_rule(self, ssid, plan_id):
+        """
+        Parameters:
+         - ssid
+         - plan_id
+
+        """
+        pass
+
+    def clean_unclose_plan(self):
         pass
 
 
@@ -384,80 +387,6 @@ class Client(Iface):
             raise result.e
         raise TApplicationException(TApplicationException.MISSING_RESULT, "confirm_plan failed: unknown result")
 
-    def has_priv_edit(self, plan_id, ssid):
-        """
-        Parameters:
-         - plan_id
-         - ssid
-
-        """
-        self.send_has_priv_edit(plan_id, ssid)
-        return self.recv_has_priv_edit()
-
-    def send_has_priv_edit(self, plan_id, ssid):
-        self._oprot.writeMessageBegin('has_priv_edit', TMessageType.CALL, self._seqid)
-        args = has_priv_edit_args()
-        args.plan_id = plan_id
-        args.ssid = ssid
-        args.write(self._oprot)
-        self._oprot.writeMessageEnd()
-        self._oprot.trans.flush()
-
-    def recv_has_priv_edit(self):
-        iprot = self._iprot
-        (fname, mtype, rseqid) = iprot.readMessageBegin()
-        if mtype == TMessageType.EXCEPTION:
-            x = TApplicationException()
-            x.read(iprot)
-            iprot.readMessageEnd()
-            raise x
-        result = has_priv_edit_result()
-        result.read(iprot)
-        iprot.readMessageEnd()
-        if result.success is not None:
-            return result.success
-        if result.e is not None:
-            raise result.e
-        raise TApplicationException(TApplicationException.MISSING_RESULT, "has_priv_edit failed: unknown result")
-
-    def upload_payinfo(self, plan_id, ssid, content):
-        """
-        Parameters:
-         - plan_id
-         - ssid
-         - content
-
-        """
-        self.send_upload_payinfo(plan_id, ssid, content)
-        return self.recv_upload_payinfo()
-
-    def send_upload_payinfo(self, plan_id, ssid, content):
-        self._oprot.writeMessageBegin('upload_payinfo', TMessageType.CALL, self._seqid)
-        args = upload_payinfo_args()
-        args.plan_id = plan_id
-        args.ssid = ssid
-        args.content = content
-        args.write(self._oprot)
-        self._oprot.writeMessageEnd()
-        self._oprot.trans.flush()
-
-    def recv_upload_payinfo(self):
-        iprot = self._iprot
-        (fname, mtype, rseqid) = iprot.readMessageBegin()
-        if mtype == TMessageType.EXCEPTION:
-            x = TApplicationException()
-            x.read(iprot)
-            iprot.readMessageEnd()
-            raise x
-        result = upload_payinfo_result()
-        result.read(iprot)
-        iprot.readMessageEnd()
-        if result.success is not None:
-            return result.success
-        if result.e is not None:
-            raise result.e
-        raise TApplicationException(TApplicationException.MISSING_RESULT, "upload_payinfo failed: unknown result")
-
     def confirm_pay(self, plan_id, ssid):
         """
         Parameters:
@@ -494,26 +423,30 @@ class Client(Iface):
             raise result.e
         raise TApplicationException(TApplicationException.MISSING_RESULT, "confirm_pay failed: unknown result")
 
-    def confirm_close(self, plan_id, ssid):
+    def confirm_deliver(self, plan_id, ssid, vichele_id, reason):
         """
         Parameters:
          - plan_id
          - ssid
+         - vichele_id
+         - reason
 
         """
-        self.send_confirm_close(plan_id, ssid)
-        return self.recv_confirm_close()
+        self.send_confirm_deliver(plan_id, ssid, vichele_id, reason)
+        return self.recv_confirm_deliver()
 
-    def send_confirm_close(self, plan_id, ssid):
-        self._oprot.writeMessageBegin('confirm_close', TMessageType.CALL, self._seqid)
-        args = confirm_close_args()
+    def send_confirm_deliver(self, plan_id, ssid, vichele_id, reason):
+        self._oprot.writeMessageBegin('confirm_deliver', TMessageType.CALL, self._seqid)
+        args = confirm_deliver_args()
         args.plan_id = plan_id
         args.ssid = ssid
+        args.vichele_id = vichele_id
+        args.reason = reason
         args.write(self._oprot)
         self._oprot.writeMessageEnd()
         self._oprot.trans.flush()
 
-    def recv_confirm_close(self):
+    def recv_confirm_deliver(self):
         iprot = self._iprot
         (fname, mtype, rseqid) = iprot.readMessageBegin()
         if mtype == TMessageType.EXCEPTION:
@@ -521,14 +454,14 @@ class Client(Iface):
             x.read(iprot)
             iprot.readMessageEnd()
             raise x
-        result = confirm_close_result()
+        result = confirm_deliver_result()
         result.read(iprot)
         iprot.readMessageEnd()
         if result.success is not None:
             return result.success
         if result.e is not None:
             raise result.e
-        raise TApplicationException(TApplicationException.MISSING_RESULT, "confirm_close failed: unknown result")
+        raise TApplicationException(TApplicationException.MISSING_RESULT, "confirm_deliver failed: unknown result")
 
     def export_plan(self, ssid, plan_ids):
         """
@@ -750,6 +683,102 @@ class Client(Iface):
             raise result.e
         raise TApplicationException(TApplicationException.MISSING_RESULT, "search_plan_by_driver_phone failed: unknown result")
 
+    def get_status_rule(self, plan_id):
+        """
+        Parameters:
+         - plan_id
+
+        """
+        self.send_get_status_rule(plan_id)
+        return self.recv_get_status_rule()
+
+    def send_get_status_rule(self, plan_id):
+        self._oprot.writeMessageBegin('get_status_rule', TMessageType.CALL, self._seqid)
+        args = get_status_rule_args()
+        args.plan_id = plan_id
+        args.write(self._oprot)
+        self._oprot.writeMessageEnd()
+        self._oprot.trans.flush()
+
+    def recv_get_status_rule(self):
+        iprot = self._iprot
+        (fname, mtype, rseqid) = iprot.readMessageBegin()
+        if mtype == TMessageType.EXCEPTION:
+            x = TApplicationException()
+            x.read(iprot)
+            iprot.readMessageEnd()
+            raise x
+        result = get_status_rule_result()
+        result.read(iprot)
+        iprot.readMessageEnd()
+        if result.success is not None:
+            return result.success
+        if result.e is not None:
+            raise result.e
+        raise TApplicationException(TApplicationException.MISSING_RESULT, "get_status_rule failed: unknown result")
+
+    def get_change_rule(self, ssid, plan_id):
+        """
+        Parameters:
+         - ssid
+         - plan_id
+
+        """
+        self.send_get_change_rule(ssid, plan_id)
+        return self.recv_get_change_rule()
+
+    def send_get_change_rule(self, ssid, plan_id):
+        self._oprot.writeMessageBegin('get_change_rule', TMessageType.CALL, self._seqid)
+        args = get_change_rule_args()
+        args.ssid = ssid
+        args.plan_id = plan_id
+        args.write(self._oprot)
+        self._oprot.writeMessageEnd()
+        self._oprot.trans.flush()
+
+    def recv_get_change_rule(self):
+        iprot = self._iprot
+        (fname, mtype, rseqid) = iprot.readMessageBegin()
+        if mtype == TMessageType.EXCEPTION:
+            x = TApplicationException()
+            x.read(iprot)
+            iprot.readMessageEnd()
+            raise x
+        result = get_change_rule_result()
+        result.read(iprot)
+        iprot.readMessageEnd()
+        if result.success is not None:
+            return result.success
+        if result.e is not None:
+            raise result.e
+        raise TApplicationException(TApplicationException.MISSING_RESULT, "get_change_rule failed: unknown result")
+
+    def clean_unclose_plan(self):
+        self.send_clean_unclose_plan()
+        self.recv_clean_unclose_plan()
+
+    def send_clean_unclose_plan(self):
+        self._oprot.writeMessageBegin('clean_unclose_plan', TMessageType.CALL, self._seqid)
+        args = clean_unclose_plan_args()
+        args.write(self._oprot)
+        self._oprot.writeMessageEnd()
+        self._oprot.trans.flush()
+
+    def recv_clean_unclose_plan(self):
+        iprot = self._iprot
+        (fname, mtype, rseqid) = iprot.readMessageBegin()
+        if mtype == TMessageType.EXCEPTION:
+            x = TApplicationException()
+            x.read(iprot)
+            iprot.readMessageEnd()
+            raise x
+        result = clean_unclose_plan_result()
+        result.read(iprot)
+        iprot.readMessageEnd()
+        if result.e is not None:
+            raise result.e
+        return
+
 
 class Processor(Iface, TProcessor):
     def __init__(self, handler):
@@ -761,16 +790,17 @@ class Processor(Iface, TProcessor):
         self._processMap["get_plan"] = Processor.process_get_plan
         self._processMap["update_plan"] = Processor.process_update_plan
         self._processMap["confirm_plan"] = Processor.process_confirm_plan
-        self._processMap["has_priv_edit"] = Processor.process_has_priv_edit
-        self._processMap["upload_payinfo"] = Processor.process_upload_payinfo
         self._processMap["confirm_pay"] = Processor.process_confirm_pay
-        self._processMap["confirm_close"] = Processor.process_confirm_close
+        self._processMap["confirm_deliver"] = Processor.process_confirm_deliver
         self._processMap["export_plan"] = Processor.process_export_plan
         self._processMap["except_close"] = Processor.process_except_close
         self._processMap["verify_plan"] = Processor.process_verify_plan
         self._processMap["send_file_via_email"] = Processor.process_send_file_via_email
         self._processMap["reject_plan"] = Processor.process_reject_plan
         self._processMap["search_plan_by_driver_phone"] = Processor.process_search_plan_by_driver_phone
+        self._processMap["get_status_rule"] = Processor.process_get_status_rule
+        self._processMap["get_change_rule"] = Processor.process_get_change_rule
+        self._processMap["clean_unclose_plan"] = Processor.process_clean_unclose_plan
         self._on_message_begin = None
 
     def on_message_begin(self, func):
@@ -949,58 +979,6 @@ class Processor(Iface, TProcessor):
         oprot.writeMessageEnd()
         oprot.trans.flush()
 
-    def process_has_priv_edit(self, seqid, iprot, oprot):
-        args = has_priv_edit_args()
-        args.read(iprot)
-        iprot.readMessageEnd()
-        result = has_priv_edit_result()
-        try:
-            result.success = self._handler.has_priv_edit(args.plan_id, args.ssid)
-            msg_type = TMessageType.REPLY
-        except TTransport.TTransportException:
-            raise
-        except gen_exp as e:
-            msg_type = TMessageType.REPLY
-            result.e = e
-        except TApplicationException as ex:
-            logging.exception('TApplication exception in handler')
-            msg_type = TMessageType.EXCEPTION
-            result = ex
-        except Exception:
-            logging.exception('Unexpected exception in handler')
-            msg_type = TMessageType.EXCEPTION
-            result = TApplicationException(TApplicationException.INTERNAL_ERROR, 'Internal error')
-        oprot.writeMessageBegin("has_priv_edit", msg_type, seqid)
-        result.write(oprot)
-        oprot.writeMessageEnd()
-        oprot.trans.flush()
-
-    def process_upload_payinfo(self, seqid, iprot, oprot):
-        args = upload_payinfo_args()
-        args.read(iprot)
-        iprot.readMessageEnd()
-        result = upload_payinfo_result()
-        try:
-            result.success = self._handler.upload_payinfo(args.plan_id, args.ssid, args.content)
-            msg_type = TMessageType.REPLY
-        except TTransport.TTransportException:
-            raise
-        except gen_exp as e:
-            msg_type = TMessageType.REPLY
-            result.e = e
-        except TApplicationException as ex:
-            logging.exception('TApplication exception in handler')
-            msg_type = TMessageType.EXCEPTION
-            result = ex
-        except Exception:
-            logging.exception('Unexpected exception in handler')
-            msg_type = TMessageType.EXCEPTION
-            result = TApplicationException(TApplicationException.INTERNAL_ERROR, 'Internal error')
-        oprot.writeMessageBegin("upload_payinfo", msg_type, seqid)
-        result.write(oprot)
-        oprot.writeMessageEnd()
-        oprot.trans.flush()
-
     def process_confirm_pay(self, seqid, iprot, oprot):
         args = confirm_pay_args()
         args.read(iprot)
@@ -1027,13 +1005,13 @@ class Processor(Iface, TProcessor):
         oprot.writeMessageEnd()
         oprot.trans.flush()
 
-    def process_confirm_close(self, seqid, iprot, oprot):
-        args = confirm_close_args()
+    def process_confirm_deliver(self, seqid, iprot, oprot):
+        args = confirm_deliver_args()
         args.read(iprot)
         iprot.readMessageEnd()
-        result = confirm_close_result()
+        result = confirm_deliver_result()
         try:
-            result.success = self._handler.confirm_close(args.plan_id, args.ssid)
+            result.success = self._handler.confirm_deliver(args.plan_id, args.ssid, args.vichele_id, args.reason)
             msg_type = TMessageType.REPLY
         except TTransport.TTransportException:
             raise
@@ -1048,7 +1026,7 @@ class Processor(Iface, TProcessor):
             logging.exception('Unexpected exception in handler')
             msg_type = TMessageType.EXCEPTION
             result = TApplicationException(TApplicationException.INTERNAL_ERROR, 'Internal error')
-        oprot.writeMessageBegin("confirm_close", msg_type, seqid)
+        oprot.writeMessageBegin("confirm_deliver", msg_type, seqid)
         result.write(oprot)
         oprot.writeMessageEnd()
         oprot.trans.flush()
@@ -1205,6 +1183,84 @@ class Processor(Iface, TProcessor):
             msg_type = TMessageType.EXCEPTION
             result = TApplicationException(TApplicationException.INTERNAL_ERROR, 'Internal error')
         oprot.writeMessageBegin("search_plan_by_driver_phone", msg_type, seqid)
+        result.write(oprot)
+        oprot.writeMessageEnd()
+        oprot.trans.flush()
+
+    def process_get_status_rule(self, seqid, iprot, oprot):
+        args = get_status_rule_args()
+        args.read(iprot)
+        iprot.readMessageEnd()
+        result = get_status_rule_result()
+        try:
+            result.success = self._handler.get_status_rule(args.plan_id)
+            msg_type = TMessageType.REPLY
+        except TTransport.TTransportException:
+            raise
+        except gen_exp as e:
+            msg_type = TMessageType.REPLY
+            result.e = e
+        except TApplicationException as ex:
+            logging.exception('TApplication exception in handler')
+            msg_type = TMessageType.EXCEPTION
+            result = ex
+        except Exception:
+            logging.exception('Unexpected exception in handler')
+            msg_type = TMessageType.EXCEPTION
+            result = TApplicationException(TApplicationException.INTERNAL_ERROR, 'Internal error')
+        oprot.writeMessageBegin("get_status_rule", msg_type, seqid)
+        result.write(oprot)
+        oprot.writeMessageEnd()
+        oprot.trans.flush()
+
+    def process_get_change_rule(self, seqid, iprot, oprot):
+        args = get_change_rule_args()
+        args.read(iprot)
+        iprot.readMessageEnd()
+        result = get_change_rule_result()
+        try:
+            result.success = self._handler.get_change_rule(args.ssid, args.plan_id)
+            msg_type = TMessageType.REPLY
+        except TTransport.TTransportException:
+            raise
+        except gen_exp as e:
+            msg_type = TMessageType.REPLY
+            result.e = e
+        except TApplicationException as ex:
+            logging.exception('TApplication exception in handler')
+            msg_type = TMessageType.EXCEPTION
+            result = ex
+        except Exception:
+            logging.exception('Unexpected exception in handler')
+            msg_type = TMessageType.EXCEPTION
+            result = TApplicationException(TApplicationException.INTERNAL_ERROR, 'Internal error')
+        oprot.writeMessageBegin("get_change_rule", msg_type, seqid)
+        result.write(oprot)
+        oprot.writeMessageEnd()
+        oprot.trans.flush()
+
+    def process_clean_unclose_plan(self, seqid, iprot, oprot):
+        args = clean_unclose_plan_args()
+        args.read(iprot)
+        iprot.readMessageEnd()
+        result = clean_unclose_plan_result()
+        try:
+            self._handler.clean_unclose_plan()
+            msg_type = TMessageType.REPLY
+        except TTransport.TTransportException:
+            raise
+        except gen_exp as e:
+            msg_type = TMessageType.REPLY
+            result.e = e
+        except TApplicationException as ex:
+            logging.exception('TApplication exception in handler')
+            msg_type = TMessageType.EXCEPTION
+            result = ex
+        except Exception:
+            logging.exception('Unexpected exception in handler')
+            msg_type = TMessageType.EXCEPTION
+            result = TApplicationException(TApplicationException.INTERNAL_ERROR, 'Internal error')
+        oprot.writeMessageBegin("clean_unclose_plan", msg_type, seqid)
         result.write(oprot)
         oprot.writeMessageEnd()
         oprot.trans.flush()
@@ -2091,312 +2147,6 @@ confirm_plan_result.thrift_spec = (
 )
 
 
-class has_priv_edit_args(object):
-    """
-    Attributes:
-     - plan_id
-     - ssid
-
-    """
-
-
-    def __init__(self, plan_id=None, ssid=None,):
-        self.plan_id = plan_id
-        self.ssid = ssid
-
-    def read(self, iprot):
-        if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
-            iprot._fast_decode(self, iprot, [self.__class__, self.thrift_spec])
-            return
-        iprot.readStructBegin()
-        while True:
-            (fname, ftype, fid) = iprot.readFieldBegin()
-            if ftype == TType.STOP:
-                break
-            if fid == 1:
-                if ftype == TType.I64:
-                    self.plan_id = iprot.readI64()
-                else:
-                    iprot.skip(ftype)
-            elif fid == 2:
-                if ftype == TType.STRING:
-                    self.ssid = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
-                else:
-                    iprot.skip(ftype)
-            else:
-                iprot.skip(ftype)
-            iprot.readFieldEnd()
-        iprot.readStructEnd()
-
-    def write(self, oprot):
-        if oprot._fast_encode is not None and self.thrift_spec is not None:
-            oprot.trans.write(oprot._fast_encode(self, [self.__class__, self.thrift_spec]))
-            return
-        oprot.writeStructBegin('has_priv_edit_args')
-        if self.plan_id is not None:
-            oprot.writeFieldBegin('plan_id', TType.I64, 1)
-            oprot.writeI64(self.plan_id)
-            oprot.writeFieldEnd()
-        if self.ssid is not None:
-            oprot.writeFieldBegin('ssid', TType.STRING, 2)
-            oprot.writeString(self.ssid.encode('utf-8') if sys.version_info[0] == 2 else self.ssid)
-            oprot.writeFieldEnd()
-        oprot.writeFieldStop()
-        oprot.writeStructEnd()
-
-    def validate(self):
-        return
-
-    def __repr__(self):
-        L = ['%s=%r' % (key, value)
-             for key, value in self.__dict__.items()]
-        return '%s(%s)' % (self.__class__.__name__, ', '.join(L))
-
-    def __eq__(self, other):
-        return isinstance(other, self.__class__) and self.__dict__ == other.__dict__
-
-    def __ne__(self, other):
-        return not (self == other)
-all_structs.append(has_priv_edit_args)
-has_priv_edit_args.thrift_spec = (
-    None,  # 0
-    (1, TType.I64, 'plan_id', None, None, ),  # 1
-    (2, TType.STRING, 'ssid', 'UTF8', None, ),  # 2
-)
-
-
-class has_priv_edit_result(object):
-    """
-    Attributes:
-     - success
-     - e
-
-    """
-
-
-    def __init__(self, success=None, e=None,):
-        self.success = success
-        self.e = e
-
-    def read(self, iprot):
-        if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
-            iprot._fast_decode(self, iprot, [self.__class__, self.thrift_spec])
-            return
-        iprot.readStructBegin()
-        while True:
-            (fname, ftype, fid) = iprot.readFieldBegin()
-            if ftype == TType.STOP:
-                break
-            if fid == 0:
-                if ftype == TType.BOOL:
-                    self.success = iprot.readBool()
-                else:
-                    iprot.skip(ftype)
-            elif fid == 1:
-                if ftype == TType.STRUCT:
-                    self.e = gen_exp.read(iprot)
-                else:
-                    iprot.skip(ftype)
-            else:
-                iprot.skip(ftype)
-            iprot.readFieldEnd()
-        iprot.readStructEnd()
-
-    def write(self, oprot):
-        if oprot._fast_encode is not None and self.thrift_spec is not None:
-            oprot.trans.write(oprot._fast_encode(self, [self.__class__, self.thrift_spec]))
-            return
-        oprot.writeStructBegin('has_priv_edit_result')
-        if self.success is not None:
-            oprot.writeFieldBegin('success', TType.BOOL, 0)
-            oprot.writeBool(self.success)
-            oprot.writeFieldEnd()
-        if self.e is not None:
-            oprot.writeFieldBegin('e', TType.STRUCT, 1)
-            self.e.write(oprot)
-            oprot.writeFieldEnd()
-        oprot.writeFieldStop()
-        oprot.writeStructEnd()
-
-    def validate(self):
-        return
-
-    def __repr__(self):
-        L = ['%s=%r' % (key, value)
-             for key, value in self.__dict__.items()]
-        return '%s(%s)' % (self.__class__.__name__, ', '.join(L))
-
-    def __eq__(self, other):
-        return isinstance(other, self.__class__) and self.__dict__ == other.__dict__
-
-    def __ne__(self, other):
-        return not (self == other)
-all_structs.append(has_priv_edit_result)
-has_priv_edit_result.thrift_spec = (
-    (0, TType.BOOL, 'success', None, None, ),  # 0
-    (1, TType.STRUCT, 'e', [gen_exp, None], None, ),  # 1
-)
-
-
-class upload_payinfo_args(object):
-    """
-    Attributes:
-     - plan_id
-     - ssid
-     - content
-
-    """
-
-
-    def __init__(self, plan_id=None, ssid=None, content=None,):
-        self.plan_id = plan_id
-        self.ssid = ssid
-        self.content = content
-
-    def read(self, iprot):
-        if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
-            iprot._fast_decode(self, iprot, [self.__class__, self.thrift_spec])
-            return
-        iprot.readStructBegin()
-        while True:
-            (fname, ftype, fid) = iprot.readFieldBegin()
-            if ftype == TType.STOP:
-                break
-            if fid == 1:
-                if ftype == TType.I64:
-                    self.plan_id = iprot.readI64()
-                else:
-                    iprot.skip(ftype)
-            elif fid == 2:
-                if ftype == TType.STRING:
-                    self.ssid = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
-                else:
-                    iprot.skip(ftype)
-            elif fid == 3:
-                if ftype == TType.STRING:
-                    self.content = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
-                else:
-                    iprot.skip(ftype)
-            else:
-                iprot.skip(ftype)
-            iprot.readFieldEnd()
-        iprot.readStructEnd()
-
-    def write(self, oprot):
-        if oprot._fast_encode is not None and self.thrift_spec is not None:
-            oprot.trans.write(oprot._fast_encode(self, [self.__class__, self.thrift_spec]))
-            return
-        oprot.writeStructBegin('upload_payinfo_args')
-        if self.plan_id is not None:
-            oprot.writeFieldBegin('plan_id', TType.I64, 1)
-            oprot.writeI64(self.plan_id)
-            oprot.writeFieldEnd()
-        if self.ssid is not None:
-            oprot.writeFieldBegin('ssid', TType.STRING, 2)
-            oprot.writeString(self.ssid.encode('utf-8') if sys.version_info[0] == 2 else self.ssid)
-            oprot.writeFieldEnd()
-        if self.content is not None:
-            oprot.writeFieldBegin('content', TType.STRING, 3)
-            oprot.writeString(self.content.encode('utf-8') if sys.version_info[0] == 2 else self.content)
-            oprot.writeFieldEnd()
-        oprot.writeFieldStop()
-        oprot.writeStructEnd()
-
-    def validate(self):
-        return
-
-    def __repr__(self):
-        L = ['%s=%r' % (key, value)
-             for key, value in self.__dict__.items()]
-        return '%s(%s)' % (self.__class__.__name__, ', '.join(L))
-
-    def __eq__(self, other):
-        return isinstance(other, self.__class__) and self.__dict__ == other.__dict__
-
-    def __ne__(self, other):
-        return not (self == other)
-all_structs.append(upload_payinfo_args)
-upload_payinfo_args.thrift_spec = (
-    None,  # 0
-    (1, TType.I64, 'plan_id', None, None, ),  # 1
-    (2, TType.STRING, 'ssid', 'UTF8', None, ),  # 2
-    (3, TType.STRING, 'content', 'UTF8', None, ),  # 3
-)
-
-
-class upload_payinfo_result(object):
-    """
-    Attributes:
-     - success
-     - e
-
-    """
-
-
-    def __init__(self, success=None, e=None,):
-        self.success = success
-        self.e = e
-
-    def read(self, iprot):
-        if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
-            iprot._fast_decode(self, iprot, [self.__class__, self.thrift_spec])
-            return
-        iprot.readStructBegin()
-        while True:
-            (fname, ftype, fid) = iprot.readFieldBegin()
-            if ftype == TType.STOP:
-                break
-            if fid == 0:
-                if ftype == TType.BOOL:
-                    self.success = iprot.readBool()
-                else:
-                    iprot.skip(ftype)
-            elif fid == 1:
-                if ftype == TType.STRUCT:
-                    self.e = gen_exp.read(iprot)
-                else:
-                    iprot.skip(ftype)
-            else:
-                iprot.skip(ftype)
-            iprot.readFieldEnd()
-        iprot.readStructEnd()
-
-    def write(self, oprot):
-        if oprot._fast_encode is not None and self.thrift_spec is not None:
-            oprot.trans.write(oprot._fast_encode(self, [self.__class__, self.thrift_spec]))
-            return
-        oprot.writeStructBegin('upload_payinfo_result')
-        if self.success is not None:
-            oprot.writeFieldBegin('success', TType.BOOL, 0)
-            oprot.writeBool(self.success)
-            oprot.writeFieldEnd()
-        if self.e is not None:
-            oprot.writeFieldBegin('e', TType.STRUCT, 1)
-            self.e.write(oprot)
-            oprot.writeFieldEnd()
-        oprot.writeFieldStop()
-        oprot.writeStructEnd()
-
-    def validate(self):
-        return
-
-    def __repr__(self):
-        L = ['%s=%r' % (key, value)
-             for key, value in self.__dict__.items()]
-        return '%s(%s)' % (self.__class__.__name__, ', '.join(L))
-
-    def __eq__(self, other):
-        return isinstance(other, self.__class__) and self.__dict__ == other.__dict__
-
-    def __ne__(self, other):
-        return not (self == other)
-all_structs.append(upload_payinfo_result)
-upload_payinfo_result.thrift_spec = (
-    (0, TType.BOOL, 'success', None, None, ),  # 0
-    (1, TType.STRUCT, 'e', [gen_exp, None], None, ),  # 1
-)
-
-
 class confirm_pay_args(object):
     """
     Attributes:
@@ -2544,18 +2294,22 @@ confirm_pay_result.thrift_spec = (
 )
 
 
-class confirm_close_args(object):
+class confirm_deliver_args(object):
     """
     Attributes:
      - plan_id
      - ssid
+     - vichele_id
+     - reason
 
     """
 
 
-    def __init__(self, plan_id=None, ssid=None,):
+    def __init__(self, plan_id=None, ssid=None, vichele_id=None, reason=None,):
         self.plan_id = plan_id
         self.ssid = ssid
+        self.vichele_id = vichele_id
+        self.reason = reason
 
     def read(self, iprot):
         if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
@@ -2576,6 +2330,21 @@ class confirm_close_args(object):
                     self.ssid = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
                 else:
                     iprot.skip(ftype)
+            elif fid == 3:
+                if ftype == TType.LIST:
+                    self.vichele_id = []
+                    (_etype73, _size70) = iprot.readListBegin()
+                    for _i74 in range(_size70):
+                        _elem75 = iprot.readI64()
+                        self.vichele_id.append(_elem75)
+                    iprot.readListEnd()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 4:
+                if ftype == TType.STRING:
+                    self.reason = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
             else:
                 iprot.skip(ftype)
             iprot.readFieldEnd()
@@ -2585,7 +2354,7 @@ class confirm_close_args(object):
         if oprot._fast_encode is not None and self.thrift_spec is not None:
             oprot.trans.write(oprot._fast_encode(self, [self.__class__, self.thrift_spec]))
             return
-        oprot.writeStructBegin('confirm_close_args')
+        oprot.writeStructBegin('confirm_deliver_args')
         if self.plan_id is not None:
             oprot.writeFieldBegin('plan_id', TType.I64, 1)
             oprot.writeI64(self.plan_id)
@@ -2593,6 +2362,17 @@ class confirm_close_args(object):
         if self.ssid is not None:
             oprot.writeFieldBegin('ssid', TType.STRING, 2)
             oprot.writeString(self.ssid.encode('utf-8') if sys.version_info[0] == 2 else self.ssid)
+            oprot.writeFieldEnd()
+        if self.vichele_id is not None:
+            oprot.writeFieldBegin('vichele_id', TType.LIST, 3)
+            oprot.writeListBegin(TType.I64, len(self.vichele_id))
+            for iter76 in self.vichele_id:
+                oprot.writeI64(iter76)
+            oprot.writeListEnd()
+            oprot.writeFieldEnd()
+        if self.reason is not None:
+            oprot.writeFieldBegin('reason', TType.STRING, 4)
+            oprot.writeString(self.reason.encode('utf-8') if sys.version_info[0] == 2 else self.reason)
             oprot.writeFieldEnd()
         oprot.writeFieldStop()
         oprot.writeStructEnd()
@@ -2610,15 +2390,17 @@ class confirm_close_args(object):
 
     def __ne__(self, other):
         return not (self == other)
-all_structs.append(confirm_close_args)
-confirm_close_args.thrift_spec = (
+all_structs.append(confirm_deliver_args)
+confirm_deliver_args.thrift_spec = (
     None,  # 0
     (1, TType.I64, 'plan_id', None, None, ),  # 1
     (2, TType.STRING, 'ssid', 'UTF8', None, ),  # 2
+    (3, TType.LIST, 'vichele_id', (TType.I64, None, False), None, ),  # 3
+    (4, TType.STRING, 'reason', 'UTF8', None, ),  # 4
 )
 
 
-class confirm_close_result(object):
+class confirm_deliver_result(object):
     """
     Attributes:
      - success
@@ -2659,7 +2441,7 @@ class confirm_close_result(object):
         if oprot._fast_encode is not None and self.thrift_spec is not None:
             oprot.trans.write(oprot._fast_encode(self, [self.__class__, self.thrift_spec]))
             return
-        oprot.writeStructBegin('confirm_close_result')
+        oprot.writeStructBegin('confirm_deliver_result')
         if self.success is not None:
             oprot.writeFieldBegin('success', TType.BOOL, 0)
             oprot.writeBool(self.success)
@@ -2684,8 +2466,8 @@ class confirm_close_result(object):
 
     def __ne__(self, other):
         return not (self == other)
-all_structs.append(confirm_close_result)
-confirm_close_result.thrift_spec = (
+all_structs.append(confirm_deliver_result)
+confirm_deliver_result.thrift_spec = (
     (0, TType.BOOL, 'success', None, None, ),  # 0
     (1, TType.STRUCT, 'e', [gen_exp, None], None, ),  # 1
 )
@@ -2721,10 +2503,10 @@ class export_plan_args(object):
             elif fid == 2:
                 if ftype == TType.LIST:
                     self.plan_ids = []
-                    (_etype73, _size70) = iprot.readListBegin()
-                    for _i74 in range(_size70):
-                        _elem75 = iprot.readI64()
-                        self.plan_ids.append(_elem75)
+                    (_etype80, _size77) = iprot.readListBegin()
+                    for _i81 in range(_size77):
+                        _elem82 = iprot.readI64()
+                        self.plan_ids.append(_elem82)
                     iprot.readListEnd()
                 else:
                     iprot.skip(ftype)
@@ -2745,8 +2527,8 @@ class export_plan_args(object):
         if self.plan_ids is not None:
             oprot.writeFieldBegin('plan_ids', TType.LIST, 2)
             oprot.writeListBegin(TType.I64, len(self.plan_ids))
-            for iter76 in self.plan_ids:
-                oprot.writeI64(iter76)
+            for iter83 in self.plan_ids:
+                oprot.writeI64(iter83)
             oprot.writeListEnd()
             oprot.writeFieldEnd()
         oprot.writeFieldStop()
@@ -3558,11 +3340,11 @@ class search_plan_by_driver_phone_result(object):
             if fid == 0:
                 if ftype == TType.LIST:
                     self.success = []
-                    (_etype80, _size77) = iprot.readListBegin()
-                    for _i81 in range(_size77):
-                        _elem82 = plan_number_id()
-                        _elem82.read(iprot)
-                        self.success.append(_elem82)
+                    (_etype87, _size84) = iprot.readListBegin()
+                    for _i88 in range(_size84):
+                        _elem89 = plan_number_id()
+                        _elem89.read(iprot)
+                        self.success.append(_elem89)
                     iprot.readListEnd()
                 else:
                     iprot.skip(ftype)
@@ -3584,8 +3366,8 @@ class search_plan_by_driver_phone_result(object):
         if self.success is not None:
             oprot.writeFieldBegin('success', TType.LIST, 0)
             oprot.writeListBegin(TType.STRUCT, len(self.success))
-            for iter83 in self.success:
-                iter83.write(oprot)
+            for iter90 in self.success:
+                iter90.write(oprot)
             oprot.writeListEnd()
             oprot.writeFieldEnd()
         if self.e is not None:
@@ -3611,6 +3393,410 @@ class search_plan_by_driver_phone_result(object):
 all_structs.append(search_plan_by_driver_phone_result)
 search_plan_by_driver_phone_result.thrift_spec = (
     (0, TType.LIST, 'success', (TType.STRUCT, [plan_number_id, None], False), None, ),  # 0
+    (1, TType.STRUCT, 'e', [gen_exp, None], None, ),  # 1
+)
+
+
+class get_status_rule_args(object):
+    """
+    Attributes:
+     - plan_id
+
+    """
+
+
+    def __init__(self, plan_id=None,):
+        self.plan_id = plan_id
+
+    def read(self, iprot):
+        if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
+            iprot._fast_decode(self, iprot, [self.__class__, self.thrift_spec])
+            return
+        iprot.readStructBegin()
+        while True:
+            (fname, ftype, fid) = iprot.readFieldBegin()
+            if ftype == TType.STOP:
+                break
+            if fid == 1:
+                if ftype == TType.I64:
+                    self.plan_id = iprot.readI64()
+                else:
+                    iprot.skip(ftype)
+            else:
+                iprot.skip(ftype)
+            iprot.readFieldEnd()
+        iprot.readStructEnd()
+
+    def write(self, oprot):
+        if oprot._fast_encode is not None and self.thrift_spec is not None:
+            oprot.trans.write(oprot._fast_encode(self, [self.__class__, self.thrift_spec]))
+            return
+        oprot.writeStructBegin('get_status_rule_args')
+        if self.plan_id is not None:
+            oprot.writeFieldBegin('plan_id', TType.I64, 1)
+            oprot.writeI64(self.plan_id)
+            oprot.writeFieldEnd()
+        oprot.writeFieldStop()
+        oprot.writeStructEnd()
+
+    def validate(self):
+        return
+
+    def __repr__(self):
+        L = ['%s=%r' % (key, value)
+             for key, value in self.__dict__.items()]
+        return '%s(%s)' % (self.__class__.__name__, ', '.join(L))
+
+    def __eq__(self, other):
+        return isinstance(other, self.__class__) and self.__dict__ == other.__dict__
+
+    def __ne__(self, other):
+        return not (self == other)
+all_structs.append(get_status_rule_args)
+get_status_rule_args.thrift_spec = (
+    None,  # 0
+    (1, TType.I64, 'plan_id', None, None, ),  # 1
+)
+
+
+class get_status_rule_result(object):
+    """
+    Attributes:
+     - success
+     - e
+
+    """
+
+
+    def __init__(self, success=None, e=None,):
+        self.success = success
+        self.e = e
+
+    def read(self, iprot):
+        if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
+            iprot._fast_decode(self, iprot, [self.__class__, self.thrift_spec])
+            return
+        iprot.readStructBegin()
+        while True:
+            (fname, ftype, fid) = iprot.readFieldBegin()
+            if ftype == TType.STOP:
+                break
+            if fid == 0:
+                if ftype == TType.LIST:
+                    self.success = []
+                    (_etype94, _size91) = iprot.readListBegin()
+                    for _i95 in range(_size91):
+                        _elem96 = plan_status_rule()
+                        _elem96.read(iprot)
+                        self.success.append(_elem96)
+                    iprot.readListEnd()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 1:
+                if ftype == TType.STRUCT:
+                    self.e = gen_exp.read(iprot)
+                else:
+                    iprot.skip(ftype)
+            else:
+                iprot.skip(ftype)
+            iprot.readFieldEnd()
+        iprot.readStructEnd()
+
+    def write(self, oprot):
+        if oprot._fast_encode is not None and self.thrift_spec is not None:
+            oprot.trans.write(oprot._fast_encode(self, [self.__class__, self.thrift_spec]))
+            return
+        oprot.writeStructBegin('get_status_rule_result')
+        if self.success is not None:
+            oprot.writeFieldBegin('success', TType.LIST, 0)
+            oprot.writeListBegin(TType.STRUCT, len(self.success))
+            for iter97 in self.success:
+                iter97.write(oprot)
+            oprot.writeListEnd()
+            oprot.writeFieldEnd()
+        if self.e is not None:
+            oprot.writeFieldBegin('e', TType.STRUCT, 1)
+            self.e.write(oprot)
+            oprot.writeFieldEnd()
+        oprot.writeFieldStop()
+        oprot.writeStructEnd()
+
+    def validate(self):
+        return
+
+    def __repr__(self):
+        L = ['%s=%r' % (key, value)
+             for key, value in self.__dict__.items()]
+        return '%s(%s)' % (self.__class__.__name__, ', '.join(L))
+
+    def __eq__(self, other):
+        return isinstance(other, self.__class__) and self.__dict__ == other.__dict__
+
+    def __ne__(self, other):
+        return not (self == other)
+all_structs.append(get_status_rule_result)
+get_status_rule_result.thrift_spec = (
+    (0, TType.LIST, 'success', (TType.STRUCT, [plan_status_rule, None], False), None, ),  # 0
+    (1, TType.STRUCT, 'e', [gen_exp, None], None, ),  # 1
+)
+
+
+class get_change_rule_args(object):
+    """
+    Attributes:
+     - ssid
+     - plan_id
+
+    """
+
+
+    def __init__(self, ssid=None, plan_id=None,):
+        self.ssid = ssid
+        self.plan_id = plan_id
+
+    def read(self, iprot):
+        if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
+            iprot._fast_decode(self, iprot, [self.__class__, self.thrift_spec])
+            return
+        iprot.readStructBegin()
+        while True:
+            (fname, ftype, fid) = iprot.readFieldBegin()
+            if ftype == TType.STOP:
+                break
+            if fid == 1:
+                if ftype == TType.STRING:
+                    self.ssid = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 2:
+                if ftype == TType.I64:
+                    self.plan_id = iprot.readI64()
+                else:
+                    iprot.skip(ftype)
+            else:
+                iprot.skip(ftype)
+            iprot.readFieldEnd()
+        iprot.readStructEnd()
+
+    def write(self, oprot):
+        if oprot._fast_encode is not None and self.thrift_spec is not None:
+            oprot.trans.write(oprot._fast_encode(self, [self.__class__, self.thrift_spec]))
+            return
+        oprot.writeStructBegin('get_change_rule_args')
+        if self.ssid is not None:
+            oprot.writeFieldBegin('ssid', TType.STRING, 1)
+            oprot.writeString(self.ssid.encode('utf-8') if sys.version_info[0] == 2 else self.ssid)
+            oprot.writeFieldEnd()
+        if self.plan_id is not None:
+            oprot.writeFieldBegin('plan_id', TType.I64, 2)
+            oprot.writeI64(self.plan_id)
+            oprot.writeFieldEnd()
+        oprot.writeFieldStop()
+        oprot.writeStructEnd()
+
+    def validate(self):
+        return
+
+    def __repr__(self):
+        L = ['%s=%r' % (key, value)
+             for key, value in self.__dict__.items()]
+        return '%s(%s)' % (self.__class__.__name__, ', '.join(L))
+
+    def __eq__(self, other):
+        return isinstance(other, self.__class__) and self.__dict__ == other.__dict__
+
+    def __ne__(self, other):
+        return not (self == other)
+all_structs.append(get_change_rule_args)
+get_change_rule_args.thrift_spec = (
+    None,  # 0
+    (1, TType.STRING, 'ssid', 'UTF8', None, ),  # 1
+    (2, TType.I64, 'plan_id', None, None, ),  # 2
+)
+
+
+class get_change_rule_result(object):
+    """
+    Attributes:
+     - success
+     - e
+
+    """
+
+
+    def __init__(self, success=None, e=None,):
+        self.success = success
+        self.e = e
+
+    def read(self, iprot):
+        if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
+            iprot._fast_decode(self, iprot, [self.__class__, self.thrift_spec])
+            return
+        iprot.readStructBegin()
+        while True:
+            (fname, ftype, fid) = iprot.readFieldBegin()
+            if ftype == TType.STOP:
+                break
+            if fid == 0:
+                if ftype == TType.LIST:
+                    self.success = []
+                    (_etype101, _size98) = iprot.readListBegin()
+                    for _i102 in range(_size98):
+                        _elem103 = iprot.readBool()
+                        self.success.append(_elem103)
+                    iprot.readListEnd()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 1:
+                if ftype == TType.STRUCT:
+                    self.e = gen_exp.read(iprot)
+                else:
+                    iprot.skip(ftype)
+            else:
+                iprot.skip(ftype)
+            iprot.readFieldEnd()
+        iprot.readStructEnd()
+
+    def write(self, oprot):
+        if oprot._fast_encode is not None and self.thrift_spec is not None:
+            oprot.trans.write(oprot._fast_encode(self, [self.__class__, self.thrift_spec]))
+            return
+        oprot.writeStructBegin('get_change_rule_result')
+        if self.success is not None:
+            oprot.writeFieldBegin('success', TType.LIST, 0)
+            oprot.writeListBegin(TType.BOOL, len(self.success))
+            for iter104 in self.success:
+                oprot.writeBool(iter104)
+            oprot.writeListEnd()
+            oprot.writeFieldEnd()
+        if self.e is not None:
+            oprot.writeFieldBegin('e', TType.STRUCT, 1)
+            self.e.write(oprot)
+            oprot.writeFieldEnd()
+        oprot.writeFieldStop()
+        oprot.writeStructEnd()
+
+    def validate(self):
+        return
+
+    def __repr__(self):
+        L = ['%s=%r' % (key, value)
+             for key, value in self.__dict__.items()]
+        return '%s(%s)' % (self.__class__.__name__, ', '.join(L))
+
+    def __eq__(self, other):
+        return isinstance(other, self.__class__) and self.__dict__ == other.__dict__
+
+    def __ne__(self, other):
+        return not (self == other)
+all_structs.append(get_change_rule_result)
+get_change_rule_result.thrift_spec = (
+    (0, TType.LIST, 'success', (TType.BOOL, None, False), None, ),  # 0
+    (1, TType.STRUCT, 'e', [gen_exp, None], None, ),  # 1
+)
+
+
+class clean_unclose_plan_args(object):
+
+
+    def read(self, iprot):
+        if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
+            iprot._fast_decode(self, iprot, [self.__class__, self.thrift_spec])
+            return
+        iprot.readStructBegin()
+        while True:
+            (fname, ftype, fid) = iprot.readFieldBegin()
+            if ftype == TType.STOP:
+                break
+            else:
+                iprot.skip(ftype)
+            iprot.readFieldEnd()
+        iprot.readStructEnd()
+
+    def write(self, oprot):
+        if oprot._fast_encode is not None and self.thrift_spec is not None:
+            oprot.trans.write(oprot._fast_encode(self, [self.__class__, self.thrift_spec]))
+            return
+        oprot.writeStructBegin('clean_unclose_plan_args')
+        oprot.writeFieldStop()
+        oprot.writeStructEnd()
+
+    def validate(self):
+        return
+
+    def __repr__(self):
+        L = ['%s=%r' % (key, value)
+             for key, value in self.__dict__.items()]
+        return '%s(%s)' % (self.__class__.__name__, ', '.join(L))
+
+    def __eq__(self, other):
+        return isinstance(other, self.__class__) and self.__dict__ == other.__dict__
+
+    def __ne__(self, other):
+        return not (self == other)
+all_structs.append(clean_unclose_plan_args)
+clean_unclose_plan_args.thrift_spec = (
+)
+
+
+class clean_unclose_plan_result(object):
+    """
+    Attributes:
+     - e
+
+    """
+
+
+    def __init__(self, e=None,):
+        self.e = e
+
+    def read(self, iprot):
+        if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
+            iprot._fast_decode(self, iprot, [self.__class__, self.thrift_spec])
+            return
+        iprot.readStructBegin()
+        while True:
+            (fname, ftype, fid) = iprot.readFieldBegin()
+            if ftype == TType.STOP:
+                break
+            if fid == 1:
+                if ftype == TType.STRUCT:
+                    self.e = gen_exp.read(iprot)
+                else:
+                    iprot.skip(ftype)
+            else:
+                iprot.skip(ftype)
+            iprot.readFieldEnd()
+        iprot.readStructEnd()
+
+    def write(self, oprot):
+        if oprot._fast_encode is not None and self.thrift_spec is not None:
+            oprot.trans.write(oprot._fast_encode(self, [self.__class__, self.thrift_spec]))
+            return
+        oprot.writeStructBegin('clean_unclose_plan_result')
+        if self.e is not None:
+            oprot.writeFieldBegin('e', TType.STRUCT, 1)
+            self.e.write(oprot)
+            oprot.writeFieldEnd()
+        oprot.writeFieldStop()
+        oprot.writeStructEnd()
+
+    def validate(self):
+        return
+
+    def __repr__(self):
+        L = ['%s=%r' % (key, value)
+             for key, value in self.__dict__.items()]
+        return '%s(%s)' % (self.__class__.__name__, ', '.join(L))
+
+    def __eq__(self, other):
+        return isinstance(other, self.__class__) and self.__dict__ == other.__dict__
+
+    def __ne__(self, other):
+        return not (self == other)
+all_structs.append(clean_unclose_plan_result)
+clean_unclose_plan_result.thrift_spec = (
+    None,  # 0
     (1, TType.STRUCT, 'e', [gen_exp, None], None, ),  # 1
 )
 fix_spec(all_structs)

@@ -29,13 +29,15 @@ export default {
             vue_this.plan_count = resp.count;
             vue_this.plan_time = resp.plan_time;
             vue_this.created_time = resp.created_time * 1000;
-            vue_this.comment = resp.comment;
             resp.vichele_info.forEach((element, index) => {
                 vue_this.$set(vue_this.vichele_info, index, element);
             });
             vue_this.name = resp.name;
             vue_this.company = resp.sale_company;
             vue_this.price = resp.price;
+        });
+        vue_this.$call_remote_process("stuff_plan_management","get_status_rule", [parseInt(vue_this.$route.params.plan_id)]).then(function (resp) {
+            vue_this.comment = resp[0].comment;
         });
     },
 }

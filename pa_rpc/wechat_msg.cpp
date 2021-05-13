@@ -2,6 +2,7 @@
 #include "time.h"
 #include <openssl/sha.h>
 #include <openssl/crypto.h>
+#include "pa_status_rule.h"
 static tdf_log g_log("wechat msg");
 struct content_from_wx {
     std::string m_content_from_wx;
@@ -176,26 +177,11 @@ void PA_WECHAT_send_plan_msg(pa_sql_userinfo &_touser, pa_sql_plan &_plan)
     }
     std::string total_price = std::to_string(_plan.count * _plan.price);
 
-    std::string status = "等待确认";
-    switch (_plan.status)
+    std::string status = "";
+    auto status_rule = PA_STATUS_RULE_get_all();
+    if (_plan.status >= 0 && _plan.status < status_rule.size() && status_rule[_plan.status])
     {
-    case 1:
-        status = "已确认计划";
-        break;
-    case 2:
-        status = "已付款";
-        break;
-    case 3:
-        status = "已确认付款";
-        break;
-    case 4:
-        status = "已提货";
-        break;
-    case 5:
-        status = "已撤销";
-        break;
-    default:
-        break;
+        status = status_rule[_plan.status]->get_name();
     }
     
     std::vector<std::string> keywords;

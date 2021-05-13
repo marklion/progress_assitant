@@ -755,6 +755,135 @@ company_attachment = class {
   }
 
 };
+plan_status_rule = class {
+  constructor(args) {
+    this.name = null;
+    this.author = null;
+    this.timestamp = null;
+    this.comment = null;
+    this.index = null;
+    this.prompt = null;
+    if (args) {
+      if (args.name !== undefined && args.name !== null) {
+        this.name = args.name;
+      }
+      if (args.author !== undefined && args.author !== null) {
+        this.author = args.author;
+      }
+      if (args.timestamp !== undefined && args.timestamp !== null) {
+        this.timestamp = args.timestamp;
+      }
+      if (args.comment !== undefined && args.comment !== null) {
+        this.comment = args.comment;
+      }
+      if (args.index !== undefined && args.index !== null) {
+        this.index = args.index;
+      }
+      if (args.prompt !== undefined && args.prompt !== null) {
+        this.prompt = args.prompt;
+      }
+    }
+  }
+
+  read (input) {
+    input.readStructBegin();
+    while (true) {
+      const ret = input.readFieldBegin();
+      const ftype = ret.ftype;
+      const fid = ret.fid;
+      if (ftype == Thrift.Type.STOP) {
+        break;
+      }
+      switch (fid) {
+        case 1:
+        if (ftype == Thrift.Type.STRING) {
+          this.name = input.readString().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        case 2:
+        if (ftype == Thrift.Type.STRING) {
+          this.author = input.readString().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        case 3:
+        if (ftype == Thrift.Type.STRING) {
+          this.timestamp = input.readString().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        case 4:
+        if (ftype == Thrift.Type.STRING) {
+          this.comment = input.readString().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        case 5:
+        if (ftype == Thrift.Type.I64) {
+          this.index = input.readI64().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        case 6:
+        if (ftype == Thrift.Type.STRING) {
+          this.prompt = input.readString().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        default:
+          input.skip(ftype);
+      }
+      input.readFieldEnd();
+    }
+    input.readStructEnd();
+    return;
+  }
+
+  write (output) {
+    output.writeStructBegin('plan_status_rule');
+    if (this.name !== null && this.name !== undefined) {
+      output.writeFieldBegin('name', Thrift.Type.STRING, 1);
+      output.writeString(this.name);
+      output.writeFieldEnd();
+    }
+    if (this.author !== null && this.author !== undefined) {
+      output.writeFieldBegin('author', Thrift.Type.STRING, 2);
+      output.writeString(this.author);
+      output.writeFieldEnd();
+    }
+    if (this.timestamp !== null && this.timestamp !== undefined) {
+      output.writeFieldBegin('timestamp', Thrift.Type.STRING, 3);
+      output.writeString(this.timestamp);
+      output.writeFieldEnd();
+    }
+    if (this.comment !== null && this.comment !== undefined) {
+      output.writeFieldBegin('comment', Thrift.Type.STRING, 4);
+      output.writeString(this.comment);
+      output.writeFieldEnd();
+    }
+    if (this.index !== null && this.index !== undefined) {
+      output.writeFieldBegin('index', Thrift.Type.I64, 5);
+      output.writeI64(this.index);
+      output.writeFieldEnd();
+    }
+    if (this.prompt !== null && this.prompt !== undefined) {
+      output.writeFieldBegin('prompt', Thrift.Type.STRING, 6);
+      output.writeString(this.prompt);
+      output.writeFieldEnd();
+    }
+    output.writeFieldStop();
+    output.writeStructEnd();
+    return;
+  }
+
+};
 plan_confirm_info = class {
   constructor(args) {
     this.timestamp = null;
@@ -894,6 +1023,8 @@ vichele_in_plan = class {
     this.count = null;
     this.drop_address = null;
     this.use_for = null;
+    this.vichele_id = null;
+    this.finish = null;
     if (args) {
       if (args.main_vichele !== undefined && args.main_vichele !== null) {
         this.main_vichele = args.main_vichele;
@@ -915,6 +1046,12 @@ vichele_in_plan = class {
       }
       if (args.use_for !== undefined && args.use_for !== null) {
         this.use_for = args.use_for;
+      }
+      if (args.vichele_id !== undefined && args.vichele_id !== null) {
+        this.vichele_id = args.vichele_id;
+      }
+      if (args.finish !== undefined && args.finish !== null) {
+        this.finish = args.finish;
       }
     }
   }
@@ -978,6 +1115,20 @@ vichele_in_plan = class {
           input.skip(ftype);
         }
         break;
+        case 8:
+        if (ftype == Thrift.Type.I64) {
+          this.vichele_id = input.readI64().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        case 9:
+        if (ftype == Thrift.Type.BOOL) {
+          this.finish = input.readBool().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
         default:
           input.skip(ftype);
       }
@@ -1024,6 +1175,16 @@ vichele_in_plan = class {
       output.writeString(this.use_for);
       output.writeFieldEnd();
     }
+    if (this.vichele_id !== null && this.vichele_id !== undefined) {
+      output.writeFieldBegin('vichele_id', Thrift.Type.I64, 8);
+      output.writeI64(this.vichele_id);
+      output.writeFieldEnd();
+    }
+    if (this.finish !== null && this.finish !== undefined) {
+      output.writeFieldBegin('finish', Thrift.Type.BOOL, 9);
+      output.writeBool(this.finish);
+      output.writeFieldEnd();
+    }
     output.writeFieldStop();
     output.writeStructEnd();
     return;
@@ -1041,21 +1202,11 @@ stuff_plan = class {
     this.name = null;
     this.price = null;
     this.status = null;
-    this.comment = null;
-    this.plan_confirm = null;
-    this.pay_confirm = null;
-    this.pay_info = null;
-    this.pay_timestamp = null;
-    this.close_timestamp = null;
-    this.close_by = null;
-    this.except_close_by = null;
-    this.except_close_timestamp = null;
-    this.except_close_reason = null;
     this.proxy_company = null;
     this.created_user_name = null;
     this.buy_company = null;
     this.sale_company = null;
-    this.reject_reason = null;
+    this.comment = null;
     if (args) {
       if (args.type_id !== undefined && args.type_id !== null) {
         this.type_id = args.type_id;
@@ -1084,36 +1235,6 @@ stuff_plan = class {
       if (args.status !== undefined && args.status !== null) {
         this.status = args.status;
       }
-      if (args.comment !== undefined && args.comment !== null) {
-        this.comment = args.comment;
-      }
-      if (args.plan_confirm !== undefined && args.plan_confirm !== null) {
-        this.plan_confirm = new plan_confirm_info(args.plan_confirm);
-      }
-      if (args.pay_confirm !== undefined && args.pay_confirm !== null) {
-        this.pay_confirm = new pay_confirm_info(args.pay_confirm);
-      }
-      if (args.pay_info !== undefined && args.pay_info !== null) {
-        this.pay_info = args.pay_info;
-      }
-      if (args.pay_timestamp !== undefined && args.pay_timestamp !== null) {
-        this.pay_timestamp = args.pay_timestamp;
-      }
-      if (args.close_timestamp !== undefined && args.close_timestamp !== null) {
-        this.close_timestamp = args.close_timestamp;
-      }
-      if (args.close_by !== undefined && args.close_by !== null) {
-        this.close_by = args.close_by;
-      }
-      if (args.except_close_by !== undefined && args.except_close_by !== null) {
-        this.except_close_by = args.except_close_by;
-      }
-      if (args.except_close_timestamp !== undefined && args.except_close_timestamp !== null) {
-        this.except_close_timestamp = args.except_close_timestamp;
-      }
-      if (args.except_close_reason !== undefined && args.except_close_reason !== null) {
-        this.except_close_reason = args.except_close_reason;
-      }
       if (args.proxy_company !== undefined && args.proxy_company !== null) {
         this.proxy_company = args.proxy_company;
       }
@@ -1126,8 +1247,8 @@ stuff_plan = class {
       if (args.sale_company !== undefined && args.sale_company !== null) {
         this.sale_company = args.sale_company;
       }
-      if (args.reject_reason !== undefined && args.reject_reason !== null) {
-        this.reject_reason = args.reject_reason;
+      if (args.comment !== undefined && args.comment !== null) {
+        this.comment = args.comment;
       }
     }
   }
@@ -1216,107 +1337,35 @@ stuff_plan = class {
         break;
         case 10:
         if (ftype == Thrift.Type.STRING) {
-          this.comment = input.readString().value;
-        } else {
-          input.skip(ftype);
-        }
-        break;
-        case 11:
-        if (ftype == Thrift.Type.STRUCT) {
-          this.plan_confirm = new plan_confirm_info();
-          this.plan_confirm.read(input);
-        } else {
-          input.skip(ftype);
-        }
-        break;
-        case 12:
-        if (ftype == Thrift.Type.STRUCT) {
-          this.pay_confirm = new pay_confirm_info();
-          this.pay_confirm.read(input);
-        } else {
-          input.skip(ftype);
-        }
-        break;
-        case 13:
-        if (ftype == Thrift.Type.STRING) {
-          this.pay_info = input.readString().value;
-        } else {
-          input.skip(ftype);
-        }
-        break;
-        case 14:
-        if (ftype == Thrift.Type.STRING) {
-          this.pay_timestamp = input.readString().value;
-        } else {
-          input.skip(ftype);
-        }
-        break;
-        case 15:
-        if (ftype == Thrift.Type.STRING) {
-          this.close_timestamp = input.readString().value;
-        } else {
-          input.skip(ftype);
-        }
-        break;
-        case 16:
-        if (ftype == Thrift.Type.STRING) {
-          this.close_by = input.readString().value;
-        } else {
-          input.skip(ftype);
-        }
-        break;
-        case 17:
-        if (ftype == Thrift.Type.STRING) {
-          this.except_close_by = input.readString().value;
-        } else {
-          input.skip(ftype);
-        }
-        break;
-        case 18:
-        if (ftype == Thrift.Type.STRING) {
-          this.except_close_timestamp = input.readString().value;
-        } else {
-          input.skip(ftype);
-        }
-        break;
-        case 19:
-        if (ftype == Thrift.Type.STRING) {
-          this.except_close_reason = input.readString().value;
-        } else {
-          input.skip(ftype);
-        }
-        break;
-        case 20:
-        if (ftype == Thrift.Type.STRING) {
           this.proxy_company = input.readString().value;
         } else {
           input.skip(ftype);
         }
         break;
-        case 21:
+        case 11:
         if (ftype == Thrift.Type.STRING) {
           this.created_user_name = input.readString().value;
         } else {
           input.skip(ftype);
         }
         break;
-        case 22:
+        case 12:
         if (ftype == Thrift.Type.STRING) {
           this.buy_company = input.readString().value;
         } else {
           input.skip(ftype);
         }
         break;
-        case 23:
+        case 13:
         if (ftype == Thrift.Type.STRING) {
           this.sale_company = input.readString().value;
         } else {
           input.skip(ftype);
         }
         break;
-        case 24:
+        case 14:
         if (ftype == Thrift.Type.STRING) {
-          this.reject_reason = input.readString().value;
+          this.comment = input.readString().value;
         } else {
           input.skip(ftype);
         }
@@ -1384,79 +1433,29 @@ stuff_plan = class {
       output.writeI64(this.status);
       output.writeFieldEnd();
     }
-    if (this.comment !== null && this.comment !== undefined) {
-      output.writeFieldBegin('comment', Thrift.Type.STRING, 10);
-      output.writeString(this.comment);
-      output.writeFieldEnd();
-    }
-    if (this.plan_confirm !== null && this.plan_confirm !== undefined) {
-      output.writeFieldBegin('plan_confirm', Thrift.Type.STRUCT, 11);
-      this.plan_confirm.write(output);
-      output.writeFieldEnd();
-    }
-    if (this.pay_confirm !== null && this.pay_confirm !== undefined) {
-      output.writeFieldBegin('pay_confirm', Thrift.Type.STRUCT, 12);
-      this.pay_confirm.write(output);
-      output.writeFieldEnd();
-    }
-    if (this.pay_info !== null && this.pay_info !== undefined) {
-      output.writeFieldBegin('pay_info', Thrift.Type.STRING, 13);
-      output.writeString(this.pay_info);
-      output.writeFieldEnd();
-    }
-    if (this.pay_timestamp !== null && this.pay_timestamp !== undefined) {
-      output.writeFieldBegin('pay_timestamp', Thrift.Type.STRING, 14);
-      output.writeString(this.pay_timestamp);
-      output.writeFieldEnd();
-    }
-    if (this.close_timestamp !== null && this.close_timestamp !== undefined) {
-      output.writeFieldBegin('close_timestamp', Thrift.Type.STRING, 15);
-      output.writeString(this.close_timestamp);
-      output.writeFieldEnd();
-    }
-    if (this.close_by !== null && this.close_by !== undefined) {
-      output.writeFieldBegin('close_by', Thrift.Type.STRING, 16);
-      output.writeString(this.close_by);
-      output.writeFieldEnd();
-    }
-    if (this.except_close_by !== null && this.except_close_by !== undefined) {
-      output.writeFieldBegin('except_close_by', Thrift.Type.STRING, 17);
-      output.writeString(this.except_close_by);
-      output.writeFieldEnd();
-    }
-    if (this.except_close_timestamp !== null && this.except_close_timestamp !== undefined) {
-      output.writeFieldBegin('except_close_timestamp', Thrift.Type.STRING, 18);
-      output.writeString(this.except_close_timestamp);
-      output.writeFieldEnd();
-    }
-    if (this.except_close_reason !== null && this.except_close_reason !== undefined) {
-      output.writeFieldBegin('except_close_reason', Thrift.Type.STRING, 19);
-      output.writeString(this.except_close_reason);
-      output.writeFieldEnd();
-    }
     if (this.proxy_company !== null && this.proxy_company !== undefined) {
-      output.writeFieldBegin('proxy_company', Thrift.Type.STRING, 20);
+      output.writeFieldBegin('proxy_company', Thrift.Type.STRING, 10);
       output.writeString(this.proxy_company);
       output.writeFieldEnd();
     }
     if (this.created_user_name !== null && this.created_user_name !== undefined) {
-      output.writeFieldBegin('created_user_name', Thrift.Type.STRING, 21);
+      output.writeFieldBegin('created_user_name', Thrift.Type.STRING, 11);
       output.writeString(this.created_user_name);
       output.writeFieldEnd();
     }
     if (this.buy_company !== null && this.buy_company !== undefined) {
-      output.writeFieldBegin('buy_company', Thrift.Type.STRING, 22);
+      output.writeFieldBegin('buy_company', Thrift.Type.STRING, 12);
       output.writeString(this.buy_company);
       output.writeFieldEnd();
     }
     if (this.sale_company !== null && this.sale_company !== undefined) {
-      output.writeFieldBegin('sale_company', Thrift.Type.STRING, 23);
+      output.writeFieldBegin('sale_company', Thrift.Type.STRING, 13);
       output.writeString(this.sale_company);
       output.writeFieldEnd();
     }
-    if (this.reject_reason !== null && this.reject_reason !== undefined) {
-      output.writeFieldBegin('reject_reason', Thrift.Type.STRING, 24);
-      output.writeString(this.reject_reason);
+    if (this.comment !== null && this.comment !== undefined) {
+      output.writeFieldBegin('comment', Thrift.Type.STRING, 14);
+      output.writeString(this.comment);
       output.writeFieldEnd();
     }
     output.writeFieldStop();
@@ -1471,6 +1470,7 @@ plan_status = class {
     this.status = null;
     this.plan_time = null;
     this.conflict_reason = null;
+    this.status_prompt = null;
     if (args) {
       if (args.plan_id !== undefined && args.plan_id !== null) {
         this.plan_id = args.plan_id;
@@ -1483,6 +1483,9 @@ plan_status = class {
       }
       if (args.conflict_reason !== undefined && args.conflict_reason !== null) {
         this.conflict_reason = args.conflict_reason;
+      }
+      if (args.status_prompt !== undefined && args.status_prompt !== null) {
+        this.status_prompt = args.status_prompt;
       }
     }
   }
@@ -1525,6 +1528,13 @@ plan_status = class {
           input.skip(ftype);
         }
         break;
+        case 5:
+        if (ftype == Thrift.Type.STRING) {
+          this.status_prompt = input.readString().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
         default:
           input.skip(ftype);
       }
@@ -1554,6 +1564,11 @@ plan_status = class {
     if (this.conflict_reason !== null && this.conflict_reason !== undefined) {
       output.writeFieldBegin('conflict_reason', Thrift.Type.STRING, 4);
       output.writeString(this.conflict_reason);
+      output.writeFieldEnd();
+    }
+    if (this.status_prompt !== null && this.status_prompt !== undefined) {
+      output.writeFieldBegin('status_prompt', Thrift.Type.STRING, 5);
+      output.writeString(this.status_prompt);
       output.writeFieldEnd();
     }
     output.writeFieldStop();

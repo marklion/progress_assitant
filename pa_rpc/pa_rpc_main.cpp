@@ -16,6 +16,7 @@
 #include <thrift/server/TThreadPoolServer.h>
 
 #include <thrift/concurrency/ThreadManager.h>
+#include "pa_status_rule.h"
 
 using namespace ::apache::thrift;
 using namespace ::apache::thrift::protocol;
@@ -24,6 +25,7 @@ using namespace ::apache::thrift::server;
 
 int main(int argc, char **argv)
 {
+    PA_STATUS_RULE_init();
     std::shared_ptr<TMultiplexedProcessor> multi_processor(new TMultiplexedProcessor());
 
     multi_processor->registerProcessor("user_management", std::shared_ptr<TProcessor>(new user_managementProcessor(std::shared_ptr<user_management_handler>(new user_management_handler()))));
@@ -40,6 +42,22 @@ int main(int argc, char **argv)
     threadManager->start();
 
     TThreadPoolServer tp_server(multi_processor, serverTransport, transportFactory, protocolFactory, threadManager);
+    std::thread([] {
+        tdf_main::get_inst().start_timer(
+            59, [](void *_private) -> void {
+                time_t cur_time;
+                time(&cur_time);
+                auto st_time = localtime(&cur_time);
+                if (st_time->tm_min == 58 && st_time->tm_hour == 23)
+                {
+                    std::cout << "pass one day" << std::endl;
+                    stuff_plan_management_handler hd;
+                    hd.clean_unclose_plan();
+                }
+            },
+            nullptr);
+        tdf_main::get_inst().run();
+    }).detach();
     tp_server.serve();
 
     return 0;
