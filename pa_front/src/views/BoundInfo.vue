@@ -1,15 +1,14 @@
 <template>
 <div class="bound_info_show">
-    <van-field v-model="address" rows="1" autosize label="公司地址" type="textarea" placeholder="请输入公司地址">
-        <template #button>
-            <van-button size="small" type="primary" @click="update_address">更新</van-button>
-        </template>
-    </van-field>
-    <van-field v-model="contact" rows="1" autosize label="联系方式" type="textarea" placeholder="请输入联系方式">
-        <template #button>
-            <van-button size="small" type="primary" @click="update_contact">更新</van-button>
-        </template>
-    </van-field>
+    <van-form @submit="update_address_contact">
+        <van-field v-model="address" rows="1" @input="show_address_contact_update_button = true" autosize label="公司地址" type="textarea" :placeholder="'请输入公司地址,例如：\n广东省广州市白云区XX路XX号'">
+        </van-field>
+        <van-field v-model="contact" rows="1" @input="show_address_contact_update_button = true" autosize label="联系方式" type="textarea" :placeholder="'请输入联系方式,例如：\n销售138XXXXXXXX\n泵房189XXXXXXXX'">
+        </van-field>
+        <div style="margin: 16px;">
+            <van-button round block :disabled="!show_address_contact_update_button" type="info" native-type="submit" size="small">保存</van-button>
+        </div>
+    </van-form>
     <van-cell-group>
         <template #title>
             <van-row type="flex" justify="space-between" align="center">
@@ -147,6 +146,7 @@ export default {
     name: 'BoundInfo',
     data: function () {
         return {
+            show_address_contact_update_button:false,
             main_vichele: [],
             behind_vichele: [],
             driver: [],
@@ -206,21 +206,18 @@ export default {
 
             }
         },
-        update_address: function () {
+        
+        update_address_contact: function () {
             var vue_this = this;
             vue_this.$call_remote_process("company_management", "set_address", [vue_this.$cookies.get('pa_ssid'), vue_this.address]).then(function (resp) {
                 if (resp) {
-                    vue_this.init_address_contact();
-                    vue_this.$toast("已更新");
-                }
-            });
-        },
-        update_contact: function () {
-            var vue_this = this;
-            vue_this.$call_remote_process("company_management", "set_contact", [vue_this.$cookies.get('pa_ssid'), vue_this.contact]).then(function (resp) {
-                if (resp) {
-                    vue_this.init_address_contact();
-                    vue_this.$toast("已更新");
+                    vue_this.$call_remote_process("company_management", "set_contact", [vue_this.$cookies.get('pa_ssid'), vue_this.contact]).then(function (resp) {
+                        if (resp) {
+                            vue_this.init_address_contact();
+                            vue_this.init_address_contact();
+                            vue_this.$toast("已保存");
+                        }
+                    });
                 }
             });
         },

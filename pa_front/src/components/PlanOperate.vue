@@ -13,15 +13,15 @@
             <template #right-icon>
                 <div v-if="status > 0">
                     <van-row type="flex" align="center" justify="end" :gutter="10">
-                        <van-col v-if="!user_is_buyer && can_change_to(status-1)">
+                        <van-col v-if="!$store.state.userinfo.buyer && can_change_to(status-1)">
                             <van-button block size="small" type="danger" @click="show_reject_reason_diag = true">驳回</van-button>
                         </van-col>
-                        <van-col v-if="!user_is_buyer && can_change_to(status + 1)">
+                        <van-col v-if="!$store.state.userinfo.buyer && can_change_to(status + 1)">
                             <van-button v-if="status == 1" block size="small" type="primary" @click="submit_confirm">确认计划</van-button>
                             <van-button v-if="status == 2" block size="small" type="primary" @click="submit_confirm_pay">确认收款</van-button>
                         </van-col>
                         <van-col v-if="status >= 3">
-                            <van-button  block size="small" type="primary" :to="{name:'DeliverPlan', params:{plan_id:plan_id}}">出货详情</van-button>
+                            <van-button block size="small" type="primary" :to="{name:'DeliverPlan', params:{plan_id:plan_id}}">出货详情</van-button>
                         </van-col>
                     </van-row>
                 </div>
@@ -94,7 +94,7 @@ export default {
     },
     components: {},
     computed: {
-        user_is_buyer:function() {
+        user_is_buyer: function () {
             var ret = false;
             if (this.$store.state.userinfo.buyer || this.is_proxy) {
                 ret = true;
