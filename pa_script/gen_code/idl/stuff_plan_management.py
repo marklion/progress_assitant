@@ -80,12 +80,12 @@ class Iface(object):
         """
         pass
 
-    def confirm_deliver(self, plan_id, ssid, vichele_id, reason):
+    def confirm_deliver(self, plan_id, ssid, deliver_infos, reason):
         """
         Parameters:
          - plan_id
          - ssid
-         - vichele_id
+         - deliver_infos
          - reason
 
         """
@@ -423,24 +423,24 @@ class Client(Iface):
             raise result.e
         raise TApplicationException(TApplicationException.MISSING_RESULT, "confirm_pay failed: unknown result")
 
-    def confirm_deliver(self, plan_id, ssid, vichele_id, reason):
+    def confirm_deliver(self, plan_id, ssid, deliver_infos, reason):
         """
         Parameters:
          - plan_id
          - ssid
-         - vichele_id
+         - deliver_infos
          - reason
 
         """
-        self.send_confirm_deliver(plan_id, ssid, vichele_id, reason)
+        self.send_confirm_deliver(plan_id, ssid, deliver_infos, reason)
         return self.recv_confirm_deliver()
 
-    def send_confirm_deliver(self, plan_id, ssid, vichele_id, reason):
+    def send_confirm_deliver(self, plan_id, ssid, deliver_infos, reason):
         self._oprot.writeMessageBegin('confirm_deliver', TMessageType.CALL, self._seqid)
         args = confirm_deliver_args()
         args.plan_id = plan_id
         args.ssid = ssid
-        args.vichele_id = vichele_id
+        args.deliver_infos = deliver_infos
         args.reason = reason
         args.write(self._oprot)
         self._oprot.writeMessageEnd()
@@ -1011,7 +1011,7 @@ class Processor(Iface, TProcessor):
         iprot.readMessageEnd()
         result = confirm_deliver_result()
         try:
-            result.success = self._handler.confirm_deliver(args.plan_id, args.ssid, args.vichele_id, args.reason)
+            result.success = self._handler.confirm_deliver(args.plan_id, args.ssid, args.deliver_infos, args.reason)
             msg_type = TMessageType.REPLY
         except TTransport.TTransportException:
             raise
@@ -2299,16 +2299,16 @@ class confirm_deliver_args(object):
     Attributes:
      - plan_id
      - ssid
-     - vichele_id
+     - deliver_infos
      - reason
 
     """
 
 
-    def __init__(self, plan_id=None, ssid=None, vichele_id=None, reason=None,):
+    def __init__(self, plan_id=None, ssid=None, deliver_infos=None, reason=None,):
         self.plan_id = plan_id
         self.ssid = ssid
-        self.vichele_id = vichele_id
+        self.deliver_infos = deliver_infos
         self.reason = reason
 
     def read(self, iprot):
@@ -2332,11 +2332,12 @@ class confirm_deliver_args(object):
                     iprot.skip(ftype)
             elif fid == 3:
                 if ftype == TType.LIST:
-                    self.vichele_id = []
+                    self.deliver_infos = []
                     (_etype73, _size70) = iprot.readListBegin()
                     for _i74 in range(_size70):
-                        _elem75 = iprot.readI64()
-                        self.vichele_id.append(_elem75)
+                        _elem75 = deliver_info()
+                        _elem75.read(iprot)
+                        self.deliver_infos.append(_elem75)
                     iprot.readListEnd()
                 else:
                     iprot.skip(ftype)
@@ -2363,11 +2364,11 @@ class confirm_deliver_args(object):
             oprot.writeFieldBegin('ssid', TType.STRING, 2)
             oprot.writeString(self.ssid.encode('utf-8') if sys.version_info[0] == 2 else self.ssid)
             oprot.writeFieldEnd()
-        if self.vichele_id is not None:
-            oprot.writeFieldBegin('vichele_id', TType.LIST, 3)
-            oprot.writeListBegin(TType.I64, len(self.vichele_id))
-            for iter76 in self.vichele_id:
-                oprot.writeI64(iter76)
+        if self.deliver_infos is not None:
+            oprot.writeFieldBegin('deliver_infos', TType.LIST, 3)
+            oprot.writeListBegin(TType.STRUCT, len(self.deliver_infos))
+            for iter76 in self.deliver_infos:
+                iter76.write(oprot)
             oprot.writeListEnd()
             oprot.writeFieldEnd()
         if self.reason is not None:
@@ -2395,7 +2396,7 @@ confirm_deliver_args.thrift_spec = (
     None,  # 0
     (1, TType.I64, 'plan_id', None, None, ),  # 1
     (2, TType.STRING, 'ssid', 'UTF8', None, ),  # 2
-    (3, TType.LIST, 'vichele_id', (TType.I64, None, False), None, ),  # 3
+    (3, TType.LIST, 'deliver_infos', (TType.STRUCT, [deliver_info, None], False), None, ),  # 3
     (4, TType.STRING, 'reason', 'UTF8', None, ),  # 4
 )
 

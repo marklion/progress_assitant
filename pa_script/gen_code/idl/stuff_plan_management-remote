@@ -31,7 +31,7 @@ if len(sys.argv) <= 1 or sys.argv[1] == '--help':
     print('  bool update_plan(stuff_plan plan, string ssid)')
     print('  bool confirm_plan(i64 plan_id, string ssid)')
     print('  bool confirm_pay(i64 plan_id, string ssid)')
-    print('  bool confirm_deliver(i64 plan_id, string ssid,  vichele_id, string reason)')
+    print('  bool confirm_deliver(i64 plan_id, string ssid,  deliver_infos, string reason)')
     print('  string export_plan(string ssid,  plan_ids)')
     print('  bool except_close(i64 plan_id, string ssid, string reason)')
     print('  string verify_plan(stuff_plan plan, string ssid)')

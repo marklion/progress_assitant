@@ -48,17 +48,12 @@ public:
             PA_RETURN_NOCOMPANY_MSG();
         }
         pa_sql_plan tmp;
-        tmp.count = 0;
         tmp.create_time = time(NULL);
         tmp.name = stuff_type->name;
         tmp.plan_time = plan.plan_time;
         tmp.price = stuff_type->price;
         tmp.proxy_company = proxy_company;
         tmp.status = 0;
-        for (auto &itr : plan.vichele_info)
-        {
-            tmp.count += itr.count;
-        }
         tmp.set_parent(*opt_user, "created_by");
         tmp.set_parent(*stuff_type, "belong_stuff");
         std::string conflict_reason;
@@ -75,7 +70,7 @@ public:
             if (main_vhichele && behind_vhichele && driver)
             {
                 pa_sql_single_vichele tmp_single;
-                tmp_single.count = itr.count;
+                tmp_single.count = 0;
                 tmp_single.drop_address = itr.drop_address;
                 tmp_single.use_for = itr.use_for;
                 tmp_single.set_parent(*main_vhichele, "main_vichele");
@@ -136,7 +131,7 @@ public:
                 if (archive_plan)
                 {
                     _return.buy_company = archive_plan->buy_company;
-                    _return.count = plan->count;
+                    _return.count = plan->calcu_all_count();
                     _return.created_time = plan->create_time;
                     _return.created_user_name = archive_plan->created_user;
                     
@@ -174,7 +169,7 @@ public:
             }
             else
             {
-                _return.count = plan->count;
+                _return.count = plan->calcu_all_count();
                 auto create_user = plan->get_parent<pa_sql_userinfo>("created_by");
                 if (create_user)
                 {
@@ -258,7 +253,6 @@ public:
         auto created_user = plan_in_sql->get_parent<pa_sql_userinfo>("created_by");
         if (created_user && created_user->get_pri_id() == opt_user->get_pri_id() && PA_STATUS_RULE_change_status(*plan_in_sql, 0, *opt_user))
         {
-            plan_in_sql->count = 0;
             plan_in_sql->plan_time = plan.plan_time;
             auto orig_vichele_info = plan_in_sql->get_all_children<pa_sql_single_vichele>("belong_plan");
             for (auto &itr : orig_vichele_info)
@@ -273,7 +267,7 @@ public:
                 if (main_vhichele && behind_vhichele && driver)
                 {
                     pa_sql_single_vichele tmp_single;
-                    tmp_single.count = itr.count;
+                    tmp_single.count = 0;
                     tmp_single.drop_address = itr.drop_address;
                     tmp_single.use_for = itr.use_for;
                     tmp_single.set_parent(*main_vhichele, "main_vichele");
@@ -281,7 +275,6 @@ public:
                     tmp_single.set_parent(*driver, "driver");
                     tmp_single.set_parent(*plan_in_sql, "belong_plan");
                     tmp_single.insert_record();
-                    plan_in_sql->count += itr.count;
                 }
             }
             PA_STATUS_RULE_action(*plan_in_sql, *opt_user, PA_DATAOPT_current_time(), plan.comment);
@@ -397,7 +390,7 @@ public:
         return ret;
     }
 
-    virtual bool confirm_deliver(const int64_t plan_id, const std::string &ssid, const std::vector<int64_t> &vichele_id, const std::string &reason)
+    virtual bool confirm_deliver(const int64_t plan_id, const std::string &ssid, const std::vector<deliver_info> &deliver_infos, const std::string &reason)
     {
         bool ret = false;
 
@@ -405,14 +398,15 @@ public:
         auto plan = sqlite_orm::search_record<pa_sql_plan>(plan_id);
         if (plan && opt_user && plan->status == 3 && PA_STATUS_RULE_can_be_change(*plan, *opt_user, 4))
         {
-            for (auto &itr : vichele_id)
+            for (auto &itr : deliver_infos)
             {
-                auto found_vichele_info = plan->get_children<pa_sql_single_vichele>("belong_plan", "PRI_ID = %ld AND finish = 0", itr);
+                auto found_vichele_info = plan->get_children<pa_sql_single_vichele>("belong_plan", "PRI_ID = %ld AND finish = 0", itr.id);
                 if (!found_vichele_info)
                 {
                     PA_RETURN_MSG("车辆信息错误");
                 }
                 found_vichele_info->finish = 1;
+                found_vichele_info->count = itr.count;
                 found_vichele_info->update_record();
             }
             auto total_count = plan->get_all_children<pa_sql_single_vichele>("belong_plan").size();

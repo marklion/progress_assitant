@@ -47,12 +47,6 @@
         </van-form>
     </van-dialog>
 
-    <van-field center name="count" label="装车量(吨)">
-        <template #input>
-            <van-stepper decimal-length="1" v-model="my_vichele_info.count" @change="count_change" />
-        </template>
-    </van-field>
-
     <van-field name="use_for" label="用途" :rules="[{ required: true, message: '请指定用途'}]">
         <template #input>
             <van-radio-group v-model="my_vichele_info.use_for" direction="horizontal" @change="use_for_change">
@@ -64,7 +58,7 @@
 
     <van-field readonly clickable name="drop_address" :value="my_vichele_info.drop_address" label="卸车地点" placeholder="点击选择省市区" @click="showArea = true" :rules="[{ required: true, message: '请指定卸车地点'}]" />
     <van-popup v-model="showArea" position="bottom">
-        <van-area :area-list="all_area" @confirm="confirm_area" @cancel="showArea = false" />
+        <van-area :area-list="all_area" columns-num="2" @confirm="confirm_area" @cancel="showArea = false" />
     </van-popup>
 
 </div>

@@ -2525,3 +2525,115 @@ void plan_number_id::printTo(std::ostream& out) const {
 }
 
 
+deliver_info::~deliver_info() noexcept {
+}
+
+
+void deliver_info::__set_id(const int64_t val) {
+  this->id = val;
+}
+
+void deliver_info::__set_count(const double val) {
+  this->count = val;
+}
+std::ostream& operator<<(std::ostream& out, const deliver_info& obj)
+{
+  obj.printTo(out);
+  return out;
+}
+
+
+uint32_t deliver_info::read(::apache::thrift::protocol::TProtocol* iprot) {
+
+  ::apache::thrift::protocol::TInputRecursionTracker tracker(*iprot);
+  uint32_t xfer = 0;
+  std::string fname;
+  ::apache::thrift::protocol::TType ftype;
+  int16_t fid;
+
+  xfer += iprot->readStructBegin(fname);
+
+  using ::apache::thrift::protocol::TProtocolException;
+
+
+  while (true)
+  {
+    xfer += iprot->readFieldBegin(fname, ftype, fid);
+    if (ftype == ::apache::thrift::protocol::T_STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 1:
+        if (ftype == ::apache::thrift::protocol::T_I64) {
+          xfer += iprot->readI64(this->id);
+          this->__isset.id = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 2:
+        if (ftype == ::apache::thrift::protocol::T_DOUBLE) {
+          xfer += iprot->readDouble(this->count);
+          this->__isset.count = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      default:
+        xfer += iprot->skip(ftype);
+        break;
+    }
+    xfer += iprot->readFieldEnd();
+  }
+
+  xfer += iprot->readStructEnd();
+
+  return xfer;
+}
+
+uint32_t deliver_info::write(::apache::thrift::protocol::TProtocol* oprot) const {
+  uint32_t xfer = 0;
+  ::apache::thrift::protocol::TOutputRecursionTracker tracker(*oprot);
+  xfer += oprot->writeStructBegin("deliver_info");
+
+  xfer += oprot->writeFieldBegin("id", ::apache::thrift::protocol::T_I64, 1);
+  xfer += oprot->writeI64(this->id);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("count", ::apache::thrift::protocol::T_DOUBLE, 2);
+  xfer += oprot->writeDouble(this->count);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldStop();
+  xfer += oprot->writeStructEnd();
+  return xfer;
+}
+
+void swap(deliver_info &a, deliver_info &b) {
+  using ::std::swap;
+  swap(a.id, b.id);
+  swap(a.count, b.count);
+  swap(a.__isset, b.__isset);
+}
+
+deliver_info::deliver_info(const deliver_info& other36) {
+  id = other36.id;
+  count = other36.count;
+  __isset = other36.__isset;
+}
+deliver_info& deliver_info::operator=(const deliver_info& other37) {
+  id = other37.id;
+  count = other37.count;
+  __isset = other37.__isset;
+  return *this;
+}
+void deliver_info::printTo(std::ostream& out) const {
+  using ::apache::thrift::to_string;
+  out << "deliver_info(";
+  out << "id=" << to_string(id);
+  out << ", " << "count=" << to_string(count);
+  out << ")";
+}
+
+

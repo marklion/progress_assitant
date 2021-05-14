@@ -51,6 +51,8 @@ class plan_status;
 
 class plan_number_id;
 
+class deliver_info;
+
 typedef struct _gen_exp__isset {
   _gen_exp__isset() : msg(false) {}
   bool msg :1;
@@ -1012,6 +1014,54 @@ class plan_number_id : public virtual ::apache::thrift::TBase {
 void swap(plan_number_id &a, plan_number_id &b);
 
 std::ostream& operator<<(std::ostream& out, const plan_number_id& obj);
+
+typedef struct _deliver_info__isset {
+  _deliver_info__isset() : id(false), count(false) {}
+  bool id :1;
+  bool count :1;
+} _deliver_info__isset;
+
+class deliver_info : public virtual ::apache::thrift::TBase {
+ public:
+
+  deliver_info(const deliver_info&);
+  deliver_info& operator=(const deliver_info&);
+  deliver_info() : id(0), count(0) {
+  }
+
+  virtual ~deliver_info() noexcept;
+  int64_t id;
+  double count;
+
+  _deliver_info__isset __isset;
+
+  void __set_id(const int64_t val);
+
+  void __set_count(const double val);
+
+  bool operator == (const deliver_info & rhs) const
+  {
+    if (!(id == rhs.id))
+      return false;
+    if (!(count == rhs.count))
+      return false;
+    return true;
+  }
+  bool operator != (const deliver_info &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const deliver_info & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+  virtual void printTo(std::ostream& out) const;
+};
+
+void swap(deliver_info &a, deliver_info &b);
+
+std::ostream& operator<<(std::ostream& out, const deliver_info& obj);
 
 
 

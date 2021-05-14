@@ -200,7 +200,6 @@ class pa_sql_plan:public sql_tree_base {
 public:
     std::string name;
     double price = 0;
-    double count = 0;
     std::string plan_time;
     int create_time = 0;
     int status = 0;
@@ -219,7 +218,6 @@ public:
         std::vector<sqlite_orm_column> ret;
         ret.push_back(sqlite_orm_column("name", sqlite_orm_column::STRING, &name));
         ret.push_back(sqlite_orm_column("price", sqlite_orm_column::REAL, &price));
-        ret.push_back(sqlite_orm_column("count", sqlite_orm_column::REAL, &count));
         ret.push_back(sqlite_orm_column("plan_time", sqlite_orm_column::STRING, &plan_time));
         ret.push_back(sqlite_orm_column("create_time", sqlite_orm_column::INTEGER, &create_time));
         ret.push_back(sqlite_orm_column("status", sqlite_orm_column::INTEGER, &status));
@@ -228,6 +226,8 @@ public:
 
         return ret;
     }
+
+    double calcu_all_count();
 
     virtual std::string table_name()
     {
