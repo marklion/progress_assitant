@@ -1,6 +1,6 @@
 <template>
 <div class="plan_detail show">
-    <stuff-info-submit :orig_comment="comment" :orig_name="name" :orig_price="price" :is_create="false" :orig_plan_count="plan_count" :orig_plan_time="plan_time" :plan_id="parseInt($route.params.plan_id)" :orig_vichele_info="vichele_info" :min_time="new Date(created_time)"></stuff-info-submit>
+    <stuff-info-submit :orig_comment="comment" :orig_name="name" :orig_price="price" :is_create="false"  :orig_plan_time="plan_time" :plan_id="parseInt($route.params.plan_id)" :orig_vichele_info="vichele_info" :min_time="new Date(created_time)"></stuff-info-submit>
 </div>
 </template>
 
@@ -16,7 +16,6 @@ export default {
             name: '',
             company: '',
             price: 0.0,
-            plan_count: 10.4,
             plan_time: '',
             vichele_info: [],
             created_time: 10,
@@ -26,7 +25,6 @@ export default {
     beforeMount: function () {
         var vue_this = this;
         vue_this.$call_remote_process("stuff_plan_management",'get_plan', [parseInt(vue_this.$route.params.plan_id)]).then(function (resp) {
-            vue_this.plan_count = resp.count;
             vue_this.plan_time = resp.plan_time;
             vue_this.created_time = resp.created_time * 1000;
             resp.vichele_info.forEach((element, index) => {

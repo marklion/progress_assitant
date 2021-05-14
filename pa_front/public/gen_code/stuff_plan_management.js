@@ -971,7 +971,7 @@ stuff_plan_management_confirm_deliver_args = class {
   constructor(args) {
     this.plan_id = null;
     this.ssid = null;
-    this.vichele_id = null;
+    this.deliver_infos = null;
     this.reason = null;
     if (args) {
       if (args.plan_id !== undefined && args.plan_id !== null) {
@@ -980,8 +980,8 @@ stuff_plan_management_confirm_deliver_args = class {
       if (args.ssid !== undefined && args.ssid !== null) {
         this.ssid = args.ssid;
       }
-      if (args.vichele_id !== undefined && args.vichele_id !== null) {
-        this.vichele_id = Thrift.copyList(args.vichele_id, [null]);
+      if (args.deliver_infos !== undefined && args.deliver_infos !== null) {
+        this.deliver_infos = Thrift.copyList(args.deliver_infos, [deliver_info]);
       }
       if (args.reason !== undefined && args.reason !== null) {
         this.reason = args.reason;
@@ -1015,13 +1015,14 @@ stuff_plan_management_confirm_deliver_args = class {
         break;
         case 3:
         if (ftype == Thrift.Type.LIST) {
-          this.vichele_id = [];
+          this.deliver_infos = [];
           const _rtmp351 = input.readListBegin();
           const _size50 = _rtmp351.size || 0;
           for (let _i52 = 0; _i52 < _size50; ++_i52) {
             let elem53 = null;
-            elem53 = input.readI64().value;
-            this.vichele_id.push(elem53);
+            elem53 = new deliver_info();
+            elem53.read(input);
+            this.deliver_infos.push(elem53);
           }
           input.readListEnd();
         } else {
@@ -1056,13 +1057,13 @@ stuff_plan_management_confirm_deliver_args = class {
       output.writeString(this.ssid);
       output.writeFieldEnd();
     }
-    if (this.vichele_id !== null && this.vichele_id !== undefined) {
-      output.writeFieldBegin('vichele_id', Thrift.Type.LIST, 3);
-      output.writeListBegin(Thrift.Type.I64, this.vichele_id.length);
-      for (let iter54 in this.vichele_id) {
-        if (this.vichele_id.hasOwnProperty(iter54)) {
-          iter54 = this.vichele_id[iter54];
-          output.writeI64(iter54);
+    if (this.deliver_infos !== null && this.deliver_infos !== undefined) {
+      output.writeFieldBegin('deliver_infos', Thrift.Type.LIST, 3);
+      output.writeListBegin(Thrift.Type.STRUCT, this.deliver_infos.length);
+      for (let iter54 in this.deliver_infos) {
+        if (this.deliver_infos.hasOwnProperty(iter54)) {
+          iter54 = this.deliver_infos[iter54];
+          iter54.write(output);
         }
       }
       output.writeListEnd();
@@ -2823,20 +2824,20 @@ stuff_plan_managementClient = class stuff_plan_managementClient {
     throw 'confirm_pay failed: unknown result';
   }
 
-  confirm_deliver (plan_id, ssid, vichele_id, reason) {
+  confirm_deliver (plan_id, ssid, deliver_infos, reason) {
     const self = this;
     return new Promise((resolve, reject) => {
-      self.send_confirm_deliver(plan_id, ssid, vichele_id, reason, (error, result) => {
+      self.send_confirm_deliver(plan_id, ssid, deliver_infos, reason, (error, result) => {
         return error ? reject(error) : resolve(result);
       });
     });
   }
 
-  send_confirm_deliver (plan_id, ssid, vichele_id, reason, callback) {
+  send_confirm_deliver (plan_id, ssid, deliver_infos, reason, callback) {
     const params = {
       plan_id: plan_id,
       ssid: ssid,
-      vichele_id: vichele_id,
+      deliver_infos: deliver_infos,
       reason: reason
     };
     const args = new stuff_plan_management_confirm_deliver_args(params);

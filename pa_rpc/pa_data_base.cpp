@@ -72,7 +72,6 @@ void pa_sql_archive_plan::translate_from_plan(pa_sql_plan &_plan)
             }
         }
     }
-    this->count = std::to_string(_plan.count);
     this->created_time = PA_DATAOPT_date_2_timestring(_plan.create_time);
     
     this->plan_number = std::to_string(_plan.create_time) + std::to_string(_plan.get_pri_id());
@@ -87,11 +86,11 @@ void pa_sql_archive_plan::translate_from_plan(pa_sql_plan &_plan)
         }
     }
     this->stuff_name = _plan.name;
-    this->total_price = std::to_string(_plan.price * _plan.count);
     this->unit_price = std::to_string(_plan.price);
     this->insert_record();
 
     auto vichele_in_plan = _plan.get_all_children<pa_sql_single_vichele>("belong_plan");
+    double count = _plan.calcu_all_count();
     for (auto &itr:vichele_in_plan)
     {
         pa_sql_archive_vichele_plan tmp;
@@ -118,6 +117,9 @@ void pa_sql_archive_plan::translate_from_plan(pa_sql_plan &_plan)
         tmp.set_parent(*this, "belong_plan");
         tmp.insert_record();
     }
+    this->count = std::to_string(count);
+    this->total_price = std::to_string(_plan.price * count);
+    this->update_record();
     stuff_plan_management_handler hd;
     std::vector<plan_status_rule> status_in_plan;
     hd.get_status_rule(status_in_plan, _plan.get_pri_id());
@@ -138,6 +140,18 @@ std::unique_ptr<pa_sql_userinfo> get_sysadmin_user()
     std::unique_ptr<pa_sql_userinfo> ret(new pa_sql_userinfo());
     ret->name = "自动提交";
     ret->is_sys_admin = true;
+
+    return ret;
+}
+
+double pa_sql_plan::calcu_all_count()
+{
+    double ret = 0;
+    auto all_vichele_info = this->get_all_children<pa_sql_single_vichele>("belong_plan");
+    for (auto &itr:all_vichele_info)
+    {
+        ret += itr.count;
+    }
 
     return ret;
 }

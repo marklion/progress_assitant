@@ -164,7 +164,10 @@ struct plan_number_id{
     2:string number,
 }
 
-
+struct deliver_info {
+    1:i64 id,
+    2:double count,
+}
 
 service stuff_plan_management {
     i64 create_plan(1:stuff_plan plan, 2:string ssid, 3:string proxy_company) throws (1:gen_exp e),
@@ -174,7 +177,7 @@ service stuff_plan_management {
     bool update_plan(1:stuff_plan plan, 2:string ssid) throws (1:gen_exp e),
     bool confirm_plan(1:i64 plan_id, 2:string ssid) throws (1:gen_exp e),
     bool confirm_pay(1:i64 plan_id, 2:string ssid) throws (1:gen_exp e),
-    bool confirm_deliver(1:i64 plan_id, 2:string ssid, 3:list<i64> vichele_id, 4:string reason) throws (1:gen_exp e),
+    bool confirm_deliver(1:i64 plan_id, 2:string ssid, 3:list<deliver_info> deliver_infos, 4:string reason) throws (1:gen_exp e),
     string export_plan(1:string ssid, 2:list<i64> plan_ids) throws (1:gen_exp e),
     bool except_close(1:i64 plan_id, 2:string ssid, 3:string reason) throws (1:gen_exp e),
     string verify_plan(1:stuff_plan plan, 2:string ssid) throws (1:gen_exp e),

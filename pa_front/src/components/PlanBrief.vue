@@ -1,7 +1,7 @@
 <template>
 <div class="plan_brief_show">
     <van-card class="stuff_card_show" :desc="company" :title="name" @click="nav_to_detail">
-        <template #num>
+        <template #num v-if="plan_count != 0">
             {{plan_count}}吨
         </template>
         <template #tags>
@@ -45,7 +45,6 @@ export default {
             company: '',
             plan_count: 0.1,
             plan_time: '',
-            vichele_info: [],
             created_time: '',
             status: 0,
         };
@@ -85,9 +84,6 @@ export default {
             vue_this.$call_remote_process("stuff_plan_management", 'get_plan', [vue_this.plan_id]).then(function (resp) {
                 vue_this.plan_count = resp.count;
                 vue_this.plan_time = resp.plan_time;
-                resp.vichele_info.forEach((element, index) => {
-                    vue_this.$set(vue_this.vichele_info, index, element);
-                });
                 vue_this.created_time = vue_this.formatDateTime(new Date(resp.created_time * 1000));
                 vue_this.name = resp.name;
                 vue_this.status = resp.status;

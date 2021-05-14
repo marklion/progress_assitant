@@ -175,7 +175,12 @@ void PA_WECHAT_send_plan_msg(pa_sql_userinfo &_touser, pa_sql_plan &_plan)
     {
         created_name = created_user->name;
     }
-    std::string total_price = std::to_string(_plan.count * _plan.price);
+    double count = _plan.calcu_all_count();
+    std::string total_price = "未知";
+    if (count > 0)
+    {
+        total_price = std::to_string(_plan.calcu_all_count() * _plan.price);
+    }
 
     std::string status = "";
     auto status_rule = PA_STATUS_RULE_get_all();
@@ -183,20 +188,20 @@ void PA_WECHAT_send_plan_msg(pa_sql_userinfo &_touser, pa_sql_plan &_plan)
     {
         status = status_rule[_plan.status]->get_name();
     }
-    
+
     std::vector<std::string> keywords;
     keywords.push_back(std::to_string(_plan.create_time) + std::to_string(_plan.get_pri_id()));
     keywords.push_back(created_name);
     keywords.push_back(total_price);
     keywords.push_back(status);
 
-    send_msg_to_wechat(_touser.openid, "TCYUdQCuq4TpOYpRPXn-WBcBL5O64xWUgkSoIaiIMN4", "计划更新", keywords, "", "/plan_detail/" + std::to_string(_plan.get_pri_id())); 
+    send_msg_to_wechat(_touser.openid, "TCYUdQCuq4TpOYpRPXn-WBcBL5O64xWUgkSoIaiIMN4", "计划更新", keywords, "", "/plan_detail/" + std::to_string(_plan.get_pri_id()));
 }
 
 void PA_WECHAT_send_create_apply_msg(pa_sql_userinfo &_touser, pa_sql_user_apply &_apply)
 {
     std::vector<std::string> keywords;
-    
+
     std::string apply_user = "无";
     auto assigner = _apply.get_parent<pa_sql_userinfo>("assigner");
     if (assigner)
@@ -226,7 +231,7 @@ void PA_WECHAT_send_process_apply_msg(pa_sql_userinfo &_touser, pa_sql_user_appl
         apply_user = assigner->name;
     }
     keywords.push_back(apply_user);
-    
+
     std::string status = "未通过";
     if (_apply.status == 1)
     {

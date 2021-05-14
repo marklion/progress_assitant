@@ -1642,3 +1642,68 @@ plan_number_id = class {
   }
 
 };
+deliver_info = class {
+  constructor(args) {
+    this.id = null;
+    this.count = null;
+    if (args) {
+      if (args.id !== undefined && args.id !== null) {
+        this.id = args.id;
+      }
+      if (args.count !== undefined && args.count !== null) {
+        this.count = args.count;
+      }
+    }
+  }
+
+  read (input) {
+    input.readStructBegin();
+    while (true) {
+      const ret = input.readFieldBegin();
+      const ftype = ret.ftype;
+      const fid = ret.fid;
+      if (ftype == Thrift.Type.STOP) {
+        break;
+      }
+      switch (fid) {
+        case 1:
+        if (ftype == Thrift.Type.I64) {
+          this.id = input.readI64().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        case 2:
+        if (ftype == Thrift.Type.DOUBLE) {
+          this.count = input.readDouble().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        default:
+          input.skip(ftype);
+      }
+      input.readFieldEnd();
+    }
+    input.readStructEnd();
+    return;
+  }
+
+  write (output) {
+    output.writeStructBegin('deliver_info');
+    if (this.id !== null && this.id !== undefined) {
+      output.writeFieldBegin('id', Thrift.Type.I64, 1);
+      output.writeI64(this.id);
+      output.writeFieldEnd();
+    }
+    if (this.count !== null && this.count !== undefined) {
+      output.writeFieldBegin('count', Thrift.Type.DOUBLE, 2);
+      output.writeDouble(this.count);
+      output.writeFieldEnd();
+    }
+    output.writeFieldStop();
+    output.writeStructEnd();
+    return;
+  }
+
+};

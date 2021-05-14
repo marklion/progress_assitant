@@ -1,21 +1,29 @@
 <template>
 <div class="deliver_show">
     <van-cell-group title="计划内容">
-        <van-cell :title="buy_company" :label="name" :value="count + '吨'" />
+        <van-cell :title="buy_company" :label="name" :value="'已提货' + count + '吨'" />
         <van-cell title="提货人" :value="user_name"></van-cell>
     </van-cell-group>
-    <van-checkbox-group v-model="pre_deliver_vichele">
+    <van-checkbox-group v-model="pre_deliver_vichele_index">
         <van-cell-group title="未出货车辆">
-            <van-cell v-for="(item, index) in undelivered_vichele" clickable :key="index" :title="item.main_vichele + '-' + item.behind_vichele" :label="item.driver_name + '-' + item.driver_phone" @click="toggle(index)">
-                <template #right-icon>
-                    <van-checkbox :name="item.vichele_id" ref="checkboxes" />
+            <van-cell v-for="(item, index) in undelivered_vichele" center :key="index" :title="item.main_vichele + '-' + item.behind_vichele" :label="item.driver_name + '-' + item.driver_phone">
+                <template #icon>
+                    <van-checkbox style="margin-right:10px" :name="index" ref="checkboxes" />
                 </template>
+                <van-row type="flex" align="center" justify="end">
+                    <van-col>
+                        <van-stepper v-model="item.count" />
+                    </van-col>
+                    <van-col>
+                        吨
+                    </van-col>
+                </van-row>
             </van-cell>
         </van-cell-group>
     </van-checkbox-group>
     <van-row :gutter="10" type="flex" justify="center" align="center" v-if="can_change_to(4)">
         <van-col :span="8">
-            <van-button block type="info" size="small" :disabled="pre_deliver_vichele.length == 0" @click="submit_confirm_deliver">确认出货选中车辆</van-button>
+            <van-button block type="info" size="small" :disabled="pre_deliver_vichele_index.length == 0" @click="submit_confirm_deliver">确认出货选中车辆</van-button>
         </van-col>
         <van-col :span="8">
             <van-button block type="primary" size="small" @click="deliver_all">出货所有车辆</van-button>
@@ -26,7 +34,7 @@
     </van-row>
 
     <van-cell-group title="已出货车辆">
-        <van-cell v-for="(item, index) in delivered_vichele" clickable :key="index" :title="item.main_vichele + '-' + item.behind_vichele" :label="item.driver_name + '-' + item.driver_phone" @click="toggle(index)">
+        <van-cell v-for="(item, index) in delivered_vichele" center :value="item.count + '吨'" :key="index" :title="item.main_vichele + '-' + item.behind_vichele" :label="item.driver_name + '-' + item.driver_phone">
         </van-cell>
     </van-cell-group>
     <van-dialog v-model="fource_reason_diag" title="有未出货车辆" close-on-click-overlay :show-confirm-button="false">
@@ -63,9 +71,13 @@ import {
 import {
     Form
 } from 'vant';
+import {
+    Stepper
+} from 'vant';
 
+Vue.use(Stepper);
 Vue.use(Form);
-// 全局注册
+
 Vue.use(Dialog);
 Vue.use(Col);
 Vue.use(Row);
@@ -85,7 +97,8 @@ export default {
             name: '',
             vichele_info: [],
             buy_company: '',
-            pre_deliver_vichele: [],
+            pre_deliver_vichele_index: [],
+
             status_change_rule: [],
             can_change_to: function (_index) {
                 var ret = false;
@@ -95,8 +108,8 @@ export default {
 
                 return ret;
             },
-            close_reason:'',
-            fource_reason_diag:false,
+            close_reason: '',
+            fource_reason_diag: false,
         };
     },
     computed: {
@@ -124,7 +137,16 @@ export default {
     methods: {
         submit_confirm_deliver: function () {
             var vue_this = this;
-            vue_this.$call_remote_process("stuff_plan_management", 'confirm_deliver', [vue_this.plan_id, vue_this.$cookies.get('pa_ssid'), vue_this.pre_deliver_vichele]).then(function (resp) {
+            var pre_deliver_vichele = [];
+            vue_this.undelivered_vichele.forEach((element, index) => {
+                if (vue_this.pre_deliver_vichele_index.indexOf(index) != -1) {
+                    pre_deliver_vichele.push({
+                        id: element.vichele_id,
+                        count: element.count
+                    });
+                }
+            });
+            vue_this.$call_remote_process("stuff_plan_management", 'confirm_deliver', [vue_this.plan_id, vue_this.$cookies.get('pa_ssid'), pre_deliver_vichele]).then(function (resp) {
                 if (resp) {
                     vue_this.$router.back();
                 }
@@ -134,7 +156,10 @@ export default {
             var vue_this = this;
             var all_vichele = [];
             vue_this.undelivered_vichele.forEach(element => {
-                all_vichele.push(element.vichele_id);
+                all_vichele.push({
+                    id: element.vichele_id,
+                    count: element.count
+                });
             });
             vue_this.$call_remote_process("stuff_plan_management", 'confirm_deliver', [vue_this.plan_id, vue_this.$cookies.get('pa_ssid'), all_vichele]).then(function (resp) {
                 if (resp) {
@@ -160,9 +185,6 @@ export default {
                 }
             });
         },
-        toggle(index) {
-            this.$refs.checkboxes[index].toggle();
-        },
         get_change_rule: function (_id) {
             var vue_this = this;
             vue_this.$call_remote_process("stuff_plan_management", 'get_change_rule', [vue_this.$cookies.get('pa_ssid'), _id]).then(function (resp) {
@@ -181,6 +203,9 @@ export default {
             vue_this.name = resp.name;
             vue_this.user_name = resp.created_user_name;
             resp.vichele_info.forEach((element, index) => {
+                if (!element.finish) {
+                    element.count = 20;
+                }
                 vue_this.$set(vue_this.vichele_info, index, element);
             });
             vue_this.buy_company = resp.buy_company;

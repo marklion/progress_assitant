@@ -356,14 +356,14 @@ uint32_t stuff_plan_management_get_created_plan_result::read(::apache::thrift::p
         if (ftype == ::apache::thrift::protocol::T_LIST) {
           {
             this->success.clear();
-            uint32_t _size113;
-            ::apache::thrift::protocol::TType _etype116;
-            xfer += iprot->readListBegin(_etype116, _size113);
-            this->success.resize(_size113);
-            uint32_t _i117;
-            for (_i117 = 0; _i117 < _size113; ++_i117)
+            uint32_t _size115;
+            ::apache::thrift::protocol::TType _etype118;
+            xfer += iprot->readListBegin(_etype118, _size115);
+            this->success.resize(_size115);
+            uint32_t _i119;
+            for (_i119 = 0; _i119 < _size115; ++_i119)
             {
-              xfer += this->success[_i117].read(iprot);
+              xfer += this->success[_i119].read(iprot);
             }
             xfer += iprot->readListEnd();
           }
@@ -402,10 +402,10 @@ uint32_t stuff_plan_management_get_created_plan_result::write(::apache::thrift::
     xfer += oprot->writeFieldBegin("success", ::apache::thrift::protocol::T_LIST, 0);
     {
       xfer += oprot->writeListBegin(::apache::thrift::protocol::T_STRUCT, static_cast<uint32_t>(this->success.size()));
-      std::vector<plan_status> ::const_iterator _iter118;
-      for (_iter118 = this->success.begin(); _iter118 != this->success.end(); ++_iter118)
+      std::vector<plan_status> ::const_iterator _iter120;
+      for (_iter120 = this->success.begin(); _iter120 != this->success.end(); ++_iter120)
       {
-        xfer += (*_iter118).write(oprot);
+        xfer += (*_iter120).write(oprot);
       }
       xfer += oprot->writeListEnd();
     }
@@ -450,14 +450,14 @@ uint32_t stuff_plan_management_get_created_plan_presult::read(::apache::thrift::
         if (ftype == ::apache::thrift::protocol::T_LIST) {
           {
             (*(this->success)).clear();
-            uint32_t _size119;
-            ::apache::thrift::protocol::TType _etype122;
-            xfer += iprot->readListBegin(_etype122, _size119);
-            (*(this->success)).resize(_size119);
-            uint32_t _i123;
-            for (_i123 = 0; _i123 < _size119; ++_i123)
+            uint32_t _size121;
+            ::apache::thrift::protocol::TType _etype124;
+            xfer += iprot->readListBegin(_etype124, _size121);
+            (*(this->success)).resize(_size121);
+            uint32_t _i125;
+            for (_i125 = 0; _i125 < _size121; ++_i125)
             {
-              xfer += (*(this->success))[_i123].read(iprot);
+              xfer += (*(this->success))[_i125].read(iprot);
             }
             xfer += iprot->readListEnd();
           }
@@ -595,14 +595,14 @@ uint32_t stuff_plan_management_get_company_plan_result::read(::apache::thrift::p
         if (ftype == ::apache::thrift::protocol::T_LIST) {
           {
             this->success.clear();
-            uint32_t _size124;
-            ::apache::thrift::protocol::TType _etype127;
-            xfer += iprot->readListBegin(_etype127, _size124);
-            this->success.resize(_size124);
-            uint32_t _i128;
-            for (_i128 = 0; _i128 < _size124; ++_i128)
+            uint32_t _size126;
+            ::apache::thrift::protocol::TType _etype129;
+            xfer += iprot->readListBegin(_etype129, _size126);
+            this->success.resize(_size126);
+            uint32_t _i130;
+            for (_i130 = 0; _i130 < _size126; ++_i130)
             {
-              xfer += this->success[_i128].read(iprot);
+              xfer += this->success[_i130].read(iprot);
             }
             xfer += iprot->readListEnd();
           }
@@ -641,10 +641,10 @@ uint32_t stuff_plan_management_get_company_plan_result::write(::apache::thrift::
     xfer += oprot->writeFieldBegin("success", ::apache::thrift::protocol::T_LIST, 0);
     {
       xfer += oprot->writeListBegin(::apache::thrift::protocol::T_STRUCT, static_cast<uint32_t>(this->success.size()));
-      std::vector<plan_status> ::const_iterator _iter129;
-      for (_iter129 = this->success.begin(); _iter129 != this->success.end(); ++_iter129)
+      std::vector<plan_status> ::const_iterator _iter131;
+      for (_iter131 = this->success.begin(); _iter131 != this->success.end(); ++_iter131)
       {
-        xfer += (*_iter129).write(oprot);
+        xfer += (*_iter131).write(oprot);
       }
       xfer += oprot->writeListEnd();
     }
@@ -689,14 +689,14 @@ uint32_t stuff_plan_management_get_company_plan_presult::read(::apache::thrift::
         if (ftype == ::apache::thrift::protocol::T_LIST) {
           {
             (*(this->success)).clear();
-            uint32_t _size130;
-            ::apache::thrift::protocol::TType _etype133;
-            xfer += iprot->readListBegin(_etype133, _size130);
-            (*(this->success)).resize(_size130);
-            uint32_t _i134;
-            for (_i134 = 0; _i134 < _size130; ++_i134)
+            uint32_t _size132;
+            ::apache::thrift::protocol::TType _etype135;
+            xfer += iprot->readListBegin(_etype135, _size132);
+            (*(this->success)).resize(_size132);
+            uint32_t _i136;
+            for (_i136 = 0; _i136 < _size132; ++_i136)
             {
-              xfer += (*(this->success))[_i134].read(iprot);
+              xfer += (*(this->success))[_i136].read(iprot);
             }
             xfer += iprot->readListEnd();
           }
@@ -1646,19 +1646,19 @@ uint32_t stuff_plan_management_confirm_deliver_args::read(::apache::thrift::prot
       case 3:
         if (ftype == ::apache::thrift::protocol::T_LIST) {
           {
-            this->vichele_id.clear();
-            uint32_t _size135;
-            ::apache::thrift::protocol::TType _etype138;
-            xfer += iprot->readListBegin(_etype138, _size135);
-            this->vichele_id.resize(_size135);
-            uint32_t _i139;
-            for (_i139 = 0; _i139 < _size135; ++_i139)
+            this->deliver_infos.clear();
+            uint32_t _size137;
+            ::apache::thrift::protocol::TType _etype140;
+            xfer += iprot->readListBegin(_etype140, _size137);
+            this->deliver_infos.resize(_size137);
+            uint32_t _i141;
+            for (_i141 = 0; _i141 < _size137; ++_i141)
             {
-              xfer += iprot->readI64(this->vichele_id[_i139]);
+              xfer += this->deliver_infos[_i141].read(iprot);
             }
             xfer += iprot->readListEnd();
           }
-          this->__isset.vichele_id = true;
+          this->__isset.deliver_infos = true;
         } else {
           xfer += iprot->skip(ftype);
         }
@@ -1696,13 +1696,13 @@ uint32_t stuff_plan_management_confirm_deliver_args::write(::apache::thrift::pro
   xfer += oprot->writeString(this->ssid);
   xfer += oprot->writeFieldEnd();
 
-  xfer += oprot->writeFieldBegin("vichele_id", ::apache::thrift::protocol::T_LIST, 3);
+  xfer += oprot->writeFieldBegin("deliver_infos", ::apache::thrift::protocol::T_LIST, 3);
   {
-    xfer += oprot->writeListBegin(::apache::thrift::protocol::T_I64, static_cast<uint32_t>(this->vichele_id.size()));
-    std::vector<int64_t> ::const_iterator _iter140;
-    for (_iter140 = this->vichele_id.begin(); _iter140 != this->vichele_id.end(); ++_iter140)
+    xfer += oprot->writeListBegin(::apache::thrift::protocol::T_STRUCT, static_cast<uint32_t>(this->deliver_infos.size()));
+    std::vector<deliver_info> ::const_iterator _iter142;
+    for (_iter142 = this->deliver_infos.begin(); _iter142 != this->deliver_infos.end(); ++_iter142)
     {
-      xfer += oprot->writeI64((*_iter140));
+      xfer += (*_iter142).write(oprot);
     }
     xfer += oprot->writeListEnd();
   }
@@ -1735,13 +1735,13 @@ uint32_t stuff_plan_management_confirm_deliver_pargs::write(::apache::thrift::pr
   xfer += oprot->writeString((*(this->ssid)));
   xfer += oprot->writeFieldEnd();
 
-  xfer += oprot->writeFieldBegin("vichele_id", ::apache::thrift::protocol::T_LIST, 3);
+  xfer += oprot->writeFieldBegin("deliver_infos", ::apache::thrift::protocol::T_LIST, 3);
   {
-    xfer += oprot->writeListBegin(::apache::thrift::protocol::T_I64, static_cast<uint32_t>((*(this->vichele_id)).size()));
-    std::vector<int64_t> ::const_iterator _iter141;
-    for (_iter141 = (*(this->vichele_id)).begin(); _iter141 != (*(this->vichele_id)).end(); ++_iter141)
+    xfer += oprot->writeListBegin(::apache::thrift::protocol::T_STRUCT, static_cast<uint32_t>((*(this->deliver_infos)).size()));
+    std::vector<deliver_info> ::const_iterator _iter143;
+    for (_iter143 = (*(this->deliver_infos)).begin(); _iter143 != (*(this->deliver_infos)).end(); ++_iter143)
     {
-      xfer += oprot->writeI64((*_iter141));
+      xfer += (*_iter143).write(oprot);
     }
     xfer += oprot->writeListEnd();
   }
@@ -1922,14 +1922,14 @@ uint32_t stuff_plan_management_export_plan_args::read(::apache::thrift::protocol
         if (ftype == ::apache::thrift::protocol::T_LIST) {
           {
             this->plan_ids.clear();
-            uint32_t _size142;
-            ::apache::thrift::protocol::TType _etype145;
-            xfer += iprot->readListBegin(_etype145, _size142);
-            this->plan_ids.resize(_size142);
-            uint32_t _i146;
-            for (_i146 = 0; _i146 < _size142; ++_i146)
+            uint32_t _size144;
+            ::apache::thrift::protocol::TType _etype147;
+            xfer += iprot->readListBegin(_etype147, _size144);
+            this->plan_ids.resize(_size144);
+            uint32_t _i148;
+            for (_i148 = 0; _i148 < _size144; ++_i148)
             {
-              xfer += iprot->readI64(this->plan_ids[_i146]);
+              xfer += iprot->readI64(this->plan_ids[_i148]);
             }
             xfer += iprot->readListEnd();
           }
@@ -1962,10 +1962,10 @@ uint32_t stuff_plan_management_export_plan_args::write(::apache::thrift::protoco
   xfer += oprot->writeFieldBegin("plan_ids", ::apache::thrift::protocol::T_LIST, 2);
   {
     xfer += oprot->writeListBegin(::apache::thrift::protocol::T_I64, static_cast<uint32_t>(this->plan_ids.size()));
-    std::vector<int64_t> ::const_iterator _iter147;
-    for (_iter147 = this->plan_ids.begin(); _iter147 != this->plan_ids.end(); ++_iter147)
+    std::vector<int64_t> ::const_iterator _iter149;
+    for (_iter149 = this->plan_ids.begin(); _iter149 != this->plan_ids.end(); ++_iter149)
     {
-      xfer += oprot->writeI64((*_iter147));
+      xfer += oprot->writeI64((*_iter149));
     }
     xfer += oprot->writeListEnd();
   }
@@ -1993,10 +1993,10 @@ uint32_t stuff_plan_management_export_plan_pargs::write(::apache::thrift::protoc
   xfer += oprot->writeFieldBegin("plan_ids", ::apache::thrift::protocol::T_LIST, 2);
   {
     xfer += oprot->writeListBegin(::apache::thrift::protocol::T_I64, static_cast<uint32_t>((*(this->plan_ids)).size()));
-    std::vector<int64_t> ::const_iterator _iter148;
-    for (_iter148 = (*(this->plan_ids)).begin(); _iter148 != (*(this->plan_ids)).end(); ++_iter148)
+    std::vector<int64_t> ::const_iterator _iter150;
+    for (_iter150 = (*(this->plan_ids)).begin(); _iter150 != (*(this->plan_ids)).end(); ++_iter150)
     {
-      xfer += oprot->writeI64((*_iter148));
+      xfer += oprot->writeI64((*_iter150));
     }
     xfer += oprot->writeListEnd();
   }
@@ -3184,14 +3184,14 @@ uint32_t stuff_plan_management_search_plan_by_driver_phone_result::read(::apache
         if (ftype == ::apache::thrift::protocol::T_LIST) {
           {
             this->success.clear();
-            uint32_t _size149;
-            ::apache::thrift::protocol::TType _etype152;
-            xfer += iprot->readListBegin(_etype152, _size149);
-            this->success.resize(_size149);
-            uint32_t _i153;
-            for (_i153 = 0; _i153 < _size149; ++_i153)
+            uint32_t _size151;
+            ::apache::thrift::protocol::TType _etype154;
+            xfer += iprot->readListBegin(_etype154, _size151);
+            this->success.resize(_size151);
+            uint32_t _i155;
+            for (_i155 = 0; _i155 < _size151; ++_i155)
             {
-              xfer += this->success[_i153].read(iprot);
+              xfer += this->success[_i155].read(iprot);
             }
             xfer += iprot->readListEnd();
           }
@@ -3230,10 +3230,10 @@ uint32_t stuff_plan_management_search_plan_by_driver_phone_result::write(::apach
     xfer += oprot->writeFieldBegin("success", ::apache::thrift::protocol::T_LIST, 0);
     {
       xfer += oprot->writeListBegin(::apache::thrift::protocol::T_STRUCT, static_cast<uint32_t>(this->success.size()));
-      std::vector<plan_number_id> ::const_iterator _iter154;
-      for (_iter154 = this->success.begin(); _iter154 != this->success.end(); ++_iter154)
+      std::vector<plan_number_id> ::const_iterator _iter156;
+      for (_iter156 = this->success.begin(); _iter156 != this->success.end(); ++_iter156)
       {
-        xfer += (*_iter154).write(oprot);
+        xfer += (*_iter156).write(oprot);
       }
       xfer += oprot->writeListEnd();
     }
@@ -3278,14 +3278,14 @@ uint32_t stuff_plan_management_search_plan_by_driver_phone_presult::read(::apach
         if (ftype == ::apache::thrift::protocol::T_LIST) {
           {
             (*(this->success)).clear();
-            uint32_t _size155;
-            ::apache::thrift::protocol::TType _etype158;
-            xfer += iprot->readListBegin(_etype158, _size155);
-            (*(this->success)).resize(_size155);
-            uint32_t _i159;
-            for (_i159 = 0; _i159 < _size155; ++_i159)
+            uint32_t _size157;
+            ::apache::thrift::protocol::TType _etype160;
+            xfer += iprot->readListBegin(_etype160, _size157);
+            (*(this->success)).resize(_size157);
+            uint32_t _i161;
+            for (_i161 = 0; _i161 < _size157; ++_i161)
             {
-              xfer += (*(this->success))[_i159].read(iprot);
+              xfer += (*(this->success))[_i161].read(iprot);
             }
             xfer += iprot->readListEnd();
           }
@@ -3423,14 +3423,14 @@ uint32_t stuff_plan_management_get_status_rule_result::read(::apache::thrift::pr
         if (ftype == ::apache::thrift::protocol::T_LIST) {
           {
             this->success.clear();
-            uint32_t _size160;
-            ::apache::thrift::protocol::TType _etype163;
-            xfer += iprot->readListBegin(_etype163, _size160);
-            this->success.resize(_size160);
-            uint32_t _i164;
-            for (_i164 = 0; _i164 < _size160; ++_i164)
+            uint32_t _size162;
+            ::apache::thrift::protocol::TType _etype165;
+            xfer += iprot->readListBegin(_etype165, _size162);
+            this->success.resize(_size162);
+            uint32_t _i166;
+            for (_i166 = 0; _i166 < _size162; ++_i166)
             {
-              xfer += this->success[_i164].read(iprot);
+              xfer += this->success[_i166].read(iprot);
             }
             xfer += iprot->readListEnd();
           }
@@ -3469,10 +3469,10 @@ uint32_t stuff_plan_management_get_status_rule_result::write(::apache::thrift::p
     xfer += oprot->writeFieldBegin("success", ::apache::thrift::protocol::T_LIST, 0);
     {
       xfer += oprot->writeListBegin(::apache::thrift::protocol::T_STRUCT, static_cast<uint32_t>(this->success.size()));
-      std::vector<plan_status_rule> ::const_iterator _iter165;
-      for (_iter165 = this->success.begin(); _iter165 != this->success.end(); ++_iter165)
+      std::vector<plan_status_rule> ::const_iterator _iter167;
+      for (_iter167 = this->success.begin(); _iter167 != this->success.end(); ++_iter167)
       {
-        xfer += (*_iter165).write(oprot);
+        xfer += (*_iter167).write(oprot);
       }
       xfer += oprot->writeListEnd();
     }
@@ -3517,14 +3517,14 @@ uint32_t stuff_plan_management_get_status_rule_presult::read(::apache::thrift::p
         if (ftype == ::apache::thrift::protocol::T_LIST) {
           {
             (*(this->success)).clear();
-            uint32_t _size166;
-            ::apache::thrift::protocol::TType _etype169;
-            xfer += iprot->readListBegin(_etype169, _size166);
-            (*(this->success)).resize(_size166);
-            uint32_t _i170;
-            for (_i170 = 0; _i170 < _size166; ++_i170)
+            uint32_t _size168;
+            ::apache::thrift::protocol::TType _etype171;
+            xfer += iprot->readListBegin(_etype171, _size168);
+            (*(this->success)).resize(_size168);
+            uint32_t _i172;
+            for (_i172 = 0; _i172 < _size168; ++_i172)
             {
-              xfer += (*(this->success))[_i170].read(iprot);
+              xfer += (*(this->success))[_i172].read(iprot);
             }
             xfer += iprot->readListEnd();
           }
@@ -3678,14 +3678,14 @@ uint32_t stuff_plan_management_get_change_rule_result::read(::apache::thrift::pr
         if (ftype == ::apache::thrift::protocol::T_LIST) {
           {
             this->success.clear();
-            uint32_t _size171;
-            ::apache::thrift::protocol::TType _etype174;
-            xfer += iprot->readListBegin(_etype174, _size171);
-            this->success.resize(_size171);
-            uint32_t _i175;
-            for (_i175 = 0; _i175 < _size171; ++_i175)
+            uint32_t _size173;
+            ::apache::thrift::protocol::TType _etype176;
+            xfer += iprot->readListBegin(_etype176, _size173);
+            this->success.resize(_size173);
+            uint32_t _i177;
+            for (_i177 = 0; _i177 < _size173; ++_i177)
             {
-              xfer += iprot->readBool(this->success[_i175]);
+              xfer += iprot->readBool(this->success[_i177]);
             }
             xfer += iprot->readListEnd();
           }
@@ -3724,10 +3724,10 @@ uint32_t stuff_plan_management_get_change_rule_result::write(::apache::thrift::p
     xfer += oprot->writeFieldBegin("success", ::apache::thrift::protocol::T_LIST, 0);
     {
       xfer += oprot->writeListBegin(::apache::thrift::protocol::T_BOOL, static_cast<uint32_t>(this->success.size()));
-      std::vector<bool> ::const_iterator _iter176;
-      for (_iter176 = this->success.begin(); _iter176 != this->success.end(); ++_iter176)
+      std::vector<bool> ::const_iterator _iter178;
+      for (_iter178 = this->success.begin(); _iter178 != this->success.end(); ++_iter178)
       {
-        xfer += oprot->writeBool((*_iter176));
+        xfer += oprot->writeBool((*_iter178));
       }
       xfer += oprot->writeListEnd();
     }
@@ -3772,14 +3772,14 @@ uint32_t stuff_plan_management_get_change_rule_presult::read(::apache::thrift::p
         if (ftype == ::apache::thrift::protocol::T_LIST) {
           {
             (*(this->success)).clear();
-            uint32_t _size177;
-            ::apache::thrift::protocol::TType _etype180;
-            xfer += iprot->readListBegin(_etype180, _size177);
-            (*(this->success)).resize(_size177);
-            uint32_t _i181;
-            for (_i181 = 0; _i181 < _size177; ++_i181)
+            uint32_t _size179;
+            ::apache::thrift::protocol::TType _etype182;
+            xfer += iprot->readListBegin(_etype182, _size179);
+            (*(this->success)).resize(_size179);
+            uint32_t _i183;
+            for (_i183 = 0; _i183 < _size179; ++_i183)
             {
-              xfer += iprot->readBool((*(this->success))[_i181]);
+              xfer += iprot->readBool((*(this->success))[_i183]);
             }
             xfer += iprot->readListEnd();
           }
@@ -4406,13 +4406,13 @@ bool stuff_plan_managementClient::recv_confirm_pay()
   throw ::apache::thrift::TApplicationException(::apache::thrift::TApplicationException::MISSING_RESULT, "confirm_pay failed: unknown result");
 }
 
-bool stuff_plan_managementClient::confirm_deliver(const int64_t plan_id, const std::string& ssid, const std::vector<int64_t> & vichele_id, const std::string& reason)
+bool stuff_plan_managementClient::confirm_deliver(const int64_t plan_id, const std::string& ssid, const std::vector<deliver_info> & deliver_infos, const std::string& reason)
 {
-  send_confirm_deliver(plan_id, ssid, vichele_id, reason);
+  send_confirm_deliver(plan_id, ssid, deliver_infos, reason);
   return recv_confirm_deliver();
 }
 
-void stuff_plan_managementClient::send_confirm_deliver(const int64_t plan_id, const std::string& ssid, const std::vector<int64_t> & vichele_id, const std::string& reason)
+void stuff_plan_managementClient::send_confirm_deliver(const int64_t plan_id, const std::string& ssid, const std::vector<deliver_info> & deliver_infos, const std::string& reason)
 {
   int32_t cseqid = 0;
   oprot_->writeMessageBegin("confirm_deliver", ::apache::thrift::protocol::T_CALL, cseqid);
@@ -4420,7 +4420,7 @@ void stuff_plan_managementClient::send_confirm_deliver(const int64_t plan_id, co
   stuff_plan_management_confirm_deliver_pargs args;
   args.plan_id = &plan_id;
   args.ssid = &ssid;
-  args.vichele_id = &vichele_id;
+  args.deliver_infos = &deliver_infos;
   args.reason = &reason;
   args.write(oprot_);
 
@@ -5463,7 +5463,7 @@ void stuff_plan_managementProcessor::process_confirm_deliver(int32_t seqid, ::ap
 
   stuff_plan_management_confirm_deliver_result result;
   try {
-    result.success = iface_->confirm_deliver(args.plan_id, args.ssid, args.vichele_id, args.reason);
+    result.success = iface_->confirm_deliver(args.plan_id, args.ssid, args.deliver_infos, args.reason);
     result.__isset.success = true;
   } catch (gen_exp &e) {
     result.e = e;
@@ -6637,13 +6637,13 @@ bool stuff_plan_managementConcurrentClient::recv_confirm_pay(const int32_t seqid
   } // end while(true)
 }
 
-bool stuff_plan_managementConcurrentClient::confirm_deliver(const int64_t plan_id, const std::string& ssid, const std::vector<int64_t> & vichele_id, const std::string& reason)
+bool stuff_plan_managementConcurrentClient::confirm_deliver(const int64_t plan_id, const std::string& ssid, const std::vector<deliver_info> & deliver_infos, const std::string& reason)
 {
-  int32_t seqid = send_confirm_deliver(plan_id, ssid, vichele_id, reason);
+  int32_t seqid = send_confirm_deliver(plan_id, ssid, deliver_infos, reason);
   return recv_confirm_deliver(seqid);
 }
 
-int32_t stuff_plan_managementConcurrentClient::send_confirm_deliver(const int64_t plan_id, const std::string& ssid, const std::vector<int64_t> & vichele_id, const std::string& reason)
+int32_t stuff_plan_managementConcurrentClient::send_confirm_deliver(const int64_t plan_id, const std::string& ssid, const std::vector<deliver_info> & deliver_infos, const std::string& reason)
 {
   int32_t cseqid = this->sync_->generateSeqId();
   ::apache::thrift::async::TConcurrentSendSentry sentry(this->sync_.get());
@@ -6652,7 +6652,7 @@ int32_t stuff_plan_managementConcurrentClient::send_confirm_deliver(const int64_
   stuff_plan_management_confirm_deliver_pargs args;
   args.plan_id = &plan_id;
   args.ssid = &ssid;
-  args.vichele_id = &vichele_id;
+  args.deliver_infos = &deliver_infos;
   args.reason = &reason;
   args.write(oprot_);
 

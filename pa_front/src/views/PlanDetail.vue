@@ -12,7 +12,10 @@
             </van-row>
         </template>
         <van-collapse v-model="extern_company_info">
-            <van-collapse-item :title="plan_detail.name" :value="plan_detail.count + '吨'" name="1" :label="plan_detail.sale_company">
+            <van-collapse-item :title="plan_detail.name"  name="1" :label="plan_detail.sale_company">
+                <template #value v-if="plan_detail.count != 0">
+                    {{plan_detail.count}}吨
+                </template>
                 <van-field v-model="company_address" rows="1" autosize label="公司地址" type="textarea" readonly>
                 </van-field>
                 <van-field v-model="company_contact" rows="1" autosize label="联系方式" type="textarea" readonly>
@@ -21,7 +24,7 @@
             </van-collapse-item>
         </van-collapse>
         <van-cell title="单价" :value="plan_detail.unit_price" />
-        <van-cell title="总价" :value="plan_detail.total_price" />
+        <van-cell title="总价" v-if="plan_detail.total_price != 0" :value="plan_detail.total_price" />
         <van-cell title="计划到厂" :value="plan_detail.plan_time" />
     </van-cell-group>
     <van-cell-group title="提交人信息">
@@ -38,7 +41,6 @@
                 <van-cell title="主车" :value="single_vichele.main_vichele"></van-cell>
                 <van-cell title="挂车" :value="single_vichele.behind_vichele"></van-cell>
                 <van-cell title="卸车地" :value="single_vichele.drop_address"></van-cell>
-                <van-cell title="数量" :value="single_vichele.count"></van-cell>
                 <van-cell title="用途" :value="single_vichele.use_for"></van-cell>
             </van-collapse-item>
         </van-collapse>
