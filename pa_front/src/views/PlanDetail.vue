@@ -1,5 +1,13 @@
 <template>
 <div class="plan_confirm_show">
+    <van-cell-group title="提交人信息">
+        <van-cell title="提交人" :value="plan_owner_info.name"></van-cell>
+        <van-cell title="公司" :value="plan_owner_info.company" center>
+            <template #right-icon v-if="!is_proxy">
+                <van-button class="preview_btn_show" size="small" type="info" plain @click="preview_buy_attach">查看买方资质</van-button>
+            </template>
+        </van-cell>
+    </van-cell-group>
     <van-cell-group title="计划内容">
         <template #title>
             <van-row type="flex" justify="space-between" align="center">
@@ -12,7 +20,7 @@
             </van-row>
         </template>
         <van-collapse v-model="extern_company_info">
-            <van-collapse-item :title="plan_detail.name"  name="1" :label="plan_detail.sale_company">
+            <van-collapse-item :title="plan_detail.name" name="1" :label="plan_detail.sale_company">
                 <template #value v-if="plan_detail.count != 0">
                     {{plan_detail.count}}吨
                 </template>
@@ -27,15 +35,23 @@
         <van-cell title="总价" v-if="plan_detail.total_price != 0" :value="plan_detail.total_price" />
         <van-cell title="计划到厂" :value="plan_detail.plan_time" />
     </van-cell-group>
-    <van-cell-group title="提交人信息">
-        <van-cell title="提交人" :value="plan_owner_info.name"></van-cell>
-        <van-cell title="公司" :value="plan_owner_info.company" center>
-            <template #right-icon v-if="!is_proxy">
-                <van-button class="preview_btn_show" size="small" type="info" plain @click="preview_buy_attach">查看买方资质</van-button>
-            </template>
-        </van-cell>
-    </van-cell-group>
-    <van-cell-group title="车辆信息">
+    <van-cell-group>
+        <template #title>
+            <van-row type="flex" justify="space-between" align="center">
+                <van-col>车辆信息</van-col>
+                <van-col>
+                    <van-button type="info" plain size="small" @click="show_vichele_table = true">浏览</van-button>
+                    <van-popup v-model="show_vichele_table" position="bottom">
+                        <vxe-table size="small" stripe align="center" :data="plan_detail.vichele_info">
+                            <vxe-table-column field="main_vichele" title="主车" width="22%"></vxe-table-column>
+                            <vxe-table-column field="behind_vichele" title="挂车" width="23%"></vxe-table-column>
+                            <vxe-table-column field="driver_name" title="司机" width="25%"></vxe-table-column>
+                            <vxe-table-column field="driver_phone" title="电话" width="30%"></vxe-table-column>
+                        </vxe-table>
+                    </van-popup>
+                </van-col>
+            </van-row>
+        </template>
         <van-collapse v-for="(single_vichele, index) in plan_detail.vichele_info" :key="index" v-model="vichele_panel[index]">
             <van-collapse-item :title="single_vichele.driver_name + '-' + single_vichele.driver_phone" name="1">
                 <van-cell title="主车" :value="single_vichele.main_vichele"></van-cell>
@@ -105,6 +121,11 @@ import {
 import {
     Notify
 } from 'vant';
+import {
+    Popup
+} from 'vant';
+
+Vue.use(Popup);
 Vue.use(Field);
 Vue.use(Form);
 Vue.use(Dialog);
@@ -125,6 +146,7 @@ export default {
     },
     data: function () {
         return {
+            show_vichele_table: false,
             vichele_panel: [
                 []
             ],
