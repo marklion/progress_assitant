@@ -176,7 +176,7 @@ void PA_STATUS_RULE_init()
     // 驳回后修改
     g_all_status[0]->set_next(0, created_can_do);
     // 驳回计划
-    g_all_status[1]->set_next(0, company_staff_can_do);
+    g_all_status[1]->set_next(0, both_can_do);
     // 收款异常
     g_all_status[2]->set_next(1, company_staff_can_do);
     // 提货或付款前买方修改
