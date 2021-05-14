@@ -6,7 +6,7 @@
         <van-field center name="comment" v-model="comment" label="备注" placeholder="请输入备注">
         </van-field>
         <van-popup v-model="show_time_picker" position="bottom">
-            <van-datetime-picker type="datehour" title="请选择时间" :min-date="min_time" @cancel="show_time_picker = false" @confirm="confirm_time" />
+            <van-datetime-picker type="datehour" :formatter="date_formatter" title="请选择时间" :min-date="min_time" @cancel="show_time_picker = false" @confirm="confirm_time" />
         </van-popup>
         <van-row type="flex" justify="center" align="center">
             <van-col :span="20">
@@ -98,7 +98,7 @@ export default {
         orig_name: String,
         orig_price: Number,
         orig_comment: String,
-        proxy_company:String,
+        proxy_company: String,
     },
     components: {
         "vichele-in-plan": VicheleInPlan,
@@ -162,6 +162,13 @@ export default {
         }
     },
     methods: {
+        date_formatter(type, val) {
+            if (type === 'hour') {
+                return val + '点';
+            }
+
+            return val;
+        },
         add_vichele_info: function () {
             this.vichele_info.splice(0, 0, {
                 main_vichele: '',
@@ -183,7 +190,7 @@ export default {
             d = d < 10 ? ('0' + d) : d;
             var h = date.getHours();
             h = h < 10 ? ('0' + h) : h;
-            return y + '-' + m + '-' + d + ' ' + h;
+            return y + '-' + m + '-' + d + ' ' + h + '点';
         },
         confirm_time: function (_time) {
             this.plan_time = this.formatDateTime(_time);
@@ -199,7 +206,7 @@ export default {
                     name: this.orig_name,
                     price: this.orig_price,
                     comment: this.comment,
-                }, this.$cookies.get("pa_ssid"),vue_this.proxy_company]).then(function (resp) {
+                }, this.$cookies.get("pa_ssid"), vue_this.proxy_company]).then(function (resp) {
                     if (resp > 0) {
                         vue_this.$router.push({
                             name: 'CompanyOrder',
@@ -234,8 +241,8 @@ export default {
                         Dialog.confirm({
                             title: '计划车辆冲突',
                             message: resp,
-                            confirmButtonText:'继续上报',
-                            cancelButtonText:'再调整下'
+                            confirmButtonText: '继续上报',
+                            cancelButtonText: '再调整下'
                         }).then(function () {
                             vue_this.submit_plan_to_server();
                         }).catch(function () {
