@@ -5,44 +5,30 @@
             <van-row type="flex" justify="space-between" align="center">
                 <van-col>当前状态</van-col>
                 <van-col v-if="$store.state.userinfo.buyer || is_proxy">
-                    <van-button v-if="status == 0" size="small" type="warning" :to="{name:'PlanUpdate', params:{plan_id:plan_id}}">修改计划</van-button>
-                    <van-uploader v-else-if="status == 2 || status == 1" :max-count="1" :after-read="upload_payinfo">
-                        <van-button icon="plus" type="primary" size="small">上传付款凭证</van-button>
-                    </van-uploader>
-                    <van-button v-else-if="status == 3" size="small" type="info" icon="qr" @click="show_qr = true">展示提货码</van-button>
-                </van-col>
-                <van-col v-else>
-                    <van-button v-if="status == 3" size="small" type="info" icon="scan" @click="confirm_close">确认提货</van-button>
+                    <van-button v-if="can_change_to(0)" size="small" type="warning" :to="{name:'PlanUpdate', params:{plan_id:plan_id}}">修改计划</van-button>
                 </van-col>
             </van-row>
         </template>
-
-        <van-cell :value="cur_status" />
+        <van-cell :value="prompt">
+            <template #right-icon>
+                <div v-if="status > 0">
+                    <van-row type="flex" align="center" justify="end" :gutter="10">
+                        <van-col v-if="can_change_to(status-1)">
+                            <van-button block size="small" type="danger" @click="show_reject_reason_diag = true">驳回</van-button>
+                        </van-col>
+                        <van-col v-if="can_change_to(status + 1)">
+                            <van-button v-if="status == 1" block size="small" type="primary" @click="submit_confirm">确认计划</van-button>
+                            <van-button v-if="status == 2" block size="small" type="primary" @click="submit_confirm_pay">确认收款</van-button>
+                        </van-col>
+                        <van-col v-if="status >= 3">
+                            <van-button  block size="small" type="primary" :to="{name:'DeliverPlan', params:{plan_id:plan_id}}">出货详情</van-button>
+                        </van-col>
+                    </van-row>
+                </div>
+            </template>
+        </van-cell>
     </van-cell-group>
-    <div style="margin: 16px;" v-if="has_pri">
-        <van-row type="flex" justify="center" align="center" :gutter="10" v-if="status == 0">
-            <van-col :span="12">
-                <van-button round block type="danger" @click="show_reject_reason_diag = true">驳回计划</van-button>
-            </van-col>
-            <van-col :span="12">
-                <van-button round block type="primary" @click="submit_confirm">确认计划</van-button>
-            </van-col>
-        </van-row>
-        <van-row type="flex" justify="center" align="center" :gutter="10" v-if="status == 2">
-            <van-col :span="12">
-                <van-button round block type="danger" @click="show_reject_reason_diag = true">驳回付款</van-button>
-            </van-col>
-            <van-col :span="12">
-                <van-button round block type="primary" @click="submit_confirm_pay">确认收款</van-button>
-            </van-col>
-        </van-row>
-        <van-button v-if="status == 3 && is_proxy" round block type="primary" :to="{name:'ClosePlan', params:{plan_id:plan_id}}">确认收货</van-button>
-    </div>
-    <van-dialog v-model="show_qr" title="提货码">
-        <van-row type="flex" justify="center" align="center">
-            <vue-qr :text="$remote_url + '/close_plan/' + plan_id" :margin="0" colorDark="#f67b29" colorLight="#fff" :logoScale="0.3" :size="200"></vue-qr>
-        </van-row>
-    </van-dialog>
+
     <van-dialog v-model="show_reject_reason_diag" title="确认驳回" closeOnClickOverlay :showConfirmButton="false">
         <van-form @submit="reject_plan">
             <van-field v-model="reject_reason" name="驳回原因" label="驳回原因" placeholder="请输入驳回原因" :rules="[{ required: true, message: '请填写驳回原因' }]" />
@@ -53,7 +39,6 @@
 </template>
 
 <script>
-import vueQr from 'vue-qr'
 import Vue from 'vue';
 import {
     Button
@@ -75,10 +60,6 @@ import {
     Dialog
 } from 'vant';
 
-// 全局注册
-import {
-    compressAccurately
-} from 'image-conversion';
 Vue.use(Dialog);
 Vue.use(Field);
 Vue.use(Form);
@@ -91,49 +72,31 @@ export default {
     name: 'PlanOperate',
     data: function () {
         return {
-            has_pri: false,
             show_qr: false,
             show_reject_reason_diag: false,
             reject_reason: '',
+            status_change_rule: [],
+            can_change_to: function (_index) {
+                var ret = false;
+                if (_index >= 0 && _index < this.status_change_rule.length) {
+                    ret = this.status_change_rule[_index];
+                }
+
+                return ret;
+            },
         };
     },
     props: {
         plan_id: Number,
         status: Number,
         is_proxy: Boolean,
+        prompt: String,
     },
-    components: {
-        "vue-qr": vueQr,
-    },
-    computed: {
-        cur_status: function () {
-            var ret = "等待商家确认计划";
-            switch (this.status) {
-                case 1:
-                    ret = "等待买方付款";
-                    break;
-                case 2:
-                    ret = "等待商家确认付款";
-                    break;
-                case 3:
-                    ret = "等待买方提货";
-                    break;
-                case 4:
-                    ret = "已提货";
-                    break;
-                case 5:
-                    ret = "已撤销";
-                    break;
-                default:
-                    break;
-            }
-
-            return ret;
-        }
-    },
+    components: {},
+    computed: {},
     watch: {
         plan_id(_id) {
-            this.get_priv(_id);
+            this.get_change_rule(_id);
         },
     },
     methods: {
@@ -187,30 +150,12 @@ export default {
                 }
             });
         },
-        upload_payinfo: function (_file) {
+        get_change_rule: function (_id) {
             var vue_this = this;
-            compressAccurately(_file.file, 400).then(function (res) {
-                var reader = new FileReader();
-                reader.readAsDataURL(res);
-                reader.onloadend = function () {
-                    vue_this.postImg(this.result);
-                };
-            });
-        },
-        postImg(base64) {
-            var file_content = base64.split(';base64,')[1];
-            var vue_this = this;
-            this.$call_remote_process("stuff_plan_management", 'upload_payinfo', [vue_this.plan_id, vue_this.$cookies.get('pa_ssid'), file_content]).
-            then(function (resp) {
-                if (resp) {
-                    vue_this.$router.go(0);
-                }
-            });
-        },
-        get_priv: function (_id) {
-            var vue_this = this;
-            vue_this.$call_remote_process("stuff_plan_management", 'has_priv_edit', [_id, vue_this.$cookies.get('pa_ssid')]).then(function (resp) {
-                vue_this.has_pri = resp;
+            vue_this.$call_remote_process("stuff_plan_management", 'get_change_rule', [vue_this.$cookies.get('pa_ssid'), _id]).then(function (resp) {
+                resp.forEach((element, index) => {
+                    vue_this.$set(vue_this.status_change_rule, index, element);
+                });
             });
         },
         submit_confirm: function () {
@@ -229,9 +174,10 @@ export default {
                 }
             });
         },
+
     },
     beforeMount: function () {
-        this.get_priv(this.plan_id);
+        this.get_change_rule(this.plan_id);
         this.config_with_wx();
     }
 }

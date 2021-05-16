@@ -347,14 +347,7 @@ std::unique_ptr<pa_sql_company> PA_DATAOPT_fetch_company(const std::string &_com
 
 std::string PA_DATAOPT_current_time()
 {
-    std::string time_string;
-    time_t cur_time;
-    time(&cur_time);
-
-    auto st_time = localtime(&cur_time);
-    time_string = std::to_string(st_time->tm_year + 1900) + "-" + std::to_string(st_time->tm_mon + 1) + "-" + std::to_string(st_time->tm_mday) + " " + std::to_string(st_time->tm_hour) + ":" + std::to_string(st_time->tm_min) + ":" + std::to_string(st_time->tm_sec);
-
-    return time_string;
+    return PA_DATAOPT_date_2_timestring(time(NULL));
 }
 
 int64_t PA_DATAOPT_timestring_2_date(const std::string &_str)
@@ -374,11 +367,12 @@ int64_t PA_DATAOPT_timestring_2_date(const std::string &_str)
 
 std::string PA_DATAOPT_date_2_timestring(int64_t _date)
 {
-    std::string time_string;
     time_t cur_time = _date;
 
     auto st_time = localtime(&cur_time);
-    time_string = std::to_string(st_time->tm_year + 1900) + "-" + std::to_string(st_time->tm_mon + 1) + "-" + std::to_string(st_time->tm_mday) + " " + std::to_string(st_time->tm_hour) + ":" + std::to_string(st_time->tm_min) + ":" + std::to_string(st_time->tm_sec);
+    char buff[512] = "";
 
-    return time_string;
+    sprintf(buff,"%d-%02d-%02d %02d:%02d:%02d", st_time->tm_year + 1900, st_time->tm_mon + 1, st_time->tm_mday, st_time->tm_hour, st_time->tm_min, st_time->tm_sec);
+
+    return std::string(buff);
 }

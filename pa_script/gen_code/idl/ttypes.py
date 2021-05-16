@@ -730,6 +730,118 @@ class company_attachment(object):
         return not (self == other)
 
 
+class plan_status_rule(object):
+    """
+    Attributes:
+     - name
+     - author
+     - timestamp
+     - comment
+     - index
+     - prompt
+
+    """
+
+
+    def __init__(self, name=None, author=None, timestamp=None, comment=None, index=None, prompt=None,):
+        self.name = name
+        self.author = author
+        self.timestamp = timestamp
+        self.comment = comment
+        self.index = index
+        self.prompt = prompt
+
+    def read(self, iprot):
+        if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
+            iprot._fast_decode(self, iprot, [self.__class__, self.thrift_spec])
+            return
+        iprot.readStructBegin()
+        while True:
+            (fname, ftype, fid) = iprot.readFieldBegin()
+            if ftype == TType.STOP:
+                break
+            if fid == 1:
+                if ftype == TType.STRING:
+                    self.name = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 2:
+                if ftype == TType.STRING:
+                    self.author = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 3:
+                if ftype == TType.STRING:
+                    self.timestamp = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 4:
+                if ftype == TType.STRING:
+                    self.comment = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 5:
+                if ftype == TType.I64:
+                    self.index = iprot.readI64()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 6:
+                if ftype == TType.STRING:
+                    self.prompt = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
+            else:
+                iprot.skip(ftype)
+            iprot.readFieldEnd()
+        iprot.readStructEnd()
+
+    def write(self, oprot):
+        if oprot._fast_encode is not None and self.thrift_spec is not None:
+            oprot.trans.write(oprot._fast_encode(self, [self.__class__, self.thrift_spec]))
+            return
+        oprot.writeStructBegin('plan_status_rule')
+        if self.name is not None:
+            oprot.writeFieldBegin('name', TType.STRING, 1)
+            oprot.writeString(self.name.encode('utf-8') if sys.version_info[0] == 2 else self.name)
+            oprot.writeFieldEnd()
+        if self.author is not None:
+            oprot.writeFieldBegin('author', TType.STRING, 2)
+            oprot.writeString(self.author.encode('utf-8') if sys.version_info[0] == 2 else self.author)
+            oprot.writeFieldEnd()
+        if self.timestamp is not None:
+            oprot.writeFieldBegin('timestamp', TType.STRING, 3)
+            oprot.writeString(self.timestamp.encode('utf-8') if sys.version_info[0] == 2 else self.timestamp)
+            oprot.writeFieldEnd()
+        if self.comment is not None:
+            oprot.writeFieldBegin('comment', TType.STRING, 4)
+            oprot.writeString(self.comment.encode('utf-8') if sys.version_info[0] == 2 else self.comment)
+            oprot.writeFieldEnd()
+        if self.index is not None:
+            oprot.writeFieldBegin('index', TType.I64, 5)
+            oprot.writeI64(self.index)
+            oprot.writeFieldEnd()
+        if self.prompt is not None:
+            oprot.writeFieldBegin('prompt', TType.STRING, 6)
+            oprot.writeString(self.prompt.encode('utf-8') if sys.version_info[0] == 2 else self.prompt)
+            oprot.writeFieldEnd()
+        oprot.writeFieldStop()
+        oprot.writeStructEnd()
+
+    def validate(self):
+        return
+
+    def __repr__(self):
+        L = ['%s=%r' % (key, value)
+             for key, value in self.__dict__.items()]
+        return '%s(%s)' % (self.__class__.__name__, ', '.join(L))
+
+    def __eq__(self, other):
+        return isinstance(other, self.__class__) and self.__dict__ == other.__dict__
+
+    def __ne__(self, other):
+        return not (self == other)
+
+
 class plan_confirm_info(object):
     """
     Attributes:
@@ -876,11 +988,13 @@ class vichele_in_plan(object):
      - count
      - drop_address
      - use_for
+     - vichele_id
+     - finish
 
     """
 
 
-    def __init__(self, main_vichele=None, behind_vichele=None, driver_name=None, driver_phone=None, count=None, drop_address=None, use_for=None,):
+    def __init__(self, main_vichele=None, behind_vichele=None, driver_name=None, driver_phone=None, count=None, drop_address=None, use_for=None, vichele_id=None, finish=None,):
         self.main_vichele = main_vichele
         self.behind_vichele = behind_vichele
         self.driver_name = driver_name
@@ -888,6 +1002,8 @@ class vichele_in_plan(object):
         self.count = count
         self.drop_address = drop_address
         self.use_for = use_for
+        self.vichele_id = vichele_id
+        self.finish = finish
 
     def read(self, iprot):
         if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
@@ -933,6 +1049,16 @@ class vichele_in_plan(object):
                     self.use_for = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
                 else:
                     iprot.skip(ftype)
+            elif fid == 8:
+                if ftype == TType.I64:
+                    self.vichele_id = iprot.readI64()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 9:
+                if ftype == TType.BOOL:
+                    self.finish = iprot.readBool()
+                else:
+                    iprot.skip(ftype)
             else:
                 iprot.skip(ftype)
             iprot.readFieldEnd()
@@ -971,6 +1097,14 @@ class vichele_in_plan(object):
             oprot.writeFieldBegin('use_for', TType.STRING, 7)
             oprot.writeString(self.use_for.encode('utf-8') if sys.version_info[0] == 2 else self.use_for)
             oprot.writeFieldEnd()
+        if self.vichele_id is not None:
+            oprot.writeFieldBegin('vichele_id', TType.I64, 8)
+            oprot.writeI64(self.vichele_id)
+            oprot.writeFieldEnd()
+        if self.finish is not None:
+            oprot.writeFieldBegin('finish', TType.BOOL, 9)
+            oprot.writeBool(self.finish)
+            oprot.writeFieldEnd()
         oprot.writeFieldStop()
         oprot.writeStructEnd()
 
@@ -1001,26 +1135,16 @@ class stuff_plan(object):
      - name
      - price
      - status
-     - comment
-     - plan_confirm
-     - pay_confirm
-     - pay_info
-     - pay_timestamp
-     - close_timestamp
-     - close_by
-     - except_close_by
-     - except_close_timestamp
-     - except_close_reason
      - proxy_company
      - created_user_name
      - buy_company
      - sale_company
-     - reject_reason
+     - comment
 
     """
 
 
-    def __init__(self, type_id=None, count=None, vichele_info=None, plan_id=None, plan_time=None, created_time=None, name=None, price=None, status=None, comment=None, plan_confirm=None, pay_confirm=None, pay_info=None, pay_timestamp=None, close_timestamp=None, close_by=None, except_close_by=None, except_close_timestamp=None, except_close_reason=None, proxy_company=None, created_user_name=None, buy_company=None, sale_company=None, reject_reason=None,):
+    def __init__(self, type_id=None, count=None, vichele_info=None, plan_id=None, plan_time=None, created_time=None, name=None, price=None, status=None, proxy_company=None, created_user_name=None, buy_company=None, sale_company=None, comment=None,):
         self.type_id = type_id
         self.count = count
         self.vichele_info = vichele_info
@@ -1030,21 +1154,11 @@ class stuff_plan(object):
         self.name = name
         self.price = price
         self.status = status
-        self.comment = comment
-        self.plan_confirm = plan_confirm
-        self.pay_confirm = pay_confirm
-        self.pay_info = pay_info
-        self.pay_timestamp = pay_timestamp
-        self.close_timestamp = close_timestamp
-        self.close_by = close_by
-        self.except_close_by = except_close_by
-        self.except_close_timestamp = except_close_timestamp
-        self.except_close_reason = except_close_reason
         self.proxy_company = proxy_company
         self.created_user_name = created_user_name
         self.buy_company = buy_company
         self.sale_company = sale_company
-        self.reject_reason = reject_reason
+        self.comment = comment
 
     def read(self, iprot):
         if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
@@ -1108,79 +1222,27 @@ class stuff_plan(object):
                     iprot.skip(ftype)
             elif fid == 10:
                 if ftype == TType.STRING:
-                    self.comment = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
-                else:
-                    iprot.skip(ftype)
-            elif fid == 11:
-                if ftype == TType.STRUCT:
-                    self.plan_confirm = plan_confirm_info()
-                    self.plan_confirm.read(iprot)
-                else:
-                    iprot.skip(ftype)
-            elif fid == 12:
-                if ftype == TType.STRUCT:
-                    self.pay_confirm = pay_confirm_info()
-                    self.pay_confirm.read(iprot)
-                else:
-                    iprot.skip(ftype)
-            elif fid == 13:
-                if ftype == TType.STRING:
-                    self.pay_info = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
-                else:
-                    iprot.skip(ftype)
-            elif fid == 14:
-                if ftype == TType.STRING:
-                    self.pay_timestamp = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
-                else:
-                    iprot.skip(ftype)
-            elif fid == 15:
-                if ftype == TType.STRING:
-                    self.close_timestamp = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
-                else:
-                    iprot.skip(ftype)
-            elif fid == 16:
-                if ftype == TType.STRING:
-                    self.close_by = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
-                else:
-                    iprot.skip(ftype)
-            elif fid == 17:
-                if ftype == TType.STRING:
-                    self.except_close_by = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
-                else:
-                    iprot.skip(ftype)
-            elif fid == 18:
-                if ftype == TType.STRING:
-                    self.except_close_timestamp = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
-                else:
-                    iprot.skip(ftype)
-            elif fid == 19:
-                if ftype == TType.STRING:
-                    self.except_close_reason = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
-                else:
-                    iprot.skip(ftype)
-            elif fid == 20:
-                if ftype == TType.STRING:
                     self.proxy_company = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
                 else:
                     iprot.skip(ftype)
-            elif fid == 21:
+            elif fid == 11:
                 if ftype == TType.STRING:
                     self.created_user_name = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
                 else:
                     iprot.skip(ftype)
-            elif fid == 22:
+            elif fid == 12:
                 if ftype == TType.STRING:
                     self.buy_company = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
                 else:
                     iprot.skip(ftype)
-            elif fid == 23:
+            elif fid == 13:
                 if ftype == TType.STRING:
                     self.sale_company = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
                 else:
                     iprot.skip(ftype)
-            elif fid == 24:
+            elif fid == 14:
                 if ftype == TType.STRING:
-                    self.reject_reason = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                    self.comment = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
                 else:
                     iprot.skip(ftype)
             else:
@@ -1232,65 +1294,25 @@ class stuff_plan(object):
             oprot.writeFieldBegin('status', TType.I64, 9)
             oprot.writeI64(self.status)
             oprot.writeFieldEnd()
-        if self.comment is not None:
-            oprot.writeFieldBegin('comment', TType.STRING, 10)
-            oprot.writeString(self.comment.encode('utf-8') if sys.version_info[0] == 2 else self.comment)
-            oprot.writeFieldEnd()
-        if self.plan_confirm is not None:
-            oprot.writeFieldBegin('plan_confirm', TType.STRUCT, 11)
-            self.plan_confirm.write(oprot)
-            oprot.writeFieldEnd()
-        if self.pay_confirm is not None:
-            oprot.writeFieldBegin('pay_confirm', TType.STRUCT, 12)
-            self.pay_confirm.write(oprot)
-            oprot.writeFieldEnd()
-        if self.pay_info is not None:
-            oprot.writeFieldBegin('pay_info', TType.STRING, 13)
-            oprot.writeString(self.pay_info.encode('utf-8') if sys.version_info[0] == 2 else self.pay_info)
-            oprot.writeFieldEnd()
-        if self.pay_timestamp is not None:
-            oprot.writeFieldBegin('pay_timestamp', TType.STRING, 14)
-            oprot.writeString(self.pay_timestamp.encode('utf-8') if sys.version_info[0] == 2 else self.pay_timestamp)
-            oprot.writeFieldEnd()
-        if self.close_timestamp is not None:
-            oprot.writeFieldBegin('close_timestamp', TType.STRING, 15)
-            oprot.writeString(self.close_timestamp.encode('utf-8') if sys.version_info[0] == 2 else self.close_timestamp)
-            oprot.writeFieldEnd()
-        if self.close_by is not None:
-            oprot.writeFieldBegin('close_by', TType.STRING, 16)
-            oprot.writeString(self.close_by.encode('utf-8') if sys.version_info[0] == 2 else self.close_by)
-            oprot.writeFieldEnd()
-        if self.except_close_by is not None:
-            oprot.writeFieldBegin('except_close_by', TType.STRING, 17)
-            oprot.writeString(self.except_close_by.encode('utf-8') if sys.version_info[0] == 2 else self.except_close_by)
-            oprot.writeFieldEnd()
-        if self.except_close_timestamp is not None:
-            oprot.writeFieldBegin('except_close_timestamp', TType.STRING, 18)
-            oprot.writeString(self.except_close_timestamp.encode('utf-8') if sys.version_info[0] == 2 else self.except_close_timestamp)
-            oprot.writeFieldEnd()
-        if self.except_close_reason is not None:
-            oprot.writeFieldBegin('except_close_reason', TType.STRING, 19)
-            oprot.writeString(self.except_close_reason.encode('utf-8') if sys.version_info[0] == 2 else self.except_close_reason)
-            oprot.writeFieldEnd()
         if self.proxy_company is not None:
-            oprot.writeFieldBegin('proxy_company', TType.STRING, 20)
+            oprot.writeFieldBegin('proxy_company', TType.STRING, 10)
             oprot.writeString(self.proxy_company.encode('utf-8') if sys.version_info[0] == 2 else self.proxy_company)
             oprot.writeFieldEnd()
         if self.created_user_name is not None:
-            oprot.writeFieldBegin('created_user_name', TType.STRING, 21)
+            oprot.writeFieldBegin('created_user_name', TType.STRING, 11)
             oprot.writeString(self.created_user_name.encode('utf-8') if sys.version_info[0] == 2 else self.created_user_name)
             oprot.writeFieldEnd()
         if self.buy_company is not None:
-            oprot.writeFieldBegin('buy_company', TType.STRING, 22)
+            oprot.writeFieldBegin('buy_company', TType.STRING, 12)
             oprot.writeString(self.buy_company.encode('utf-8') if sys.version_info[0] == 2 else self.buy_company)
             oprot.writeFieldEnd()
         if self.sale_company is not None:
-            oprot.writeFieldBegin('sale_company', TType.STRING, 23)
+            oprot.writeFieldBegin('sale_company', TType.STRING, 13)
             oprot.writeString(self.sale_company.encode('utf-8') if sys.version_info[0] == 2 else self.sale_company)
             oprot.writeFieldEnd()
-        if self.reject_reason is not None:
-            oprot.writeFieldBegin('reject_reason', TType.STRING, 24)
-            oprot.writeString(self.reject_reason.encode('utf-8') if sys.version_info[0] == 2 else self.reject_reason)
+        if self.comment is not None:
+            oprot.writeFieldBegin('comment', TType.STRING, 14)
+            oprot.writeString(self.comment.encode('utf-8') if sys.version_info[0] == 2 else self.comment)
             oprot.writeFieldEnd()
         oprot.writeFieldStop()
         oprot.writeStructEnd()
@@ -1317,15 +1339,17 @@ class plan_status(object):
      - status
      - plan_time
      - conflict_reason
+     - status_prompt
 
     """
 
 
-    def __init__(self, plan_id=None, status=None, plan_time=None, conflict_reason=None,):
+    def __init__(self, plan_id=None, status=None, plan_time=None, conflict_reason=None, status_prompt=None,):
         self.plan_id = plan_id
         self.status = status
         self.plan_time = plan_time
         self.conflict_reason = conflict_reason
+        self.status_prompt = status_prompt
 
     def read(self, iprot):
         if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
@@ -1356,6 +1380,11 @@ class plan_status(object):
                     self.conflict_reason = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
                 else:
                     iprot.skip(ftype)
+            elif fid == 5:
+                if ftype == TType.STRING:
+                    self.status_prompt = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
             else:
                 iprot.skip(ftype)
             iprot.readFieldEnd()
@@ -1381,6 +1410,10 @@ class plan_status(object):
         if self.conflict_reason is not None:
             oprot.writeFieldBegin('conflict_reason', TType.STRING, 4)
             oprot.writeString(self.conflict_reason.encode('utf-8') if sys.version_info[0] == 2 else self.conflict_reason)
+            oprot.writeFieldEnd()
+        if self.status_prompt is not None:
+            oprot.writeFieldBegin('status_prompt', TType.STRING, 5)
+            oprot.writeString(self.status_prompt.encode('utf-8') if sys.version_info[0] == 2 else self.status_prompt)
             oprot.writeFieldEnd()
         oprot.writeFieldStop()
         oprot.writeStructEnd()
@@ -1528,6 +1561,16 @@ company_attachment.thrift_spec = (
     (2, TType.STRING, 'path', 'UTF8', None, ),  # 2
     (3, TType.STRING, 'pic_path', 'UTF8', None, ),  # 3
 )
+all_structs.append(plan_status_rule)
+plan_status_rule.thrift_spec = (
+    None,  # 0
+    (1, TType.STRING, 'name', 'UTF8', None, ),  # 1
+    (2, TType.STRING, 'author', 'UTF8', None, ),  # 2
+    (3, TType.STRING, 'timestamp', 'UTF8', None, ),  # 3
+    (4, TType.STRING, 'comment', 'UTF8', None, ),  # 4
+    (5, TType.I64, 'index', None, None, ),  # 5
+    (6, TType.STRING, 'prompt', 'UTF8', None, ),  # 6
+)
 all_structs.append(plan_confirm_info)
 plan_confirm_info.thrift_spec = (
     None,  # 0
@@ -1550,6 +1593,8 @@ vichele_in_plan.thrift_spec = (
     (5, TType.DOUBLE, 'count', None, None, ),  # 5
     (6, TType.STRING, 'drop_address', 'UTF8', None, ),  # 6
     (7, TType.STRING, 'use_for', 'UTF8', None, ),  # 7
+    (8, TType.I64, 'vichele_id', None, None, ),  # 8
+    (9, TType.BOOL, 'finish', None, None, ),  # 9
 )
 all_structs.append(stuff_plan)
 stuff_plan.thrift_spec = (
@@ -1563,21 +1608,11 @@ stuff_plan.thrift_spec = (
     (7, TType.STRING, 'name', 'UTF8', None, ),  # 7
     (8, TType.DOUBLE, 'price', None, None, ),  # 8
     (9, TType.I64, 'status', None, None, ),  # 9
-    (10, TType.STRING, 'comment', 'UTF8', None, ),  # 10
-    (11, TType.STRUCT, 'plan_confirm', [plan_confirm_info, None], None, ),  # 11
-    (12, TType.STRUCT, 'pay_confirm', [pay_confirm_info, None], None, ),  # 12
-    (13, TType.STRING, 'pay_info', 'UTF8', None, ),  # 13
-    (14, TType.STRING, 'pay_timestamp', 'UTF8', None, ),  # 14
-    (15, TType.STRING, 'close_timestamp', 'UTF8', None, ),  # 15
-    (16, TType.STRING, 'close_by', 'UTF8', None, ),  # 16
-    (17, TType.STRING, 'except_close_by', 'UTF8', None, ),  # 17
-    (18, TType.STRING, 'except_close_timestamp', 'UTF8', None, ),  # 18
-    (19, TType.STRING, 'except_close_reason', 'UTF8', None, ),  # 19
-    (20, TType.STRING, 'proxy_company', 'UTF8', None, ),  # 20
-    (21, TType.STRING, 'created_user_name', 'UTF8', None, ),  # 21
-    (22, TType.STRING, 'buy_company', 'UTF8', None, ),  # 22
-    (23, TType.STRING, 'sale_company', 'UTF8', None, ),  # 23
-    (24, TType.STRING, 'reject_reason', 'UTF8', None, ),  # 24
+    (10, TType.STRING, 'proxy_company', 'UTF8', None, ),  # 10
+    (11, TType.STRING, 'created_user_name', 'UTF8', None, ),  # 11
+    (12, TType.STRING, 'buy_company', 'UTF8', None, ),  # 12
+    (13, TType.STRING, 'sale_company', 'UTF8', None, ),  # 13
+    (14, TType.STRING, 'comment', 'UTF8', None, ),  # 14
 )
 all_structs.append(plan_status)
 plan_status.thrift_spec = (
@@ -1586,6 +1621,7 @@ plan_status.thrift_spec = (
     (2, TType.I64, 'status', None, None, ),  # 2
     (3, TType.I64, 'plan_time', None, None, ),  # 3
     (4, TType.STRING, 'conflict_reason', 'UTF8', None, ),  # 4
+    (5, TType.STRING, 'status_prompt', 'UTF8', None, ),  # 5
 )
 all_structs.append(plan_number_id)
 plan_number_id.thrift_spec = (

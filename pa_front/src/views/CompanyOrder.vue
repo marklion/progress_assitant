@@ -12,7 +12,7 @@
                     <van-button type="primary" block @click="export_plan(order_need_show)">导出</van-button>
                 </van-col>
             </van-row>
-            <plan-brief v-for="(single_plan, index) in order_need_show" :key="index" :conflict_reason="single_plan.conflict_reason" :plan_id="single_plan.plan_id" :company_view="!$store.state.userinfo.buyer"></plan-brief>
+            <plan-brief v-for="(single_plan, index) in order_need_show" :key="index" :conflict_reason="single_plan.conflict_reason" :plan_id="single_plan.plan_id" :company_view="!$store.state.userinfo.buyer" :status_prompt="single_plan.status_prompt"></plan-brief>
         </van-tab>
     </van-tabs>
     <export-file :remote_file="export_file_path" v-model="show_export_email"></export-file>
@@ -79,24 +79,6 @@ export default {
             status_name_map: [{
                 name: '全部',
                 status: -1,
-            }, {
-                name: '待确认',
-                status: 0,
-            }, {
-                name: '待付款',
-                status: 1,
-            }, {
-                name: '待收款',
-                status: 2,
-            }, {
-                name: '待提货',
-                status: 3,
-            }, {
-                name: '已完成',
-                status: 4,
-            }, {
-                name: '已撤销',
-                status: 5,
             }],
             date_option: [{
                 text: '所有进厂时间',
@@ -196,9 +178,23 @@ export default {
                 func = "get_created_plan";
             }
             vue_this.$call_remote_process("stuff_plan_management", func, [vue_this.$cookies.get('pa_ssid')]).then(function (resp) {
+                var some_plan_id = 0;
                 resp.forEach((element, index) => {
                     vue_this.$set(vue_this.orders, index, element);
+                    some_plan_id = element.plan_id;
                 });
+
+                if (0 != some_plan_id) {
+                    vue_this.$call_remote_process("stuff_plan_management", "get_status_rule", [some_plan_id]).then(function (resp) {
+                        resp.forEach(element => {
+                            vue_this.status_name_map.push({
+                                name: element.prompt,
+                                status: element.index
+                            });
+                        });
+                    });
+
+                }
             });
         },
     },
