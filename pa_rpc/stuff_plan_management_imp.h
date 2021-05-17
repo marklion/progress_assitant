@@ -857,6 +857,69 @@ public:
             my_except_close(itr, *get_sysadmin_user(), "超过计划日期，自动关闭");
         }
     }
+
+    virtual void get_today_statistics(std::vector<vichele_statistics> &_return, const std::string &ssid) 
+    {
+        auto user = PA_DATAOPT_get_online_user(ssid);
+        if (!user)
+        {
+            PA_RETURN_UNLOGIN_MSG();
+        }
+        auto company = user->get_parent<pa_sql_company>("belong_company");
+        if (!company)
+        {
+            PA_RETURN_NOCOMPANY_MSG();
+        }
+
+        auto saled_stuff = company->get_all_children<pa_sql_stuff_info>("belong_company");
+        for (auto &itr:saled_stuff)
+        {
+            auto current_time = PA_DATAOPT_current_time();
+            auto date_only = current_time.substr(0,10);
+            auto related_plans = itr.get_all_children<pa_sql_plan>("belong_stuff", "plan_time LIKE '%s%%' AND status > 1", date_only.c_str());
+            for (auto &single_plan:related_plans)
+            {
+                std::string buyer_company;
+                if (single_plan.proxy_company.length() > 0)
+                {
+                    buyer_company = single_plan.proxy_company;
+                }
+                else
+                {
+                    auto created_user = single_plan.get_parent<pa_sql_userinfo>("created_by");
+                    if (created_user)
+                    {
+                        auto created_user_company = created_user->get_parent<pa_sql_company>("belong_company");
+                        if (created_user_company)
+                        {
+                            buyer_company = created_user_company->name;
+                        }
+                    }
+                }
+                auto related_vichele_info = single_plan.get_all_children<pa_sql_single_vichele>("belong_plan");
+                for (auto &vichele:related_vichele_info)
+                {
+                    vichele_statistics tmp;
+                    auto main_vichele = vichele.get_parent<pa_sql_vichele>("main_vichele");
+                    auto behind_vichele = vichele.get_parent<pa_sql_vichele_behind>("behind_vichele");
+                    auto driver = vichele.get_parent<pa_sql_driver>("driver");
+                    if (main_vichele && behind_vichele && driver)
+                    {
+                        tmp.behind_vichele = behind_vichele->number;
+                        tmp.company = buyer_company;
+                        tmp.delivered = vichele.finish == 0?false:true;
+                        tmp.driver_name = driver->name;
+                        tmp.driver_phone = driver->phone;
+                        tmp.main_vichele = main_vichele->number;
+                        tmp.plan_id = single_plan.get_pri_id();
+                        tmp.plan_order = std::to_string(single_plan.create_time) + std::to_string(single_plan.get_pri_id());
+                        _return.push_back(tmp);
+                    }
+                }
+            }
+        }
+
+    }
 };
 
 #endif // _STUFF_PLAN_MANAGEMENT_H_

@@ -66,6 +66,17 @@
             </div>
         </van-form>
     </van-dialog>
+    <van-divider>实时数据</van-divider>
+    <van-collapse v-model="expend_statistics">
+        <van-collapse-item title="今日装车状态" :value="'共' + vichele_statistics.length + '车  出货' + delivered_vichele.length + '车'" name="0">
+            <vxe-table size="small" stripe align="center" :data="vichele_statistics">
+                <vxe-table-column field="company" title="公司" width="34%" sortable></vxe-table-column>
+                <vxe-table-column field="main_vichele" title="主车" width="24%"></vxe-table-column>
+                <vxe-table-column field="behind_vichele" title="挂车" width="24%"></vxe-table-column>
+                <vxe-table-column field="delivered" title="状态" width="18%" sortable :formatter="formater_status_vichele"></vxe-table-column>
+            </vxe-table>
+        </van-collapse-item>
+    </van-collapse>
     <van-divider class="notice_show">当前公告</van-divider>
     <van-field v-model="notice" rows="2" autosize type="textarea" maxlength="300" placeholder="请输入公告" show-word-limit />
     <van-row type="flex" justify="center" align="center" :gutter="10">
@@ -130,7 +141,13 @@ import {
 import {
     Image as VanImage
 } from 'vant';
+import {
+    Collapse,
+    CollapseItem
+} from 'vant';
 
+Vue.use(Collapse);
+Vue.use(CollapseItem);
 Vue.use(VanImage);
 Vue.use(Popover);
 Vue.use(Divider);
@@ -151,6 +168,7 @@ export default {
     name: 'CompanyHome',
     data: function () {
         return {
+            expend_statistics: [],
             all_type: [],
             show_add_stuff: false,
             add_stuff_name: '',
@@ -177,9 +195,28 @@ export default {
             proxy_company: '',
             proxy_type_id: 0,
             company_logo: '',
+            vichele_statistics: [],
         };
     },
     computed: {
+        undelivered_vichele: function () {
+            var ret = [];
+            this.vichele_statistics.forEach(element => {
+                if (!element.delivered) {
+                    ret.push(element);
+                }
+            });
+            return ret;
+        },
+        delivered_vichele: function () {
+            var ret = [];
+            this.vichele_statistics.forEach(element => {
+                if (element.delivered) {
+                    ret.push(element);
+                }
+            });
+            return ret;
+        },
         enter_company: function () {
             var ret = false;
             if (this.$store.state.userinfo.company && this.$store.state.userinfo.buyer == false) {
@@ -211,6 +248,21 @@ export default {
         }
     },
     methods: {
+        formater_status_vichele: function ({ cellValue }) {
+            if (cellValue != true) {
+                return "未提货";
+            } else {
+                return "已提货"
+            }
+        },
+        init_vichele_statistices: function () {
+            var vue_this = this;
+            vue_this.$call_remote_process("stuff_plan_management", "get_today_statistics", [vue_this.$cookies.get('pa_ssid')]).then(function (resp) {
+                resp.forEach((element, index) => {
+                    vue_this.$set(vue_this.vichele_statistics, index, element);
+                });
+            });
+        },
         nav_to_company_data: function () {
             this.$router.push({
                 name: 'BoundInfo'
@@ -387,6 +439,7 @@ export default {
         vue_this.$call_remote_process("company_management", 'get_company_logo', [vue_this.$cookies.get('pa_ssid')]).then(function (resp) {
             vue_this.company_logo = resp;
         });
+        vue_this.init_vichele_statistices();
     },
     watch: {
         "$store.state.userinfo.company": function (_val) {
@@ -429,6 +482,6 @@ export default {
     margin: 0 auto;
     width: 20px;
     line-height: 15px;
-    color:red;
+    color: red;
 }
 </style>
