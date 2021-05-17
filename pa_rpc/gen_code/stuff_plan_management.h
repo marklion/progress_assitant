@@ -39,6 +39,7 @@ class stuff_plan_managementIf {
   virtual void get_status_rule(std::vector<plan_status_rule> & _return, const int64_t plan_id) = 0;
   virtual void get_change_rule(std::vector<bool> & _return, const std::string& ssid, const int64_t plan_id) = 0;
   virtual void clean_unclose_plan() = 0;
+  virtual void get_today_statistics(std::vector<vichele_statistics> & _return, const std::string& ssid) = 0;
 };
 
 class stuff_plan_managementIfFactory {
@@ -125,6 +126,9 @@ class stuff_plan_managementNull : virtual public stuff_plan_managementIf {
     return;
   }
   void clean_unclose_plan() {
+    return;
+  }
+  void get_today_statistics(std::vector<vichele_statistics> & /* _return */, const std::string& /* ssid */) {
     return;
   }
 };
@@ -2132,6 +2136,118 @@ class stuff_plan_management_clean_unclose_plan_presult {
 
 };
 
+typedef struct _stuff_plan_management_get_today_statistics_args__isset {
+  _stuff_plan_management_get_today_statistics_args__isset() : ssid(false) {}
+  bool ssid :1;
+} _stuff_plan_management_get_today_statistics_args__isset;
+
+class stuff_plan_management_get_today_statistics_args {
+ public:
+
+  stuff_plan_management_get_today_statistics_args(const stuff_plan_management_get_today_statistics_args&);
+  stuff_plan_management_get_today_statistics_args& operator=(const stuff_plan_management_get_today_statistics_args&);
+  stuff_plan_management_get_today_statistics_args() : ssid() {
+  }
+
+  virtual ~stuff_plan_management_get_today_statistics_args() noexcept;
+  std::string ssid;
+
+  _stuff_plan_management_get_today_statistics_args__isset __isset;
+
+  void __set_ssid(const std::string& val);
+
+  bool operator == (const stuff_plan_management_get_today_statistics_args & rhs) const
+  {
+    if (!(ssid == rhs.ssid))
+      return false;
+    return true;
+  }
+  bool operator != (const stuff_plan_management_get_today_statistics_args &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const stuff_plan_management_get_today_statistics_args & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+
+class stuff_plan_management_get_today_statistics_pargs {
+ public:
+
+
+  virtual ~stuff_plan_management_get_today_statistics_pargs() noexcept;
+  const std::string* ssid;
+
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _stuff_plan_management_get_today_statistics_result__isset {
+  _stuff_plan_management_get_today_statistics_result__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _stuff_plan_management_get_today_statistics_result__isset;
+
+class stuff_plan_management_get_today_statistics_result {
+ public:
+
+  stuff_plan_management_get_today_statistics_result(const stuff_plan_management_get_today_statistics_result&);
+  stuff_plan_management_get_today_statistics_result& operator=(const stuff_plan_management_get_today_statistics_result&);
+  stuff_plan_management_get_today_statistics_result() {
+  }
+
+  virtual ~stuff_plan_management_get_today_statistics_result() noexcept;
+  std::vector<vichele_statistics>  success;
+  gen_exp e;
+
+  _stuff_plan_management_get_today_statistics_result__isset __isset;
+
+  void __set_success(const std::vector<vichele_statistics> & val);
+
+  void __set_e(const gen_exp& val);
+
+  bool operator == (const stuff_plan_management_get_today_statistics_result & rhs) const
+  {
+    if (!(success == rhs.success))
+      return false;
+    if (!(e == rhs.e))
+      return false;
+    return true;
+  }
+  bool operator != (const stuff_plan_management_get_today_statistics_result &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const stuff_plan_management_get_today_statistics_result & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _stuff_plan_management_get_today_statistics_presult__isset {
+  _stuff_plan_management_get_today_statistics_presult__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _stuff_plan_management_get_today_statistics_presult__isset;
+
+class stuff_plan_management_get_today_statistics_presult {
+ public:
+
+
+  virtual ~stuff_plan_management_get_today_statistics_presult() noexcept;
+  std::vector<vichele_statistics> * success;
+  gen_exp e;
+
+  _stuff_plan_management_get_today_statistics_presult__isset __isset;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+
+};
+
 class stuff_plan_managementClient : virtual public stuff_plan_managementIf {
  public:
   stuff_plan_managementClient(std::shared_ptr< ::apache::thrift::protocol::TProtocol> prot) {
@@ -2208,6 +2324,9 @@ class stuff_plan_managementClient : virtual public stuff_plan_managementIf {
   void clean_unclose_plan();
   void send_clean_unclose_plan();
   void recv_clean_unclose_plan();
+  void get_today_statistics(std::vector<vichele_statistics> & _return, const std::string& ssid);
+  void send_get_today_statistics(const std::string& ssid);
+  void recv_get_today_statistics(std::vector<vichele_statistics> & _return);
  protected:
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> piprot_;
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> poprot_;
@@ -2240,6 +2359,7 @@ class stuff_plan_managementProcessor : public ::apache::thrift::TDispatchProcess
   void process_get_status_rule(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
   void process_get_change_rule(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
   void process_clean_unclose_plan(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
+  void process_get_today_statistics(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
  public:
   stuff_plan_managementProcessor(::std::shared_ptr<stuff_plan_managementIf> iface) :
     iface_(iface) {
@@ -2260,6 +2380,7 @@ class stuff_plan_managementProcessor : public ::apache::thrift::TDispatchProcess
     processMap_["get_status_rule"] = &stuff_plan_managementProcessor::process_get_status_rule;
     processMap_["get_change_rule"] = &stuff_plan_managementProcessor::process_get_change_rule;
     processMap_["clean_unclose_plan"] = &stuff_plan_managementProcessor::process_clean_unclose_plan;
+    processMap_["get_today_statistics"] = &stuff_plan_managementProcessor::process_get_today_statistics;
   }
 
   virtual ~stuff_plan_managementProcessor() {}
@@ -2449,6 +2570,16 @@ class stuff_plan_managementMultiface : virtual public stuff_plan_managementIf {
     ifaces_[i]->clean_unclose_plan();
   }
 
+  void get_today_statistics(std::vector<vichele_statistics> & _return, const std::string& ssid) {
+    size_t sz = ifaces_.size();
+    size_t i = 0;
+    for (; i < (sz - 1); ++i) {
+      ifaces_[i]->get_today_statistics(_return, ssid);
+    }
+    ifaces_[i]->get_today_statistics(_return, ssid);
+    return;
+  }
+
 };
 
 // The 'concurrent' client is a thread safe client that correctly handles
@@ -2532,6 +2663,9 @@ class stuff_plan_managementConcurrentClient : virtual public stuff_plan_manageme
   void clean_unclose_plan();
   int32_t send_clean_unclose_plan();
   void recv_clean_unclose_plan(const int32_t seqid);
+  void get_today_statistics(std::vector<vichele_statistics> & _return, const std::string& ssid);
+  int32_t send_get_today_statistics(const std::string& ssid);
+  void recv_get_today_statistics(std::vector<vichele_statistics> & _return, const int32_t seqid);
  protected:
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> piprot_;
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> poprot_;

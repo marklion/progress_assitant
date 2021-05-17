@@ -169,6 +169,17 @@ struct deliver_info {
     2:double count,
 }
 
+struct vichele_statistics {
+    1:string company,
+    2:string main_vichele,
+    3:string behind_vichele,
+    4:string driver_name,
+    5:string driver_phone,
+    6:bool delivered,
+    7:i64 plan_id,
+    8:string plan_order,
+}
+
 service stuff_plan_management {
     i64 create_plan(1:stuff_plan plan, 2:string ssid, 3:string proxy_company) throws (1:gen_exp e),
     list<plan_status> get_created_plan(1:string ssid) throws (1:gen_exp e),
@@ -187,4 +198,5 @@ service stuff_plan_management {
     list<plan_status_rule> get_status_rule(1:i64 plan_id) throws (1:gen_exp e),
     list<bool> get_change_rule(1:string ssid, 2:i64 plan_id) throws (1:gen_exp e),
     void clean_unclose_plan() throws (1:gen_exp e),
+    list<vichele_statistics> get_today_statistics(1:string ssid) throws (1:gen_exp e),
 }

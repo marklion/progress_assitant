@@ -53,6 +53,8 @@ class plan_number_id;
 
 class deliver_info;
 
+class vichele_statistics;
+
 typedef struct _gen_exp__isset {
   _gen_exp__isset() : msg(false) {}
   bool msg :1;
@@ -1062,6 +1064,90 @@ class deliver_info : public virtual ::apache::thrift::TBase {
 void swap(deliver_info &a, deliver_info &b);
 
 std::ostream& operator<<(std::ostream& out, const deliver_info& obj);
+
+typedef struct _vichele_statistics__isset {
+  _vichele_statistics__isset() : company(false), main_vichele(false), behind_vichele(false), driver_name(false), driver_phone(false), delivered(false), plan_id(false), plan_order(false) {}
+  bool company :1;
+  bool main_vichele :1;
+  bool behind_vichele :1;
+  bool driver_name :1;
+  bool driver_phone :1;
+  bool delivered :1;
+  bool plan_id :1;
+  bool plan_order :1;
+} _vichele_statistics__isset;
+
+class vichele_statistics : public virtual ::apache::thrift::TBase {
+ public:
+
+  vichele_statistics(const vichele_statistics&);
+  vichele_statistics& operator=(const vichele_statistics&);
+  vichele_statistics() : company(), main_vichele(), behind_vichele(), driver_name(), driver_phone(), delivered(0), plan_id(0), plan_order() {
+  }
+
+  virtual ~vichele_statistics() noexcept;
+  std::string company;
+  std::string main_vichele;
+  std::string behind_vichele;
+  std::string driver_name;
+  std::string driver_phone;
+  bool delivered;
+  int64_t plan_id;
+  std::string plan_order;
+
+  _vichele_statistics__isset __isset;
+
+  void __set_company(const std::string& val);
+
+  void __set_main_vichele(const std::string& val);
+
+  void __set_behind_vichele(const std::string& val);
+
+  void __set_driver_name(const std::string& val);
+
+  void __set_driver_phone(const std::string& val);
+
+  void __set_delivered(const bool val);
+
+  void __set_plan_id(const int64_t val);
+
+  void __set_plan_order(const std::string& val);
+
+  bool operator == (const vichele_statistics & rhs) const
+  {
+    if (!(company == rhs.company))
+      return false;
+    if (!(main_vichele == rhs.main_vichele))
+      return false;
+    if (!(behind_vichele == rhs.behind_vichele))
+      return false;
+    if (!(driver_name == rhs.driver_name))
+      return false;
+    if (!(driver_phone == rhs.driver_phone))
+      return false;
+    if (!(delivered == rhs.delivered))
+      return false;
+    if (!(plan_id == rhs.plan_id))
+      return false;
+    if (!(plan_order == rhs.plan_order))
+      return false;
+    return true;
+  }
+  bool operator != (const vichele_statistics &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const vichele_statistics & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+  virtual void printTo(std::ostream& out) const;
+};
+
+void swap(vichele_statistics &a, vichele_statistics &b);
+
+std::ostream& operator<<(std::ostream& out, const vichele_statistics& obj);
 
 
 

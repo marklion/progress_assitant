@@ -1707,3 +1707,164 @@ deliver_info = class {
   }
 
 };
+vichele_statistics = class {
+  constructor(args) {
+    this.company = null;
+    this.main_vichele = null;
+    this.behind_vichele = null;
+    this.driver_name = null;
+    this.driver_phone = null;
+    this.delivered = null;
+    this.plan_id = null;
+    this.plan_order = null;
+    if (args) {
+      if (args.company !== undefined && args.company !== null) {
+        this.company = args.company;
+      }
+      if (args.main_vichele !== undefined && args.main_vichele !== null) {
+        this.main_vichele = args.main_vichele;
+      }
+      if (args.behind_vichele !== undefined && args.behind_vichele !== null) {
+        this.behind_vichele = args.behind_vichele;
+      }
+      if (args.driver_name !== undefined && args.driver_name !== null) {
+        this.driver_name = args.driver_name;
+      }
+      if (args.driver_phone !== undefined && args.driver_phone !== null) {
+        this.driver_phone = args.driver_phone;
+      }
+      if (args.delivered !== undefined && args.delivered !== null) {
+        this.delivered = args.delivered;
+      }
+      if (args.plan_id !== undefined && args.plan_id !== null) {
+        this.plan_id = args.plan_id;
+      }
+      if (args.plan_order !== undefined && args.plan_order !== null) {
+        this.plan_order = args.plan_order;
+      }
+    }
+  }
+
+  read (input) {
+    input.readStructBegin();
+    while (true) {
+      const ret = input.readFieldBegin();
+      const ftype = ret.ftype;
+      const fid = ret.fid;
+      if (ftype == Thrift.Type.STOP) {
+        break;
+      }
+      switch (fid) {
+        case 1:
+        if (ftype == Thrift.Type.STRING) {
+          this.company = input.readString().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        case 2:
+        if (ftype == Thrift.Type.STRING) {
+          this.main_vichele = input.readString().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        case 3:
+        if (ftype == Thrift.Type.STRING) {
+          this.behind_vichele = input.readString().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        case 4:
+        if (ftype == Thrift.Type.STRING) {
+          this.driver_name = input.readString().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        case 5:
+        if (ftype == Thrift.Type.STRING) {
+          this.driver_phone = input.readString().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        case 6:
+        if (ftype == Thrift.Type.BOOL) {
+          this.delivered = input.readBool().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        case 7:
+        if (ftype == Thrift.Type.I64) {
+          this.plan_id = input.readI64().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        case 8:
+        if (ftype == Thrift.Type.STRING) {
+          this.plan_order = input.readString().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        default:
+          input.skip(ftype);
+      }
+      input.readFieldEnd();
+    }
+    input.readStructEnd();
+    return;
+  }
+
+  write (output) {
+    output.writeStructBegin('vichele_statistics');
+    if (this.company !== null && this.company !== undefined) {
+      output.writeFieldBegin('company', Thrift.Type.STRING, 1);
+      output.writeString(this.company);
+      output.writeFieldEnd();
+    }
+    if (this.main_vichele !== null && this.main_vichele !== undefined) {
+      output.writeFieldBegin('main_vichele', Thrift.Type.STRING, 2);
+      output.writeString(this.main_vichele);
+      output.writeFieldEnd();
+    }
+    if (this.behind_vichele !== null && this.behind_vichele !== undefined) {
+      output.writeFieldBegin('behind_vichele', Thrift.Type.STRING, 3);
+      output.writeString(this.behind_vichele);
+      output.writeFieldEnd();
+    }
+    if (this.driver_name !== null && this.driver_name !== undefined) {
+      output.writeFieldBegin('driver_name', Thrift.Type.STRING, 4);
+      output.writeString(this.driver_name);
+      output.writeFieldEnd();
+    }
+    if (this.driver_phone !== null && this.driver_phone !== undefined) {
+      output.writeFieldBegin('driver_phone', Thrift.Type.STRING, 5);
+      output.writeString(this.driver_phone);
+      output.writeFieldEnd();
+    }
+    if (this.delivered !== null && this.delivered !== undefined) {
+      output.writeFieldBegin('delivered', Thrift.Type.BOOL, 6);
+      output.writeBool(this.delivered);
+      output.writeFieldEnd();
+    }
+    if (this.plan_id !== null && this.plan_id !== undefined) {
+      output.writeFieldBegin('plan_id', Thrift.Type.I64, 7);
+      output.writeI64(this.plan_id);
+      output.writeFieldEnd();
+    }
+    if (this.plan_order !== null && this.plan_order !== undefined) {
+      output.writeFieldBegin('plan_order', Thrift.Type.STRING, 8);
+      output.writeString(this.plan_order);
+      output.writeFieldEnd();
+    }
+    output.writeFieldStop();
+    output.writeStructEnd();
+    return;
+  }
+
+};

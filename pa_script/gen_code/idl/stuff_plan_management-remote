@@ -41,6 +41,7 @@ if len(sys.argv) <= 1 or sys.argv[1] == '--help':
     print('   get_status_rule(i64 plan_id)')
     print('   get_change_rule(string ssid, i64 plan_id)')
     print('  void clean_unclose_plan()')
+    print('   get_today_statistics(string ssid)')
     print('')
     sys.exit(0)
 
@@ -221,6 +222,12 @@ elif cmd == 'clean_unclose_plan':
         print('clean_unclose_plan requires 0 args')
         sys.exit(1)
     pp.pprint(client.clean_unclose_plan())
+
+elif cmd == 'get_today_statistics':
+    if len(args) != 1:
+        print('get_today_statistics requires 1 args')
+        sys.exit(1)
+    pp.pprint(client.get_today_statistics(args[0],))
 
 else:
     print('Unrecognized method %s' % cmd)

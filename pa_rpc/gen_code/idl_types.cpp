@@ -2637,3 +2637,235 @@ void deliver_info::printTo(std::ostream& out) const {
 }
 
 
+vichele_statistics::~vichele_statistics() noexcept {
+}
+
+
+void vichele_statistics::__set_company(const std::string& val) {
+  this->company = val;
+}
+
+void vichele_statistics::__set_main_vichele(const std::string& val) {
+  this->main_vichele = val;
+}
+
+void vichele_statistics::__set_behind_vichele(const std::string& val) {
+  this->behind_vichele = val;
+}
+
+void vichele_statistics::__set_driver_name(const std::string& val) {
+  this->driver_name = val;
+}
+
+void vichele_statistics::__set_driver_phone(const std::string& val) {
+  this->driver_phone = val;
+}
+
+void vichele_statistics::__set_delivered(const bool val) {
+  this->delivered = val;
+}
+
+void vichele_statistics::__set_plan_id(const int64_t val) {
+  this->plan_id = val;
+}
+
+void vichele_statistics::__set_plan_order(const std::string& val) {
+  this->plan_order = val;
+}
+std::ostream& operator<<(std::ostream& out, const vichele_statistics& obj)
+{
+  obj.printTo(out);
+  return out;
+}
+
+
+uint32_t vichele_statistics::read(::apache::thrift::protocol::TProtocol* iprot) {
+
+  ::apache::thrift::protocol::TInputRecursionTracker tracker(*iprot);
+  uint32_t xfer = 0;
+  std::string fname;
+  ::apache::thrift::protocol::TType ftype;
+  int16_t fid;
+
+  xfer += iprot->readStructBegin(fname);
+
+  using ::apache::thrift::protocol::TProtocolException;
+
+
+  while (true)
+  {
+    xfer += iprot->readFieldBegin(fname, ftype, fid);
+    if (ftype == ::apache::thrift::protocol::T_STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 1:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->company);
+          this->__isset.company = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 2:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->main_vichele);
+          this->__isset.main_vichele = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 3:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->behind_vichele);
+          this->__isset.behind_vichele = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 4:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->driver_name);
+          this->__isset.driver_name = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 5:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->driver_phone);
+          this->__isset.driver_phone = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 6:
+        if (ftype == ::apache::thrift::protocol::T_BOOL) {
+          xfer += iprot->readBool(this->delivered);
+          this->__isset.delivered = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 7:
+        if (ftype == ::apache::thrift::protocol::T_I64) {
+          xfer += iprot->readI64(this->plan_id);
+          this->__isset.plan_id = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 8:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->plan_order);
+          this->__isset.plan_order = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      default:
+        xfer += iprot->skip(ftype);
+        break;
+    }
+    xfer += iprot->readFieldEnd();
+  }
+
+  xfer += iprot->readStructEnd();
+
+  return xfer;
+}
+
+uint32_t vichele_statistics::write(::apache::thrift::protocol::TProtocol* oprot) const {
+  uint32_t xfer = 0;
+  ::apache::thrift::protocol::TOutputRecursionTracker tracker(*oprot);
+  xfer += oprot->writeStructBegin("vichele_statistics");
+
+  xfer += oprot->writeFieldBegin("company", ::apache::thrift::protocol::T_STRING, 1);
+  xfer += oprot->writeString(this->company);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("main_vichele", ::apache::thrift::protocol::T_STRING, 2);
+  xfer += oprot->writeString(this->main_vichele);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("behind_vichele", ::apache::thrift::protocol::T_STRING, 3);
+  xfer += oprot->writeString(this->behind_vichele);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("driver_name", ::apache::thrift::protocol::T_STRING, 4);
+  xfer += oprot->writeString(this->driver_name);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("driver_phone", ::apache::thrift::protocol::T_STRING, 5);
+  xfer += oprot->writeString(this->driver_phone);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("delivered", ::apache::thrift::protocol::T_BOOL, 6);
+  xfer += oprot->writeBool(this->delivered);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("plan_id", ::apache::thrift::protocol::T_I64, 7);
+  xfer += oprot->writeI64(this->plan_id);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("plan_order", ::apache::thrift::protocol::T_STRING, 8);
+  xfer += oprot->writeString(this->plan_order);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldStop();
+  xfer += oprot->writeStructEnd();
+  return xfer;
+}
+
+void swap(vichele_statistics &a, vichele_statistics &b) {
+  using ::std::swap;
+  swap(a.company, b.company);
+  swap(a.main_vichele, b.main_vichele);
+  swap(a.behind_vichele, b.behind_vichele);
+  swap(a.driver_name, b.driver_name);
+  swap(a.driver_phone, b.driver_phone);
+  swap(a.delivered, b.delivered);
+  swap(a.plan_id, b.plan_id);
+  swap(a.plan_order, b.plan_order);
+  swap(a.__isset, b.__isset);
+}
+
+vichele_statistics::vichele_statistics(const vichele_statistics& other38) {
+  company = other38.company;
+  main_vichele = other38.main_vichele;
+  behind_vichele = other38.behind_vichele;
+  driver_name = other38.driver_name;
+  driver_phone = other38.driver_phone;
+  delivered = other38.delivered;
+  plan_id = other38.plan_id;
+  plan_order = other38.plan_order;
+  __isset = other38.__isset;
+}
+vichele_statistics& vichele_statistics::operator=(const vichele_statistics& other39) {
+  company = other39.company;
+  main_vichele = other39.main_vichele;
+  behind_vichele = other39.behind_vichele;
+  driver_name = other39.driver_name;
+  driver_phone = other39.driver_phone;
+  delivered = other39.delivered;
+  plan_id = other39.plan_id;
+  plan_order = other39.plan_order;
+  __isset = other39.__isset;
+  return *this;
+}
+void vichele_statistics::printTo(std::ostream& out) const {
+  using ::apache::thrift::to_string;
+  out << "vichele_statistics(";
+  out << "company=" << to_string(company);
+  out << ", " << "main_vichele=" << to_string(main_vichele);
+  out << ", " << "behind_vichele=" << to_string(behind_vichele);
+  out << ", " << "driver_name=" << to_string(driver_name);
+  out << ", " << "driver_phone=" << to_string(driver_phone);
+  out << ", " << "delivered=" << to_string(delivered);
+  out << ", " << "plan_id=" << to_string(plan_id);
+  out << ", " << "plan_order=" << to_string(plan_order);
+  out << ")";
+}
+
+

@@ -1567,6 +1567,140 @@ class deliver_info(object):
 
     def __ne__(self, other):
         return not (self == other)
+
+
+class vichele_statistics(object):
+    """
+    Attributes:
+     - company
+     - main_vichele
+     - behind_vichele
+     - driver_name
+     - driver_phone
+     - delivered
+     - plan_id
+     - plan_order
+
+    """
+
+
+    def __init__(self, company=None, main_vichele=None, behind_vichele=None, driver_name=None, driver_phone=None, delivered=None, plan_id=None, plan_order=None,):
+        self.company = company
+        self.main_vichele = main_vichele
+        self.behind_vichele = behind_vichele
+        self.driver_name = driver_name
+        self.driver_phone = driver_phone
+        self.delivered = delivered
+        self.plan_id = plan_id
+        self.plan_order = plan_order
+
+    def read(self, iprot):
+        if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
+            iprot._fast_decode(self, iprot, [self.__class__, self.thrift_spec])
+            return
+        iprot.readStructBegin()
+        while True:
+            (fname, ftype, fid) = iprot.readFieldBegin()
+            if ftype == TType.STOP:
+                break
+            if fid == 1:
+                if ftype == TType.STRING:
+                    self.company = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 2:
+                if ftype == TType.STRING:
+                    self.main_vichele = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 3:
+                if ftype == TType.STRING:
+                    self.behind_vichele = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 4:
+                if ftype == TType.STRING:
+                    self.driver_name = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 5:
+                if ftype == TType.STRING:
+                    self.driver_phone = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 6:
+                if ftype == TType.BOOL:
+                    self.delivered = iprot.readBool()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 7:
+                if ftype == TType.I64:
+                    self.plan_id = iprot.readI64()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 8:
+                if ftype == TType.STRING:
+                    self.plan_order = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
+            else:
+                iprot.skip(ftype)
+            iprot.readFieldEnd()
+        iprot.readStructEnd()
+
+    def write(self, oprot):
+        if oprot._fast_encode is not None and self.thrift_spec is not None:
+            oprot.trans.write(oprot._fast_encode(self, [self.__class__, self.thrift_spec]))
+            return
+        oprot.writeStructBegin('vichele_statistics')
+        if self.company is not None:
+            oprot.writeFieldBegin('company', TType.STRING, 1)
+            oprot.writeString(self.company.encode('utf-8') if sys.version_info[0] == 2 else self.company)
+            oprot.writeFieldEnd()
+        if self.main_vichele is not None:
+            oprot.writeFieldBegin('main_vichele', TType.STRING, 2)
+            oprot.writeString(self.main_vichele.encode('utf-8') if sys.version_info[0] == 2 else self.main_vichele)
+            oprot.writeFieldEnd()
+        if self.behind_vichele is not None:
+            oprot.writeFieldBegin('behind_vichele', TType.STRING, 3)
+            oprot.writeString(self.behind_vichele.encode('utf-8') if sys.version_info[0] == 2 else self.behind_vichele)
+            oprot.writeFieldEnd()
+        if self.driver_name is not None:
+            oprot.writeFieldBegin('driver_name', TType.STRING, 4)
+            oprot.writeString(self.driver_name.encode('utf-8') if sys.version_info[0] == 2 else self.driver_name)
+            oprot.writeFieldEnd()
+        if self.driver_phone is not None:
+            oprot.writeFieldBegin('driver_phone', TType.STRING, 5)
+            oprot.writeString(self.driver_phone.encode('utf-8') if sys.version_info[0] == 2 else self.driver_phone)
+            oprot.writeFieldEnd()
+        if self.delivered is not None:
+            oprot.writeFieldBegin('delivered', TType.BOOL, 6)
+            oprot.writeBool(self.delivered)
+            oprot.writeFieldEnd()
+        if self.plan_id is not None:
+            oprot.writeFieldBegin('plan_id', TType.I64, 7)
+            oprot.writeI64(self.plan_id)
+            oprot.writeFieldEnd()
+        if self.plan_order is not None:
+            oprot.writeFieldBegin('plan_order', TType.STRING, 8)
+            oprot.writeString(self.plan_order.encode('utf-8') if sys.version_info[0] == 2 else self.plan_order)
+            oprot.writeFieldEnd()
+        oprot.writeFieldStop()
+        oprot.writeStructEnd()
+
+    def validate(self):
+        return
+
+    def __repr__(self):
+        L = ['%s=%r' % (key, value)
+             for key, value in self.__dict__.items()]
+        return '%s(%s)' % (self.__class__.__name__, ', '.join(L))
+
+    def __eq__(self, other):
+        return isinstance(other, self.__class__) and self.__dict__ == other.__dict__
+
+    def __ne__(self, other):
+        return not (self == other)
 all_structs.append(gen_exp)
 gen_exp.thrift_spec = (
     None,  # 0
@@ -1702,6 +1836,18 @@ deliver_info.thrift_spec = (
     None,  # 0
     (1, TType.I64, 'id', None, None, ),  # 1
     (2, TType.DOUBLE, 'count', None, None, ),  # 2
+)
+all_structs.append(vichele_statistics)
+vichele_statistics.thrift_spec = (
+    None,  # 0
+    (1, TType.STRING, 'company', 'UTF8', None, ),  # 1
+    (2, TType.STRING, 'main_vichele', 'UTF8', None, ),  # 2
+    (3, TType.STRING, 'behind_vichele', 'UTF8', None, ),  # 3
+    (4, TType.STRING, 'driver_name', 'UTF8', None, ),  # 4
+    (5, TType.STRING, 'driver_phone', 'UTF8', None, ),  # 5
+    (6, TType.BOOL, 'delivered', None, None, ),  # 6
+    (7, TType.I64, 'plan_id', None, None, ),  # 7
+    (8, TType.STRING, 'plan_order', 'UTF8', None, ),  # 8
 )
 fix_spec(all_structs)
 del all_structs
