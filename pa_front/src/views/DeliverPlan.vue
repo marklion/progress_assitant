@@ -8,9 +8,9 @@
         <van-cell-group title="未出货车辆">
             <van-cell v-for="(item, index) in undelivered_vichele" center :key="index" :title="item.main_vichele + '-' + item.behind_vichele" :label="item.driver_name + '-' + item.driver_phone">
                 <template #icon>
-                    <van-checkbox style="margin-right:10px" :name="index" ref="checkboxes" />
+                    <van-checkbox style="margin-right:10px" :name="index" ref="checkboxes" v-if="can_change_to(4)"/>
                 </template>
-                <van-row type="flex" align="center" justify="end">
+                <van-row type="flex" align="center" justify="end" v-if="can_change_to(4)">
                     <van-col>
                         <van-stepper v-model="item.count" />
                     </van-col>
