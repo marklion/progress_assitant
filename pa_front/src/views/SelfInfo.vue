@@ -24,7 +24,7 @@
                 <van-button v-else size="small" type="primary" native-type="button" @click="send_sms">发送验证码</van-button>
             </template>
         </van-field>
-        <van-field v-if="has_verify_code" v-model="verify_code" name="验证码" label="验证码" placeholder="请输入验证码" :rules="[{ required: true, message: '请填写验证码' }]" />
+        <van-field v-if="has_verify_code" v-model="verify_code" maxlength="6" name="验证码" label="验证码" placeholder="请输入验证码" :rules="[{ required: true, message: '请填写验证码' }]" />
         <van-field name="company_picker" v-if="$store.state.userinfo.buyer" v-model="userinfo.company" label="公司" placeholder="请填入所在公司" :rules="[{ required: true, message: '请填写所属公司' }]" />
         <div style="margin: 16px;">
             <van-button round block type="info" native-type="submit">提交</van-button>
