@@ -87,6 +87,7 @@ void pa_sql_archive_plan::translate_from_plan(pa_sql_plan &_plan)
     }
     this->stuff_name = _plan.name;
     this->unit_price = std::to_string(_plan.price);
+    this->is_cancel = _plan.is_cancel;
     this->insert_record();
 
     auto vichele_in_plan = _plan.get_all_children<pa_sql_single_vichele>("belong_plan");
@@ -114,6 +115,7 @@ void pa_sql_archive_plan::translate_from_plan(pa_sql_plan &_plan)
         tmp.drop_address = itr.drop_address;
         tmp.use_for = itr.use_for;
         tmp.finish = itr.finish;
+        tmp.deliver_timestamp = itr.deliver_timestamp;
         tmp.set_parent(*this, "belong_plan");
         tmp.insert_record();
     }

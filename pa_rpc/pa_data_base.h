@@ -208,6 +208,7 @@ public:
     std::string a_buy_company;
     std::string a_buy_name;
     std::string a_sale_company;
+    int is_cancel = 0;
     pa_sql_plan() {
         add_parent_type<pa_sql_userinfo>("created_by");
         add_parent_type<pa_sql_stuff_info>("belong_stuff");
@@ -223,6 +224,7 @@ public:
         ret.push_back(sqlite_orm_column("status", sqlite_orm_column::INTEGER, &status));
         ret.push_back(sqlite_orm_column("proxy_company", sqlite_orm_column::STRING, &proxy_company));
         ret.push_back(sqlite_orm_column("conflict_reason", sqlite_orm_column::STRING, &conflict_reason));
+        ret.push_back(sqlite_orm_column("is_cancel", sqlite_orm_column::INTEGER, &is_cancel));
 
         return ret;
     }
@@ -268,6 +270,7 @@ public:
     std::string use_for;
     double count = 0;
     int finish = 0;
+    std::string deliver_timestamp;
     pa_sql_single_vichele()
     {
         add_parent_type<pa_sql_vichele>("main_vichele");
@@ -282,6 +285,7 @@ public:
         ret.push_back(sqlite_orm_column("use_for", sqlite_orm_column::STRING, &use_for));
         ret.push_back(sqlite_orm_column("count", sqlite_orm_column::REAL, &count));
         ret.push_back(sqlite_orm_column("finish", sqlite_orm_column::INTEGER, &finish));
+        ret.push_back(sqlite_orm_column("deliver_timestamp", sqlite_orm_column::STRING, &deliver_timestamp));
 
         return ret;
     }
@@ -353,6 +357,7 @@ public:
     std::string plan_time;
     std::string sale_company;
     std::string buy_company;
+    int is_cancel = 0;
     virtual std::vector<sqlite_orm_column> self_columns_defined()
     {
         std::vector<sqlite_orm_column> ret;
@@ -366,6 +371,7 @@ public:
         ret.push_back(sqlite_orm_column("plan_time", sqlite_orm_column::STRING, &plan_time));
         ret.push_back(sqlite_orm_column("sale_company", sqlite_orm_column::STRING, &sale_company));
         ret.push_back(sqlite_orm_column("buy_company", sqlite_orm_column::STRING, &buy_company));
+        ret.push_back(sqlite_orm_column("is_cancel", sqlite_orm_column::INTEGER, &is_cancel));
 
         return ret;
     }
@@ -389,6 +395,7 @@ public:
     std::string use_for;
     std::string count;
     int finish = 0;
+    std::string deliver_timestamp;
     pa_sql_archive_vichele_plan()
     {
         add_parent_type<pa_sql_archive_plan>("belong_plan");
@@ -404,6 +411,7 @@ public:
         ret.push_back(sqlite_orm_column("use_for", sqlite_orm_column::STRING, &use_for));
         ret.push_back(sqlite_orm_column("count", sqlite_orm_column::STRING, &count));
         ret.push_back(sqlite_orm_column("finish", sqlite_orm_column::INTEGER, &finish));
+        ret.push_back(sqlite_orm_column("deliver_timestamp", sqlite_orm_column::STRING, &deliver_timestamp));
 
         return ret;
     }

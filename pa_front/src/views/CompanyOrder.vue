@@ -186,6 +186,10 @@ export default {
 
                 if (0 != some_plan_id) {
                     vue_this.$call_remote_process("stuff_plan_management", "get_status_rule", [some_plan_id]).then(function (resp) {
+                        vue_this.status_name_map = [{
+                            name: "全部",
+                            status: -1
+                        }];
                         resp.forEach(element => {
                             vue_this.status_name_map.push({
                                 name: element.prompt,

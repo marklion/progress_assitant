@@ -6,9 +6,12 @@
         </template>
         <template #tags>
             <div>
-                进厂时间：{{plan_time}}
+                计划进厂时间：{{plan_time}}
             </div>
             <van-tag plain type="danger">{{status_prompt}}</van-tag>
+            <div v-if="need_show_deliver_time">
+                实际出货时间：{{status_in_plan[3].timestamp}}
+            </div>
         </template>
         <template #footer>
             创建时间:{{created_time}}
@@ -47,6 +50,8 @@ export default {
             plan_time: '',
             created_time: '',
             status: 0,
+            status_in_plan: [],
+            is_cancel: false,
         };
     },
     watch: {
@@ -55,6 +60,13 @@ export default {
         }
     },
     computed: {
+        need_show_deliver_time: function () {
+            var ret = false;
+            if (this.status_in_plan.length > 3 && this.status_in_plan[3].timestamp) {
+                ret = true;
+            }
+            return ret;
+        },
     },
     methods: {
         nav_to_detail: function () {
@@ -87,6 +99,7 @@ export default {
                 vue_this.created_time = vue_this.formatDateTime(new Date(resp.created_time * 1000));
                 vue_this.name = resp.name;
                 vue_this.status = resp.status;
+                vue_this.is_cancel = resp.is_cancel;
                 if (false == vue_this.company_view) {
                     vue_this.company = resp.sale_company;
                 } else {
@@ -97,8 +110,19 @@ export default {
                         vue_this.company = vue_this.company + '(' + resp.created_user_name + ')';
                     }
                 }
+                vue_this.get_status_in_plan();
             });
         },
+        get_status_in_plan: function () {
+            var vue_this = this;
+            vue_this.status_in_plan = [];
+            vue_this.$call_remote_process("stuff_plan_management", "get_status_rule", [vue_this.plan_id]).then(function (resp) {
+                resp.forEach((element, index) => {
+                    vue_this.$set(vue_this.status_in_plan, index, element);
+                });
+            });
+        },
+
     },
     beforeMount: function () {
         this.init_brief_data();
@@ -108,14 +132,16 @@ export default {
 
 <style scoped>
 .stuff_card_show /deep/ .van-card__title {
-    font-size:18px;
+    font-size: 18px;
     line-height: 20px;
 }
+
 .stuff_card_show /deep/ .van-card__desc {
     font-size: 16px;
     font-weight: bold;
 }
+
 .conflict_show {
-    color:red;
+    color: red;
 }
 </style>

@@ -53,9 +53,10 @@
             </van-row>
         </template>
         <van-collapse v-for="(single_vichele, index) in plan_detail.vichele_info" :key="index" v-model="vichele_panel[index]">
-            <van-collapse-item :title="single_vichele.driver_name + '-' + single_vichele.driver_phone" name="1">
-                <van-cell title="主车" :value="single_vichele.main_vichele"></van-cell>
-                <van-cell title="挂车" :value="single_vichele.behind_vichele"></van-cell>
+            <van-collapse-item :title="single_vichele.main_vichele+ '-' + single_vichele.behind_vichele" :value="vichele_status(single_vichele.finish)" name="1">
+                <van-cell title="司机" :value="single_vichele.driver_name"></van-cell>
+                <van-cell title="电话" :value="single_vichele.driver_phone"></van-cell>
+                <van-cell v-if="single_vichele.finish" title="提货时间" :value="single_vichele.deliver_timestamp"></van-cell>
                 <van-cell title="卸车地" :value="single_vichele.drop_address"></van-cell>
                 <van-cell title="用途" :value="single_vichele.use_for"></van-cell>
             </van-collapse-item>
@@ -174,6 +175,13 @@ export default {
             company_contact: '',
             status_in_plan: [],
             status_change_rule: [],
+            vichele_status: function (_value) {
+                var ret = "未提货";
+                if (_value) {
+                    ret = "已提货";
+                }
+                return ret;
+            },
         };
     },
     computed: {
@@ -184,7 +192,8 @@ export default {
             }
 
             return ret;
-        }
+        },
+
     },
     methods: {
         preview_buy_attach: function () {
@@ -230,6 +239,7 @@ export default {
         },
         get_status_in_plan: function () {
             var vue_this = this;
+            vue_this.status_in_plan = [];
             vue_this.$call_remote_process("stuff_plan_management", "get_status_rule", [parseInt(vue_this.$route.params.plan_id)]).then(function (resp) {
                 resp.forEach((element, index) => {
                     vue_this.$set(vue_this.status_in_plan, index, element);
@@ -243,6 +253,7 @@ export default {
         },
         get_change_rule: function () {
             var vue_this = this;
+            vue_this.status_change_rule = [];
             vue_this.$call_remote_process("stuff_plan_management", 'get_change_rule', [vue_this.$cookies.get('pa_ssid'), parseInt(vue_this.$route.params.plan_id)]).then(function (resp) {
                 resp.forEach((element, index) => {
                     vue_this.$set(vue_this.status_change_rule, index, element);
@@ -266,6 +277,7 @@ export default {
                 vue_this.company_address = company_resp.address;
                 vue_this.company_contact = company_resp.contact;
             });
+            vue_this.vichele_info = [];
             resp.vichele_info.forEach((element, index) => {
                 vue_this.$set(vue_this.plan_detail.vichele_info, index, element);
                 vue_this.$set(vue_this.vichele_panel, index, ['0']);
