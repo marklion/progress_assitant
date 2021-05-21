@@ -1025,6 +1025,7 @@ vichele_in_plan = class {
     this.use_for = null;
     this.vichele_id = null;
     this.finish = null;
+    this.deliver_timestamp = null;
     if (args) {
       if (args.main_vichele !== undefined && args.main_vichele !== null) {
         this.main_vichele = args.main_vichele;
@@ -1052,6 +1053,9 @@ vichele_in_plan = class {
       }
       if (args.finish !== undefined && args.finish !== null) {
         this.finish = args.finish;
+      }
+      if (args.deliver_timestamp !== undefined && args.deliver_timestamp !== null) {
+        this.deliver_timestamp = args.deliver_timestamp;
       }
     }
   }
@@ -1129,6 +1133,13 @@ vichele_in_plan = class {
           input.skip(ftype);
         }
         break;
+        case 10:
+        if (ftype == Thrift.Type.STRING) {
+          this.deliver_timestamp = input.readString().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
         default:
           input.skip(ftype);
       }
@@ -1185,6 +1196,11 @@ vichele_in_plan = class {
       output.writeBool(this.finish);
       output.writeFieldEnd();
     }
+    if (this.deliver_timestamp !== null && this.deliver_timestamp !== undefined) {
+      output.writeFieldBegin('deliver_timestamp', Thrift.Type.STRING, 10);
+      output.writeString(this.deliver_timestamp);
+      output.writeFieldEnd();
+    }
     output.writeFieldStop();
     output.writeStructEnd();
     return;
@@ -1207,6 +1223,7 @@ stuff_plan = class {
     this.buy_company = null;
     this.sale_company = null;
     this.comment = null;
+    this.is_cancel = null;
     if (args) {
       if (args.type_id !== undefined && args.type_id !== null) {
         this.type_id = args.type_id;
@@ -1249,6 +1266,9 @@ stuff_plan = class {
       }
       if (args.comment !== undefined && args.comment !== null) {
         this.comment = args.comment;
+      }
+      if (args.is_cancel !== undefined && args.is_cancel !== null) {
+        this.is_cancel = args.is_cancel;
       }
     }
   }
@@ -1370,6 +1390,13 @@ stuff_plan = class {
           input.skip(ftype);
         }
         break;
+        case 15:
+        if (ftype == Thrift.Type.BOOL) {
+          this.is_cancel = input.readBool().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
         default:
           input.skip(ftype);
       }
@@ -1456,6 +1483,11 @@ stuff_plan = class {
     if (this.comment !== null && this.comment !== undefined) {
       output.writeFieldBegin('comment', Thrift.Type.STRING, 14);
       output.writeString(this.comment);
+      output.writeFieldEnd();
+    }
+    if (this.is_cancel !== null && this.is_cancel !== undefined) {
+      output.writeFieldBegin('is_cancel', Thrift.Type.BOOL, 15);
+      output.writeBool(this.is_cancel);
       output.writeFieldEnd();
     }
     output.writeFieldStop();

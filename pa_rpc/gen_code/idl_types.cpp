@@ -1656,6 +1656,10 @@ void vichele_in_plan::__set_vichele_id(const int64_t val) {
 void vichele_in_plan::__set_finish(const bool val) {
   this->finish = val;
 }
+
+void vichele_in_plan::__set_deliver_timestamp(const std::string& val) {
+  this->deliver_timestamp = val;
+}
 std::ostream& operator<<(std::ostream& out, const vichele_in_plan& obj)
 {
   obj.printTo(out);
@@ -1756,6 +1760,14 @@ uint32_t vichele_in_plan::read(::apache::thrift::protocol::TProtocol* iprot) {
           xfer += iprot->skip(ftype);
         }
         break;
+      case 10:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->deliver_timestamp);
+          this->__isset.deliver_timestamp = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
       default:
         xfer += iprot->skip(ftype);
         break;
@@ -1809,6 +1821,10 @@ uint32_t vichele_in_plan::write(::apache::thrift::protocol::TProtocol* oprot) co
   xfer += oprot->writeBool(this->finish);
   xfer += oprot->writeFieldEnd();
 
+  xfer += oprot->writeFieldBegin("deliver_timestamp", ::apache::thrift::protocol::T_STRING, 10);
+  xfer += oprot->writeString(this->deliver_timestamp);
+  xfer += oprot->writeFieldEnd();
+
   xfer += oprot->writeFieldStop();
   xfer += oprot->writeStructEnd();
   return xfer;
@@ -1825,6 +1841,7 @@ void swap(vichele_in_plan &a, vichele_in_plan &b) {
   swap(a.use_for, b.use_for);
   swap(a.vichele_id, b.vichele_id);
   swap(a.finish, b.finish);
+  swap(a.deliver_timestamp, b.deliver_timestamp);
   swap(a.__isset, b.__isset);
 }
 
@@ -1838,6 +1855,7 @@ vichele_in_plan::vichele_in_plan(const vichele_in_plan& other22) {
   use_for = other22.use_for;
   vichele_id = other22.vichele_id;
   finish = other22.finish;
+  deliver_timestamp = other22.deliver_timestamp;
   __isset = other22.__isset;
 }
 vichele_in_plan& vichele_in_plan::operator=(const vichele_in_plan& other23) {
@@ -1850,6 +1868,7 @@ vichele_in_plan& vichele_in_plan::operator=(const vichele_in_plan& other23) {
   use_for = other23.use_for;
   vichele_id = other23.vichele_id;
   finish = other23.finish;
+  deliver_timestamp = other23.deliver_timestamp;
   __isset = other23.__isset;
   return *this;
 }
@@ -1865,6 +1884,7 @@ void vichele_in_plan::printTo(std::ostream& out) const {
   out << ", " << "use_for=" << to_string(use_for);
   out << ", " << "vichele_id=" << to_string(vichele_id);
   out << ", " << "finish=" << to_string(finish);
+  out << ", " << "deliver_timestamp=" << to_string(deliver_timestamp);
   out << ")";
 }
 
@@ -1927,6 +1947,10 @@ void stuff_plan::__set_sale_company(const std::string& val) {
 
 void stuff_plan::__set_comment(const std::string& val) {
   this->comment = val;
+}
+
+void stuff_plan::__set_is_cancel(const bool val) {
+  this->is_cancel = val;
 }
 std::ostream& operator<<(std::ostream& out, const stuff_plan& obj)
 {
@@ -2080,6 +2104,14 @@ uint32_t stuff_plan::read(::apache::thrift::protocol::TProtocol* iprot) {
           xfer += iprot->skip(ftype);
         }
         break;
+      case 15:
+        if (ftype == ::apache::thrift::protocol::T_BOOL) {
+          xfer += iprot->readBool(this->is_cancel);
+          this->__isset.is_cancel = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
       default:
         xfer += iprot->skip(ftype);
         break;
@@ -2161,6 +2193,10 @@ uint32_t stuff_plan::write(::apache::thrift::protocol::TProtocol* oprot) const {
   xfer += oprot->writeString(this->comment);
   xfer += oprot->writeFieldEnd();
 
+  xfer += oprot->writeFieldBegin("is_cancel", ::apache::thrift::protocol::T_BOOL, 15);
+  xfer += oprot->writeBool(this->is_cancel);
+  xfer += oprot->writeFieldEnd();
+
   xfer += oprot->writeFieldStop();
   xfer += oprot->writeStructEnd();
   return xfer;
@@ -2182,6 +2218,7 @@ void swap(stuff_plan &a, stuff_plan &b) {
   swap(a.buy_company, b.buy_company);
   swap(a.sale_company, b.sale_company);
   swap(a.comment, b.comment);
+  swap(a.is_cancel, b.is_cancel);
   swap(a.__isset, b.__isset);
 }
 
@@ -2200,6 +2237,7 @@ stuff_plan::stuff_plan(const stuff_plan& other30) {
   buy_company = other30.buy_company;
   sale_company = other30.sale_company;
   comment = other30.comment;
+  is_cancel = other30.is_cancel;
   __isset = other30.__isset;
 }
 stuff_plan& stuff_plan::operator=(const stuff_plan& other31) {
@@ -2217,6 +2255,7 @@ stuff_plan& stuff_plan::operator=(const stuff_plan& other31) {
   buy_company = other31.buy_company;
   sale_company = other31.sale_company;
   comment = other31.comment;
+  is_cancel = other31.is_cancel;
   __isset = other31.__isset;
   return *this;
 }
@@ -2237,6 +2276,7 @@ void stuff_plan::printTo(std::ostream& out) const {
   out << ", " << "buy_company=" << to_string(buy_company);
   out << ", " << "sale_company=" << to_string(sale_company);
   out << ", " << "comment=" << to_string(comment);
+  out << ", " << "is_cancel=" << to_string(is_cancel);
   out << ")";
 }
 

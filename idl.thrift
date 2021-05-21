@@ -132,6 +132,7 @@ struct vichele_in_plan {
     7:string use_for,
     8:i64 vichele_id,
     9:bool finish,
+    10:string deliver_timestamp,
 }
 
 struct stuff_plan {
@@ -149,6 +150,7 @@ struct stuff_plan {
     12:string buy_company,
     13:string sale_company,
     14:string comment,
+    15:bool is_cancel,
 }
 
 struct plan_status {

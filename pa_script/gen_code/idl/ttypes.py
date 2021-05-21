@@ -990,11 +990,12 @@ class vichele_in_plan(object):
      - use_for
      - vichele_id
      - finish
+     - deliver_timestamp
 
     """
 
 
-    def __init__(self, main_vichele=None, behind_vichele=None, driver_name=None, driver_phone=None, count=None, drop_address=None, use_for=None, vichele_id=None, finish=None,):
+    def __init__(self, main_vichele=None, behind_vichele=None, driver_name=None, driver_phone=None, count=None, drop_address=None, use_for=None, vichele_id=None, finish=None, deliver_timestamp=None,):
         self.main_vichele = main_vichele
         self.behind_vichele = behind_vichele
         self.driver_name = driver_name
@@ -1004,6 +1005,7 @@ class vichele_in_plan(object):
         self.use_for = use_for
         self.vichele_id = vichele_id
         self.finish = finish
+        self.deliver_timestamp = deliver_timestamp
 
     def read(self, iprot):
         if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
@@ -1059,6 +1061,11 @@ class vichele_in_plan(object):
                     self.finish = iprot.readBool()
                 else:
                     iprot.skip(ftype)
+            elif fid == 10:
+                if ftype == TType.STRING:
+                    self.deliver_timestamp = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
             else:
                 iprot.skip(ftype)
             iprot.readFieldEnd()
@@ -1105,6 +1112,10 @@ class vichele_in_plan(object):
             oprot.writeFieldBegin('finish', TType.BOOL, 9)
             oprot.writeBool(self.finish)
             oprot.writeFieldEnd()
+        if self.deliver_timestamp is not None:
+            oprot.writeFieldBegin('deliver_timestamp', TType.STRING, 10)
+            oprot.writeString(self.deliver_timestamp.encode('utf-8') if sys.version_info[0] == 2 else self.deliver_timestamp)
+            oprot.writeFieldEnd()
         oprot.writeFieldStop()
         oprot.writeStructEnd()
 
@@ -1140,11 +1151,12 @@ class stuff_plan(object):
      - buy_company
      - sale_company
      - comment
+     - is_cancel
 
     """
 
 
-    def __init__(self, type_id=None, count=None, vichele_info=None, plan_id=None, plan_time=None, created_time=None, name=None, price=None, status=None, proxy_company=None, created_user_name=None, buy_company=None, sale_company=None, comment=None,):
+    def __init__(self, type_id=None, count=None, vichele_info=None, plan_id=None, plan_time=None, created_time=None, name=None, price=None, status=None, proxy_company=None, created_user_name=None, buy_company=None, sale_company=None, comment=None, is_cancel=None,):
         self.type_id = type_id
         self.count = count
         self.vichele_info = vichele_info
@@ -1159,6 +1171,7 @@ class stuff_plan(object):
         self.buy_company = buy_company
         self.sale_company = sale_company
         self.comment = comment
+        self.is_cancel = is_cancel
 
     def read(self, iprot):
         if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
@@ -1245,6 +1258,11 @@ class stuff_plan(object):
                     self.comment = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
                 else:
                     iprot.skip(ftype)
+            elif fid == 15:
+                if ftype == TType.BOOL:
+                    self.is_cancel = iprot.readBool()
+                else:
+                    iprot.skip(ftype)
             else:
                 iprot.skip(ftype)
             iprot.readFieldEnd()
@@ -1313,6 +1331,10 @@ class stuff_plan(object):
         if self.comment is not None:
             oprot.writeFieldBegin('comment', TType.STRING, 14)
             oprot.writeString(self.comment.encode('utf-8') if sys.version_info[0] == 2 else self.comment)
+            oprot.writeFieldEnd()
+        if self.is_cancel is not None:
+            oprot.writeFieldBegin('is_cancel', TType.BOOL, 15)
+            oprot.writeBool(self.is_cancel)
             oprot.writeFieldEnd()
         oprot.writeFieldStop()
         oprot.writeStructEnd()
@@ -1797,6 +1819,7 @@ vichele_in_plan.thrift_spec = (
     (7, TType.STRING, 'use_for', 'UTF8', None, ),  # 7
     (8, TType.I64, 'vichele_id', None, None, ),  # 8
     (9, TType.BOOL, 'finish', None, None, ),  # 9
+    (10, TType.STRING, 'deliver_timestamp', 'UTF8', None, ),  # 10
 )
 all_structs.append(stuff_plan)
 stuff_plan.thrift_spec = (
@@ -1815,6 +1838,7 @@ stuff_plan.thrift_spec = (
     (12, TType.STRING, 'buy_company', 'UTF8', None, ),  # 12
     (13, TType.STRING, 'sale_company', 'UTF8', None, ),  # 13
     (14, TType.STRING, 'comment', 'UTF8', None, ),  # 14
+    (15, TType.BOOL, 'is_cancel', None, None, ),  # 15
 )
 all_structs.append(plan_status)
 plan_status.thrift_spec = (

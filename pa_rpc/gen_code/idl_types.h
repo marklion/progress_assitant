@@ -694,7 +694,7 @@ void swap(pay_confirm_info &a, pay_confirm_info &b);
 std::ostream& operator<<(std::ostream& out, const pay_confirm_info& obj);
 
 typedef struct _vichele_in_plan__isset {
-  _vichele_in_plan__isset() : main_vichele(false), behind_vichele(false), driver_name(false), driver_phone(false), count(false), drop_address(false), use_for(false), vichele_id(false), finish(false) {}
+  _vichele_in_plan__isset() : main_vichele(false), behind_vichele(false), driver_name(false), driver_phone(false), count(false), drop_address(false), use_for(false), vichele_id(false), finish(false), deliver_timestamp(false) {}
   bool main_vichele :1;
   bool behind_vichele :1;
   bool driver_name :1;
@@ -704,6 +704,7 @@ typedef struct _vichele_in_plan__isset {
   bool use_for :1;
   bool vichele_id :1;
   bool finish :1;
+  bool deliver_timestamp :1;
 } _vichele_in_plan__isset;
 
 class vichele_in_plan : public virtual ::apache::thrift::TBase {
@@ -711,7 +712,7 @@ class vichele_in_plan : public virtual ::apache::thrift::TBase {
 
   vichele_in_plan(const vichele_in_plan&);
   vichele_in_plan& operator=(const vichele_in_plan&);
-  vichele_in_plan() : main_vichele(), behind_vichele(), driver_name(), driver_phone(), count(0), drop_address(), use_for(), vichele_id(0), finish(0) {
+  vichele_in_plan() : main_vichele(), behind_vichele(), driver_name(), driver_phone(), count(0), drop_address(), use_for(), vichele_id(0), finish(0), deliver_timestamp() {
   }
 
   virtual ~vichele_in_plan() noexcept;
@@ -724,6 +725,7 @@ class vichele_in_plan : public virtual ::apache::thrift::TBase {
   std::string use_for;
   int64_t vichele_id;
   bool finish;
+  std::string deliver_timestamp;
 
   _vichele_in_plan__isset __isset;
 
@@ -745,6 +747,8 @@ class vichele_in_plan : public virtual ::apache::thrift::TBase {
 
   void __set_finish(const bool val);
 
+  void __set_deliver_timestamp(const std::string& val);
+
   bool operator == (const vichele_in_plan & rhs) const
   {
     if (!(main_vichele == rhs.main_vichele))
@@ -765,6 +769,8 @@ class vichele_in_plan : public virtual ::apache::thrift::TBase {
       return false;
     if (!(finish == rhs.finish))
       return false;
+    if (!(deliver_timestamp == rhs.deliver_timestamp))
+      return false;
     return true;
   }
   bool operator != (const vichele_in_plan &rhs) const {
@@ -784,7 +790,7 @@ void swap(vichele_in_plan &a, vichele_in_plan &b);
 std::ostream& operator<<(std::ostream& out, const vichele_in_plan& obj);
 
 typedef struct _stuff_plan__isset {
-  _stuff_plan__isset() : type_id(false), count(false), vichele_info(false), plan_id(false), plan_time(false), created_time(false), name(false), price(false), status(false), proxy_company(false), created_user_name(false), buy_company(false), sale_company(false), comment(false) {}
+  _stuff_plan__isset() : type_id(false), count(false), vichele_info(false), plan_id(false), plan_time(false), created_time(false), name(false), price(false), status(false), proxy_company(false), created_user_name(false), buy_company(false), sale_company(false), comment(false), is_cancel(false) {}
   bool type_id :1;
   bool count :1;
   bool vichele_info :1;
@@ -799,6 +805,7 @@ typedef struct _stuff_plan__isset {
   bool buy_company :1;
   bool sale_company :1;
   bool comment :1;
+  bool is_cancel :1;
 } _stuff_plan__isset;
 
 class stuff_plan : public virtual ::apache::thrift::TBase {
@@ -806,7 +813,7 @@ class stuff_plan : public virtual ::apache::thrift::TBase {
 
   stuff_plan(const stuff_plan&);
   stuff_plan& operator=(const stuff_plan&);
-  stuff_plan() : type_id(0), count(0), plan_id(0), plan_time(), created_time(0), name(), price(0), status(0), proxy_company(), created_user_name(), buy_company(), sale_company(), comment() {
+  stuff_plan() : type_id(0), count(0), plan_id(0), plan_time(), created_time(0), name(), price(0), status(0), proxy_company(), created_user_name(), buy_company(), sale_company(), comment(), is_cancel(0) {
   }
 
   virtual ~stuff_plan() noexcept;
@@ -824,6 +831,7 @@ class stuff_plan : public virtual ::apache::thrift::TBase {
   std::string buy_company;
   std::string sale_company;
   std::string comment;
+  bool is_cancel;
 
   _stuff_plan__isset __isset;
 
@@ -855,6 +863,8 @@ class stuff_plan : public virtual ::apache::thrift::TBase {
 
   void __set_comment(const std::string& val);
 
+  void __set_is_cancel(const bool val);
+
   bool operator == (const stuff_plan & rhs) const
   {
     if (!(type_id == rhs.type_id))
@@ -884,6 +894,8 @@ class stuff_plan : public virtual ::apache::thrift::TBase {
     if (!(sale_company == rhs.sale_company))
       return false;
     if (!(comment == rhs.comment))
+      return false;
+    if (!(is_cancel == rhs.is_cancel))
       return false;
     return true;
   }

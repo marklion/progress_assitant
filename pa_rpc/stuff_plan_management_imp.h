@@ -142,6 +142,7 @@ public:
                     _return.proxy_company = plan->proxy_company;
                     _return.sale_company = archive_plan->sale_company;
                     _return.status = plan->status;
+                    _return.is_cancel = plan->is_cancel == 0?false:true;
                     auto belong_type = plan->get_parent<pa_sql_stuff_info>("belong_stuff");
                     if (belong_type)
                     {
@@ -159,6 +160,7 @@ public:
                         tmp.main_vichele = itr.main_vichele;
                         tmp.use_for = itr.use_for;
                         tmp.finish = itr.finish == 0?false:true;
+                        tmp.deliver_timestamp = itr.deliver_timestamp;
                         _return.vichele_info.push_back(tmp);
                     }
                 }
@@ -220,6 +222,7 @@ public:
                         tmp.use_for = itr.use_for;
                         tmp.vichele_id = itr.get_pri_id();
                         tmp.finish = itr.finish == 0?false:true;
+                        tmp.deliver_timestamp = itr.deliver_timestamp;
                         _return.vichele_info.push_back(tmp);
                     }
                 }
@@ -396,6 +399,7 @@ public:
 
         auto opt_user = PA_DATAOPT_get_online_user(ssid);
         auto plan = sqlite_orm::search_record<pa_sql_plan>(plan_id);
+        auto current_time = PA_DATAOPT_current_time();
         if (plan && opt_user && plan->status == 3 && PA_STATUS_RULE_can_be_change(*plan, *opt_user, 4))
         {
             for (auto &itr : deliver_infos)
@@ -407,6 +411,7 @@ public:
                 }
                 found_vichele_info->finish = 1;
                 found_vichele_info->count = itr.count;
+                found_vichele_info->deliver_timestamp = current_time;
                 found_vichele_info->update_record();
             }
             auto total_count = plan->get_all_children<pa_sql_single_vichele>("belong_plan").size();
@@ -617,7 +622,8 @@ public:
         }
         if (my_except_close(*plan, *opt_user, "手动撤销，原因：" + reason))
         {
-            ret = true;
+            plan->is_cancel = 1;
+            ret = plan->update_record();
         }
         else
         {
@@ -854,6 +860,11 @@ public:
         auto plans_need_close = sqlite_orm::search_record_all<pa_sql_plan>("status != 4 AND plan_time LIKE '%s%%'", current_day.c_str());
         for (auto &itr : plans_need_close)
         {
+            auto delivered_vichele = itr.get_all_children<pa_sql_single_vichele>("belong_plan", "finish = 1");
+            if (delivered_vichele.size() == 0)
+            {
+                itr.is_cancel = 1;
+            }
             my_except_close(itr, *get_sysadmin_user(), "超过计划日期，自动关闭");
         }
     }
