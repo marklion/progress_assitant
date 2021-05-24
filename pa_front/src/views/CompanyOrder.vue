@@ -1,6 +1,6 @@
 <template>
 <div class="company_order_show">
-    <van-tabs v-model="active" sticky>
+    <van-tabs v-model="active" sticky @change="init_orders($store.state.userinfo.buyer)">
         <van-tab v-for="(status_in_map, _si_index) in status_name_map" :key="_si_index" :title="status_in_map.name" :badge="numbers_of_tab(status_in_map.status)">
             <van-row type="flex" justify="center" align="center">
                 <van-col :span="20">
@@ -12,7 +12,9 @@
                     <van-button type="primary" block @click="export_plan(order_need_show)">导出</van-button>
                 </van-col>
             </van-row>
-            <plan-brief v-for="(single_plan, index) in order_need_show" :key="index" :conflict_reason="single_plan.conflict_reason" :plan_id="single_plan.plan_id" :company_view="!$store.state.userinfo.buyer" :status_prompt="single_plan.status_prompt"></plan-brief>
+            <van-list :immediate-check="false" v-model="lazy_loading" :finished="lazy_finished" finished-text="没有更多了" @load="get_orders_by_ancher">
+                <plan-brief v-for="(single_plan, index) in order_need_show" :key="index" :conflict_reason="single_plan.conflict_reason" :plan_id="single_plan.plan_id" :company_view="!$store.state.userinfo.buyer" :status_prompt="single_plan.status_prompt"></plan-brief>
+            </van-list>
         </van-tab>
     </van-tabs>
     <export-file :remote_file="export_file_path" v-model="show_export_email"></export-file>
@@ -42,9 +44,12 @@ import {
 import {
     Field
 } from 'vant';
+import {
+    List
+} from 'vant';
 
+Vue.use(List);
 Vue.use(Field);
-// 全局注册
 Vue.use(Dialog);
 Vue.use(Button);
 Vue.use(Col);
@@ -59,6 +64,8 @@ export default {
     name: 'CompanyOrder',
     data: function () {
         return {
+            lazy_loading: false,
+            lazy_finished: false,
             orders: [],
             active: 0,
             numbers_of_tab: function (_status) {
@@ -171,18 +178,40 @@ export default {
                 vue_this.show_export_email = true;
             });
         },
+        get_orders_by_ancher: function () {
+            var vue_this = this;
+            var func = "get_company_plan";
+            if (vue_this.$store.state.userinfo.buyer) {
+                func = "get_created_plan";
+            }
+            vue_this.$call_remote_process("stuff_plan_management", func, [vue_this.$cookies.get('pa_ssid'), vue_this.orders.length]).then(function (resp) {
+                resp.forEach(element => {
+                    vue_this.orders.push(element)
+                });
+                if (resp.length < 15) {
+                    vue_this.lazy_finished = true;
+                }
+                vue_this.lazy_loading = false;
+            });
+        },
         init_orders: function (_is_buyer) {
             var vue_this = this;
             var func = "get_company_plan";
             if (_is_buyer) {
                 func = "get_created_plan";
             }
-            vue_this.$call_remote_process("stuff_plan_management", func, [vue_this.$cookies.get('pa_ssid')]).then(function (resp) {
+            vue_this.$call_remote_process("stuff_plan_management", func, [vue_this.$cookies.get('pa_ssid'), 0]).then(function (resp) {
+                vue_this.orders = [];
                 var some_plan_id = 0;
                 resp.forEach((element, index) => {
                     vue_this.$set(vue_this.orders, index, element);
                     some_plan_id = element.plan_id;
                 });
+                if (resp.length < 15) {
+                    vue_this.lazy_finished = true;
+                } else {
+                    vue_this.lazy_finished = false;
+                }
 
                 if (0 != some_plan_id) {
                     vue_this.$call_remote_process("stuff_plan_management", "get_status_rule", [some_plan_id]).then(function (resp) {

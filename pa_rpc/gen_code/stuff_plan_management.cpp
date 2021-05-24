@@ -281,6 +281,14 @@ uint32_t stuff_plan_management_get_created_plan_args::read(::apache::thrift::pro
           xfer += iprot->skip(ftype);
         }
         break;
+      case 2:
+        if (ftype == ::apache::thrift::protocol::T_I64) {
+          xfer += iprot->readI64(this->anchor);
+          this->__isset.anchor = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
       default:
         xfer += iprot->skip(ftype);
         break;
@@ -302,6 +310,10 @@ uint32_t stuff_plan_management_get_created_plan_args::write(::apache::thrift::pr
   xfer += oprot->writeString(this->ssid);
   xfer += oprot->writeFieldEnd();
 
+  xfer += oprot->writeFieldBegin("anchor", ::apache::thrift::protocol::T_I64, 2);
+  xfer += oprot->writeI64(this->anchor);
+  xfer += oprot->writeFieldEnd();
+
   xfer += oprot->writeFieldStop();
   xfer += oprot->writeStructEnd();
   return xfer;
@@ -319,6 +331,10 @@ uint32_t stuff_plan_management_get_created_plan_pargs::write(::apache::thrift::p
 
   xfer += oprot->writeFieldBegin("ssid", ::apache::thrift::protocol::T_STRING, 1);
   xfer += oprot->writeString((*(this->ssid)));
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("anchor", ::apache::thrift::protocol::T_I64, 2);
+  xfer += oprot->writeI64((*(this->anchor)));
   xfer += oprot->writeFieldEnd();
 
   xfer += oprot->writeFieldStop();
@@ -520,6 +536,14 @@ uint32_t stuff_plan_management_get_company_plan_args::read(::apache::thrift::pro
           xfer += iprot->skip(ftype);
         }
         break;
+      case 2:
+        if (ftype == ::apache::thrift::protocol::T_I64) {
+          xfer += iprot->readI64(this->anchor);
+          this->__isset.anchor = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
       default:
         xfer += iprot->skip(ftype);
         break;
@@ -541,6 +565,10 @@ uint32_t stuff_plan_management_get_company_plan_args::write(::apache::thrift::pr
   xfer += oprot->writeString(this->ssid);
   xfer += oprot->writeFieldEnd();
 
+  xfer += oprot->writeFieldBegin("anchor", ::apache::thrift::protocol::T_I64, 2);
+  xfer += oprot->writeI64(this->anchor);
+  xfer += oprot->writeFieldEnd();
+
   xfer += oprot->writeFieldStop();
   xfer += oprot->writeStructEnd();
   return xfer;
@@ -558,6 +586,10 @@ uint32_t stuff_plan_management_get_company_plan_pargs::write(::apache::thrift::p
 
   xfer += oprot->writeFieldBegin("ssid", ::apache::thrift::protocol::T_STRING, 1);
   xfer += oprot->writeString((*(this->ssid)));
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("anchor", ::apache::thrift::protocol::T_I64, 2);
+  xfer += oprot->writeI64((*(this->anchor)));
   xfer += oprot->writeFieldEnd();
 
   xfer += oprot->writeFieldStop();
@@ -4276,19 +4308,20 @@ int64_t stuff_plan_managementClient::recv_create_plan()
   throw ::apache::thrift::TApplicationException(::apache::thrift::TApplicationException::MISSING_RESULT, "create_plan failed: unknown result");
 }
 
-void stuff_plan_managementClient::get_created_plan(std::vector<plan_status> & _return, const std::string& ssid)
+void stuff_plan_managementClient::get_created_plan(std::vector<plan_status> & _return, const std::string& ssid, const int64_t anchor)
 {
-  send_get_created_plan(ssid);
+  send_get_created_plan(ssid, anchor);
   recv_get_created_plan(_return);
 }
 
-void stuff_plan_managementClient::send_get_created_plan(const std::string& ssid)
+void stuff_plan_managementClient::send_get_created_plan(const std::string& ssid, const int64_t anchor)
 {
   int32_t cseqid = 0;
   oprot_->writeMessageBegin("get_created_plan", ::apache::thrift::protocol::T_CALL, cseqid);
 
   stuff_plan_management_get_created_plan_pargs args;
   args.ssid = &ssid;
+  args.anchor = &anchor;
   args.write(oprot_);
 
   oprot_->writeMessageEnd();
@@ -4337,19 +4370,20 @@ void stuff_plan_managementClient::recv_get_created_plan(std::vector<plan_status>
   throw ::apache::thrift::TApplicationException(::apache::thrift::TApplicationException::MISSING_RESULT, "get_created_plan failed: unknown result");
 }
 
-void stuff_plan_managementClient::get_company_plan(std::vector<plan_status> & _return, const std::string& ssid)
+void stuff_plan_managementClient::get_company_plan(std::vector<plan_status> & _return, const std::string& ssid, const int64_t anchor)
 {
-  send_get_company_plan(ssid);
+  send_get_company_plan(ssid, anchor);
   recv_get_company_plan(_return);
 }
 
-void stuff_plan_managementClient::send_get_company_plan(const std::string& ssid)
+void stuff_plan_managementClient::send_get_company_plan(const std::string& ssid, const int64_t anchor)
 {
   int32_t cseqid = 0;
   oprot_->writeMessageBegin("get_company_plan", ::apache::thrift::protocol::T_CALL, cseqid);
 
   stuff_plan_management_get_company_plan_pargs args;
   args.ssid = &ssid;
+  args.anchor = &anchor;
   args.write(oprot_);
 
   oprot_->writeMessageEnd();
@@ -5421,7 +5455,7 @@ void stuff_plan_managementProcessor::process_get_created_plan(int32_t seqid, ::a
 
   stuff_plan_management_get_created_plan_result result;
   try {
-    iface_->get_created_plan(result.success, args.ssid);
+    iface_->get_created_plan(result.success, args.ssid, args.anchor);
     result.__isset.success = true;
   } catch (gen_exp &e) {
     result.e = e;
@@ -5478,7 +5512,7 @@ void stuff_plan_managementProcessor::process_get_company_plan(int32_t seqid, ::a
 
   stuff_plan_management_get_company_plan_result result;
   try {
-    iface_->get_company_plan(result.success, args.ssid);
+    iface_->get_company_plan(result.success, args.ssid, args.anchor);
     result.__isset.success = true;
   } catch (gen_exp &e) {
     result.e = e;
@@ -6463,13 +6497,13 @@ int64_t stuff_plan_managementConcurrentClient::recv_create_plan(const int32_t se
   } // end while(true)
 }
 
-void stuff_plan_managementConcurrentClient::get_created_plan(std::vector<plan_status> & _return, const std::string& ssid)
+void stuff_plan_managementConcurrentClient::get_created_plan(std::vector<plan_status> & _return, const std::string& ssid, const int64_t anchor)
 {
-  int32_t seqid = send_get_created_plan(ssid);
+  int32_t seqid = send_get_created_plan(ssid, anchor);
   recv_get_created_plan(_return, seqid);
 }
 
-int32_t stuff_plan_managementConcurrentClient::send_get_created_plan(const std::string& ssid)
+int32_t stuff_plan_managementConcurrentClient::send_get_created_plan(const std::string& ssid, const int64_t anchor)
 {
   int32_t cseqid = this->sync_->generateSeqId();
   ::apache::thrift::async::TConcurrentSendSentry sentry(this->sync_.get());
@@ -6477,6 +6511,7 @@ int32_t stuff_plan_managementConcurrentClient::send_get_created_plan(const std::
 
   stuff_plan_management_get_created_plan_pargs args;
   args.ssid = &ssid;
+  args.anchor = &anchor;
   args.write(oprot_);
 
   oprot_->writeMessageEnd();
@@ -6551,13 +6586,13 @@ void stuff_plan_managementConcurrentClient::recv_get_created_plan(std::vector<pl
   } // end while(true)
 }
 
-void stuff_plan_managementConcurrentClient::get_company_plan(std::vector<plan_status> & _return, const std::string& ssid)
+void stuff_plan_managementConcurrentClient::get_company_plan(std::vector<plan_status> & _return, const std::string& ssid, const int64_t anchor)
 {
-  int32_t seqid = send_get_company_plan(ssid);
+  int32_t seqid = send_get_company_plan(ssid, anchor);
   recv_get_company_plan(_return, seqid);
 }
 
-int32_t stuff_plan_managementConcurrentClient::send_get_company_plan(const std::string& ssid)
+int32_t stuff_plan_managementConcurrentClient::send_get_company_plan(const std::string& ssid, const int64_t anchor)
 {
   int32_t cseqid = this->sync_->generateSeqId();
   ::apache::thrift::async::TConcurrentSendSentry sentry(this->sync_.get());
@@ -6565,6 +6600,7 @@ int32_t stuff_plan_managementConcurrentClient::send_get_company_plan(const std::
 
   stuff_plan_management_get_company_plan_pargs args;
   args.ssid = &ssid;
+  args.anchor = &anchor;
   args.write(oprot_);
 
   oprot_->writeMessageEnd();

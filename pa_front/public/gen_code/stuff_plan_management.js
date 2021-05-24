@@ -165,9 +165,13 @@ stuff_plan_management_create_plan_result = class {
 stuff_plan_management_get_created_plan_args = class {
   constructor(args) {
     this.ssid = null;
+    this.anchor = null;
     if (args) {
       if (args.ssid !== undefined && args.ssid !== null) {
         this.ssid = args.ssid;
+      }
+      if (args.anchor !== undefined && args.anchor !== null) {
+        this.anchor = args.anchor;
       }
     }
   }
@@ -189,9 +193,13 @@ stuff_plan_management_get_created_plan_args = class {
           input.skip(ftype);
         }
         break;
-        case 0:
+        case 2:
+        if (ftype == Thrift.Type.I64) {
+          this.anchor = input.readI64().value;
+        } else {
           input.skip(ftype);
-          break;
+        }
+        break;
         default:
           input.skip(ftype);
       }
@@ -206,6 +214,11 @@ stuff_plan_management_get_created_plan_args = class {
     if (this.ssid !== null && this.ssid !== undefined) {
       output.writeFieldBegin('ssid', Thrift.Type.STRING, 1);
       output.writeString(this.ssid);
+      output.writeFieldEnd();
+    }
+    if (this.anchor !== null && this.anchor !== undefined) {
+      output.writeFieldBegin('anchor', Thrift.Type.I64, 2);
+      output.writeI64(this.anchor);
       output.writeFieldEnd();
     }
     output.writeFieldStop();
@@ -303,9 +316,13 @@ stuff_plan_management_get_created_plan_result = class {
 stuff_plan_management_get_company_plan_args = class {
   constructor(args) {
     this.ssid = null;
+    this.anchor = null;
     if (args) {
       if (args.ssid !== undefined && args.ssid !== null) {
         this.ssid = args.ssid;
+      }
+      if (args.anchor !== undefined && args.anchor !== null) {
+        this.anchor = args.anchor;
       }
     }
   }
@@ -327,9 +344,13 @@ stuff_plan_management_get_company_plan_args = class {
           input.skip(ftype);
         }
         break;
-        case 0:
+        case 2:
+        if (ftype == Thrift.Type.I64) {
+          this.anchor = input.readI64().value;
+        } else {
           input.skip(ftype);
-          break;
+        }
+        break;
         default:
           input.skip(ftype);
       }
@@ -344,6 +365,11 @@ stuff_plan_management_get_company_plan_args = class {
     if (this.ssid !== null && this.ssid !== undefined) {
       output.writeFieldBegin('ssid', Thrift.Type.STRING, 1);
       output.writeString(this.ssid);
+      output.writeFieldEnd();
+    }
+    if (this.anchor !== null && this.anchor !== undefined) {
+      output.writeFieldBegin('anchor', Thrift.Type.I64, 2);
+      output.writeI64(this.anchor);
       output.writeFieldEnd();
     }
     output.writeFieldStop();
@@ -2605,18 +2631,19 @@ stuff_plan_managementClient = class stuff_plan_managementClient {
     throw 'create_plan failed: unknown result';
   }
 
-  get_created_plan (ssid) {
+  get_created_plan (ssid, anchor) {
     const self = this;
     return new Promise((resolve, reject) => {
-      self.send_get_created_plan(ssid, (error, result) => {
+      self.send_get_created_plan(ssid, anchor, (error, result) => {
         return error ? reject(error) : resolve(result);
       });
     });
   }
 
-  send_get_created_plan (ssid, callback) {
+  send_get_created_plan (ssid, anchor, callback) {
     const params = {
-      ssid: ssid
+      ssid: ssid,
+      anchor: anchor
     };
     const args = new stuff_plan_management_get_created_plan_args(params);
     try {
@@ -2664,18 +2691,19 @@ stuff_plan_managementClient = class stuff_plan_managementClient {
     throw 'get_created_plan failed: unknown result';
   }
 
-  get_company_plan (ssid) {
+  get_company_plan (ssid, anchor) {
     const self = this;
     return new Promise((resolve, reject) => {
-      self.send_get_company_plan(ssid, (error, result) => {
+      self.send_get_company_plan(ssid, anchor, (error, result) => {
         return error ? reject(error) : resolve(result);
       });
     });
   }
 
-  send_get_company_plan (ssid, callback) {
+  send_get_company_plan (ssid, anchor, callback) {
     const params = {
-      ssid: ssid
+      ssid: ssid,
+      anchor: anchor
     };
     const args = new stuff_plan_management_get_company_plan_args(params);
     try {

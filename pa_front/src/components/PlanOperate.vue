@@ -67,7 +67,6 @@ Vue.use(Uploader);
 Vue.use(Cell);
 Vue.use(CellGroup);
 Vue.use(Button);
-import wx from 'weixin-js-sdk'
 export default {
     name: 'PlanOperate',
     data: function () {
@@ -128,37 +127,6 @@ export default {
             }
             return pwd;
         },
-        config_with_wx: function () {
-            var timestamp = (new Date()).getTime();
-            var nonceStr = this.randomString(32);
-            var vue_this = this;
-            vue_this.$call_remote_process("user_management", 'get_wx_api_signature', [timestamp, nonceStr, window.location.href]).then(function (resp) {
-                wx.config({
-                    debug: false,
-                    appId: 'wxa390f8b6f68e9c6d',
-                    timestamp: timestamp,
-                    nonceStr: nonceStr,
-                    signature: resp,
-                    jsApiList: ['scanQRCode']
-                });
-                wx.ready(function () {
-                    console.log('success to config wx');
-                });
-                wx.error(function (err) {
-                    console.log('fail to config wx');
-                    console.log(err);
-                });
-            });
-        },
-        confirm_close: function () {
-            wx.scanQRCode({
-                needResult: 1,
-                success: function (res) {
-                    var dest_url = res.resultStr;
-                    window.location.href = dest_url;
-                }
-            });
-        },
         get_change_rule: function (_id) {
             var vue_this = this;
             vue_this.$call_remote_process("stuff_plan_management", 'get_change_rule', [vue_this.$cookies.get('pa_ssid'), _id]).then(function (resp) {
@@ -187,7 +155,6 @@ export default {
     },
     beforeMount: function () {
         this.get_change_rule(this.plan_id);
-        this.config_with_wx();
     }
 }
 </script>
