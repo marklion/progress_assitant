@@ -29,18 +29,20 @@ class Iface(object):
         """
         pass
 
-    def get_created_plan(self, ssid):
+    def get_created_plan(self, ssid, anchor):
         """
         Parameters:
          - ssid
+         - anchor
 
         """
         pass
 
-    def get_company_plan(self, ssid):
+    def get_company_plan(self, ssid, anchor):
         """
         Parameters:
          - ssid
+         - anchor
 
         """
         pass
@@ -221,19 +223,21 @@ class Client(Iface):
             raise result.e
         raise TApplicationException(TApplicationException.MISSING_RESULT, "create_plan failed: unknown result")
 
-    def get_created_plan(self, ssid):
+    def get_created_plan(self, ssid, anchor):
         """
         Parameters:
          - ssid
+         - anchor
 
         """
-        self.send_get_created_plan(ssid)
+        self.send_get_created_plan(ssid, anchor)
         return self.recv_get_created_plan()
 
-    def send_get_created_plan(self, ssid):
+    def send_get_created_plan(self, ssid, anchor):
         self._oprot.writeMessageBegin('get_created_plan', TMessageType.CALL, self._seqid)
         args = get_created_plan_args()
         args.ssid = ssid
+        args.anchor = anchor
         args.write(self._oprot)
         self._oprot.writeMessageEnd()
         self._oprot.trans.flush()
@@ -255,19 +259,21 @@ class Client(Iface):
             raise result.e
         raise TApplicationException(TApplicationException.MISSING_RESULT, "get_created_plan failed: unknown result")
 
-    def get_company_plan(self, ssid):
+    def get_company_plan(self, ssid, anchor):
         """
         Parameters:
          - ssid
+         - anchor
 
         """
-        self.send_get_company_plan(ssid)
+        self.send_get_company_plan(ssid, anchor)
         return self.recv_get_company_plan()
 
-    def send_get_company_plan(self, ssid):
+    def send_get_company_plan(self, ssid, anchor):
         self._oprot.writeMessageBegin('get_company_plan', TMessageType.CALL, self._seqid)
         args = get_company_plan_args()
         args.ssid = ssid
+        args.anchor = anchor
         args.write(self._oprot)
         self._oprot.writeMessageEnd()
         self._oprot.trans.flush()
@@ -898,7 +904,7 @@ class Processor(Iface, TProcessor):
         iprot.readMessageEnd()
         result = get_created_plan_result()
         try:
-            result.success = self._handler.get_created_plan(args.ssid)
+            result.success = self._handler.get_created_plan(args.ssid, args.anchor)
             msg_type = TMessageType.REPLY
         except TTransport.TTransportException:
             raise
@@ -924,7 +930,7 @@ class Processor(Iface, TProcessor):
         iprot.readMessageEnd()
         result = get_company_plan_result()
         try:
-            result.success = self._handler.get_company_plan(args.ssid)
+            result.success = self._handler.get_company_plan(args.ssid, args.anchor)
             msg_type = TMessageType.REPLY
         except TTransport.TTransportException:
             raise
@@ -1501,12 +1507,14 @@ class get_created_plan_args(object):
     """
     Attributes:
      - ssid
+     - anchor
 
     """
 
 
-    def __init__(self, ssid=None,):
+    def __init__(self, ssid=None, anchor=None,):
         self.ssid = ssid
+        self.anchor = anchor
 
     def read(self, iprot):
         if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
@@ -1522,6 +1530,11 @@ class get_created_plan_args(object):
                     self.ssid = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
                 else:
                     iprot.skip(ftype)
+            elif fid == 2:
+                if ftype == TType.I64:
+                    self.anchor = iprot.readI64()
+                else:
+                    iprot.skip(ftype)
             else:
                 iprot.skip(ftype)
             iprot.readFieldEnd()
@@ -1535,6 +1548,10 @@ class get_created_plan_args(object):
         if self.ssid is not None:
             oprot.writeFieldBegin('ssid', TType.STRING, 1)
             oprot.writeString(self.ssid.encode('utf-8') if sys.version_info[0] == 2 else self.ssid)
+            oprot.writeFieldEnd()
+        if self.anchor is not None:
+            oprot.writeFieldBegin('anchor', TType.I64, 2)
+            oprot.writeI64(self.anchor)
             oprot.writeFieldEnd()
         oprot.writeFieldStop()
         oprot.writeStructEnd()
@@ -1556,6 +1573,7 @@ all_structs.append(get_created_plan_args)
 get_created_plan_args.thrift_spec = (
     None,  # 0
     (1, TType.STRING, 'ssid', 'UTF8', None, ),  # 1
+    (2, TType.I64, 'anchor', None, None, ),  # 2
 )
 
 
@@ -1645,12 +1663,14 @@ class get_company_plan_args(object):
     """
     Attributes:
      - ssid
+     - anchor
 
     """
 
 
-    def __init__(self, ssid=None,):
+    def __init__(self, ssid=None, anchor=None,):
         self.ssid = ssid
+        self.anchor = anchor
 
     def read(self, iprot):
         if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
@@ -1666,6 +1686,11 @@ class get_company_plan_args(object):
                     self.ssid = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
                 else:
                     iprot.skip(ftype)
+            elif fid == 2:
+                if ftype == TType.I64:
+                    self.anchor = iprot.readI64()
+                else:
+                    iprot.skip(ftype)
             else:
                 iprot.skip(ftype)
             iprot.readFieldEnd()
@@ -1679,6 +1704,10 @@ class get_company_plan_args(object):
         if self.ssid is not None:
             oprot.writeFieldBegin('ssid', TType.STRING, 1)
             oprot.writeString(self.ssid.encode('utf-8') if sys.version_info[0] == 2 else self.ssid)
+            oprot.writeFieldEnd()
+        if self.anchor is not None:
+            oprot.writeFieldBegin('anchor', TType.I64, 2)
+            oprot.writeI64(self.anchor)
             oprot.writeFieldEnd()
         oprot.writeFieldStop()
         oprot.writeStructEnd()
@@ -1700,6 +1729,7 @@ all_structs.append(get_company_plan_args)
 get_company_plan_args.thrift_spec = (
     None,  # 0
     (1, TType.STRING, 'ssid', 'UTF8', None, ),  # 1
+    (2, TType.I64, 'anchor', None, None, ),  # 2
 )
 
 

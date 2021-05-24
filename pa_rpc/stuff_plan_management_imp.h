@@ -88,15 +88,12 @@ public:
         }
         return ret;
     }
-    virtual void get_created_plan(std::vector<plan_status> &_return, const std::string &ssid)
+    virtual void get_created_plan(std::vector<plan_status> &_return, const std::string &ssid, const int64_t anchor)
     {
         auto opt_user = PA_DATAOPT_get_online_user(ssid);
         if (opt_user)
         {
-            auto plans = opt_user->get_all_children<pa_sql_plan>("created_by");
-            plans.sort([](pa_sql_plan &s1, pa_sql_plan &s2) {
-                return s1.create_time > s2.create_time;
-            });
+            auto plans = opt_user->get_all_children<pa_sql_plan>("created_by", "PRI_ID != 0 ORDER BY create_time DESC LIMIT 15 OFFSET %ld", anchor);
             for (auto &itr : plans)
             {
                 plan_status tmp;
@@ -298,7 +295,7 @@ public:
 
         return ret;
     }
-    virtual void get_company_plan(std::vector<plan_status> &_return, const std::string &ssid)
+    virtual void get_company_plan(std::vector<plan_status> &_return, const std::string &ssid, const int64_t anchor)
     {
         auto opt_user = PA_DATAOPT_get_online_user(ssid);
         if (opt_user && opt_user->buyer == false)
@@ -306,29 +303,28 @@ public:
             auto company = opt_user->get_parent<pa_sql_company>("belong_company");
             if (company)
             {
+                std::string connect_param = "belong_stuff_ext_key = 0";
                 auto stuffs = company->get_all_children<pa_sql_stuff_info>("belong_company");
                 for (auto &itr : stuffs)
                 {
-                    auto plans = itr.get_all_children<pa_sql_plan>("belong_stuff");
-                    plans.sort([](pa_sql_plan &s1, pa_sql_plan &s2) {
-                        return s1.create_time > s2.create_time;
-                    });
-                    for (auto &single_plan : plans)
+                    connect_param.append(" OR belong_stuff_ext_key = " + std::to_string(itr.get_pri_id()));
+                }
+                auto plans = sqlite_orm::search_record_all<pa_sql_plan>("%s ORDER BY create_time DESC LIMIT 15 OFFSET %ld",connect_param.c_str(), anchor);
+                for (auto &single_plan : plans)
+                {
+                    plan_status tmp;
+                    tmp.plan_id = single_plan.get_pri_id();
+                    tmp.status = single_plan.status;
+                    tmp.plan_time = PA_DATAOPT_timestring_2_date(single_plan.plan_time);
+                    tmp.conflict_reason = single_plan.conflict_reason;
+                    std::string status_prompt = "";
+                    auto statuses = PA_STATUS_RULE_get_all();
+                    if (statuses[single_plan.status])
                     {
-                        plan_status tmp;
-                        tmp.plan_id = single_plan.get_pri_id();
-                        tmp.status = single_plan.status;
-                        tmp.plan_time = PA_DATAOPT_timestring_2_date(single_plan.plan_time);
-                        tmp.conflict_reason = single_plan.conflict_reason;
-                        std::string status_prompt = "";
-                        auto statuses = PA_STATUS_RULE_get_all();
-                        if (statuses[single_plan.status])
-                        {
-                            status_prompt = statuses[single_plan.status]->get_prompt();
-                        }
-                        tmp.status_prompt = status_prompt;
-                        _return.push_back(tmp);
+                        status_prompt = statuses[single_plan.status]->get_prompt();
                     }
+                    tmp.status_prompt = status_prompt;
+                    _return.push_back(tmp);
                 }
             }
             else
@@ -856,7 +852,7 @@ public:
     virtual void clean_unclose_plan()
     {
         auto current_date = PA_DATAOPT_current_time();
-        auto current_day = current_date.substr(0,10);
+        auto current_day = current_date.substr(0, 10);
         auto plans_need_close = sqlite_orm::search_record_all<pa_sql_plan>("status != 4 AND plan_time LIKE '%s%%'", current_day.c_str());
         for (auto &itr : plans_need_close)
         {
@@ -869,7 +865,7 @@ public:
         }
     }
 
-    virtual void get_today_statistics(std::vector<vichele_statistics> &_return, const std::string &ssid) 
+    virtual void get_today_statistics(std::vector<vichele_statistics> &_return, const std::string &ssid)
     {
         auto user = PA_DATAOPT_get_online_user(ssid);
         if (!user)
@@ -883,12 +879,12 @@ public:
         }
 
         auto saled_stuff = company->get_all_children<pa_sql_stuff_info>("belong_company");
-        for (auto &itr:saled_stuff)
+        for (auto &itr : saled_stuff)
         {
             auto current_time = PA_DATAOPT_current_time();
-            auto date_only = current_time.substr(0,10);
+            auto date_only = current_time.substr(0, 10);
             auto related_plans = itr.get_all_children<pa_sql_plan>("belong_stuff", "plan_time LIKE '%s%%' AND status > 1", date_only.c_str());
-            for (auto &single_plan:related_plans)
+            for (auto &single_plan : related_plans)
             {
                 std::string buyer_company;
                 if (single_plan.proxy_company.length() > 0)
@@ -908,7 +904,7 @@ public:
                     }
                 }
                 auto related_vichele_info = single_plan.get_all_children<pa_sql_single_vichele>("belong_plan");
-                for (auto &vichele:related_vichele_info)
+                for (auto &vichele : related_vichele_info)
                 {
                     vichele_statistics tmp;
                     auto main_vichele = vichele.get_parent<pa_sql_vichele>("main_vichele");
@@ -918,7 +914,7 @@ public:
                     {
                         tmp.behind_vichele = behind_vichele->number;
                         tmp.company = buyer_company;
-                        tmp.delivered = vichele.finish == 0?false:true;
+                        tmp.delivered = vichele.finish == 0 ? false : true;
                         tmp.driver_name = driver->name;
                         tmp.driver_phone = driver->phone;
                         tmp.main_vichele = main_vichele->number;
@@ -929,7 +925,6 @@ public:
                 }
             }
         }
-
     }
 };
 

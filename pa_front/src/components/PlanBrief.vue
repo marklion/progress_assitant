@@ -1,5 +1,8 @@
 <template>
 <div class="plan_brief_show">
+    <div class="order_number_show">
+        计划单号：{{order_number}}
+    </div>
     <van-card class="stuff_card_show" :desc="company" :title="name" @click="nav_to_detail">
         <template #num v-if="plan_count != 0">
             {{plan_count}}吨
@@ -52,6 +55,7 @@ export default {
             status: 0,
             status_in_plan: [],
             is_cancel: false,
+            order_number: '',
         };
     },
     watch: {
@@ -110,6 +114,7 @@ export default {
                         vue_this.company = vue_this.company + '(' + resp.created_user_name + ')';
                     }
                 }
+                vue_this.order_number = resp.created_time.toString() + vue_this.plan_id.toString();
                 vue_this.get_status_in_plan();
             });
         },
@@ -143,5 +148,19 @@ export default {
 
 .conflict_show {
     color: red;
+}
+.plan_brief_show {
+    border: 1px solid rgb(165, 49, 49);
+    border-radius: 6px;
+    margin-bottom: 2px;
+}
+.order_number_show {
+    padding-left: 12px;
+    margin-top: 3px;
+    margin-bottom: 3px;
+    margin-left: 5px;
+    margin-right: 5px;
+    background-color: rgb(187, 187, 187);
+    color:rgb(0, 5, 75);
 }
 </style>
