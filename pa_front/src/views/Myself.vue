@@ -3,16 +3,16 @@
     <div v-if="$store.state.is_login" class="login_show">
         <div class="login_user_show">
             <van-row type="flex" align="center" :gutter="5">
-                <van-col :offset="2">
+                <van-col :offset="2" :span="6">
                     <van-image round width="80px" height="80px" fit="cover" :src="$remote_url +  $store.state.userinfo.logo" />
                 </van-col>
-                <van-col>
-                    <h3>{{$store.state.userinfo.name}}</h3>
+                <van-col :span="13">
+                    <van-row type="flex"  align="center">
+                        <h3>{{$store.state.userinfo.name}}</h3>
+                        <div >{{$store.state.userinfo.company}}</div>
+                    </van-row>
                 </van-col>
-                <van-col>
-                    <div class="role_show">{{$store.state.userinfo.company}}</div>
-                </van-col>
-                <van-col>
+                <van-col :span="3">
                     <van-button icon="edit" plain round size="small" :to="{name: 'SelfInfo'}" />
                 </van-col>
             </van-row>

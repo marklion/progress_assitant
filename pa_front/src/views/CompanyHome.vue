@@ -1,11 +1,11 @@
 <template>
 <div class="company_home_show">
     <van-row type="flex" align="center" :gutter="10">
-        <van-col :offset="2">
+        <van-col :offset="2" :span="6">
             <van-image round width="80px" height="80px" fit="cover" :src="$remote_url +  company_logo" />
         </van-col>
-        <van-col>
-            <div class="company_name_show">
+        <van-col :span="16">
+            <div class="company_name_show ">
                 {{$store.state.userinfo.company}}
             </div>
             <van-row type="flex" align="center" :gutter="10">
