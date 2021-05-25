@@ -6,7 +6,7 @@ install:
 - pushd thrift_dir
 - tar xf thrift-0.14.1.tar.gz
 - pushd thrift-0.14.1
-- ./configure --prefix=/usr --without-ruby --without-java --without-go --without-erlang --without-perl --without-qt5 --without-lua --without-php --without-nodejs --without-php_extension && make -j 8 && sudo make install
+- #./configure --prefix=/usr --without-ruby --without-java --without-go --without-erlang --without-perl --without-qt5 --without-lua --without-php --without-nodejs --without-php_extension && make -j 8 && sudo make install
 - popd
 - popd
 
@@ -34,6 +34,7 @@ addons:
     project:
       name: "marklion/progress_assitant"
       description: "scan"
+      version: "v1.0"
     notification_email: marklion@sina.com
     build_command_prepend: "echo run_prepare"
     build_command: "./build.sh -bf -m build -o cov-build"
