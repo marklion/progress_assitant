@@ -121,6 +121,15 @@ const routes = [
         has_go_back:true,
     },
   },
+  {
+    path: '/plan_copy/:plan_id',
+    name: 'PlanCopy',
+    component: () => import('../views/PlanCopy.vue'),
+    meta: {
+      private_title: '复制计划',
+      has_go_back: true,
+    },
+  },
 ]
 
 const router = new VueRouter({

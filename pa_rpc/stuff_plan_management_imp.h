@@ -632,7 +632,7 @@ public:
     std::string get_vichele_verify_result(pa_sql_vichele &single_vichele, std::string plan_time_day, int64_t self_plan_id)
     {
         std::string ret;
-        auto all_related_plan = sqlite_orm::search_record_all<pa_sql_plan>("plan_time LIKE '%s%%' AND status != 5 AND PRI_ID != %ld", plan_time_day.c_str(), self_plan_id);
+        auto all_related_plan = sqlite_orm::search_record_all<pa_sql_plan>("plan_time LIKE '%s%%' AND status != 4 AND PRI_ID != %ld", plan_time_day.c_str(), self_plan_id);
         for (auto &itr : all_related_plan)
         {
             auto all_related_vichele_info = itr.get_all_children<pa_sql_single_vichele>("belong_plan");
@@ -925,6 +925,31 @@ public:
                 }
             }
         }
+    }
+
+    virtual bool plan_created_by_user(const std::string &ssid, const int64_t plan_id)
+    {
+        bool ret = false;
+
+        auto user = PA_DATAOPT_get_online_user(ssid);
+        if (!user)
+        {
+            PA_RETURN_UNLOGIN_MSG();
+        }
+
+        auto plan = sqlite_orm::search_record<pa_sql_plan>(plan_id);
+        if (!plan)
+        {
+            PA_RETURN_NOPLAN_MSG();
+        }
+
+        auto created_user = plan->get_parent<pa_sql_userinfo>("created_by");
+        if (created_user && created_user->get_pri_id() == user->get_pri_id())
+        {
+            ret = true;
+        }
+
+        return ret;
     }
 };
 

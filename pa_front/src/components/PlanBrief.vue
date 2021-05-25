@@ -1,7 +1,14 @@
 <template>
 <div class="plan_brief_show">
     <div class="order_number_show">
-        计划单号：{{order_number}}
+        <van-row type="flex" align="center" justify="space-between">
+            <van-col>
+                计划单号：{{order_number}}
+            </van-col>
+            <van-col v-if="can_be_copy">
+                <van-button size="small" plain type="info" :to="{name:'PlanCopy', params:{plan_id:plan_id}}">复制</van-button>
+            </van-col>
+        </van-row>
     </div>
     <van-card class="stuff_card_show" :desc="company" :title="name" @click="nav_to_detail">
         <template #num v-if="plan_count != 0">
@@ -34,7 +41,17 @@ import {
 import {
     Tag
 } from 'vant';
+import {
+    Col,
+    Row
+} from 'vant';
+import {
+    Button
+} from 'vant';
 
+Vue.use(Button);
+Vue.use(Col);
+Vue.use(Row);
 Vue.use(Tag);
 Vue.use(Card);
 export default {
@@ -56,6 +73,7 @@ export default {
             status_in_plan: [],
             is_cancel: false,
             order_number: '',
+            is_proxy: false,
         };
     },
     watch: {
@@ -64,6 +82,14 @@ export default {
         }
     },
     computed: {
+        can_be_copy: function () {
+            var ret = false;
+            if (this.$store.state.userinfo.buyer || this.is_proxy) {
+                ret = true;
+            }
+
+            return ret;
+        },
         need_show_deliver_time: function () {
             var ret = false;
             if (this.status_in_plan.length > 3 && this.status_in_plan[3].timestamp) {
@@ -104,6 +130,9 @@ export default {
                 vue_this.name = resp.name;
                 vue_this.status = resp.status;
                 vue_this.is_cancel = resp.is_cancel;
+                if (resp.proxy_company.length > 0) {
+                    vue_this.is_proxy = true;
+                }
                 if (false == vue_this.company_view) {
                     vue_this.company = resp.sale_company;
                 } else {
@@ -149,11 +178,13 @@ export default {
 .conflict_show {
     color: red;
 }
+
 .plan_brief_show {
     border: 1px solid rgb(165, 49, 49);
     border-radius: 6px;
     margin-bottom: 2px;
 }
+
 .order_number_show {
     padding-left: 12px;
     margin-top: 3px;
@@ -161,6 +192,6 @@ export default {
     margin-left: 5px;
     margin-right: 5px;
     background-color: rgb(187, 187, 187);
-    color:rgb(0, 5, 75);
+    color: rgb(0, 5, 75);
 }
 </style>

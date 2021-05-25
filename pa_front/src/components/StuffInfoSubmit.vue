@@ -2,6 +2,9 @@
 <div class="stuff_info_submit_show">
     <van-form @submit="submit_plan">
         <van-field center readonly clickable name="datetimePicker" :value="plan_time" label="到厂时间" placeholder="点击选择时间" @click="show_time_picker = true">
+            <template #right-icon>
+                <van-tag type="primary">{{plan_time_easy}}</van-tag>
+            </template>
         </van-field>
         <van-field center name="comment" v-model="comment" label="备注" placeholder="请输入备注">
         </van-field>
@@ -116,6 +119,21 @@ export default {
         };
     },
     computed: {
+        plan_time_easy: function () {
+            var setted_time = new Date(/\d{4}-\d{1,2}-\d{1,2}/g.exec(this.plan_time)[0]);
+            var current_time = new Date();
+            var ret = "";
+            var bigger_than = setted_time.getDate() - current_time.getDate();
+            if (bigger_than == 0) {
+                ret = "今天";
+            } else if (bigger_than == 1) {
+                ret = "明天";
+            } else {
+                ret = bigger_than.toString() + "天后";
+            }
+
+            return ret;
+        },
         action_name: function () {
             if (this.is_create) {
                 return "提交";
@@ -154,7 +172,9 @@ export default {
     },
     beforeMount: function () {
         if (this.is_create) {
-            this.plan_time = this.formatDateTime(new Date());
+            var date = new Date();
+            date.setDate(date.getDate() + 1);
+            this.plan_time = this.formatDateTime(date);
         } else {
             this.plan_time = this.orig_plan_time;
             this.vichele_info = JSON.parse(JSON.stringify(this.orig_vichele_info));

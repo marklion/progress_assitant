@@ -201,4 +201,5 @@ service stuff_plan_management {
     list<bool> get_change_rule(1:string ssid, 2:i64 plan_id) throws (1:gen_exp e),
     void clean_unclose_plan() throws (1:gen_exp e),
     list<vichele_statistics> get_today_statistics(1:string ssid) throws (1:gen_exp e),
+    bool plan_created_by_user(1:string ssid, 2:i64 plan_id) throws (1:gen_exp e),
 }
