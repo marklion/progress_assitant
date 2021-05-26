@@ -10,7 +10,7 @@
     </van-popup>
     <van-dialog v-model="show_add_main_vichele_diag" close-on-click-overlay title="添加车辆" :show-confirm-button="false">
         <van-form @submit="submit_new_vichele(true)">
-            <van-field v-model="new_vichele" placeholder="请输入车牌号" :rules="[{ required:true, message:'请输入正确车牌', pattern: vichele_number_patten}]" />
+            <van-field v-model="new_vichele" placeholder="请输入车牌号" :formatter="convert_bigger" :rules="[{ required:true, message:'请输入正确车牌', pattern: vichele_number_patten}]" />
             <van-button round block type="primary">添加车辆</van-button>
         </van-form>
     </van-dialog>
@@ -25,7 +25,7 @@
     </van-popup>
     <van-dialog v-model="show_add_behind_vichele_diag" close-on-click-overlay title="添加车辆" :show-confirm-button="false">
         <van-form @submit="submit_new_vichele(false)">
-            <van-field v-model="new_vichele" placeholder="请输入车牌号" :rules="[{ required:true, message:'请输入正确车牌', pattern: vichele_number_patten, validator:have_to_have_gua}]" />
+            <van-field v-model="new_vichele" placeholder="请输入车牌号" :formatter="convert_bigger" :rules="[{ required:true, message:'请输入正确车牌', pattern: vichele_number_patten, validator:have_to_have_gua}]" />
             <van-button round block type="primary">添加车辆</van-button>
         </van-form>
     </van-dialog>
@@ -4187,10 +4187,12 @@ export default {
         };
     },
     methods: {
-        have_to_have_gua:function (value) {
+        convert_bigger: function (_value) {
+            return _value.toLocaleUpperCase();
+        },
+        have_to_have_gua: function (value) {
             var ret = false;
-            if (value.split('')[value.length - 1] == "挂")
-            {
+            if (value.split('')[value.length - 1] == "挂") {
                 ret = true;
             }
             return ret;

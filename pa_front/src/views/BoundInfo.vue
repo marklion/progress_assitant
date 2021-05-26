@@ -84,7 +84,7 @@
 
     <van-dialog v-model="show_main_vichele_add_diag" title="绑定主车" :showConfirmButton="false" closeOnClickOverlay>
         <van-form @submit="add_vichele(true)">
-            <van-field v-model="new_vichele" name="车牌" label="车牌号" placeholder="请输入车牌号" :rules="[{ required:true, message:'请输入正确车牌', pattern: vichele_number_patten}]" />
+            <van-field v-model="new_vichele" name="车牌" label="车牌号" placeholder="请输入车牌号" :formatter="convert_bigger" :rules="[{ required:true, message:'请输入正确车牌', pattern: vichele_number_patten}]" />
             <div style="margin: 16px;">
                 <van-button round block type="info" native-type="submit">提交</van-button>
             </div>
@@ -92,7 +92,7 @@
     </van-dialog>
     <van-dialog v-model="show_behind_vichele_add_diag" title="绑定挂车" :showConfirmButton="false" closeOnClickOverlay>
         <van-form @submit="add_vichele(false)">
-            <van-field v-model="new_vichele" name="车牌" label="车牌号" placeholder="请输入车牌号" :rules="[{ required:true, message:'请输入正确车牌', pattern: vichele_number_patten}]" />
+            <van-field v-model="new_vichele" name="车牌" label="车牌号" placeholder="请输入车牌号" :formatter="convert_bigger" :rules="[{ required:true, message:'请输入正确车牌', pattern: vichele_number_patten}]" />
             <div style="margin: 16px;">
                 <van-button round block type="info" native-type="submit">提交</van-button>
             </div>
@@ -164,6 +164,9 @@ export default {
         };
     },
     methods: {
+        convert_bigger: function (_value) {
+            return _value.toLocaleUpperCase();
+        },
         remove_attach: function (_attach) {
             var vue_this = this;
             Dialog.confirm({
