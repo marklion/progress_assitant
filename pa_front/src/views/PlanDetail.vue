@@ -41,8 +41,8 @@
                 <van-col>车辆信息</van-col>
                 <van-col>
                     <van-button type="info" plain size="small" @click="show_vichele_table = true">浏览</van-button>
-                    <van-popup v-model="show_vichele_table" position="bottom">
-                        <vxe-table size="small" stripe align="center" :data="plan_detail.vichele_info">
+                    <van-popup v-model="show_vichele_table" position="bottom" get-container="body">
+                        <vxe-table size="small" stripe align="center" max-height="500" :data="plan_detail.vichele_info">
                             <vxe-table-column field="main_vichele" title="主车" width="22%"></vxe-table-column>
                             <vxe-table-column field="behind_vichele" title="挂车" width="23%"></vxe-table-column>
                             <vxe-table-column field="driver_name" title="司机" width="25%"></vxe-table-column>
