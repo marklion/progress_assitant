@@ -27,16 +27,16 @@ env:
   global:
    # The next declaration is the encrypted COVERITY_SCAN_TOKEN, created
    #   via the "travis encrypt" command using the project repo's public key
-   - secure: "KvXKpZSfzfMnmXnH9gtH1KZUfllqEqqKGoYbHRYEFsSuop51fcV5UpNZskpzCB+Im8aXPs3z1YNadAzrPRhpaulmW4GVx1dPreV3BeaEoi2pqXF0gVbCAxTHanBULpnEGlVJw8I3dFmyFA1Ae4+dOtOo4QQ7eGSxzfkK3MrO6v8bHmbR/+XCiLtcsYC/x3yX2DRUC59FtkflLWFun2rOndCDdj4ybOZN1EzHo+6iolWAEvah/vfqU0RsO7v5/DH7kN6zyu+5Kp8cnd5aH+PauZnSdSi8WRXBzNyCRV5MzpQgUTSpjExtXR5F2I45RY3FGnHDObu8Chtz6VYyGpwOUilifr35eLPVzpJUu1uhKWcf/S3x61wEk6dLJIZ+SzCKtxDaZE0tE607bdLH5OT7UBKM7YZdQ6Qx7nZ1BvgAQQQkGNApbi4qDpDnwZmN+DP+5/015A3OVk7uvXhvaG4ddeKdKOvCQj+VneZJCvN2FYrMCF8UP4BCDeLj2tPt/+srx8u3doYznUIeFB5OWxRvGfJpRfXJS7A1cGsfvaHbwLBJxUhlHqOk9wtOUBMp1PnM9UOiVHZnwZ2qjMujcFZiHdFVwsWCLcAGFbooQ6oyezmVFaQ9t1QzM5QzKsb5GqReHg1Pa0YdzHRb8UGS8H4zsOdhRmBIRcck2bwTs8828QQ="
-
+   - secure: "A29+FbGoyNFz54JGGdR/kNri2eP0FMf1QDiC9RdzVRG8tSb2MQ6hjsfho+fto/77XmXDcloacg/l4X93CEFVWUWYDt2RPhYfiT4ve+pq938G93BMggF6yabDSMKfzRtfWKTgOB0bMvRbV4oTnu9tomYpuV3E1PPfxpKBT3T2b+6Wu7MXBBTTUujTwKTta76OMfLdzokxaXYmXmNmo3ylnvZhq7hZBDOQ6QDT8PLK4gNVmpD29iTtSUOI3Wi3u6Z3COIrVFH8pDYZze7m4WRY/NILq4w7RQYhJQBMTS3citv1nMGsgKViUTofQlcOx/0SXJPEXhMUh/NG5KYKWy2Biwb8LtwN9rkrraaQ+6EjsyYp+UhX0OjbcIvMdIz5GVh5hs+Bc5rmwp28xKfDOscR6BJHTyHM2akzK1kWR9gLnSpWzStzY+N/s3ecWeBMgaA4OplralZ20ImRxDRnW5a4GJmPCASHY0dk+5oF5i0cMnWjRbQ3hNTs5p4krtRJRKDsuobbwwFcZuIci5OiI6mariWPUA7VLYpJpUR7n/R2uysF6USJSJct5j+GTqiZgZIa5QcAhwATxSNMGciTHm1JrBsG100DHBY9piUUVDMbZjOS/8obKHWV2vDSbqR92OkDaLdpraiyH2OKM9S6fesZXIHv1wPWguR7+7BkWUHhBPs="
 before_install:
-  - echo -n | openssl s_client -connect https://scan.coverity.com:443 | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' | sudo tee -a /etc/ssl/certs/ca-
+  - echo -n | openssl s_client -connect scan.coverity.com:443 | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' | sudo tee -a /etc/ssl/certs/ca-
 
 addons:
   coverity_scan:
     project:
       name: "marklion/progress_assitant"
       description: "scan"
+      version: "v1.0"
     notification_email: marklion@sina.com
     build_command_prepend: "echo run_prepare"
     build_command: "./build.sh -bf -m build -o cov-build"
