@@ -16,7 +16,6 @@
 #include <thrift/server/TThreadPoolServer.h>
 
 #include <thrift/concurrency/ThreadManager.h>
-#include "pa_status_rule.h"
 
 using namespace ::apache::thrift;
 using namespace ::apache::thrift::protocol;

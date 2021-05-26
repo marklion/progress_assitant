@@ -1,13 +1,13 @@
 #if !defined(_STUFF_PLAN_MANAGEMENT_H_)
 #define _STUFF_PLAN_MANAGEMENT_H_
 
-#include "gen_code/stuff_plan_management.h"
-#include "pa_utils.h"
-#include "wechat_msg.h"
+#include "../gen_code/stuff_plan_management.h"
+#include "../pa_util/pa_utils.h"
+#include "../pa_util/wechat_msg.h"
 #include <iterator>
-#include "writer.hpp"
 #include <Python.h>
-#include "pa_status_rule.h"
+#include "../pa_util/pa_status_rule.h"
+#include "../external_src/writer.hpp"
 
 static std::vector<std::string> prepare_vichels(const std::string &_vicheles)
 {

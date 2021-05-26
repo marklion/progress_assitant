@@ -1,7 +1,7 @@
 #include "pa_data_base.h"
 #include "wechat_msg.h"
 #include "pa_status_rule.h"
-#include "stuff_plan_management_imp.h"
+#include "../pa_rpc/stuff_plan_management_imp.h"
 #include <random>
 
 void pa_sql_plan::send_wechat_msg()

@@ -8,7 +8,7 @@
 #include <thrift/protocol/TMultiplexedProtocol.h>
 #include "../gen_code/user_management.h"
 #include "../gen_code/idl_types.h"
-#include "../pa_data_base.h"
+#include "../pa_util/pa_data_base.h"
 
 #define PA_USER_TEST_STUB_NAME "stub_name"
 #define PA_USER_TEST_STUB_COMPANY_NAME "stub_company_name"

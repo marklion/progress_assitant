@@ -1,16 +1,16 @@
 #if !defined(_USER_MANAGEMENT_IMP_H_)
 #define _USER_MANAGEMENT_IMP_H_
 
-#include "gen_code/idl_types.h"
-#include "gen_code/user_management.h"
-#include "pa_data_base.h"
-#include "CJsonObject.hpp"
+#include "../gen_code/idl_types.h"
+#include "../gen_code/user_management.h"
+#include "../pa_util/pa_data_base.h"
+#include "../external_src/CJsonObject.hpp"
 #include <uuid/uuid.h>
 #include <curl/curl.h>
-#include "Base64.h"
+#include "../external_src/Base64.h"
 #include <fstream>
-#include "pa_utils.h"
-#include "wechat_msg.h"
+#include "../pa_util/pa_utils.h"
+#include "../pa_util/wechat_msg.h"
 
 class user_management_handler : virtual public user_managementIf
 {

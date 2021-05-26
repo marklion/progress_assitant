@@ -1,5 +1,5 @@
-#include "gen_code/stuff_info.h"
-#include "pa_utils.h"
+#include "../gen_code/stuff_info.h"
+#include "../pa_util/pa_utils.h"
 
 class stuff_info_handler: virtual public stuff_infoIf {
 public:

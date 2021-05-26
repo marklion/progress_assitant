@@ -1,7 +1,8 @@
 #!/bin/bash
 
-COMPS=("tcp_framework" "sqlite_orm" "pa_rpc")
+COMPS=("tcp_framework" "sqlite_orm" "external_src" "pa_util" "pa_rpc" "pa_automation")
 SRC_DIR=`dirname $(realpath $0)`
+BACK_SRC_DIR="${SRC_DIR}/pa_back"
 
 BUILD_DIR="build"
 
@@ -41,7 +42,7 @@ then
     for SUB_FOLDER in ${COMPS[*]}
     do
         COMP_NAME=${SUB_FOLDER}
-        SUB_FOLDER="$SRC_DIR/${SUB_FOLDER}"
+        SUB_FOLDER="$BACK_SRC_DIR/${SUB_FOLDER}"
         [ -d ${BUILD_DIR}/${COMP_NAME} ] || mkdir $BUILD_DIR/$COMP_NAME
         pushd $BUILD_DIR/$COMP_NAME
         [ -f Makefile ] || cmake -D PRJ_INTERNAL_BUILD=${BUILD_DIR} $SUB_FOLDER

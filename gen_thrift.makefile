@@ -1,5 +1,5 @@
 SRC_DIR:=$(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
-BACK_END_PATH=$(SRC_DIR)/pa_rpc/gen_code
+BACK_END_PATH=$(SRC_DIR)/pa_back/gen_code
 FRONT_END_PATH=$(SRC_DIR)/pa_front/public/gen_code
 AUTO_REPLY_PATH=$(SRC_DIR)/pa_script/gen_code
 

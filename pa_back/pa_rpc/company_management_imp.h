@@ -2,12 +2,12 @@
 #define _COMPANY_MANAGEMENT_IMP_H_
 
 #include <Python.h>
-#include "gen_code/company_management.h"
-#include "pa_utils.h"
+#include "../gen_code/company_management.h"
+#include "../pa_util/pa_utils.h"
 #include <algorithm>
-#include "writer.hpp"
-#include "Base64.h"
-#include "pa_status_rule.h"
+#include "../external_src/CJsonObject.hpp"
+#include "../external_src/Base64.h"
+#include "../pa_util/pa_status_rule.h"
 class company_management_handler : virtual public company_managementIf
 {
 public:
