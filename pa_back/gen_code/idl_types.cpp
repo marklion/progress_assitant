@@ -2304,6 +2304,10 @@ void plan_status::__set_conflict_reason(const std::string& val) {
 void plan_status::__set_status_prompt(const std::string& val) {
   this->status_prompt = val;
 }
+
+void plan_status::__set_is_cancel(const bool val) {
+  this->is_cancel = val;
+}
 std::ostream& operator<<(std::ostream& out, const plan_status& obj)
 {
   obj.printTo(out);
@@ -2372,6 +2376,14 @@ uint32_t plan_status::read(::apache::thrift::protocol::TProtocol* iprot) {
           xfer += iprot->skip(ftype);
         }
         break;
+      case 6:
+        if (ftype == ::apache::thrift::protocol::T_BOOL) {
+          xfer += iprot->readBool(this->is_cancel);
+          this->__isset.is_cancel = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
       default:
         xfer += iprot->skip(ftype);
         break;
@@ -2409,6 +2421,10 @@ uint32_t plan_status::write(::apache::thrift::protocol::TProtocol* oprot) const 
   xfer += oprot->writeString(this->status_prompt);
   xfer += oprot->writeFieldEnd();
 
+  xfer += oprot->writeFieldBegin("is_cancel", ::apache::thrift::protocol::T_BOOL, 6);
+  xfer += oprot->writeBool(this->is_cancel);
+  xfer += oprot->writeFieldEnd();
+
   xfer += oprot->writeFieldStop();
   xfer += oprot->writeStructEnd();
   return xfer;
@@ -2421,6 +2437,7 @@ void swap(plan_status &a, plan_status &b) {
   swap(a.plan_time, b.plan_time);
   swap(a.conflict_reason, b.conflict_reason);
   swap(a.status_prompt, b.status_prompt);
+  swap(a.is_cancel, b.is_cancel);
   swap(a.__isset, b.__isset);
 }
 
@@ -2430,6 +2447,7 @@ plan_status::plan_status(const plan_status& other32) {
   plan_time = other32.plan_time;
   conflict_reason = other32.conflict_reason;
   status_prompt = other32.status_prompt;
+  is_cancel = other32.is_cancel;
   __isset = other32.__isset;
 }
 plan_status& plan_status::operator=(const plan_status& other33) {
@@ -2438,6 +2456,7 @@ plan_status& plan_status::operator=(const plan_status& other33) {
   plan_time = other33.plan_time;
   conflict_reason = other33.conflict_reason;
   status_prompt = other33.status_prompt;
+  is_cancel = other33.is_cancel;
   __isset = other33.__isset;
   return *this;
 }
@@ -2449,6 +2468,7 @@ void plan_status::printTo(std::ostream& out) const {
   out << ", " << "plan_time=" << to_string(plan_time);
   out << ", " << "conflict_reason=" << to_string(conflict_reason);
   out << ", " << "status_prompt=" << to_string(status_prompt);
+  out << ", " << "is_cancel=" << to_string(is_cancel);
   out << ")";
 }
 

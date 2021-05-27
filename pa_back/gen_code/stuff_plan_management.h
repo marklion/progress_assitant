@@ -41,6 +41,8 @@ class stuff_plan_managementIf {
   virtual void clean_unclose_plan() = 0;
   virtual void get_today_statistics(std::vector<vichele_statistics> & _return, const std::string& ssid) = 0;
   virtual bool plan_created_by_user(const std::string& ssid, const int64_t plan_id) = 0;
+  virtual void export_plan_by_plan_date(std::string& _return, const std::string& ssid, const std::string& plan_date) = 0;
+  virtual void export_plan_by_create_date(std::string& _return, const std::string& ssid, const int64_t begin_date, const int64_t end_date) = 0;
 };
 
 class stuff_plan_managementIfFactory {
@@ -135,6 +137,12 @@ class stuff_plan_managementNull : virtual public stuff_plan_managementIf {
   bool plan_created_by_user(const std::string& /* ssid */, const int64_t /* plan_id */) {
     bool _return = false;
     return _return;
+  }
+  void export_plan_by_plan_date(std::string& /* _return */, const std::string& /* ssid */, const std::string& /* plan_date */) {
+    return;
+  }
+  void export_plan_by_create_date(std::string& /* _return */, const std::string& /* ssid */, const int64_t /* begin_date */, const int64_t /* end_date */) {
+    return;
   }
 };
 
@@ -2386,6 +2394,251 @@ class stuff_plan_management_plan_created_by_user_presult {
 
 };
 
+typedef struct _stuff_plan_management_export_plan_by_plan_date_args__isset {
+  _stuff_plan_management_export_plan_by_plan_date_args__isset() : ssid(false), plan_date(false) {}
+  bool ssid :1;
+  bool plan_date :1;
+} _stuff_plan_management_export_plan_by_plan_date_args__isset;
+
+class stuff_plan_management_export_plan_by_plan_date_args {
+ public:
+
+  stuff_plan_management_export_plan_by_plan_date_args(const stuff_plan_management_export_plan_by_plan_date_args&);
+  stuff_plan_management_export_plan_by_plan_date_args& operator=(const stuff_plan_management_export_plan_by_plan_date_args&);
+  stuff_plan_management_export_plan_by_plan_date_args() : ssid(), plan_date() {
+  }
+
+  virtual ~stuff_plan_management_export_plan_by_plan_date_args() noexcept;
+  std::string ssid;
+  std::string plan_date;
+
+  _stuff_plan_management_export_plan_by_plan_date_args__isset __isset;
+
+  void __set_ssid(const std::string& val);
+
+  void __set_plan_date(const std::string& val);
+
+  bool operator == (const stuff_plan_management_export_plan_by_plan_date_args & rhs) const
+  {
+    if (!(ssid == rhs.ssid))
+      return false;
+    if (!(plan_date == rhs.plan_date))
+      return false;
+    return true;
+  }
+  bool operator != (const stuff_plan_management_export_plan_by_plan_date_args &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const stuff_plan_management_export_plan_by_plan_date_args & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+
+class stuff_plan_management_export_plan_by_plan_date_pargs {
+ public:
+
+
+  virtual ~stuff_plan_management_export_plan_by_plan_date_pargs() noexcept;
+  const std::string* ssid;
+  const std::string* plan_date;
+
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _stuff_plan_management_export_plan_by_plan_date_result__isset {
+  _stuff_plan_management_export_plan_by_plan_date_result__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _stuff_plan_management_export_plan_by_plan_date_result__isset;
+
+class stuff_plan_management_export_plan_by_plan_date_result {
+ public:
+
+  stuff_plan_management_export_plan_by_plan_date_result(const stuff_plan_management_export_plan_by_plan_date_result&);
+  stuff_plan_management_export_plan_by_plan_date_result& operator=(const stuff_plan_management_export_plan_by_plan_date_result&);
+  stuff_plan_management_export_plan_by_plan_date_result() : success() {
+  }
+
+  virtual ~stuff_plan_management_export_plan_by_plan_date_result() noexcept;
+  std::string success;
+  gen_exp e;
+
+  _stuff_plan_management_export_plan_by_plan_date_result__isset __isset;
+
+  void __set_success(const std::string& val);
+
+  void __set_e(const gen_exp& val);
+
+  bool operator == (const stuff_plan_management_export_plan_by_plan_date_result & rhs) const
+  {
+    if (!(success == rhs.success))
+      return false;
+    if (!(e == rhs.e))
+      return false;
+    return true;
+  }
+  bool operator != (const stuff_plan_management_export_plan_by_plan_date_result &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const stuff_plan_management_export_plan_by_plan_date_result & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _stuff_plan_management_export_plan_by_plan_date_presult__isset {
+  _stuff_plan_management_export_plan_by_plan_date_presult__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _stuff_plan_management_export_plan_by_plan_date_presult__isset;
+
+class stuff_plan_management_export_plan_by_plan_date_presult {
+ public:
+
+
+  virtual ~stuff_plan_management_export_plan_by_plan_date_presult() noexcept;
+  std::string* success;
+  gen_exp e;
+
+  _stuff_plan_management_export_plan_by_plan_date_presult__isset __isset;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+
+};
+
+typedef struct _stuff_plan_management_export_plan_by_create_date_args__isset {
+  _stuff_plan_management_export_plan_by_create_date_args__isset() : ssid(false), begin_date(false), end_date(false) {}
+  bool ssid :1;
+  bool begin_date :1;
+  bool end_date :1;
+} _stuff_plan_management_export_plan_by_create_date_args__isset;
+
+class stuff_plan_management_export_plan_by_create_date_args {
+ public:
+
+  stuff_plan_management_export_plan_by_create_date_args(const stuff_plan_management_export_plan_by_create_date_args&);
+  stuff_plan_management_export_plan_by_create_date_args& operator=(const stuff_plan_management_export_plan_by_create_date_args&);
+  stuff_plan_management_export_plan_by_create_date_args() : ssid(), begin_date(0), end_date(0) {
+  }
+
+  virtual ~stuff_plan_management_export_plan_by_create_date_args() noexcept;
+  std::string ssid;
+  int64_t begin_date;
+  int64_t end_date;
+
+  _stuff_plan_management_export_plan_by_create_date_args__isset __isset;
+
+  void __set_ssid(const std::string& val);
+
+  void __set_begin_date(const int64_t val);
+
+  void __set_end_date(const int64_t val);
+
+  bool operator == (const stuff_plan_management_export_plan_by_create_date_args & rhs) const
+  {
+    if (!(ssid == rhs.ssid))
+      return false;
+    if (!(begin_date == rhs.begin_date))
+      return false;
+    if (!(end_date == rhs.end_date))
+      return false;
+    return true;
+  }
+  bool operator != (const stuff_plan_management_export_plan_by_create_date_args &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const stuff_plan_management_export_plan_by_create_date_args & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+
+class stuff_plan_management_export_plan_by_create_date_pargs {
+ public:
+
+
+  virtual ~stuff_plan_management_export_plan_by_create_date_pargs() noexcept;
+  const std::string* ssid;
+  const int64_t* begin_date;
+  const int64_t* end_date;
+
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _stuff_plan_management_export_plan_by_create_date_result__isset {
+  _stuff_plan_management_export_plan_by_create_date_result__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _stuff_plan_management_export_plan_by_create_date_result__isset;
+
+class stuff_plan_management_export_plan_by_create_date_result {
+ public:
+
+  stuff_plan_management_export_plan_by_create_date_result(const stuff_plan_management_export_plan_by_create_date_result&);
+  stuff_plan_management_export_plan_by_create_date_result& operator=(const stuff_plan_management_export_plan_by_create_date_result&);
+  stuff_plan_management_export_plan_by_create_date_result() : success() {
+  }
+
+  virtual ~stuff_plan_management_export_plan_by_create_date_result() noexcept;
+  std::string success;
+  gen_exp e;
+
+  _stuff_plan_management_export_plan_by_create_date_result__isset __isset;
+
+  void __set_success(const std::string& val);
+
+  void __set_e(const gen_exp& val);
+
+  bool operator == (const stuff_plan_management_export_plan_by_create_date_result & rhs) const
+  {
+    if (!(success == rhs.success))
+      return false;
+    if (!(e == rhs.e))
+      return false;
+    return true;
+  }
+  bool operator != (const stuff_plan_management_export_plan_by_create_date_result &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const stuff_plan_management_export_plan_by_create_date_result & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _stuff_plan_management_export_plan_by_create_date_presult__isset {
+  _stuff_plan_management_export_plan_by_create_date_presult__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _stuff_plan_management_export_plan_by_create_date_presult__isset;
+
+class stuff_plan_management_export_plan_by_create_date_presult {
+ public:
+
+
+  virtual ~stuff_plan_management_export_plan_by_create_date_presult() noexcept;
+  std::string* success;
+  gen_exp e;
+
+  _stuff_plan_management_export_plan_by_create_date_presult__isset __isset;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+
+};
+
 class stuff_plan_managementClient : virtual public stuff_plan_managementIf {
  public:
   stuff_plan_managementClient(std::shared_ptr< ::apache::thrift::protocol::TProtocol> prot) {
@@ -2468,6 +2721,12 @@ class stuff_plan_managementClient : virtual public stuff_plan_managementIf {
   bool plan_created_by_user(const std::string& ssid, const int64_t plan_id);
   void send_plan_created_by_user(const std::string& ssid, const int64_t plan_id);
   bool recv_plan_created_by_user();
+  void export_plan_by_plan_date(std::string& _return, const std::string& ssid, const std::string& plan_date);
+  void send_export_plan_by_plan_date(const std::string& ssid, const std::string& plan_date);
+  void recv_export_plan_by_plan_date(std::string& _return);
+  void export_plan_by_create_date(std::string& _return, const std::string& ssid, const int64_t begin_date, const int64_t end_date);
+  void send_export_plan_by_create_date(const std::string& ssid, const int64_t begin_date, const int64_t end_date);
+  void recv_export_plan_by_create_date(std::string& _return);
  protected:
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> piprot_;
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> poprot_;
@@ -2502,6 +2761,8 @@ class stuff_plan_managementProcessor : public ::apache::thrift::TDispatchProcess
   void process_clean_unclose_plan(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
   void process_get_today_statistics(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
   void process_plan_created_by_user(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
+  void process_export_plan_by_plan_date(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
+  void process_export_plan_by_create_date(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
  public:
   stuff_plan_managementProcessor(::std::shared_ptr<stuff_plan_managementIf> iface) :
     iface_(iface) {
@@ -2524,6 +2785,8 @@ class stuff_plan_managementProcessor : public ::apache::thrift::TDispatchProcess
     processMap_["clean_unclose_plan"] = &stuff_plan_managementProcessor::process_clean_unclose_plan;
     processMap_["get_today_statistics"] = &stuff_plan_managementProcessor::process_get_today_statistics;
     processMap_["plan_created_by_user"] = &stuff_plan_managementProcessor::process_plan_created_by_user;
+    processMap_["export_plan_by_plan_date"] = &stuff_plan_managementProcessor::process_export_plan_by_plan_date;
+    processMap_["export_plan_by_create_date"] = &stuff_plan_managementProcessor::process_export_plan_by_create_date;
   }
 
   virtual ~stuff_plan_managementProcessor() {}
@@ -2732,6 +2995,26 @@ class stuff_plan_managementMultiface : virtual public stuff_plan_managementIf {
     return ifaces_[i]->plan_created_by_user(ssid, plan_id);
   }
 
+  void export_plan_by_plan_date(std::string& _return, const std::string& ssid, const std::string& plan_date) {
+    size_t sz = ifaces_.size();
+    size_t i = 0;
+    for (; i < (sz - 1); ++i) {
+      ifaces_[i]->export_plan_by_plan_date(_return, ssid, plan_date);
+    }
+    ifaces_[i]->export_plan_by_plan_date(_return, ssid, plan_date);
+    return;
+  }
+
+  void export_plan_by_create_date(std::string& _return, const std::string& ssid, const int64_t begin_date, const int64_t end_date) {
+    size_t sz = ifaces_.size();
+    size_t i = 0;
+    for (; i < (sz - 1); ++i) {
+      ifaces_[i]->export_plan_by_create_date(_return, ssid, begin_date, end_date);
+    }
+    ifaces_[i]->export_plan_by_create_date(_return, ssid, begin_date, end_date);
+    return;
+  }
+
 };
 
 // The 'concurrent' client is a thread safe client that correctly handles
@@ -2821,6 +3104,12 @@ class stuff_plan_managementConcurrentClient : virtual public stuff_plan_manageme
   bool plan_created_by_user(const std::string& ssid, const int64_t plan_id);
   int32_t send_plan_created_by_user(const std::string& ssid, const int64_t plan_id);
   bool recv_plan_created_by_user(const int32_t seqid);
+  void export_plan_by_plan_date(std::string& _return, const std::string& ssid, const std::string& plan_date);
+  int32_t send_export_plan_by_plan_date(const std::string& ssid, const std::string& plan_date);
+  void recv_export_plan_by_plan_date(std::string& _return, const int32_t seqid);
+  void export_plan_by_create_date(std::string& _return, const std::string& ssid, const int64_t begin_date, const int64_t end_date);
+  int32_t send_export_plan_by_create_date(const std::string& ssid, const int64_t begin_date, const int64_t end_date);
+  void recv_export_plan_by_create_date(std::string& _return, const int32_t seqid);
  protected:
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> piprot_;
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> poprot_;

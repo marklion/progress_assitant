@@ -108,6 +108,7 @@ public:
                     status_prompt = statuses[itr.status]->get_prompt();
                 }
                 tmp.status_prompt = status_prompt;
+                tmp.is_cancel = itr.is_cancel == 0?false:true;
 
                 _return.push_back(tmp);
             }
@@ -324,6 +325,7 @@ public:
                         status_prompt = statuses[single_plan.status]->get_prompt();
                     }
                     tmp.status_prompt = status_prompt;
+                    tmp.is_cancel = single_plan.is_cancel == 0?false:true;
                     _return.push_back(tmp);
                 }
             }
@@ -450,7 +452,7 @@ public:
         auto user = PA_DATAOPT_get_online_user(ssid);
         if (user)
         {
-            std::string file_name_no_ext = "plan_export" + std::to_string(time(NULL));
+            std::string file_name_no_ext = "plan_export" + std::to_string(time(NULL)) + std::to_string(user->get_pri_id());
             std::string file_name = "/dist/logo_res/" + file_name_no_ext + ".csv";
             std::ofstream stream(file_name);
             std::string csv_bom = {
@@ -458,7 +460,7 @@ public:
             stream << csv_bom;
             csv2::Writer<csv2::delimiter<','>> writer(stream);
             std::vector<std::string> table_header = {
-                "装液日期", "客户名称", "货名", "车牌", "车挂", "司机姓名", "司机电话", "卸车地点", "用途", "当前状态"};
+                "装液日期", "客户名称", "货名", "车牌", "车挂", "司机姓名", "司机电话","当前状态", "卸车地点", "用途" };
             writer.write_row(table_header);
             for (auto &itr : plan_ids)
             {
@@ -509,14 +511,14 @@ public:
                             single_rec.push_back(itr.behind_vichele);
                             single_rec.push_back(itr.driver_name);
                             single_rec.push_back(itr.driver_phone);
-                            single_rec.push_back(itr.drop_address);
-                            single_rec.push_back(itr.use_for);
                             auto status_string = "已提货";
                             if (itr.finish == 0)
                             {
                                 status_string = "未提货";
                             }
                             single_rec.push_back(status_string);
+                            single_rec.push_back(itr.drop_address);
+                            single_rec.push_back(itr.use_for);
 
                             writer.write_row(single_rec);
                         }
@@ -537,8 +539,6 @@ public:
                                 single_rec.push_back(driver->name);
                                 single_rec.push_back(driver->phone);
                             }
-                            single_rec.push_back(vichele_itr.drop_address);
-                            single_rec.push_back(vichele_itr.use_for);
                             std::string status_str = "未提货";
                             auto status_rule = PA_STATUS_RULE_get_all();
                             if (plan->status >= 0 && plan->status < 3 && status_rule[plan->status])
@@ -550,6 +550,8 @@ public:
                                 status_str = "已提货";
                             }
                             single_rec.push_back(status_str);
+                            single_rec.push_back(vichele_itr.drop_address);
+                            single_rec.push_back(vichele_itr.use_for);
                             writer.write_row(single_rec);
                         }
                     }
@@ -950,6 +952,73 @@ public:
         }
 
         return ret;
+    }
+
+    virtual void export_plan_by_plan_date(std::string &_return, const std::string &ssid, const std::string &plan_date)
+    {
+        auto opt_user = PA_DATAOPT_get_online_user(ssid);
+        if (!opt_user)
+        {
+            PA_RETURN_UNLOGIN_MSG();
+        }
+        std::list<pa_sql_plan> plans;
+        if (opt_user->buyer)
+        {
+            plans = opt_user->get_all_children<pa_sql_plan>("created_by", "plan_time LIKE '%s%%' AND is_cancel = 0", plan_date.c_str());
+        }
+        else
+        {
+            auto company = opt_user->get_parent<pa_sql_company>("belong_company");
+            if (!company)
+            {
+                PA_RETURN_NOCOMPANY_MSG();
+            }
+            auto all_stuff = company->get_all_children<pa_sql_stuff_info>("belong_company");
+            for (auto &itr:all_stuff)
+            {
+                auto one_kind_plan = itr.get_all_children<pa_sql_plan>("belong_stuff", "plan_time LIKE '%s%%' AND is_cancel = 0", plan_date.c_str());
+                plans.insert(plans.end(), one_kind_plan.begin(), one_kind_plan.end());
+            }
+        }
+        std::vector<int64_t> plan_ids;
+        for (auto &itr:plans)
+        {
+            plan_ids.push_back(itr.get_pri_id());
+        }
+        this->export_plan(_return, ssid, plan_ids);
+    }
+    virtual void export_plan_by_create_date(std::string &_return, const std::string &ssid, const int64_t begin_date, const int64_t end_date)
+    {
+        auto opt_user = PA_DATAOPT_get_online_user(ssid);
+        if (!opt_user)
+        {
+            PA_RETURN_UNLOGIN_MSG();
+        }
+        std::list<pa_sql_plan> plans;
+        if (opt_user->buyer)
+        {
+            plans = opt_user->get_all_children<pa_sql_plan>("created_by", "create_time >= %ld AND create_time <= %ld AND is_cancel = 0", begin_date, end_date);
+        }
+        else
+        {
+            auto company = opt_user->get_parent<pa_sql_company>("belong_company");
+            if (!company)
+            {
+                PA_RETURN_NOCOMPANY_MSG();
+            }
+            auto all_stuff = company->get_all_children<pa_sql_stuff_info>("belong_company");
+            for (auto &itr : all_stuff)
+            {
+                auto one_kind_plan = itr.get_all_children<pa_sql_plan>("belong_stuff", "create_time >= %ld AND create_time <= %ld AND is_cancel = 0", begin_date, end_date);
+                plans.insert(plans.end(), one_kind_plan.begin(), one_kind_plan.end());
+            }
+        }
+        std::vector<int64_t> plan_ids;
+        for (auto &itr : plans)
+        {
+            plan_ids.push_back(itr.get_pri_id());
+        }
+        this->export_plan(_return, ssid, plan_ids);
     }
 };
 
