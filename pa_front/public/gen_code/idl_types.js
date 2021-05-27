@@ -1503,6 +1503,7 @@ plan_status = class {
     this.plan_time = null;
     this.conflict_reason = null;
     this.status_prompt = null;
+    this.is_cancel = null;
     if (args) {
       if (args.plan_id !== undefined && args.plan_id !== null) {
         this.plan_id = args.plan_id;
@@ -1518,6 +1519,9 @@ plan_status = class {
       }
       if (args.status_prompt !== undefined && args.status_prompt !== null) {
         this.status_prompt = args.status_prompt;
+      }
+      if (args.is_cancel !== undefined && args.is_cancel !== null) {
+        this.is_cancel = args.is_cancel;
       }
     }
   }
@@ -1567,6 +1571,13 @@ plan_status = class {
           input.skip(ftype);
         }
         break;
+        case 6:
+        if (ftype == Thrift.Type.BOOL) {
+          this.is_cancel = input.readBool().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
         default:
           input.skip(ftype);
       }
@@ -1601,6 +1612,11 @@ plan_status = class {
     if (this.status_prompt !== null && this.status_prompt !== undefined) {
       output.writeFieldBegin('status_prompt', Thrift.Type.STRING, 5);
       output.writeString(this.status_prompt);
+      output.writeFieldEnd();
+    }
+    if (this.is_cancel !== null && this.is_cancel !== undefined) {
+      output.writeFieldBegin('is_cancel', Thrift.Type.BOOL, 6);
+      output.writeBool(this.is_cancel);
       output.writeFieldEnd();
     }
     output.writeFieldStop();

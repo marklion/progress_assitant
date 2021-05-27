@@ -6,10 +6,11 @@
                 <van-col :span="20">
                     <van-dropdown-menu>
                         <van-dropdown-item v-model="date_filter" :options="date_option" />
+                        <van-dropdown-item v-model="cancel_filter" :options="cancel_option" />
                     </van-dropdown-menu>
                 </van-col>
                 <van-col :span="4">
-                    <van-button type="primary" block @click="export_plan(order_need_show)">导出</van-button>
+                    <van-button type="primary" block :to="{name:'Statistics'}">导出</van-button>
                 </van-col>
             </van-row>
             <van-list :immediate-check="false" v-model="lazy_loading" :finished="lazy_finished" finished-text="没有更多了" @load="get_orders_by_ancher">
@@ -100,9 +101,17 @@ export default {
                 text: '本周进厂',
                 value: 3
             }],
+            cancel_option: [{
+                text:'只看有效计划',
+                value:0,
+            },{
+                text:'查看所有计划',
+                value:1,
+            }],
             date_filter: 0,
             show_export_email: false,
             export_file_path: '',
+            cancel_filter:0,
         }
     },
     computed: {
@@ -159,6 +168,18 @@ export default {
                     }
                 });
             }
+            var cancel_filter_ret = filter_ret;
+            filter_ret = [];
+            cancel_filter_ret.forEach(element=>{
+                if (vue_this.cancel_filter == 1)
+                {
+                    filter_ret.push(element);
+                }
+                else if (!element.is_cancel)
+                {
+                    filter_ret.push(element);
+                }
+            });
             return filter_ret;
         },
     },
@@ -167,17 +188,6 @@ export default {
         "export-file": ExportFile,
     },
     methods: {
-        export_plan: function (_plans) {
-            var plan_ids = [];
-            _plans.forEach((element) => {
-                plan_ids.push(element.plan_id);
-            });
-            var vue_this = this;
-            vue_this.$call_remote_process("stuff_plan_management", "export_plan", [vue_this.$cookies.get('pa_ssid'), plan_ids]).then(function (resp) {
-                vue_this.export_file_path = vue_this.$remote_url + resp;
-                vue_this.show_export_email = true;
-            });
-        },
         get_orders_by_ancher: function () {
             var vue_this = this;
             var func = "get_company_plan";

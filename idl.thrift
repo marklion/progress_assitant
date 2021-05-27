@@ -159,6 +159,7 @@ struct plan_status {
     3:i64 plan_time,
     4:string conflict_reason,
     5:string status_prompt,
+    6:bool is_cancel,
 }
 
 struct plan_number_id{
@@ -202,4 +203,6 @@ service stuff_plan_management {
     void clean_unclose_plan() throws (1:gen_exp e),
     list<vichele_statistics> get_today_statistics(1:string ssid) throws (1:gen_exp e),
     bool plan_created_by_user(1:string ssid, 2:i64 plan_id) throws (1:gen_exp e),
+    string export_plan_by_plan_date(1:string ssid, 2:string plan_date) throws (1:gen_exp e),
+    string export_plan_by_create_date(1:string ssid, 2:i64 begin_date, 3:i64 end_date) throws (1:gen_exp e),
 }
