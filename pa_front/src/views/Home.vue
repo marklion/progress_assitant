@@ -15,9 +15,17 @@
             <van-tag plain type="danger">{{single_stuff.last}}</van-tag>
         </template>
         <template #num>
-            <van-button round size="small" icon="plus" type="primary" @click="nav_to_plan(single_stuff.type_id)">报计划</van-button>
+            <van-row type="flex" justify="end" :gutter="10">
+                <van-col>
+                    <van-button round size="small" icon="down" type="warning" @click="nav_to_plan(single_stuff.type_id, false)">导入计划</van-button>
+                </van-col>
+                <van-col>
+                    <van-button round size="small" icon="plus" type="primary" @click="nav_to_plan(single_stuff.type_id, true)">报计划</van-button>
+                </van-col>
+            </van-row>
         </template>
     </van-card>
+
 </div>
 </template>
 
@@ -149,18 +157,26 @@ export default {
                 }
             });
         },
-        nav_to_plan: function (_type_id) {
+        nav_to_plan: function (_type_id, is_created) {
             var vue_this = this;
             if (this.$store.state.is_login) {
                 vue_this.$call_remote_process("company_management", "get_all_attachment", [vue_this.$cookies.get('pa_ssid')]).then(function (resp) {
                     if (resp.length > 0) {
-                        vue_this.$router.push({
-                            name: 'StuffPlan',
-                            params: {
-                                type_id: _type_id
-                            }
-                        });
-
+                        if (is_created) {
+                            vue_this.$router.push({
+                                name: 'StuffPlan',
+                                params: {
+                                    type_id: _type_id
+                                }
+                            });
+                        } else {
+                            vue_this.$router.push({
+                                name: 'PlanImport',
+                                params: {
+                                    type_id: _type_id
+                                }
+                            });
+                        }
                     } else {
                         vue_this.$router.push({
                             name: 'BoundInfo'
