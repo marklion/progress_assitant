@@ -33,3 +33,15 @@ export function call_remote_process(_service_interface,process,args) {
     });
 
 }
+export function call_remote_process_no_toast(_service_interface,process,args) {
+    var client = get_client(_service_interface);
+    return new Promise(function (resolve, reject) {
+        client[process].apply(client, args).then(function (resp) {
+            resolve(resp);
+        }).catch(function (err) {
+            console.log(err);
+            reject(err);
+        });
+    });
+
+}

@@ -25,7 +25,8 @@
     "vuex": "^3.4.0",
     "vxe-table": "^3.3.2",
     "weixin-js-sdk": "^1.6.0",
-    "xe-utils": "^3.2.1"
+    "xe-utils": "^3.2.1",
+    "xlsx": "^0.17.0"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.5.0",

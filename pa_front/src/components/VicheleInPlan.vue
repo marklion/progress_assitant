@@ -4278,7 +4278,6 @@ export default {
     beforeMount: function () {
         this.fetch_current_vichele();
         this.fetch_current_driver();
-        console.log(typeof this.vichele_number_patten);
     },
 }
 </script>

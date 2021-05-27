@@ -130,6 +130,15 @@ const routes = [
       has_go_back: true,
     },
   },
+  {
+    path: '/plan_import/:type_id',
+    name: 'PlanImport',
+    component: () => import('../views/PlanImport.vue'),
+    meta: {
+      private_title: '导入计划',
+      has_go_back: true,
+    },
+  },
 ]
 
 const router = new VueRouter({
