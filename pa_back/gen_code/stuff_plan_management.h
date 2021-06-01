@@ -43,6 +43,7 @@ class stuff_plan_managementIf {
   virtual bool plan_created_by_user(const std::string& ssid, const int64_t plan_id) = 0;
   virtual void export_plan_by_plan_date(std::string& _return, const std::string& ssid, const std::string& plan_date) = 0;
   virtual void export_plan_by_create_date(std::string& _return, const std::string& ssid, const int64_t begin_date, const int64_t end_date) = 0;
+  virtual void search_plan_by_vichele_number(std::vector<vichele_search_result> & _return, const std::string& ssid, const std::string& vichele_number) = 0;
 };
 
 class stuff_plan_managementIfFactory {
@@ -142,6 +143,9 @@ class stuff_plan_managementNull : virtual public stuff_plan_managementIf {
     return;
   }
   void export_plan_by_create_date(std::string& /* _return */, const std::string& /* ssid */, const int64_t /* begin_date */, const int64_t /* end_date */) {
+    return;
+  }
+  void search_plan_by_vichele_number(std::vector<vichele_search_result> & /* _return */, const std::string& /* ssid */, const std::string& /* vichele_number */) {
     return;
   }
 };
@@ -2639,6 +2643,125 @@ class stuff_plan_management_export_plan_by_create_date_presult {
 
 };
 
+typedef struct _stuff_plan_management_search_plan_by_vichele_number_args__isset {
+  _stuff_plan_management_search_plan_by_vichele_number_args__isset() : ssid(false), vichele_number(false) {}
+  bool ssid :1;
+  bool vichele_number :1;
+} _stuff_plan_management_search_plan_by_vichele_number_args__isset;
+
+class stuff_plan_management_search_plan_by_vichele_number_args {
+ public:
+
+  stuff_plan_management_search_plan_by_vichele_number_args(const stuff_plan_management_search_plan_by_vichele_number_args&);
+  stuff_plan_management_search_plan_by_vichele_number_args& operator=(const stuff_plan_management_search_plan_by_vichele_number_args&);
+  stuff_plan_management_search_plan_by_vichele_number_args() : ssid(), vichele_number() {
+  }
+
+  virtual ~stuff_plan_management_search_plan_by_vichele_number_args() noexcept;
+  std::string ssid;
+  std::string vichele_number;
+
+  _stuff_plan_management_search_plan_by_vichele_number_args__isset __isset;
+
+  void __set_ssid(const std::string& val);
+
+  void __set_vichele_number(const std::string& val);
+
+  bool operator == (const stuff_plan_management_search_plan_by_vichele_number_args & rhs) const
+  {
+    if (!(ssid == rhs.ssid))
+      return false;
+    if (!(vichele_number == rhs.vichele_number))
+      return false;
+    return true;
+  }
+  bool operator != (const stuff_plan_management_search_plan_by_vichele_number_args &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const stuff_plan_management_search_plan_by_vichele_number_args & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+
+class stuff_plan_management_search_plan_by_vichele_number_pargs {
+ public:
+
+
+  virtual ~stuff_plan_management_search_plan_by_vichele_number_pargs() noexcept;
+  const std::string* ssid;
+  const std::string* vichele_number;
+
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _stuff_plan_management_search_plan_by_vichele_number_result__isset {
+  _stuff_plan_management_search_plan_by_vichele_number_result__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _stuff_plan_management_search_plan_by_vichele_number_result__isset;
+
+class stuff_plan_management_search_plan_by_vichele_number_result {
+ public:
+
+  stuff_plan_management_search_plan_by_vichele_number_result(const stuff_plan_management_search_plan_by_vichele_number_result&);
+  stuff_plan_management_search_plan_by_vichele_number_result& operator=(const stuff_plan_management_search_plan_by_vichele_number_result&);
+  stuff_plan_management_search_plan_by_vichele_number_result() {
+  }
+
+  virtual ~stuff_plan_management_search_plan_by_vichele_number_result() noexcept;
+  std::vector<vichele_search_result>  success;
+  gen_exp e;
+
+  _stuff_plan_management_search_plan_by_vichele_number_result__isset __isset;
+
+  void __set_success(const std::vector<vichele_search_result> & val);
+
+  void __set_e(const gen_exp& val);
+
+  bool operator == (const stuff_plan_management_search_plan_by_vichele_number_result & rhs) const
+  {
+    if (!(success == rhs.success))
+      return false;
+    if (!(e == rhs.e))
+      return false;
+    return true;
+  }
+  bool operator != (const stuff_plan_management_search_plan_by_vichele_number_result &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const stuff_plan_management_search_plan_by_vichele_number_result & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _stuff_plan_management_search_plan_by_vichele_number_presult__isset {
+  _stuff_plan_management_search_plan_by_vichele_number_presult__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _stuff_plan_management_search_plan_by_vichele_number_presult__isset;
+
+class stuff_plan_management_search_plan_by_vichele_number_presult {
+ public:
+
+
+  virtual ~stuff_plan_management_search_plan_by_vichele_number_presult() noexcept;
+  std::vector<vichele_search_result> * success;
+  gen_exp e;
+
+  _stuff_plan_management_search_plan_by_vichele_number_presult__isset __isset;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+
+};
+
 class stuff_plan_managementClient : virtual public stuff_plan_managementIf {
  public:
   stuff_plan_managementClient(std::shared_ptr< ::apache::thrift::protocol::TProtocol> prot) {
@@ -2727,6 +2850,9 @@ class stuff_plan_managementClient : virtual public stuff_plan_managementIf {
   void export_plan_by_create_date(std::string& _return, const std::string& ssid, const int64_t begin_date, const int64_t end_date);
   void send_export_plan_by_create_date(const std::string& ssid, const int64_t begin_date, const int64_t end_date);
   void recv_export_plan_by_create_date(std::string& _return);
+  void search_plan_by_vichele_number(std::vector<vichele_search_result> & _return, const std::string& ssid, const std::string& vichele_number);
+  void send_search_plan_by_vichele_number(const std::string& ssid, const std::string& vichele_number);
+  void recv_search_plan_by_vichele_number(std::vector<vichele_search_result> & _return);
  protected:
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> piprot_;
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> poprot_;
@@ -2763,6 +2889,7 @@ class stuff_plan_managementProcessor : public ::apache::thrift::TDispatchProcess
   void process_plan_created_by_user(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
   void process_export_plan_by_plan_date(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
   void process_export_plan_by_create_date(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
+  void process_search_plan_by_vichele_number(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
  public:
   stuff_plan_managementProcessor(::std::shared_ptr<stuff_plan_managementIf> iface) :
     iface_(iface) {
@@ -2787,6 +2914,7 @@ class stuff_plan_managementProcessor : public ::apache::thrift::TDispatchProcess
     processMap_["plan_created_by_user"] = &stuff_plan_managementProcessor::process_plan_created_by_user;
     processMap_["export_plan_by_plan_date"] = &stuff_plan_managementProcessor::process_export_plan_by_plan_date;
     processMap_["export_plan_by_create_date"] = &stuff_plan_managementProcessor::process_export_plan_by_create_date;
+    processMap_["search_plan_by_vichele_number"] = &stuff_plan_managementProcessor::process_search_plan_by_vichele_number;
   }
 
   virtual ~stuff_plan_managementProcessor() {}
@@ -3015,6 +3143,16 @@ class stuff_plan_managementMultiface : virtual public stuff_plan_managementIf {
     return;
   }
 
+  void search_plan_by_vichele_number(std::vector<vichele_search_result> & _return, const std::string& ssid, const std::string& vichele_number) {
+    size_t sz = ifaces_.size();
+    size_t i = 0;
+    for (; i < (sz - 1); ++i) {
+      ifaces_[i]->search_plan_by_vichele_number(_return, ssid, vichele_number);
+    }
+    ifaces_[i]->search_plan_by_vichele_number(_return, ssid, vichele_number);
+    return;
+  }
+
 };
 
 // The 'concurrent' client is a thread safe client that correctly handles
@@ -3110,6 +3248,9 @@ class stuff_plan_managementConcurrentClient : virtual public stuff_plan_manageme
   void export_plan_by_create_date(std::string& _return, const std::string& ssid, const int64_t begin_date, const int64_t end_date);
   int32_t send_export_plan_by_create_date(const std::string& ssid, const int64_t begin_date, const int64_t end_date);
   void recv_export_plan_by_create_date(std::string& _return, const int32_t seqid);
+  void search_plan_by_vichele_number(std::vector<vichele_search_result> & _return, const std::string& ssid, const std::string& vichele_number);
+  int32_t send_search_plan_by_vichele_number(const std::string& ssid, const std::string& vichele_number);
+  void recv_search_plan_by_vichele_number(std::vector<vichele_search_result> & _return, const int32_t seqid);
  protected:
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> piprot_;
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> poprot_;

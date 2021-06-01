@@ -205,6 +205,15 @@ class Iface(object):
         """
         pass
 
+    def search_plan_by_vichele_number(self, ssid, vichele_number):
+        """
+        Parameters:
+         - ssid
+         - vichele_number
+
+        """
+        pass
+
 
 class Client(Iface):
     def __init__(self, iprot, oprot=None):
@@ -965,6 +974,42 @@ class Client(Iface):
             raise result.e
         raise TApplicationException(TApplicationException.MISSING_RESULT, "export_plan_by_create_date failed: unknown result")
 
+    def search_plan_by_vichele_number(self, ssid, vichele_number):
+        """
+        Parameters:
+         - ssid
+         - vichele_number
+
+        """
+        self.send_search_plan_by_vichele_number(ssid, vichele_number)
+        return self.recv_search_plan_by_vichele_number()
+
+    def send_search_plan_by_vichele_number(self, ssid, vichele_number):
+        self._oprot.writeMessageBegin('search_plan_by_vichele_number', TMessageType.CALL, self._seqid)
+        args = search_plan_by_vichele_number_args()
+        args.ssid = ssid
+        args.vichele_number = vichele_number
+        args.write(self._oprot)
+        self._oprot.writeMessageEnd()
+        self._oprot.trans.flush()
+
+    def recv_search_plan_by_vichele_number(self):
+        iprot = self._iprot
+        (fname, mtype, rseqid) = iprot.readMessageBegin()
+        if mtype == TMessageType.EXCEPTION:
+            x = TApplicationException()
+            x.read(iprot)
+            iprot.readMessageEnd()
+            raise x
+        result = search_plan_by_vichele_number_result()
+        result.read(iprot)
+        iprot.readMessageEnd()
+        if result.success is not None:
+            return result.success
+        if result.e is not None:
+            raise result.e
+        raise TApplicationException(TApplicationException.MISSING_RESULT, "search_plan_by_vichele_number failed: unknown result")
+
 
 class Processor(Iface, TProcessor):
     def __init__(self, handler):
@@ -991,6 +1036,7 @@ class Processor(Iface, TProcessor):
         self._processMap["plan_created_by_user"] = Processor.process_plan_created_by_user
         self._processMap["export_plan_by_plan_date"] = Processor.process_export_plan_by_plan_date
         self._processMap["export_plan_by_create_date"] = Processor.process_export_plan_by_create_date
+        self._processMap["search_plan_by_vichele_number"] = Processor.process_search_plan_by_vichele_number
         self._on_message_begin = None
 
     def on_message_begin(self, func):
@@ -1555,6 +1601,32 @@ class Processor(Iface, TProcessor):
             msg_type = TMessageType.EXCEPTION
             result = TApplicationException(TApplicationException.INTERNAL_ERROR, 'Internal error')
         oprot.writeMessageBegin("export_plan_by_create_date", msg_type, seqid)
+        result.write(oprot)
+        oprot.writeMessageEnd()
+        oprot.trans.flush()
+
+    def process_search_plan_by_vichele_number(self, seqid, iprot, oprot):
+        args = search_plan_by_vichele_number_args()
+        args.read(iprot)
+        iprot.readMessageEnd()
+        result = search_plan_by_vichele_number_result()
+        try:
+            result.success = self._handler.search_plan_by_vichele_number(args.ssid, args.vichele_number)
+            msg_type = TMessageType.REPLY
+        except TTransport.TTransportException:
+            raise
+        except gen_exp as e:
+            msg_type = TMessageType.REPLY
+            result.e = e
+        except TApplicationException as ex:
+            logging.exception('TApplication exception in handler')
+            msg_type = TMessageType.EXCEPTION
+            result = ex
+        except Exception:
+            logging.exception('Unexpected exception in handler')
+            msg_type = TMessageType.EXCEPTION
+            result = TApplicationException(TApplicationException.INTERNAL_ERROR, 'Internal error')
+        oprot.writeMessageBegin("search_plan_by_vichele_number", msg_type, seqid)
         result.write(oprot)
         oprot.writeMessageEnd()
         oprot.trans.flush()
@@ -4713,6 +4785,162 @@ class export_plan_by_create_date_result(object):
 all_structs.append(export_plan_by_create_date_result)
 export_plan_by_create_date_result.thrift_spec = (
     (0, TType.STRING, 'success', 'UTF8', None, ),  # 0
+    (1, TType.STRUCT, 'e', [gen_exp, None], None, ),  # 1
+)
+
+
+class search_plan_by_vichele_number_args(object):
+    """
+    Attributes:
+     - ssid
+     - vichele_number
+
+    """
+
+
+    def __init__(self, ssid=None, vichele_number=None,):
+        self.ssid = ssid
+        self.vichele_number = vichele_number
+
+    def read(self, iprot):
+        if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
+            iprot._fast_decode(self, iprot, [self.__class__, self.thrift_spec])
+            return
+        iprot.readStructBegin()
+        while True:
+            (fname, ftype, fid) = iprot.readFieldBegin()
+            if ftype == TType.STOP:
+                break
+            if fid == 1:
+                if ftype == TType.STRING:
+                    self.ssid = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 2:
+                if ftype == TType.STRING:
+                    self.vichele_number = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
+            else:
+                iprot.skip(ftype)
+            iprot.readFieldEnd()
+        iprot.readStructEnd()
+
+    def write(self, oprot):
+        if oprot._fast_encode is not None and self.thrift_spec is not None:
+            oprot.trans.write(oprot._fast_encode(self, [self.__class__, self.thrift_spec]))
+            return
+        oprot.writeStructBegin('search_plan_by_vichele_number_args')
+        if self.ssid is not None:
+            oprot.writeFieldBegin('ssid', TType.STRING, 1)
+            oprot.writeString(self.ssid.encode('utf-8') if sys.version_info[0] == 2 else self.ssid)
+            oprot.writeFieldEnd()
+        if self.vichele_number is not None:
+            oprot.writeFieldBegin('vichele_number', TType.STRING, 2)
+            oprot.writeString(self.vichele_number.encode('utf-8') if sys.version_info[0] == 2 else self.vichele_number)
+            oprot.writeFieldEnd()
+        oprot.writeFieldStop()
+        oprot.writeStructEnd()
+
+    def validate(self):
+        return
+
+    def __repr__(self):
+        L = ['%s=%r' % (key, value)
+             for key, value in self.__dict__.items()]
+        return '%s(%s)' % (self.__class__.__name__, ', '.join(L))
+
+    def __eq__(self, other):
+        return isinstance(other, self.__class__) and self.__dict__ == other.__dict__
+
+    def __ne__(self, other):
+        return not (self == other)
+all_structs.append(search_plan_by_vichele_number_args)
+search_plan_by_vichele_number_args.thrift_spec = (
+    None,  # 0
+    (1, TType.STRING, 'ssid', 'UTF8', None, ),  # 1
+    (2, TType.STRING, 'vichele_number', 'UTF8', None, ),  # 2
+)
+
+
+class search_plan_by_vichele_number_result(object):
+    """
+    Attributes:
+     - success
+     - e
+
+    """
+
+
+    def __init__(self, success=None, e=None,):
+        self.success = success
+        self.e = e
+
+    def read(self, iprot):
+        if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
+            iprot._fast_decode(self, iprot, [self.__class__, self.thrift_spec])
+            return
+        iprot.readStructBegin()
+        while True:
+            (fname, ftype, fid) = iprot.readFieldBegin()
+            if ftype == TType.STOP:
+                break
+            if fid == 0:
+                if ftype == TType.LIST:
+                    self.success = []
+                    (_etype115, _size112) = iprot.readListBegin()
+                    for _i116 in range(_size112):
+                        _elem117 = vichele_search_result()
+                        _elem117.read(iprot)
+                        self.success.append(_elem117)
+                    iprot.readListEnd()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 1:
+                if ftype == TType.STRUCT:
+                    self.e = gen_exp.read(iprot)
+                else:
+                    iprot.skip(ftype)
+            else:
+                iprot.skip(ftype)
+            iprot.readFieldEnd()
+        iprot.readStructEnd()
+
+    def write(self, oprot):
+        if oprot._fast_encode is not None and self.thrift_spec is not None:
+            oprot.trans.write(oprot._fast_encode(self, [self.__class__, self.thrift_spec]))
+            return
+        oprot.writeStructBegin('search_plan_by_vichele_number_result')
+        if self.success is not None:
+            oprot.writeFieldBegin('success', TType.LIST, 0)
+            oprot.writeListBegin(TType.STRUCT, len(self.success))
+            for iter118 in self.success:
+                iter118.write(oprot)
+            oprot.writeListEnd()
+            oprot.writeFieldEnd()
+        if self.e is not None:
+            oprot.writeFieldBegin('e', TType.STRUCT, 1)
+            self.e.write(oprot)
+            oprot.writeFieldEnd()
+        oprot.writeFieldStop()
+        oprot.writeStructEnd()
+
+    def validate(self):
+        return
+
+    def __repr__(self):
+        L = ['%s=%r' % (key, value)
+             for key, value in self.__dict__.items()]
+        return '%s(%s)' % (self.__class__.__name__, ', '.join(L))
+
+    def __eq__(self, other):
+        return isinstance(other, self.__class__) and self.__dict__ == other.__dict__
+
+    def __ne__(self, other):
+        return not (self == other)
+all_structs.append(search_plan_by_vichele_number_result)
+search_plan_by_vichele_number_result.thrift_spec = (
+    (0, TType.LIST, 'success', (TType.STRUCT, [vichele_search_result, None], False), None, ),  # 0
     (1, TType.STRUCT, 'e', [gen_exp, None], None, ),  # 1
 )
 fix_spec(all_structs)

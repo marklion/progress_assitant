@@ -1,3 +1,10 @@
+#if !defined(_STUFF_INFO_IMP_H_)
+#define _STUFF_INFO_IMP_H_
+
+
+
+
+
 #include "../gen_code/stuff_info.h"
 #include "../pa_util/pa_utils.h"
 
@@ -44,3 +51,4 @@ public:
         }
     }
 };
+#endif // _STUFF_INFO_IMP_H_

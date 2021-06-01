@@ -13,12 +13,25 @@
                     <van-button type="primary" block :to="{name:'Statistics'}">导出</van-button>
                 </van-col>
             </van-row>
+            <van-search v-model="vichele_number_search" label="车牌号" placeholder="请输入车牌号搜索当天计划" @search="search_plan_by_vichele_number" />
             <van-list :immediate-check="false" v-model="lazy_loading" :finished="lazy_finished" finished-text="没有更多了" @load="get_orders_by_ancher">
                 <plan-brief v-for="(single_plan, index) in order_need_show" :key="index" :conflict_reason="single_plan.conflict_reason" :plan_id="single_plan.plan_id" :company_view="!$store.state.userinfo.buyer" :status_prompt="single_plan.status_prompt"></plan-brief>
             </van-list>
         </van-tab>
     </van-tabs>
     <export-file :remote_file="export_file_path" v-model="show_export_email"></export-file>
+    <van-dialog :show-confirm-button="false" close-on-click-overlay v-model="show_search_result" title="搜索结果">
+        <vxe-table size="small" stripe align="center" :data="search_result" max-height="400">
+            <vxe-table-column field="plan_info.number" title="计划单号">
+                <template #default="{ row }">
+                    <van-button plain size="small" type="info" :to="{name:'PlanDetail', params:{plan_id:row.plan_info.id}}">{{row.plan_info.number}}</van-button>
+                </template>
+            </vxe-table-column>
+            <vxe-table-column field="vichele_numbers" title="车号"></vxe-table-column>
+            <vxe-table-column field="plan_time" title="计划进厂时间"></vxe-table-column>
+            <vxe-table-column field="status" title="状态"></vxe-table-column>
+        </vxe-table>
+    </van-dialog>
 </div>
 </template>
 
@@ -48,7 +61,11 @@ import {
 import {
     List
 } from 'vant';
+import {
+    Search
+} from 'vant';
 
+Vue.use(Search);
 Vue.use(List);
 Vue.use(Field);
 Vue.use(Dialog);
@@ -65,6 +82,8 @@ export default {
     name: 'CompanyOrder',
     data: function () {
         return {
+            show_search_result: false,
+            vichele_number_search: '',
             lazy_loading: false,
             lazy_finished: false,
             orders: [],
@@ -102,16 +121,17 @@ export default {
                 value: 3
             }],
             cancel_option: [{
-                text:'只看有效计划',
-                value:0,
-            },{
-                text:'查看所有计划',
-                value:1,
+                text: '只看有效计划',
+                value: 0,
+            }, {
+                text: '查看所有计划',
+                value: 1,
             }],
             date_filter: 0,
             show_export_email: false,
             export_file_path: '',
-            cancel_filter:0,
+            cancel_filter: 0,
+            search_result: [],
         }
     },
     computed: {
@@ -170,13 +190,10 @@ export default {
             }
             var cancel_filter_ret = filter_ret;
             filter_ret = [];
-            cancel_filter_ret.forEach(element=>{
-                if (vue_this.cancel_filter == 1)
-                {
+            cancel_filter_ret.forEach(element => {
+                if (vue_this.cancel_filter == 1) {
                     filter_ret.push(element);
-                }
-                else if (!element.is_cancel)
-                {
+                } else if (!element.is_cancel) {
                     filter_ret.push(element);
                 }
             });
@@ -188,6 +205,16 @@ export default {
         "export-file": ExportFile,
     },
     methods: {
+        search_plan_by_vichele_number: function () {
+            var vue_this = this;
+            vue_this.search_result = [];
+            vue_this.$call_remote_process("stuff_plan_management", "search_plan_by_vichele_number", [vue_this.$cookies.get('pa_ssid'), vue_this.vichele_number_search]).then(function (resp) {
+                resp.forEach((element, index) => {
+                    vue_this.$set(vue_this.search_result, index, element);
+                });
+                vue_this.show_search_result = true;
+            });
+        },
         get_orders_by_ancher: function () {
             var vue_this = this;
             var func = "get_company_plan";

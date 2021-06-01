@@ -3,6 +3,7 @@
 #include <cstring>
 #include "parameters.hpp"
 #include <fstream>
+#include <iterator>
 #include <string>
 #include <utility>
 #include <iostream>

@@ -1916,3 +1916,101 @@ vichele_statistics = class {
   }
 
 };
+vichele_search_result = class {
+  constructor(args) {
+    this.plan_info = null;
+    this.vichele_numbers = null;
+    this.plan_time = null;
+    this.status = null;
+    if (args) {
+      if (args.plan_info !== undefined && args.plan_info !== null) {
+        this.plan_info = new plan_number_id(args.plan_info);
+      }
+      if (args.vichele_numbers !== undefined && args.vichele_numbers !== null) {
+        this.vichele_numbers = args.vichele_numbers;
+      }
+      if (args.plan_time !== undefined && args.plan_time !== null) {
+        this.plan_time = args.plan_time;
+      }
+      if (args.status !== undefined && args.status !== null) {
+        this.status = args.status;
+      }
+    }
+  }
+
+  read (input) {
+    input.readStructBegin();
+    while (true) {
+      const ret = input.readFieldBegin();
+      const ftype = ret.ftype;
+      const fid = ret.fid;
+      if (ftype == Thrift.Type.STOP) {
+        break;
+      }
+      switch (fid) {
+        case 1:
+        if (ftype == Thrift.Type.STRUCT) {
+          this.plan_info = new plan_number_id();
+          this.plan_info.read(input);
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        case 2:
+        if (ftype == Thrift.Type.STRING) {
+          this.vichele_numbers = input.readString().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        case 3:
+        if (ftype == Thrift.Type.STRING) {
+          this.plan_time = input.readString().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        case 4:
+        if (ftype == Thrift.Type.STRING) {
+          this.status = input.readString().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        default:
+          input.skip(ftype);
+      }
+      input.readFieldEnd();
+    }
+    input.readStructEnd();
+    return;
+  }
+
+  write (output) {
+    output.writeStructBegin('vichele_search_result');
+    if (this.plan_info !== null && this.plan_info !== undefined) {
+      output.writeFieldBegin('plan_info', Thrift.Type.STRUCT, 1);
+      this.plan_info.write(output);
+      output.writeFieldEnd();
+    }
+    if (this.vichele_numbers !== null && this.vichele_numbers !== undefined) {
+      output.writeFieldBegin('vichele_numbers', Thrift.Type.STRING, 2);
+      output.writeString(this.vichele_numbers);
+      output.writeFieldEnd();
+    }
+    if (this.plan_time !== null && this.plan_time !== undefined) {
+      output.writeFieldBegin('plan_time', Thrift.Type.STRING, 3);
+      output.writeString(this.plan_time);
+      output.writeFieldEnd();
+    }
+    if (this.status !== null && this.status !== undefined) {
+      output.writeFieldBegin('status', Thrift.Type.STRING, 4);
+      output.writeString(this.status);
+      output.writeFieldEnd();
+    }
+    output.writeFieldStop();
+    output.writeStructEnd();
+    return;
+  }
+
+};

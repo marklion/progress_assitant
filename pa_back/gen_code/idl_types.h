@@ -55,6 +55,8 @@ class deliver_info;
 
 class vichele_statistics;
 
+class vichele_search_result;
+
 typedef struct _gen_exp__isset {
   _gen_exp__isset() : msg(false) {}
   bool msg :1;
@@ -1166,6 +1168,66 @@ class vichele_statistics : public virtual ::apache::thrift::TBase {
 void swap(vichele_statistics &a, vichele_statistics &b);
 
 std::ostream& operator<<(std::ostream& out, const vichele_statistics& obj);
+
+typedef struct _vichele_search_result__isset {
+  _vichele_search_result__isset() : plan_info(false), vichele_numbers(false), plan_time(false), status(false) {}
+  bool plan_info :1;
+  bool vichele_numbers :1;
+  bool plan_time :1;
+  bool status :1;
+} _vichele_search_result__isset;
+
+class vichele_search_result : public virtual ::apache::thrift::TBase {
+ public:
+
+  vichele_search_result(const vichele_search_result&);
+  vichele_search_result& operator=(const vichele_search_result&);
+  vichele_search_result() : vichele_numbers(), plan_time(), status() {
+  }
+
+  virtual ~vichele_search_result() noexcept;
+  plan_number_id plan_info;
+  std::string vichele_numbers;
+  std::string plan_time;
+  std::string status;
+
+  _vichele_search_result__isset __isset;
+
+  void __set_plan_info(const plan_number_id& val);
+
+  void __set_vichele_numbers(const std::string& val);
+
+  void __set_plan_time(const std::string& val);
+
+  void __set_status(const std::string& val);
+
+  bool operator == (const vichele_search_result & rhs) const
+  {
+    if (!(plan_info == rhs.plan_info))
+      return false;
+    if (!(vichele_numbers == rhs.vichele_numbers))
+      return false;
+    if (!(plan_time == rhs.plan_time))
+      return false;
+    if (!(status == rhs.status))
+      return false;
+    return true;
+  }
+  bool operator != (const vichele_search_result &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const vichele_search_result & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+  virtual void printTo(std::ostream& out) const;
+};
+
+void swap(vichele_search_result &a, vichele_search_result &b);
+
+std::ostream& operator<<(std::ostream& out, const vichele_search_result& obj);
 
 
 

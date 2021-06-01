@@ -8,6 +8,7 @@
 #include "../external_src/CJsonObject.hpp"
 #include "../external_src/Base64.h"
 #include "../pa_util/pa_status_rule.h"
+#include "../external_src/writer.hpp"
 class company_management_handler : virtual public company_managementIf
 {
 public:

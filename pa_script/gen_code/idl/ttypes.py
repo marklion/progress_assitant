@@ -1734,6 +1734,97 @@ class vichele_statistics(object):
 
     def __ne__(self, other):
         return not (self == other)
+
+
+class vichele_search_result(object):
+    """
+    Attributes:
+     - plan_info
+     - vichele_numbers
+     - plan_time
+     - status
+
+    """
+
+
+    def __init__(self, plan_info=None, vichele_numbers=None, plan_time=None, status=None,):
+        self.plan_info = plan_info
+        self.vichele_numbers = vichele_numbers
+        self.plan_time = plan_time
+        self.status = status
+
+    def read(self, iprot):
+        if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
+            iprot._fast_decode(self, iprot, [self.__class__, self.thrift_spec])
+            return
+        iprot.readStructBegin()
+        while True:
+            (fname, ftype, fid) = iprot.readFieldBegin()
+            if ftype == TType.STOP:
+                break
+            if fid == 1:
+                if ftype == TType.STRUCT:
+                    self.plan_info = plan_number_id()
+                    self.plan_info.read(iprot)
+                else:
+                    iprot.skip(ftype)
+            elif fid == 2:
+                if ftype == TType.STRING:
+                    self.vichele_numbers = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 3:
+                if ftype == TType.STRING:
+                    self.plan_time = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 4:
+                if ftype == TType.STRING:
+                    self.status = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
+            else:
+                iprot.skip(ftype)
+            iprot.readFieldEnd()
+        iprot.readStructEnd()
+
+    def write(self, oprot):
+        if oprot._fast_encode is not None and self.thrift_spec is not None:
+            oprot.trans.write(oprot._fast_encode(self, [self.__class__, self.thrift_spec]))
+            return
+        oprot.writeStructBegin('vichele_search_result')
+        if self.plan_info is not None:
+            oprot.writeFieldBegin('plan_info', TType.STRUCT, 1)
+            self.plan_info.write(oprot)
+            oprot.writeFieldEnd()
+        if self.vichele_numbers is not None:
+            oprot.writeFieldBegin('vichele_numbers', TType.STRING, 2)
+            oprot.writeString(self.vichele_numbers.encode('utf-8') if sys.version_info[0] == 2 else self.vichele_numbers)
+            oprot.writeFieldEnd()
+        if self.plan_time is not None:
+            oprot.writeFieldBegin('plan_time', TType.STRING, 3)
+            oprot.writeString(self.plan_time.encode('utf-8') if sys.version_info[0] == 2 else self.plan_time)
+            oprot.writeFieldEnd()
+        if self.status is not None:
+            oprot.writeFieldBegin('status', TType.STRING, 4)
+            oprot.writeString(self.status.encode('utf-8') if sys.version_info[0] == 2 else self.status)
+            oprot.writeFieldEnd()
+        oprot.writeFieldStop()
+        oprot.writeStructEnd()
+
+    def validate(self):
+        return
+
+    def __repr__(self):
+        L = ['%s=%r' % (key, value)
+             for key, value in self.__dict__.items()]
+        return '%s(%s)' % (self.__class__.__name__, ', '.join(L))
+
+    def __eq__(self, other):
+        return isinstance(other, self.__class__) and self.__dict__ == other.__dict__
+
+    def __ne__(self, other):
+        return not (self == other)
 all_structs.append(gen_exp)
 gen_exp.thrift_spec = (
     None,  # 0
@@ -1884,6 +1975,14 @@ vichele_statistics.thrift_spec = (
     (6, TType.BOOL, 'delivered', None, None, ),  # 6
     (7, TType.I64, 'plan_id', None, None, ),  # 7
     (8, TType.STRING, 'plan_order', 'UTF8', None, ),  # 8
+)
+all_structs.append(vichele_search_result)
+vichele_search_result.thrift_spec = (
+    None,  # 0
+    (1, TType.STRUCT, 'plan_info', [plan_number_id, None], None, ),  # 1
+    (2, TType.STRING, 'vichele_numbers', 'UTF8', None, ),  # 2
+    (3, TType.STRING, 'plan_time', 'UTF8', None, ),  # 3
+    (4, TType.STRING, 'status', 'UTF8', None, ),  # 4
 )
 fix_spec(all_structs)
 del all_structs
