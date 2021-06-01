@@ -79,7 +79,7 @@ public:
     {
         va_list vl;
         va_start(vl, _query);
-        char tmpbuff[256];
+        char tmpbuff[2048];
         vsnprintf(tmpbuff, sizeof(tmpbuff), _query, vl);
         va_end(vl);
         return sqlite_orm::search_record_all<T>("%s_ext_key = %d AND %s", _parent_tag.c_str(), get_pri_id(), tmpbuff);
@@ -100,7 +100,7 @@ public:
     {
         va_list vl;
         va_start(vl, _query);
-        char tmpbuff[256];
+        char tmpbuff[2048];
         vsnprintf(tmpbuff, sizeof(tmpbuff), _query, vl);
         va_end(vl);
 

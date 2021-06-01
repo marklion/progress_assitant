@@ -8,6 +8,7 @@
 #include <Python.h>
 #include "../pa_util/pa_status_rule.h"
 #include "../external_src/writer.hpp"
+#include "pa_rpc_util.h"
 
 static std::vector<std::string> prepare_vichels(const std::string &_vicheles)
 {
@@ -1019,6 +1020,59 @@ public:
             plan_ids.push_back(itr.get_pri_id());
         }
         this->export_plan(_return, ssid, plan_ids);
+    }
+
+    virtual void search_plan_by_vichele_number(std::vector<vichele_search_result> &_return, const std::string &ssid, const std::string &vichele_number)
+    {
+        auto main_vichele = sqlite_orm::search_record_all<pa_sql_vichele>("number LIKE '%%%s%%'", vichele_number.c_str());
+        auto behind_vichele = sqlite_orm::search_record_all<pa_sql_vichele_behind>("number LIKE '%%%s%%'", vichele_number.c_str());
+        std::string filter_condition = "main_vichele_ext_key = 0";
+        for (auto &itr : main_vichele)
+        {
+            filter_condition.append(" OR main_vichele_ext_key = " + std::to_string(itr.get_pri_id()));
+        }
+
+        for (auto &itr : behind_vichele)
+        {
+            filter_condition.append(" OR behind_vichele_ext_key = " + std::to_string(itr.get_pri_id()));
+        }
+        std::string today_date = PA_DATAOPT_current_time();
+        today_date = today_date.substr(0, 10);
+        auto plan_scope = PA_RPC_get_all_plans_related_by_user(ssid, "plan_time LIKE '%s%%'", today_date.c_str());
+        std::string plan_filter = "belong_plan_ext_key = 0";
+        for (auto &itr:plan_scope) 
+        {
+            plan_filter.append(" OR belong_plan_ext_key = " + std::to_string(itr.get_pri_id()));
+        }
+        auto all_single_vichele = sqlite_orm::search_record_all<pa_sql_single_vichele>("(%s) AND (%s)", filter_condition.c_str(), plan_filter.c_str());
+        for (auto &itr : all_single_vichele)
+        {
+            auto main_vichele_number = itr.get_parent<pa_sql_vichele>("main_vichele");
+            auto behind_vichele_number = itr.get_parent<pa_sql_vichele_behind>("behind_vichele");
+            std::string vichele_number = "";
+            if (main_vichele_number && behind_vichele_number)
+            {
+                vichele_number = main_vichele_number->number + "-" + behind_vichele_number->number;
+            }
+            auto plan = itr.get_parent<pa_sql_plan>("belong_plan");
+            if (plan)
+            {
+                std::string status_prompt = "";
+                auto statuses = PA_STATUS_RULE_get_all();
+                if (statuses[plan->status])
+                {
+                    status_prompt = statuses[plan->status]->get_prompt();
+                }
+                vichele_search_result tmp;
+                tmp.plan_info.id = plan->get_pri_id();
+                tmp.plan_info.number = std::to_string(plan->create_time) + std::to_string(plan->get_pri_id());
+                tmp.vichele_numbers = vichele_number;
+                tmp.plan_time = plan->plan_time;
+                tmp.status = status_prompt;
+
+                _return.push_back(tmp);
+            }
+        }
     }
 };
 

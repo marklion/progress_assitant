@@ -330,7 +330,7 @@ public:
     {
         va_list vl;
         va_start(vl, _query);
-        char tmpbuff[256];
+        char tmpbuff[2048];
         vsnprintf(tmpbuff, sizeof(tmpbuff), _query, vl);
         va_end(vl);
         return search_record_all<sql_record>(std::string(tmpbuff));
@@ -353,7 +353,7 @@ public:
     {
         va_list vl;
         va_start(vl, _query);
-        char tmpbuff[256];
+        char tmpbuff[2048];
         vsnprintf(tmpbuff, sizeof(tmpbuff), _query, vl);
         va_end(vl);
         return search_record<sql_record>(std::string(tmpbuff));

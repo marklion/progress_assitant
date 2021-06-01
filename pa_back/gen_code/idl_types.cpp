@@ -2929,3 +2929,155 @@ void vichele_statistics::printTo(std::ostream& out) const {
 }
 
 
+vichele_search_result::~vichele_search_result() noexcept {
+}
+
+
+void vichele_search_result::__set_plan_info(const plan_number_id& val) {
+  this->plan_info = val;
+}
+
+void vichele_search_result::__set_vichele_numbers(const std::string& val) {
+  this->vichele_numbers = val;
+}
+
+void vichele_search_result::__set_plan_time(const std::string& val) {
+  this->plan_time = val;
+}
+
+void vichele_search_result::__set_status(const std::string& val) {
+  this->status = val;
+}
+std::ostream& operator<<(std::ostream& out, const vichele_search_result& obj)
+{
+  obj.printTo(out);
+  return out;
+}
+
+
+uint32_t vichele_search_result::read(::apache::thrift::protocol::TProtocol* iprot) {
+
+  ::apache::thrift::protocol::TInputRecursionTracker tracker(*iprot);
+  uint32_t xfer = 0;
+  std::string fname;
+  ::apache::thrift::protocol::TType ftype;
+  int16_t fid;
+
+  xfer += iprot->readStructBegin(fname);
+
+  using ::apache::thrift::protocol::TProtocolException;
+
+
+  while (true)
+  {
+    xfer += iprot->readFieldBegin(fname, ftype, fid);
+    if (ftype == ::apache::thrift::protocol::T_STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 1:
+        if (ftype == ::apache::thrift::protocol::T_STRUCT) {
+          xfer += this->plan_info.read(iprot);
+          this->__isset.plan_info = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 2:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->vichele_numbers);
+          this->__isset.vichele_numbers = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 3:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->plan_time);
+          this->__isset.plan_time = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 4:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->status);
+          this->__isset.status = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      default:
+        xfer += iprot->skip(ftype);
+        break;
+    }
+    xfer += iprot->readFieldEnd();
+  }
+
+  xfer += iprot->readStructEnd();
+
+  return xfer;
+}
+
+uint32_t vichele_search_result::write(::apache::thrift::protocol::TProtocol* oprot) const {
+  uint32_t xfer = 0;
+  ::apache::thrift::protocol::TOutputRecursionTracker tracker(*oprot);
+  xfer += oprot->writeStructBegin("vichele_search_result");
+
+  xfer += oprot->writeFieldBegin("plan_info", ::apache::thrift::protocol::T_STRUCT, 1);
+  xfer += this->plan_info.write(oprot);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("vichele_numbers", ::apache::thrift::protocol::T_STRING, 2);
+  xfer += oprot->writeString(this->vichele_numbers);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("plan_time", ::apache::thrift::protocol::T_STRING, 3);
+  xfer += oprot->writeString(this->plan_time);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("status", ::apache::thrift::protocol::T_STRING, 4);
+  xfer += oprot->writeString(this->status);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldStop();
+  xfer += oprot->writeStructEnd();
+  return xfer;
+}
+
+void swap(vichele_search_result &a, vichele_search_result &b) {
+  using ::std::swap;
+  swap(a.plan_info, b.plan_info);
+  swap(a.vichele_numbers, b.vichele_numbers);
+  swap(a.plan_time, b.plan_time);
+  swap(a.status, b.status);
+  swap(a.__isset, b.__isset);
+}
+
+vichele_search_result::vichele_search_result(const vichele_search_result& other40) {
+  plan_info = other40.plan_info;
+  vichele_numbers = other40.vichele_numbers;
+  plan_time = other40.plan_time;
+  status = other40.status;
+  __isset = other40.__isset;
+}
+vichele_search_result& vichele_search_result::operator=(const vichele_search_result& other41) {
+  plan_info = other41.plan_info;
+  vichele_numbers = other41.vichele_numbers;
+  plan_time = other41.plan_time;
+  status = other41.status;
+  __isset = other41.__isset;
+  return *this;
+}
+void vichele_search_result::printTo(std::ostream& out) const {
+  using ::apache::thrift::to_string;
+  out << "vichele_search_result(";
+  out << "plan_info=" << to_string(plan_info);
+  out << ", " << "vichele_numbers=" << to_string(vichele_numbers);
+  out << ", " << "plan_time=" << to_string(plan_time);
+  out << ", " << "status=" << to_string(status);
+  out << ")";
+}
+
+
