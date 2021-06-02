@@ -81,6 +81,15 @@ struct plan_status_rule {
     5:i64 index,
     6:string prompt,
 }
+
+struct real_access_record {
+    1:string name,
+    2:string logo,
+    3:string phone,
+    4:string company_name,
+    5:string attachment,
+}
+
 service company_management {
     list<i64> get_all_type(1:string ssid) throws (1:gen_exp e),
     i64 add_type(1:string name, 2:i64 price, 3:string last,  4:string ssid) throws (1:gen_exp e),
@@ -105,6 +114,7 @@ service company_management {
     void del_attachment(1:string ssid, 2:i64 id) throws (1:gen_exp e),
     list<company_attachment> get_all_attachment(1:string ssid) throws (1:gen_exp e),
     string get_attachment(1:string company_name) throws (1:gen_exp e),
+    list<real_access_record> get_real_access(1:string ssid) throws (1:gen_exp e),
 }
 
 service stuff_info {

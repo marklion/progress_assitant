@@ -884,6 +884,119 @@ plan_status_rule = class {
   }
 
 };
+real_access_record = class {
+  constructor(args) {
+    this.name = null;
+    this.logo = null;
+    this.phone = null;
+    this.company_name = null;
+    this.attachment = null;
+    if (args) {
+      if (args.name !== undefined && args.name !== null) {
+        this.name = args.name;
+      }
+      if (args.logo !== undefined && args.logo !== null) {
+        this.logo = args.logo;
+      }
+      if (args.phone !== undefined && args.phone !== null) {
+        this.phone = args.phone;
+      }
+      if (args.company_name !== undefined && args.company_name !== null) {
+        this.company_name = args.company_name;
+      }
+      if (args.attachment !== undefined && args.attachment !== null) {
+        this.attachment = args.attachment;
+      }
+    }
+  }
+
+  read (input) {
+    input.readStructBegin();
+    while (true) {
+      const ret = input.readFieldBegin();
+      const ftype = ret.ftype;
+      const fid = ret.fid;
+      if (ftype == Thrift.Type.STOP) {
+        break;
+      }
+      switch (fid) {
+        case 1:
+        if (ftype == Thrift.Type.STRING) {
+          this.name = input.readString().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        case 2:
+        if (ftype == Thrift.Type.STRING) {
+          this.logo = input.readString().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        case 3:
+        if (ftype == Thrift.Type.STRING) {
+          this.phone = input.readString().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        case 4:
+        if (ftype == Thrift.Type.STRING) {
+          this.company_name = input.readString().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        case 5:
+        if (ftype == Thrift.Type.STRING) {
+          this.attachment = input.readString().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        default:
+          input.skip(ftype);
+      }
+      input.readFieldEnd();
+    }
+    input.readStructEnd();
+    return;
+  }
+
+  write (output) {
+    output.writeStructBegin('real_access_record');
+    if (this.name !== null && this.name !== undefined) {
+      output.writeFieldBegin('name', Thrift.Type.STRING, 1);
+      output.writeString(this.name);
+      output.writeFieldEnd();
+    }
+    if (this.logo !== null && this.logo !== undefined) {
+      output.writeFieldBegin('logo', Thrift.Type.STRING, 2);
+      output.writeString(this.logo);
+      output.writeFieldEnd();
+    }
+    if (this.phone !== null && this.phone !== undefined) {
+      output.writeFieldBegin('phone', Thrift.Type.STRING, 3);
+      output.writeString(this.phone);
+      output.writeFieldEnd();
+    }
+    if (this.company_name !== null && this.company_name !== undefined) {
+      output.writeFieldBegin('company_name', Thrift.Type.STRING, 4);
+      output.writeString(this.company_name);
+      output.writeFieldEnd();
+    }
+    if (this.attachment !== null && this.attachment !== undefined) {
+      output.writeFieldBegin('attachment', Thrift.Type.STRING, 5);
+      output.writeString(this.attachment);
+      output.writeFieldEnd();
+    }
+    output.writeFieldStop();
+    output.writeStructEnd();
+    return;
+  }
+
+};
 plan_confirm_info = class {
   constructor(args) {
     this.timestamp = null;

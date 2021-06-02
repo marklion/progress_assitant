@@ -9,6 +9,7 @@
 #include "../external_src/Base64.h"
 #include "../pa_util/pa_status_rule.h"
 #include "../external_src/writer.hpp"
+#include "pa_rpc_util.h"
 class company_management_handler : virtual public company_managementIf
 {
 public:
@@ -606,5 +607,28 @@ public:
         _return = company->attachment_picture;
     }
 
+    virtual void get_real_access(std::vector<real_access_record> &_return, const std::string &ssid)
+    {
+        auto plans = PA_RPC_get_all_plans_related_by_user(ssid, "proxy_company == '' OR proxy_company IS NULL GROUP BY created_by_ext_key");
+        for (auto &itr:plans)
+        {
+            auto created_user = itr.get_parent<pa_sql_userinfo>("created_by");
+            if (created_user)
+            {
+                auto company = created_user->get_parent<pa_sql_company>("belong_company");
+                if (company)
+                {
+                    real_access_record tmp;
+                    tmp.name = created_user->name;
+                    tmp.logo = created_user->logo;
+                    tmp.attachment = company->attachment_picture;
+                    tmp.company_name = company->name;
+                    tmp.phone = created_user->phone;
+                    _return.push_back(tmp);
+                }
+            }
+        }
+        
+    }
 };
 #endif // _COMPANY_MANAGEMENT_IMP_H_

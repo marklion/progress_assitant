@@ -39,6 +39,8 @@ class company_attachment;
 
 class plan_status_rule;
 
+class real_access_record;
+
 class plan_confirm_info;
 
 class pay_confirm_info;
@@ -598,6 +600,72 @@ class plan_status_rule : public virtual ::apache::thrift::TBase {
 void swap(plan_status_rule &a, plan_status_rule &b);
 
 std::ostream& operator<<(std::ostream& out, const plan_status_rule& obj);
+
+typedef struct _real_access_record__isset {
+  _real_access_record__isset() : name(false), logo(false), phone(false), company_name(false), attachment(false) {}
+  bool name :1;
+  bool logo :1;
+  bool phone :1;
+  bool company_name :1;
+  bool attachment :1;
+} _real_access_record__isset;
+
+class real_access_record : public virtual ::apache::thrift::TBase {
+ public:
+
+  real_access_record(const real_access_record&);
+  real_access_record& operator=(const real_access_record&);
+  real_access_record() : name(), logo(), phone(), company_name(), attachment() {
+  }
+
+  virtual ~real_access_record() noexcept;
+  std::string name;
+  std::string logo;
+  std::string phone;
+  std::string company_name;
+  std::string attachment;
+
+  _real_access_record__isset __isset;
+
+  void __set_name(const std::string& val);
+
+  void __set_logo(const std::string& val);
+
+  void __set_phone(const std::string& val);
+
+  void __set_company_name(const std::string& val);
+
+  void __set_attachment(const std::string& val);
+
+  bool operator == (const real_access_record & rhs) const
+  {
+    if (!(name == rhs.name))
+      return false;
+    if (!(logo == rhs.logo))
+      return false;
+    if (!(phone == rhs.phone))
+      return false;
+    if (!(company_name == rhs.company_name))
+      return false;
+    if (!(attachment == rhs.attachment))
+      return false;
+    return true;
+  }
+  bool operator != (const real_access_record &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const real_access_record & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+  virtual void printTo(std::ostream& out) const;
+};
+
+void swap(real_access_record &a, real_access_record &b);
+
+std::ostream& operator<<(std::ostream& out, const real_access_record& obj);
 
 typedef struct _plan_confirm_info__isset {
   _plan_confirm_info__isset() : timestamp(false), name(false) {}

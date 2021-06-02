@@ -76,7 +76,7 @@
         </van-dialog>
     </div>
     <div v-else-if="active_index == 1">
-        <van-divider >当前公告</van-divider>
+        <van-divider>当前公告</van-divider>
         <van-field v-model="notice" rows="2" autosize type="textarea" maxlength="300" placeholder="请输入公告" show-word-limit />
         <van-row type="flex" justify="center" align="center" :gutter="10">
             <van-col :span="10">
@@ -102,6 +102,17 @@
     </div>
     <div v-else-if="active_index == 3">
         <van-divider>访客记录</van-divider>
+        <van-cell-group title="谁报过计划">
+            <van-collapse v-model="real_access_users_show">
+                <van-collapse-item v-for="(single_record, index) in real_access_users" :key="index" :title="single_record.company_name" :label="single_record.name" :name="index">
+                    <template #icon>
+                        <van-image round width="40px" height="40px" fit="cover" :src="$remote_url +  single_record.logo" />
+                    </template>
+                    <van-cell title="联系电话" :value="single_record.phone"></van-cell>
+                    <van-cell title="查看资质" is-link @click="show_attachment(single_record.attachment)"></van-cell>
+                </van-collapse-item>
+            </van-collapse>
+        </van-cell-group>
     </div>
 </div>
 </template>
@@ -157,7 +168,7 @@ import {
     Grid,
     GridItem
 } from 'vant';
-
+import { ImagePreview } from 'vant';
 Vue.use(Grid);
 Vue.use(GridItem);
 Vue.use(Collapse);
@@ -181,6 +192,8 @@ export default {
     name: 'CompanyHome',
     data: function () {
         return {
+            real_access_users_show: [0],
+            real_access_users: [],
             active_index: 0,
             all_grids: [{
                 icon: 'shop-o',
@@ -275,6 +288,9 @@ export default {
         }
     },
     methods: {
+        show_attachment: function (_value) {
+            ImagePreview([this.$remote_url + _value]);
+        },
         formater_status_vichele: function ({
             cellValue
         }) {
@@ -428,6 +444,11 @@ export default {
                     vue_this.notice = resp;
                 });
             }
+            vue_this.$call_remote_process("company_management", 'get_real_access', [vue_this.$cookies.get('pa_ssid')]).then(function (resp) {
+                resp.forEach((element, index) => {
+                    vue_this.$set(vue_this.real_access_users, index, element);
+                });
+            });
         }
     },
     beforeMount: function () {
