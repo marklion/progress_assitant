@@ -13,85 +13,96 @@
                     <van-icon name="setting-o" size="25" color="#1989fa" @click="nav_to_company_data" />
                 </van-col>
             </van-row>
-
         </van-col>
     </van-row>
-    <van-cell-group>
-        <template #title>
-            <van-row type="flex" justify="space-between" align="center">
-                <van-col>今日报价</van-col>
-                <van-col>
-                    <van-button type="primary" size="small" round icon="plus" @click="open_add_type">增加商品</van-button>
-                </van-col>
-            </van-row>
-        </template>
-        <van-cell v-for="(single_type, index) in all_type" center :key="index" :value="'¥' + single_type.price" :title="single_type.name">
-            <template #extra>
-                <van-popover v-model="show_operate[index]" trigger="click" :actions="support_operate" @select="do_operate" @open="open_operate(single_type)" @close="focus_type = 0">
-                    <template #reference>
-                        <van-button size="small" round plain type="primary" class="opt_btn_show">操作</van-button>
-                    </template>
-                </van-popover>
+    <van-grid>
+        <van-grid-item v-for="(single_grid, index) in all_grids" :key="index" :class="{grid_is_active: index == active_index, grid_is_not_active: index != active_index}" :icon="single_grid.icon" :text="single_grid.text" @click="active_index = index" />
+    </van-grid>
+    <div v-if="active_index == 0">
+        <van-cell-group>
+            <template #title>
+                <van-row type="flex" justify="space-between" align="center">
+                    <van-col>今日报价</van-col>
+                    <van-col>
+                        <van-button type="primary" size="small" round icon="plus" @click="open_add_type">增加商品</van-button>
+                    </van-col>
+                </van-row>
             </template>
-            <template #label v-if="single_type.last">
-                <van-tag plain type="danger">{{single_type.last}}</van-tag>
-            </template>
-            <template #icon v-if="!single_type.saling">
-                <div class="saling_tag_show">
-                    已下架
+            <van-cell v-for="(single_type, index) in all_type" center :key="index" :value="'¥' + single_type.price" :title="single_type.name">
+                <template #extra>
+                    <van-popover v-model="show_operate[index]" trigger="click" :actions="support_operate" @select="do_operate" @open="open_operate(single_type)" @close="focus_type = 0">
+                        <template #reference>
+                            <van-button size="small" round plain type="primary" class="opt_btn_show">操作</van-button>
+                        </template>
+                    </van-popover>
+                </template>
+                <template #label v-if="single_type.last">
+                    <van-tag plain type="danger">{{single_type.last}}</van-tag>
+                </template>
+                <template #icon v-if="!single_type.saling">
+                    <div class="saling_tag_show">
+                        已下架
+                    </div>
+                </template>
+            </van-cell>
+        </van-cell-group>
+        <van-dialog :show-confirm-button="false" close-on-click-overlay v-model="show_add_stuff" title="添加商品">
+            <van-form @submit="add_stuff">
+                <van-field v-model="add_stuff_name" name="商品名" label="商品名" placeholder="请输入商品名" :rules="[{ required: true, message: '请填写商品名' }]" />
+                <van-field v-model="add_stuff_price" type="number" name="价格" label="价格" placeholder="请输入价格" :rules="[{ required: true, message: '请填写价格' }]" />
+                <van-field v-model="add_stuff_last" name="存量" label="备注" placeholder="请输入备注信息" />
+                <div style="margin: 16px;">
+                    <van-button round block type="info" native-type="submit">确认</van-button>
                 </div>
-            </template>
-        </van-cell>
-    </van-cell-group>
-    <van-dialog :show-confirm-button="false" close-on-click-overlay v-model="show_add_stuff" title="添加商品">
-        <van-form @submit="add_stuff">
-            <van-field v-model="add_stuff_name" name="商品名" label="商品名" placeholder="请输入商品名" :rules="[{ required: true, message: '请填写商品名' }]" />
-            <van-field v-model="add_stuff_price" type="number" name="价格" label="价格" placeholder="请输入价格" :rules="[{ required: true, message: '请填写价格' }]" />
-            <van-field v-model="add_stuff_last" name="存量" label="备注" placeholder="请输入备注信息" />
-            <div style="margin: 16px;">
-                <van-button round block type="info" native-type="submit">确认</van-button>
-            </div>
-        </van-form>
-    </van-dialog>
-    <van-dialog :show-confirm-button="false" close-on-click-overlay v-model="show_edit_stuff" title="修改商品">
-        <van-form @submit="edit_stuff">
-            <van-field v-model="stuff_in_edit.name" name="商品名" label="商品名" readonly />
-            <van-field v-model="stuff_in_edit.price" name="价格" label="价格" placeholder="请输入价格" :rules="[{ required: true, message: '请填写价格' }]" />
-            <van-field v-model="stuff_in_edit.last" name="存量" label="备注" placeholder="请输入备注信息" />
-            <div style="margin: 16px;">
-                <van-button round block type="info" native-type="submit">确认</van-button>
-            </div>
-        </van-form>
-    </van-dialog>
-    <van-divider>实时数据</van-divider>
-    <van-collapse v-model="expend_statistics">
-        <van-collapse-item title="今日装车状态" :value="'共' + vichele_statistics.length + '车  出货' + delivered_vichele.length + '车'" name="0">
-            <vxe-table size="small" stripe align="center" :data="vichele_statistics">
-                <vxe-table-column field="company" title="公司" width="34%" sortable></vxe-table-column>
-                <vxe-table-column field="main_vichele" title="主车" width="24%"></vxe-table-column>
-                <vxe-table-column field="behind_vichele" title="挂车" width="24%"></vxe-table-column>
-                <vxe-table-column field="delivered" title="状态" width="18%" sortable :formatter="formater_status_vichele"></vxe-table-column>
-            </vxe-table>
-        </van-collapse-item>
-    </van-collapse>
-    <van-divider class="notice_show">当前公告</van-divider>
-    <van-field v-model="notice" rows="2" autosize type="textarea" maxlength="300" placeholder="请输入公告" show-word-limit />
-    <van-row type="flex" justify="center" align="center" :gutter="10">
-        <van-col :span="10">
-            <van-button size="small" round block type="danger" @click="submit_notice(false)">清除</van-button>
-        </van-col>
-        <van-col :span="10">
-            <van-button size="small" round block type="primary" @click="submit_notice(true)">发布</van-button>
-        </van-col>
-    </van-row>
-    <van-dialog v-model="show_proxy_company_diag" title="代提客户" :showConfirmButton="false" closeOnClickOverlay>
-        <van-form @submit="submit_proxy_company">
-            <van-field v-model="proxy_company" name="客户" label="客户公司" placeholder="请输入客户名称" :rules="[{ required: true, message: '请填写客户名称' }]" />
-            <div style="margin: 16px;">
-                <van-button round block type="info" native-type="submit">提交</van-button>
-            </div>
-        </van-form>
-    </van-dialog>
+            </van-form>
+        </van-dialog>
+        <van-dialog :show-confirm-button="false" close-on-click-overlay v-model="show_edit_stuff" title="修改商品">
+            <van-form @submit="edit_stuff">
+                <van-field v-model="stuff_in_edit.name" name="商品名" label="商品名" readonly />
+                <van-field v-model="stuff_in_edit.price" name="价格" label="价格" placeholder="请输入价格" :rules="[{ required: true, message: '请填写价格' }]" />
+                <van-field v-model="stuff_in_edit.last" name="存量" label="备注" placeholder="请输入备注信息" />
+                <div style="margin: 16px;">
+                    <van-button round block type="info" native-type="submit">确认</van-button>
+                </div>
+            </van-form>
+        </van-dialog>
+        <van-dialog v-model="show_proxy_company_diag" title="代提客户" :showConfirmButton="false" closeOnClickOverlay>
+            <van-form @submit="submit_proxy_company">
+                <van-field v-model="proxy_company" name="客户" label="客户公司" placeholder="请输入客户名称" :rules="[{ required: true, message: '请填写客户名称' }]" />
+                <div style="margin: 16px;">
+                    <van-button round block type="info" native-type="submit">提交</van-button>
+                </div>
+            </van-form>
+        </van-dialog>
+    </div>
+    <div v-else-if="active_index == 1">
+        <van-divider >当前公告</van-divider>
+        <van-field v-model="notice" rows="2" autosize type="textarea" maxlength="300" placeholder="请输入公告" show-word-limit />
+        <van-row type="flex" justify="center" align="center" :gutter="10">
+            <van-col :span="10">
+                <van-button size="small" round block type="danger" @click="submit_notice(false)">清除</van-button>
+            </van-col>
+            <van-col :span="10">
+                <van-button size="small" round block type="primary" @click="submit_notice(true)">发布</van-button>
+            </van-col>
+        </van-row>
+    </div>
+    <div v-else-if="active_index == 2">
+        <van-divider>实时数据</van-divider>
+        <van-collapse v-model="expend_statistics">
+            <van-collapse-item title="今日装车状态" :value="'共' + vichele_statistics.length + '车  出货' + delivered_vichele.length + '车'" name="0">
+                <vxe-table size="small" stripe align="center" :data="vichele_statistics">
+                    <vxe-table-column field="company" title="公司" width="34%" sortable></vxe-table-column>
+                    <vxe-table-column field="main_vichele" title="主车" width="24%"></vxe-table-column>
+                    <vxe-table-column field="behind_vichele" title="挂车" width="24%"></vxe-table-column>
+                    <vxe-table-column field="delivered" title="状态" width="18%" sortable :formatter="formater_status_vichele"></vxe-table-column>
+                </vxe-table>
+            </van-collapse-item>
+        </van-collapse>
+    </div>
+    <div v-else-if="active_index == 3">
+        <van-divider>访客记录</van-divider>
+    </div>
 </div>
 </template>
 
@@ -142,7 +153,13 @@ import {
     Collapse,
     CollapseItem
 } from 'vant';
+import {
+    Grid,
+    GridItem
+} from 'vant';
 
+Vue.use(Grid);
+Vue.use(GridItem);
 Vue.use(Collapse);
 Vue.use(CollapseItem);
 Vue.use(VanImage);
@@ -164,6 +181,20 @@ export default {
     name: 'CompanyHome',
     data: function () {
         return {
+            active_index: 0,
+            all_grids: [{
+                icon: 'shop-o',
+                text: '今日报价'
+            }, {
+                icon: 'info-o',
+                text: '公告管理'
+            }, {
+                icon: 'underway-o',
+                text: '实时数据'
+            }, {
+                icon: 'friends-o',
+                text: '访客记录'
+            }, ],
             expend_statistics: [],
             all_type: [],
             show_add_stuff: false,
@@ -244,7 +275,9 @@ export default {
         }
     },
     methods: {
-        formater_status_vichele: function ({ cellValue }) {
+        formater_status_vichele: function ({
+            cellValue
+        }) {
             if (cellValue != true) {
                 return "未提货";
             } else {
@@ -446,6 +479,14 @@ export default {
     margin: 0 auto;
     width: 20px;
     line-height: 15px;
+    color: red;
+}
+
+.grid_is_active {
+    color: green;
+}
+
+.grid_is_not_active {
     color: red;
 }
 </style>
