@@ -13,18 +13,19 @@
         </van-popup>
         <van-row type="flex" justify="center" align="center">
             <van-col :span="20">
-                <van-divider>运输车辆</van-divider>
+                <van-divider>运输车辆: 已添加{{vichele_info.length}}辆</van-divider>
             </van-col>
             <van-col :span="4">
                 <van-button round size="small" type="primary" icon="plus" native-type="button" @click="add_vichele_info"></van-button>
             </van-col>
         </van-row>
         <div class="single_vichele_show" v-for="(single_vichele, index) in vichele_info" :key="index">
+            <div class="vichele_index_show">{{index + 1}}</div>
             <vichele-in-plan :vichele_info="single_vichele"></vichele-in-plan>
-            <van-button plain round block icon="delete-o" native-type="button" @click="remove_vichele_info(index)"></van-button>
+            <van-button plain round block icon="delete-o" native-type="button" @click="remove_vichele_info(index)" >移除</van-button>
         </div>
         <div style="margin: 16px;">
-            <van-button round block type="info" native-type="submit" :disabled="!stuff_info_change">{{action_name}}</van-button>
+            <van-button round block type="info" native-type="submit" :disabled="!stuff_info_change">{{action_name}}: 共{{vichele_info.length}}辆车</van-button>
         </div>
     </van-form>
 </div>
@@ -284,6 +285,16 @@ export default {
     border: 1px solid gray;
     border-radius: 16px;
     margin-left: 10px;
-    margin-right: 10px
+    margin-right: 10px;
+    position: relative;
+}
+.vichele_index_show {
+    position: absolute;
+    top: 30%;
+    left: 60%;
+    font-size: 100px;
+    z-index: 20;
+    color:rgb(167, 167, 238);
+    opacity: 0.5;
 }
 </style>
