@@ -217,6 +217,9 @@ export default {
         },
         get_orders_by_ancher: function () {
             var vue_this = this;
+            if (vue_this.orders.length <= 0) {
+                return;
+            }
             var func = "get_company_plan";
             if (vue_this.$store.state.userinfo.buyer) {
                 func = "get_created_plan";

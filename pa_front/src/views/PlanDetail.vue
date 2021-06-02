@@ -38,7 +38,7 @@
     <van-cell-group>
         <template #title>
             <van-row type="flex" justify="space-between" align="center">
-                <van-col>车辆信息</van-col>
+                <van-col>车辆信息: 共{{plan_detail.vichele_info.length}}辆</van-col>
                 <van-col>
                     <van-button type="info" plain size="small" @click="show_vichele_table = true">浏览</van-button>
                     <van-popup v-model="show_vichele_table" position="bottom" get-container="body">
@@ -54,6 +54,9 @@
         </template>
         <van-collapse v-for="(single_vichele, index) in plan_detail.vichele_info" :key="index" v-model="vichele_panel[index]">
             <van-collapse-item :title="single_vichele.main_vichele+ '-' + single_vichele.behind_vichele" :value="vichele_status(single_vichele.finish)" name="1">
+                <template #icon>
+                    <div class="vichele_index_show">{{index + 1}}</div>
+                </template>
                 <van-cell title="司机" :value="single_vichele.driver_name"></van-cell>
                 <van-cell title="电话" :value="single_vichele.driver_phone"></van-cell>
                 <van-cell v-if="single_vichele.finish" title="提货时间" :value="single_vichele.deliver_timestamp"></van-cell>
@@ -304,5 +307,9 @@ export default {
 <style scoped>
 .preview_btn_show {
     margin-left: 15px;
+}
+.vichele_index_show {
+    color: rgb(97, 129, 33);
+    margin-right: 5px;
 }
 </style>
