@@ -47,6 +47,7 @@ if len(sys.argv) <= 1 or sys.argv[1] == '--help':
     print('  void del_attachment(string ssid, i64 id)')
     print('   get_all_attachment(string ssid)')
     print('  string get_attachment(string company_name)')
+    print('   get_real_access(string ssid)')
     print('')
     sys.exit(0)
 
@@ -263,6 +264,12 @@ elif cmd == 'get_attachment':
         print('get_attachment requires 1 args')
         sys.exit(1)
     pp.pprint(client.get_attachment(args[0],))
+
+elif cmd == 'get_real_access':
+    if len(args) != 1:
+        print('get_real_access requires 1 args')
+        sys.exit(1)
+    pp.pprint(client.get_real_access(args[0],))
 
 else:
     print('Unrecognized method %s' % cmd)
