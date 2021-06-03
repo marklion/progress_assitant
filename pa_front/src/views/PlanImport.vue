@@ -77,7 +77,9 @@ Vue.use(Form);
 Vue.use(Field);
 Vue.use(Uploader);
 Vue.use(Dialog);
-import { ImagePreview } from 'vant';
+import {
+    ImagePreview
+} from 'vant';
 import StuffTitle from '../components/StuffTitle.vue'
 import StuffInfoSubmit from '../components/StuffInfoSubmit.vue'
 export default {
@@ -102,7 +104,10 @@ export default {
     },
     methods: {
         preview_format_sample: function () {
-            ImagePreview([this.$remote_url + '/logo_res/plan_sheet_sample.jpg']);
+            ImagePreview({
+                images: [this.$remote_url + '/logo_res/plan_sheet_sample.jpg'],
+                close: true
+            });
         },
         confirm_sheet: function (_value) {
             this.table_from_user = this.convert_wb_2_array(this.wb.Sheets[_value]);

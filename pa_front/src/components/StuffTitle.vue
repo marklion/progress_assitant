@@ -1,5 +1,5 @@
 <template>
-<div >
+<div>
     <van-notice-bar v-if="company_notice" left-icon="volume-o" :text="company_notice" />
     <van-dialog v-model="show_notice_diag" v-if="company_notice" title="公告" :message="company_notice">
     </van-dialog>
@@ -31,8 +31,12 @@ import {
 import {
     Field
 } from 'vant';
-import { Button } from 'vant';
-import { ImagePreview } from 'vant';
+import {
+    Button
+} from 'vant';
+import {
+    ImagePreview
+} from 'vant';
 Vue.use(Button);
 Vue.use(Field);
 Vue.use(Dialog);
@@ -42,7 +46,7 @@ Vue.use(CellGroup);
 export default {
     name: 'StuffTitle',
     props: {
-        type_id:Number,
+        type_id: Number,
     },
     data: function () {
         return {
@@ -55,7 +59,7 @@ export default {
                 company_contact: '',
             },
             company_notice: '',
-            show_notice_diag:true,
+            show_notice_diag: true,
         };
     },
     beforeMount: function () {
@@ -76,9 +80,11 @@ export default {
         preview_company_attachment: function () {
             var vue_this = this;
             vue_this.$call_remote_process("company_management", "get_attachment", [vue_this.stuff_brief.company]).then(function (resp) {
-                if (resp)
-                {
-                    ImagePreview([vue_this.$remote_url + resp]);
+                if (resp) {
+                    ImagePreview({
+                        images: [vue_this.$remote_url + resp],
+                        closeable: true
+                    });
                 }
             });
         },

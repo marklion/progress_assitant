@@ -315,7 +315,10 @@ export default {
     methods: {
         show_attachment: function (_value) {
             if (_value.search(".jpg") != -1) {
-                ImagePreview([this.$remote_url + _value]);
+                ImagePreview({
+                    images: [this.$remote_url + _value],
+                    closeable: true
+                });
             } else {
                 this.$toast("内容不存在");
             }

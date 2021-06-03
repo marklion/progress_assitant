@@ -203,7 +203,10 @@ export default {
             var vue_this = this;
             vue_this.$call_remote_process("company_management", "get_attachment", [vue_this.plan_owner_info.company]).then(function (resp) {
                 if (resp) {
-                    ImagePreview([vue_this.$remote_url + resp]);
+                    ImagePreview({
+                        images: [vue_this.$remote_url + resp],
+                        closeable: true
+                    });
                 }
             });
         },
@@ -211,7 +214,10 @@ export default {
             var vue_this = this;
             vue_this.$call_remote_process("company_management", "get_attachment", [vue_this.plan_detail.sale_company]).then(function (resp) {
                 if (resp) {
-                    ImagePreview([vue_this.$remote_url + resp]);
+                    ImagePreview({
+                        images: [vue_this.$remote_url + resp],
+                        closeable: true
+                    });
                 }
             });
         },
@@ -308,6 +314,7 @@ export default {
 .preview_btn_show {
     margin-left: 15px;
 }
+
 .vichele_index_show {
     color: rgb(97, 129, 33);
     margin-right: 5px;
