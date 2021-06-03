@@ -146,7 +146,7 @@ export default {
     name: 'BoundInfo',
     data: function () {
         return {
-            show_address_contact_update_button:false,
+            show_address_contact_update_button: false,
             main_vichele: [],
             behind_vichele: [],
             driver: [],
@@ -178,7 +178,10 @@ export default {
             });
         },
         pre_view_attach: function (_remote_path) {
-            ImagePreview([this.$remote_url + _remote_path]);
+            ImagePreview({
+                images: [this.$remote_url + _remote_path],
+                closeable: true
+            });
         },
         convert_2_base64_send: function (_file, _is_pdf) {
             var vue_this = this;
@@ -209,7 +212,7 @@ export default {
 
             }
         },
-        
+
         update_address_contact: function () {
             var vue_this = this;
             vue_this.$call_remote_process("company_management", "set_address", [vue_this.$cookies.get('pa_ssid'), vue_this.address]).then(function (resp) {
