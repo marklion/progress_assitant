@@ -85,7 +85,7 @@ public:
         ret = tmp.get_pri_id();
         if (ret > 0)
         {
-            tmp.send_wechat_msg();
+            tmp.send_wechat_msg(*opt_user, "创建了该计划");
         }
         return ret;
     }
@@ -287,7 +287,7 @@ public:
             ret = plan_in_sql->update_record();
             if (ret)
             {
-                plan_in_sql->send_wechat_msg();
+                plan_in_sql->send_wechat_msg(*opt_user, "更新了该计划");
             }
         }
         else
@@ -361,10 +361,6 @@ public:
         plan->conflict_reason = "";
         ret = PA_STATUS_RULE_action(*plan, *opt_user, PA_DATAOPT_current_time(), "OK");
         ret &= PA_STATUS_RULE_change_status(*plan, *opt_user);
-        if (ret)
-        {
-            plan->send_wechat_msg();
-        }
 
         return ret;
     }
@@ -379,10 +375,6 @@ public:
         {
             ret = PA_STATUS_RULE_action(*plan, *opt_user, PA_DATAOPT_current_time(), "OK");
             ret &= PA_STATUS_RULE_change_status(*plan, *opt_user);
-            if (ret)
-            {
-                plan->send_wechat_msg();
-            }
         }
         else
         {
@@ -437,7 +429,7 @@ public:
             }
             if (ret)
             {
-                plan->send_wechat_msg();
+                plan->send_wechat_msg(*opt_user, "更新，已出货" + std::to_string(deliver_count) + "车/共" + std::to_string(total_count) + "车");
             }
         }
         else
@@ -593,7 +585,8 @@ public:
                 ret = PA_STATUS_RULE_action(plan, opt_user, PA_DATAOPT_current_time(), reason);
                 if (ret)
                 {
-                    plan.send_wechat_msg();
+                    
+                    plan.send_wechat_msg(opt_user, "撤销了该计划\r\n 备注：" + reason);
                     pa_sql_archive_plan tmp;
                     tmp.translate_from_plan(plan);
                     plan.set_parent(tmp, "archived");
@@ -748,7 +741,10 @@ public:
             ret &= PA_STATUS_RULE_change_status(*plan, plan->status - 1, *user);
             if (ret)
             {
-                plan->send_wechat_msg();
+                if (plan->status == 0)
+                {
+                    plan->send_wechat_msg(*user, "驳回了该计划\r\n, 备注:" + reject_reason);
+                }
             }
         }
         else
