@@ -113,6 +113,22 @@
                 </van-collapse-item>
             </van-collapse>
         </van-cell-group>
+        <van-cell-group title="谁感兴趣">
+            <van-collapse v-model="all_access_users_show">
+                <div v-if="all_access_users.length > 0">
+                    <van-collapse-item v-for="(single_record, index) in all_access_users" :key="index" :title="single_record.company_name" :label="single_record.name" :name="index">
+                        <template #icon>
+                            <van-image round width="40px" height="40px" fit="cover" :src="$remote_url +  single_record.logo" />
+                        </template>
+                        <van-cell title="联系电话" :value="single_record.phone"></van-cell>
+                        <van-cell title="查看资质" is-link @click="show_attachment(single_record.attachment)"></van-cell>
+                    </van-collapse-item>
+                </div>
+                <div v-else>
+                    请联系管理员开通查看权限
+                </div>
+            </van-collapse>
+        </van-cell-group>
     </div>
 </div>
 </template>
@@ -168,7 +184,9 @@ import {
     Grid,
     GridItem
 } from 'vant';
-import { ImagePreview } from 'vant';
+import {
+    ImagePreview
+} from 'vant';
 Vue.use(Grid);
 Vue.use(GridItem);
 Vue.use(Collapse);
@@ -192,8 +210,10 @@ export default {
     name: 'CompanyHome',
     data: function () {
         return {
-            real_access_users_show: [0],
+            real_access_users_show: [],
+            all_access_users_show: [],
             real_access_users: [],
+            all_access_users: [],
             active_index: 0,
             all_grids: [{
                 icon: 'shop-o',
@@ -289,7 +309,11 @@ export default {
     },
     methods: {
         show_attachment: function (_value) {
-            ImagePreview([this.$remote_url + _value]);
+            if (_value.search(".jpg") != -1) {
+                ImagePreview([this.$remote_url + _value]);
+            } else {
+                this.$toast("内容不存在");
+            }
         },
         formater_status_vichele: function ({
             cellValue
@@ -447,6 +471,11 @@ export default {
             vue_this.$call_remote_process("company_management", 'get_real_access', [vue_this.$cookies.get('pa_ssid')]).then(function (resp) {
                 resp.forEach((element, index) => {
                     vue_this.$set(vue_this.real_access_users, index, element);
+                });
+            });
+            vue_this.$call_remote_process("company_management", 'get_all_access', [vue_this.$cookies.get('pa_ssid')]).then(function (resp) {
+                resp.forEach((element, index) => {
+                    vue_this.$set(vue_this.all_access_users, index, element);
                 });
             });
         }

@@ -10,6 +10,7 @@
 #include "../pa_util/pa_status_rule.h"
 #include "../external_src/writer.hpp"
 #include "pa_rpc_util.h"
+#include "../pa_util/pa_advance.h"
 class company_management_handler : virtual public company_managementIf
 {
 public:
@@ -607,28 +608,59 @@ public:
         _return = company->attachment_picture;
     }
 
+    std::unique_ptr<real_access_record> make_access_record(pa_sql_userinfo &user)
+    {
+        auto company = user.get_parent<pa_sql_company>("belong_company");
+        if (company)
+        {
+            std::unique_ptr<real_access_record> ret(new real_access_record());
+            ret->name = user.name;
+            ret->logo = user.logo;
+            ret->attachment = company->attachment_picture;
+            ret->company_name = company->name;
+            ret->phone = user.phone;
+            return ret;
+        }
+        return std::unique_ptr<real_access_record>();
+    }
+
     virtual void get_real_access(std::vector<real_access_record> &_return, const std::string &ssid)
     {
         auto plans = PA_RPC_get_all_plans_related_by_user(ssid, "proxy_company == '' OR proxy_company IS NULL GROUP BY created_by_ext_key");
-        for (auto &itr:plans)
+        for (auto &itr : plans)
         {
             auto created_user = itr.get_parent<pa_sql_userinfo>("created_by");
             if (created_user)
             {
-                auto company = created_user->get_parent<pa_sql_company>("belong_company");
-                if (company)
+                auto access_record = make_access_record(*created_user);
+                if (access_record)
                 {
-                    real_access_record tmp;
-                    tmp.name = created_user->name;
-                    tmp.logo = created_user->logo;
-                    tmp.attachment = company->attachment_picture;
-                    tmp.company_name = company->name;
-                    tmp.phone = created_user->phone;
-                    _return.push_back(tmp);
+                    _return.push_back(*access_record);
                 }
             }
         }
-        
+    }
+
+    virtual void
+    get_all_access(std::vector<real_access_record> &_return, const std::string &ssid)
+    {
+        auto user = PA_DATAOPT_get_online_user(ssid);
+        if (!user)
+        {
+            PA_RETURN_UNLOGIN_MSG();
+        }
+        if (pa_advance_has_permission(*user, PA_ADVANCE_GET_ALL_ACCESS_RECORD))
+        {
+            auto all_buyer = sqlite_orm::search_record_all<pa_sql_userinfo>("buyer != 0");
+            for (auto &itr : all_buyer)
+            {
+                auto access_record = make_access_record(itr);
+                if (access_record)
+                {
+                    _return.push_back(*access_record);
+                }
+            }
+        }
     }
 };
 #endif // _COMPANY_MANAGEMENT_IMP_H_

@@ -46,6 +46,7 @@ class company_managementIf {
   virtual void get_all_attachment(std::vector<company_attachment> & _return, const std::string& ssid) = 0;
   virtual void get_attachment(std::string& _return, const std::string& company_name) = 0;
   virtual void get_real_access(std::vector<real_access_record> & _return, const std::string& ssid) = 0;
+  virtual void get_all_access(std::vector<real_access_record> & _return, const std::string& ssid) = 0;
 };
 
 class company_managementIfFactory {
@@ -154,6 +155,9 @@ class company_managementNull : virtual public company_managementIf {
     return;
   }
   void get_real_access(std::vector<real_access_record> & /* _return */, const std::string& /* ssid */) {
+    return;
+  }
+  void get_all_access(std::vector<real_access_record> & /* _return */, const std::string& /* ssid */) {
     return;
   }
 };
@@ -2941,6 +2945,118 @@ class company_management_get_real_access_presult {
 
 };
 
+typedef struct _company_management_get_all_access_args__isset {
+  _company_management_get_all_access_args__isset() : ssid(false) {}
+  bool ssid :1;
+} _company_management_get_all_access_args__isset;
+
+class company_management_get_all_access_args {
+ public:
+
+  company_management_get_all_access_args(const company_management_get_all_access_args&);
+  company_management_get_all_access_args& operator=(const company_management_get_all_access_args&);
+  company_management_get_all_access_args() : ssid() {
+  }
+
+  virtual ~company_management_get_all_access_args() noexcept;
+  std::string ssid;
+
+  _company_management_get_all_access_args__isset __isset;
+
+  void __set_ssid(const std::string& val);
+
+  bool operator == (const company_management_get_all_access_args & rhs) const
+  {
+    if (!(ssid == rhs.ssid))
+      return false;
+    return true;
+  }
+  bool operator != (const company_management_get_all_access_args &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const company_management_get_all_access_args & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+
+class company_management_get_all_access_pargs {
+ public:
+
+
+  virtual ~company_management_get_all_access_pargs() noexcept;
+  const std::string* ssid;
+
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _company_management_get_all_access_result__isset {
+  _company_management_get_all_access_result__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _company_management_get_all_access_result__isset;
+
+class company_management_get_all_access_result {
+ public:
+
+  company_management_get_all_access_result(const company_management_get_all_access_result&);
+  company_management_get_all_access_result& operator=(const company_management_get_all_access_result&);
+  company_management_get_all_access_result() {
+  }
+
+  virtual ~company_management_get_all_access_result() noexcept;
+  std::vector<real_access_record>  success;
+  gen_exp e;
+
+  _company_management_get_all_access_result__isset __isset;
+
+  void __set_success(const std::vector<real_access_record> & val);
+
+  void __set_e(const gen_exp& val);
+
+  bool operator == (const company_management_get_all_access_result & rhs) const
+  {
+    if (!(success == rhs.success))
+      return false;
+    if (!(e == rhs.e))
+      return false;
+    return true;
+  }
+  bool operator != (const company_management_get_all_access_result &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const company_management_get_all_access_result & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _company_management_get_all_access_presult__isset {
+  _company_management_get_all_access_presult__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _company_management_get_all_access_presult__isset;
+
+class company_management_get_all_access_presult {
+ public:
+
+
+  virtual ~company_management_get_all_access_presult() noexcept;
+  std::vector<real_access_record> * success;
+  gen_exp e;
+
+  _company_management_get_all_access_presult__isset __isset;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+
+};
+
 class company_managementClient : virtual public company_managementIf {
  public:
   company_managementClient(std::shared_ptr< ::apache::thrift::protocol::TProtocol> prot) {
@@ -3038,6 +3154,9 @@ class company_managementClient : virtual public company_managementIf {
   void get_real_access(std::vector<real_access_record> & _return, const std::string& ssid);
   void send_get_real_access(const std::string& ssid);
   void recv_get_real_access(std::vector<real_access_record> & _return);
+  void get_all_access(std::vector<real_access_record> & _return, const std::string& ssid);
+  void send_get_all_access(const std::string& ssid);
+  void recv_get_all_access(std::vector<real_access_record> & _return);
  protected:
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> piprot_;
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> poprot_;
@@ -3077,6 +3196,7 @@ class company_managementProcessor : public ::apache::thrift::TDispatchProcessor 
   void process_get_all_attachment(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
   void process_get_attachment(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
   void process_get_real_access(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
+  void process_get_all_access(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
  public:
   company_managementProcessor(::std::shared_ptr<company_managementIf> iface) :
     iface_(iface) {
@@ -3104,6 +3224,7 @@ class company_managementProcessor : public ::apache::thrift::TDispatchProcessor 
     processMap_["get_all_attachment"] = &company_managementProcessor::process_get_all_attachment;
     processMap_["get_attachment"] = &company_managementProcessor::process_get_attachment;
     processMap_["get_real_access"] = &company_managementProcessor::process_get_real_access;
+    processMap_["get_all_access"] = &company_managementProcessor::process_get_all_access;
   }
 
   virtual ~company_managementProcessor() {}
@@ -3360,6 +3481,16 @@ class company_managementMultiface : virtual public company_managementIf {
     return;
   }
 
+  void get_all_access(std::vector<real_access_record> & _return, const std::string& ssid) {
+    size_t sz = ifaces_.size();
+    size_t i = 0;
+    for (; i < (sz - 1); ++i) {
+      ifaces_[i]->get_all_access(_return, ssid);
+    }
+    ifaces_[i]->get_all_access(_return, ssid);
+    return;
+  }
+
 };
 
 // The 'concurrent' client is a thread safe client that correctly handles
@@ -3464,6 +3595,9 @@ class company_managementConcurrentClient : virtual public company_managementIf {
   void get_real_access(std::vector<real_access_record> & _return, const std::string& ssid);
   int32_t send_get_real_access(const std::string& ssid);
   void recv_get_real_access(std::vector<real_access_record> & _return, const int32_t seqid);
+  void get_all_access(std::vector<real_access_record> & _return, const std::string& ssid);
+  int32_t send_get_all_access(const std::string& ssid);
+  void recv_get_all_access(std::vector<real_access_record> & _return, const int32_t seqid);
  protected:
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> piprot_;
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> poprot_;
