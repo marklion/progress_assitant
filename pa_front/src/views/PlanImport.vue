@@ -41,7 +41,7 @@
         <van-image :src="$remote_url + '/logo_res/sheet_select_prompt.jpg'"></van-image>
         <van-picker show-toolbar :columns="sheet_in_wb" title="请选择工作表" @cancel="sheet_seletct_picker = false" @confirm="confirm_sheet" />
     </van-popup>
-    <stuff-info-submit :is_create="true" :min_time="new Date()" :orig_name="stuff_name" :type_id="parseInt($route.params.type_id)" :orig_price="price" :orig_vichele_info="vichele_info"></stuff-info-submit>
+    <stuff-info-submit :proxy_company="$route.query.proxy_company" :is_create="true" :min_time="new Date()" :orig_name="stuff_name" :type_id="parseInt($route.params.type_id)" :orig_price="price" :orig_vichele_info="vichele_info"></stuff-info-submit>
 </div>
 </template>
 

@@ -256,6 +256,7 @@ export default {
             proxy_type_id: 0,
             company_logo: '',
             vichele_statistics: [],
+            proxy_need_import: false,
         };
     },
     computed: {
@@ -304,6 +305,10 @@ export default {
                 text: '手工提单',
                 operate: this.submit_proxy,
             })
+            ret.push({
+                text: '手工导入',
+                operate: this.submit_proxy_import,
+            });
             return ret;
         }
     },
@@ -352,7 +357,7 @@ export default {
         submit_proxy_company: function () {
             this.show_proxy_company_diag = false;
             this.$router.push({
-                name: 'StuffPlan',
+                name: this.proxy_need_import ? 'PlanImport' : 'StuffPlan',
                 params: {
                     type_id: this.proxy_type_id
                 },
@@ -365,6 +370,11 @@ export default {
             this.focus_type = _single_type;
         },
         submit_proxy: function (_type) {
+            this.show_proxy_company_diag = true;
+            this.proxy_type_id = _type.type_id;
+        },
+        submit_proxy_import: function (_type) {
+            this.proxy_need_import = true;
             this.show_proxy_company_diag = true;
             this.proxy_type_id = _type.type_id;
         },
