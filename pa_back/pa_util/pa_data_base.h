@@ -235,7 +235,7 @@ public:
     {
         return "plan_table";
     }
-    void send_wechat_msg();
+    void send_wechat_msg(pa_sql_userinfo &_opt_user, const std::string &_remark = "");
 };
 
 class pa_sql_plan_status:public sql_tree_base {

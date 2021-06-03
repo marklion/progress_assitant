@@ -167,7 +167,7 @@ static void send_msg_to_wechat(const std::string &_touser, const std::string &_t
     g_log.log("recv from wechat:%s", ret.c_str());
 }
 
-void PA_WECHAT_send_plan_msg(pa_sql_userinfo &_touser, pa_sql_plan &_plan)
+void PA_WECHAT_send_plan_msg(pa_sql_userinfo &_touser, pa_sql_plan &_plan, const std::string &_remark)
 {
     std::string created_name = "无";
     auto created_user = _plan.get_parent<pa_sql_userinfo>("created_by");
@@ -195,7 +195,7 @@ void PA_WECHAT_send_plan_msg(pa_sql_userinfo &_touser, pa_sql_plan &_plan)
     keywords.push_back(total_price);
     keywords.push_back(status);
 
-    send_msg_to_wechat(_touser.openid, "TCYUdQCuq4TpOYpRPXn-WBcBL5O64xWUgkSoIaiIMN4", "计划更新", keywords, "", "/plan_detail/" + std::to_string(_plan.get_pri_id()));
+    send_msg_to_wechat(_touser.openid, "TCYUdQCuq4TpOYpRPXn-WBcBL5O64xWUgkSoIaiIMN4", "计划更新", keywords, _remark, "/plan_detail/" + std::to_string(_plan.get_pri_id()));
 }
 
 void PA_WECHAT_send_create_apply_msg(pa_sql_userinfo &_touser, pa_sql_user_apply &_apply)
