@@ -562,10 +562,9 @@ public:
             std::string py_converter =
                 "import pandas as pd\n"
                 "import sys\n"
-                "csv = pd.read_csv('" +
-                file_name + "', encoding='utf-8')\n"
-                            "csv.to_excel('/dist/logo_res/" +
-                file_name_no_ext + ".xlsx', sheet_name='data')\n";
+                "csv = pd.read_csv('" + file_name + "', encoding='utf-8')\n"
+                "csv.index = csv.index + 1\n"
+                "csv.to_excel('/dist/logo_res/" + file_name_no_ext + ".xlsx', sheet_name='data')\n";
 
             if (Py_IsInitialized())
             {

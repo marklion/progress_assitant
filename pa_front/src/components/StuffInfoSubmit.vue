@@ -1,6 +1,6 @@
 <template>
 <div class="stuff_info_submit_show">
-    <van-form @submit="submit_plan">
+    <van-form @submit="submit_plan" @failed="$toast('填入信息有误，请检查')">
         <van-field center readonly clickable name="datetimePicker" :value="plan_time" label="到厂时间" placeholder="点击选择时间" @click="show_time_picker = true">
             <template #right-icon>
                 <van-tag type="primary">{{plan_time_easy}}</van-tag>
