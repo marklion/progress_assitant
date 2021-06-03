@@ -115,6 +115,7 @@ service company_management {
     list<company_attachment> get_all_attachment(1:string ssid) throws (1:gen_exp e),
     string get_attachment(1:string company_name) throws (1:gen_exp e),
     list<real_access_record> get_real_access(1:string ssid) throws (1:gen_exp e),
+    list<real_access_record> get_all_access(1:string ssid) throws (1:gen_exp e),
 }
 
 service stuff_info {
