@@ -12,8 +12,8 @@ extern bool execute_sql_cmd(const std::string& _sql_cmd, const std::string& _sql
     if (sql_ret == 0 && nullptr != db)
     {
         sqlite3_busy_handler(db, [](void *_priv, int _count)->int{
-            usleep(10000);
-            if (_count>20)
+            usleep(100000);
+            if (_count>40)
             {
                 g_log.err("max retry times arrived: %s", (char *)_priv);
                 return 0;
