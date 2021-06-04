@@ -448,4 +448,32 @@ public:
     }
 };
 
+class pa_sql_contract: public sql_tree_base {
+public:
+    std::string start_time;
+    std::string end_time;
+    std::string number;
+    int status = 0;
+    pa_sql_contract() {
+        add_parent_type<pa_sql_company>("a_side");
+        add_parent_type<pa_sql_company>("b_side");
+    }
+    virtual std::vector<sqlite_orm_column> self_columns_defined()
+    {
+        std::vector<sqlite_orm_column> ret;
+        ret.push_back(sqlite_orm_column("start_time", sqlite_orm_column::STRING, &start_time));
+        ret.push_back(sqlite_orm_column("end_time", sqlite_orm_column::STRING, &end_time));
+        ret.push_back(sqlite_orm_column("number", sqlite_orm_column::STRING, &number));
+        ret.push_back(sqlite_orm_column("status", sqlite_orm_column::INTEGER, &status));
+
+        return ret;
+    }
+
+    virtual std::string table_name()
+    {
+        return "contract_table";
+    }
+    void update_status();
+};
+
 #endif // _PA_DATABSE_H_

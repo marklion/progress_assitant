@@ -842,6 +842,129 @@ class plan_status_rule(object):
         return not (self == other)
 
 
+class common_contract(object):
+    """
+    Attributes:
+     - a_side_company
+     - b_side_company
+     - start_time
+     - end_time
+     - number
+     - id
+     - status
+
+    """
+
+
+    def __init__(self, a_side_company=None, b_side_company=None, start_time=None, end_time=None, number=None, id=None, status=None,):
+        self.a_side_company = a_side_company
+        self.b_side_company = b_side_company
+        self.start_time = start_time
+        self.end_time = end_time
+        self.number = number
+        self.id = id
+        self.status = status
+
+    def read(self, iprot):
+        if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
+            iprot._fast_decode(self, iprot, [self.__class__, self.thrift_spec])
+            return
+        iprot.readStructBegin()
+        while True:
+            (fname, ftype, fid) = iprot.readFieldBegin()
+            if ftype == TType.STOP:
+                break
+            if fid == 1:
+                if ftype == TType.STRING:
+                    self.a_side_company = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 2:
+                if ftype == TType.STRING:
+                    self.b_side_company = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 3:
+                if ftype == TType.STRING:
+                    self.start_time = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 4:
+                if ftype == TType.STRING:
+                    self.end_time = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 5:
+                if ftype == TType.STRING:
+                    self.number = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 6:
+                if ftype == TType.I64:
+                    self.id = iprot.readI64()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 7:
+                if ftype == TType.I64:
+                    self.status = iprot.readI64()
+                else:
+                    iprot.skip(ftype)
+            else:
+                iprot.skip(ftype)
+            iprot.readFieldEnd()
+        iprot.readStructEnd()
+
+    def write(self, oprot):
+        if oprot._fast_encode is not None and self.thrift_spec is not None:
+            oprot.trans.write(oprot._fast_encode(self, [self.__class__, self.thrift_spec]))
+            return
+        oprot.writeStructBegin('common_contract')
+        if self.a_side_company is not None:
+            oprot.writeFieldBegin('a_side_company', TType.STRING, 1)
+            oprot.writeString(self.a_side_company.encode('utf-8') if sys.version_info[0] == 2 else self.a_side_company)
+            oprot.writeFieldEnd()
+        if self.b_side_company is not None:
+            oprot.writeFieldBegin('b_side_company', TType.STRING, 2)
+            oprot.writeString(self.b_side_company.encode('utf-8') if sys.version_info[0] == 2 else self.b_side_company)
+            oprot.writeFieldEnd()
+        if self.start_time is not None:
+            oprot.writeFieldBegin('start_time', TType.STRING, 3)
+            oprot.writeString(self.start_time.encode('utf-8') if sys.version_info[0] == 2 else self.start_time)
+            oprot.writeFieldEnd()
+        if self.end_time is not None:
+            oprot.writeFieldBegin('end_time', TType.STRING, 4)
+            oprot.writeString(self.end_time.encode('utf-8') if sys.version_info[0] == 2 else self.end_time)
+            oprot.writeFieldEnd()
+        if self.number is not None:
+            oprot.writeFieldBegin('number', TType.STRING, 5)
+            oprot.writeString(self.number.encode('utf-8') if sys.version_info[0] == 2 else self.number)
+            oprot.writeFieldEnd()
+        if self.id is not None:
+            oprot.writeFieldBegin('id', TType.I64, 6)
+            oprot.writeI64(self.id)
+            oprot.writeFieldEnd()
+        if self.status is not None:
+            oprot.writeFieldBegin('status', TType.I64, 7)
+            oprot.writeI64(self.status)
+            oprot.writeFieldEnd()
+        oprot.writeFieldStop()
+        oprot.writeStructEnd()
+
+    def validate(self):
+        return
+
+    def __repr__(self):
+        L = ['%s=%r' % (key, value)
+             for key, value in self.__dict__.items()]
+        return '%s(%s)' % (self.__class__.__name__, ', '.join(L))
+
+    def __eq__(self, other):
+        return isinstance(other, self.__class__) and self.__dict__ == other.__dict__
+
+    def __ne__(self, other):
+        return not (self == other)
+
+
 class real_access_record(object):
     """
     Attributes:
@@ -1997,6 +2120,17 @@ plan_status_rule.thrift_spec = (
     (4, TType.STRING, 'comment', 'UTF8', None, ),  # 4
     (5, TType.I64, 'index', None, None, ),  # 5
     (6, TType.STRING, 'prompt', 'UTF8', None, ),  # 6
+)
+all_structs.append(common_contract)
+common_contract.thrift_spec = (
+    None,  # 0
+    (1, TType.STRING, 'a_side_company', 'UTF8', None, ),  # 1
+    (2, TType.STRING, 'b_side_company', 'UTF8', None, ),  # 2
+    (3, TType.STRING, 'start_time', 'UTF8', None, ),  # 3
+    (4, TType.STRING, 'end_time', 'UTF8', None, ),  # 4
+    (5, TType.STRING, 'number', 'UTF8', None, ),  # 5
+    (6, TType.I64, 'id', None, None, ),  # 6
+    (7, TType.I64, 'status', None, None, ),  # 7
 )
 all_structs.append(real_access_record)
 real_access_record.thrift_spec = (

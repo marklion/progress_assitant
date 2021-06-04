@@ -138,6 +138,14 @@ const routes = [
       private_title: '导入计划',
       has_go_back: true,
     },
+  }, {
+    path: '/contract',
+    name: 'Contract',
+    component: () => import('../views/Contract.vue'),
+    meta: {
+      private_title: '合同管理',
+      has_go_back: true,
+    },
   },
 ]
 
