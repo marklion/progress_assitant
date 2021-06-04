@@ -53,6 +53,14 @@ int main(int argc, char **argv)
                     stuff_plan_management_handler hd;
                     hd.clean_unclose_plan();
                 }
+                if (st_time->tm_min == 57 && st_time->tm_hour == 22)
+                {
+                    auto all_contract = sqlite_orm::search_record_all<pa_sql_contract>();
+                    for (auto &itr:all_contract)
+                    {
+                        itr.update_status();
+                    }
+                }
             },
             nullptr);
         tdf_main::get_inst().run();

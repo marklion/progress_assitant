@@ -82,6 +82,16 @@ struct plan_status_rule {
     6:string prompt,
 }
 
+struct common_contract {
+    1:string a_side_company,
+    2:string b_side_company,
+    3:string start_time,
+    4:string end_time,
+    5:string number,
+    6:i64 id,
+    7:i64 status,
+}
+
 struct real_access_record {
     1:string name,
     2:string logo,
@@ -89,6 +99,7 @@ struct real_access_record {
     4:string company_name,
     5:string attachment,
 }
+
 
 service company_management {
     list<i64> get_all_type(1:string ssid) throws (1:gen_exp e),
@@ -116,6 +127,10 @@ service company_management {
     string get_attachment(1:string company_name) throws (1:gen_exp e),
     list<real_access_record> get_real_access(1:string ssid) throws (1:gen_exp e),
     list<real_access_record> get_all_access(1:string ssid) throws (1:gen_exp e),
+    bool add_contract(1:string ssid, 2:common_contract contract) throws (1:gen_exp e),
+    void del_contract(1:string ssid, 2:i64 id) throws (1:gen_exp e),
+    list<common_contract> get_all_contract(1:string ssid) throws (1:gen_exp e),
+    common_contract get_contract(1:string a_side_company, 2:string b_side_company) throws (1:gen_exp e),
 }
 
 service stuff_info {

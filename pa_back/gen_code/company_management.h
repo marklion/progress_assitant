@@ -47,6 +47,10 @@ class company_managementIf {
   virtual void get_attachment(std::string& _return, const std::string& company_name) = 0;
   virtual void get_real_access(std::vector<real_access_record> & _return, const std::string& ssid) = 0;
   virtual void get_all_access(std::vector<real_access_record> & _return, const std::string& ssid) = 0;
+  virtual bool add_contract(const std::string& ssid, const common_contract& contract) = 0;
+  virtual void del_contract(const std::string& ssid, const int64_t id) = 0;
+  virtual void get_all_contract(std::vector<common_contract> & _return, const std::string& ssid) = 0;
+  virtual void get_contract(common_contract& _return, const std::string& a_side_company, const std::string& b_side_company) = 0;
 };
 
 class company_managementIfFactory {
@@ -158,6 +162,19 @@ class company_managementNull : virtual public company_managementIf {
     return;
   }
   void get_all_access(std::vector<real_access_record> & /* _return */, const std::string& /* ssid */) {
+    return;
+  }
+  bool add_contract(const std::string& /* ssid */, const common_contract& /* contract */) {
+    bool _return = false;
+    return _return;
+  }
+  void del_contract(const std::string& /* ssid */, const int64_t /* id */) {
+    return;
+  }
+  void get_all_contract(std::vector<common_contract> & /* _return */, const std::string& /* ssid */) {
+    return;
+  }
+  void get_contract(common_contract& /* _return */, const std::string& /* a_side_company */, const std::string& /* b_side_company */) {
     return;
   }
 };
@@ -3057,6 +3074,467 @@ class company_management_get_all_access_presult {
 
 };
 
+typedef struct _company_management_add_contract_args__isset {
+  _company_management_add_contract_args__isset() : ssid(false), contract(false) {}
+  bool ssid :1;
+  bool contract :1;
+} _company_management_add_contract_args__isset;
+
+class company_management_add_contract_args {
+ public:
+
+  company_management_add_contract_args(const company_management_add_contract_args&);
+  company_management_add_contract_args& operator=(const company_management_add_contract_args&);
+  company_management_add_contract_args() : ssid() {
+  }
+
+  virtual ~company_management_add_contract_args() noexcept;
+  std::string ssid;
+  common_contract contract;
+
+  _company_management_add_contract_args__isset __isset;
+
+  void __set_ssid(const std::string& val);
+
+  void __set_contract(const common_contract& val);
+
+  bool operator == (const company_management_add_contract_args & rhs) const
+  {
+    if (!(ssid == rhs.ssid))
+      return false;
+    if (!(contract == rhs.contract))
+      return false;
+    return true;
+  }
+  bool operator != (const company_management_add_contract_args &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const company_management_add_contract_args & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+
+class company_management_add_contract_pargs {
+ public:
+
+
+  virtual ~company_management_add_contract_pargs() noexcept;
+  const std::string* ssid;
+  const common_contract* contract;
+
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _company_management_add_contract_result__isset {
+  _company_management_add_contract_result__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _company_management_add_contract_result__isset;
+
+class company_management_add_contract_result {
+ public:
+
+  company_management_add_contract_result(const company_management_add_contract_result&);
+  company_management_add_contract_result& operator=(const company_management_add_contract_result&);
+  company_management_add_contract_result() : success(0) {
+  }
+
+  virtual ~company_management_add_contract_result() noexcept;
+  bool success;
+  gen_exp e;
+
+  _company_management_add_contract_result__isset __isset;
+
+  void __set_success(const bool val);
+
+  void __set_e(const gen_exp& val);
+
+  bool operator == (const company_management_add_contract_result & rhs) const
+  {
+    if (!(success == rhs.success))
+      return false;
+    if (!(e == rhs.e))
+      return false;
+    return true;
+  }
+  bool operator != (const company_management_add_contract_result &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const company_management_add_contract_result & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _company_management_add_contract_presult__isset {
+  _company_management_add_contract_presult__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _company_management_add_contract_presult__isset;
+
+class company_management_add_contract_presult {
+ public:
+
+
+  virtual ~company_management_add_contract_presult() noexcept;
+  bool* success;
+  gen_exp e;
+
+  _company_management_add_contract_presult__isset __isset;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+
+};
+
+typedef struct _company_management_del_contract_args__isset {
+  _company_management_del_contract_args__isset() : ssid(false), id(false) {}
+  bool ssid :1;
+  bool id :1;
+} _company_management_del_contract_args__isset;
+
+class company_management_del_contract_args {
+ public:
+
+  company_management_del_contract_args(const company_management_del_contract_args&);
+  company_management_del_contract_args& operator=(const company_management_del_contract_args&);
+  company_management_del_contract_args() : ssid(), id(0) {
+  }
+
+  virtual ~company_management_del_contract_args() noexcept;
+  std::string ssid;
+  int64_t id;
+
+  _company_management_del_contract_args__isset __isset;
+
+  void __set_ssid(const std::string& val);
+
+  void __set_id(const int64_t val);
+
+  bool operator == (const company_management_del_contract_args & rhs) const
+  {
+    if (!(ssid == rhs.ssid))
+      return false;
+    if (!(id == rhs.id))
+      return false;
+    return true;
+  }
+  bool operator != (const company_management_del_contract_args &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const company_management_del_contract_args & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+
+class company_management_del_contract_pargs {
+ public:
+
+
+  virtual ~company_management_del_contract_pargs() noexcept;
+  const std::string* ssid;
+  const int64_t* id;
+
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _company_management_del_contract_result__isset {
+  _company_management_del_contract_result__isset() : e(false) {}
+  bool e :1;
+} _company_management_del_contract_result__isset;
+
+class company_management_del_contract_result {
+ public:
+
+  company_management_del_contract_result(const company_management_del_contract_result&);
+  company_management_del_contract_result& operator=(const company_management_del_contract_result&);
+  company_management_del_contract_result() {
+  }
+
+  virtual ~company_management_del_contract_result() noexcept;
+  gen_exp e;
+
+  _company_management_del_contract_result__isset __isset;
+
+  void __set_e(const gen_exp& val);
+
+  bool operator == (const company_management_del_contract_result & rhs) const
+  {
+    if (!(e == rhs.e))
+      return false;
+    return true;
+  }
+  bool operator != (const company_management_del_contract_result &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const company_management_del_contract_result & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _company_management_del_contract_presult__isset {
+  _company_management_del_contract_presult__isset() : e(false) {}
+  bool e :1;
+} _company_management_del_contract_presult__isset;
+
+class company_management_del_contract_presult {
+ public:
+
+
+  virtual ~company_management_del_contract_presult() noexcept;
+  gen_exp e;
+
+  _company_management_del_contract_presult__isset __isset;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+
+};
+
+typedef struct _company_management_get_all_contract_args__isset {
+  _company_management_get_all_contract_args__isset() : ssid(false) {}
+  bool ssid :1;
+} _company_management_get_all_contract_args__isset;
+
+class company_management_get_all_contract_args {
+ public:
+
+  company_management_get_all_contract_args(const company_management_get_all_contract_args&);
+  company_management_get_all_contract_args& operator=(const company_management_get_all_contract_args&);
+  company_management_get_all_contract_args() : ssid() {
+  }
+
+  virtual ~company_management_get_all_contract_args() noexcept;
+  std::string ssid;
+
+  _company_management_get_all_contract_args__isset __isset;
+
+  void __set_ssid(const std::string& val);
+
+  bool operator == (const company_management_get_all_contract_args & rhs) const
+  {
+    if (!(ssid == rhs.ssid))
+      return false;
+    return true;
+  }
+  bool operator != (const company_management_get_all_contract_args &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const company_management_get_all_contract_args & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+
+class company_management_get_all_contract_pargs {
+ public:
+
+
+  virtual ~company_management_get_all_contract_pargs() noexcept;
+  const std::string* ssid;
+
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _company_management_get_all_contract_result__isset {
+  _company_management_get_all_contract_result__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _company_management_get_all_contract_result__isset;
+
+class company_management_get_all_contract_result {
+ public:
+
+  company_management_get_all_contract_result(const company_management_get_all_contract_result&);
+  company_management_get_all_contract_result& operator=(const company_management_get_all_contract_result&);
+  company_management_get_all_contract_result() {
+  }
+
+  virtual ~company_management_get_all_contract_result() noexcept;
+  std::vector<common_contract>  success;
+  gen_exp e;
+
+  _company_management_get_all_contract_result__isset __isset;
+
+  void __set_success(const std::vector<common_contract> & val);
+
+  void __set_e(const gen_exp& val);
+
+  bool operator == (const company_management_get_all_contract_result & rhs) const
+  {
+    if (!(success == rhs.success))
+      return false;
+    if (!(e == rhs.e))
+      return false;
+    return true;
+  }
+  bool operator != (const company_management_get_all_contract_result &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const company_management_get_all_contract_result & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _company_management_get_all_contract_presult__isset {
+  _company_management_get_all_contract_presult__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _company_management_get_all_contract_presult__isset;
+
+class company_management_get_all_contract_presult {
+ public:
+
+
+  virtual ~company_management_get_all_contract_presult() noexcept;
+  std::vector<common_contract> * success;
+  gen_exp e;
+
+  _company_management_get_all_contract_presult__isset __isset;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+
+};
+
+typedef struct _company_management_get_contract_args__isset {
+  _company_management_get_contract_args__isset() : a_side_company(false), b_side_company(false) {}
+  bool a_side_company :1;
+  bool b_side_company :1;
+} _company_management_get_contract_args__isset;
+
+class company_management_get_contract_args {
+ public:
+
+  company_management_get_contract_args(const company_management_get_contract_args&);
+  company_management_get_contract_args& operator=(const company_management_get_contract_args&);
+  company_management_get_contract_args() : a_side_company(), b_side_company() {
+  }
+
+  virtual ~company_management_get_contract_args() noexcept;
+  std::string a_side_company;
+  std::string b_side_company;
+
+  _company_management_get_contract_args__isset __isset;
+
+  void __set_a_side_company(const std::string& val);
+
+  void __set_b_side_company(const std::string& val);
+
+  bool operator == (const company_management_get_contract_args & rhs) const
+  {
+    if (!(a_side_company == rhs.a_side_company))
+      return false;
+    if (!(b_side_company == rhs.b_side_company))
+      return false;
+    return true;
+  }
+  bool operator != (const company_management_get_contract_args &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const company_management_get_contract_args & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+
+class company_management_get_contract_pargs {
+ public:
+
+
+  virtual ~company_management_get_contract_pargs() noexcept;
+  const std::string* a_side_company;
+  const std::string* b_side_company;
+
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _company_management_get_contract_result__isset {
+  _company_management_get_contract_result__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _company_management_get_contract_result__isset;
+
+class company_management_get_contract_result {
+ public:
+
+  company_management_get_contract_result(const company_management_get_contract_result&);
+  company_management_get_contract_result& operator=(const company_management_get_contract_result&);
+  company_management_get_contract_result() {
+  }
+
+  virtual ~company_management_get_contract_result() noexcept;
+  common_contract success;
+  gen_exp e;
+
+  _company_management_get_contract_result__isset __isset;
+
+  void __set_success(const common_contract& val);
+
+  void __set_e(const gen_exp& val);
+
+  bool operator == (const company_management_get_contract_result & rhs) const
+  {
+    if (!(success == rhs.success))
+      return false;
+    if (!(e == rhs.e))
+      return false;
+    return true;
+  }
+  bool operator != (const company_management_get_contract_result &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const company_management_get_contract_result & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _company_management_get_contract_presult__isset {
+  _company_management_get_contract_presult__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _company_management_get_contract_presult__isset;
+
+class company_management_get_contract_presult {
+ public:
+
+
+  virtual ~company_management_get_contract_presult() noexcept;
+  common_contract* success;
+  gen_exp e;
+
+  _company_management_get_contract_presult__isset __isset;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+
+};
+
 class company_managementClient : virtual public company_managementIf {
  public:
   company_managementClient(std::shared_ptr< ::apache::thrift::protocol::TProtocol> prot) {
@@ -3157,6 +3635,18 @@ class company_managementClient : virtual public company_managementIf {
   void get_all_access(std::vector<real_access_record> & _return, const std::string& ssid);
   void send_get_all_access(const std::string& ssid);
   void recv_get_all_access(std::vector<real_access_record> & _return);
+  bool add_contract(const std::string& ssid, const common_contract& contract);
+  void send_add_contract(const std::string& ssid, const common_contract& contract);
+  bool recv_add_contract();
+  void del_contract(const std::string& ssid, const int64_t id);
+  void send_del_contract(const std::string& ssid, const int64_t id);
+  void recv_del_contract();
+  void get_all_contract(std::vector<common_contract> & _return, const std::string& ssid);
+  void send_get_all_contract(const std::string& ssid);
+  void recv_get_all_contract(std::vector<common_contract> & _return);
+  void get_contract(common_contract& _return, const std::string& a_side_company, const std::string& b_side_company);
+  void send_get_contract(const std::string& a_side_company, const std::string& b_side_company);
+  void recv_get_contract(common_contract& _return);
  protected:
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> piprot_;
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> poprot_;
@@ -3197,6 +3687,10 @@ class company_managementProcessor : public ::apache::thrift::TDispatchProcessor 
   void process_get_attachment(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
   void process_get_real_access(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
   void process_get_all_access(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
+  void process_add_contract(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
+  void process_del_contract(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
+  void process_get_all_contract(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
+  void process_get_contract(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
  public:
   company_managementProcessor(::std::shared_ptr<company_managementIf> iface) :
     iface_(iface) {
@@ -3225,6 +3719,10 @@ class company_managementProcessor : public ::apache::thrift::TDispatchProcessor 
     processMap_["get_attachment"] = &company_managementProcessor::process_get_attachment;
     processMap_["get_real_access"] = &company_managementProcessor::process_get_real_access;
     processMap_["get_all_access"] = &company_managementProcessor::process_get_all_access;
+    processMap_["add_contract"] = &company_managementProcessor::process_add_contract;
+    processMap_["del_contract"] = &company_managementProcessor::process_del_contract;
+    processMap_["get_all_contract"] = &company_managementProcessor::process_get_all_contract;
+    processMap_["get_contract"] = &company_managementProcessor::process_get_contract;
   }
 
   virtual ~company_managementProcessor() {}
@@ -3491,6 +3989,44 @@ class company_managementMultiface : virtual public company_managementIf {
     return;
   }
 
+  bool add_contract(const std::string& ssid, const common_contract& contract) {
+    size_t sz = ifaces_.size();
+    size_t i = 0;
+    for (; i < (sz - 1); ++i) {
+      ifaces_[i]->add_contract(ssid, contract);
+    }
+    return ifaces_[i]->add_contract(ssid, contract);
+  }
+
+  void del_contract(const std::string& ssid, const int64_t id) {
+    size_t sz = ifaces_.size();
+    size_t i = 0;
+    for (; i < (sz - 1); ++i) {
+      ifaces_[i]->del_contract(ssid, id);
+    }
+    ifaces_[i]->del_contract(ssid, id);
+  }
+
+  void get_all_contract(std::vector<common_contract> & _return, const std::string& ssid) {
+    size_t sz = ifaces_.size();
+    size_t i = 0;
+    for (; i < (sz - 1); ++i) {
+      ifaces_[i]->get_all_contract(_return, ssid);
+    }
+    ifaces_[i]->get_all_contract(_return, ssid);
+    return;
+  }
+
+  void get_contract(common_contract& _return, const std::string& a_side_company, const std::string& b_side_company) {
+    size_t sz = ifaces_.size();
+    size_t i = 0;
+    for (; i < (sz - 1); ++i) {
+      ifaces_[i]->get_contract(_return, a_side_company, b_side_company);
+    }
+    ifaces_[i]->get_contract(_return, a_side_company, b_side_company);
+    return;
+  }
+
 };
 
 // The 'concurrent' client is a thread safe client that correctly handles
@@ -3598,6 +4134,18 @@ class company_managementConcurrentClient : virtual public company_managementIf {
   void get_all_access(std::vector<real_access_record> & _return, const std::string& ssid);
   int32_t send_get_all_access(const std::string& ssid);
   void recv_get_all_access(std::vector<real_access_record> & _return, const int32_t seqid);
+  bool add_contract(const std::string& ssid, const common_contract& contract);
+  int32_t send_add_contract(const std::string& ssid, const common_contract& contract);
+  bool recv_add_contract(const int32_t seqid);
+  void del_contract(const std::string& ssid, const int64_t id);
+  int32_t send_del_contract(const std::string& ssid, const int64_t id);
+  void recv_del_contract(const int32_t seqid);
+  void get_all_contract(std::vector<common_contract> & _return, const std::string& ssid);
+  int32_t send_get_all_contract(const std::string& ssid);
+  void recv_get_all_contract(std::vector<common_contract> & _return, const int32_t seqid);
+  void get_contract(common_contract& _return, const std::string& a_side_company, const std::string& b_side_company);
+  int32_t send_get_contract(const std::string& a_side_company, const std::string& b_side_company);
+  void recv_get_contract(common_contract& _return, const int32_t seqid);
  protected:
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> piprot_;
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> poprot_;

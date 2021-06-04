@@ -12,6 +12,7 @@
     </van-field>
     <van-field v-model="stuff_brief.company_contact" rows="1" autosize label="联系方式" type="textarea" readonly>
     </van-field>
+    <contract-cell :a_side="buy_company" :b_side="stuff_brief.company"></contract-cell>
 </div>
 </template>
 
@@ -37,6 +38,7 @@ import {
 import {
     ImagePreview
 } from 'vant';
+import ContractCell from './ContractCell.vue'
 Vue.use(Button);
 Vue.use(Field);
 Vue.use(Dialog);
@@ -47,6 +49,10 @@ export default {
     name: 'StuffTitle',
     props: {
         type_id: Number,
+        buy_company: String,
+    },
+    components: {
+        "contract-cell": ContractCell,
     },
     data: function () {
         return {

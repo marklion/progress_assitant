@@ -39,6 +39,8 @@ class company_attachment;
 
 class plan_status_rule;
 
+class common_contract;
+
 class real_access_record;
 
 class plan_confirm_info;
@@ -600,6 +602,84 @@ class plan_status_rule : public virtual ::apache::thrift::TBase {
 void swap(plan_status_rule &a, plan_status_rule &b);
 
 std::ostream& operator<<(std::ostream& out, const plan_status_rule& obj);
+
+typedef struct _common_contract__isset {
+  _common_contract__isset() : a_side_company(false), b_side_company(false), start_time(false), end_time(false), number(false), id(false), status(false) {}
+  bool a_side_company :1;
+  bool b_side_company :1;
+  bool start_time :1;
+  bool end_time :1;
+  bool number :1;
+  bool id :1;
+  bool status :1;
+} _common_contract__isset;
+
+class common_contract : public virtual ::apache::thrift::TBase {
+ public:
+
+  common_contract(const common_contract&);
+  common_contract& operator=(const common_contract&);
+  common_contract() : a_side_company(), b_side_company(), start_time(), end_time(), number(), id(0), status(0) {
+  }
+
+  virtual ~common_contract() noexcept;
+  std::string a_side_company;
+  std::string b_side_company;
+  std::string start_time;
+  std::string end_time;
+  std::string number;
+  int64_t id;
+  int64_t status;
+
+  _common_contract__isset __isset;
+
+  void __set_a_side_company(const std::string& val);
+
+  void __set_b_side_company(const std::string& val);
+
+  void __set_start_time(const std::string& val);
+
+  void __set_end_time(const std::string& val);
+
+  void __set_number(const std::string& val);
+
+  void __set_id(const int64_t val);
+
+  void __set_status(const int64_t val);
+
+  bool operator == (const common_contract & rhs) const
+  {
+    if (!(a_side_company == rhs.a_side_company))
+      return false;
+    if (!(b_side_company == rhs.b_side_company))
+      return false;
+    if (!(start_time == rhs.start_time))
+      return false;
+    if (!(end_time == rhs.end_time))
+      return false;
+    if (!(number == rhs.number))
+      return false;
+    if (!(id == rhs.id))
+      return false;
+    if (!(status == rhs.status))
+      return false;
+    return true;
+  }
+  bool operator != (const common_contract &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const common_contract & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+  virtual void printTo(std::ostream& out) const;
+};
+
+void swap(common_contract &a, common_contract &b);
+
+std::ostream& operator<<(std::ostream& out, const common_contract& obj);
 
 typedef struct _real_access_record__isset {
   _real_access_record__isset() : name(false), logo(false), phone(false), company_name(false), attachment(false) {}

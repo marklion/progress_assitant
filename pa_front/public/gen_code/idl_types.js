@@ -884,6 +884,151 @@ plan_status_rule = class {
   }
 
 };
+common_contract = class {
+  constructor(args) {
+    this.a_side_company = null;
+    this.b_side_company = null;
+    this.start_time = null;
+    this.end_time = null;
+    this.number = null;
+    this.id = null;
+    this.status = null;
+    if (args) {
+      if (args.a_side_company !== undefined && args.a_side_company !== null) {
+        this.a_side_company = args.a_side_company;
+      }
+      if (args.b_side_company !== undefined && args.b_side_company !== null) {
+        this.b_side_company = args.b_side_company;
+      }
+      if (args.start_time !== undefined && args.start_time !== null) {
+        this.start_time = args.start_time;
+      }
+      if (args.end_time !== undefined && args.end_time !== null) {
+        this.end_time = args.end_time;
+      }
+      if (args.number !== undefined && args.number !== null) {
+        this.number = args.number;
+      }
+      if (args.id !== undefined && args.id !== null) {
+        this.id = args.id;
+      }
+      if (args.status !== undefined && args.status !== null) {
+        this.status = args.status;
+      }
+    }
+  }
+
+  read (input) {
+    input.readStructBegin();
+    while (true) {
+      const ret = input.readFieldBegin();
+      const ftype = ret.ftype;
+      const fid = ret.fid;
+      if (ftype == Thrift.Type.STOP) {
+        break;
+      }
+      switch (fid) {
+        case 1:
+        if (ftype == Thrift.Type.STRING) {
+          this.a_side_company = input.readString().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        case 2:
+        if (ftype == Thrift.Type.STRING) {
+          this.b_side_company = input.readString().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        case 3:
+        if (ftype == Thrift.Type.STRING) {
+          this.start_time = input.readString().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        case 4:
+        if (ftype == Thrift.Type.STRING) {
+          this.end_time = input.readString().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        case 5:
+        if (ftype == Thrift.Type.STRING) {
+          this.number = input.readString().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        case 6:
+        if (ftype == Thrift.Type.I64) {
+          this.id = input.readI64().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        case 7:
+        if (ftype == Thrift.Type.I64) {
+          this.status = input.readI64().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        default:
+          input.skip(ftype);
+      }
+      input.readFieldEnd();
+    }
+    input.readStructEnd();
+    return;
+  }
+
+  write (output) {
+    output.writeStructBegin('common_contract');
+    if (this.a_side_company !== null && this.a_side_company !== undefined) {
+      output.writeFieldBegin('a_side_company', Thrift.Type.STRING, 1);
+      output.writeString(this.a_side_company);
+      output.writeFieldEnd();
+    }
+    if (this.b_side_company !== null && this.b_side_company !== undefined) {
+      output.writeFieldBegin('b_side_company', Thrift.Type.STRING, 2);
+      output.writeString(this.b_side_company);
+      output.writeFieldEnd();
+    }
+    if (this.start_time !== null && this.start_time !== undefined) {
+      output.writeFieldBegin('start_time', Thrift.Type.STRING, 3);
+      output.writeString(this.start_time);
+      output.writeFieldEnd();
+    }
+    if (this.end_time !== null && this.end_time !== undefined) {
+      output.writeFieldBegin('end_time', Thrift.Type.STRING, 4);
+      output.writeString(this.end_time);
+      output.writeFieldEnd();
+    }
+    if (this.number !== null && this.number !== undefined) {
+      output.writeFieldBegin('number', Thrift.Type.STRING, 5);
+      output.writeString(this.number);
+      output.writeFieldEnd();
+    }
+    if (this.id !== null && this.id !== undefined) {
+      output.writeFieldBegin('id', Thrift.Type.I64, 6);
+      output.writeI64(this.id);
+      output.writeFieldEnd();
+    }
+    if (this.status !== null && this.status !== undefined) {
+      output.writeFieldBegin('status', Thrift.Type.I64, 7);
+      output.writeI64(this.status);
+      output.writeFieldEnd();
+    }
+    output.writeFieldStop();
+    output.writeStructEnd();
+    return;
+  }
+
+};
 real_access_record = class {
   constructor(args) {
     this.name = null;

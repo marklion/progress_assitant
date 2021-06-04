@@ -654,13 +654,151 @@ public:
             auto all_buyer = sqlite_orm::search_record_all<pa_sql_userinfo>("buyer != 0");
             for (auto &itr : all_buyer)
             {
-                auto access_record = make_access_record(itr);
+                auto access_record = make_access_record(itr );
                 if (access_record)
                 {
                     _return.push_back(*access_record);
                 }
             }
         }
+    }
+
+    virtual bool add_contract(const std::string &ssid, const common_contract &contract)
+    {
+        bool ret = false;
+
+        auto user = PA_DATAOPT_get_online_user(ssid);
+        if (!user)
+        {
+            PA_RETURN_UNLOGIN_MSG();
+        }
+        if (user->buyer)
+        {
+            PA_RETURN_NOPRIVA_MSG();
+        }
+
+        auto b_side_company = user->get_parent<pa_sql_company>("belong_company");
+        auto a_side_company = sqlite_orm::search_record<pa_sql_company>("name = '%s'", contract.a_side_company.c_str());
+        if (!a_side_company)
+        {
+            pa_sql_company tmp;
+            tmp.name = contract.a_side_company;
+            tmp.insert_record();
+            a_side_company.reset(sqlite_orm::search_record<pa_sql_company>("name = '%s'", contract.a_side_company.c_str()).release());
+        }
+
+        if (!a_side_company || !b_side_company)
+        {
+            PA_RETURN_NOCOMPANY_MSG();
+        }
+
+        auto exist_contract = b_side_company->get_children<pa_sql_contract>("b_side", "a_side_ext_key = %ld", a_side_company->get_pri_id());
+        if (exist_contract)
+        {
+            PA_RETURN_MSG("合同已存在");
+        }
+
+        pa_sql_contract tmp;
+        tmp.end_time = contract.end_time;
+        tmp.number = contract.number;
+        tmp.start_time = contract.start_time;
+        tmp.set_parent(*a_side_company, "a_side");
+        tmp.set_parent(*b_side_company, "b_side");
+
+        ret = tmp.insert_record();
+        if (ret)
+        {
+            tmp.update_status();
+        }
+
+        return ret;
+    }
+    virtual void del_contract(const std::string &ssid, const int64_t id)
+    {
+        auto user = PA_DATAOPT_get_online_user(ssid);
+        if (!user)
+        {
+            PA_RETURN_UNLOGIN_MSG();
+        }
+        if (user->buyer)
+        {
+            PA_RETURN_NOPRIVA_MSG();
+        }
+
+        auto company = user->get_parent<pa_sql_company>("belong_company");
+        if (!company)
+        {
+            PA_RETURN_NOCOMPANY_MSG();
+        }
+
+        auto contract = company->get_children<pa_sql_contract>("b_side", "PRI_ID = %ld", id);
+        if (!contract)
+        {
+            PA_RETURN_MSG("合同不存在");
+        }
+        contract->remove_record();
+    }
+    virtual void get_all_contract(std::vector<common_contract> &_return, const std::string &ssid)
+    {
+        auto user = PA_DATAOPT_get_online_user(ssid);
+        if (!user)
+        {
+            PA_RETURN_UNLOGIN_MSG();
+        }
+
+        auto company = user->get_parent<pa_sql_company>("belong_company");
+        if (!company)
+        {
+            PA_RETURN_NOCOMPANY_MSG();
+        }
+        std::string query = "b_side";
+        if (user->buyer)
+        {
+            query = "a_side";
+        }
+        auto all_contract = company->get_all_children<pa_sql_contract>(query);
+        for (auto &itr:all_contract)
+        {
+            itr.update_status();
+            auto a_side_company = itr.get_parent<pa_sql_company>("a_side");
+            auto b_side_company = itr.get_parent<pa_sql_company>("b_side");
+            if (a_side_company && b_side_company)
+            {
+                common_contract tmp;
+                tmp.a_side_company = a_side_company->name;
+                tmp.b_side_company = b_side_company->name;
+                tmp.end_time = itr.end_time;
+                tmp.id = itr.get_pri_id();
+                tmp.number = itr.number;
+                tmp.start_time = itr.start_time;
+                tmp.status = itr.status;
+                _return.push_back(tmp);
+            }
+        }
+
+    }
+
+    virtual void get_contract(common_contract &_return, const std::string &a_side_company, const std::string &b_side_company)
+    {
+        auto a_side = sqlite_orm::search_record<pa_sql_company>("name = '%s'", a_side_company.c_str());
+        auto b_side = sqlite_orm::search_record<pa_sql_company>("name = '%s'", b_side_company.c_str());
+        if (!a_side || !b_side)
+        {
+            PA_RETURN_NOCOMPANY_MSG();
+        }
+        auto contract = a_side->get_children<pa_sql_contract>("a_side", "b_side_ext_key = %ld", b_side->get_pri_id());
+        if (!contract)
+        {
+            PA_RETURN_MSG("合同不存在");
+        }
+        contract->update_status();
+        _return.a_side_company = a_side_company;
+        _return.b_side_company = b_side_company;
+        _return.end_time = contract->end_time;
+        _return.id = contract->get_pri_id();
+        _return.number = contract->number;
+        _return.start_time = contract->start_time;
+        _return.status = contract->status;
     }
 };
 #endif // _COMPANY_MANAGEMENT_IMP_H_

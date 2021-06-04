@@ -174,3 +174,25 @@ double pa_sql_plan::calcu_all_count()
 
     return ret;
 }
+
+void pa_sql_contract::update_status()
+{
+    auto current_time = time(nullptr);
+    auto end_time_sec = PA_DATAOPT_timestring_2_date(this->end_time + " 0:");
+    auto time_left = end_time_sec - current_time;
+    time_left /= 3600 * 24;
+    
+    if (time_left <= 0)
+    {
+        status = 2;
+    }
+    else if (time_left > 0 && time_left <= 30)
+    {
+        status = 1;
+    }
+    else
+    {
+        status = 0;
+    }
+    this->update_record();
+}

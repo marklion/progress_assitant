@@ -7,6 +7,7 @@
                 <van-button class="preview_btn_show" size="small" type="info" plain @click="preview_buy_attach">查看买方资质</van-button>
             </template>
         </van-cell>
+        <contract-cell :a_side="plan_owner_info.company" :b_side="plan_detail.sale_company"></contract-cell>
     </van-cell-group>
     <van-cell-group title="计划内容">
         <template #title>
@@ -128,6 +129,7 @@ import {
 import {
     Popup
 } from 'vant';
+import ContractCell from '../components/ContractCell.vue'
 
 Vue.use(Popup);
 Vue.use(Field);
@@ -147,6 +149,7 @@ export default {
     name: 'PlanDetail',
     components: {
         "plan-operate": PlanOperate,
+        "contract-cell": ContractCell,
     },
     data: function () {
         return {
@@ -302,7 +305,6 @@ export default {
             if (vue_this.is_proxy) {
                 Notify("此单为手工单，请自行确认买方资质");
             }
-
             vue_this.get_status_in_plan();
             vue_this.get_change_rule();
         });

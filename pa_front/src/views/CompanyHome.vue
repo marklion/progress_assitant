@@ -110,6 +110,7 @@
                     </template>
                     <van-cell title="联系电话" :value="single_record.phone"></van-cell>
                     <van-cell title="查看资质" is-link @click="show_attachment(single_record.attachment)"></van-cell>
+                    <contract-cell :a_side="single_record.company_name" :b_side="$store.state.userinfo.company"></contract-cell>
                 </van-collapse-item>
             </van-collapse>
         </van-cell-group>
@@ -187,6 +188,8 @@ import {
 import {
     ImagePreview
 } from 'vant';
+import ContractCell from '../components/ContractCell.vue';
+
 Vue.use(Grid);
 Vue.use(GridItem);
 Vue.use(Collapse);
@@ -258,6 +261,9 @@ export default {
             vichele_statistics: [],
             proxy_need_import: false,
         };
+    },
+    components: {
+        "contract-cell":ContractCell,
     },
     computed: {
         undelivered_vichele: function () {
