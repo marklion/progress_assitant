@@ -114,7 +114,7 @@ export default {
         preview_format_sample: function () {
             ImagePreview({
                 images: [this.$remote_url + '/logo_res/plan_sheet_sample.jpg'],
-                close: true
+                closeable: true
             });
         },
         convert_wb_2_array: function (current_sheetes) {
