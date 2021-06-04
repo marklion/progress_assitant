@@ -13,6 +13,7 @@
     <van-field v-model="stuff_brief.company_contact" rows="1" autosize label="联系方式" type="textarea" readonly>
     </van-field>
     <contract-cell :a_side="buy_company" :b_side="stuff_brief.company"></contract-cell>
+    <van-cell v-if="is_proxy" title="客户名称" :value="buy_company"></van-cell>
 </div>
 </template>
 
@@ -50,6 +51,7 @@ export default {
     props: {
         type_id: Number,
         buy_company: String,
+        is_proxy: Boolean,
     },
     components: {
         "contract-cell": ContractCell,

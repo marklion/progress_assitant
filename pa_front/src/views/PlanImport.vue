@@ -1,6 +1,6 @@
 <template>
 <div class="plan_import_show">
-    <stuff-title :type_id="parseInt($route.params.type_id)" :buy_company="buy_company()"></stuff-title>
+    <stuff-title :type_id="parseInt($route.params.type_id)" :buy_company="buy_company()" :is_proxy="is_proxy()"></stuff-title>
     <van-dialog v-model="import_diag" title="导入计划" :showConfirmButton="false" closeOnClickOverlay>
         <div class="info_show">
             点击提交按钮后，计划表中的车辆司机信息将自动导入，请注意检查，货品名称、进厂时间等信息
@@ -100,6 +100,14 @@ export default {
                 var ret = this.$store.state.userinfo.company;
                 if (this.$route.query.proxy_company) {
                     ret = this.$route.query.proxy_company;
+                }
+
+                return ret;
+            },
+            is_proxy: function () {
+                var ret = false;
+                if (this.$route.query.proxy_company) {
+                    ret = true;
                 }
 
                 return ret;
