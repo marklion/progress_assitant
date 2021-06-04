@@ -36,11 +36,6 @@
             </div>
         </van-form>
     </van-dialog>
-    <van-popup v-model="sheet_seletct_picker" round position="bottom">
-        <div>请指定计划内容在那张工作表</div>
-        <van-image :src="$remote_url + '/logo_res/sheet_select_prompt.jpg'"></van-image>
-        <van-picker show-toolbar :columns="sheet_in_wb" title="请选择工作表" @cancel="sheet_seletct_picker = false" @confirm="confirm_sheet" />
-    </van-popup>
     <stuff-info-submit :proxy_company="$route.query.proxy_company" :is_create="true" :min_time="new Date()" :orig_name="stuff_name" :type_id="parseInt($route.params.type_id)" :orig_price="price" :orig_vichele_info="vichele_info"></stuff-info-submit>
 </div>
 </template>
@@ -93,9 +88,6 @@ export default {
             stuff_name: '',
             price: 0,
             vichele_info: [],
-            sheet_seletct_picker: false,
-            sheet_in_wb: [],
-            wb: '',
             buy_company: function () {
                 var ret = this.$store.state.userinfo.company;
                 if (this.$route.query.proxy_company) {
@@ -124,10 +116,6 @@ export default {
                 images: [this.$remote_url + '/logo_res/plan_sheet_sample.jpg'],
                 close: true
             });
-        },
-        confirm_sheet: function (_value) {
-            this.table_from_user = this.convert_wb_2_array(this.wb.Sheets[_value]);
-            this.sheet_seletct_picker = false;
         },
         convert_wb_2_array: function (current_sheetes) {
             var ret = [];
@@ -198,13 +186,8 @@ export default {
                 var workbook = XLSX.read(data, {
                     type: 'array'
                 });
-                vue_this.sheet_in_wb = [];
-                workbook.SheetNames.forEach((element, index) => {
-                    vue_this.$set(vue_this.sheet_in_wb, index, element);
-                });
-                vue_this.wb = workbook;
-                vue_this.sheet_seletct_picker = true;
                 vue_this.table_from_user = [];
+                vue_this.table_from_user = vue_this.convert_wb_2_array(workbook.Sheets[workbook.SheetNames[0]]);
             };
             reader.readAsArrayBuffer(_file.file);
         },
