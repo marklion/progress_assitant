@@ -1,6 +1,6 @@
 <template>
 <div class="stuff_info_submit_show">
-    <van-form @submit="submit_plan" @failed="$toast('填入信息有误，请检查')">
+    <van-form @submit="submit_plan" scroll-to-error @failed="$toast('填入信息有误，请检查')">
         <van-field center readonly clickable name="datetimePicker" :value="plan_time" label="到厂时间" placeholder="点击选择时间" @click="show_time_picker = true">
             <template #right-icon>
                 <van-tag type="primary">{{plan_time_easy}}</van-tag>
@@ -19,10 +19,10 @@
                 <van-button round size="small" type="primary" icon="plus" native-type="button" @click="add_vichele_info"></van-button>
             </van-col>
         </van-row>
-        <div class="single_vichele_show" v-for="(single_vichele, index) in vichele_info" :key="index">
+        <div class="single_vichele_show" v-for="(single_vichele, index) in vichele_info" :key="index" ref="vichele_ref">
             <div class="vichele_index_show">{{index + 1}}</div>
             <vichele-in-plan :vichele_info="single_vichele"></vichele-in-plan>
-            <van-button plain round block icon="delete-o" native-type="button" @click="remove_vichele_info(index)" >移除</van-button>
+            <van-button plain round block icon="delete-o" native-type="button" @click="remove_vichele_info(index)">移除</van-button>
         </div>
         <div style="margin: 16px;">
             <van-button round block type="info" native-type="submit" :disabled="!stuff_info_change">{{action_name}}: 共{{vichele_info.length}}辆车</van-button>
@@ -247,11 +247,41 @@ export default {
                 });
             }
         },
+        find_dup: function () {
+            var ret = -1;
+            var vue_this = this;
+            for (let i = 0; i < this.vichele_info.length; i++) {
+                const pro = this.vichele_info[i];
+                ret = -1;
+                this.vichele_info.forEach((element, index) => {
+                    if (index != i) {
+                        if (element.main_vichele == pro.main_vichele || element.behind_vichele == pro.behind_vichele || (element.driver_name == pro.driver_name && element.driver_phone == pro.driver_phone)) {
+                            ret = i;
+                            vue_this.$refs.vichele_ref[index].style["border-color"] = 'red';
+                            vue_this.$refs.vichele_ref[i].style["border-color"] = 'red';
+                        }
+                    }
+                });
+                if (ret != -1) {
+                    break;
+                }
+            }
+            return ret;
+
+        },
         submit_plan: function () {
             var vue_this = this;
             if (vue_this.vichele_info.length <= 0) {
                 vue_this.$toast("请添加车辆信息");
             } else {
+                vue_this.$refs.vichele_ref.forEach((element) => {
+                    element.style["border-color"] = 'gray';
+                });
+                if (-1 != vue_this.find_dup()) {
+                    var dup_id = vue_this.find_dup() + 1;
+                    vue_this.$toast("车辆" + dup_id + "重复了");
+                    return;
+                }
                 vue_this.$call_remote_process("stuff_plan_management", "verify_plan", [{
                     plan_time: vue_this.plan_time,
                     vichele_info: vue_this.vichele_info,
@@ -288,13 +318,14 @@ export default {
     margin-right: 10px;
     position: relative;
 }
+
 .vichele_index_show {
     position: absolute;
     top: 30%;
     left: 60%;
     font-size: 100px;
     z-index: 20;
-    color:rgb(167, 167, 238);
+    color: rgb(167, 167, 238);
     opacity: 0.5;
 }
 </style>
