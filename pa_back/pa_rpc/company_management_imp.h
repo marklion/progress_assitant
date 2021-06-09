@@ -50,7 +50,7 @@ public:
     virtual int64_t add_type(const std::string &name, const int64_t price, const std::string &last, const std::string &ssid)
     {
         int64_t ret = 0;
-
+        sqlite_orm_lock a;
         auto user = PA_DATAOPT_get_online_user(ssid);
         if (user) {
             auto company = user->get_parent<pa_sql_company>("belong_company");
@@ -81,6 +81,7 @@ public:
     }
     virtual bool edit_type(const stuff_detail& stuff, const std::string& ssid) {
         bool ret = false;
+        sqlite_orm_lock a;
         auto user = PA_DATAOPT_get_online_user(ssid);
         if (user)
         {
@@ -114,6 +115,7 @@ public:
     }
     virtual void remove_type(const stuff_detail &stuff, const std::string &ssid)
     {
+        sqlite_orm_lock a;
         auto user = PA_DATAOPT_get_online_user(ssid);
         if (user)
         {
@@ -170,6 +172,7 @@ public:
     }
     virtual bool approve_apply(const int64_t apply_id, const std::string &ssid, const bool approve) {
         bool ret = false;
+        sqlite_orm_lock a;
         auto apply = sqlite_orm::search_record<pa_sql_user_apply>(apply_id);
         auto opt_user = PA_DATAOPT_get_online_user(ssid);
         if (!opt_user)
@@ -218,6 +221,7 @@ public:
     virtual bool readd_type(const stuff_detail &stuff, const std::string &ssid)
     {
         bool ret = false;
+        sqlite_orm_lock a;
         auto user = PA_DATAOPT_get_online_user(ssid);
         if (user)
         {
@@ -251,6 +255,7 @@ public:
 
     virtual void generate_statistics(std::string &_return, const std::string &ssid, const int64_t begin_date, const int64_t end_date)
     {
+        sqlite_orm_lock a;
         auto opt_user = PA_DATAOPT_get_online_user(ssid);
         std::list<pa_sql_plan> statistics_plan;
         if (opt_user)
@@ -332,6 +337,7 @@ public:
 
     virtual bool set_notice(const std::string &ssid, const std::string &notice)
     {
+        sqlite_orm_lock a;
         bool ret = false;
         auto user = PA_DATAOPT_get_online_user(ssid);
         if (user) {
@@ -366,6 +372,7 @@ public:
     }
     virtual void clear_notice(const std::string &ssid) 
     {
+        sqlite_orm_lock a;
         set_notice(ssid, "");
     }
     virtual void get_all_compay_user(std::vector<user_info> &_return, const std::string &ssid)
@@ -398,6 +405,7 @@ public:
 
     virtual bool remove_user_from_company(const std::string &ssid, const int64_t user_id) 
     {
+        sqlite_orm_lock a;
         auto user = PA_DATAOPT_get_online_user(ssid);
         if (!user)
         {
@@ -461,6 +469,7 @@ public:
 
     virtual bool set_address(const std::string &ssid, const std::string &address)
     {
+        sqlite_orm_lock a;
         auto company = get_belong_company(ssid);
         company->address = address;
         return company->update_record();
@@ -472,6 +481,7 @@ public:
     }
     virtual bool set_contact(const std::string &ssid, const std::string &contact)
     {
+        sqlite_orm_lock a;
         auto company = get_belong_company(ssid);
         company->contact = contact;
         return company->update_record();
@@ -494,6 +504,7 @@ public:
     }
 
     void update_company_attachment_pic(pa_sql_company &_company) { 
+        sqlite_orm_lock a;
         auto attachments = _company.get_all_children<pa_sql_company_attachment>("belong_company");
         std::string params;
         for (auto &itr:attachments)
@@ -528,6 +539,7 @@ public:
     virtual bool add_attachment(const std::string &ssid, const std::string &base64content, const bool is_pdf)
     {
         bool ret = false;
+        sqlite_orm_lock a;
         auto company = get_belong_company(ssid);
         std::string content;
 
@@ -573,6 +585,7 @@ public:
     }
     virtual void del_attachment(const std::string &ssid, const int64_t id)
     {
+        sqlite_orm_lock a;
         auto company = get_belong_company(ssid);
         auto attach = company->get_children<pa_sql_company_attachment>("belong_company", "PRI_ID = %ld", id);
         if (attach)
@@ -665,6 +678,7 @@ public:
 
     virtual bool add_contract(const std::string &ssid, const common_contract &contract)
     {
+        sqlite_orm_lock a;
         bool ret = false;
 
         auto user = PA_DATAOPT_get_online_user(ssid);
@@ -715,6 +729,7 @@ public:
     }
     virtual void del_contract(const std::string &ssid, const int64_t id)
     {
+        sqlite_orm_lock a;
         auto user = PA_DATAOPT_get_online_user(ssid);
         if (!user)
         {
