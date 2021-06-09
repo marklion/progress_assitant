@@ -25,6 +25,7 @@ using namespace ::apache::thrift::server;
 int main(int argc, char **argv)
 {
     PA_STATUS_RULE_init();
+    sqlite_orm_lock::init_lock();
     std::shared_ptr<TMultiplexedProcessor> multi_processor(new TMultiplexedProcessor());
 
     multi_processor->registerProcessor("user_management", std::shared_ptr<TProcessor>(new user_managementProcessor(std::shared_ptr<user_management_handler>(new user_management_handler()))));

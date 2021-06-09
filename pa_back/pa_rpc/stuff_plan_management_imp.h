@@ -32,6 +32,7 @@ class stuff_plan_management_handler : virtual public stuff_plan_managementIf
 public:
     virtual int64_t create_plan(const stuff_plan &plan, const std::string &ssid, const std::string &proxy_company)
     {
+        sqlite_orm_lock a;
         int64_t ret = 0;
         auto opt_user = PA_DATAOPT_get_online_user(ssid);
         if (!opt_user)
@@ -235,6 +236,7 @@ public:
     virtual bool update_plan(const stuff_plan &plan, const std::string &ssid)
     {
         bool ret = false;
+        sqlite_orm_lock a;
 
         auto opt_user = PA_DATAOPT_get_online_user(ssid);
         if (!opt_user)
@@ -343,6 +345,7 @@ public:
     virtual bool confirm_plan(const int64_t plan_id, const std::string &ssid)
     {
         bool ret = false;
+        sqlite_orm_lock a;
         auto opt_user = PA_DATAOPT_get_online_user(ssid);
         if (!opt_user)
         {
@@ -368,6 +371,7 @@ public:
     virtual bool confirm_pay(const int64_t plan_id, const std::string &ssid)
     {
         bool ret = false;
+        sqlite_orm_lock a;
 
         auto opt_user = PA_DATAOPT_get_online_user(ssid);
         auto plan = sqlite_orm::search_record<pa_sql_plan>(plan_id);
@@ -387,6 +391,7 @@ public:
     virtual bool confirm_deliver(const int64_t plan_id, const std::string &ssid, const std::vector<deliver_info> &deliver_infos, const std::string &reason)
     {
         bool ret = false;
+        sqlite_orm_lock a;
 
         auto opt_user = PA_DATAOPT_get_online_user(ssid);
         auto plan = sqlite_orm::search_record<pa_sql_plan>(plan_id);
@@ -600,6 +605,7 @@ public:
     virtual bool except_close(const int64_t plan_id, const std::string &ssid, const std::string &reason)
     {
         bool ret = false;
+        sqlite_orm_lock a;
 
         auto opt_user = PA_DATAOPT_get_online_user(ssid);
         if (!opt_user)
@@ -668,6 +674,7 @@ public:
 
     virtual void verify_plan(std::string &_return, const stuff_plan &plan, const std::string &ssid)
     {
+        sqlite_orm_lock a;
         auto user = PA_DATAOPT_get_online_user(ssid);
         if (!user)
         {
@@ -697,6 +704,7 @@ public:
 
     virtual bool send_file_via_email(const std::string &ssid, const std::string &filepath, const std::string &email)
     {
+        sqlite_orm_lock a;
         bool ret = false;
         auto file_name_begin = filepath.find("/logo_res/");
         auto file_name = "/dist" + filepath.substr(file_name_begin, filepath.length() - file_name_begin);
@@ -723,6 +731,7 @@ public:
     virtual bool reject_plan(const int64_t plan_id, const std::string &ssid, const std::string &reject_reason)
     {
         bool ret = false;
+        sqlite_orm_lock a;
         auto user = PA_DATAOPT_get_online_user(ssid);
         if (!user)
         {
@@ -849,6 +858,7 @@ public:
 
     virtual void clean_unclose_plan()
     {
+        sqlite_orm_lock a;
         auto current_date = PA_DATAOPT_current_time();
         auto current_day = current_date.substr(0, 10);
         auto plans_need_close = sqlite_orm::search_record_all<pa_sql_plan>("status != 4 AND plan_time LIKE '%s%%'", current_day.c_str());
@@ -865,6 +875,7 @@ public:
 
     virtual void get_today_statistics(std::vector<vichele_statistics> &_return, const std::string &ssid)
     {
+        sqlite_orm_lock a;
         auto user = PA_DATAOPT_get_online_user(ssid);
         if (!user)
         {
@@ -952,6 +963,7 @@ public:
 
     virtual void export_plan_by_plan_date(std::string &_return, const std::string &ssid, const std::string &plan_date)
     {
+        sqlite_orm_lock a;
         auto opt_user = PA_DATAOPT_get_online_user(ssid);
         if (!opt_user)
         {
@@ -985,6 +997,7 @@ public:
     }
     virtual void export_plan_by_create_date(std::string &_return, const std::string &ssid, const int64_t begin_date, const int64_t end_date)
     {
+        sqlite_orm_lock a;
         auto opt_user = PA_DATAOPT_get_online_user(ssid);
         if (!opt_user)
         {

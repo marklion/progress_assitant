@@ -97,3 +97,31 @@ extern bool execute_sql_cmd(const std::string& _sql_cmd, const std::string& _sql
     
     return ret;
 }
+
+pthread_mutex_t sqlite_orm_lock::lock;
+
+void sqlite_orm_lock::init_lock()
+{
+    pthread_mutexattr_t attr;
+    pthread_mutexattr_init(&attr);
+    pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_RECURSIVE);
+    pthread_mutex_init(&sqlite_orm_lock::lock, &attr);
+}
+
+sqlite_orm_lock::sqlite_orm_lock()
+{
+    auto ret = pthread_mutex_lock(&sqlite_orm_lock::lock);
+    if (0 == ret)
+    {
+        g_log.log("lock sql");
+    }
+    else
+    {
+        g_log.err("failed to lock sql");
+    }
+}
+sqlite_orm_lock::~sqlite_orm_lock()
+{
+    pthread_mutex_unlock(&sqlite_orm_lock::lock);
+    g_log.log("unlock sql");
+}

@@ -63,6 +63,14 @@ struct sqlite_orm_column {
     }
 };
 
+class sqlite_orm_lock {
+    static pthread_mutex_t lock;
+public:
+    static void init_lock() ;
+    sqlite_orm_lock();
+    ~sqlite_orm_lock();
+};
+
 class sqlite_orm
 {
 public:
