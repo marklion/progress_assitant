@@ -29,10 +29,8 @@
         <van-form @submit="add_contract">
             <van-field v-model="submit_contract.a_side_company" name="甲方" label="甲方" placeholder="请输入甲方公司名" :rules="[{ required:true, message:'请输入甲方公司'}]" />
             <van-field v-model="submit_contract.number" name="编号" label="合同编号" placeholder="请输入合同编号" :rules="[{ required:true, message:'请输入合同编号'}]" />
-            <van-field readonly clickable name="calendar1" :value="submit_contract.start_time" label="开始日期" placeholder="点击选择日期" @click="show_start_time_picker= true" :rules="[{ required:true, message:'请选择合同起始日期'}]" />
-            <van-calendar :min-date="min_date" :max-date="max_date" get-container="body" v-model="show_start_time_picker" @confirm="confirm_start_time" />
-            <van-field readonly clickable name="calendar2" :value="submit_contract.end_time" label="到期日期" placeholder="点击选择日期" @click="show_end_time_picker = true" :rules="[{ required:true, message:'请选择合同起始日期'}]" />
-            <van-calendar :min-date="min_date" :max-date="max_date" get-container="body" v-model="show_end_time_picker" @confirm="confirm_end_time" />
+            <van-field name="calendar1" v-model="submit_contract.start_time" label="开始日期" placeholder="请输入开始日期yyyy/mm/dd" format-trigger="onBlur" :formatter="formatter_input_date" :rules="[{ required:true, message:'请输入开始日期'}]" />
+            <van-field name="calendar2" v-model="submit_contract.end_time" label="到期日期" placeholder="请输入到期日期yyyy/mm/dd" format-trigger="onBlur" :formatter="formatter_input_date" :rules="[{ required:true, message:'请输入到期日期'}]" />
             <div style="margin: 16px;">
                 <van-button round block type="info" native-type="submit">提交</van-button>
             </div>
@@ -90,8 +88,6 @@ export default {
                 start_time: '',
                 end_time: '',
             },
-            show_start_time_picker: false,
-            show_end_time_picker: false,
             add_contract_show: false,
             contract: [],
             my_side: function (single_contract) {
@@ -119,6 +115,12 @@ export default {
         };
     },
     methods: {
+        formatter_input_date: function (_value) {
+            if (_value.length <= 0) {
+                return _value;
+            }
+            return this.formatDateTime(new Date(_value));
+        },
         formatDateTime: function (date) {
             var y = date.getFullYear();
             var m = date.getMonth() + 1;
@@ -132,14 +134,6 @@ export default {
             vue_this.$call_remote_process("company_management", "del_contract", [vue_this.$cookies.get('pa_ssid'), _id]).then(function () {
                 vue_this.init_contract_data();
             });
-        },
-        confirm_start_time: function (_date) {
-            this.submit_contract.start_time = this.formatDateTime(_date)
-            this.show_start_time_picker = false;
-        },
-        confirm_end_time: function (_date) {
-            this.submit_contract.end_time = this.formatDateTime(_date)
-            this.show_end_time_picker = false;
         },
         add_contract: function () {
             var vue_this = this;
@@ -173,6 +167,7 @@ export default {
 .del_show {
     margin-left: 10px;
 }
+
 .status_show {
     margin-left: 5px;
 }
