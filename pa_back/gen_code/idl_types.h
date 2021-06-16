@@ -61,6 +61,8 @@ class vichele_statistics;
 
 class vichele_search_result;
 
+class company_plan_brief;
+
 typedef struct _gen_exp__isset {
   _gen_exp__isset() : msg(false) {}
   bool msg :1;
@@ -1376,6 +1378,66 @@ class vichele_search_result : public virtual ::apache::thrift::TBase {
 void swap(vichele_search_result &a, vichele_search_result &b);
 
 std::ostream& operator<<(std::ostream& out, const vichele_search_result& obj);
+
+typedef struct _company_plan_brief__isset {
+  _company_plan_brief__isset() : today_plan_count(false), today_vichele_count(false), tomorrow_plan_count(false), tomorrow_vichele_count(false) {}
+  bool today_plan_count :1;
+  bool today_vichele_count :1;
+  bool tomorrow_plan_count :1;
+  bool tomorrow_vichele_count :1;
+} _company_plan_brief__isset;
+
+class company_plan_brief : public virtual ::apache::thrift::TBase {
+ public:
+
+  company_plan_brief(const company_plan_brief&);
+  company_plan_brief& operator=(const company_plan_brief&);
+  company_plan_brief() : today_plan_count(0), today_vichele_count(0), tomorrow_plan_count(0), tomorrow_vichele_count(0) {
+  }
+
+  virtual ~company_plan_brief() noexcept;
+  int64_t today_plan_count;
+  int64_t today_vichele_count;
+  int64_t tomorrow_plan_count;
+  int64_t tomorrow_vichele_count;
+
+  _company_plan_brief__isset __isset;
+
+  void __set_today_plan_count(const int64_t val);
+
+  void __set_today_vichele_count(const int64_t val);
+
+  void __set_tomorrow_plan_count(const int64_t val);
+
+  void __set_tomorrow_vichele_count(const int64_t val);
+
+  bool operator == (const company_plan_brief & rhs) const
+  {
+    if (!(today_plan_count == rhs.today_plan_count))
+      return false;
+    if (!(today_vichele_count == rhs.today_vichele_count))
+      return false;
+    if (!(tomorrow_plan_count == rhs.tomorrow_plan_count))
+      return false;
+    if (!(tomorrow_vichele_count == rhs.tomorrow_vichele_count))
+      return false;
+    return true;
+  }
+  bool operator != (const company_plan_brief &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const company_plan_brief & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+  virtual void printTo(std::ostream& out) const;
+};
+
+void swap(company_plan_brief &a, company_plan_brief &b);
+
+std::ostream& operator<<(std::ostream& out, const company_plan_brief& obj);
 
 
 

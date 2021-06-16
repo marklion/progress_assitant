@@ -13,6 +13,7 @@
                     <van-button type="primary" block :to="{name:'Statistics'}">导出</van-button>
                 </van-col>
             </van-row>
+            <van-notice-bar left-icon="info-o" :text="'今日计划 ' + company_plan_brief.today_plan_count + '单 ' + company_plan_brief.today_vichele_count + '辆车  明日计划 ' + company_plan_brief.tomorrow_plan_count + '单 ' + company_plan_brief.tomorrow_vichele_count + '辆车'" />
             <van-search v-model="vichele_number_search" label="车牌号" placeholder="请输入车牌号搜索当天计划" @search="search_plan_by_vichele_number" />
             <van-list :immediate-check="false" v-model="lazy_loading" :finished="lazy_finished" finished-text="没有更多了" @load="get_orders_by_ancher">
                 <plan-brief v-for="(single_plan, index) in order_need_show" :key="index" :conflict_reason="single_plan.conflict_reason" :plan_id="single_plan.plan_id" :company_view="!$store.state.userinfo.buyer" :status_prompt="single_plan.status_prompt"></plan-brief>
@@ -64,7 +65,11 @@ import {
 import {
     Search
 } from 'vant';
+import {
+    NoticeBar
+} from 'vant';
 
+Vue.use(NoticeBar);
 Vue.use(Search);
 Vue.use(List);
 Vue.use(Field);
@@ -82,6 +87,12 @@ export default {
     name: 'CompanyOrder',
     data: function () {
         return {
+            company_plan_brief: {
+                today_plan_count: 0,
+                tomorrow_plan_count: 0,
+                today_vichele_count: 0,
+                tomorrow_vichele_count: 0,
+            },
             show_search_result: false,
             vichele_number_search: '',
             lazy_loading: false,
@@ -268,6 +279,9 @@ export default {
                     });
 
                 }
+            });
+            vue_this.$call_remote_process("stuff_plan_management", "get_company_brief", [vue_this.$cookies.get('pa_ssid')]).then(function (resp) {
+                vue_this.company_plan_brief = resp;
             });
         },
     },

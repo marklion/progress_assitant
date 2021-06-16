@@ -3465,3 +3465,155 @@ void vichele_search_result::printTo(std::ostream& out) const {
 }
 
 
+company_plan_brief::~company_plan_brief() noexcept {
+}
+
+
+void company_plan_brief::__set_today_plan_count(const int64_t val) {
+  this->today_plan_count = val;
+}
+
+void company_plan_brief::__set_today_vichele_count(const int64_t val) {
+  this->today_vichele_count = val;
+}
+
+void company_plan_brief::__set_tomorrow_plan_count(const int64_t val) {
+  this->tomorrow_plan_count = val;
+}
+
+void company_plan_brief::__set_tomorrow_vichele_count(const int64_t val) {
+  this->tomorrow_vichele_count = val;
+}
+std::ostream& operator<<(std::ostream& out, const company_plan_brief& obj)
+{
+  obj.printTo(out);
+  return out;
+}
+
+
+uint32_t company_plan_brief::read(::apache::thrift::protocol::TProtocol* iprot) {
+
+  ::apache::thrift::protocol::TInputRecursionTracker tracker(*iprot);
+  uint32_t xfer = 0;
+  std::string fname;
+  ::apache::thrift::protocol::TType ftype;
+  int16_t fid;
+
+  xfer += iprot->readStructBegin(fname);
+
+  using ::apache::thrift::protocol::TProtocolException;
+
+
+  while (true)
+  {
+    xfer += iprot->readFieldBegin(fname, ftype, fid);
+    if (ftype == ::apache::thrift::protocol::T_STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 1:
+        if (ftype == ::apache::thrift::protocol::T_I64) {
+          xfer += iprot->readI64(this->today_plan_count);
+          this->__isset.today_plan_count = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 2:
+        if (ftype == ::apache::thrift::protocol::T_I64) {
+          xfer += iprot->readI64(this->today_vichele_count);
+          this->__isset.today_vichele_count = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 3:
+        if (ftype == ::apache::thrift::protocol::T_I64) {
+          xfer += iprot->readI64(this->tomorrow_plan_count);
+          this->__isset.tomorrow_plan_count = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 4:
+        if (ftype == ::apache::thrift::protocol::T_I64) {
+          xfer += iprot->readI64(this->tomorrow_vichele_count);
+          this->__isset.tomorrow_vichele_count = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      default:
+        xfer += iprot->skip(ftype);
+        break;
+    }
+    xfer += iprot->readFieldEnd();
+  }
+
+  xfer += iprot->readStructEnd();
+
+  return xfer;
+}
+
+uint32_t company_plan_brief::write(::apache::thrift::protocol::TProtocol* oprot) const {
+  uint32_t xfer = 0;
+  ::apache::thrift::protocol::TOutputRecursionTracker tracker(*oprot);
+  xfer += oprot->writeStructBegin("company_plan_brief");
+
+  xfer += oprot->writeFieldBegin("today_plan_count", ::apache::thrift::protocol::T_I64, 1);
+  xfer += oprot->writeI64(this->today_plan_count);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("today_vichele_count", ::apache::thrift::protocol::T_I64, 2);
+  xfer += oprot->writeI64(this->today_vichele_count);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("tomorrow_plan_count", ::apache::thrift::protocol::T_I64, 3);
+  xfer += oprot->writeI64(this->tomorrow_plan_count);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("tomorrow_vichele_count", ::apache::thrift::protocol::T_I64, 4);
+  xfer += oprot->writeI64(this->tomorrow_vichele_count);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldStop();
+  xfer += oprot->writeStructEnd();
+  return xfer;
+}
+
+void swap(company_plan_brief &a, company_plan_brief &b) {
+  using ::std::swap;
+  swap(a.today_plan_count, b.today_plan_count);
+  swap(a.today_vichele_count, b.today_vichele_count);
+  swap(a.tomorrow_plan_count, b.tomorrow_plan_count);
+  swap(a.tomorrow_vichele_count, b.tomorrow_vichele_count);
+  swap(a.__isset, b.__isset);
+}
+
+company_plan_brief::company_plan_brief(const company_plan_brief& other46) {
+  today_plan_count = other46.today_plan_count;
+  today_vichele_count = other46.today_vichele_count;
+  tomorrow_plan_count = other46.tomorrow_plan_count;
+  tomorrow_vichele_count = other46.tomorrow_vichele_count;
+  __isset = other46.__isset;
+}
+company_plan_brief& company_plan_brief::operator=(const company_plan_brief& other47) {
+  today_plan_count = other47.today_plan_count;
+  today_vichele_count = other47.today_vichele_count;
+  tomorrow_plan_count = other47.tomorrow_plan_count;
+  tomorrow_vichele_count = other47.tomorrow_vichele_count;
+  __isset = other47.__isset;
+  return *this;
+}
+void company_plan_brief::printTo(std::ostream& out) const {
+  using ::apache::thrift::to_string;
+  out << "company_plan_brief(";
+  out << "today_plan_count=" << to_string(today_plan_count);
+  out << ", " << "today_vichele_count=" << to_string(today_vichele_count);
+  out << ", " << "tomorrow_plan_count=" << to_string(tomorrow_plan_count);
+  out << ", " << "tomorrow_vichele_count=" << to_string(tomorrow_vichele_count);
+  out << ")";
+}
+
+

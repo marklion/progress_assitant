@@ -45,6 +45,7 @@ class stuff_plan_managementIf {
   virtual void export_plan_by_create_date(std::string& _return, const std::string& ssid, const int64_t begin_date, const int64_t end_date) = 0;
   virtual void search_plan_by_vichele_number(std::vector<vichele_search_result> & _return, const std::string& ssid, const std::string& vichele_number) = 0;
   virtual void get_tomorrow_statistics(std::vector<vichele_statistics> & _return, const std::string& ssid) = 0;
+  virtual void get_company_brief(company_plan_brief& _return, const std::string& ssid) = 0;
 };
 
 class stuff_plan_managementIfFactory {
@@ -150,6 +151,9 @@ class stuff_plan_managementNull : virtual public stuff_plan_managementIf {
     return;
   }
   void get_tomorrow_statistics(std::vector<vichele_statistics> & /* _return */, const std::string& /* ssid */) {
+    return;
+  }
+  void get_company_brief(company_plan_brief& /* _return */, const std::string& /* ssid */) {
     return;
   }
 };
@@ -2878,6 +2882,118 @@ class stuff_plan_management_get_tomorrow_statistics_presult {
 
 };
 
+typedef struct _stuff_plan_management_get_company_brief_args__isset {
+  _stuff_plan_management_get_company_brief_args__isset() : ssid(false) {}
+  bool ssid :1;
+} _stuff_plan_management_get_company_brief_args__isset;
+
+class stuff_plan_management_get_company_brief_args {
+ public:
+
+  stuff_plan_management_get_company_brief_args(const stuff_plan_management_get_company_brief_args&);
+  stuff_plan_management_get_company_brief_args& operator=(const stuff_plan_management_get_company_brief_args&);
+  stuff_plan_management_get_company_brief_args() : ssid() {
+  }
+
+  virtual ~stuff_plan_management_get_company_brief_args() noexcept;
+  std::string ssid;
+
+  _stuff_plan_management_get_company_brief_args__isset __isset;
+
+  void __set_ssid(const std::string& val);
+
+  bool operator == (const stuff_plan_management_get_company_brief_args & rhs) const
+  {
+    if (!(ssid == rhs.ssid))
+      return false;
+    return true;
+  }
+  bool operator != (const stuff_plan_management_get_company_brief_args &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const stuff_plan_management_get_company_brief_args & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+
+class stuff_plan_management_get_company_brief_pargs {
+ public:
+
+
+  virtual ~stuff_plan_management_get_company_brief_pargs() noexcept;
+  const std::string* ssid;
+
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _stuff_plan_management_get_company_brief_result__isset {
+  _stuff_plan_management_get_company_brief_result__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _stuff_plan_management_get_company_brief_result__isset;
+
+class stuff_plan_management_get_company_brief_result {
+ public:
+
+  stuff_plan_management_get_company_brief_result(const stuff_plan_management_get_company_brief_result&);
+  stuff_plan_management_get_company_brief_result& operator=(const stuff_plan_management_get_company_brief_result&);
+  stuff_plan_management_get_company_brief_result() {
+  }
+
+  virtual ~stuff_plan_management_get_company_brief_result() noexcept;
+  company_plan_brief success;
+  gen_exp e;
+
+  _stuff_plan_management_get_company_brief_result__isset __isset;
+
+  void __set_success(const company_plan_brief& val);
+
+  void __set_e(const gen_exp& val);
+
+  bool operator == (const stuff_plan_management_get_company_brief_result & rhs) const
+  {
+    if (!(success == rhs.success))
+      return false;
+    if (!(e == rhs.e))
+      return false;
+    return true;
+  }
+  bool operator != (const stuff_plan_management_get_company_brief_result &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const stuff_plan_management_get_company_brief_result & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _stuff_plan_management_get_company_brief_presult__isset {
+  _stuff_plan_management_get_company_brief_presult__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _stuff_plan_management_get_company_brief_presult__isset;
+
+class stuff_plan_management_get_company_brief_presult {
+ public:
+
+
+  virtual ~stuff_plan_management_get_company_brief_presult() noexcept;
+  company_plan_brief* success;
+  gen_exp e;
+
+  _stuff_plan_management_get_company_brief_presult__isset __isset;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+
+};
+
 class stuff_plan_managementClient : virtual public stuff_plan_managementIf {
  public:
   stuff_plan_managementClient(std::shared_ptr< ::apache::thrift::protocol::TProtocol> prot) {
@@ -2972,6 +3088,9 @@ class stuff_plan_managementClient : virtual public stuff_plan_managementIf {
   void get_tomorrow_statistics(std::vector<vichele_statistics> & _return, const std::string& ssid);
   void send_get_tomorrow_statistics(const std::string& ssid);
   void recv_get_tomorrow_statistics(std::vector<vichele_statistics> & _return);
+  void get_company_brief(company_plan_brief& _return, const std::string& ssid);
+  void send_get_company_brief(const std::string& ssid);
+  void recv_get_company_brief(company_plan_brief& _return);
  protected:
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> piprot_;
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> poprot_;
@@ -3010,6 +3129,7 @@ class stuff_plan_managementProcessor : public ::apache::thrift::TDispatchProcess
   void process_export_plan_by_create_date(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
   void process_search_plan_by_vichele_number(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
   void process_get_tomorrow_statistics(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
+  void process_get_company_brief(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
  public:
   stuff_plan_managementProcessor(::std::shared_ptr<stuff_plan_managementIf> iface) :
     iface_(iface) {
@@ -3036,6 +3156,7 @@ class stuff_plan_managementProcessor : public ::apache::thrift::TDispatchProcess
     processMap_["export_plan_by_create_date"] = &stuff_plan_managementProcessor::process_export_plan_by_create_date;
     processMap_["search_plan_by_vichele_number"] = &stuff_plan_managementProcessor::process_search_plan_by_vichele_number;
     processMap_["get_tomorrow_statistics"] = &stuff_plan_managementProcessor::process_get_tomorrow_statistics;
+    processMap_["get_company_brief"] = &stuff_plan_managementProcessor::process_get_company_brief;
   }
 
   virtual ~stuff_plan_managementProcessor() {}
@@ -3284,6 +3405,16 @@ class stuff_plan_managementMultiface : virtual public stuff_plan_managementIf {
     return;
   }
 
+  void get_company_brief(company_plan_brief& _return, const std::string& ssid) {
+    size_t sz = ifaces_.size();
+    size_t i = 0;
+    for (; i < (sz - 1); ++i) {
+      ifaces_[i]->get_company_brief(_return, ssid);
+    }
+    ifaces_[i]->get_company_brief(_return, ssid);
+    return;
+  }
+
 };
 
 // The 'concurrent' client is a thread safe client that correctly handles
@@ -3385,6 +3516,9 @@ class stuff_plan_managementConcurrentClient : virtual public stuff_plan_manageme
   void get_tomorrow_statistics(std::vector<vichele_statistics> & _return, const std::string& ssid);
   int32_t send_get_tomorrow_statistics(const std::string& ssid);
   void recv_get_tomorrow_statistics(std::vector<vichele_statistics> & _return, const int32_t seqid);
+  void get_company_brief(company_plan_brief& _return, const std::string& ssid);
+  int32_t send_get_company_brief(const std::string& ssid);
+  void recv_get_company_brief(company_plan_brief& _return, const int32_t seqid);
  protected:
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> piprot_;
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> poprot_;

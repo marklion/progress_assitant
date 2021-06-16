@@ -2272,3 +2272,100 @@ vichele_search_result = class {
   }
 
 };
+company_plan_brief = class {
+  constructor(args) {
+    this.today_plan_count = null;
+    this.today_vichele_count = null;
+    this.tomorrow_plan_count = null;
+    this.tomorrow_vichele_count = null;
+    if (args) {
+      if (args.today_plan_count !== undefined && args.today_plan_count !== null) {
+        this.today_plan_count = args.today_plan_count;
+      }
+      if (args.today_vichele_count !== undefined && args.today_vichele_count !== null) {
+        this.today_vichele_count = args.today_vichele_count;
+      }
+      if (args.tomorrow_plan_count !== undefined && args.tomorrow_plan_count !== null) {
+        this.tomorrow_plan_count = args.tomorrow_plan_count;
+      }
+      if (args.tomorrow_vichele_count !== undefined && args.tomorrow_vichele_count !== null) {
+        this.tomorrow_vichele_count = args.tomorrow_vichele_count;
+      }
+    }
+  }
+
+  read (input) {
+    input.readStructBegin();
+    while (true) {
+      const ret = input.readFieldBegin();
+      const ftype = ret.ftype;
+      const fid = ret.fid;
+      if (ftype == Thrift.Type.STOP) {
+        break;
+      }
+      switch (fid) {
+        case 1:
+        if (ftype == Thrift.Type.I64) {
+          this.today_plan_count = input.readI64().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        case 2:
+        if (ftype == Thrift.Type.I64) {
+          this.today_vichele_count = input.readI64().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        case 3:
+        if (ftype == Thrift.Type.I64) {
+          this.tomorrow_plan_count = input.readI64().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        case 4:
+        if (ftype == Thrift.Type.I64) {
+          this.tomorrow_vichele_count = input.readI64().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        default:
+          input.skip(ftype);
+      }
+      input.readFieldEnd();
+    }
+    input.readStructEnd();
+    return;
+  }
+
+  write (output) {
+    output.writeStructBegin('company_plan_brief');
+    if (this.today_plan_count !== null && this.today_plan_count !== undefined) {
+      output.writeFieldBegin('today_plan_count', Thrift.Type.I64, 1);
+      output.writeI64(this.today_plan_count);
+      output.writeFieldEnd();
+    }
+    if (this.today_vichele_count !== null && this.today_vichele_count !== undefined) {
+      output.writeFieldBegin('today_vichele_count', Thrift.Type.I64, 2);
+      output.writeI64(this.today_vichele_count);
+      output.writeFieldEnd();
+    }
+    if (this.tomorrow_plan_count !== null && this.tomorrow_plan_count !== undefined) {
+      output.writeFieldBegin('tomorrow_plan_count', Thrift.Type.I64, 3);
+      output.writeI64(this.tomorrow_plan_count);
+      output.writeFieldEnd();
+    }
+    if (this.tomorrow_vichele_count !== null && this.tomorrow_vichele_count !== undefined) {
+      output.writeFieldBegin('tomorrow_vichele_count', Thrift.Type.I64, 4);
+      output.writeI64(this.tomorrow_vichele_count);
+      output.writeFieldEnd();
+    }
+    output.writeFieldStop();
+    output.writeStructEnd();
+    return;
+  }
+
+};
