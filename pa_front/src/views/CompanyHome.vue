@@ -98,6 +98,15 @@
                     <vxe-table-column field="delivered" title="状态" width="18%" sortable :formatter="formater_status_vichele"></vxe-table-column>
                 </vxe-table>
             </van-collapse-item>
+            <van-collapse-item title="明日计划装车" :value="'共' + tomorrow_vichele.length + '车'"   name="1">
+                <vxe-table size="small" stripe align="center" :data="tomorrow_vichele">
+                    <vxe-table-column field="company" title="公司" width="34%" sortable></vxe-table-column>
+                    <vxe-table-column field="main_vichele" title="主车" width="24%"></vxe-table-column>
+                    <vxe-table-column field="behind_vichele" title="挂车" width="24%"></vxe-table-column>
+                    <vxe-table-column field="delivered" title="状态" width="18%" sortable :formatter="formater_status_vichele"></vxe-table-column>
+                </vxe-table>
+            </van-collapse-item>
+
         </van-collapse>
     </div>
     <div v-else-if="active_index == 3">
@@ -259,11 +268,12 @@ export default {
             proxy_type_id: 0,
             company_logo: '',
             vichele_statistics: [],
+            tomorrow_vichele: [],
             proxy_need_import: false,
         };
     },
     components: {
-        "contract-cell":ContractCell,
+        "contract-cell": ContractCell,
     },
     computed: {
         undelivered_vichele: function () {
@@ -346,6 +356,16 @@ export default {
                 });
             });
         },
+
+        init_tomorrow_vichele: function () {
+            var vue_this = this;
+            vue_this.$call_remote_process("stuff_plan_management", "get_tomorrow_statistics", [vue_this.$cookies.get('pa_ssid')]).then(function (resp) {
+                resp.forEach((element, index) => {
+                    vue_this.$set(vue_this.tomorrow_vichele, index, element);
+                });
+            });
+        },
+
         nav_to_company_data: function () {
             this.$router.push({
                 name: 'BoundInfo'
@@ -506,6 +526,7 @@ export default {
             vue_this.company_logo = resp;
         });
         vue_this.init_vichele_statistices();
+        vue_this.init_tomorrow_vichele();
     },
     watch: {
         "$store.state.userinfo.company": function (_val) {

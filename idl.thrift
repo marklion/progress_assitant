@@ -239,4 +239,5 @@ service stuff_plan_management {
     string export_plan_by_plan_date(1:string ssid, 2:string plan_date) throws (1:gen_exp e),
     string export_plan_by_create_date(1:string ssid, 2:i64 begin_date, 3:i64 end_date) throws (1:gen_exp e),
     list<vichele_search_result> search_plan_by_vichele_number(1:string ssid, 2:string vichele_number) throws (1:gen_exp e),
+    list<vichele_statistics> get_tomorrow_statistics(1:string ssid) throws (1:gen_exp e),
 }
