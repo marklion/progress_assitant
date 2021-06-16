@@ -1,5 +1,8 @@
 <template>
 <div class="plan_brief_show">
+    <div class="count_of_vichele">
+        共{{count_of_vichele}}车
+    </div>
     <div class="order_number_show">
         <van-row type="flex" align="center" justify="space-between">
             <van-col>
@@ -74,6 +77,7 @@ export default {
             is_cancel: false,
             order_number: '',
             is_proxy: false,
+            count_of_vichele:0,
         };
     },
     watch: {
@@ -145,6 +149,7 @@ export default {
                 }
                 vue_this.order_number = resp.created_time.toString() + vue_this.plan_id.toString();
                 vue_this.get_status_in_plan();
+                vue_this.count_of_vichele = resp.vichele_info.length;
             });
         },
         get_status_in_plan: function () {
@@ -183,8 +188,17 @@ export default {
     border: 1px solid rgb(165, 49, 49);
     border-radius: 6px;
     margin-bottom: 2px;
+    position: relative;
 }
-
+.count_of_vichele{
+    position: absolute;
+    top: 60%;
+    left: 80%;
+    font-size: 20px;
+    z-index: 20;
+    color: rgb(9, 110, 0);
+    opacity: 0.8;
+}
 .order_number_show {
     padding-left: 12px;
     margin-top: 3px;
