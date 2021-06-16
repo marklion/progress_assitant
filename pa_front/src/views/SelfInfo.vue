@@ -1,7 +1,7 @@
 <template>
 <div class="self_info_show">
     <van-form @submit="on_submit">
-        <van-field v-model="userinfo.name" name="姓名" label="姓名" placeholder="推荐填入真实姓名" :rules="[{ required: true, message: '请填写姓名' }]" />
+        <van-field v-model="userinfo.name" name="姓名" label="真实姓名" placeholder="推荐填入真实姓名" :rules="[{ required: true, message: '请填写姓名' }]" />
         <van-field name="logo" label="头像">
             <template #input>
                 <van-uploader v-model="logo" :after-read="upload_to_wx" :deletable="false">
@@ -25,7 +25,7 @@
             </template>
         </van-field>
         <van-field v-if="has_verify_code" v-model="verify_code" maxlength="6" name="验证码" label="验证码" placeholder="请输入验证码" :rules="[{ required: true, message: '请填写验证码' }]" />
-        <van-field name="company_picker" v-if="$store.state.userinfo.buyer" v-model="userinfo.company" label="公司" placeholder="请填入所在公司" :rules="[{ required: true, message: '请填写所属公司' }]" />
+        <van-field name="company_picker" v-if="$store.state.userinfo.buyer" v-model="userinfo.company" label="公司全称" placeholder="请填入所在公司" :rules="[{ required: true, message: '请填写所属公司' }]" />
         <div style="margin: 16px;">
             <van-button round block type="info" native-type="submit">提交</van-button>
         </div>
@@ -66,6 +66,7 @@ import {
 import {
     compressAccurately
 } from 'image-conversion';
+import { Dialog } from 'vant';
 Vue.use(Col);
 Vue.use(Row);
 Vue.use(CountDown);
@@ -104,6 +105,7 @@ export default {
     beforeMount: function () {
         this.userinfo = JSON.parse(JSON.stringify(this.$store.state.userinfo));
         this.logo[0].url = this.$remote_url + this.userinfo.logo;
+        Dialog.alert({message:'请务必填入真实姓名和公司全称'});
     },
     watch: {
         "$store.state.userinfo": function (_new_value) {
