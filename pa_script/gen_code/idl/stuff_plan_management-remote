@@ -46,6 +46,7 @@ if len(sys.argv) <= 1 or sys.argv[1] == '--help':
     print('  string export_plan_by_plan_date(string ssid, string plan_date)')
     print('  string export_plan_by_create_date(string ssid, i64 begin_date, i64 end_date)')
     print('   search_plan_by_vichele_number(string ssid, string vichele_number)')
+    print('   get_tomorrow_statistics(string ssid)')
     print('')
     sys.exit(0)
 
@@ -256,6 +257,12 @@ elif cmd == 'search_plan_by_vichele_number':
         print('search_plan_by_vichele_number requires 2 args')
         sys.exit(1)
     pp.pprint(client.search_plan_by_vichele_number(args[0], args[1],))
+
+elif cmd == 'get_tomorrow_statistics':
+    if len(args) != 1:
+        print('get_tomorrow_statistics requires 1 args')
+        sys.exit(1)
+    pp.pprint(client.get_tomorrow_statistics(args[0],))
 
 else:
     print('Unrecognized method %s' % cmd)
