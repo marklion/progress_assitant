@@ -1,12 +1,12 @@
 <template>
 <div class="company_order_show">
-    <van-tabs v-model="active" sticky @change="init_orders($store.state.userinfo.buyer)">
+    <van-tabs v-model="active" sticky @change="tab_change">
         <van-tab v-for="(status_in_map, _si_index) in status_name_map" :key="_si_index" :title="status_in_map.name" :badge="numbers_of_tab(status_in_map.status)">
             <van-row type="flex" justify="center" align="center">
                 <van-col :span="20">
                     <van-dropdown-menu>
-                        <van-dropdown-item v-model="date_filter" :options="date_option" />
-                        <van-dropdown-item v-model="cancel_filter" :options="cancel_option" />
+                        <van-dropdown-item v-model="date_filter" :options="date_option" @close="recheck_list" />
+                        <van-dropdown-item v-model="cancel_filter" :options="cancel_option" @close="recheck_list" />
                     </van-dropdown-menu>
                 </van-col>
                 <van-col :span="4">
@@ -15,7 +15,7 @@
             </van-row>
             <van-notice-bar left-icon="info-o" :text="'今日计划 ' + company_plan_brief.today_plan_count + '单 ' + company_plan_brief.today_vichele_count + '辆车  明日计划 ' + company_plan_brief.tomorrow_plan_count + '单 ' + company_plan_brief.tomorrow_vichele_count + '辆车'" />
             <van-search v-model="vichele_number_search" label="车牌号" placeholder="请输入车牌号搜索当天计划" @search="search_plan_by_vichele_number" />
-            <van-list :immediate-check="false" v-model="lazy_loading" :finished="lazy_finished" finished-text="没有更多了" @load="get_orders_by_ancher">
+            <van-list ref="order_list" :immediate-check="false" v-model="lazy_loading" :finished="lazy_finished" finished-text="没有更多了" @load="get_orders_by_ancher">
                 <plan-brief v-for="(single_plan, index) in order_need_show" :key="index" :conflict_reason="single_plan.conflict_reason" :plan_id="single_plan.plan_id" :company_view="!$store.state.userinfo.buyer" :status_prompt="single_plan.status_prompt"></plan-brief>
             </van-list>
         </van-tab>
@@ -216,6 +216,15 @@ export default {
         "export-file": ExportFile,
     },
     methods: {
+        tab_change: function () {
+            this.init_orders(this.$store.state.userinfo.buyer)
+            this.recheck_list();
+        },
+        recheck_list: function () {
+            this.$refs.order_list.forEach(element=>{
+                element.check();
+            });
+        },
         search_plan_by_vichele_number: function () {
             var vue_this = this;
             vue_this.search_result = [];
