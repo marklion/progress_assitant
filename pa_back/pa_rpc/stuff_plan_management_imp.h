@@ -1132,6 +1132,31 @@ public:
             }
         }
     }
+
+    virtual void get_company_brief(company_plan_brief &_return, const std::string &ssid)
+    {
+        auto current_time_date = time(nullptr);
+        current_time_date += 3600 * 24;
+        auto tomorrow = PA_DATAOPT_date_2_timestring(current_time_date);
+        auto date_only = tomorrow.substr(0, 10);
+        auto tomorrow_plans = PA_RPC_get_all_plans_related_by_user(ssid, "plan_time LIKE '%s%%' AND status > 1 AND is_cancel == 0", date_only.c_str());
+        auto current_time = PA_DATAOPT_current_time();
+        date_only = current_time.substr(0, 10);
+        auto today_plans = PA_RPC_get_all_plans_related_by_user(ssid, "plan_time LIKE '%s%%' AND status > 1 AND is_cancel == 0", date_only.c_str());
+
+        _return.today_plan_count = today_plans.size();
+        _return.tomorrow_plan_count = tomorrow_plans.size();
+        for (auto &itr:today_plans)
+        {
+            auto single_vichele = itr.get_all_children<pa_sql_single_vichele>("belong_plan");
+            _return.today_vichele_count += single_vichele.size();
+        } 
+        for (auto &itr:tomorrow_plans)
+        {
+            auto single_vichele = itr.get_all_children<pa_sql_single_vichele>("belong_plan");
+            _return.tomorrow_vichele_count += single_vichele.size();
+        } 
+    }
 };
 
 #endif // _STUFF_PLAN_MANAGEMENT_H_

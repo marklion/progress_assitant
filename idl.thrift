@@ -216,6 +216,13 @@ struct vichele_search_result {
     4:string status,
 }
 
+struct company_plan_brief {
+    1:i64 today_plan_count,
+    2:i64 today_vichele_count,
+    3:i64 tomorrow_plan_count,
+    4:i64 tomorrow_vichele_count,
+}
+
 service stuff_plan_management {
     i64 create_plan(1:stuff_plan plan, 2:string ssid, 3:string proxy_company) throws (1:gen_exp e),
     list<plan_status> get_created_plan(1:string ssid, 2:i64 anchor) throws (1:gen_exp e),
@@ -240,4 +247,5 @@ service stuff_plan_management {
     string export_plan_by_create_date(1:string ssid, 2:i64 begin_date, 3:i64 end_date) throws (1:gen_exp e),
     list<vichele_search_result> search_plan_by_vichele_number(1:string ssid, 2:string vichele_number) throws (1:gen_exp e),
     list<vichele_statistics> get_tomorrow_statistics(1:string ssid) throws (1:gen_exp e),
+    company_plan_brief get_company_brief(1:string ssid) throws (1:gen_exp e),
 }

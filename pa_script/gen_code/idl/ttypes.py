@@ -2049,6 +2049,96 @@ class vichele_search_result(object):
 
     def __ne__(self, other):
         return not (self == other)
+
+
+class company_plan_brief(object):
+    """
+    Attributes:
+     - today_plan_count
+     - today_vichele_count
+     - tomorrow_plan_count
+     - tomorrow_vichele_count
+
+    """
+
+
+    def __init__(self, today_plan_count=None, today_vichele_count=None, tomorrow_plan_count=None, tomorrow_vichele_count=None,):
+        self.today_plan_count = today_plan_count
+        self.today_vichele_count = today_vichele_count
+        self.tomorrow_plan_count = tomorrow_plan_count
+        self.tomorrow_vichele_count = tomorrow_vichele_count
+
+    def read(self, iprot):
+        if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
+            iprot._fast_decode(self, iprot, [self.__class__, self.thrift_spec])
+            return
+        iprot.readStructBegin()
+        while True:
+            (fname, ftype, fid) = iprot.readFieldBegin()
+            if ftype == TType.STOP:
+                break
+            if fid == 1:
+                if ftype == TType.I64:
+                    self.today_plan_count = iprot.readI64()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 2:
+                if ftype == TType.I64:
+                    self.today_vichele_count = iprot.readI64()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 3:
+                if ftype == TType.I64:
+                    self.tomorrow_plan_count = iprot.readI64()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 4:
+                if ftype == TType.I64:
+                    self.tomorrow_vichele_count = iprot.readI64()
+                else:
+                    iprot.skip(ftype)
+            else:
+                iprot.skip(ftype)
+            iprot.readFieldEnd()
+        iprot.readStructEnd()
+
+    def write(self, oprot):
+        if oprot._fast_encode is not None and self.thrift_spec is not None:
+            oprot.trans.write(oprot._fast_encode(self, [self.__class__, self.thrift_spec]))
+            return
+        oprot.writeStructBegin('company_plan_brief')
+        if self.today_plan_count is not None:
+            oprot.writeFieldBegin('today_plan_count', TType.I64, 1)
+            oprot.writeI64(self.today_plan_count)
+            oprot.writeFieldEnd()
+        if self.today_vichele_count is not None:
+            oprot.writeFieldBegin('today_vichele_count', TType.I64, 2)
+            oprot.writeI64(self.today_vichele_count)
+            oprot.writeFieldEnd()
+        if self.tomorrow_plan_count is not None:
+            oprot.writeFieldBegin('tomorrow_plan_count', TType.I64, 3)
+            oprot.writeI64(self.tomorrow_plan_count)
+            oprot.writeFieldEnd()
+        if self.tomorrow_vichele_count is not None:
+            oprot.writeFieldBegin('tomorrow_vichele_count', TType.I64, 4)
+            oprot.writeI64(self.tomorrow_vichele_count)
+            oprot.writeFieldEnd()
+        oprot.writeFieldStop()
+        oprot.writeStructEnd()
+
+    def validate(self):
+        return
+
+    def __repr__(self):
+        L = ['%s=%r' % (key, value)
+             for key, value in self.__dict__.items()]
+        return '%s(%s)' % (self.__class__.__name__, ', '.join(L))
+
+    def __eq__(self, other):
+        return isinstance(other, self.__class__) and self.__dict__ == other.__dict__
+
+    def __ne__(self, other):
+        return not (self == other)
 all_structs.append(gen_exp)
 gen_exp.thrift_spec = (
     None,  # 0
@@ -2227,6 +2317,14 @@ vichele_search_result.thrift_spec = (
     (2, TType.STRING, 'vichele_numbers', 'UTF8', None, ),  # 2
     (3, TType.STRING, 'plan_time', 'UTF8', None, ),  # 3
     (4, TType.STRING, 'status', 'UTF8', None, ),  # 4
+)
+all_structs.append(company_plan_brief)
+company_plan_brief.thrift_spec = (
+    None,  # 0
+    (1, TType.I64, 'today_plan_count', None, None, ),  # 1
+    (2, TType.I64, 'today_vichele_count', None, None, ),  # 2
+    (3, TType.I64, 'tomorrow_plan_count', None, None, ),  # 3
+    (4, TType.I64, 'tomorrow_vichele_count', None, None, ),  # 4
 )
 fix_spec(all_structs)
 del all_structs
