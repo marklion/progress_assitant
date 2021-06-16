@@ -7,9 +7,9 @@
                     <van-image round width="80px" height="80px" fit="cover" :src="$remote_url +  $store.state.userinfo.logo" />
                 </van-col>
                 <van-col :span="13">
-                    <van-row type="flex"  align="center">
+                    <van-row type="flex" align="center">
                         <h3>{{$store.state.userinfo.name}}</h3>
-                        <div >{{$store.state.userinfo.company}}</div>
+                        <div>{{$store.state.userinfo.company}}</div>
                     </van-row>
                 </van-col>
                 <van-col :span="3">
@@ -25,6 +25,8 @@
             <van-cell icon="sign" is-link :to="{name:'Contract'}" title="合同管理"></van-cell>
         </van-cell-group>
         <van-divider />
+
+        <van-cell title="联系客服" icon="service-o" is-link @click="show_service_diag"></van-cell>
         <van-button type="danger" plain @click="logoff" block>退出登录</van-button>
     </div>
     <div v-else class="unlogin_show">
@@ -34,6 +36,7 @@
         <van-row type="flex" justify="center" align="center">
             <h1>掌易助理</h1>
         </van-row>
+        <van-cell title="联系客服" icon="service-o" is-link @click="show_service_diag"></van-cell>
         <div style="margin: 16px;">
             <van-button type="primary" @click="login" block>微信登录</van-button>
         </div>
@@ -61,6 +64,7 @@ import {
 import {
     Divider
 } from 'vant';
+import { Dialog } from 'vant';
 
 Vue.use(Divider);
 Vue.use(Icon);
@@ -78,6 +82,11 @@ export default {
         };
     },
     methods: {
+        show_service_diag: function () {
+            Dialog({
+                message:'杨经理\n电话/微信: 18547707666'
+            });
+        },
         logoff: function () {
             var vue_this = this;
             vue_this.$call_remote_process("user_management", 'logff_user', [vue_this.$cookies.get('pa_ssid')]).finally(function () {
