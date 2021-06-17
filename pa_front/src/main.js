@@ -28,3 +28,15 @@ new Vue({
   store,
   render: h => h(App)
 }).$mount('#app')
+
+
+// eslint-disable-next-line
+router.beforeEach((to, from, next) => {
+  if (from.meta.keepAlive) {
+    const $content = document.querySelector('.content'); // 列表的外层容器
+    const scrollTop = $content ? $content.scrollTop : 0;
+    console.log('scrollTop', scrollTop)
+    from.meta.scrollTop = scrollTop;
+  }
+  next();
+});

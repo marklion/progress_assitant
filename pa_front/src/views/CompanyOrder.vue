@@ -221,7 +221,7 @@ export default {
             this.recheck_list();
         },
         recheck_list: function () {
-            this.$refs.order_list.forEach(element=>{
+            this.$refs.order_list.forEach(element => {
                 element.check();
             });
         },
@@ -302,7 +302,14 @@ export default {
     beforeMount: function () {
         this.init_orders(this.$store.state.userinfo.buyer);
 
-    }
+    },
+    activated() {
+        const scrollTop = this.$route.meta.scrollTop;
+        const $content = document.querySelector('.content');
+        if (scrollTop && $content) {
+            $content.scrollTop = scrollTop;
+        }
+    },
 }
 </script>
 
