@@ -56,6 +56,8 @@ const routes = [
     meta: {    
         private_title: '订单',
         has_go_back:false,
+        keepAlive: true,
+        scrollTop: 0,
     },
   },
   {

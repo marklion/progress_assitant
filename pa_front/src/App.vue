@@ -6,7 +6,10 @@
         </template>
     </van-nav-bar>
     <van-pull-refresh v-model="isLoading" @refresh="onRefresh">
-        <router-view />
+        <keep-alive>
+            <router-view v-if='$route.meta.keepAlive' />
+        </keep-alive>
+        <router-view v-if='!$route.meta.keepAlive' />
     </van-pull-refresh>
     <div style="height: 6rem;"></div>
     <van-tabbar route fixed>
