@@ -12,6 +12,7 @@
     </van-field>
     <van-field v-model="stuff_brief.company_contact" rows="1" autosize label="联系方式" type="textarea" readonly>
     </van-field>
+    <van-cell title="营业时间" :value="work_time"></van-cell>
     <contract-cell :a_side="buy_company" :b_side="stuff_brief.company"></contract-cell>
     <van-cell v-if="is_proxy" title="客户名称" :value="buy_company"></van-cell>
 </div>
@@ -56,6 +57,13 @@ export default {
     components: {
         "contract-cell": ContractCell,
     },
+    computed: {
+        work_time:function() {
+            var start_time = parseInt(this.work_time_from_server.start_time / 60) + '点' + this.work_time_from_server.start_time % 60 + '分';
+            var end_time = parseInt(this.work_time_from_server.end_time / 60) + '点' + this.work_time_from_server.end_time % 60 + '分';
+            return start_time + '~' + end_time;
+        },
+    },
     data: function () {
         return {
             stuff_brief: {
@@ -68,6 +76,10 @@ export default {
             },
             company_notice: '',
             show_notice_diag: true,
+            work_time_from_server: {
+                start_time: 0,
+                end_time: 0,
+            },
         };
     },
     beforeMount: function () {
@@ -81,6 +93,9 @@ export default {
             vue_this.stuff_brief.company_contact = resp.company_contact;
             vue_this.$call_remote_process("company_management", 'get_notice', [resp.company]).then(function (resp) {
                 vue_this.company_notice = resp;
+            });
+            vue_this.$call_remote_process("company_management", 'get_work_time', [vue_this.stuff_brief.company]).then(function (resp) {
+                vue_this.work_time_from_server = resp;
             });
         });
     },

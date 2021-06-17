@@ -14,6 +14,7 @@
 #define PA_RETURN_NOSTUFF_MSG() PA_RETURN_MSG("货品不存在")
 #define PA_RETURN_NOPLAN_MSG() PA_RETURN_MSG("计划不存在")
 #define PA_RETURN_RELATED_PLAN_OPEN() PA_RETURN_MSG("计划未关闭无法操作")
+#define PA_RETURN_SALE_CLOSE() PA_RETURN_MSG("卖家已休息，请在上班时间段内操作")
 
 std::unique_ptr<pa_sql_userinfo> PA_DATAOPT_get_online_user(const std::string &_ssid);
 std::string PA_DATAOPT_store_logo_to_file(const std::string &_logo, const std::string &_upid);
@@ -32,4 +33,5 @@ std::unique_ptr<pa_sql_company> PA_DATAOPT_fetch_company(const std::string &_com
 std::string PA_DATAOPT_current_time();
 int64_t PA_DATAOPT_timestring_2_date(const std::string &_str);
 std::string PA_DATAOPT_date_2_timestring(int64_t _date);
+void PA_DATAOPT_notify_pay(pa_sql_company &_company);
 #endif // _PA_UTILS_H_

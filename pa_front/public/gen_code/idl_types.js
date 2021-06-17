@@ -1142,6 +1142,71 @@ real_access_record = class {
   }
 
 };
+company_work_time = class {
+  constructor(args) {
+    this.start_time = null;
+    this.end_time = null;
+    if (args) {
+      if (args.start_time !== undefined && args.start_time !== null) {
+        this.start_time = args.start_time;
+      }
+      if (args.end_time !== undefined && args.end_time !== null) {
+        this.end_time = args.end_time;
+      }
+    }
+  }
+
+  read (input) {
+    input.readStructBegin();
+    while (true) {
+      const ret = input.readFieldBegin();
+      const ftype = ret.ftype;
+      const fid = ret.fid;
+      if (ftype == Thrift.Type.STOP) {
+        break;
+      }
+      switch (fid) {
+        case 1:
+        if (ftype == Thrift.Type.I64) {
+          this.start_time = input.readI64().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        case 2:
+        if (ftype == Thrift.Type.I64) {
+          this.end_time = input.readI64().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        default:
+          input.skip(ftype);
+      }
+      input.readFieldEnd();
+    }
+    input.readStructEnd();
+    return;
+  }
+
+  write (output) {
+    output.writeStructBegin('company_work_time');
+    if (this.start_time !== null && this.start_time !== undefined) {
+      output.writeFieldBegin('start_time', Thrift.Type.I64, 1);
+      output.writeI64(this.start_time);
+      output.writeFieldEnd();
+    }
+    if (this.end_time !== null && this.end_time !== undefined) {
+      output.writeFieldBegin('end_time', Thrift.Type.I64, 2);
+      output.writeI64(this.end_time);
+      output.writeFieldEnd();
+    }
+    output.writeFieldStop();
+    output.writeStructEnd();
+    return;
+  }
+
+};
 plan_confirm_info = class {
   constructor(args) {
     this.timestamp = null;

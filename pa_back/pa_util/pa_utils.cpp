@@ -376,3 +376,18 @@ std::string PA_DATAOPT_date_2_timestring(int64_t _date)
 
     return std::string(buff);
 }
+
+void PA_DATAOPT_notify_pay(pa_sql_company &_company)
+{
+    auto current_date = PA_DATAOPT_current_time();
+    auto current_day = current_date.substr(0, 10);
+    auto all_stuff = _company.get_all_children<pa_sql_stuff_info>("belong_company");
+    for (auto &single_stuff:all_stuff)
+    {
+        auto plans = single_stuff.get_all_children<pa_sql_plan>("belong_stuff", "status == 2 AND plan_time LIKE '%s%%'", current_day.c_str());
+        for (auto &itr : plans)
+        {
+            itr.send_wechat_msg(*get_sysadmin_user(), "该计划还未付款，请尽快付款");
+        }
+    }
+}

@@ -1066,6 +1066,74 @@ class real_access_record(object):
         return not (self == other)
 
 
+class company_work_time(object):
+    """
+    Attributes:
+     - start_time
+     - end_time
+
+    """
+
+
+    def __init__(self, start_time=None, end_time=None,):
+        self.start_time = start_time
+        self.end_time = end_time
+
+    def read(self, iprot):
+        if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
+            iprot._fast_decode(self, iprot, [self.__class__, self.thrift_spec])
+            return
+        iprot.readStructBegin()
+        while True:
+            (fname, ftype, fid) = iprot.readFieldBegin()
+            if ftype == TType.STOP:
+                break
+            if fid == 1:
+                if ftype == TType.I64:
+                    self.start_time = iprot.readI64()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 2:
+                if ftype == TType.I64:
+                    self.end_time = iprot.readI64()
+                else:
+                    iprot.skip(ftype)
+            else:
+                iprot.skip(ftype)
+            iprot.readFieldEnd()
+        iprot.readStructEnd()
+
+    def write(self, oprot):
+        if oprot._fast_encode is not None and self.thrift_spec is not None:
+            oprot.trans.write(oprot._fast_encode(self, [self.__class__, self.thrift_spec]))
+            return
+        oprot.writeStructBegin('company_work_time')
+        if self.start_time is not None:
+            oprot.writeFieldBegin('start_time', TType.I64, 1)
+            oprot.writeI64(self.start_time)
+            oprot.writeFieldEnd()
+        if self.end_time is not None:
+            oprot.writeFieldBegin('end_time', TType.I64, 2)
+            oprot.writeI64(self.end_time)
+            oprot.writeFieldEnd()
+        oprot.writeFieldStop()
+        oprot.writeStructEnd()
+
+    def validate(self):
+        return
+
+    def __repr__(self):
+        L = ['%s=%r' % (key, value)
+             for key, value in self.__dict__.items()]
+        return '%s(%s)' % (self.__class__.__name__, ', '.join(L))
+
+    def __eq__(self, other):
+        return isinstance(other, self.__class__) and self.__dict__ == other.__dict__
+
+    def __ne__(self, other):
+        return not (self == other)
+
+
 class plan_confirm_info(object):
     """
     Attributes:
@@ -2230,6 +2298,12 @@ real_access_record.thrift_spec = (
     (3, TType.STRING, 'phone', 'UTF8', None, ),  # 3
     (4, TType.STRING, 'company_name', 'UTF8', None, ),  # 4
     (5, TType.STRING, 'attachment', 'UTF8', None, ),  # 5
+)
+all_structs.append(company_work_time)
+company_work_time.thrift_spec = (
+    None,  # 0
+    (1, TType.I64, 'start_time', None, None, ),  # 1
+    (2, TType.I64, 'end_time', None, None, ),  # 2
 )
 all_structs.append(plan_confirm_info)
 plan_confirm_info.thrift_spec = (

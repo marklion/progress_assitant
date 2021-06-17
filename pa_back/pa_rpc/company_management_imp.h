@@ -815,5 +815,34 @@ public:
         _return.start_time = contract->start_time;
         _return.status = contract->status;
     }
+
+    virtual bool set_work_time(const std::string &ssid, const int64_t start_work_time, const int64_t end_work_time)
+    {
+        auto user = PA_DATAOPT_get_online_user(ssid);
+        if (!user)
+        {
+            PA_RETURN_UNLOGIN_MSG();
+        }
+        auto company = user->get_parent<pa_sql_company>("belong_company");
+        if (!company || user->buyer)
+        {
+            PA_RETURN_NOPRIVA_MSG();
+        }
+        company->work_start_time = start_work_time;
+        company->work_end_time = end_work_time;
+
+        return company->update_record();
+    }
+
+    virtual void get_work_time(company_work_time &_return, const std::string &company_name)
+    {
+        auto company = sqlite_orm::search_record<pa_sql_company>("name = '%s'", company_name.c_str());
+        if (!company)
+        {
+            PA_RETURN_NOCOMPANY_MSG();
+        }
+        _return.start_time = company->work_start_time;
+        _return.end_time = company->work_end_time;
+    }
 };
 #endif // _COMPANY_MANAGEMENT_IMP_H_

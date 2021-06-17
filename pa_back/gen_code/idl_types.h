@@ -43,6 +43,8 @@ class common_contract;
 
 class real_access_record;
 
+class company_work_time;
+
 class plan_confirm_info;
 
 class pay_confirm_info;
@@ -748,6 +750,54 @@ class real_access_record : public virtual ::apache::thrift::TBase {
 void swap(real_access_record &a, real_access_record &b);
 
 std::ostream& operator<<(std::ostream& out, const real_access_record& obj);
+
+typedef struct _company_work_time__isset {
+  _company_work_time__isset() : start_time(false), end_time(false) {}
+  bool start_time :1;
+  bool end_time :1;
+} _company_work_time__isset;
+
+class company_work_time : public virtual ::apache::thrift::TBase {
+ public:
+
+  company_work_time(const company_work_time&);
+  company_work_time& operator=(const company_work_time&);
+  company_work_time() : start_time(0), end_time(0) {
+  }
+
+  virtual ~company_work_time() noexcept;
+  int64_t start_time;
+  int64_t end_time;
+
+  _company_work_time__isset __isset;
+
+  void __set_start_time(const int64_t val);
+
+  void __set_end_time(const int64_t val);
+
+  bool operator == (const company_work_time & rhs) const
+  {
+    if (!(start_time == rhs.start_time))
+      return false;
+    if (!(end_time == rhs.end_time))
+      return false;
+    return true;
+  }
+  bool operator != (const company_work_time &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const company_work_time & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+  virtual void printTo(std::ostream& out) const;
+};
+
+void swap(company_work_time &a, company_work_time &b);
+
+std::ostream& operator<<(std::ostream& out, const company_work_time& obj);
 
 typedef struct _plan_confirm_info__isset {
   _plan_confirm_info__isset() : timestamp(false), name(false) {}

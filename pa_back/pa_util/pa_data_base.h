@@ -14,6 +14,8 @@ public:
     std::string address;
     std::string contact;
     std::string attachment_picture;
+    int work_start_time = 0;
+    int work_end_time = 0;
 
     virtual std::vector<sqlite_orm_column> self_columns_defined()
     {
@@ -25,6 +27,8 @@ public:
         ret.push_back(sqlite_orm_column("address", sqlite_orm_column::STRING, &address));
         ret.push_back(sqlite_orm_column("contact", sqlite_orm_column::STRING, &contact));
         ret.push_back(sqlite_orm_column("attachment_picture", sqlite_orm_column::STRING, &attachment_picture));
+        ret.push_back(sqlite_orm_column("work_start_time", sqlite_orm_column::INTEGER, &work_start_time));
+        ret.push_back(sqlite_orm_column("work_end_time", sqlite_orm_column::INTEGER, &work_end_time));
 
         return ret;
     }

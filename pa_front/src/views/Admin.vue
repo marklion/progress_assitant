@@ -31,6 +31,16 @@
                 </template>
             </van-cell>
         </van-tab>
+        <van-tab title="营业时间">
+            <van-field readonly clickable :value="work_start_time" label="上班时间" placeholder="点击选择时间" @click="show_start_Picker = true" />
+            <van-popup v-model="show_start_Picker" position="bottom">
+                <van-datetime-picker type="time" @confirm="on_start_Confirm" @cancel="show_start_Picker = false" />
+            </van-popup>
+            <van-field readonly clickable :value="work_end_time" label="下班时间" placeholder="点击选择时间" @click="show_end_Picker = true" />
+            <van-popup v-model="show_end_Picker" position="bottom">
+                <van-datetime-picker type="time" @confirm="on_end_Confirm" @cancel="show_end_Picker = false" />
+            </van-popup>
+        </van-tab>
     </van-tabs>
 
 </div>
@@ -59,6 +69,19 @@ import {
 import {
     Dialog
 } from 'vant';
+import {
+    Field
+} from 'vant';
+import {
+    Popup
+} from 'vant';
+import {
+    DatetimePicker
+} from 'vant';
+
+Vue.use(DatetimePicker);
+Vue.use(Popup);
+Vue.use(Field);
 Vue.use(Tab);
 Vue.use(Tabs);
 Vue.use(Col);
@@ -74,17 +97,42 @@ export default {
             all_apply: [],
             active: 0,
             all_user: [],
+            work_start_time: 0,
+            show_start_Picker: false,
+            work_end_time: 0,
+            show_end_Picker: false,
         };
     },
     methods: {
+        on_start_Confirm: function (_time) {
+            var start_time = parseInt(_time.split(":")[0]) * 60 + parseInt(_time.split(":")[1]);
+            var end_time = parseInt(this.work_end_time.split(":")[0]) * 60 + parseInt(this.work_end_time.split(":")[1]);
+            var vue_this = this;
+            vue_this.$call_remote_process("company_management", "set_work_time", [vue_this.$cookies.get('pa_ssid'), start_time, end_time]).then(function (resp) {
+                if (resp) {
+                    vue_this.init_work_time();
+                    vue_this.show_start_Picker = false;
+                }
+            })
+        },
+        on_end_Confirm: function (_time) {
+            var start_time = parseInt(this.work_start_time.split(":")[0]) * 60 + parseInt(this.work_start_time.split(":")[1]);
+            var end_time = parseInt(_time.split(":")[0]) * 60 + parseInt(_time.split(":")[1]);
+            var vue_this = this;
+            vue_this.$call_remote_process("company_management", "set_work_time", [vue_this.$cookies.get('pa_ssid'), start_time, end_time]).then(function (resp) {
+                if (resp) {
+                    vue_this.init_work_time();
+                    vue_this.show_end_Picker = false;
+                }
+            })
+        },
         remove_user: function (_user) {
             var vue_this = this;
             Dialog.confirm({
                 message: '确定要移除' + _user.name + '吗',
             }).then(() => {
                 vue_this.$call_remote_process("company_management", "remove_user_from_company", [vue_this.$cookies.get('pa_ssid'), _user.user_id]).then(function (resp) {
-                    if (resp)
-                    {
+                    if (resp) {
                         vue_this.init_all_user();
                     }
                 });
@@ -116,10 +164,18 @@ export default {
                 });
             });
         },
+        init_work_time: function () {
+            var vue_this = this;
+            vue_this.$call_remote_process("company_management", "get_work_time", [vue_this.$store.state.userinfo.company]).then(function (resp) {
+                vue_this.work_start_time = parseInt(resp.start_time / 60) + ':' + resp.start_time % 60;
+                vue_this.work_end_time = parseInt(resp.end_time / 60) + ':' + resp.end_time % 60;
+            });
+        },
     },
     beforeMount: function () {
         this.init_apply_info();
         this.init_all_user();
+        this.init_work_time();
     },
 }
 </script>

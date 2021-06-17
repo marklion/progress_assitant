@@ -62,6 +62,16 @@ int main(int argc, char **argv)
                         itr.update_status();
                     }
                 }
+                auto sale_companys = sqlite_orm::search_record_all<pa_sql_company>("is_sale == 1");
+                auto current_min = st_time->tm_min + st_time->tm_hour * 60;
+                for (auto &itr:sale_companys)
+                {
+                    auto min_left = itr.work_end_time - current_min;
+                    if (min_left == 30 || min_left == 20 || min_left == 10 || min_left == 0)
+                    {
+                        PA_DATAOPT_notify_pay(itr);
+                    }
+                }
             },
             nullptr);
         tdf_main::get_inst().run();
