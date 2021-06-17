@@ -186,11 +186,12 @@ class Iface(object):
         """
         pass
 
-    def export_plan_by_plan_date(self, ssid, plan_date):
+    def export_plan_by_plan_date(self, ssid, plan_date, create_date):
         """
         Parameters:
          - ssid
          - plan_date
+         - create_date
 
         """
         pass
@@ -916,21 +917,23 @@ class Client(Iface):
             raise result.e
         raise TApplicationException(TApplicationException.MISSING_RESULT, "plan_created_by_user failed: unknown result")
 
-    def export_plan_by_plan_date(self, ssid, plan_date):
+    def export_plan_by_plan_date(self, ssid, plan_date, create_date):
         """
         Parameters:
          - ssid
          - plan_date
+         - create_date
 
         """
-        self.send_export_plan_by_plan_date(ssid, plan_date)
+        self.send_export_plan_by_plan_date(ssid, plan_date, create_date)
         return self.recv_export_plan_by_plan_date()
 
-    def send_export_plan_by_plan_date(self, ssid, plan_date):
+    def send_export_plan_by_plan_date(self, ssid, plan_date, create_date):
         self._oprot.writeMessageBegin('export_plan_by_plan_date', TMessageType.CALL, self._seqid)
         args = export_plan_by_plan_date_args()
         args.ssid = ssid
         args.plan_date = plan_date
+        args.create_date = create_date
         args.write(self._oprot)
         self._oprot.writeMessageEnd()
         self._oprot.trans.flush()
@@ -1645,7 +1648,7 @@ class Processor(Iface, TProcessor):
         iprot.readMessageEnd()
         result = export_plan_by_plan_date_result()
         try:
-            result.success = self._handler.export_plan_by_plan_date(args.ssid, args.plan_date)
+            result.success = self._handler.export_plan_by_plan_date(args.ssid, args.plan_date, args.create_date)
             msg_type = TMessageType.REPLY
         except TTransport.TTransportException:
             raise
@@ -4626,13 +4629,15 @@ class export_plan_by_plan_date_args(object):
     Attributes:
      - ssid
      - plan_date
+     - create_date
 
     """
 
 
-    def __init__(self, ssid=None, plan_date=None,):
+    def __init__(self, ssid=None, plan_date=None, create_date=None,):
         self.ssid = ssid
         self.plan_date = plan_date
+        self.create_date = create_date
 
     def read(self, iprot):
         if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
@@ -4653,6 +4658,11 @@ class export_plan_by_plan_date_args(object):
                     self.plan_date = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
                 else:
                     iprot.skip(ftype)
+            elif fid == 3:
+                if ftype == TType.STRING:
+                    self.create_date = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
             else:
                 iprot.skip(ftype)
             iprot.readFieldEnd()
@@ -4670,6 +4680,10 @@ class export_plan_by_plan_date_args(object):
         if self.plan_date is not None:
             oprot.writeFieldBegin('plan_date', TType.STRING, 2)
             oprot.writeString(self.plan_date.encode('utf-8') if sys.version_info[0] == 2 else self.plan_date)
+            oprot.writeFieldEnd()
+        if self.create_date is not None:
+            oprot.writeFieldBegin('create_date', TType.STRING, 3)
+            oprot.writeString(self.create_date.encode('utf-8') if sys.version_info[0] == 2 else self.create_date)
             oprot.writeFieldEnd()
         oprot.writeFieldStop()
         oprot.writeStructEnd()
@@ -4692,6 +4706,7 @@ export_plan_by_plan_date_args.thrift_spec = (
     None,  # 0
     (1, TType.STRING, 'ssid', 'UTF8', None, ),  # 1
     (2, TType.STRING, 'plan_date', 'UTF8', None, ),  # 2
+    (3, TType.STRING, 'create_date', 'UTF8', None, ),  # 3
 )
 
 

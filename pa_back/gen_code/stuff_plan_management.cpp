@@ -4510,6 +4510,14 @@ uint32_t stuff_plan_management_export_plan_by_plan_date_args::read(::apache::thr
           xfer += iprot->skip(ftype);
         }
         break;
+      case 3:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->create_date);
+          this->__isset.create_date = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
       default:
         xfer += iprot->skip(ftype);
         break;
@@ -4535,6 +4543,10 @@ uint32_t stuff_plan_management_export_plan_by_plan_date_args::write(::apache::th
   xfer += oprot->writeString(this->plan_date);
   xfer += oprot->writeFieldEnd();
 
+  xfer += oprot->writeFieldBegin("create_date", ::apache::thrift::protocol::T_STRING, 3);
+  xfer += oprot->writeString(this->create_date);
+  xfer += oprot->writeFieldEnd();
+
   xfer += oprot->writeFieldStop();
   xfer += oprot->writeStructEnd();
   return xfer;
@@ -4556,6 +4568,10 @@ uint32_t stuff_plan_management_export_plan_by_plan_date_pargs::write(::apache::t
 
   xfer += oprot->writeFieldBegin("plan_date", ::apache::thrift::protocol::T_STRING, 2);
   xfer += oprot->writeString((*(this->plan_date)));
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("create_date", ::apache::thrift::protocol::T_STRING, 3);
+  xfer += oprot->writeString((*(this->create_date)));
   xfer += oprot->writeFieldEnd();
 
   xfer += oprot->writeFieldStop();
@@ -6804,13 +6820,13 @@ bool stuff_plan_managementClient::recv_plan_created_by_user()
   throw ::apache::thrift::TApplicationException(::apache::thrift::TApplicationException::MISSING_RESULT, "plan_created_by_user failed: unknown result");
 }
 
-void stuff_plan_managementClient::export_plan_by_plan_date(std::string& _return, const std::string& ssid, const std::string& plan_date)
+void stuff_plan_managementClient::export_plan_by_plan_date(std::string& _return, const std::string& ssid, const std::string& plan_date, const std::string& create_date)
 {
-  send_export_plan_by_plan_date(ssid, plan_date);
+  send_export_plan_by_plan_date(ssid, plan_date, create_date);
   recv_export_plan_by_plan_date(_return);
 }
 
-void stuff_plan_managementClient::send_export_plan_by_plan_date(const std::string& ssid, const std::string& plan_date)
+void stuff_plan_managementClient::send_export_plan_by_plan_date(const std::string& ssid, const std::string& plan_date, const std::string& create_date)
 {
   int32_t cseqid = 0;
   oprot_->writeMessageBegin("export_plan_by_plan_date", ::apache::thrift::protocol::T_CALL, cseqid);
@@ -6818,6 +6834,7 @@ void stuff_plan_managementClient::send_export_plan_by_plan_date(const std::strin
   stuff_plan_management_export_plan_by_plan_date_pargs args;
   args.ssid = &ssid;
   args.plan_date = &plan_date;
+  args.create_date = &create_date;
   args.write(oprot_);
 
   oprot_->writeMessageEnd();
@@ -8237,7 +8254,7 @@ void stuff_plan_managementProcessor::process_export_plan_by_plan_date(int32_t se
 
   stuff_plan_management_export_plan_by_plan_date_result result;
   try {
-    iface_->export_plan_by_plan_date(result.success, args.ssid, args.plan_date);
+    iface_->export_plan_by_plan_date(result.success, args.ssid, args.plan_date, args.create_date);
     result.__isset.success = true;
   } catch (gen_exp &e) {
     result.e = e;
@@ -10191,13 +10208,13 @@ bool stuff_plan_managementConcurrentClient::recv_plan_created_by_user(const int3
   } // end while(true)
 }
 
-void stuff_plan_managementConcurrentClient::export_plan_by_plan_date(std::string& _return, const std::string& ssid, const std::string& plan_date)
+void stuff_plan_managementConcurrentClient::export_plan_by_plan_date(std::string& _return, const std::string& ssid, const std::string& plan_date, const std::string& create_date)
 {
-  int32_t seqid = send_export_plan_by_plan_date(ssid, plan_date);
+  int32_t seqid = send_export_plan_by_plan_date(ssid, plan_date, create_date);
   recv_export_plan_by_plan_date(_return, seqid);
 }
 
-int32_t stuff_plan_managementConcurrentClient::send_export_plan_by_plan_date(const std::string& ssid, const std::string& plan_date)
+int32_t stuff_plan_managementConcurrentClient::send_export_plan_by_plan_date(const std::string& ssid, const std::string& plan_date, const std::string& create_date)
 {
   int32_t cseqid = this->sync_->generateSeqId();
   ::apache::thrift::async::TConcurrentSendSentry sentry(this->sync_.get());
@@ -10206,6 +10223,7 @@ int32_t stuff_plan_managementConcurrentClient::send_export_plan_by_plan_date(con
   stuff_plan_management_export_plan_by_plan_date_pargs args;
   args.ssid = &ssid;
   args.plan_date = &plan_date;
+  args.create_date = &create_date;
   args.write(oprot_);
 
   oprot_->writeMessageEnd();

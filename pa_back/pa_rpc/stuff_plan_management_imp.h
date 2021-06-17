@@ -961,37 +961,26 @@ public:
         return ret;
     }
 
-    virtual void export_plan_by_plan_date(std::string &_return, const std::string &ssid, const std::string &plan_date)
+    virtual void export_plan_by_plan_date(std::string &_return, const std::string &ssid, const std::string &plan_date, const std::string &create_date)
     {
         sqlite_orm_lock a;
-        auto opt_user = PA_DATAOPT_get_online_user(ssid);
-        if (!opt_user)
-        {
-            PA_RETURN_UNLOGIN_MSG();
-        }
-        std::list<pa_sql_plan> plans;
-        if (opt_user->buyer)
-        {
-            plans = opt_user->get_all_children<pa_sql_plan>("created_by", "plan_time LIKE '%s%%' AND is_cancel = 0", plan_date.c_str());
-        }
-        else
-        {
-            auto company = opt_user->get_parent<pa_sql_company>("belong_company");
-            if (!company)
-            {
-                PA_RETURN_NOCOMPANY_MSG();
-            }
-            auto all_stuff = company->get_all_children<pa_sql_stuff_info>("belong_company");
-            for (auto &itr:all_stuff)
-            {
-                auto one_kind_plan = itr.get_all_children<pa_sql_plan>("belong_stuff", "plan_time LIKE '%s%%' AND is_cancel = 0", plan_date.c_str());
-                plans.insert(plans.end(), one_kind_plan.begin(), one_kind_plan.end());
-            }
-        }
+        auto plans = PA_RPC_get_all_plans_related_by_user(ssid, "plan_time LIKE '%s%%' AND is_cancel = 0", plan_date.c_str());
+
         std::vector<int64_t> plan_ids;
         for (auto &itr:plans)
         {
-            plan_ids.push_back(itr.get_pri_id());
+            if (create_date.length() == 0)
+            {
+                plan_ids.push_back(itr.get_pri_id());
+            }
+            else
+            {
+                auto create_date_from_sql = PA_DATAOPT_date_2_timestring(itr.create_time);
+                if (create_date_from_sql.substr(0, 10) == create_date.substr(0, 10))
+                {
+                    plan_ids.push_back(itr.get_pri_id());
+                }
+            }
         }
         this->export_plan(_return, ssid, plan_ids);
     }

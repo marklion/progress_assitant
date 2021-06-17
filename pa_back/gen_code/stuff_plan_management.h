@@ -41,7 +41,7 @@ class stuff_plan_managementIf {
   virtual void clean_unclose_plan() = 0;
   virtual void get_today_statistics(std::vector<vichele_statistics> & _return, const std::string& ssid) = 0;
   virtual bool plan_created_by_user(const std::string& ssid, const int64_t plan_id) = 0;
-  virtual void export_plan_by_plan_date(std::string& _return, const std::string& ssid, const std::string& plan_date) = 0;
+  virtual void export_plan_by_plan_date(std::string& _return, const std::string& ssid, const std::string& plan_date, const std::string& create_date) = 0;
   virtual void export_plan_by_create_date(std::string& _return, const std::string& ssid, const int64_t begin_date, const int64_t end_date) = 0;
   virtual void search_plan_by_vichele_number(std::vector<vichele_search_result> & _return, const std::string& ssid, const std::string& vichele_number) = 0;
   virtual void get_tomorrow_statistics(std::vector<vichele_statistics> & _return, const std::string& ssid) = 0;
@@ -141,7 +141,7 @@ class stuff_plan_managementNull : virtual public stuff_plan_managementIf {
     bool _return = false;
     return _return;
   }
-  void export_plan_by_plan_date(std::string& /* _return */, const std::string& /* ssid */, const std::string& /* plan_date */) {
+  void export_plan_by_plan_date(std::string& /* _return */, const std::string& /* ssid */, const std::string& /* plan_date */, const std::string& /* create_date */) {
     return;
   }
   void export_plan_by_create_date(std::string& /* _return */, const std::string& /* ssid */, const int64_t /* begin_date */, const int64_t /* end_date */) {
@@ -2407,9 +2407,10 @@ class stuff_plan_management_plan_created_by_user_presult {
 };
 
 typedef struct _stuff_plan_management_export_plan_by_plan_date_args__isset {
-  _stuff_plan_management_export_plan_by_plan_date_args__isset() : ssid(false), plan_date(false) {}
+  _stuff_plan_management_export_plan_by_plan_date_args__isset() : ssid(false), plan_date(false), create_date(false) {}
   bool ssid :1;
   bool plan_date :1;
+  bool create_date :1;
 } _stuff_plan_management_export_plan_by_plan_date_args__isset;
 
 class stuff_plan_management_export_plan_by_plan_date_args {
@@ -2417,12 +2418,13 @@ class stuff_plan_management_export_plan_by_plan_date_args {
 
   stuff_plan_management_export_plan_by_plan_date_args(const stuff_plan_management_export_plan_by_plan_date_args&);
   stuff_plan_management_export_plan_by_plan_date_args& operator=(const stuff_plan_management_export_plan_by_plan_date_args&);
-  stuff_plan_management_export_plan_by_plan_date_args() : ssid(), plan_date() {
+  stuff_plan_management_export_plan_by_plan_date_args() : ssid(), plan_date(), create_date() {
   }
 
   virtual ~stuff_plan_management_export_plan_by_plan_date_args() noexcept;
   std::string ssid;
   std::string plan_date;
+  std::string create_date;
 
   _stuff_plan_management_export_plan_by_plan_date_args__isset __isset;
 
@@ -2430,11 +2432,15 @@ class stuff_plan_management_export_plan_by_plan_date_args {
 
   void __set_plan_date(const std::string& val);
 
+  void __set_create_date(const std::string& val);
+
   bool operator == (const stuff_plan_management_export_plan_by_plan_date_args & rhs) const
   {
     if (!(ssid == rhs.ssid))
       return false;
     if (!(plan_date == rhs.plan_date))
+      return false;
+    if (!(create_date == rhs.create_date))
       return false;
     return true;
   }
@@ -2457,6 +2463,7 @@ class stuff_plan_management_export_plan_by_plan_date_pargs {
   virtual ~stuff_plan_management_export_plan_by_plan_date_pargs() noexcept;
   const std::string* ssid;
   const std::string* plan_date;
+  const std::string* create_date;
 
   uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
 
@@ -3076,8 +3083,8 @@ class stuff_plan_managementClient : virtual public stuff_plan_managementIf {
   bool plan_created_by_user(const std::string& ssid, const int64_t plan_id);
   void send_plan_created_by_user(const std::string& ssid, const int64_t plan_id);
   bool recv_plan_created_by_user();
-  void export_plan_by_plan_date(std::string& _return, const std::string& ssid, const std::string& plan_date);
-  void send_export_plan_by_plan_date(const std::string& ssid, const std::string& plan_date);
+  void export_plan_by_plan_date(std::string& _return, const std::string& ssid, const std::string& plan_date, const std::string& create_date);
+  void send_export_plan_by_plan_date(const std::string& ssid, const std::string& plan_date, const std::string& create_date);
   void recv_export_plan_by_plan_date(std::string& _return);
   void export_plan_by_create_date(std::string& _return, const std::string& ssid, const int64_t begin_date, const int64_t end_date);
   void send_export_plan_by_create_date(const std::string& ssid, const int64_t begin_date, const int64_t end_date);
@@ -3365,13 +3372,13 @@ class stuff_plan_managementMultiface : virtual public stuff_plan_managementIf {
     return ifaces_[i]->plan_created_by_user(ssid, plan_id);
   }
 
-  void export_plan_by_plan_date(std::string& _return, const std::string& ssid, const std::string& plan_date) {
+  void export_plan_by_plan_date(std::string& _return, const std::string& ssid, const std::string& plan_date, const std::string& create_date) {
     size_t sz = ifaces_.size();
     size_t i = 0;
     for (; i < (sz - 1); ++i) {
-      ifaces_[i]->export_plan_by_plan_date(_return, ssid, plan_date);
+      ifaces_[i]->export_plan_by_plan_date(_return, ssid, plan_date, create_date);
     }
-    ifaces_[i]->export_plan_by_plan_date(_return, ssid, plan_date);
+    ifaces_[i]->export_plan_by_plan_date(_return, ssid, plan_date, create_date);
     return;
   }
 
@@ -3504,8 +3511,8 @@ class stuff_plan_managementConcurrentClient : virtual public stuff_plan_manageme
   bool plan_created_by_user(const std::string& ssid, const int64_t plan_id);
   int32_t send_plan_created_by_user(const std::string& ssid, const int64_t plan_id);
   bool recv_plan_created_by_user(const int32_t seqid);
-  void export_plan_by_plan_date(std::string& _return, const std::string& ssid, const std::string& plan_date);
-  int32_t send_export_plan_by_plan_date(const std::string& ssid, const std::string& plan_date);
+  void export_plan_by_plan_date(std::string& _return, const std::string& ssid, const std::string& plan_date, const std::string& create_date);
+  int32_t send_export_plan_by_plan_date(const std::string& ssid, const std::string& plan_date, const std::string& create_date);
   void recv_export_plan_by_plan_date(std::string& _return, const int32_t seqid);
   void export_plan_by_create_date(std::string& _return, const std::string& ssid, const int64_t begin_date, const int64_t end_date);
   int32_t send_export_plan_by_create_date(const std::string& ssid, const int64_t begin_date, const int64_t end_date);
