@@ -6,10 +6,17 @@
                 <van-radio name="1">今日</van-radio>
                 <van-radio name="2">明日</van-radio>
             </van-radio-group>
-            <template #right-icon>
-                <van-button type="info" size="small" @click="export_plan_by_date">导出</van-button>
-            </template>
         </van-cell>
+        <van-cell title="提报时间" center>
+            <van-radio-group v-model="create_date" direction="horizontal">
+                <van-radio name="1">不限</van-radio>
+                <van-radio name="2">昨日</van-radio>
+                <van-radio name="3">今日</van-radio>
+            </van-radio-group>
+        </van-cell>
+        <div style="margin: 16px;">
+            <van-button type="info" block round size="small" @click="export_plan_by_date">导出</van-button>
+        </div>
     </van-cell-group>
     <van-cell-group title="按计划创建时间导出">
         <van-cell title="选择日期区间" :value="date" @click="show_date = true" center>
@@ -67,6 +74,7 @@ export default {
             download_url: '',
             show_export_file: false,
             plan_date: '1',
+            create_date: '1',
         };
     },
     components: {
@@ -79,17 +87,25 @@ export default {
             m = m < 10 ? ('0' + m) : m;
             var d = date.getDate();
             d = d < 10 ? ('0' + d) : d;
-            return y + '-' + m + '-' + d ;
+            return y + '-' + m + '-' + d;
         },
         export_plan_by_date: function () {
             var vue_this = this;
             var current_time = new Date();
+            var create_time = new Date();
             if (this.plan_date == '2') {
                 current_time.setDate(current_time.getDate() + 1);
             }
+            if (this.create_date == '2') {
+                create_time.setDate(create_time.getDate() - 1);
+            }
+            var create_date_string = "";
+            if (this.create_date != '1') {
+                create_date_string = this.formatDateTime(create_time);
+            }
             var plan_date_string = this.formatDateTime(current_time);
             console.log(plan_date_string);
-            vue_this.$call_remote_process("stuff_plan_management", 'export_plan_by_plan_date', [vue_this.$cookies.get('pa_ssid'), plan_date_string]).then(function (resp) {
+            vue_this.$call_remote_process("stuff_plan_management", 'export_plan_by_plan_date', [vue_this.$cookies.get('pa_ssid'), plan_date_string, create_date_string]).then(function (resp) {
                 vue_this.download_url = vue_this.$remote_url + resp;
                 vue_this.show_export_file = true;
             });

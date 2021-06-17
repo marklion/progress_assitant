@@ -2702,12 +2702,16 @@ stuff_plan_management_export_plan_by_plan_date_args = class {
   constructor(args) {
     this.ssid = null;
     this.plan_date = null;
+    this.create_date = null;
     if (args) {
       if (args.ssid !== undefined && args.ssid !== null) {
         this.ssid = args.ssid;
       }
       if (args.plan_date !== undefined && args.plan_date !== null) {
         this.plan_date = args.plan_date;
+      }
+      if (args.create_date !== undefined && args.create_date !== null) {
+        this.create_date = args.create_date;
       }
     }
   }
@@ -2736,6 +2740,13 @@ stuff_plan_management_export_plan_by_plan_date_args = class {
           input.skip(ftype);
         }
         break;
+        case 3:
+        if (ftype == Thrift.Type.STRING) {
+          this.create_date = input.readString().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
         default:
           input.skip(ftype);
       }
@@ -2755,6 +2766,11 @@ stuff_plan_management_export_plan_by_plan_date_args = class {
     if (this.plan_date !== null && this.plan_date !== undefined) {
       output.writeFieldBegin('plan_date', Thrift.Type.STRING, 2);
       output.writeString(this.plan_date);
+      output.writeFieldEnd();
+    }
+    if (this.create_date !== null && this.create_date !== undefined) {
+      output.writeFieldBegin('create_date', Thrift.Type.STRING, 3);
+      output.writeString(this.create_date);
       output.writeFieldEnd();
     }
     output.writeFieldStop();
@@ -4538,19 +4554,20 @@ stuff_plan_managementClient = class stuff_plan_managementClient {
     throw 'plan_created_by_user failed: unknown result';
   }
 
-  export_plan_by_plan_date (ssid, plan_date) {
+  export_plan_by_plan_date (ssid, plan_date, create_date) {
     const self = this;
     return new Promise((resolve, reject) => {
-      self.send_export_plan_by_plan_date(ssid, plan_date, (error, result) => {
+      self.send_export_plan_by_plan_date(ssid, plan_date, create_date, (error, result) => {
         return error ? reject(error) : resolve(result);
       });
     });
   }
 
-  send_export_plan_by_plan_date (ssid, plan_date, callback) {
+  send_export_plan_by_plan_date (ssid, plan_date, create_date, callback) {
     const params = {
       ssid: ssid,
-      plan_date: plan_date
+      plan_date: plan_date,
+      create_date: create_date
     };
     const args = new stuff_plan_management_export_plan_by_plan_date_args(params);
     try {
