@@ -51,6 +51,8 @@ class company_managementIf {
   virtual void del_contract(const std::string& ssid, const int64_t id) = 0;
   virtual void get_all_contract(std::vector<common_contract> & _return, const std::string& ssid) = 0;
   virtual void get_contract(common_contract& _return, const std::string& a_side_company, const std::string& b_side_company) = 0;
+  virtual bool set_work_time(const std::string& ssid, const int64_t start_work_time, const int64_t end_work_time) = 0;
+  virtual void get_work_time(company_work_time& _return, const std::string& company_name) = 0;
 };
 
 class company_managementIfFactory {
@@ -175,6 +177,13 @@ class company_managementNull : virtual public company_managementIf {
     return;
   }
   void get_contract(common_contract& /* _return */, const std::string& /* a_side_company */, const std::string& /* b_side_company */) {
+    return;
+  }
+  bool set_work_time(const std::string& /* ssid */, const int64_t /* start_work_time */, const int64_t /* end_work_time */) {
+    bool _return = false;
+    return _return;
+  }
+  void get_work_time(company_work_time& /* _return */, const std::string& /* company_name */) {
     return;
   }
 };
@@ -3535,6 +3544,244 @@ class company_management_get_contract_presult {
 
 };
 
+typedef struct _company_management_set_work_time_args__isset {
+  _company_management_set_work_time_args__isset() : ssid(false), start_work_time(false), end_work_time(false) {}
+  bool ssid :1;
+  bool start_work_time :1;
+  bool end_work_time :1;
+} _company_management_set_work_time_args__isset;
+
+class company_management_set_work_time_args {
+ public:
+
+  company_management_set_work_time_args(const company_management_set_work_time_args&);
+  company_management_set_work_time_args& operator=(const company_management_set_work_time_args&);
+  company_management_set_work_time_args() : ssid(), start_work_time(0), end_work_time(0) {
+  }
+
+  virtual ~company_management_set_work_time_args() noexcept;
+  std::string ssid;
+  int64_t start_work_time;
+  int64_t end_work_time;
+
+  _company_management_set_work_time_args__isset __isset;
+
+  void __set_ssid(const std::string& val);
+
+  void __set_start_work_time(const int64_t val);
+
+  void __set_end_work_time(const int64_t val);
+
+  bool operator == (const company_management_set_work_time_args & rhs) const
+  {
+    if (!(ssid == rhs.ssid))
+      return false;
+    if (!(start_work_time == rhs.start_work_time))
+      return false;
+    if (!(end_work_time == rhs.end_work_time))
+      return false;
+    return true;
+  }
+  bool operator != (const company_management_set_work_time_args &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const company_management_set_work_time_args & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+
+class company_management_set_work_time_pargs {
+ public:
+
+
+  virtual ~company_management_set_work_time_pargs() noexcept;
+  const std::string* ssid;
+  const int64_t* start_work_time;
+  const int64_t* end_work_time;
+
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _company_management_set_work_time_result__isset {
+  _company_management_set_work_time_result__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _company_management_set_work_time_result__isset;
+
+class company_management_set_work_time_result {
+ public:
+
+  company_management_set_work_time_result(const company_management_set_work_time_result&);
+  company_management_set_work_time_result& operator=(const company_management_set_work_time_result&);
+  company_management_set_work_time_result() : success(0) {
+  }
+
+  virtual ~company_management_set_work_time_result() noexcept;
+  bool success;
+  gen_exp e;
+
+  _company_management_set_work_time_result__isset __isset;
+
+  void __set_success(const bool val);
+
+  void __set_e(const gen_exp& val);
+
+  bool operator == (const company_management_set_work_time_result & rhs) const
+  {
+    if (!(success == rhs.success))
+      return false;
+    if (!(e == rhs.e))
+      return false;
+    return true;
+  }
+  bool operator != (const company_management_set_work_time_result &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const company_management_set_work_time_result & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _company_management_set_work_time_presult__isset {
+  _company_management_set_work_time_presult__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _company_management_set_work_time_presult__isset;
+
+class company_management_set_work_time_presult {
+ public:
+
+
+  virtual ~company_management_set_work_time_presult() noexcept;
+  bool* success;
+  gen_exp e;
+
+  _company_management_set_work_time_presult__isset __isset;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+
+};
+
+typedef struct _company_management_get_work_time_args__isset {
+  _company_management_get_work_time_args__isset() : company_name(false) {}
+  bool company_name :1;
+} _company_management_get_work_time_args__isset;
+
+class company_management_get_work_time_args {
+ public:
+
+  company_management_get_work_time_args(const company_management_get_work_time_args&);
+  company_management_get_work_time_args& operator=(const company_management_get_work_time_args&);
+  company_management_get_work_time_args() : company_name() {
+  }
+
+  virtual ~company_management_get_work_time_args() noexcept;
+  std::string company_name;
+
+  _company_management_get_work_time_args__isset __isset;
+
+  void __set_company_name(const std::string& val);
+
+  bool operator == (const company_management_get_work_time_args & rhs) const
+  {
+    if (!(company_name == rhs.company_name))
+      return false;
+    return true;
+  }
+  bool operator != (const company_management_get_work_time_args &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const company_management_get_work_time_args & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+
+class company_management_get_work_time_pargs {
+ public:
+
+
+  virtual ~company_management_get_work_time_pargs() noexcept;
+  const std::string* company_name;
+
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _company_management_get_work_time_result__isset {
+  _company_management_get_work_time_result__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _company_management_get_work_time_result__isset;
+
+class company_management_get_work_time_result {
+ public:
+
+  company_management_get_work_time_result(const company_management_get_work_time_result&);
+  company_management_get_work_time_result& operator=(const company_management_get_work_time_result&);
+  company_management_get_work_time_result() {
+  }
+
+  virtual ~company_management_get_work_time_result() noexcept;
+  company_work_time success;
+  gen_exp e;
+
+  _company_management_get_work_time_result__isset __isset;
+
+  void __set_success(const company_work_time& val);
+
+  void __set_e(const gen_exp& val);
+
+  bool operator == (const company_management_get_work_time_result & rhs) const
+  {
+    if (!(success == rhs.success))
+      return false;
+    if (!(e == rhs.e))
+      return false;
+    return true;
+  }
+  bool operator != (const company_management_get_work_time_result &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const company_management_get_work_time_result & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _company_management_get_work_time_presult__isset {
+  _company_management_get_work_time_presult__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _company_management_get_work_time_presult__isset;
+
+class company_management_get_work_time_presult {
+ public:
+
+
+  virtual ~company_management_get_work_time_presult() noexcept;
+  company_work_time* success;
+  gen_exp e;
+
+  _company_management_get_work_time_presult__isset __isset;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+
+};
+
 class company_managementClient : virtual public company_managementIf {
  public:
   company_managementClient(std::shared_ptr< ::apache::thrift::protocol::TProtocol> prot) {
@@ -3647,6 +3894,12 @@ class company_managementClient : virtual public company_managementIf {
   void get_contract(common_contract& _return, const std::string& a_side_company, const std::string& b_side_company);
   void send_get_contract(const std::string& a_side_company, const std::string& b_side_company);
   void recv_get_contract(common_contract& _return);
+  bool set_work_time(const std::string& ssid, const int64_t start_work_time, const int64_t end_work_time);
+  void send_set_work_time(const std::string& ssid, const int64_t start_work_time, const int64_t end_work_time);
+  bool recv_set_work_time();
+  void get_work_time(company_work_time& _return, const std::string& company_name);
+  void send_get_work_time(const std::string& company_name);
+  void recv_get_work_time(company_work_time& _return);
  protected:
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> piprot_;
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> poprot_;
@@ -3691,6 +3944,8 @@ class company_managementProcessor : public ::apache::thrift::TDispatchProcessor 
   void process_del_contract(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
   void process_get_all_contract(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
   void process_get_contract(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
+  void process_set_work_time(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
+  void process_get_work_time(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
  public:
   company_managementProcessor(::std::shared_ptr<company_managementIf> iface) :
     iface_(iface) {
@@ -3723,6 +3978,8 @@ class company_managementProcessor : public ::apache::thrift::TDispatchProcessor 
     processMap_["del_contract"] = &company_managementProcessor::process_del_contract;
     processMap_["get_all_contract"] = &company_managementProcessor::process_get_all_contract;
     processMap_["get_contract"] = &company_managementProcessor::process_get_contract;
+    processMap_["set_work_time"] = &company_managementProcessor::process_set_work_time;
+    processMap_["get_work_time"] = &company_managementProcessor::process_get_work_time;
   }
 
   virtual ~company_managementProcessor() {}
@@ -4027,6 +4284,25 @@ class company_managementMultiface : virtual public company_managementIf {
     return;
   }
 
+  bool set_work_time(const std::string& ssid, const int64_t start_work_time, const int64_t end_work_time) {
+    size_t sz = ifaces_.size();
+    size_t i = 0;
+    for (; i < (sz - 1); ++i) {
+      ifaces_[i]->set_work_time(ssid, start_work_time, end_work_time);
+    }
+    return ifaces_[i]->set_work_time(ssid, start_work_time, end_work_time);
+  }
+
+  void get_work_time(company_work_time& _return, const std::string& company_name) {
+    size_t sz = ifaces_.size();
+    size_t i = 0;
+    for (; i < (sz - 1); ++i) {
+      ifaces_[i]->get_work_time(_return, company_name);
+    }
+    ifaces_[i]->get_work_time(_return, company_name);
+    return;
+  }
+
 };
 
 // The 'concurrent' client is a thread safe client that correctly handles
@@ -4146,6 +4422,12 @@ class company_managementConcurrentClient : virtual public company_managementIf {
   void get_contract(common_contract& _return, const std::string& a_side_company, const std::string& b_side_company);
   int32_t send_get_contract(const std::string& a_side_company, const std::string& b_side_company);
   void recv_get_contract(common_contract& _return, const int32_t seqid);
+  bool set_work_time(const std::string& ssid, const int64_t start_work_time, const int64_t end_work_time);
+  int32_t send_set_work_time(const std::string& ssid, const int64_t start_work_time, const int64_t end_work_time);
+  bool recv_set_work_time(const int32_t seqid);
+  void get_work_time(company_work_time& _return, const std::string& company_name);
+  int32_t send_get_work_time(const std::string& company_name);
+  void recv_get_work_time(company_work_time& _return, const int32_t seqid);
  protected:
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> piprot_;
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> poprot_;

@@ -1777,6 +1777,118 @@ void real_access_record::printTo(std::ostream& out) const {
 }
 
 
+company_work_time::~company_work_time() noexcept {
+}
+
+
+void company_work_time::__set_start_time(const int64_t val) {
+  this->start_time = val;
+}
+
+void company_work_time::__set_end_time(const int64_t val) {
+  this->end_time = val;
+}
+std::ostream& operator<<(std::ostream& out, const company_work_time& obj)
+{
+  obj.printTo(out);
+  return out;
+}
+
+
+uint32_t company_work_time::read(::apache::thrift::protocol::TProtocol* iprot) {
+
+  ::apache::thrift::protocol::TInputRecursionTracker tracker(*iprot);
+  uint32_t xfer = 0;
+  std::string fname;
+  ::apache::thrift::protocol::TType ftype;
+  int16_t fid;
+
+  xfer += iprot->readStructBegin(fname);
+
+  using ::apache::thrift::protocol::TProtocolException;
+
+
+  while (true)
+  {
+    xfer += iprot->readFieldBegin(fname, ftype, fid);
+    if (ftype == ::apache::thrift::protocol::T_STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 1:
+        if (ftype == ::apache::thrift::protocol::T_I64) {
+          xfer += iprot->readI64(this->start_time);
+          this->__isset.start_time = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 2:
+        if (ftype == ::apache::thrift::protocol::T_I64) {
+          xfer += iprot->readI64(this->end_time);
+          this->__isset.end_time = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      default:
+        xfer += iprot->skip(ftype);
+        break;
+    }
+    xfer += iprot->readFieldEnd();
+  }
+
+  xfer += iprot->readStructEnd();
+
+  return xfer;
+}
+
+uint32_t company_work_time::write(::apache::thrift::protocol::TProtocol* oprot) const {
+  uint32_t xfer = 0;
+  ::apache::thrift::protocol::TOutputRecursionTracker tracker(*oprot);
+  xfer += oprot->writeStructBegin("company_work_time");
+
+  xfer += oprot->writeFieldBegin("start_time", ::apache::thrift::protocol::T_I64, 1);
+  xfer += oprot->writeI64(this->start_time);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("end_time", ::apache::thrift::protocol::T_I64, 2);
+  xfer += oprot->writeI64(this->end_time);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldStop();
+  xfer += oprot->writeStructEnd();
+  return xfer;
+}
+
+void swap(company_work_time &a, company_work_time &b) {
+  using ::std::swap;
+  swap(a.start_time, b.start_time);
+  swap(a.end_time, b.end_time);
+  swap(a.__isset, b.__isset);
+}
+
+company_work_time::company_work_time(const company_work_time& other22) {
+  start_time = other22.start_time;
+  end_time = other22.end_time;
+  __isset = other22.__isset;
+}
+company_work_time& company_work_time::operator=(const company_work_time& other23) {
+  start_time = other23.start_time;
+  end_time = other23.end_time;
+  __isset = other23.__isset;
+  return *this;
+}
+void company_work_time::printTo(std::ostream& out) const {
+  using ::apache::thrift::to_string;
+  out << "company_work_time(";
+  out << "start_time=" << to_string(start_time);
+  out << ", " << "end_time=" << to_string(end_time);
+  out << ")";
+}
+
+
 plan_confirm_info::~plan_confirm_info() noexcept {
 }
 
@@ -1869,15 +1981,15 @@ void swap(plan_confirm_info &a, plan_confirm_info &b) {
   swap(a.__isset, b.__isset);
 }
 
-plan_confirm_info::plan_confirm_info(const plan_confirm_info& other22) {
-  timestamp = other22.timestamp;
-  name = other22.name;
-  __isset = other22.__isset;
+plan_confirm_info::plan_confirm_info(const plan_confirm_info& other24) {
+  timestamp = other24.timestamp;
+  name = other24.name;
+  __isset = other24.__isset;
 }
-plan_confirm_info& plan_confirm_info::operator=(const plan_confirm_info& other23) {
-  timestamp = other23.timestamp;
-  name = other23.name;
-  __isset = other23.__isset;
+plan_confirm_info& plan_confirm_info::operator=(const plan_confirm_info& other25) {
+  timestamp = other25.timestamp;
+  name = other25.name;
+  __isset = other25.__isset;
   return *this;
 }
 void plan_confirm_info::printTo(std::ostream& out) const {
@@ -1981,15 +2093,15 @@ void swap(pay_confirm_info &a, pay_confirm_info &b) {
   swap(a.__isset, b.__isset);
 }
 
-pay_confirm_info::pay_confirm_info(const pay_confirm_info& other24) {
-  timestamp = other24.timestamp;
-  name = other24.name;
-  __isset = other24.__isset;
+pay_confirm_info::pay_confirm_info(const pay_confirm_info& other26) {
+  timestamp = other26.timestamp;
+  name = other26.name;
+  __isset = other26.__isset;
 }
-pay_confirm_info& pay_confirm_info::operator=(const pay_confirm_info& other25) {
-  timestamp = other25.timestamp;
-  name = other25.name;
-  __isset = other25.__isset;
+pay_confirm_info& pay_confirm_info::operator=(const pay_confirm_info& other27) {
+  timestamp = other27.timestamp;
+  name = other27.name;
+  __isset = other27.__isset;
   return *this;
 }
 void pay_confirm_info::printTo(std::ostream& out) const {
@@ -2229,31 +2341,31 @@ void swap(vichele_in_plan &a, vichele_in_plan &b) {
   swap(a.__isset, b.__isset);
 }
 
-vichele_in_plan::vichele_in_plan(const vichele_in_plan& other26) {
-  main_vichele = other26.main_vichele;
-  behind_vichele = other26.behind_vichele;
-  driver_name = other26.driver_name;
-  driver_phone = other26.driver_phone;
-  count = other26.count;
-  drop_address = other26.drop_address;
-  use_for = other26.use_for;
-  vichele_id = other26.vichele_id;
-  finish = other26.finish;
-  deliver_timestamp = other26.deliver_timestamp;
-  __isset = other26.__isset;
+vichele_in_plan::vichele_in_plan(const vichele_in_plan& other28) {
+  main_vichele = other28.main_vichele;
+  behind_vichele = other28.behind_vichele;
+  driver_name = other28.driver_name;
+  driver_phone = other28.driver_phone;
+  count = other28.count;
+  drop_address = other28.drop_address;
+  use_for = other28.use_for;
+  vichele_id = other28.vichele_id;
+  finish = other28.finish;
+  deliver_timestamp = other28.deliver_timestamp;
+  __isset = other28.__isset;
 }
-vichele_in_plan& vichele_in_plan::operator=(const vichele_in_plan& other27) {
-  main_vichele = other27.main_vichele;
-  behind_vichele = other27.behind_vichele;
-  driver_name = other27.driver_name;
-  driver_phone = other27.driver_phone;
-  count = other27.count;
-  drop_address = other27.drop_address;
-  use_for = other27.use_for;
-  vichele_id = other27.vichele_id;
-  finish = other27.finish;
-  deliver_timestamp = other27.deliver_timestamp;
-  __isset = other27.__isset;
+vichele_in_plan& vichele_in_plan::operator=(const vichele_in_plan& other29) {
+  main_vichele = other29.main_vichele;
+  behind_vichele = other29.behind_vichele;
+  driver_name = other29.driver_name;
+  driver_phone = other29.driver_phone;
+  count = other29.count;
+  drop_address = other29.drop_address;
+  use_for = other29.use_for;
+  vichele_id = other29.vichele_id;
+  finish = other29.finish;
+  deliver_timestamp = other29.deliver_timestamp;
+  __isset = other29.__isset;
   return *this;
 }
 void vichele_in_plan::printTo(std::ostream& out) const {
@@ -2384,14 +2496,14 @@ uint32_t stuff_plan::read(::apache::thrift::protocol::TProtocol* iprot) {
         if (ftype == ::apache::thrift::protocol::T_LIST) {
           {
             this->vichele_info.clear();
-            uint32_t _size28;
-            ::apache::thrift::protocol::TType _etype31;
-            xfer += iprot->readListBegin(_etype31, _size28);
-            this->vichele_info.resize(_size28);
-            uint32_t _i32;
-            for (_i32 = 0; _i32 < _size28; ++_i32)
+            uint32_t _size30;
+            ::apache::thrift::protocol::TType _etype33;
+            xfer += iprot->readListBegin(_etype33, _size30);
+            this->vichele_info.resize(_size30);
+            uint32_t _i34;
+            for (_i34 = 0; _i34 < _size30; ++_i34)
             {
-              xfer += this->vichele_info[_i32].read(iprot);
+              xfer += this->vichele_info[_i34].read(iprot);
             }
             xfer += iprot->readListEnd();
           }
@@ -2524,10 +2636,10 @@ uint32_t stuff_plan::write(::apache::thrift::protocol::TProtocol* oprot) const {
   xfer += oprot->writeFieldBegin("vichele_info", ::apache::thrift::protocol::T_LIST, 3);
   {
     xfer += oprot->writeListBegin(::apache::thrift::protocol::T_STRUCT, static_cast<uint32_t>(this->vichele_info.size()));
-    std::vector<vichele_in_plan> ::const_iterator _iter33;
-    for (_iter33 = this->vichele_info.begin(); _iter33 != this->vichele_info.end(); ++_iter33)
+    std::vector<vichele_in_plan> ::const_iterator _iter35;
+    for (_iter35 = this->vichele_info.begin(); _iter35 != this->vichele_info.end(); ++_iter35)
     {
-      xfer += (*_iter33).write(oprot);
+      xfer += (*_iter35).write(oprot);
     }
     xfer += oprot->writeListEnd();
   }
@@ -2606,41 +2718,41 @@ void swap(stuff_plan &a, stuff_plan &b) {
   swap(a.__isset, b.__isset);
 }
 
-stuff_plan::stuff_plan(const stuff_plan& other34) {
-  type_id = other34.type_id;
-  count = other34.count;
-  vichele_info = other34.vichele_info;
-  plan_id = other34.plan_id;
-  plan_time = other34.plan_time;
-  created_time = other34.created_time;
-  name = other34.name;
-  price = other34.price;
-  status = other34.status;
-  proxy_company = other34.proxy_company;
-  created_user_name = other34.created_user_name;
-  buy_company = other34.buy_company;
-  sale_company = other34.sale_company;
-  comment = other34.comment;
-  is_cancel = other34.is_cancel;
-  __isset = other34.__isset;
+stuff_plan::stuff_plan(const stuff_plan& other36) {
+  type_id = other36.type_id;
+  count = other36.count;
+  vichele_info = other36.vichele_info;
+  plan_id = other36.plan_id;
+  plan_time = other36.plan_time;
+  created_time = other36.created_time;
+  name = other36.name;
+  price = other36.price;
+  status = other36.status;
+  proxy_company = other36.proxy_company;
+  created_user_name = other36.created_user_name;
+  buy_company = other36.buy_company;
+  sale_company = other36.sale_company;
+  comment = other36.comment;
+  is_cancel = other36.is_cancel;
+  __isset = other36.__isset;
 }
-stuff_plan& stuff_plan::operator=(const stuff_plan& other35) {
-  type_id = other35.type_id;
-  count = other35.count;
-  vichele_info = other35.vichele_info;
-  plan_id = other35.plan_id;
-  plan_time = other35.plan_time;
-  created_time = other35.created_time;
-  name = other35.name;
-  price = other35.price;
-  status = other35.status;
-  proxy_company = other35.proxy_company;
-  created_user_name = other35.created_user_name;
-  buy_company = other35.buy_company;
-  sale_company = other35.sale_company;
-  comment = other35.comment;
-  is_cancel = other35.is_cancel;
-  __isset = other35.__isset;
+stuff_plan& stuff_plan::operator=(const stuff_plan& other37) {
+  type_id = other37.type_id;
+  count = other37.count;
+  vichele_info = other37.vichele_info;
+  plan_id = other37.plan_id;
+  plan_time = other37.plan_time;
+  created_time = other37.created_time;
+  name = other37.name;
+  price = other37.price;
+  status = other37.status;
+  proxy_company = other37.proxy_company;
+  created_user_name = other37.created_user_name;
+  buy_company = other37.buy_company;
+  sale_company = other37.sale_company;
+  comment = other37.comment;
+  is_cancel = other37.is_cancel;
+  __isset = other37.__isset;
   return *this;
 }
 void stuff_plan::printTo(std::ostream& out) const {
@@ -2825,23 +2937,23 @@ void swap(plan_status &a, plan_status &b) {
   swap(a.__isset, b.__isset);
 }
 
-plan_status::plan_status(const plan_status& other36) {
-  plan_id = other36.plan_id;
-  status = other36.status;
-  plan_time = other36.plan_time;
-  conflict_reason = other36.conflict_reason;
-  status_prompt = other36.status_prompt;
-  is_cancel = other36.is_cancel;
-  __isset = other36.__isset;
+plan_status::plan_status(const plan_status& other38) {
+  plan_id = other38.plan_id;
+  status = other38.status;
+  plan_time = other38.plan_time;
+  conflict_reason = other38.conflict_reason;
+  status_prompt = other38.status_prompt;
+  is_cancel = other38.is_cancel;
+  __isset = other38.__isset;
 }
-plan_status& plan_status::operator=(const plan_status& other37) {
-  plan_id = other37.plan_id;
-  status = other37.status;
-  plan_time = other37.plan_time;
-  conflict_reason = other37.conflict_reason;
-  status_prompt = other37.status_prompt;
-  is_cancel = other37.is_cancel;
-  __isset = other37.__isset;
+plan_status& plan_status::operator=(const plan_status& other39) {
+  plan_id = other39.plan_id;
+  status = other39.status;
+  plan_time = other39.plan_time;
+  conflict_reason = other39.conflict_reason;
+  status_prompt = other39.status_prompt;
+  is_cancel = other39.is_cancel;
+  __isset = other39.__isset;
   return *this;
 }
 void plan_status::printTo(std::ostream& out) const {
@@ -2949,15 +3061,15 @@ void swap(plan_number_id &a, plan_number_id &b) {
   swap(a.__isset, b.__isset);
 }
 
-plan_number_id::plan_number_id(const plan_number_id& other38) {
-  id = other38.id;
-  number = other38.number;
-  __isset = other38.__isset;
+plan_number_id::plan_number_id(const plan_number_id& other40) {
+  id = other40.id;
+  number = other40.number;
+  __isset = other40.__isset;
 }
-plan_number_id& plan_number_id::operator=(const plan_number_id& other39) {
-  id = other39.id;
-  number = other39.number;
-  __isset = other39.__isset;
+plan_number_id& plan_number_id::operator=(const plan_number_id& other41) {
+  id = other41.id;
+  number = other41.number;
+  __isset = other41.__isset;
   return *this;
 }
 void plan_number_id::printTo(std::ostream& out) const {
@@ -3061,15 +3173,15 @@ void swap(deliver_info &a, deliver_info &b) {
   swap(a.__isset, b.__isset);
 }
 
-deliver_info::deliver_info(const deliver_info& other40) {
-  id = other40.id;
-  count = other40.count;
-  __isset = other40.__isset;
+deliver_info::deliver_info(const deliver_info& other42) {
+  id = other42.id;
+  count = other42.count;
+  __isset = other42.__isset;
 }
-deliver_info& deliver_info::operator=(const deliver_info& other41) {
-  id = other41.id;
-  count = other41.count;
-  __isset = other41.__isset;
+deliver_info& deliver_info::operator=(const deliver_info& other43) {
+  id = other43.id;
+  count = other43.count;
+  __isset = other43.__isset;
   return *this;
 }
 void deliver_info::printTo(std::ostream& out) const {
@@ -3275,27 +3387,27 @@ void swap(vichele_statistics &a, vichele_statistics &b) {
   swap(a.__isset, b.__isset);
 }
 
-vichele_statistics::vichele_statistics(const vichele_statistics& other42) {
-  company = other42.company;
-  main_vichele = other42.main_vichele;
-  behind_vichele = other42.behind_vichele;
-  driver_name = other42.driver_name;
-  driver_phone = other42.driver_phone;
-  delivered = other42.delivered;
-  plan_id = other42.plan_id;
-  plan_order = other42.plan_order;
-  __isset = other42.__isset;
+vichele_statistics::vichele_statistics(const vichele_statistics& other44) {
+  company = other44.company;
+  main_vichele = other44.main_vichele;
+  behind_vichele = other44.behind_vichele;
+  driver_name = other44.driver_name;
+  driver_phone = other44.driver_phone;
+  delivered = other44.delivered;
+  plan_id = other44.plan_id;
+  plan_order = other44.plan_order;
+  __isset = other44.__isset;
 }
-vichele_statistics& vichele_statistics::operator=(const vichele_statistics& other43) {
-  company = other43.company;
-  main_vichele = other43.main_vichele;
-  behind_vichele = other43.behind_vichele;
-  driver_name = other43.driver_name;
-  driver_phone = other43.driver_phone;
-  delivered = other43.delivered;
-  plan_id = other43.plan_id;
-  plan_order = other43.plan_order;
-  __isset = other43.__isset;
+vichele_statistics& vichele_statistics::operator=(const vichele_statistics& other45) {
+  company = other45.company;
+  main_vichele = other45.main_vichele;
+  behind_vichele = other45.behind_vichele;
+  driver_name = other45.driver_name;
+  driver_phone = other45.driver_phone;
+  delivered = other45.delivered;
+  plan_id = other45.plan_id;
+  plan_order = other45.plan_order;
+  __isset = other45.__isset;
   return *this;
 }
 void vichele_statistics::printTo(std::ostream& out) const {
@@ -3439,19 +3551,19 @@ void swap(vichele_search_result &a, vichele_search_result &b) {
   swap(a.__isset, b.__isset);
 }
 
-vichele_search_result::vichele_search_result(const vichele_search_result& other44) {
-  plan_info = other44.plan_info;
-  vichele_numbers = other44.vichele_numbers;
-  plan_time = other44.plan_time;
-  status = other44.status;
-  __isset = other44.__isset;
+vichele_search_result::vichele_search_result(const vichele_search_result& other46) {
+  plan_info = other46.plan_info;
+  vichele_numbers = other46.vichele_numbers;
+  plan_time = other46.plan_time;
+  status = other46.status;
+  __isset = other46.__isset;
 }
-vichele_search_result& vichele_search_result::operator=(const vichele_search_result& other45) {
-  plan_info = other45.plan_info;
-  vichele_numbers = other45.vichele_numbers;
-  plan_time = other45.plan_time;
-  status = other45.status;
-  __isset = other45.__isset;
+vichele_search_result& vichele_search_result::operator=(const vichele_search_result& other47) {
+  plan_info = other47.plan_info;
+  vichele_numbers = other47.vichele_numbers;
+  plan_time = other47.plan_time;
+  status = other47.status;
+  __isset = other47.__isset;
   return *this;
 }
 void vichele_search_result::printTo(std::ostream& out) const {
@@ -3591,19 +3703,19 @@ void swap(company_plan_brief &a, company_plan_brief &b) {
   swap(a.__isset, b.__isset);
 }
 
-company_plan_brief::company_plan_brief(const company_plan_brief& other46) {
-  today_plan_count = other46.today_plan_count;
-  today_vichele_count = other46.today_vichele_count;
-  tomorrow_plan_count = other46.tomorrow_plan_count;
-  tomorrow_vichele_count = other46.tomorrow_vichele_count;
-  __isset = other46.__isset;
+company_plan_brief::company_plan_brief(const company_plan_brief& other48) {
+  today_plan_count = other48.today_plan_count;
+  today_vichele_count = other48.today_vichele_count;
+  tomorrow_plan_count = other48.tomorrow_plan_count;
+  tomorrow_vichele_count = other48.tomorrow_vichele_count;
+  __isset = other48.__isset;
 }
-company_plan_brief& company_plan_brief::operator=(const company_plan_brief& other47) {
-  today_plan_count = other47.today_plan_count;
-  today_vichele_count = other47.today_vichele_count;
-  tomorrow_plan_count = other47.tomorrow_plan_count;
-  tomorrow_vichele_count = other47.tomorrow_vichele_count;
-  __isset = other47.__isset;
+company_plan_brief& company_plan_brief::operator=(const company_plan_brief& other49) {
+  today_plan_count = other49.today_plan_count;
+  today_vichele_count = other49.today_vichele_count;
+  tomorrow_plan_count = other49.tomorrow_plan_count;
+  tomorrow_vichele_count = other49.tomorrow_vichele_count;
+  __isset = other49.__isset;
   return *this;
 }
 void company_plan_brief::printTo(std::ostream& out) const {

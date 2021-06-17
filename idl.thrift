@@ -100,6 +100,10 @@ struct real_access_record {
     5:string attachment,
 }
 
+struct company_work_time{
+    1:i64 start_time,
+    2:i64 end_time,
+}
 
 service company_management {
     list<i64> get_all_type(1:string ssid) throws (1:gen_exp e),
@@ -131,6 +135,8 @@ service company_management {
     void del_contract(1:string ssid, 2:i64 id) throws (1:gen_exp e),
     list<common_contract> get_all_contract(1:string ssid) throws (1:gen_exp e),
     common_contract get_contract(1:string a_side_company, 2:string b_side_company) throws (1:gen_exp e),
+    bool set_work_time(1:string ssid, 2:i64 start_work_time, 3:i64 end_work_time) throws (1:gen_exp e),
+    company_work_time get_work_time(1:string company_name) throws (1:gen_exp e),
 }
 
 service stuff_info {

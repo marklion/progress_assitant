@@ -30,9 +30,28 @@ static std::vector<std::string> prepare_vichels(const std::string &_vicheles)
 class stuff_plan_management_handler : virtual public stuff_plan_managementIf
 {
 public:
+    bool company_can_work_now(pa_sql_company &_company)
+    {
+        bool ret = false;
+        auto current_time = PA_DATAOPT_current_time();
+        auto current_hour = atoi(current_time.substr(11, 2).c_str());
+        auto current_min = atoi(current_time.substr(14, 2).c_str());
+        auto total_min = current_hour * 60 + current_min;
+        if (_company.work_start_time == _company.work_end_time)
+        {
+            ret = true;
+        }
+        else if (_company.work_start_time <= total_min && _company.work_end_time > total_min)
+        {
+            ret = true;
+        }
+
+        return ret;
+    }
     virtual int64_t create_plan(const stuff_plan &plan, const std::string &ssid, const std::string &proxy_company)
     {
         sqlite_orm_lock a;
+
         int64_t ret = 0;
         auto opt_user = PA_DATAOPT_get_online_user(ssid);
         if (!opt_user)
@@ -44,6 +63,17 @@ public:
         {
             PA_RETURN_NOSTUFF_MSG();
         }
+        auto sale_company = stuff_type->get_parent<pa_sql_company>("belong_company");
+        if (!sale_company)
+        {
+            PA_RETURN_NOPRIVA_MSG();
+        }
+
+        if (false == company_can_work_now(*sale_company))
+        {
+            PA_RETURN_SALE_CLOSE();
+        }
+
         auto company = opt_user->get_parent<pa_sql_company>("belong_company");
         if (!company)
         {
@@ -248,7 +278,22 @@ public:
         {
             PA_RETURN_NOPLAN_MSG();
         }
-        
+
+        auto stuff_info = plan_in_sql->get_parent<pa_sql_stuff_info>("belong_stuff");
+        if (!stuff_info)
+        {
+            PA_RETURN_NOSTUFF_MSG();
+        }
+        auto sale_company = stuff_info->get_parent<pa_sql_company>("belong_company");
+        if (!sale_company)
+        {
+            PA_RETURN_NOPRIVA_MSG();
+        }
+
+        if (false == company_can_work_now(*sale_company))
+        {
+            PA_RETURN_SALE_CLOSE();
+        }
         auto company = opt_user->get_parent<pa_sql_company>("belong_company");
         if (!company)
         {
