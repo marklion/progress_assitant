@@ -90,6 +90,7 @@ struct common_contract {
     5:string number,
     6:i64 id,
     7:i64 status,
+    8:string customer_code,
 }
 
 struct real_access_record {

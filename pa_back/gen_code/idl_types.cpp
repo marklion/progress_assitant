@@ -1424,6 +1424,10 @@ void common_contract::__set_id(const int64_t val) {
 void common_contract::__set_status(const int64_t val) {
   this->status = val;
 }
+
+void common_contract::__set_customer_code(const std::string& val) {
+  this->customer_code = val;
+}
 std::ostream& operator<<(std::ostream& out, const common_contract& obj)
 {
   obj.printTo(out);
@@ -1508,6 +1512,14 @@ uint32_t common_contract::read(::apache::thrift::protocol::TProtocol* iprot) {
           xfer += iprot->skip(ftype);
         }
         break;
+      case 8:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->customer_code);
+          this->__isset.customer_code = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
       default:
         xfer += iprot->skip(ftype);
         break;
@@ -1553,6 +1565,10 @@ uint32_t common_contract::write(::apache::thrift::protocol::TProtocol* oprot) co
   xfer += oprot->writeI64(this->status);
   xfer += oprot->writeFieldEnd();
 
+  xfer += oprot->writeFieldBegin("customer_code", ::apache::thrift::protocol::T_STRING, 8);
+  xfer += oprot->writeString(this->customer_code);
+  xfer += oprot->writeFieldEnd();
+
   xfer += oprot->writeFieldStop();
   xfer += oprot->writeStructEnd();
   return xfer;
@@ -1567,6 +1583,7 @@ void swap(common_contract &a, common_contract &b) {
   swap(a.number, b.number);
   swap(a.id, b.id);
   swap(a.status, b.status);
+  swap(a.customer_code, b.customer_code);
   swap(a.__isset, b.__isset);
 }
 
@@ -1578,6 +1595,7 @@ common_contract::common_contract(const common_contract& other18) {
   number = other18.number;
   id = other18.id;
   status = other18.status;
+  customer_code = other18.customer_code;
   __isset = other18.__isset;
 }
 common_contract& common_contract::operator=(const common_contract& other19) {
@@ -1588,6 +1606,7 @@ common_contract& common_contract::operator=(const common_contract& other19) {
   number = other19.number;
   id = other19.id;
   status = other19.status;
+  customer_code = other19.customer_code;
   __isset = other19.__isset;
   return *this;
 }
@@ -1601,6 +1620,7 @@ void common_contract::printTo(std::ostream& out) const {
   out << ", " << "number=" << to_string(number);
   out << ", " << "id=" << to_string(id);
   out << ", " << "status=" << to_string(status);
+  out << ", " << "customer_code=" << to_string(customer_code);
   out << ")";
 }
 

@@ -608,7 +608,7 @@ void swap(plan_status_rule &a, plan_status_rule &b);
 std::ostream& operator<<(std::ostream& out, const plan_status_rule& obj);
 
 typedef struct _common_contract__isset {
-  _common_contract__isset() : a_side_company(false), b_side_company(false), start_time(false), end_time(false), number(false), id(false), status(false) {}
+  _common_contract__isset() : a_side_company(false), b_side_company(false), start_time(false), end_time(false), number(false), id(false), status(false), customer_code(false) {}
   bool a_side_company :1;
   bool b_side_company :1;
   bool start_time :1;
@@ -616,6 +616,7 @@ typedef struct _common_contract__isset {
   bool number :1;
   bool id :1;
   bool status :1;
+  bool customer_code :1;
 } _common_contract__isset;
 
 class common_contract : public virtual ::apache::thrift::TBase {
@@ -623,7 +624,7 @@ class common_contract : public virtual ::apache::thrift::TBase {
 
   common_contract(const common_contract&);
   common_contract& operator=(const common_contract&);
-  common_contract() : a_side_company(), b_side_company(), start_time(), end_time(), number(), id(0), status(0) {
+  common_contract() : a_side_company(), b_side_company(), start_time(), end_time(), number(), id(0), status(0), customer_code() {
   }
 
   virtual ~common_contract() noexcept;
@@ -634,6 +635,7 @@ class common_contract : public virtual ::apache::thrift::TBase {
   std::string number;
   int64_t id;
   int64_t status;
+  std::string customer_code;
 
   _common_contract__isset __isset;
 
@@ -651,6 +653,8 @@ class common_contract : public virtual ::apache::thrift::TBase {
 
   void __set_status(const int64_t val);
 
+  void __set_customer_code(const std::string& val);
+
   bool operator == (const common_contract & rhs) const
   {
     if (!(a_side_company == rhs.a_side_company))
@@ -666,6 +670,8 @@ class common_contract : public virtual ::apache::thrift::TBase {
     if (!(id == rhs.id))
       return false;
     if (!(status == rhs.status))
+      return false;
+    if (!(customer_code == rhs.customer_code))
       return false;
     return true;
   }

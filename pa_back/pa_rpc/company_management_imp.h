@@ -15,10 +15,8 @@ class company_management_handler : virtual public company_managementIf
 {
 public:
     company_management_handler() {
-        Py_Initialize();
     }
     ~company_management_handler() {
-        Py_Finalize();
     }
     virtual void get_all_type(std::vector<int64_t> &_return, const std::string &ssid)
     {
@@ -718,6 +716,7 @@ public:
         tmp.start_time = contract.start_time;
         tmp.set_parent(*a_side_company, "a_side");
         tmp.set_parent(*b_side_company, "b_side");
+        tmp.customer_code = contract.customer_code;
 
         ret = tmp.insert_record();
         if (ret)
@@ -787,6 +786,7 @@ public:
                 tmp.number = itr.number;
                 tmp.start_time = itr.start_time;
                 tmp.status = itr.status;
+                tmp.customer_code = itr.customer_code;
                 _return.push_back(tmp);
             }
         }
@@ -814,6 +814,7 @@ public:
         _return.number = contract->number;
         _return.start_time = contract->start_time;
         _return.status = contract->status;
+        _return.customer_code = contract->customer_code;
     }
 
     virtual bool set_work_time(const std::string &ssid, const int64_t start_work_time, const int64_t end_work_time)
@@ -858,6 +859,7 @@ public:
         contract_from_sql->end_time = contract.end_time;
         contract_from_sql->number = contract.number;
         contract_from_sql->start_time = contract.start_time;
+        contract_from_sql->customer_code = contract.customer_code;
 
         contract_from_sql->update_status();
         ret = contract_from_sql->update_record();

@@ -12,6 +12,7 @@
         <van-cell v-for="(single_contract, index) in contract" :key="index" center :label="'合同编号：' + single_contract.number">
             <template #title>
                 <span>{{my_side(single_contract)}}</span>
+                <span v-if="!$store.state.userinfo.buyer && single_contract.customer_code">({{single_contract.customer_code}})</span>
                 <span class="status_show">
                     <van-tag :type="contract_status[single_contract.status].type">{{contract_status[single_contract.status].text}}</van-tag>
                 </span>
@@ -36,6 +37,7 @@
             <van-field v-model="submit_contract.number" name="编号" label="合同编号" placeholder="请输入合同编号" :rules="[{ required:true, message:'请输入合同编号'}]" />
             <van-field name="calendar1" v-model="submit_contract.start_time" label="开始日期" placeholder="请输入开始日期yyyy/mm/dd" format-trigger="onBlur" :formatter="formatter_input_date" :rules="[{ required:true, message:'请输入开始日期'}]" />
             <van-field name="calendar2" v-model="submit_contract.end_time" label="到期日期" placeholder="请输入到期日期yyyy/mm/dd" format-trigger="onBlur" :formatter="formatter_input_date" :rules="[{ required:true, message:'请输入到期日期'}]" />
+            <van-field v-model="submit_contract.customer_code" name="客户编码" label="客户编码(可选)" placeholder="请输入客户编码"  />
             <div style="margin: 16px;">
                 <van-button round block type="info" native-type="submit">提交</van-button>
             </div>
@@ -47,6 +49,7 @@
             <van-field v-model="submit_contract.number" name="编号" label="合同编号" placeholder="请输入合同编号" :rules="[{ required:true, message:'请输入合同编号'}]" />
             <van-field name="calendar1" v-model="submit_contract.start_time" label="开始日期" placeholder="请输入开始日期yyyy/mm/dd" format-trigger="onBlur" :formatter="formatter_input_date" :rules="[{ required:true, message:'请输入开始日期'}]" />
             <van-field name="calendar2" v-model="submit_contract.end_time" label="到期日期" placeholder="请输入到期日期yyyy/mm/dd" format-trigger="onBlur" :formatter="formatter_input_date" :rules="[{ required:true, message:'请输入到期日期'}]" />
+            <van-field v-model="submit_contract.customer_code" name="客户编码" label="客户编码(可选)" placeholder="请输入客户编码"  />
             <div style="margin: 16px;">
                 <van-button round block type="info" native-type="submit">提交</van-button>
             </div>
@@ -103,6 +106,7 @@ export default {
                 a_side_company: '',
                 start_time: '',
                 end_time: '',
+                customer_code:'',
             },
             add_contract_show: false,
             update_contract_show: false,

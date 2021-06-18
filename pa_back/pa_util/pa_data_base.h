@@ -458,6 +458,7 @@ public:
     std::string end_time;
     std::string number;
     int status = 0;
+    std::string customer_code;
     pa_sql_contract() {
         add_parent_type<pa_sql_company>("a_side");
         add_parent_type<pa_sql_company>("b_side");
@@ -469,6 +470,7 @@ public:
         ret.push_back(sqlite_orm_column("end_time", sqlite_orm_column::STRING, &end_time));
         ret.push_back(sqlite_orm_column("number", sqlite_orm_column::STRING, &number));
         ret.push_back(sqlite_orm_column("status", sqlite_orm_column::INTEGER, &status));
+        ret.push_back(sqlite_orm_column("customer_code", sqlite_orm_column::STRING, &customer_code));
 
         return ret;
     }
