@@ -132,6 +132,7 @@ service company_management {
     list<real_access_record> get_real_access(1:string ssid) throws (1:gen_exp e),
     list<real_access_record> get_all_access(1:string ssid) throws (1:gen_exp e),
     bool add_contract(1:string ssid, 2:common_contract contract) throws (1:gen_exp e),
+    bool update_contract(1:string ssid, 2:common_contract contract) throws (1:gen_exp e),
     void del_contract(1:string ssid, 2:i64 id) throws (1:gen_exp e),
     list<common_contract> get_all_contract(1:string ssid) throws (1:gen_exp e),
     common_contract get_contract(1:string a_side_company, 2:string b_side_company) throws (1:gen_exp e),

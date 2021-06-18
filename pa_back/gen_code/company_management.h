@@ -48,6 +48,7 @@ class company_managementIf {
   virtual void get_real_access(std::vector<real_access_record> & _return, const std::string& ssid) = 0;
   virtual void get_all_access(std::vector<real_access_record> & _return, const std::string& ssid) = 0;
   virtual bool add_contract(const std::string& ssid, const common_contract& contract) = 0;
+  virtual bool update_contract(const std::string& ssid, const common_contract& contract) = 0;
   virtual void del_contract(const std::string& ssid, const int64_t id) = 0;
   virtual void get_all_contract(std::vector<common_contract> & _return, const std::string& ssid) = 0;
   virtual void get_contract(common_contract& _return, const std::string& a_side_company, const std::string& b_side_company) = 0;
@@ -167,6 +168,10 @@ class company_managementNull : virtual public company_managementIf {
     return;
   }
   bool add_contract(const std::string& /* ssid */, const common_contract& /* contract */) {
+    bool _return = false;
+    return _return;
+  }
+  bool update_contract(const std::string& /* ssid */, const common_contract& /* contract */) {
     bool _return = false;
     return _return;
   }
@@ -3202,6 +3207,125 @@ class company_management_add_contract_presult {
 
 };
 
+typedef struct _company_management_update_contract_args__isset {
+  _company_management_update_contract_args__isset() : ssid(false), contract(false) {}
+  bool ssid :1;
+  bool contract :1;
+} _company_management_update_contract_args__isset;
+
+class company_management_update_contract_args {
+ public:
+
+  company_management_update_contract_args(const company_management_update_contract_args&);
+  company_management_update_contract_args& operator=(const company_management_update_contract_args&);
+  company_management_update_contract_args() : ssid() {
+  }
+
+  virtual ~company_management_update_contract_args() noexcept;
+  std::string ssid;
+  common_contract contract;
+
+  _company_management_update_contract_args__isset __isset;
+
+  void __set_ssid(const std::string& val);
+
+  void __set_contract(const common_contract& val);
+
+  bool operator == (const company_management_update_contract_args & rhs) const
+  {
+    if (!(ssid == rhs.ssid))
+      return false;
+    if (!(contract == rhs.contract))
+      return false;
+    return true;
+  }
+  bool operator != (const company_management_update_contract_args &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const company_management_update_contract_args & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+
+class company_management_update_contract_pargs {
+ public:
+
+
+  virtual ~company_management_update_contract_pargs() noexcept;
+  const std::string* ssid;
+  const common_contract* contract;
+
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _company_management_update_contract_result__isset {
+  _company_management_update_contract_result__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _company_management_update_contract_result__isset;
+
+class company_management_update_contract_result {
+ public:
+
+  company_management_update_contract_result(const company_management_update_contract_result&);
+  company_management_update_contract_result& operator=(const company_management_update_contract_result&);
+  company_management_update_contract_result() : success(0) {
+  }
+
+  virtual ~company_management_update_contract_result() noexcept;
+  bool success;
+  gen_exp e;
+
+  _company_management_update_contract_result__isset __isset;
+
+  void __set_success(const bool val);
+
+  void __set_e(const gen_exp& val);
+
+  bool operator == (const company_management_update_contract_result & rhs) const
+  {
+    if (!(success == rhs.success))
+      return false;
+    if (!(e == rhs.e))
+      return false;
+    return true;
+  }
+  bool operator != (const company_management_update_contract_result &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const company_management_update_contract_result & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _company_management_update_contract_presult__isset {
+  _company_management_update_contract_presult__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _company_management_update_contract_presult__isset;
+
+class company_management_update_contract_presult {
+ public:
+
+
+  virtual ~company_management_update_contract_presult() noexcept;
+  bool* success;
+  gen_exp e;
+
+  _company_management_update_contract_presult__isset __isset;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+
+};
+
 typedef struct _company_management_del_contract_args__isset {
   _company_management_del_contract_args__isset() : ssid(false), id(false) {}
   bool ssid :1;
@@ -3885,6 +4009,9 @@ class company_managementClient : virtual public company_managementIf {
   bool add_contract(const std::string& ssid, const common_contract& contract);
   void send_add_contract(const std::string& ssid, const common_contract& contract);
   bool recv_add_contract();
+  bool update_contract(const std::string& ssid, const common_contract& contract);
+  void send_update_contract(const std::string& ssid, const common_contract& contract);
+  bool recv_update_contract();
   void del_contract(const std::string& ssid, const int64_t id);
   void send_del_contract(const std::string& ssid, const int64_t id);
   void recv_del_contract();
@@ -3941,6 +4068,7 @@ class company_managementProcessor : public ::apache::thrift::TDispatchProcessor 
   void process_get_real_access(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
   void process_get_all_access(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
   void process_add_contract(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
+  void process_update_contract(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
   void process_del_contract(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
   void process_get_all_contract(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
   void process_get_contract(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
@@ -3975,6 +4103,7 @@ class company_managementProcessor : public ::apache::thrift::TDispatchProcessor 
     processMap_["get_real_access"] = &company_managementProcessor::process_get_real_access;
     processMap_["get_all_access"] = &company_managementProcessor::process_get_all_access;
     processMap_["add_contract"] = &company_managementProcessor::process_add_contract;
+    processMap_["update_contract"] = &company_managementProcessor::process_update_contract;
     processMap_["del_contract"] = &company_managementProcessor::process_del_contract;
     processMap_["get_all_contract"] = &company_managementProcessor::process_get_all_contract;
     processMap_["get_contract"] = &company_managementProcessor::process_get_contract;
@@ -4255,6 +4384,15 @@ class company_managementMultiface : virtual public company_managementIf {
     return ifaces_[i]->add_contract(ssid, contract);
   }
 
+  bool update_contract(const std::string& ssid, const common_contract& contract) {
+    size_t sz = ifaces_.size();
+    size_t i = 0;
+    for (; i < (sz - 1); ++i) {
+      ifaces_[i]->update_contract(ssid, contract);
+    }
+    return ifaces_[i]->update_contract(ssid, contract);
+  }
+
   void del_contract(const std::string& ssid, const int64_t id) {
     size_t sz = ifaces_.size();
     size_t i = 0;
@@ -4413,6 +4551,9 @@ class company_managementConcurrentClient : virtual public company_managementIf {
   bool add_contract(const std::string& ssid, const common_contract& contract);
   int32_t send_add_contract(const std::string& ssid, const common_contract& contract);
   bool recv_add_contract(const int32_t seqid);
+  bool update_contract(const std::string& ssid, const common_contract& contract);
+  int32_t send_update_contract(const std::string& ssid, const common_contract& contract);
+  bool recv_update_contract(const int32_t seqid);
   void del_contract(const std::string& ssid, const int64_t id);
   int32_t send_del_contract(const std::string& ssid, const int64_t id);
   void recv_del_contract(const int32_t seqid);

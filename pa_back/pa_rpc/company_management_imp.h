@@ -844,5 +844,25 @@ public:
         _return.start_time = company->work_start_time;
         _return.end_time = company->work_end_time;
     }
+
+    virtual bool update_contract(const std::string &ssid, const common_contract &contract)
+    {
+        bool ret = false;
+
+        auto contract_from_sql = sqlite_orm::search_record<pa_sql_contract>(contract.id);
+        if (!contract_from_sql)
+        {
+            PA_RETURN_MSG("合同不存在");
+        }
+
+        contract_from_sql->end_time = contract.end_time;
+        contract_from_sql->number = contract.number;
+        contract_from_sql->start_time = contract.start_time;
+
+        contract_from_sql->update_status();
+        ret = contract_from_sql->update_record();
+
+        return ret;
+    }
 };
 #endif // _COMPANY_MANAGEMENT_IMP_H_
