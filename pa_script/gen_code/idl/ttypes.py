@@ -852,11 +852,12 @@ class common_contract(object):
      - number
      - id
      - status
+     - customer_code
 
     """
 
 
-    def __init__(self, a_side_company=None, b_side_company=None, start_time=None, end_time=None, number=None, id=None, status=None,):
+    def __init__(self, a_side_company=None, b_side_company=None, start_time=None, end_time=None, number=None, id=None, status=None, customer_code=None,):
         self.a_side_company = a_side_company
         self.b_side_company = b_side_company
         self.start_time = start_time
@@ -864,6 +865,7 @@ class common_contract(object):
         self.number = number
         self.id = id
         self.status = status
+        self.customer_code = customer_code
 
     def read(self, iprot):
         if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
@@ -909,6 +911,11 @@ class common_contract(object):
                     self.status = iprot.readI64()
                 else:
                     iprot.skip(ftype)
+            elif fid == 8:
+                if ftype == TType.STRING:
+                    self.customer_code = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
             else:
                 iprot.skip(ftype)
             iprot.readFieldEnd()
@@ -946,6 +953,10 @@ class common_contract(object):
         if self.status is not None:
             oprot.writeFieldBegin('status', TType.I64, 7)
             oprot.writeI64(self.status)
+            oprot.writeFieldEnd()
+        if self.customer_code is not None:
+            oprot.writeFieldBegin('customer_code', TType.STRING, 8)
+            oprot.writeString(self.customer_code.encode('utf-8') if sys.version_info[0] == 2 else self.customer_code)
             oprot.writeFieldEnd()
         oprot.writeFieldStop()
         oprot.writeStructEnd()
@@ -2289,6 +2300,7 @@ common_contract.thrift_spec = (
     (5, TType.STRING, 'number', 'UTF8', None, ),  # 5
     (6, TType.I64, 'id', None, None, ),  # 6
     (7, TType.I64, 'status', None, None, ),  # 7
+    (8, TType.STRING, 'customer_code', 'UTF8', None, ),  # 8
 )
 all_structs.append(real_access_record)
 real_access_record.thrift_spec = (

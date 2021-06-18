@@ -504,6 +504,10 @@ public:
             csv2::Writer<csv2::delimiter<','>> writer(stream);
             std::vector<std::string> table_header = {
                 "装液日期", "客户名称", "货名", "车牌", "车挂", "司机姓名", "司机电话","当前状态", "卸车地点", "用途" };
+            if (!user->buyer)
+            {
+                table_header.insert(table_header.begin() + 1, "客户编码");
+            }
             writer.write_row(table_header);
             for (auto &itr : plan_ids)
             {
@@ -543,7 +547,27 @@ public:
                             }
                         }
                     }
+                    
+                    std::string customer_code;
+                    if (!user->buyer)
+                    {
+                        auto a_side_company = sqlite_orm::search_record<pa_sql_company>("name = '%s'", company_name.c_str());
+                        auto b_side_company = user->get_parent<pa_sql_company>("belong_company");
+                        if (a_side_company && b_side_company)
+                        {
+                            auto contract = a_side_company->get_children<pa_sql_contract>("a_side", "b_side_ext_key = %ld", b_side_company->get_pri_id());
+                            if (contract)
+                            {
+                                customer_code = contract->customer_code;
+                            }
+                        }
+                    }
+
                     std::vector<std::string> single_rec_sample = {plan->plan_time, company_name, plan->name};
+                    if (!user->buyer)
+                    {
+                        single_rec_sample.insert(single_rec_sample.begin() + 1, customer_code);
+                    }
                     if (archive_plan)
                     {
                         auto archive_vichele = archive_plan->get_all_children<pa_sql_archive_vichele_plan>("belong_plan");

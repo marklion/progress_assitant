@@ -893,6 +893,7 @@ common_contract = class {
     this.number = null;
     this.id = null;
     this.status = null;
+    this.customer_code = null;
     if (args) {
       if (args.a_side_company !== undefined && args.a_side_company !== null) {
         this.a_side_company = args.a_side_company;
@@ -914,6 +915,9 @@ common_contract = class {
       }
       if (args.status !== undefined && args.status !== null) {
         this.status = args.status;
+      }
+      if (args.customer_code !== undefined && args.customer_code !== null) {
+        this.customer_code = args.customer_code;
       }
     }
   }
@@ -977,6 +981,13 @@ common_contract = class {
           input.skip(ftype);
         }
         break;
+        case 8:
+        if (ftype == Thrift.Type.STRING) {
+          this.customer_code = input.readString().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
         default:
           input.skip(ftype);
       }
@@ -1021,6 +1032,11 @@ common_contract = class {
     if (this.status !== null && this.status !== undefined) {
       output.writeFieldBegin('status', Thrift.Type.I64, 7);
       output.writeI64(this.status);
+      output.writeFieldEnd();
+    }
+    if (this.customer_code !== null && this.customer_code !== undefined) {
+      output.writeFieldBegin('customer_code', Thrift.Type.STRING, 8);
+      output.writeString(this.customer_code);
       output.writeFieldEnd();
     }
     output.writeFieldStop();
