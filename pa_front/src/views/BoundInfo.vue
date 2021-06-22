@@ -12,7 +12,21 @@
     <van-cell-group>
         <template #title>
             <van-row type="flex" justify="space-between" align="center">
-                <van-col>资质证明</van-col>
+                <van-col>
+                    <van-row type="flex" align="center">
+                        <van-col>
+                            资质证明
+                        </van-col>
+                        <van-col>
+                            <van-popover v-model="show_attachment_prompt" trigger="click" placement="right-end">
+                                <template #reference>
+                                    <van-icon name="info-o" size="20px"></van-icon>
+                                </template>
+                                <div style="width: 240px;">LNG买家请上传公司营业执照和危化品经营许可证或燃气经营许可证</div>
+                            </van-popover>
+                        </van-col>
+                    </van-row>
+                </van-col>
                 <van-col>
                     <van-uploader :after-read="upload_attachment" accept="image/*,.pdf">
                         <van-button icon="plus" size="small" type="primary">上传文件</van-button>
@@ -133,6 +147,13 @@ import {
 import {
     compressAccurately
 } from 'image-conversion';
+import {
+    Popover
+} from 'vant';
+import { Icon } from 'vant';
+
+Vue.use(Icon);
+Vue.use(Popover);
 Vue.use(Uploader);
 Vue.use(Field);
 Vue.use(Form);
@@ -161,6 +182,7 @@ export default {
             address: '',
             contact: '',
             attachment: [],
+            show_attachment_prompt: false,
         };
     },
     methods: {
