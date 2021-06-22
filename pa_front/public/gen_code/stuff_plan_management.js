@@ -727,12 +727,16 @@ stuff_plan_management_confirm_plan_args = class {
   constructor(args) {
     this.plan_id = null;
     this.ssid = null;
+    this.comment = null;
     if (args) {
       if (args.plan_id !== undefined && args.plan_id !== null) {
         this.plan_id = args.plan_id;
       }
       if (args.ssid !== undefined && args.ssid !== null) {
         this.ssid = args.ssid;
+      }
+      if (args.comment !== undefined && args.comment !== null) {
+        this.comment = args.comment;
       }
     }
   }
@@ -761,6 +765,13 @@ stuff_plan_management_confirm_plan_args = class {
           input.skip(ftype);
         }
         break;
+        case 3:
+        if (ftype == Thrift.Type.STRING) {
+          this.comment = input.readString().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
         default:
           input.skip(ftype);
       }
@@ -780,6 +791,11 @@ stuff_plan_management_confirm_plan_args = class {
     if (this.ssid !== null && this.ssid !== undefined) {
       output.writeFieldBegin('ssid', Thrift.Type.STRING, 2);
       output.writeString(this.ssid);
+      output.writeFieldEnd();
+    }
+    if (this.comment !== null && this.comment !== undefined) {
+      output.writeFieldBegin('comment', Thrift.Type.STRING, 3);
+      output.writeString(this.comment);
       output.writeFieldEnd();
     }
     output.writeFieldStop();
@@ -862,12 +878,16 @@ stuff_plan_management_confirm_pay_args = class {
   constructor(args) {
     this.plan_id = null;
     this.ssid = null;
+    this.comment = null;
     if (args) {
       if (args.plan_id !== undefined && args.plan_id !== null) {
         this.plan_id = args.plan_id;
       }
       if (args.ssid !== undefined && args.ssid !== null) {
         this.ssid = args.ssid;
+      }
+      if (args.comment !== undefined && args.comment !== null) {
+        this.comment = args.comment;
       }
     }
   }
@@ -896,6 +916,13 @@ stuff_plan_management_confirm_pay_args = class {
           input.skip(ftype);
         }
         break;
+        case 3:
+        if (ftype == Thrift.Type.STRING) {
+          this.comment = input.readString().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
         default:
           input.skip(ftype);
       }
@@ -915,6 +942,11 @@ stuff_plan_management_confirm_pay_args = class {
     if (this.ssid !== null && this.ssid !== undefined) {
       output.writeFieldBegin('ssid', Thrift.Type.STRING, 2);
       output.writeString(this.ssid);
+      output.writeFieldEnd();
+    }
+    if (this.comment !== null && this.comment !== undefined) {
+      output.writeFieldBegin('comment', Thrift.Type.STRING, 3);
+      output.writeString(this.comment);
       output.writeFieldEnd();
     }
     output.writeFieldStop();
@@ -3719,19 +3751,20 @@ stuff_plan_managementClient = class stuff_plan_managementClient {
     throw 'update_plan failed: unknown result';
   }
 
-  confirm_plan (plan_id, ssid) {
+  confirm_plan (plan_id, ssid, comment) {
     const self = this;
     return new Promise((resolve, reject) => {
-      self.send_confirm_plan(plan_id, ssid, (error, result) => {
+      self.send_confirm_plan(plan_id, ssid, comment, (error, result) => {
         return error ? reject(error) : resolve(result);
       });
     });
   }
 
-  send_confirm_plan (plan_id, ssid, callback) {
+  send_confirm_plan (plan_id, ssid, comment, callback) {
     const params = {
       plan_id: plan_id,
-      ssid: ssid
+      ssid: ssid,
+      comment: comment
     };
     const args = new stuff_plan_management_confirm_plan_args(params);
     try {
@@ -3779,19 +3812,20 @@ stuff_plan_managementClient = class stuff_plan_managementClient {
     throw 'confirm_plan failed: unknown result';
   }
 
-  confirm_pay (plan_id, ssid) {
+  confirm_pay (plan_id, ssid, comment) {
     const self = this;
     return new Promise((resolve, reject) => {
-      self.send_confirm_pay(plan_id, ssid, (error, result) => {
+      self.send_confirm_pay(plan_id, ssid, comment, (error, result) => {
         return error ? reject(error) : resolve(result);
       });
     });
   }
 
-  send_confirm_pay (plan_id, ssid, callback) {
+  send_confirm_pay (plan_id, ssid, comment, callback) {
     const params = {
       plan_id: plan_id,
-      ssid: ssid
+      ssid: ssid,
+      comment: comment
     };
     const args = new stuff_plan_management_confirm_pay_args(params);
     try {

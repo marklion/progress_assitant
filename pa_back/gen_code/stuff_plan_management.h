@@ -27,8 +27,8 @@ class stuff_plan_managementIf {
   virtual void get_company_plan(std::vector<plan_status> & _return, const std::string& ssid, const int64_t anchor) = 0;
   virtual void get_plan(stuff_plan& _return, const int64_t plan_id) = 0;
   virtual bool update_plan(const stuff_plan& plan, const std::string& ssid) = 0;
-  virtual bool confirm_plan(const int64_t plan_id, const std::string& ssid) = 0;
-  virtual bool confirm_pay(const int64_t plan_id, const std::string& ssid) = 0;
+  virtual bool confirm_plan(const int64_t plan_id, const std::string& ssid, const std::string& comment) = 0;
+  virtual bool confirm_pay(const int64_t plan_id, const std::string& ssid, const std::string& comment) = 0;
   virtual bool confirm_deliver(const int64_t plan_id, const std::string& ssid, const std::vector<deliver_info> & deliver_infos, const std::string& reason) = 0;
   virtual void export_plan(std::string& _return, const std::string& ssid, const std::vector<int64_t> & plan_ids) = 0;
   virtual bool except_close(const int64_t plan_id, const std::string& ssid, const std::string& reason) = 0;
@@ -92,11 +92,11 @@ class stuff_plan_managementNull : virtual public stuff_plan_managementIf {
     bool _return = false;
     return _return;
   }
-  bool confirm_plan(const int64_t /* plan_id */, const std::string& /* ssid */) {
+  bool confirm_plan(const int64_t /* plan_id */, const std::string& /* ssid */, const std::string& /* comment */) {
     bool _return = false;
     return _return;
   }
-  bool confirm_pay(const int64_t /* plan_id */, const std::string& /* ssid */) {
+  bool confirm_pay(const int64_t /* plan_id */, const std::string& /* ssid */, const std::string& /* comment */) {
     bool _return = false;
     return _return;
   }
@@ -754,9 +754,10 @@ class stuff_plan_management_update_plan_presult {
 };
 
 typedef struct _stuff_plan_management_confirm_plan_args__isset {
-  _stuff_plan_management_confirm_plan_args__isset() : plan_id(false), ssid(false) {}
+  _stuff_plan_management_confirm_plan_args__isset() : plan_id(false), ssid(false), comment(false) {}
   bool plan_id :1;
   bool ssid :1;
+  bool comment :1;
 } _stuff_plan_management_confirm_plan_args__isset;
 
 class stuff_plan_management_confirm_plan_args {
@@ -764,12 +765,13 @@ class stuff_plan_management_confirm_plan_args {
 
   stuff_plan_management_confirm_plan_args(const stuff_plan_management_confirm_plan_args&);
   stuff_plan_management_confirm_plan_args& operator=(const stuff_plan_management_confirm_plan_args&);
-  stuff_plan_management_confirm_plan_args() : plan_id(0), ssid() {
+  stuff_plan_management_confirm_plan_args() : plan_id(0), ssid(), comment() {
   }
 
   virtual ~stuff_plan_management_confirm_plan_args() noexcept;
   int64_t plan_id;
   std::string ssid;
+  std::string comment;
 
   _stuff_plan_management_confirm_plan_args__isset __isset;
 
@@ -777,11 +779,15 @@ class stuff_plan_management_confirm_plan_args {
 
   void __set_ssid(const std::string& val);
 
+  void __set_comment(const std::string& val);
+
   bool operator == (const stuff_plan_management_confirm_plan_args & rhs) const
   {
     if (!(plan_id == rhs.plan_id))
       return false;
     if (!(ssid == rhs.ssid))
+      return false;
+    if (!(comment == rhs.comment))
       return false;
     return true;
   }
@@ -804,6 +810,7 @@ class stuff_plan_management_confirm_plan_pargs {
   virtual ~stuff_plan_management_confirm_plan_pargs() noexcept;
   const int64_t* plan_id;
   const std::string* ssid;
+  const std::string* comment;
 
   uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
 
@@ -873,9 +880,10 @@ class stuff_plan_management_confirm_plan_presult {
 };
 
 typedef struct _stuff_plan_management_confirm_pay_args__isset {
-  _stuff_plan_management_confirm_pay_args__isset() : plan_id(false), ssid(false) {}
+  _stuff_plan_management_confirm_pay_args__isset() : plan_id(false), ssid(false), comment(false) {}
   bool plan_id :1;
   bool ssid :1;
+  bool comment :1;
 } _stuff_plan_management_confirm_pay_args__isset;
 
 class stuff_plan_management_confirm_pay_args {
@@ -883,12 +891,13 @@ class stuff_plan_management_confirm_pay_args {
 
   stuff_plan_management_confirm_pay_args(const stuff_plan_management_confirm_pay_args&);
   stuff_plan_management_confirm_pay_args& operator=(const stuff_plan_management_confirm_pay_args&);
-  stuff_plan_management_confirm_pay_args() : plan_id(0), ssid() {
+  stuff_plan_management_confirm_pay_args() : plan_id(0), ssid(), comment() {
   }
 
   virtual ~stuff_plan_management_confirm_pay_args() noexcept;
   int64_t plan_id;
   std::string ssid;
+  std::string comment;
 
   _stuff_plan_management_confirm_pay_args__isset __isset;
 
@@ -896,11 +905,15 @@ class stuff_plan_management_confirm_pay_args {
 
   void __set_ssid(const std::string& val);
 
+  void __set_comment(const std::string& val);
+
   bool operator == (const stuff_plan_management_confirm_pay_args & rhs) const
   {
     if (!(plan_id == rhs.plan_id))
       return false;
     if (!(ssid == rhs.ssid))
+      return false;
+    if (!(comment == rhs.comment))
       return false;
     return true;
   }
@@ -923,6 +936,7 @@ class stuff_plan_management_confirm_pay_pargs {
   virtual ~stuff_plan_management_confirm_pay_pargs() noexcept;
   const int64_t* plan_id;
   const std::string* ssid;
+  const std::string* comment;
 
   uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
 
@@ -3041,11 +3055,11 @@ class stuff_plan_managementClient : virtual public stuff_plan_managementIf {
   bool update_plan(const stuff_plan& plan, const std::string& ssid);
   void send_update_plan(const stuff_plan& plan, const std::string& ssid);
   bool recv_update_plan();
-  bool confirm_plan(const int64_t plan_id, const std::string& ssid);
-  void send_confirm_plan(const int64_t plan_id, const std::string& ssid);
+  bool confirm_plan(const int64_t plan_id, const std::string& ssid, const std::string& comment);
+  void send_confirm_plan(const int64_t plan_id, const std::string& ssid, const std::string& comment);
   bool recv_confirm_plan();
-  bool confirm_pay(const int64_t plan_id, const std::string& ssid);
-  void send_confirm_pay(const int64_t plan_id, const std::string& ssid);
+  bool confirm_pay(const int64_t plan_id, const std::string& ssid, const std::string& comment);
+  void send_confirm_pay(const int64_t plan_id, const std::string& ssid, const std::string& comment);
   bool recv_confirm_pay();
   bool confirm_deliver(const int64_t plan_id, const std::string& ssid, const std::vector<deliver_info> & deliver_infos, const std::string& reason);
   void send_confirm_deliver(const int64_t plan_id, const std::string& ssid, const std::vector<deliver_info> & deliver_infos, const std::string& reason);
@@ -3240,22 +3254,22 @@ class stuff_plan_managementMultiface : virtual public stuff_plan_managementIf {
     return ifaces_[i]->update_plan(plan, ssid);
   }
 
-  bool confirm_plan(const int64_t plan_id, const std::string& ssid) {
+  bool confirm_plan(const int64_t plan_id, const std::string& ssid, const std::string& comment) {
     size_t sz = ifaces_.size();
     size_t i = 0;
     for (; i < (sz - 1); ++i) {
-      ifaces_[i]->confirm_plan(plan_id, ssid);
+      ifaces_[i]->confirm_plan(plan_id, ssid, comment);
     }
-    return ifaces_[i]->confirm_plan(plan_id, ssid);
+    return ifaces_[i]->confirm_plan(plan_id, ssid, comment);
   }
 
-  bool confirm_pay(const int64_t plan_id, const std::string& ssid) {
+  bool confirm_pay(const int64_t plan_id, const std::string& ssid, const std::string& comment) {
     size_t sz = ifaces_.size();
     size_t i = 0;
     for (; i < (sz - 1); ++i) {
-      ifaces_[i]->confirm_pay(plan_id, ssid);
+      ifaces_[i]->confirm_pay(plan_id, ssid, comment);
     }
-    return ifaces_[i]->confirm_pay(plan_id, ssid);
+    return ifaces_[i]->confirm_pay(plan_id, ssid, comment);
   }
 
   bool confirm_deliver(const int64_t plan_id, const std::string& ssid, const std::vector<deliver_info> & deliver_infos, const std::string& reason) {
@@ -3469,11 +3483,11 @@ class stuff_plan_managementConcurrentClient : virtual public stuff_plan_manageme
   bool update_plan(const stuff_plan& plan, const std::string& ssid);
   int32_t send_update_plan(const stuff_plan& plan, const std::string& ssid);
   bool recv_update_plan(const int32_t seqid);
-  bool confirm_plan(const int64_t plan_id, const std::string& ssid);
-  int32_t send_confirm_plan(const int64_t plan_id, const std::string& ssid);
+  bool confirm_plan(const int64_t plan_id, const std::string& ssid, const std::string& comment);
+  int32_t send_confirm_plan(const int64_t plan_id, const std::string& ssid, const std::string& comment);
   bool recv_confirm_plan(const int32_t seqid);
-  bool confirm_pay(const int64_t plan_id, const std::string& ssid);
-  int32_t send_confirm_pay(const int64_t plan_id, const std::string& ssid);
+  bool confirm_pay(const int64_t plan_id, const std::string& ssid, const std::string& comment);
+  int32_t send_confirm_pay(const int64_t plan_id, const std::string& ssid, const std::string& comment);
   bool recv_confirm_pay(const int32_t seqid);
   bool confirm_deliver(const int64_t plan_id, const std::string& ssid, const std::vector<deliver_info> & deliver_infos, const std::string& reason);
   int32_t send_confirm_deliver(const int64_t plan_id, const std::string& ssid, const std::vector<deliver_info> & deliver_infos, const std::string& reason);

@@ -9,7 +9,7 @@
                 </van-col>
             </van-row>
         </template>
-        <van-cell :value="prompt">
+        <van-cell :title="prompt" center >
             <template #right-icon>
                 <div v-if="status > 0">
                     <van-row type="flex" align="center" justify="end" :gutter="10">
@@ -26,6 +26,9 @@
                     </van-row>
                 </div>
             </template>
+            <div v-if="!$store.state.userinfo.buyer && can_change_to(status + 1) && (status == 1 || status == 2)">
+                <van-field v-model="confirm_comment" placeholder="输入确认附言（可选）"></van-field>
+            </div>
         </van-cell>
     </van-cell-group>
 
@@ -83,6 +86,7 @@ export default {
 
                 return ret;
             },
+            confirm_comment: "",
         };
     },
     props: {
@@ -137,7 +141,7 @@ export default {
         },
         submit_confirm: function () {
             var vue_this = this;
-            vue_this.$call_remote_process("stuff_plan_management", 'confirm_plan', [vue_this.plan_id, vue_this.$cookies.get('pa_ssid')]).then(function (resp) {
+            vue_this.$call_remote_process("stuff_plan_management", 'confirm_plan', [vue_this.plan_id, vue_this.$cookies.get('pa_ssid'), vue_this.confirm_comment]).then(function (resp) {
                 if (resp) {
                     vue_this.$router.go(0);
                 }
@@ -145,7 +149,7 @@ export default {
         },
         submit_confirm_pay: function () {
             var vue_this = this;
-            vue_this.$call_remote_process("stuff_plan_management", 'confirm_pay', [vue_this.plan_id, vue_this.$cookies.get('pa_ssid')]).then(function (resp) {
+            vue_this.$call_remote_process("stuff_plan_management", 'confirm_pay', [vue_this.plan_id, vue_this.$cookies.get('pa_ssid'), vue_this.confirm_comment]).then(function (resp) {
                 if (resp) {
                     vue_this.$router.go(0);
                 }
