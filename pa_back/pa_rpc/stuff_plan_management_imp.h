@@ -1225,6 +1225,23 @@ public:
             _return.tomorrow_vichele_count += single_vichele.size();
         } 
     }
+
+    virtual bool push_user_pay(const std::string &ssid, const int64_t plan_id)
+    {
+        auto plan = PA_RPC_get_plan_related_by_user(ssid, "PRI_ID == %ld", plan_id);
+        if (!plan)
+        {
+            PA_RETURN_NOPLAN_MSG();
+        }
+        auto user = PA_DATAOPT_get_online_user(ssid);
+        if (!user)
+        {
+            PA_RETURN_UNLOGIN_MSG();
+        }
+        plan->send_wechat_msg(*user, "该计划还未付款，请尽快付款");
+
+        return true;
+    }
 };
 
 #endif // _STUFF_PLAN_MANAGEMENT_H_

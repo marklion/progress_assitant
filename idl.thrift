@@ -256,4 +256,5 @@ service stuff_plan_management {
     list<vichele_search_result> search_plan_by_vichele_number(1:string ssid, 2:string vichele_number) throws (1:gen_exp e),
     list<vichele_statistics> get_tomorrow_statistics(1:string ssid) throws (1:gen_exp e),
     company_plan_brief get_company_brief(1:string ssid) throws (1:gen_exp e),
+    bool push_user_pay(1:string ssid, 2:i64 plan_id) throws (1:gen_exp e),
 }

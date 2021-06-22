@@ -4,12 +4,19 @@
         <template #title>
             <van-row type="flex" justify="space-between" align="center">
                 <van-col>当前状态</van-col>
-                <van-col v-if="user_is_buyer">
-                    <van-button v-if="can_change_to(0)" size="small" type="warning" :to="{name:'PlanUpdate', params:{plan_id:plan_id}}">修改计划</van-button>
+                <van-col>
+                    <van-row type="flex" align="center" :gutter="10">
+                        <van-col v-if="user_is_buyer">
+                            <van-button v-if="can_change_to(0)" size="small" type="warning" :to="{name:'PlanUpdate', params:{plan_id:plan_id}}">修改计划</van-button>
+                        </van-col>
+                        <van-col v-if="!$store.state.userinfo.buyer && status == 2">
+                            <van-button size="small" type="warning" @click="push_buyer">催款</van-button>
+                        </van-col>
+                    </van-row>
                 </van-col>
             </van-row>
         </template>
-        <van-cell :title="prompt" center >
+        <van-cell :title="prompt" center>
             <template #right-icon>
                 <div v-if="status > 0">
                     <van-row type="flex" align="center" justify="end" :gutter="10">
@@ -112,6 +119,14 @@ export default {
         },
     },
     methods: {
+        push_buyer: function () {
+            var vue_this = this;
+            vue_this.$call_remote_process("stuff_plan_management", "push_user_pay", [vue_this.$cookies.get('pa_ssid'), vue_this.plan_id]).then(function (resp) {
+                if (resp == true) {
+                    vue_this.$toast("已发送催款信息");
+                }
+            });
+        },
         reject_plan: function () {
             var vue_this = this;
             vue_this.$call_remote_process("stuff_plan_management", "reject_plan", [vue_this.plan_id, vue_this.$cookies.get('pa_ssid'), vue_this.reject_reason]).then(function (resp) {
