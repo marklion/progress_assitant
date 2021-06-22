@@ -1229,6 +1229,14 @@ uint32_t stuff_plan_management_confirm_plan_args::read(::apache::thrift::protoco
           xfer += iprot->skip(ftype);
         }
         break;
+      case 3:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->comment);
+          this->__isset.comment = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
       default:
         xfer += iprot->skip(ftype);
         break;
@@ -1254,6 +1262,10 @@ uint32_t stuff_plan_management_confirm_plan_args::write(::apache::thrift::protoc
   xfer += oprot->writeString(this->ssid);
   xfer += oprot->writeFieldEnd();
 
+  xfer += oprot->writeFieldBegin("comment", ::apache::thrift::protocol::T_STRING, 3);
+  xfer += oprot->writeString(this->comment);
+  xfer += oprot->writeFieldEnd();
+
   xfer += oprot->writeFieldStop();
   xfer += oprot->writeStructEnd();
   return xfer;
@@ -1275,6 +1287,10 @@ uint32_t stuff_plan_management_confirm_plan_pargs::write(::apache::thrift::proto
 
   xfer += oprot->writeFieldBegin("ssid", ::apache::thrift::protocol::T_STRING, 2);
   xfer += oprot->writeString((*(this->ssid)));
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("comment", ::apache::thrift::protocol::T_STRING, 3);
+  xfer += oprot->writeString((*(this->comment)));
   xfer += oprot->writeFieldEnd();
 
   xfer += oprot->writeFieldStop();
@@ -1452,6 +1468,14 @@ uint32_t stuff_plan_management_confirm_pay_args::read(::apache::thrift::protocol
           xfer += iprot->skip(ftype);
         }
         break;
+      case 3:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->comment);
+          this->__isset.comment = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
       default:
         xfer += iprot->skip(ftype);
         break;
@@ -1477,6 +1501,10 @@ uint32_t stuff_plan_management_confirm_pay_args::write(::apache::thrift::protoco
   xfer += oprot->writeString(this->ssid);
   xfer += oprot->writeFieldEnd();
 
+  xfer += oprot->writeFieldBegin("comment", ::apache::thrift::protocol::T_STRING, 3);
+  xfer += oprot->writeString(this->comment);
+  xfer += oprot->writeFieldEnd();
+
   xfer += oprot->writeFieldStop();
   xfer += oprot->writeStructEnd();
   return xfer;
@@ -1498,6 +1526,10 @@ uint32_t stuff_plan_management_confirm_pay_pargs::write(::apache::thrift::protoc
 
   xfer += oprot->writeFieldBegin("ssid", ::apache::thrift::protocol::T_STRING, 2);
   xfer += oprot->writeString((*(this->ssid)));
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("comment", ::apache::thrift::protocol::T_STRING, 3);
+  xfer += oprot->writeString((*(this->comment)));
   xfer += oprot->writeFieldEnd();
 
   xfer += oprot->writeFieldStop();
@@ -5957,13 +5989,13 @@ bool stuff_plan_managementClient::recv_update_plan()
   throw ::apache::thrift::TApplicationException(::apache::thrift::TApplicationException::MISSING_RESULT, "update_plan failed: unknown result");
 }
 
-bool stuff_plan_managementClient::confirm_plan(const int64_t plan_id, const std::string& ssid)
+bool stuff_plan_managementClient::confirm_plan(const int64_t plan_id, const std::string& ssid, const std::string& comment)
 {
-  send_confirm_plan(plan_id, ssid);
+  send_confirm_plan(plan_id, ssid, comment);
   return recv_confirm_plan();
 }
 
-void stuff_plan_managementClient::send_confirm_plan(const int64_t plan_id, const std::string& ssid)
+void stuff_plan_managementClient::send_confirm_plan(const int64_t plan_id, const std::string& ssid, const std::string& comment)
 {
   int32_t cseqid = 0;
   oprot_->writeMessageBegin("confirm_plan", ::apache::thrift::protocol::T_CALL, cseqid);
@@ -5971,6 +6003,7 @@ void stuff_plan_managementClient::send_confirm_plan(const int64_t plan_id, const
   stuff_plan_management_confirm_plan_pargs args;
   args.plan_id = &plan_id;
   args.ssid = &ssid;
+  args.comment = &comment;
   args.write(oprot_);
 
   oprot_->writeMessageEnd();
@@ -6019,13 +6052,13 @@ bool stuff_plan_managementClient::recv_confirm_plan()
   throw ::apache::thrift::TApplicationException(::apache::thrift::TApplicationException::MISSING_RESULT, "confirm_plan failed: unknown result");
 }
 
-bool stuff_plan_managementClient::confirm_pay(const int64_t plan_id, const std::string& ssid)
+bool stuff_plan_managementClient::confirm_pay(const int64_t plan_id, const std::string& ssid, const std::string& comment)
 {
-  send_confirm_pay(plan_id, ssid);
+  send_confirm_pay(plan_id, ssid, comment);
   return recv_confirm_pay();
 }
 
-void stuff_plan_managementClient::send_confirm_pay(const int64_t plan_id, const std::string& ssid)
+void stuff_plan_managementClient::send_confirm_pay(const int64_t plan_id, const std::string& ssid, const std::string& comment)
 {
   int32_t cseqid = 0;
   oprot_->writeMessageBegin("confirm_pay", ::apache::thrift::protocol::T_CALL, cseqid);
@@ -6033,6 +6066,7 @@ void stuff_plan_managementClient::send_confirm_pay(const int64_t plan_id, const 
   stuff_plan_management_confirm_pay_pargs args;
   args.plan_id = &plan_id;
   args.ssid = &ssid;
+  args.comment = &comment;
   args.write(oprot_);
 
   oprot_->writeMessageEnd();
@@ -7457,7 +7491,7 @@ void stuff_plan_managementProcessor::process_confirm_plan(int32_t seqid, ::apach
 
   stuff_plan_management_confirm_plan_result result;
   try {
-    result.success = iface_->confirm_plan(args.plan_id, args.ssid);
+    result.success = iface_->confirm_plan(args.plan_id, args.ssid, args.comment);
     result.__isset.success = true;
   } catch (gen_exp &e) {
     result.e = e;
@@ -7514,7 +7548,7 @@ void stuff_plan_managementProcessor::process_confirm_pay(int32_t seqid, ::apache
 
   stuff_plan_management_confirm_pay_result result;
   try {
-    result.success = iface_->confirm_pay(args.plan_id, args.ssid);
+    result.success = iface_->confirm_pay(args.plan_id, args.ssid, args.comment);
     result.__isset.success = true;
   } catch (gen_exp &e) {
     result.e = e;
@@ -8968,13 +9002,13 @@ bool stuff_plan_managementConcurrentClient::recv_update_plan(const int32_t seqid
   } // end while(true)
 }
 
-bool stuff_plan_managementConcurrentClient::confirm_plan(const int64_t plan_id, const std::string& ssid)
+bool stuff_plan_managementConcurrentClient::confirm_plan(const int64_t plan_id, const std::string& ssid, const std::string& comment)
 {
-  int32_t seqid = send_confirm_plan(plan_id, ssid);
+  int32_t seqid = send_confirm_plan(plan_id, ssid, comment);
   return recv_confirm_plan(seqid);
 }
 
-int32_t stuff_plan_managementConcurrentClient::send_confirm_plan(const int64_t plan_id, const std::string& ssid)
+int32_t stuff_plan_managementConcurrentClient::send_confirm_plan(const int64_t plan_id, const std::string& ssid, const std::string& comment)
 {
   int32_t cseqid = this->sync_->generateSeqId();
   ::apache::thrift::async::TConcurrentSendSentry sentry(this->sync_.get());
@@ -8983,6 +9017,7 @@ int32_t stuff_plan_managementConcurrentClient::send_confirm_plan(const int64_t p
   stuff_plan_management_confirm_plan_pargs args;
   args.plan_id = &plan_id;
   args.ssid = &ssid;
+  args.comment = &comment;
   args.write(oprot_);
 
   oprot_->writeMessageEnd();
@@ -9057,13 +9092,13 @@ bool stuff_plan_managementConcurrentClient::recv_confirm_plan(const int32_t seqi
   } // end while(true)
 }
 
-bool stuff_plan_managementConcurrentClient::confirm_pay(const int64_t plan_id, const std::string& ssid)
+bool stuff_plan_managementConcurrentClient::confirm_pay(const int64_t plan_id, const std::string& ssid, const std::string& comment)
 {
-  int32_t seqid = send_confirm_pay(plan_id, ssid);
+  int32_t seqid = send_confirm_pay(plan_id, ssid, comment);
   return recv_confirm_pay(seqid);
 }
 
-int32_t stuff_plan_managementConcurrentClient::send_confirm_pay(const int64_t plan_id, const std::string& ssid)
+int32_t stuff_plan_managementConcurrentClient::send_confirm_pay(const int64_t plan_id, const std::string& ssid, const std::string& comment)
 {
   int32_t cseqid = this->sync_->generateSeqId();
   ::apache::thrift::async::TConcurrentSendSentry sentry(this->sync_.get());
@@ -9072,6 +9107,7 @@ int32_t stuff_plan_managementConcurrentClient::send_confirm_pay(const int64_t pl
   stuff_plan_management_confirm_pay_pargs args;
   args.plan_id = &plan_id;
   args.ssid = &ssid;
+  args.comment = &comment;
   args.write(oprot_);
 
   oprot_->writeMessageEnd();

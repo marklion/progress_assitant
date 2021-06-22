@@ -64,20 +64,22 @@ class Iface(object):
         """
         pass
 
-    def confirm_plan(self, plan_id, ssid):
+    def confirm_plan(self, plan_id, ssid, comment):
         """
         Parameters:
          - plan_id
          - ssid
+         - comment
 
         """
         pass
 
-    def confirm_pay(self, plan_id, ssid):
+    def confirm_pay(self, plan_id, ssid, comment):
         """
         Parameters:
          - plan_id
          - ssid
+         - comment
 
         """
         pass
@@ -419,21 +421,23 @@ class Client(Iface):
             raise result.e
         raise TApplicationException(TApplicationException.MISSING_RESULT, "update_plan failed: unknown result")
 
-    def confirm_plan(self, plan_id, ssid):
+    def confirm_plan(self, plan_id, ssid, comment):
         """
         Parameters:
          - plan_id
          - ssid
+         - comment
 
         """
-        self.send_confirm_plan(plan_id, ssid)
+        self.send_confirm_plan(plan_id, ssid, comment)
         return self.recv_confirm_plan()
 
-    def send_confirm_plan(self, plan_id, ssid):
+    def send_confirm_plan(self, plan_id, ssid, comment):
         self._oprot.writeMessageBegin('confirm_plan', TMessageType.CALL, self._seqid)
         args = confirm_plan_args()
         args.plan_id = plan_id
         args.ssid = ssid
+        args.comment = comment
         args.write(self._oprot)
         self._oprot.writeMessageEnd()
         self._oprot.trans.flush()
@@ -455,21 +459,23 @@ class Client(Iface):
             raise result.e
         raise TApplicationException(TApplicationException.MISSING_RESULT, "confirm_plan failed: unknown result")
 
-    def confirm_pay(self, plan_id, ssid):
+    def confirm_pay(self, plan_id, ssid, comment):
         """
         Parameters:
          - plan_id
          - ssid
+         - comment
 
         """
-        self.send_confirm_pay(plan_id, ssid)
+        self.send_confirm_pay(plan_id, ssid, comment)
         return self.recv_confirm_pay()
 
-    def send_confirm_pay(self, plan_id, ssid):
+    def send_confirm_pay(self, plan_id, ssid, comment):
         self._oprot.writeMessageBegin('confirm_pay', TMessageType.CALL, self._seqid)
         args = confirm_pay_args()
         args.plan_id = plan_id
         args.ssid = ssid
+        args.comment = comment
         args.write(self._oprot)
         self._oprot.writeMessageEnd()
         self._oprot.trans.flush()
@@ -1284,7 +1290,7 @@ class Processor(Iface, TProcessor):
         iprot.readMessageEnd()
         result = confirm_plan_result()
         try:
-            result.success = self._handler.confirm_plan(args.plan_id, args.ssid)
+            result.success = self._handler.confirm_plan(args.plan_id, args.ssid, args.comment)
             msg_type = TMessageType.REPLY
         except TTransport.TTransportException:
             raise
@@ -1310,7 +1316,7 @@ class Processor(Iface, TProcessor):
         iprot.readMessageEnd()
         result = confirm_pay_result()
         try:
-            result.success = self._handler.confirm_pay(args.plan_id, args.ssid)
+            result.success = self._handler.confirm_pay(args.plan_id, args.ssid, args.comment)
             msg_type = TMessageType.REPLY
         except TTransport.TTransportException:
             raise
@@ -2536,13 +2542,15 @@ class confirm_plan_args(object):
     Attributes:
      - plan_id
      - ssid
+     - comment
 
     """
 
 
-    def __init__(self, plan_id=None, ssid=None,):
+    def __init__(self, plan_id=None, ssid=None, comment=None,):
         self.plan_id = plan_id
         self.ssid = ssid
+        self.comment = comment
 
     def read(self, iprot):
         if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
@@ -2563,6 +2571,11 @@ class confirm_plan_args(object):
                     self.ssid = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
                 else:
                     iprot.skip(ftype)
+            elif fid == 3:
+                if ftype == TType.STRING:
+                    self.comment = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
             else:
                 iprot.skip(ftype)
             iprot.readFieldEnd()
@@ -2580,6 +2593,10 @@ class confirm_plan_args(object):
         if self.ssid is not None:
             oprot.writeFieldBegin('ssid', TType.STRING, 2)
             oprot.writeString(self.ssid.encode('utf-8') if sys.version_info[0] == 2 else self.ssid)
+            oprot.writeFieldEnd()
+        if self.comment is not None:
+            oprot.writeFieldBegin('comment', TType.STRING, 3)
+            oprot.writeString(self.comment.encode('utf-8') if sys.version_info[0] == 2 else self.comment)
             oprot.writeFieldEnd()
         oprot.writeFieldStop()
         oprot.writeStructEnd()
@@ -2602,6 +2619,7 @@ confirm_plan_args.thrift_spec = (
     None,  # 0
     (1, TType.I64, 'plan_id', None, None, ),  # 1
     (2, TType.STRING, 'ssid', 'UTF8', None, ),  # 2
+    (3, TType.STRING, 'comment', 'UTF8', None, ),  # 3
 )
 
 
@@ -2683,13 +2701,15 @@ class confirm_pay_args(object):
     Attributes:
      - plan_id
      - ssid
+     - comment
 
     """
 
 
-    def __init__(self, plan_id=None, ssid=None,):
+    def __init__(self, plan_id=None, ssid=None, comment=None,):
         self.plan_id = plan_id
         self.ssid = ssid
+        self.comment = comment
 
     def read(self, iprot):
         if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
@@ -2710,6 +2730,11 @@ class confirm_pay_args(object):
                     self.ssid = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
                 else:
                     iprot.skip(ftype)
+            elif fid == 3:
+                if ftype == TType.STRING:
+                    self.comment = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
             else:
                 iprot.skip(ftype)
             iprot.readFieldEnd()
@@ -2727,6 +2752,10 @@ class confirm_pay_args(object):
         if self.ssid is not None:
             oprot.writeFieldBegin('ssid', TType.STRING, 2)
             oprot.writeString(self.ssid.encode('utf-8') if sys.version_info[0] == 2 else self.ssid)
+            oprot.writeFieldEnd()
+        if self.comment is not None:
+            oprot.writeFieldBegin('comment', TType.STRING, 3)
+            oprot.writeString(self.comment.encode('utf-8') if sys.version_info[0] == 2 else self.comment)
             oprot.writeFieldEnd()
         oprot.writeFieldStop()
         oprot.writeStructEnd()
@@ -2749,6 +2778,7 @@ confirm_pay_args.thrift_spec = (
     None,  # 0
     (1, TType.I64, 'plan_id', None, None, ),  # 1
     (2, TType.STRING, 'ssid', 'UTF8', None, ),  # 2
+    (3, TType.STRING, 'comment', 'UTF8', None, ),  # 3
 )
 
 

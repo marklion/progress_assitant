@@ -387,7 +387,7 @@ public:
             PA_RETURN_MSG("用户未注册为卖家");
         }
     }
-    virtual bool confirm_plan(const int64_t plan_id, const std::string &ssid)
+    virtual bool confirm_plan(const int64_t plan_id, const std::string &ssid, const std::string &comment)
     {
         bool ret = false;
         sqlite_orm_lock a;
@@ -407,22 +407,32 @@ public:
             PA_RETURN_NOPRIVA_MSG();
         }
         plan->conflict_reason = "";
-        ret = PA_STATUS_RULE_action(*plan, *opt_user, PA_DATAOPT_current_time(), "OK");
+        std::string status_comment = "已确认";
+        if (comment.length() > 0)
+        {
+            status_comment = comment;
+        }
+        ret = PA_STATUS_RULE_action(*plan, *opt_user, PA_DATAOPT_current_time(), status_comment);
         ret &= PA_STATUS_RULE_change_status(*plan, *opt_user);
 
         return ret;
     }
 
-    virtual bool confirm_pay(const int64_t plan_id, const std::string &ssid)
+    virtual bool confirm_pay(const int64_t plan_id, const std::string &ssid, const std::string &comment)
     {
         bool ret = false;
         sqlite_orm_lock a;
 
         auto opt_user = PA_DATAOPT_get_online_user(ssid);
+        std::string status_comment = "已确认";
+        if (comment.length() > 0)
+        {
+            status_comment = comment;
+        }
         auto plan = sqlite_orm::search_record<pa_sql_plan>(plan_id);
         if (plan && opt_user && plan->status == 2 && PA_STATUS_RULE_can_be_change(*plan, *opt_user, 3))
         {
-            ret = PA_STATUS_RULE_action(*plan, *opt_user, PA_DATAOPT_current_time(), "OK");
+            ret = PA_STATUS_RULE_action(*plan, *opt_user, PA_DATAOPT_current_time(), status_comment);
             ret &= PA_STATUS_RULE_change_status(*plan, *opt_user);
         }
         else
