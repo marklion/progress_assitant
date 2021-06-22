@@ -46,6 +46,7 @@ class stuff_plan_managementIf {
   virtual void search_plan_by_vichele_number(std::vector<vichele_search_result> & _return, const std::string& ssid, const std::string& vichele_number) = 0;
   virtual void get_tomorrow_statistics(std::vector<vichele_statistics> & _return, const std::string& ssid) = 0;
   virtual void get_company_brief(company_plan_brief& _return, const std::string& ssid) = 0;
+  virtual bool push_user_pay(const std::string& ssid, const int64_t plan_id) = 0;
 };
 
 class stuff_plan_managementIfFactory {
@@ -155,6 +156,10 @@ class stuff_plan_managementNull : virtual public stuff_plan_managementIf {
   }
   void get_company_brief(company_plan_brief& /* _return */, const std::string& /* ssid */) {
     return;
+  }
+  bool push_user_pay(const std::string& /* ssid */, const int64_t /* plan_id */) {
+    bool _return = false;
+    return _return;
   }
 };
 
@@ -3015,6 +3020,125 @@ class stuff_plan_management_get_company_brief_presult {
 
 };
 
+typedef struct _stuff_plan_management_push_user_pay_args__isset {
+  _stuff_plan_management_push_user_pay_args__isset() : ssid(false), plan_id(false) {}
+  bool ssid :1;
+  bool plan_id :1;
+} _stuff_plan_management_push_user_pay_args__isset;
+
+class stuff_plan_management_push_user_pay_args {
+ public:
+
+  stuff_plan_management_push_user_pay_args(const stuff_plan_management_push_user_pay_args&);
+  stuff_plan_management_push_user_pay_args& operator=(const stuff_plan_management_push_user_pay_args&);
+  stuff_plan_management_push_user_pay_args() : ssid(), plan_id(0) {
+  }
+
+  virtual ~stuff_plan_management_push_user_pay_args() noexcept;
+  std::string ssid;
+  int64_t plan_id;
+
+  _stuff_plan_management_push_user_pay_args__isset __isset;
+
+  void __set_ssid(const std::string& val);
+
+  void __set_plan_id(const int64_t val);
+
+  bool operator == (const stuff_plan_management_push_user_pay_args & rhs) const
+  {
+    if (!(ssid == rhs.ssid))
+      return false;
+    if (!(plan_id == rhs.plan_id))
+      return false;
+    return true;
+  }
+  bool operator != (const stuff_plan_management_push_user_pay_args &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const stuff_plan_management_push_user_pay_args & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+
+class stuff_plan_management_push_user_pay_pargs {
+ public:
+
+
+  virtual ~stuff_plan_management_push_user_pay_pargs() noexcept;
+  const std::string* ssid;
+  const int64_t* plan_id;
+
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _stuff_plan_management_push_user_pay_result__isset {
+  _stuff_plan_management_push_user_pay_result__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _stuff_plan_management_push_user_pay_result__isset;
+
+class stuff_plan_management_push_user_pay_result {
+ public:
+
+  stuff_plan_management_push_user_pay_result(const stuff_plan_management_push_user_pay_result&);
+  stuff_plan_management_push_user_pay_result& operator=(const stuff_plan_management_push_user_pay_result&);
+  stuff_plan_management_push_user_pay_result() : success(0) {
+  }
+
+  virtual ~stuff_plan_management_push_user_pay_result() noexcept;
+  bool success;
+  gen_exp e;
+
+  _stuff_plan_management_push_user_pay_result__isset __isset;
+
+  void __set_success(const bool val);
+
+  void __set_e(const gen_exp& val);
+
+  bool operator == (const stuff_plan_management_push_user_pay_result & rhs) const
+  {
+    if (!(success == rhs.success))
+      return false;
+    if (!(e == rhs.e))
+      return false;
+    return true;
+  }
+  bool operator != (const stuff_plan_management_push_user_pay_result &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const stuff_plan_management_push_user_pay_result & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _stuff_plan_management_push_user_pay_presult__isset {
+  _stuff_plan_management_push_user_pay_presult__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _stuff_plan_management_push_user_pay_presult__isset;
+
+class stuff_plan_management_push_user_pay_presult {
+ public:
+
+
+  virtual ~stuff_plan_management_push_user_pay_presult() noexcept;
+  bool* success;
+  gen_exp e;
+
+  _stuff_plan_management_push_user_pay_presult__isset __isset;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+
+};
+
 class stuff_plan_managementClient : virtual public stuff_plan_managementIf {
  public:
   stuff_plan_managementClient(std::shared_ptr< ::apache::thrift::protocol::TProtocol> prot) {
@@ -3112,6 +3236,9 @@ class stuff_plan_managementClient : virtual public stuff_plan_managementIf {
   void get_company_brief(company_plan_brief& _return, const std::string& ssid);
   void send_get_company_brief(const std::string& ssid);
   void recv_get_company_brief(company_plan_brief& _return);
+  bool push_user_pay(const std::string& ssid, const int64_t plan_id);
+  void send_push_user_pay(const std::string& ssid, const int64_t plan_id);
+  bool recv_push_user_pay();
  protected:
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> piprot_;
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> poprot_;
@@ -3151,6 +3278,7 @@ class stuff_plan_managementProcessor : public ::apache::thrift::TDispatchProcess
   void process_search_plan_by_vichele_number(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
   void process_get_tomorrow_statistics(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
   void process_get_company_brief(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
+  void process_push_user_pay(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
  public:
   stuff_plan_managementProcessor(::std::shared_ptr<stuff_plan_managementIf> iface) :
     iface_(iface) {
@@ -3178,6 +3306,7 @@ class stuff_plan_managementProcessor : public ::apache::thrift::TDispatchProcess
     processMap_["search_plan_by_vichele_number"] = &stuff_plan_managementProcessor::process_search_plan_by_vichele_number;
     processMap_["get_tomorrow_statistics"] = &stuff_plan_managementProcessor::process_get_tomorrow_statistics;
     processMap_["get_company_brief"] = &stuff_plan_managementProcessor::process_get_company_brief;
+    processMap_["push_user_pay"] = &stuff_plan_managementProcessor::process_push_user_pay;
   }
 
   virtual ~stuff_plan_managementProcessor() {}
@@ -3436,6 +3565,15 @@ class stuff_plan_managementMultiface : virtual public stuff_plan_managementIf {
     return;
   }
 
+  bool push_user_pay(const std::string& ssid, const int64_t plan_id) {
+    size_t sz = ifaces_.size();
+    size_t i = 0;
+    for (; i < (sz - 1); ++i) {
+      ifaces_[i]->push_user_pay(ssid, plan_id);
+    }
+    return ifaces_[i]->push_user_pay(ssid, plan_id);
+  }
+
 };
 
 // The 'concurrent' client is a thread safe client that correctly handles
@@ -3540,6 +3678,9 @@ class stuff_plan_managementConcurrentClient : virtual public stuff_plan_manageme
   void get_company_brief(company_plan_brief& _return, const std::string& ssid);
   int32_t send_get_company_brief(const std::string& ssid);
   void recv_get_company_brief(company_plan_brief& _return, const int32_t seqid);
+  bool push_user_pay(const std::string& ssid, const int64_t plan_id);
+  int32_t send_push_user_pay(const std::string& ssid, const int64_t plan_id);
+  bool recv_push_user_pay(const int32_t seqid);
  protected:
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> piprot_;
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> poprot_;
