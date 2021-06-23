@@ -6,7 +6,14 @@
     <div class="order_number_show">
         <van-row type="flex" align="center" justify="space-between">
             <van-col>
-                计划单号：{{order_number}}
+                <van-row type="flex" align="center" :gutter="10">
+                    <van-col>
+                        计划单号：{{order_number}}
+                    </van-col>
+                    <van-col>
+                        <van-checkbox shape="square" v-model="is_selected">选择</van-checkbox>
+                    </van-col>
+                </van-row>
             </van-col>
             <van-col v-if="can_be_copy">
                 <van-button size="small" plain type="info" :to="{name:'PlanCopy', params:{plan_id:plan_id}}">复制</van-button>
@@ -33,6 +40,7 @@
             <p class="conflict_show">{{conflict_reason}}</p>
         </template>
     </van-card>
+
 </div>
 </template>
 
@@ -51,7 +59,19 @@ import {
 import {
     Button
 } from 'vant';
+import {
+    RadioGroup,
+    Radio
+} from 'vant';
+import {
+    Checkbox,
+    CheckboxGroup
+} from 'vant';
 
+Vue.use(Checkbox);
+Vue.use(CheckboxGroup);
+Vue.use(Radio);
+Vue.use(RadioGroup);
 Vue.use(Button);
 Vue.use(Col);
 Vue.use(Row);
@@ -77,10 +97,14 @@ export default {
             is_cancel: false,
             order_number: '',
             is_proxy: false,
-            count_of_vichele:0,
+            count_of_vichele: 0,
+            is_selected: false,
         };
     },
     watch: {
+        is_selected: function () {
+            this.$emit("select_trigger");
+        },
         plan_id: function () {
             this.init_brief_data();
         }
@@ -103,6 +127,18 @@ export default {
         },
     },
     methods: {
+        select_it: function () {
+            this.is_selected = true;
+        },
+        unselect_it: function () {
+            this.is_selected = false;
+        },
+        current_is_selected: function () {
+            return this.is_selected;
+        },
+        get_plan_id: function () {
+            return this.plan_id;
+        },
         nav_to_detail: function () {
             this.$router.push({
                 name: 'PlanDetail',
@@ -136,6 +172,8 @@ export default {
                 vue_this.is_cancel = resp.is_cancel;
                 if (resp.proxy_company.length > 0) {
                     vue_this.is_proxy = true;
+                } else {
+                    vue_this.is_proxy = false;
                 }
                 if (false == vue_this.company_view) {
                     vue_this.company = resp.sale_company;
@@ -190,7 +228,8 @@ export default {
     margin-bottom: 2px;
     position: relative;
 }
-.count_of_vichele{
+
+.count_of_vichele {
     position: absolute;
     top: 60%;
     left: 80%;
@@ -199,6 +238,7 @@ export default {
     color: rgb(9, 110, 0);
     opacity: 0.8;
 }
+
 .order_number_show {
     padding-left: 12px;
     margin-top: 3px;
