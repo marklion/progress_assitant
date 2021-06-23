@@ -1,7 +1,7 @@
 <template>
 <div class="company_order_show">
     <van-tabs v-model="active" sticky @change="tab_change">
-        <van-tab v-for="(status_in_map, _si_index) in status_name_map" :key="_si_index" :title="status_in_map.name" :badge="numbers_of_tab(status_in_map.status)">
+        <van-tab v-for="(status_in_map, _si_index) in status_name_map" :key="_si_index" :title="status_in_map.name" :dot="numbers_of_tab(status_in_map.status) > 0">
             <van-row type="flex" justify="center" align="center">
                 <van-col :span="20">
                     <van-dropdown-menu>
@@ -15,8 +15,19 @@
             </van-row>
             <van-notice-bar left-icon="info-o" :text="'今日计划 ' + company_plan_brief.today_plan_count + '单 ' + company_plan_brief.today_vichele_count + '辆车  明日计划 ' + company_plan_brief.tomorrow_plan_count + '单 ' + company_plan_brief.tomorrow_vichele_count + '辆车'" />
             <van-search v-model="vichele_number_search" label="车牌号" placeholder="请输入车牌号搜索当天计划" @search="search_plan_by_vichele_number" />
+            <van-row v-if="show_export">
+                <van-col :span="8">
+                    <van-button type="info" block @click="select_all_plan">全选</van-button>
+                </van-col>
+                <van-col :span="8">
+                    <van-button type="danger" block @click="cancle_select">取消多选</van-button>
+                </van-col>
+                <van-col :span="8">
+                    <van-button type="primary" block @click="show_export_prompt">导出所选{{item_need_export.length}}项</van-button>
+                </van-col>
+            </van-row>
             <van-list ref="order_list" :immediate-check="false" v-model="lazy_loading" :finished="lazy_finished" finished-text="没有更多了" @load="get_orders_by_ancher">
-                <plan-brief v-for="(single_plan, index) in order_need_show" :key="index" :conflict_reason="single_plan.conflict_reason" :plan_id="single_plan.plan_id" :company_view="!$store.state.userinfo.buyer" :status_prompt="single_plan.status_prompt"></plan-brief>
+                <plan-brief @select_trigger="proc_select" ref="single_plan" v-for="(single_plan, index) in order_need_show" :key="index" :conflict_reason="single_plan.conflict_reason" :plan_id="single_plan.plan_id" :company_view="!$store.state.userinfo.buyer" :status_prompt="single_plan.status_prompt"></plan-brief>
             </van-list>
         </van-tab>
     </van-tabs>
@@ -33,6 +44,8 @@
             <vxe-table-column field="status" title="状态"></vxe-table-column>
         </vxe-table>
     </van-dialog>
+
+    <export-file :remote_file="download_url" v-model="show_export_file"></export-file>
 </div>
 </template>
 
@@ -87,6 +100,9 @@ export default {
     name: 'CompanyOrder',
     data: function () {
         return {
+            download_url:'',
+            show_export_file:false,
+            show_export: false,
             company_plan_brief: {
                 today_plan_count: 0,
                 tomorrow_plan_count: 0,
@@ -143,6 +159,20 @@ export default {
             export_file_path: '',
             cancel_filter: 0,
             search_result: [],
+            item_need_export: [],
+            item_selected: function () {
+                var ret = [];
+                if (this.$refs.single_plan) {
+                    this.$refs.single_plan.forEach(element => {
+                        if (element.current_is_selected()) {
+                            if (ret.indexOf(element.get_plan_id()) == -1) {
+                                ret.push(element.get_plan_id());
+                            }
+                        }
+                    });
+                }
+                this.item_need_export = ret;
+            },
         }
     },
     computed: {
@@ -216,6 +246,32 @@ export default {
         "export-file": ExportFile,
     },
     methods: {
+        proc_select: function () {
+            this.item_selected();
+            if (this.item_need_export.length > 0) {
+                this.show_export = true;
+            } else {
+                this.show_export = false;
+            }
+        },
+        select_all_plan: function () {
+            this.$refs.single_plan.forEach(element => {
+                element.select_it();
+            });
+        },
+        cancle_select: function () {
+            this.$refs.single_plan.forEach(element => {
+                element.unselect_it();
+            });
+        },
+
+        show_export_prompt: function () {
+            var vue_this = this;
+            vue_this.$call_remote_process("stuff_plan_management", "export_plan", [vue_this.$cookies.get('pa_ssid'), vue_this.item_need_export]).then(function (resp) {
+                vue_this.download_url = vue_this.$remote_url + resp;
+                vue_this.show_export_file = true;
+            });
+        },
         tab_change: function () {
             this.init_orders(this.$store.state.userinfo.buyer)
             this.recheck_list();
