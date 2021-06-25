@@ -50,6 +50,10 @@ then
         [ $? == "0" ] && make -j 8 || exit -1
         popd
     done
+    pushd ${BUILD_DIR}/pa_rest_node
+    npm install
+    popd
+    cp ${BACK_SRC_DIR}/pa_rest_node -a ${BUILD_DIR}/
 fi
 
 [ -d ${BUILD_DIR}/conf ] || mkdir ${BUILD_DIR}/conf
@@ -71,7 +75,7 @@ then
     popd
 fi
 
-tar zcf pa_deliver.tar.gz -C ${BUILD_DIR} bin lib conf dist script
+tar zcf pa_deliver.tar.gz -C ${BUILD_DIR} bin lib conf dist script pa_rest_node
 cat deploy.sh pa_deliver.tar.gz > ${BUILD_DIR}/install.sh
 chmod +x ${BUILD_DIR}/install.sh
 rm pa_deliver.tar.gz

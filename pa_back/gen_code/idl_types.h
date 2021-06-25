@@ -61,6 +61,8 @@ class deliver_info;
 
 class vichele_statistics;
 
+class vichele_stuff_statistics;
+
 class vichele_search_result;
 
 class company_plan_brief;
@@ -1374,6 +1376,54 @@ class vichele_statistics : public virtual ::apache::thrift::TBase {
 void swap(vichele_statistics &a, vichele_statistics &b);
 
 std::ostream& operator<<(std::ostream& out, const vichele_statistics& obj);
+
+typedef struct _vichele_stuff_statistics__isset {
+  _vichele_stuff_statistics__isset() : vichele(false), stuff_name(false) {}
+  bool vichele :1;
+  bool stuff_name :1;
+} _vichele_stuff_statistics__isset;
+
+class vichele_stuff_statistics : public virtual ::apache::thrift::TBase {
+ public:
+
+  vichele_stuff_statistics(const vichele_stuff_statistics&);
+  vichele_stuff_statistics& operator=(const vichele_stuff_statistics&);
+  vichele_stuff_statistics() : stuff_name() {
+  }
+
+  virtual ~vichele_stuff_statistics() noexcept;
+  vichele_statistics vichele;
+  std::string stuff_name;
+
+  _vichele_stuff_statistics__isset __isset;
+
+  void __set_vichele(const vichele_statistics& val);
+
+  void __set_stuff_name(const std::string& val);
+
+  bool operator == (const vichele_stuff_statistics & rhs) const
+  {
+    if (!(vichele == rhs.vichele))
+      return false;
+    if (!(stuff_name == rhs.stuff_name))
+      return false;
+    return true;
+  }
+  bool operator != (const vichele_stuff_statistics &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const vichele_stuff_statistics & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+  virtual void printTo(std::ostream& out) const;
+};
+
+void swap(vichele_stuff_statistics &a, vichele_stuff_statistics &b);
+
+std::ostream& operator<<(std::ostream& out, const vichele_stuff_statistics& obj);
 
 typedef struct _vichele_search_result__isset {
   _vichele_search_result__isset() : plan_info(false), vichele_numbers(false), plan_time(false), status(false) {}

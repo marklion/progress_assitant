@@ -2039,6 +2039,75 @@ class vichele_statistics(object):
         return not (self == other)
 
 
+class vichele_stuff_statistics(object):
+    """
+    Attributes:
+     - vichele
+     - stuff_name
+
+    """
+
+
+    def __init__(self, vichele=None, stuff_name=None,):
+        self.vichele = vichele
+        self.stuff_name = stuff_name
+
+    def read(self, iprot):
+        if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
+            iprot._fast_decode(self, iprot, [self.__class__, self.thrift_spec])
+            return
+        iprot.readStructBegin()
+        while True:
+            (fname, ftype, fid) = iprot.readFieldBegin()
+            if ftype == TType.STOP:
+                break
+            if fid == 1:
+                if ftype == TType.STRUCT:
+                    self.vichele = vichele_statistics()
+                    self.vichele.read(iprot)
+                else:
+                    iprot.skip(ftype)
+            elif fid == 2:
+                if ftype == TType.STRING:
+                    self.stuff_name = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
+            else:
+                iprot.skip(ftype)
+            iprot.readFieldEnd()
+        iprot.readStructEnd()
+
+    def write(self, oprot):
+        if oprot._fast_encode is not None and self.thrift_spec is not None:
+            oprot.trans.write(oprot._fast_encode(self, [self.__class__, self.thrift_spec]))
+            return
+        oprot.writeStructBegin('vichele_stuff_statistics')
+        if self.vichele is not None:
+            oprot.writeFieldBegin('vichele', TType.STRUCT, 1)
+            self.vichele.write(oprot)
+            oprot.writeFieldEnd()
+        if self.stuff_name is not None:
+            oprot.writeFieldBegin('stuff_name', TType.STRING, 2)
+            oprot.writeString(self.stuff_name.encode('utf-8') if sys.version_info[0] == 2 else self.stuff_name)
+            oprot.writeFieldEnd()
+        oprot.writeFieldStop()
+        oprot.writeStructEnd()
+
+    def validate(self):
+        return
+
+    def __repr__(self):
+        L = ['%s=%r' % (key, value)
+             for key, value in self.__dict__.items()]
+        return '%s(%s)' % (self.__class__.__name__, ', '.join(L))
+
+    def __eq__(self, other):
+        return isinstance(other, self.__class__) and self.__dict__ == other.__dict__
+
+    def __ne__(self, other):
+        return not (self == other)
+
+
 class vichele_search_result(object):
     """
     Attributes:
@@ -2395,6 +2464,12 @@ vichele_statistics.thrift_spec = (
     (6, TType.BOOL, 'delivered', None, None, ),  # 6
     (7, TType.I64, 'plan_id', None, None, ),  # 7
     (8, TType.STRING, 'plan_order', 'UTF8', None, ),  # 8
+)
+all_structs.append(vichele_stuff_statistics)
+vichele_stuff_statistics.thrift_spec = (
+    None,  # 0
+    (1, TType.STRUCT, 'vichele', [vichele_statistics, None], None, ),  # 1
+    (2, TType.STRING, 'stuff_name', 'UTF8', None, ),  # 2
 )
 all_structs.append(vichele_search_result)
 vichele_search_result.thrift_spec = (
