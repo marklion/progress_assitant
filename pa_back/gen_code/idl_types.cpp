@@ -3445,6 +3445,118 @@ void vichele_statistics::printTo(std::ostream& out) const {
 }
 
 
+vichele_stuff_statistics::~vichele_stuff_statistics() noexcept {
+}
+
+
+void vichele_stuff_statistics::__set_vichele(const vichele_statistics& val) {
+  this->vichele = val;
+}
+
+void vichele_stuff_statistics::__set_stuff_name(const std::string& val) {
+  this->stuff_name = val;
+}
+std::ostream& operator<<(std::ostream& out, const vichele_stuff_statistics& obj)
+{
+  obj.printTo(out);
+  return out;
+}
+
+
+uint32_t vichele_stuff_statistics::read(::apache::thrift::protocol::TProtocol* iprot) {
+
+  ::apache::thrift::protocol::TInputRecursionTracker tracker(*iprot);
+  uint32_t xfer = 0;
+  std::string fname;
+  ::apache::thrift::protocol::TType ftype;
+  int16_t fid;
+
+  xfer += iprot->readStructBegin(fname);
+
+  using ::apache::thrift::protocol::TProtocolException;
+
+
+  while (true)
+  {
+    xfer += iprot->readFieldBegin(fname, ftype, fid);
+    if (ftype == ::apache::thrift::protocol::T_STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 1:
+        if (ftype == ::apache::thrift::protocol::T_STRUCT) {
+          xfer += this->vichele.read(iprot);
+          this->__isset.vichele = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 2:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->stuff_name);
+          this->__isset.stuff_name = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      default:
+        xfer += iprot->skip(ftype);
+        break;
+    }
+    xfer += iprot->readFieldEnd();
+  }
+
+  xfer += iprot->readStructEnd();
+
+  return xfer;
+}
+
+uint32_t vichele_stuff_statistics::write(::apache::thrift::protocol::TProtocol* oprot) const {
+  uint32_t xfer = 0;
+  ::apache::thrift::protocol::TOutputRecursionTracker tracker(*oprot);
+  xfer += oprot->writeStructBegin("vichele_stuff_statistics");
+
+  xfer += oprot->writeFieldBegin("vichele", ::apache::thrift::protocol::T_STRUCT, 1);
+  xfer += this->vichele.write(oprot);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("stuff_name", ::apache::thrift::protocol::T_STRING, 2);
+  xfer += oprot->writeString(this->stuff_name);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldStop();
+  xfer += oprot->writeStructEnd();
+  return xfer;
+}
+
+void swap(vichele_stuff_statistics &a, vichele_stuff_statistics &b) {
+  using ::std::swap;
+  swap(a.vichele, b.vichele);
+  swap(a.stuff_name, b.stuff_name);
+  swap(a.__isset, b.__isset);
+}
+
+vichele_stuff_statistics::vichele_stuff_statistics(const vichele_stuff_statistics& other46) {
+  vichele = other46.vichele;
+  stuff_name = other46.stuff_name;
+  __isset = other46.__isset;
+}
+vichele_stuff_statistics& vichele_stuff_statistics::operator=(const vichele_stuff_statistics& other47) {
+  vichele = other47.vichele;
+  stuff_name = other47.stuff_name;
+  __isset = other47.__isset;
+  return *this;
+}
+void vichele_stuff_statistics::printTo(std::ostream& out) const {
+  using ::apache::thrift::to_string;
+  out << "vichele_stuff_statistics(";
+  out << "vichele=" << to_string(vichele);
+  out << ", " << "stuff_name=" << to_string(stuff_name);
+  out << ")";
+}
+
+
 vichele_search_result::~vichele_search_result() noexcept {
 }
 
@@ -3571,19 +3683,19 @@ void swap(vichele_search_result &a, vichele_search_result &b) {
   swap(a.__isset, b.__isset);
 }
 
-vichele_search_result::vichele_search_result(const vichele_search_result& other46) {
-  plan_info = other46.plan_info;
-  vichele_numbers = other46.vichele_numbers;
-  plan_time = other46.plan_time;
-  status = other46.status;
-  __isset = other46.__isset;
+vichele_search_result::vichele_search_result(const vichele_search_result& other48) {
+  plan_info = other48.plan_info;
+  vichele_numbers = other48.vichele_numbers;
+  plan_time = other48.plan_time;
+  status = other48.status;
+  __isset = other48.__isset;
 }
-vichele_search_result& vichele_search_result::operator=(const vichele_search_result& other47) {
-  plan_info = other47.plan_info;
-  vichele_numbers = other47.vichele_numbers;
-  plan_time = other47.plan_time;
-  status = other47.status;
-  __isset = other47.__isset;
+vichele_search_result& vichele_search_result::operator=(const vichele_search_result& other49) {
+  plan_info = other49.plan_info;
+  vichele_numbers = other49.vichele_numbers;
+  plan_time = other49.plan_time;
+  status = other49.status;
+  __isset = other49.__isset;
   return *this;
 }
 void vichele_search_result::printTo(std::ostream& out) const {
@@ -3723,19 +3835,19 @@ void swap(company_plan_brief &a, company_plan_brief &b) {
   swap(a.__isset, b.__isset);
 }
 
-company_plan_brief::company_plan_brief(const company_plan_brief& other48) {
-  today_plan_count = other48.today_plan_count;
-  today_vichele_count = other48.today_vichele_count;
-  tomorrow_plan_count = other48.tomorrow_plan_count;
-  tomorrow_vichele_count = other48.tomorrow_vichele_count;
-  __isset = other48.__isset;
+company_plan_brief::company_plan_brief(const company_plan_brief& other50) {
+  today_plan_count = other50.today_plan_count;
+  today_vichele_count = other50.today_vichele_count;
+  tomorrow_plan_count = other50.tomorrow_plan_count;
+  tomorrow_vichele_count = other50.tomorrow_vichele_count;
+  __isset = other50.__isset;
 }
-company_plan_brief& company_plan_brief::operator=(const company_plan_brief& other49) {
-  today_plan_count = other49.today_plan_count;
-  today_vichele_count = other49.today_vichele_count;
-  tomorrow_plan_count = other49.tomorrow_plan_count;
-  tomorrow_vichele_count = other49.tomorrow_vichele_count;
-  __isset = other49.__isset;
+company_plan_brief& company_plan_brief::operator=(const company_plan_brief& other51) {
+  today_plan_count = other51.today_plan_count;
+  today_vichele_count = other51.today_vichele_count;
+  tomorrow_plan_count = other51.tomorrow_plan_count;
+  tomorrow_vichele_count = other51.tomorrow_vichele_count;
+  __isset = other51.__isset;
   return *this;
 }
 void company_plan_brief::printTo(std::ostream& out) const {

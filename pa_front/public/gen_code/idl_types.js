@@ -2255,6 +2255,72 @@ vichele_statistics = class {
   }
 
 };
+vichele_stuff_statistics = class {
+  constructor(args) {
+    this.vichele = null;
+    this.stuff_name = null;
+    if (args) {
+      if (args.vichele !== undefined && args.vichele !== null) {
+        this.vichele = new vichele_statistics(args.vichele);
+      }
+      if (args.stuff_name !== undefined && args.stuff_name !== null) {
+        this.stuff_name = args.stuff_name;
+      }
+    }
+  }
+
+  read (input) {
+    input.readStructBegin();
+    while (true) {
+      const ret = input.readFieldBegin();
+      const ftype = ret.ftype;
+      const fid = ret.fid;
+      if (ftype == Thrift.Type.STOP) {
+        break;
+      }
+      switch (fid) {
+        case 1:
+        if (ftype == Thrift.Type.STRUCT) {
+          this.vichele = new vichele_statistics();
+          this.vichele.read(input);
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        case 2:
+        if (ftype == Thrift.Type.STRING) {
+          this.stuff_name = input.readString().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        default:
+          input.skip(ftype);
+      }
+      input.readFieldEnd();
+    }
+    input.readStructEnd();
+    return;
+  }
+
+  write (output) {
+    output.writeStructBegin('vichele_stuff_statistics');
+    if (this.vichele !== null && this.vichele !== undefined) {
+      output.writeFieldBegin('vichele', Thrift.Type.STRUCT, 1);
+      this.vichele.write(output);
+      output.writeFieldEnd();
+    }
+    if (this.stuff_name !== null && this.stuff_name !== undefined) {
+      output.writeFieldBegin('stuff_name', Thrift.Type.STRING, 2);
+      output.writeString(this.stuff_name);
+      output.writeFieldEnd();
+    }
+    output.writeFieldStop();
+    output.writeStructEnd();
+    return;
+  }
+
+};
 vichele_search_result = class {
   constructor(args) {
     this.plan_info = null;

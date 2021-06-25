@@ -3579,6 +3579,144 @@ stuff_plan_management_push_user_pay_result = class {
   }
 
 };
+stuff_plan_management_get_today_transformation_args = class {
+  constructor(args) {
+    this.company_name = null;
+    if (args) {
+      if (args.company_name !== undefined && args.company_name !== null) {
+        this.company_name = args.company_name;
+      }
+    }
+  }
+
+  read (input) {
+    input.readStructBegin();
+    while (true) {
+      const ret = input.readFieldBegin();
+      const ftype = ret.ftype;
+      const fid = ret.fid;
+      if (ftype == Thrift.Type.STOP) {
+        break;
+      }
+      switch (fid) {
+        case 1:
+        if (ftype == Thrift.Type.STRING) {
+          this.company_name = input.readString().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        case 0:
+          input.skip(ftype);
+          break;
+        default:
+          input.skip(ftype);
+      }
+      input.readFieldEnd();
+    }
+    input.readStructEnd();
+    return;
+  }
+
+  write (output) {
+    output.writeStructBegin('stuff_plan_management_get_today_transformation_args');
+    if (this.company_name !== null && this.company_name !== undefined) {
+      output.writeFieldBegin('company_name', Thrift.Type.STRING, 1);
+      output.writeString(this.company_name);
+      output.writeFieldEnd();
+    }
+    output.writeFieldStop();
+    output.writeStructEnd();
+    return;
+  }
+
+};
+stuff_plan_management_get_today_transformation_result = class {
+  constructor(args) {
+    this.success = null;
+    this.e = null;
+    if (args instanceof gen_exp) {
+        this.e = args;
+        return;
+    }
+    if (args) {
+      if (args.success !== undefined && args.success !== null) {
+        this.success = Thrift.copyList(args.success, [vichele_stuff_statistics]);
+      }
+      if (args.e !== undefined && args.e !== null) {
+        this.e = args.e;
+      }
+    }
+  }
+
+  read (input) {
+    input.readStructBegin();
+    while (true) {
+      const ret = input.readFieldBegin();
+      const ftype = ret.ftype;
+      const fid = ret.fid;
+      if (ftype == Thrift.Type.STOP) {
+        break;
+      }
+      switch (fid) {
+        case 0:
+        if (ftype == Thrift.Type.LIST) {
+          this.success = [];
+          const _rtmp3106 = input.readListBegin();
+          const _size105 = _rtmp3106.size || 0;
+          for (let _i107 = 0; _i107 < _size105; ++_i107) {
+            let elem108 = null;
+            elem108 = new vichele_stuff_statistics();
+            elem108.read(input);
+            this.success.push(elem108);
+          }
+          input.readListEnd();
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        case 1:
+        if (ftype == Thrift.Type.STRUCT) {
+          this.e = new gen_exp();
+          this.e.read(input);
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        default:
+          input.skip(ftype);
+      }
+      input.readFieldEnd();
+    }
+    input.readStructEnd();
+    return;
+  }
+
+  write (output) {
+    output.writeStructBegin('stuff_plan_management_get_today_transformation_result');
+    if (this.success !== null && this.success !== undefined) {
+      output.writeFieldBegin('success', Thrift.Type.LIST, 0);
+      output.writeListBegin(Thrift.Type.STRUCT, this.success.length);
+      for (let iter109 in this.success) {
+        if (this.success.hasOwnProperty(iter109)) {
+          iter109 = this.success[iter109];
+          iter109.write(output);
+        }
+      }
+      output.writeListEnd();
+      output.writeFieldEnd();
+    }
+    if (this.e !== null && this.e !== undefined) {
+      output.writeFieldBegin('e', Thrift.Type.STRUCT, 1);
+      this.e.write(output);
+      output.writeFieldEnd();
+    }
+    output.writeFieldStop();
+    output.writeStructEnd();
+    return;
+  }
+
+};
 stuff_plan_managementClient = class stuff_plan_managementClient {
   constructor(input, output) {
     this.input = input;
@@ -5081,5 +5219,64 @@ stuff_plan_managementClient = class stuff_plan_managementClient {
       return result.success;
     }
     throw 'push_user_pay failed: unknown result';
+  }
+
+  get_today_transformation (company_name) {
+    const self = this;
+    return new Promise((resolve, reject) => {
+      self.send_get_today_transformation(company_name, (error, result) => {
+        return error ? reject(error) : resolve(result);
+      });
+    });
+  }
+
+  send_get_today_transformation (company_name, callback) {
+    const params = {
+      company_name: company_name
+    };
+    const args = new stuff_plan_management_get_today_transformation_args(params);
+    try {
+      this.output.writeMessageBegin('get_today_transformation', Thrift.MessageType.CALL, this.seqid);
+      args.write(this.output);
+      this.output.writeMessageEnd();
+      const self = this;
+      this.output.getTransport().flush(true, () => {
+        let error = null, result = null;
+        try {
+          result = self.recv_get_today_transformation();
+        } catch (e) {
+          error = e;
+        }
+        callback(error, result);
+      });
+    }
+    catch (e) {
+      if (typeof this.output.getTransport().reset === 'function') {
+        this.output.getTransport().reset();
+      }
+      throw e;
+    }
+  }
+
+  recv_get_today_transformation () {
+    const ret = this.input.readMessageBegin();
+    const mtype = ret.mtype;
+    if (mtype == Thrift.MessageType.EXCEPTION) {
+      const x = new Thrift.TApplicationException();
+      x.read(this.input);
+      this.input.readMessageEnd();
+      throw x;
+    }
+    const result = new stuff_plan_management_get_today_transformation_result();
+    result.read(this.input);
+    this.input.readMessageEnd();
+
+    if (null !== result.e) {
+      throw result.e;
+    }
+    if (null !== result.success) {
+      return result.success;
+    }
+    throw 'get_today_transformation failed: unknown result';
   }
 };

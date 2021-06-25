@@ -49,6 +49,7 @@ if len(sys.argv) <= 1 or sys.argv[1] == '--help':
     print('   get_tomorrow_statistics(string ssid)')
     print('  company_plan_brief get_company_brief(string ssid)')
     print('  bool push_user_pay(string ssid, i64 plan_id)')
+    print('   get_today_transformation(string company_name)')
     print('')
     sys.exit(0)
 
@@ -277,6 +278,12 @@ elif cmd == 'push_user_pay':
         print('push_user_pay requires 2 args')
         sys.exit(1)
     pp.pprint(client.push_user_pay(args[0], eval(args[1]),))
+
+elif cmd == 'get_today_transformation':
+    if len(args) != 1:
+        print('get_today_transformation requires 1 args')
+        sys.exit(1)
+    pp.pprint(client.get_today_transformation(args[0],))
 
 else:
     print('Unrecognized method %s' % cmd)

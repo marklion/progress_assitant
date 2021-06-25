@@ -10,3 +10,4 @@ RUN sed -i '/domain="resource" name="width"/d' /etc/ImageMagick-6/policy.xml
 COPY mutool /bin/
 RUN pip3 install werobot
 RUN pip3 install thrift 
+RUN  apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y nodejs
