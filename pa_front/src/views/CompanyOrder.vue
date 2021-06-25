@@ -6,7 +6,7 @@
                 <van-col :span="20">
                     <van-dropdown-menu>
                         <van-dropdown-item v-model="date_filter" :options="date_option" @close="recheck_list" />
-                        <van-dropdown-item v-model="cancel_filter" :options="cancel_option" @close="recheck_list" />
+                        <van-dropdown-item v-model="cancel_filter" :options="cancel_option" @change="recheck_list" />
                     </van-dropdown-menu>
                 </van-col>
                 <van-col :span="4">
@@ -26,11 +26,11 @@
                     <van-button type="primary" block @click="show_export_prompt">导出所选{{item_need_export.length}}项</van-button>
                 </van-col>
             </van-row>
-            <van-list ref="order_list" :immediate-check="false" v-model="lazy_loading" :finished="lazy_finished" finished-text="没有更多了" @load="get_orders_by_ancher">
-                <plan-brief @select_trigger="proc_select" ref="single_plan" v-for="(single_plan, index) in order_need_show" :key="index" :conflict_reason="single_plan.conflict_reason" :plan_id="single_plan.plan_id" :company_view="!$store.state.userinfo.buyer" :status_prompt="single_plan.status_prompt"></plan-brief>
-            </van-list>
         </van-tab>
     </van-tabs>
+    <van-list ref="order_list" v-model="lazy_loading" :finished="lazy_finished" finished-text="没有更多了" @load="get_orders_by_ancher">
+        <plan-brief @select_trigger="proc_select" ref="single_plan" v-for="(single_plan, index) in order_need_show" :key="index" :conflict_reason="single_plan.conflict_reason" :plan_id="single_plan.plan_id" :company_view="!$store.state.userinfo.buyer" :status_prompt="single_plan.status_prompt"></plan-brief>
+    </van-list>
     <export-file :remote_file="export_file_path" v-model="show_export_email"></export-file>
     <van-dialog :show-confirm-button="false" close-on-click-overlay v-model="show_search_result" title="搜索结果">
         <vxe-table size="small" stripe align="center" :data="search_result" max-height="400">
@@ -100,8 +100,8 @@ export default {
     name: 'CompanyOrder',
     data: function () {
         return {
-            download_url:'',
-            show_export_file:false,
+            download_url: '',
+            show_export_file: false,
             show_export: false,
             company_plan_brief: {
                 today_plan_count: 0,
@@ -273,13 +273,12 @@ export default {
             });
         },
         tab_change: function () {
-            this.init_orders(this.$store.state.userinfo.buyer)
             this.recheck_list();
         },
         recheck_list: function () {
-            this.$refs.order_list.forEach(element => {
-                element.check();
-            });
+            this.lazy_finished = false;
+            this.orders = [];
+            this.$refs.order_list.check();
         },
         search_plan_by_vichele_number: function () {
             var vue_this = this;
@@ -291,16 +290,17 @@ export default {
                 vue_this.show_search_result = true;
             });
         },
-        get_orders_by_ancher: function () {
+        get_orders_by_ancher: function (_init) {
             var vue_this = this;
-            if (vue_this.orders.length <= 0) {
-                return;
-            }
             var func = "get_company_plan";
             if (vue_this.$store.state.userinfo.buyer) {
                 func = "get_created_plan";
             }
             vue_this.$call_remote_process("stuff_plan_management", func, [vue_this.$cookies.get('pa_ssid'), vue_this.orders.length]).then(function (resp) {
+                if (_init && _init == true) {
+                    vue_this.orders = [];
+                    vue_this.lazy_finished = false;
+                }
                 resp.forEach(element => {
                     vue_this.orders.push(element)
                 });
@@ -310,53 +310,36 @@ export default {
                 vue_this.lazy_loading = false;
             });
         },
-        init_orders: function (_is_buyer) {
+        init_orders: function () {
             var vue_this = this;
-            var func = "get_company_plan";
-            if (_is_buyer) {
-                func = "get_created_plan";
-            }
-            vue_this.$call_remote_process("stuff_plan_management", func, [vue_this.$cookies.get('pa_ssid'), 0]).then(function (resp) {
-                vue_this.orders = [];
-                var some_plan_id = 0;
-                resp.forEach((element, index) => {
-                    vue_this.$set(vue_this.orders, index, element);
-                    some_plan_id = element.plan_id;
-                });
-                if (resp.length < 15) {
-                    vue_this.lazy_finished = true;
-                } else {
-                    vue_this.lazy_finished = false;
-                }
-
-                if (0 != some_plan_id) {
-                    vue_this.$call_remote_process("stuff_plan_management", "get_status_rule", [some_plan_id]).then(function (resp) {
-                        vue_this.status_name_map = [{
-                            name: "全部",
-                            status: -1
-                        }];
-                        resp.forEach(element => {
-                            vue_this.status_name_map.push({
-                                name: element.prompt,
-                                status: element.index
-                            });
-                        });
+            vue_this.orders = [];
+            vue_this.$call_remote_process("stuff_plan_management", "get_status_rule", [1]).then(function (resp) {
+                vue_this.status_name_map = [{
+                    name: "全部",
+                    status: -1
+                }];
+                resp.forEach(element => {
+                    vue_this.status_name_map.push({
+                        name: element.prompt,
+                        status: element.index
                     });
-
-                }
+                });
             });
+
             vue_this.$call_remote_process("stuff_plan_management", "get_company_brief", [vue_this.$cookies.get('pa_ssid')]).then(function (resp) {
                 vue_this.company_plan_brief = resp;
             });
         },
     },
     watch: {
-        "$store.state.userinfo.buyer": function (_val) {
-            this.init_orders(_val);
+        "$store.state.userinfo.buyer": function () {
+            this.lazy_finished = false;
+            this.orders = [];
+            this.get_orders_by_ancher(true);
         },
     },
     beforeMount: function () {
-        this.init_orders(this.$store.state.userinfo.buyer);
+        this.init_orders();
 
     },
     activated() {

@@ -414,6 +414,10 @@ public:
         }
         ret = PA_STATUS_RULE_action(*plan, *opt_user, PA_DATAOPT_current_time(), status_comment);
         ret &= PA_STATUS_RULE_change_status(*plan, *opt_user);
+        if (ret)
+        {
+            plan->send_wechat_msg(*opt_user, "确认了该计划, 附言：" + status_comment);
+        }
 
         return ret;
     }
@@ -438,6 +442,11 @@ public:
         else
         {
             PA_RETURN_NOPRIVA_MSG();
+        }
+
+        if (ret)
+        {
+            plan->send_wechat_msg(*opt_user, "确认收款, 附言：" + status_comment);
         }
 
         return ret;
@@ -669,8 +678,11 @@ public:
                 ret = PA_STATUS_RULE_action(plan, opt_user, PA_DATAOPT_current_time(), reason);
                 if (ret)
                 {
-                    
-                    plan.send_wechat_msg(opt_user, "撤销了该计划\r\n 备注：" + reason);
+                    if (!opt_user.is_sys_admin)
+                    {
+                        plan.send_wechat_msg(opt_user, "撤销了该计划\r\n 备注：" + reason);
+                    }
+
                     pa_sql_archive_plan tmp;
                     tmp.translate_from_plan(plan);
                     plan.set_parent(tmp, "archived");
@@ -1046,7 +1058,7 @@ public:
         auto plans = PA_RPC_get_all_plans_related_by_user(ssid, "plan_time LIKE '%s%%' AND is_cancel = 0", plan_date.c_str());
 
         std::vector<int64_t> plan_ids;
-        for (auto &itr:plans)
+        for (auto &itr : plans)
         {
             if (create_date.length() == 0)
             {
@@ -1116,7 +1128,7 @@ public:
         today_date = today_date.substr(0, 10);
         auto plan_scope = PA_RPC_get_all_plans_related_by_user(ssid, "plan_time LIKE '%s%%'", today_date.c_str());
         std::string plan_filter = "belong_plan_ext_key = 0";
-        for (auto &itr:plan_scope) 
+        for (auto &itr : plan_scope)
         {
             plan_filter.append(" OR belong_plan_ext_key = " + std::to_string(itr.get_pri_id()));
         }
@@ -1214,16 +1226,16 @@ public:
 
         _return.today_plan_count = today_plans.size();
         _return.tomorrow_plan_count = tomorrow_plans.size();
-        for (auto &itr:today_plans)
+        for (auto &itr : today_plans)
         {
             auto single_vichele = itr.get_all_children<pa_sql_single_vichele>("belong_plan");
             _return.today_vichele_count += single_vichele.size();
-        } 
-        for (auto &itr:tomorrow_plans)
+        }
+        for (auto &itr : tomorrow_plans)
         {
             auto single_vichele = itr.get_all_children<pa_sql_single_vichele>("belong_plan");
             _return.tomorrow_vichele_count += single_vichele.size();
-        } 
+        }
     }
 
     virtual bool push_user_pay(const std::string &ssid, const int64_t plan_id)
