@@ -20,11 +20,12 @@ def send_mail(_to_user, _title, _content, _attachments):
         message['Subject'] = Header(subject, 'utf-8')
         content = MIMEText(_content, 'plain', 'utf-8')
         message.attach(content)
-        with open(_attachments, 'rb') as f:
-            att_file = f.read()
-        file_content = MIMEApplication(att_file)
-        file_content.add_header('Content-Disposition', 'attachment',  filename="导出表.xlsx")
-        message.attach(file_content)
+        if len(_attachments) != 0:
+            with open(_attachments, 'rb') as f:
+                att_file = f.read()
+            file_content = MIMEApplication(att_file)
+            file_content.add_header('Content-Disposition', 'attachment',  filename="导出表.xlsx")
+            message.attach(file_content)
 
         smtpObj.sendmail('postmaster@d8sis.cn',
                         [_to_user], message.as_string())
@@ -38,7 +39,9 @@ if __name__ == '__main__':
     _to_user = sys.argv[1]
     _title = sys.argv[2]
     _content = sys.argv[3]
-    _attachments = sys.argv[4]
+    _attachments = ""
+    if len(sys.argv) == 5:
+        _attachments = sys.argv[4]
 
     if send_mail(_to_user, _title, _content, _attachments):
         sys.exit(0)

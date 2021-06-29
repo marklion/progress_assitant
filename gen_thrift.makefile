@@ -3,9 +3,10 @@ BACK_END_PATH=$(SRC_DIR)/pa_back/gen_code
 FRONT_END_PATH=$(SRC_DIR)/pa_front/public/gen_code
 AUTO_REPLY_PATH=$(SRC_DIR)/pa_script/gen_code
 NODE_REST_SEVER=$(SRC_DIR)/pa_back/pa_rest_node/gen_code
+NODE_CLI=$(SRC_DIR)/pa_tool/pa_api_cli/gen_code
 
 
-all:$(BACK_END_PATH) $(FRONT_END_PATH) $(AUTO_REPLY_PATH) $(NODE_REST_SEVER)
+all:$(BACK_END_PATH) $(FRONT_END_PATH) $(AUTO_REPLY_PATH) $(NODE_REST_SEVER) $(NODE_CLI)
 
 $(BACK_END_PATH):$(SRC_DIR)/idl.thrift
 	rm -rf $(BACK_END_PATH)
@@ -26,3 +27,7 @@ $(NODE_REST_SEVER):$(SRC_DIR)/idl.thrift
 	rm -rf $(NODE_REST_SEVER)
 	mkdir $(NODE_REST_SEVER)
 	thrift -out $(NODE_REST_SEVER) --gen js:node $^
+$(NODE_CLI):$(SRC_DIR)/idl.thrift
+	rm -rf $(NODE_CLI)
+	mkdir $(NODE_CLI)
+	thrift -out $(NODE_CLI) --gen js:node $^
