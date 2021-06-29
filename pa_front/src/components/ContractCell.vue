@@ -1,22 +1,28 @@
 <template>
 <div class="contract_cell_show">
-    <van-cell center :label="contract.number?'合同编号：' + contract.number:''">
-        <template #title>
-            <van-row :gutter="10" type="flex" align="center">
-                <van-col>合同</van-col>
-                <van-col>
-                    <van-tag :type="contract_status[contract.status].type">{{contract_status[contract.status].text}}</van-tag>
-                </van-col>
-            </van-row>
+    <van-swipe-cell>
+        <template #right v-if="!$store.state.userinfo.buyer">
+            <van-button class="swipe_button" square type="info" text="复制公司名" @click="$copyText(a_side)" />
+            <van-button class="swipe_button" square type="primary" text="复制编码" @click="$copyText(contract.customer_code)"/>
         </template>
-        <template #right-icon v-if="!contract.number && !$store.state.userinfo.buyer">
-            <van-button type="primary" size="small" @click="add_contract_show = true">增加</van-button>
-        </template>
-        <div v-if="contract.number">
-            <div>开始日期：{{contract.start_time}}</div>
-            <div>到期日期：{{contract.end_time}}</div>
-        </div>
-    </van-cell>
+        <van-cell center :label="contract.number?'合同编号：' + contract.number:''">
+            <template #title>
+                <van-row :gutter="10" type="flex" align="center">
+                    <van-col>合同</van-col>
+                    <van-col>
+                        <van-tag :type="contract_status[contract.status].type">{{contract_status[contract.status].text}}</van-tag>
+                    </van-col>
+                </van-row>
+            </template>
+            <template #right-icon v-if="!contract.number && !$store.state.userinfo.buyer">
+                <van-button type="primary" size="small" @click="add_contract_show = true">增加</van-button>
+            </template>
+            <div v-if="contract.number">
+                <div>开始日期：{{contract.start_time}}</div>
+                <div>到期日期：{{contract.end_time}}</div>
+            </div>
+        </van-cell>
+    </van-swipe-cell>
     <van-dialog v-model="add_contract_show" title="添加合同" :showConfirmButton="false" closeOnClickOverlay>
         <van-form @submit="add_contract">
             <van-field v-model="submit_contract.a_side_company" name="甲方" label="甲方" placeholder="请输入甲方公司名" :rules="[{ required:true, message:'请输入甲方公司'}]" />
@@ -56,7 +62,13 @@ import {
 import {
     Button
 } from 'vant';
+import {
+    SwipeCell
+} from 'vant';
+import VueClipboard from 'vue-clipboard2'
 
+Vue.use(VueClipboard)
+Vue.use(SwipeCell);
 Vue.use(Button);
 Vue.use(Dialog);
 Vue.use(Form);
@@ -150,6 +162,8 @@ export default {
 }
 </script>
 
-<style>
-
+<style scoped>
+.swipe_button {
+    height: 100%;
+}
 </style>
