@@ -1,0 +1,16 @@
+{
+  "name": "pa_api_cli",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "commander": "^8.0.0",
+    "js-sha256": "^0.9.0",
+    "thrift": "^0.14.2"
+  }
+}

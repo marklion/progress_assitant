@@ -482,4 +482,32 @@ public:
     void update_status();
 };
 
+class pa_sql_api_user:public sql_tree_base{
+public:
+    std::string password_md5;
+    std::string email;
+    std::string verify_code;
+    long code_expire = 0;
+    std::string token;
+    pa_sql_api_user() {
+        add_parent_type<pa_sql_company>("belong_company");
+    }
+    virtual std::vector<sqlite_orm_column> self_columns_defined()
+    {
+        std::vector<sqlite_orm_column> ret;
+        ret.push_back(sqlite_orm_column("password_md5", sqlite_orm_column::STRING, &password_md5));
+        ret.push_back(sqlite_orm_column("email", sqlite_orm_column::STRING, &email));
+        ret.push_back(sqlite_orm_column("verify_code", sqlite_orm_column::STRING, &verify_code));
+        ret.push_back(sqlite_orm_column("code_expire", sqlite_orm_column::INTEGER, &code_expire));
+        ret.push_back(sqlite_orm_column("token", sqlite_orm_column::STRING, &token));
+
+        return ret;
+    }
+
+    virtual std::string table_name()
+    {
+        return "api_user_table";
+    }
+};
+
 #endif // _PA_DATABSE_H_

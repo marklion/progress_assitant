@@ -4,6 +4,7 @@ branches:
   - /^ZYZL/
 install:
 - DEBIAN_FRONTEND=noninteractive sudo apt-get install -y libpython3-dev npm nodejs sqlite3 libsqlite3-dev uuid uuid-dev libcurl4-openssl-dev automake bison flex g++ git libboost-all-dev libevent-dev libssl-dev libtool make pkg-config
+- npm install pkg -g
 - sudo cp depend_docker/libthrift.a /usr/lib/
 - sudo cp -a depend_docker/thrift /usr/include/
 - mkdir thrift_dir

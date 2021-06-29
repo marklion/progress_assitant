@@ -50,10 +50,10 @@ then
         [ $? == "0" ] && make -j 8 || exit -1
         popd
     done
+    cp ${BACK_SRC_DIR}/pa_rest_node -a ${BUILD_DIR}/
     pushd ${BUILD_DIR}/pa_rest_node
     npm install
     popd
-    cp ${BACK_SRC_DIR}/pa_rest_node -a ${BUILD_DIR}/
 fi
 
 [ -d ${BUILD_DIR}/conf ] || mkdir ${BUILD_DIR}/conf
@@ -74,6 +74,12 @@ then
     cp ./dist -a ${BUILD_DIR}/
     popd
 fi
+
+pushd ${SRC_DIR}/pa_tool/pa_api_cli
+npm install
+mkdir ${BUILD_DIR}/dist/tools
+pkg --out-path ${BUILD_DIR}/dist/tools pa_api_cli.js
+popd
 
 tar zcf pa_deliver.tar.gz -C ${BUILD_DIR} bin lib conf dist script pa_rest_node
 cat deploy.sh pa_deliver.tar.gz > ${BUILD_DIR}/install.sh
