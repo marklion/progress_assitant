@@ -39,7 +39,7 @@ cli.command('register')
             var sha_password = sha256(sub_args.password);
             var result = await request_rpc("open_api_management", 'register_api_user', [sub_args.company, sub_args.email, sha_password]);
             if (result) {
-                console.log('verify code was sent to your email address, please check it and use command "verify -e <email> -v <code>" to finish register');
+                console.log('verify code was sent to your email address, please check it and use command "verify -e <email> -C <code>" to finish register');
             }
         } catch (error) {
             console.log(error.msg);
@@ -76,6 +76,20 @@ cli.command('unregister')
             else {
                 console.log('failure');
             }
+        } catch (error) {
+            console.log(error.msg);
+        }
+    });
+
+cli.command('token')
+    .requiredOption('-e, --email <email>', 'specify the email')
+    .requiredOption('-p, --password <password>', 'specify the password')
+    .action(async (sub_args)=>{
+        var sha_password = sha256(sub_args.password);
+        try {
+            var result = await request_rpc('open_api_management', 'get_token', [sub_args.email, sha_password]);
+            console.log('String in below line is the api token, please remember it. It will change once the token command issued');
+            console.log(result);
         } catch (error) {
             console.log(error.msg);
         }

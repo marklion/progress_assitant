@@ -27,6 +27,7 @@ if len(sys.argv) <= 1 or sys.argv[1] == '--help':
     print('  bool register_api_user(string company_name, string email, string password)')
     print('  bool verify_email_code(string email, string code)')
     print('  bool unregister_api_user(string email, string password)')
+    print('  string get_token(string email, string password)')
     print('')
     sys.exit(0)
 
@@ -123,6 +124,12 @@ elif cmd == 'unregister_api_user':
         print('unregister_api_user requires 2 args')
         sys.exit(1)
     pp.pprint(client.unregister_api_user(args[0], args[1],))
+
+elif cmd == 'get_token':
+    if len(args) != 2:
+        print('get_token requires 2 args')
+        sys.exit(1)
+    pp.pprint(client.get_token(args[0], args[1],))
 
 else:
     print('Unrecognized method %s' % cmd)
