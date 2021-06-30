@@ -1,7 +1,7 @@
 <template>
 <div class="company_order_show">
     <van-tabs v-model="active" sticky @change="tab_change">
-        <van-tab v-for="(status_in_map, _si_index) in status_name_map" :key="_si_index" :title="status_in_map.name" :dot="numbers_of_tab(status_in_map.status) > 0">
+        <van-tab v-for="(status_in_map, _si_index) in status_name_map" :key="_si_index" :title="status_in_map.name" :badge="status_in_map.count">
             <van-row type="flex" justify="center" align="center">
                 <van-col :span="20">
                     <van-dropdown-menu>
@@ -133,6 +133,7 @@ export default {
             status_name_map: [{
                 name: '全部',
                 status: -1,
+                count: '',
             }],
             date_option: [{
                 text: '所有进厂时间',
@@ -316,12 +317,22 @@ export default {
             vue_this.$call_remote_process("stuff_plan_management", "get_status_rule", [1]).then(function (resp) {
                 vue_this.status_name_map = [{
                     name: "全部",
-                    status: -1
+                    status: -1,
+                    count: '',
                 }];
                 resp.forEach(element => {
+                    if (element.index < 4) {
+                        vue_this.$call_remote_process("stuff_plan_management", 'get_count_by_status', [vue_this.$cookies.get('pa_ssid'), element.index]).then(function (resp) {
+                            var status_element = vue_this.status_name_map.find(single_element => {
+                                return single_element.status == element.index;
+                            });
+                            status_element.count = resp > 0 ? resp : '';
+                        });
+                    }
                     vue_this.status_name_map.push({
                         name: element.prompt,
-                        status: element.index
+                        status: element.index,
+                        count: '',
                     });
                 });
             });
