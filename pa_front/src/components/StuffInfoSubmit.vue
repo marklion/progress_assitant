@@ -22,7 +22,8 @@
         <div class="single_vichele_show" v-for="(single_vichele, index) in vichele_info" :key="index" ref="vichele_ref">
             <div class="vichele_index_show">{{index + 1}}</div>
             <vichele-in-plan :vichele_info="single_vichele"></vichele-in-plan>
-            <van-button plain round block icon="delete-o" native-type="button" @click="remove_vichele_info(index)">移除</van-button>
+            <van-divider />
+            <van-button plain round block type="danger" icon="delete-o" native-type="button" @click="remove_vichele_info(index)">移除</van-button>
         </div>
         <div style="margin: 16px;">
             <van-button round block type="info" native-type="submit" :disabled="!stuff_info_change">{{action_name}}: 共{{vichele_info.length}}辆车</van-button>
@@ -123,8 +124,9 @@ export default {
         plan_time_easy: function () {
             var setted_time = new Date(/\d{4}-\d{1,2}-\d{1,2}/g.exec(this.plan_time)[0]);
             var current_time = new Date();
+            current_time.setHours(0,0,0,0);
             var ret = "";
-            var bigger_than = setted_time.getDate() - current_time.getDate();
+            var bigger_than = parseInt((setted_time.getTime() - current_time.getTime()) / (1000*60*60*24));
             if (bigger_than == 0) {
                 ret = "今天";
             } else if (bigger_than == 1) {
@@ -313,9 +315,10 @@ export default {
 <style scoped>
 .single_vichele_show {
     border: 1px solid gray;
-    border-radius: 16px;
+    border-radius: 25px;
     margin-left: 10px;
     margin-right: 10px;
+    margin-top: 10px;
     position: relative;
 }
 
