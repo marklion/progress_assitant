@@ -263,6 +263,7 @@ service stuff_plan_management {
     company_plan_brief get_company_brief(1:string ssid) throws (1:gen_exp e),
     bool push_user_pay(1:string ssid, 2:i64 plan_id) throws (1:gen_exp e),
     list<vichele_stuff_statistics> get_today_transformation(1:string company_name) throws (1:gen_exp e),
+    i64 get_count_by_status(1:string ssid, 2:i64 status) throws (1:gen_exp e),
 }
 
 service open_api_management {

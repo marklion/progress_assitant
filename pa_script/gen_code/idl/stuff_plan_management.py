@@ -250,6 +250,15 @@ class Iface(object):
         """
         pass
 
+    def get_count_by_status(self, ssid, status):
+        """
+        Parameters:
+         - ssid
+         - status
+
+        """
+        pass
+
 
 class Client(Iface):
     def __init__(self, iprot, oprot=None):
@@ -1190,6 +1199,42 @@ class Client(Iface):
             raise result.e
         raise TApplicationException(TApplicationException.MISSING_RESULT, "get_today_transformation failed: unknown result")
 
+    def get_count_by_status(self, ssid, status):
+        """
+        Parameters:
+         - ssid
+         - status
+
+        """
+        self.send_get_count_by_status(ssid, status)
+        return self.recv_get_count_by_status()
+
+    def send_get_count_by_status(self, ssid, status):
+        self._oprot.writeMessageBegin('get_count_by_status', TMessageType.CALL, self._seqid)
+        args = get_count_by_status_args()
+        args.ssid = ssid
+        args.status = status
+        args.write(self._oprot)
+        self._oprot.writeMessageEnd()
+        self._oprot.trans.flush()
+
+    def recv_get_count_by_status(self):
+        iprot = self._iprot
+        (fname, mtype, rseqid) = iprot.readMessageBegin()
+        if mtype == TMessageType.EXCEPTION:
+            x = TApplicationException()
+            x.read(iprot)
+            iprot.readMessageEnd()
+            raise x
+        result = get_count_by_status_result()
+        result.read(iprot)
+        iprot.readMessageEnd()
+        if result.success is not None:
+            return result.success
+        if result.e is not None:
+            raise result.e
+        raise TApplicationException(TApplicationException.MISSING_RESULT, "get_count_by_status failed: unknown result")
+
 
 class Processor(Iface, TProcessor):
     def __init__(self, handler):
@@ -1221,6 +1266,7 @@ class Processor(Iface, TProcessor):
         self._processMap["get_company_brief"] = Processor.process_get_company_brief
         self._processMap["push_user_pay"] = Processor.process_push_user_pay
         self._processMap["get_today_transformation"] = Processor.process_get_today_transformation
+        self._processMap["get_count_by_status"] = Processor.process_get_count_by_status
         self._on_message_begin = None
 
     def on_message_begin(self, func):
@@ -1915,6 +1961,32 @@ class Processor(Iface, TProcessor):
             msg_type = TMessageType.EXCEPTION
             result = TApplicationException(TApplicationException.INTERNAL_ERROR, 'Internal error')
         oprot.writeMessageBegin("get_today_transformation", msg_type, seqid)
+        result.write(oprot)
+        oprot.writeMessageEnd()
+        oprot.trans.flush()
+
+    def process_get_count_by_status(self, seqid, iprot, oprot):
+        args = get_count_by_status_args()
+        args.read(iprot)
+        iprot.readMessageEnd()
+        result = get_count_by_status_result()
+        try:
+            result.success = self._handler.get_count_by_status(args.ssid, args.status)
+            msg_type = TMessageType.REPLY
+        except TTransport.TTransportException:
+            raise
+        except gen_exp as e:
+            msg_type = TMessageType.REPLY
+            result.e = e
+        except TApplicationException as ex:
+            logging.exception('TApplication exception in handler')
+            msg_type = TMessageType.EXCEPTION
+            result = ex
+        except Exception:
+            logging.exception('Unexpected exception in handler')
+            msg_type = TMessageType.EXCEPTION
+            result = TApplicationException(TApplicationException.INTERNAL_ERROR, 'Internal error')
+        oprot.writeMessageBegin("get_count_by_status", msg_type, seqid)
         result.write(oprot)
         oprot.writeMessageEnd()
         oprot.trans.flush()
@@ -5836,6 +5908,153 @@ class get_today_transformation_result(object):
 all_structs.append(get_today_transformation_result)
 get_today_transformation_result.thrift_spec = (
     (0, TType.LIST, 'success', (TType.STRUCT, [vichele_stuff_statistics, None], False), None, ),  # 0
+    (1, TType.STRUCT, 'e', [gen_exp, None], None, ),  # 1
+)
+
+
+class get_count_by_status_args(object):
+    """
+    Attributes:
+     - ssid
+     - status
+
+    """
+
+
+    def __init__(self, ssid=None, status=None,):
+        self.ssid = ssid
+        self.status = status
+
+    def read(self, iprot):
+        if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
+            iprot._fast_decode(self, iprot, [self.__class__, self.thrift_spec])
+            return
+        iprot.readStructBegin()
+        while True:
+            (fname, ftype, fid) = iprot.readFieldBegin()
+            if ftype == TType.STOP:
+                break
+            if fid == 1:
+                if ftype == TType.STRING:
+                    self.ssid = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 2:
+                if ftype == TType.I64:
+                    self.status = iprot.readI64()
+                else:
+                    iprot.skip(ftype)
+            else:
+                iprot.skip(ftype)
+            iprot.readFieldEnd()
+        iprot.readStructEnd()
+
+    def write(self, oprot):
+        if oprot._fast_encode is not None and self.thrift_spec is not None:
+            oprot.trans.write(oprot._fast_encode(self, [self.__class__, self.thrift_spec]))
+            return
+        oprot.writeStructBegin('get_count_by_status_args')
+        if self.ssid is not None:
+            oprot.writeFieldBegin('ssid', TType.STRING, 1)
+            oprot.writeString(self.ssid.encode('utf-8') if sys.version_info[0] == 2 else self.ssid)
+            oprot.writeFieldEnd()
+        if self.status is not None:
+            oprot.writeFieldBegin('status', TType.I64, 2)
+            oprot.writeI64(self.status)
+            oprot.writeFieldEnd()
+        oprot.writeFieldStop()
+        oprot.writeStructEnd()
+
+    def validate(self):
+        return
+
+    def __repr__(self):
+        L = ['%s=%r' % (key, value)
+             for key, value in self.__dict__.items()]
+        return '%s(%s)' % (self.__class__.__name__, ', '.join(L))
+
+    def __eq__(self, other):
+        return isinstance(other, self.__class__) and self.__dict__ == other.__dict__
+
+    def __ne__(self, other):
+        return not (self == other)
+all_structs.append(get_count_by_status_args)
+get_count_by_status_args.thrift_spec = (
+    None,  # 0
+    (1, TType.STRING, 'ssid', 'UTF8', None, ),  # 1
+    (2, TType.I64, 'status', None, None, ),  # 2
+)
+
+
+class get_count_by_status_result(object):
+    """
+    Attributes:
+     - success
+     - e
+
+    """
+
+
+    def __init__(self, success=None, e=None,):
+        self.success = success
+        self.e = e
+
+    def read(self, iprot):
+        if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
+            iprot._fast_decode(self, iprot, [self.__class__, self.thrift_spec])
+            return
+        iprot.readStructBegin()
+        while True:
+            (fname, ftype, fid) = iprot.readFieldBegin()
+            if ftype == TType.STOP:
+                break
+            if fid == 0:
+                if ftype == TType.I64:
+                    self.success = iprot.readI64()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 1:
+                if ftype == TType.STRUCT:
+                    self.e = gen_exp.read(iprot)
+                else:
+                    iprot.skip(ftype)
+            else:
+                iprot.skip(ftype)
+            iprot.readFieldEnd()
+        iprot.readStructEnd()
+
+    def write(self, oprot):
+        if oprot._fast_encode is not None and self.thrift_spec is not None:
+            oprot.trans.write(oprot._fast_encode(self, [self.__class__, self.thrift_spec]))
+            return
+        oprot.writeStructBegin('get_count_by_status_result')
+        if self.success is not None:
+            oprot.writeFieldBegin('success', TType.I64, 0)
+            oprot.writeI64(self.success)
+            oprot.writeFieldEnd()
+        if self.e is not None:
+            oprot.writeFieldBegin('e', TType.STRUCT, 1)
+            self.e.write(oprot)
+            oprot.writeFieldEnd()
+        oprot.writeFieldStop()
+        oprot.writeStructEnd()
+
+    def validate(self):
+        return
+
+    def __repr__(self):
+        L = ['%s=%r' % (key, value)
+             for key, value in self.__dict__.items()]
+        return '%s(%s)' % (self.__class__.__name__, ', '.join(L))
+
+    def __eq__(self, other):
+        return isinstance(other, self.__class__) and self.__dict__ == other.__dict__
+
+    def __ne__(self, other):
+        return not (self == other)
+all_structs.append(get_count_by_status_result)
+get_count_by_status_result.thrift_spec = (
+    (0, TType.I64, 'success', None, None, ),  # 0
     (1, TType.STRUCT, 'e', [gen_exp, None], None, ),  # 1
 )
 fix_spec(all_structs)

@@ -50,6 +50,7 @@ if len(sys.argv) <= 1 or sys.argv[1] == '--help':
     print('  company_plan_brief get_company_brief(string ssid)')
     print('  bool push_user_pay(string ssid, i64 plan_id)')
     print('   get_today_transformation(string company_name)')
+    print('  i64 get_count_by_status(string ssid, i64 status)')
     print('')
     sys.exit(0)
 
@@ -284,6 +285,12 @@ elif cmd == 'get_today_transformation':
         print('get_today_transformation requires 1 args')
         sys.exit(1)
     pp.pprint(client.get_today_transformation(args[0],))
+
+elif cmd == 'get_count_by_status':
+    if len(args) != 2:
+        print('get_count_by_status requires 2 args')
+        sys.exit(1)
+    pp.pprint(client.get_count_by_status(args[0], eval(args[1]),))
 
 else:
     print('Unrecognized method %s' % cmd)

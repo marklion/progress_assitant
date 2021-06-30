@@ -1313,6 +1313,12 @@ public:
             }
         }
     }
+
+    virtual int64_t get_count_by_status(const std::string &ssid, const int64_t status)
+    {
+        auto plans = PA_RPC_get_all_plans_related_by_user(ssid, "status == %ld", status);
+        return plans.size();
+    }
 };
 
 #endif // _STUFF_PLAN_MANAGEMENT_H_

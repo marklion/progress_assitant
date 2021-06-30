@@ -48,6 +48,7 @@ class stuff_plan_managementIf {
   virtual void get_company_brief(company_plan_brief& _return, const std::string& ssid) = 0;
   virtual bool push_user_pay(const std::string& ssid, const int64_t plan_id) = 0;
   virtual void get_today_transformation(std::vector<vichele_stuff_statistics> & _return, const std::string& company_name) = 0;
+  virtual int64_t get_count_by_status(const std::string& ssid, const int64_t status) = 0;
 };
 
 class stuff_plan_managementIfFactory {
@@ -164,6 +165,10 @@ class stuff_plan_managementNull : virtual public stuff_plan_managementIf {
   }
   void get_today_transformation(std::vector<vichele_stuff_statistics> & /* _return */, const std::string& /* company_name */) {
     return;
+  }
+  int64_t get_count_by_status(const std::string& /* ssid */, const int64_t /* status */) {
+    int64_t _return = 0;
+    return _return;
   }
 };
 
@@ -3255,6 +3260,125 @@ class stuff_plan_management_get_today_transformation_presult {
 
 };
 
+typedef struct _stuff_plan_management_get_count_by_status_args__isset {
+  _stuff_plan_management_get_count_by_status_args__isset() : ssid(false), status(false) {}
+  bool ssid :1;
+  bool status :1;
+} _stuff_plan_management_get_count_by_status_args__isset;
+
+class stuff_plan_management_get_count_by_status_args {
+ public:
+
+  stuff_plan_management_get_count_by_status_args(const stuff_plan_management_get_count_by_status_args&);
+  stuff_plan_management_get_count_by_status_args& operator=(const stuff_plan_management_get_count_by_status_args&);
+  stuff_plan_management_get_count_by_status_args() : ssid(), status(0) {
+  }
+
+  virtual ~stuff_plan_management_get_count_by_status_args() noexcept;
+  std::string ssid;
+  int64_t status;
+
+  _stuff_plan_management_get_count_by_status_args__isset __isset;
+
+  void __set_ssid(const std::string& val);
+
+  void __set_status(const int64_t val);
+
+  bool operator == (const stuff_plan_management_get_count_by_status_args & rhs) const
+  {
+    if (!(ssid == rhs.ssid))
+      return false;
+    if (!(status == rhs.status))
+      return false;
+    return true;
+  }
+  bool operator != (const stuff_plan_management_get_count_by_status_args &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const stuff_plan_management_get_count_by_status_args & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+
+class stuff_plan_management_get_count_by_status_pargs {
+ public:
+
+
+  virtual ~stuff_plan_management_get_count_by_status_pargs() noexcept;
+  const std::string* ssid;
+  const int64_t* status;
+
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _stuff_plan_management_get_count_by_status_result__isset {
+  _stuff_plan_management_get_count_by_status_result__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _stuff_plan_management_get_count_by_status_result__isset;
+
+class stuff_plan_management_get_count_by_status_result {
+ public:
+
+  stuff_plan_management_get_count_by_status_result(const stuff_plan_management_get_count_by_status_result&);
+  stuff_plan_management_get_count_by_status_result& operator=(const stuff_plan_management_get_count_by_status_result&);
+  stuff_plan_management_get_count_by_status_result() : success(0) {
+  }
+
+  virtual ~stuff_plan_management_get_count_by_status_result() noexcept;
+  int64_t success;
+  gen_exp e;
+
+  _stuff_plan_management_get_count_by_status_result__isset __isset;
+
+  void __set_success(const int64_t val);
+
+  void __set_e(const gen_exp& val);
+
+  bool operator == (const stuff_plan_management_get_count_by_status_result & rhs) const
+  {
+    if (!(success == rhs.success))
+      return false;
+    if (!(e == rhs.e))
+      return false;
+    return true;
+  }
+  bool operator != (const stuff_plan_management_get_count_by_status_result &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const stuff_plan_management_get_count_by_status_result & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _stuff_plan_management_get_count_by_status_presult__isset {
+  _stuff_plan_management_get_count_by_status_presult__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _stuff_plan_management_get_count_by_status_presult__isset;
+
+class stuff_plan_management_get_count_by_status_presult {
+ public:
+
+
+  virtual ~stuff_plan_management_get_count_by_status_presult() noexcept;
+  int64_t* success;
+  gen_exp e;
+
+  _stuff_plan_management_get_count_by_status_presult__isset __isset;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+
+};
+
 class stuff_plan_managementClient : virtual public stuff_plan_managementIf {
  public:
   stuff_plan_managementClient(std::shared_ptr< ::apache::thrift::protocol::TProtocol> prot) {
@@ -3358,6 +3482,9 @@ class stuff_plan_managementClient : virtual public stuff_plan_managementIf {
   void get_today_transformation(std::vector<vichele_stuff_statistics> & _return, const std::string& company_name);
   void send_get_today_transformation(const std::string& company_name);
   void recv_get_today_transformation(std::vector<vichele_stuff_statistics> & _return);
+  int64_t get_count_by_status(const std::string& ssid, const int64_t status);
+  void send_get_count_by_status(const std::string& ssid, const int64_t status);
+  int64_t recv_get_count_by_status();
  protected:
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> piprot_;
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> poprot_;
@@ -3399,6 +3526,7 @@ class stuff_plan_managementProcessor : public ::apache::thrift::TDispatchProcess
   void process_get_company_brief(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
   void process_push_user_pay(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
   void process_get_today_transformation(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
+  void process_get_count_by_status(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
  public:
   stuff_plan_managementProcessor(::std::shared_ptr<stuff_plan_managementIf> iface) :
     iface_(iface) {
@@ -3428,6 +3556,7 @@ class stuff_plan_managementProcessor : public ::apache::thrift::TDispatchProcess
     processMap_["get_company_brief"] = &stuff_plan_managementProcessor::process_get_company_brief;
     processMap_["push_user_pay"] = &stuff_plan_managementProcessor::process_push_user_pay;
     processMap_["get_today_transformation"] = &stuff_plan_managementProcessor::process_get_today_transformation;
+    processMap_["get_count_by_status"] = &stuff_plan_managementProcessor::process_get_count_by_status;
   }
 
   virtual ~stuff_plan_managementProcessor() {}
@@ -3705,6 +3834,15 @@ class stuff_plan_managementMultiface : virtual public stuff_plan_managementIf {
     return;
   }
 
+  int64_t get_count_by_status(const std::string& ssid, const int64_t status) {
+    size_t sz = ifaces_.size();
+    size_t i = 0;
+    for (; i < (sz - 1); ++i) {
+      ifaces_[i]->get_count_by_status(ssid, status);
+    }
+    return ifaces_[i]->get_count_by_status(ssid, status);
+  }
+
 };
 
 // The 'concurrent' client is a thread safe client that correctly handles
@@ -3815,6 +3953,9 @@ class stuff_plan_managementConcurrentClient : virtual public stuff_plan_manageme
   void get_today_transformation(std::vector<vichele_stuff_statistics> & _return, const std::string& company_name);
   int32_t send_get_today_transformation(const std::string& company_name);
   void recv_get_today_transformation(std::vector<vichele_stuff_statistics> & _return, const int32_t seqid);
+  int64_t get_count_by_status(const std::string& ssid, const int64_t status);
+  int32_t send_get_count_by_status(const std::string& ssid, const int64_t status);
+  int64_t recv_get_count_by_status(const int32_t seqid);
  protected:
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> piprot_;
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> poprot_;
