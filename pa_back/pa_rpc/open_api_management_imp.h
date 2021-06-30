@@ -11,6 +11,7 @@
 #define OPEN_API_MSG_EMAIL_FAILURE "failed to send email"
 #define OPEN_API_MSG_CODE_INVALID "verify code is invalid"
 #define OPEN_API_MSG_WRONG_IDENTITY "user name or password was incorrect"
+#define OPEN_API_MSG_USER_NEED_VERIFY "user should be verified first"
 
 class open_api_management_handler : public open_api_managementIf
 {
@@ -83,7 +84,6 @@ public:
             {
                 if (code == api_user->verify_code)
                 {
-                    api_user->token = PA_DATAOPT_gen_ssid();
                     api_user->verify_code = "";
                     api_user->code_expire = 0;
                     ret = api_user->update_record();
@@ -114,6 +114,22 @@ public:
         
 
         return ret;
+    }
+
+    virtual void get_token(std::string &_return, const std::string &email, const std::string &password)
+    {
+        auto api_user = sqlite_orm::search_record<pa_sql_api_user>("email = '%s' AND password_md5 = '%s'", email.c_str(), password.c_str());
+        if (!api_user)
+        {
+            PA_RETURN_MSG(OPEN_API_MSG_WRONG_IDENTITY);
+        }
+        if (api_user->code_expire != 0)
+        {
+            PA_RETURN_MSG(OPEN_API_MSG_USER_NEED_VERIFY);
+        }
+        api_user->token = PA_DATAOPT_gen_ssid();
+        api_user->update_record();
+        _return = api_user->token;
     }
 };
 

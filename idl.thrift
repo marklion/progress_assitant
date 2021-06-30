@@ -269,4 +269,5 @@ service open_api_management {
     bool register_api_user(1:string company_name, 2:string email, 3:string password) throws (1:gen_exp e),
     bool verify_email_code(1:string email, 2:string code) throws (1:gen_exp e),
     bool unregister_api_user(1:string email, 2:string password) throws (1:gen_exp e),
+    string get_token(1:string email, 2:string password) throws (1:gen_exp e),
 }

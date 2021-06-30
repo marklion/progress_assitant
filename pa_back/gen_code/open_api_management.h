@@ -25,6 +25,7 @@ class open_api_managementIf {
   virtual bool register_api_user(const std::string& company_name, const std::string& email, const std::string& password) = 0;
   virtual bool verify_email_code(const std::string& email, const std::string& code) = 0;
   virtual bool unregister_api_user(const std::string& email, const std::string& password) = 0;
+  virtual void get_token(std::string& _return, const std::string& email, const std::string& password) = 0;
 };
 
 class open_api_managementIfFactory {
@@ -65,6 +66,9 @@ class open_api_managementNull : virtual public open_api_managementIf {
   bool unregister_api_user(const std::string& /* email */, const std::string& /* password */) {
     bool _return = false;
     return _return;
+  }
+  void get_token(std::string& /* _return */, const std::string& /* email */, const std::string& /* password */) {
+    return;
   }
 };
 
@@ -432,6 +436,125 @@ class open_api_management_unregister_api_user_presult {
 
 };
 
+typedef struct _open_api_management_get_token_args__isset {
+  _open_api_management_get_token_args__isset() : email(false), password(false) {}
+  bool email :1;
+  bool password :1;
+} _open_api_management_get_token_args__isset;
+
+class open_api_management_get_token_args {
+ public:
+
+  open_api_management_get_token_args(const open_api_management_get_token_args&);
+  open_api_management_get_token_args& operator=(const open_api_management_get_token_args&);
+  open_api_management_get_token_args() : email(), password() {
+  }
+
+  virtual ~open_api_management_get_token_args() noexcept;
+  std::string email;
+  std::string password;
+
+  _open_api_management_get_token_args__isset __isset;
+
+  void __set_email(const std::string& val);
+
+  void __set_password(const std::string& val);
+
+  bool operator == (const open_api_management_get_token_args & rhs) const
+  {
+    if (!(email == rhs.email))
+      return false;
+    if (!(password == rhs.password))
+      return false;
+    return true;
+  }
+  bool operator != (const open_api_management_get_token_args &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const open_api_management_get_token_args & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+
+class open_api_management_get_token_pargs {
+ public:
+
+
+  virtual ~open_api_management_get_token_pargs() noexcept;
+  const std::string* email;
+  const std::string* password;
+
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _open_api_management_get_token_result__isset {
+  _open_api_management_get_token_result__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _open_api_management_get_token_result__isset;
+
+class open_api_management_get_token_result {
+ public:
+
+  open_api_management_get_token_result(const open_api_management_get_token_result&);
+  open_api_management_get_token_result& operator=(const open_api_management_get_token_result&);
+  open_api_management_get_token_result() : success() {
+  }
+
+  virtual ~open_api_management_get_token_result() noexcept;
+  std::string success;
+  gen_exp e;
+
+  _open_api_management_get_token_result__isset __isset;
+
+  void __set_success(const std::string& val);
+
+  void __set_e(const gen_exp& val);
+
+  bool operator == (const open_api_management_get_token_result & rhs) const
+  {
+    if (!(success == rhs.success))
+      return false;
+    if (!(e == rhs.e))
+      return false;
+    return true;
+  }
+  bool operator != (const open_api_management_get_token_result &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const open_api_management_get_token_result & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _open_api_management_get_token_presult__isset {
+  _open_api_management_get_token_presult__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _open_api_management_get_token_presult__isset;
+
+class open_api_management_get_token_presult {
+ public:
+
+
+  virtual ~open_api_management_get_token_presult() noexcept;
+  std::string* success;
+  gen_exp e;
+
+  _open_api_management_get_token_presult__isset __isset;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+
+};
+
 class open_api_managementClient : virtual public open_api_managementIf {
  public:
   open_api_managementClient(std::shared_ptr< ::apache::thrift::protocol::TProtocol> prot) {
@@ -466,6 +589,9 @@ class open_api_managementClient : virtual public open_api_managementIf {
   bool unregister_api_user(const std::string& email, const std::string& password);
   void send_unregister_api_user(const std::string& email, const std::string& password);
   bool recv_unregister_api_user();
+  void get_token(std::string& _return, const std::string& email, const std::string& password);
+  void send_get_token(const std::string& email, const std::string& password);
+  void recv_get_token(std::string& _return);
  protected:
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> piprot_;
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> poprot_;
@@ -484,12 +610,14 @@ class open_api_managementProcessor : public ::apache::thrift::TDispatchProcessor
   void process_register_api_user(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
   void process_verify_email_code(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
   void process_unregister_api_user(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
+  void process_get_token(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
  public:
   open_api_managementProcessor(::std::shared_ptr<open_api_managementIf> iface) :
     iface_(iface) {
     processMap_["register_api_user"] = &open_api_managementProcessor::process_register_api_user;
     processMap_["verify_email_code"] = &open_api_managementProcessor::process_verify_email_code;
     processMap_["unregister_api_user"] = &open_api_managementProcessor::process_unregister_api_user;
+    processMap_["get_token"] = &open_api_managementProcessor::process_get_token;
   }
 
   virtual ~open_api_managementProcessor() {}
@@ -545,6 +673,16 @@ class open_api_managementMultiface : virtual public open_api_managementIf {
     return ifaces_[i]->unregister_api_user(email, password);
   }
 
+  void get_token(std::string& _return, const std::string& email, const std::string& password) {
+    size_t sz = ifaces_.size();
+    size_t i = 0;
+    for (; i < (sz - 1); ++i) {
+      ifaces_[i]->get_token(_return, email, password);
+    }
+    ifaces_[i]->get_token(_return, email, password);
+    return;
+  }
+
 };
 
 // The 'concurrent' client is a thread safe client that correctly handles
@@ -586,6 +724,9 @@ class open_api_managementConcurrentClient : virtual public open_api_managementIf
   bool unregister_api_user(const std::string& email, const std::string& password);
   int32_t send_unregister_api_user(const std::string& email, const std::string& password);
   bool recv_unregister_api_user(const int32_t seqid);
+  void get_token(std::string& _return, const std::string& email, const std::string& password);
+  int32_t send_get_token(const std::string& email, const std::string& password);
+  void recv_get_token(std::string& _return, const int32_t seqid);
  protected:
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> piprot_;
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> poprot_;
