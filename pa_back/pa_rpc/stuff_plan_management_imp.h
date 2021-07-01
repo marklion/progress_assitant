@@ -1319,6 +1319,35 @@ public:
         auto plans = PA_RPC_get_all_plans_related_by_user(ssid, "status == %ld", status);
         return plans.size();
     }
+
+    virtual bool cancel_vichele_from_plan(const std::string &ssid, const std::vector<int64_t> &ids)
+    {
+        for (auto &itr:ids)
+        {
+            auto single_vichele = sqlite_orm::search_record<pa_sql_single_vichele>(itr);
+            if (single_vichele)
+            {
+                auto belong_plan = single_vichele->get_parent<pa_sql_plan>("belong_plan");
+                if (belong_plan && belong_plan->status < 4)
+                {
+                    auto related_plan = PA_RPC_get_plan_related_by_user(ssid, "PRI_ID == %ld", belong_plan->get_pri_id());
+                    if (related_plan)
+                    {
+                        auto main_vichele = single_vichele->get_parent<pa_sql_vichele>("main_vichele");
+                        auto behind_vichele = single_vichele->get_parent<pa_sql_vichele_behind>("behind_vichele");
+                        auto opt_user = PA_DATAOPT_get_online_user(ssid);
+                        single_vichele->remove_record();
+                        if (main_vichele && behind_vichele && opt_user)
+                        {
+                            related_plan->send_wechat_msg(*opt_user, "取消了该计划中的车辆：" + main_vichele->number + "-" + behind_vichele->number);
+                        }
+                    }
+                }
+            }
+        }
+
+        return true;
+    }
 };
 
 #endif // _STUFF_PLAN_MANAGEMENT_H_
