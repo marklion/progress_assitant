@@ -111,7 +111,7 @@
     </div>
     <div v-else-if="active_index == 3">
         <van-divider>访客记录</van-divider>
-        <van-cell-group title="谁报过计划">
+        <van-cell-group :title="'谁报过计划 共' + real_access_users.length + '人'">
             <van-collapse v-model="real_access_users_show">
                 <van-collapse-item v-for="(single_record, index) in real_access_users" :key="index" :title="single_record.company_name" :label="single_record.name" :name="index">
                     <template #icon>
