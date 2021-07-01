@@ -3748,6 +3748,152 @@ stuff_plan_management_get_count_by_status_result.prototype.write = function(outp
   return;
 };
 
+var stuff_plan_management_cancel_vichele_from_plan_args = function(args) {
+  this.ssid = null;
+  this.ids = null;
+  if (args) {
+    if (args.ssid !== undefined && args.ssid !== null) {
+      this.ssid = args.ssid;
+    }
+    if (args.ids !== undefined && args.ids !== null) {
+      this.ids = Thrift.copyList(args.ids, [null]);
+    }
+  }
+};
+stuff_plan_management_cancel_vichele_from_plan_args.prototype = {};
+stuff_plan_management_cancel_vichele_from_plan_args.prototype.read = function(input) {
+  input.readStructBegin();
+  while (true) {
+    var ret = input.readFieldBegin();
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    switch (fid) {
+      case 1:
+      if (ftype == Thrift.Type.STRING) {
+        this.ssid = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 2:
+      if (ftype == Thrift.Type.LIST) {
+        this.ids = [];
+        var _rtmp3111 = input.readListBegin();
+        var _size110 = _rtmp3111.size || 0;
+        for (var _i112 = 0; _i112 < _size110; ++_i112) {
+          var elem113 = null;
+          elem113 = input.readI64();
+          this.ids.push(elem113);
+        }
+        input.readListEnd();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      default:
+        input.skip(ftype);
+    }
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+stuff_plan_management_cancel_vichele_from_plan_args.prototype.write = function(output) {
+  output.writeStructBegin('stuff_plan_management_cancel_vichele_from_plan_args');
+  if (this.ssid !== null && this.ssid !== undefined) {
+    output.writeFieldBegin('ssid', Thrift.Type.STRING, 1);
+    output.writeString(this.ssid);
+    output.writeFieldEnd();
+  }
+  if (this.ids !== null && this.ids !== undefined) {
+    output.writeFieldBegin('ids', Thrift.Type.LIST, 2);
+    output.writeListBegin(Thrift.Type.I64, this.ids.length);
+    for (var iter114 in this.ids) {
+      if (this.ids.hasOwnProperty(iter114)) {
+        iter114 = this.ids[iter114];
+        output.writeI64(iter114);
+      }
+    }
+    output.writeListEnd();
+    output.writeFieldEnd();
+  }
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+
+var stuff_plan_management_cancel_vichele_from_plan_result = function(args) {
+  this.success = null;
+  this.e = null;
+  if (args instanceof ttypes.gen_exp) {
+    this.e = args;
+    return;
+  }
+  if (args) {
+    if (args.success !== undefined && args.success !== null) {
+      this.success = args.success;
+    }
+    if (args.e !== undefined && args.e !== null) {
+      this.e = args.e;
+    }
+  }
+};
+stuff_plan_management_cancel_vichele_from_plan_result.prototype = {};
+stuff_plan_management_cancel_vichele_from_plan_result.prototype.read = function(input) {
+  input.readStructBegin();
+  while (true) {
+    var ret = input.readFieldBegin();
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    switch (fid) {
+      case 0:
+      if (ftype == Thrift.Type.BOOL) {
+        this.success = input.readBool();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 1:
+      if (ftype == Thrift.Type.STRUCT) {
+        this.e = new ttypes.gen_exp();
+        this.e.read(input);
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      default:
+        input.skip(ftype);
+    }
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+stuff_plan_management_cancel_vichele_from_plan_result.prototype.write = function(output) {
+  output.writeStructBegin('stuff_plan_management_cancel_vichele_from_plan_result');
+  if (this.success !== null && this.success !== undefined) {
+    output.writeFieldBegin('success', Thrift.Type.BOOL, 0);
+    output.writeBool(this.success);
+    output.writeFieldEnd();
+  }
+  if (this.e !== null && this.e !== undefined) {
+    output.writeFieldBegin('e', Thrift.Type.STRUCT, 1);
+    this.e.write(output);
+    output.writeFieldEnd();
+  }
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+
 var stuff_plan_managementClient = exports.Client = function(output, pClass) {
   this.output = output;
   this.pClass = pClass;
@@ -5454,6 +5600,69 @@ stuff_plan_managementClient.prototype.recv_get_count_by_status = function(input,
   }
   return callback('get_count_by_status failed: unknown result');
 };
+
+stuff_plan_managementClient.prototype.cancel_vichele_from_plan = function(ssid, ids, callback) {
+  this._seqid = this.new_seqid();
+  if (callback === undefined) {
+    var _defer = Q.defer();
+    this._reqs[this.seqid()] = function(error, result) {
+      if (error) {
+        _defer.reject(error);
+      } else {
+        _defer.resolve(result);
+      }
+    };
+    this.send_cancel_vichele_from_plan(ssid, ids);
+    return _defer.promise;
+  } else {
+    this._reqs[this.seqid()] = callback;
+    this.send_cancel_vichele_from_plan(ssid, ids);
+  }
+};
+
+stuff_plan_managementClient.prototype.send_cancel_vichele_from_plan = function(ssid, ids) {
+  var output = new this.pClass(this.output);
+  var params = {
+    ssid: ssid,
+    ids: ids
+  };
+  var args = new stuff_plan_management_cancel_vichele_from_plan_args(params);
+  try {
+    output.writeMessageBegin('cancel_vichele_from_plan', Thrift.MessageType.CALL, this.seqid());
+    args.write(output);
+    output.writeMessageEnd();
+    return this.output.flush();
+  }
+  catch (e) {
+    delete this._reqs[this.seqid()];
+    if (typeof output.reset === 'function') {
+      output.reset();
+    }
+    throw e;
+  }
+};
+
+stuff_plan_managementClient.prototype.recv_cancel_vichele_from_plan = function(input,mtype,rseqid) {
+  var callback = this._reqs[rseqid] || function() {};
+  delete this._reqs[rseqid];
+  if (mtype == Thrift.MessageType.EXCEPTION) {
+    var x = new Thrift.TApplicationException();
+    x.read(input);
+    input.readMessageEnd();
+    return callback(x);
+  }
+  var result = new stuff_plan_management_cancel_vichele_from_plan_result();
+  result.read(input);
+  input.readMessageEnd();
+
+  if (null !== result.e) {
+    return callback(result.e);
+  }
+  if (null !== result.success) {
+    return callback(null, result.success);
+  }
+  return callback('cancel_vichele_from_plan failed: unknown result');
+};
 var stuff_plan_managementProcessor = exports.Processor = function(handler) {
   this._handler = handler;
 };
@@ -6626,6 +6835,49 @@ stuff_plan_managementProcessor.prototype.process_get_count_by_status = function(
       } else {
         result_obj = new Thrift.TApplicationException(Thrift.TApplicationExceptionType.UNKNOWN, err.message);
         output.writeMessageBegin("get_count_by_status", Thrift.MessageType.EXCEPTION, seqid);
+      }
+      result_obj.write(output);
+      output.writeMessageEnd();
+      output.flush();
+    });
+  }
+};
+stuff_plan_managementProcessor.prototype.process_cancel_vichele_from_plan = function(seqid, input, output) {
+  var args = new stuff_plan_management_cancel_vichele_from_plan_args();
+  args.read(input);
+  input.readMessageEnd();
+  if (this._handler.cancel_vichele_from_plan.length === 2) {
+    Q.fcall(this._handler.cancel_vichele_from_plan.bind(this._handler),
+      args.ssid,
+      args.ids
+    ).then(function(result) {
+      var result_obj = new stuff_plan_management_cancel_vichele_from_plan_result({success: result});
+      output.writeMessageBegin("cancel_vichele_from_plan", Thrift.MessageType.REPLY, seqid);
+      result_obj.write(output);
+      output.writeMessageEnd();
+      output.flush();
+    }).catch(function (err) {
+      var result;
+      if (err instanceof ttypes.gen_exp) {
+        result = new stuff_plan_management_cancel_vichele_from_plan_result(err);
+        output.writeMessageBegin("cancel_vichele_from_plan", Thrift.MessageType.REPLY, seqid);
+      } else {
+        result = new Thrift.TApplicationException(Thrift.TApplicationExceptionType.UNKNOWN, err.message);
+        output.writeMessageBegin("cancel_vichele_from_plan", Thrift.MessageType.EXCEPTION, seqid);
+      }
+      result.write(output);
+      output.writeMessageEnd();
+      output.flush();
+    });
+  } else {
+    this._handler.cancel_vichele_from_plan(args.ssid, args.ids, function (err, result) {
+      var result_obj;
+      if ((err === null || typeof err === 'undefined') || err instanceof ttypes.gen_exp) {
+        result_obj = new stuff_plan_management_cancel_vichele_from_plan_result((err !== null || typeof err === 'undefined') ? err : {success: result});
+        output.writeMessageBegin("cancel_vichele_from_plan", Thrift.MessageType.REPLY, seqid);
+      } else {
+        result_obj = new Thrift.TApplicationException(Thrift.TApplicationExceptionType.UNKNOWN, err.message);
+        output.writeMessageBegin("cancel_vichele_from_plan", Thrift.MessageType.EXCEPTION, seqid);
       }
       result_obj.write(output);
       output.writeMessageEnd();

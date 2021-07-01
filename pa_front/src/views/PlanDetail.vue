@@ -63,6 +63,7 @@
                 <van-cell v-if="single_vichele.finish" title="提货时间" :value="single_vichele.deliver_timestamp"></van-cell>
                 <van-cell title="卸车地" :value="single_vichele.drop_address"></van-cell>
                 <van-cell title="用途" :value="single_vichele.use_for"></van-cell>
+                <van-button block type="danger" plain size="small" round icon="delete-o" @click="cancel_vichele_from_plan(single_vichele)">取消</van-button>
             </van-collapse-item>
         </van-collapse>
     </van-cell-group>
@@ -202,6 +203,19 @@ export default {
 
     },
     methods: {
+        cancel_vichele_from_plan: function (vichele_info) {
+            var vue_this = this;
+            Dialog.confirm({
+                title: '取消车辆',
+                message: '确定要取消 ' + vichele_info.main_vichele + '-' + vichele_info.behind_vichele + ' 吗？'
+            }).then(function () {
+                vue_this.$call_remote_process("stuff_plan_management", 'cancel_vichele_from_plan', [vue_this.$cookies.get('pa_ssid'), [vichele_info.vichele_id]]).then(function (resp) {
+                    if (resp) {
+                        vue_this.$router.go(0);
+                    }
+                });
+            });
+        },
         preview_buy_attach: function () {
             var vue_this = this;
             vue_this.$call_remote_process("company_management", "get_attachment", [vue_this.plan_owner_info.company]).then(function (resp) {
