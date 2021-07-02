@@ -93,6 +93,8 @@ void pa_sql_archive_plan::translate_from_plan(pa_sql_plan &_plan)
 
     this->plan_number = std::to_string(_plan.create_time) + std::to_string(_plan.get_pri_id());
     this->plan_time = _plan.plan_time;
+    double count = _plan.calcu_all_count();
+    this->count = std::to_string(count);
     auto stuff_info = _plan.get_parent<pa_sql_stuff_info>("belong_stuff");
     if (stuff_info)
     {
@@ -101,14 +103,14 @@ void pa_sql_archive_plan::translate_from_plan(pa_sql_plan &_plan)
         {
             this->sale_company = sale_company->name;
         }
+        this->unit_price = std::to_string(stuff_info->price);
+        this->total_price = std::to_string(stuff_info->price * count);
     }
     this->stuff_name = _plan.name;
-    this->unit_price = std::to_string(_plan.price);
     this->is_cancel = _plan.is_cancel;
     this->insert_record();
 
     auto vichele_in_plan = _plan.get_all_children<pa_sql_single_vichele>("belong_plan");
-    double count = _plan.calcu_all_count();
     for (auto &itr : vichele_in_plan)
     {
         pa_sql_archive_vichele_plan tmp;
@@ -136,8 +138,6 @@ void pa_sql_archive_plan::translate_from_plan(pa_sql_plan &_plan)
         tmp.set_parent(*this, "belong_plan");
         tmp.insert_record();
     }
-    this->count = std::to_string(count);
-    this->total_price = std::to_string(_plan.price * count);
     this->update_record();
     stuff_plan_management_handler hd;
     std::vector<plan_status_rule> status_in_plan;

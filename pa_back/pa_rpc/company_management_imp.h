@@ -91,9 +91,16 @@ public:
                 if (stuff_company && company && stuff_company->get_pri_id() == company->get_pri_id())
                 {
                     stuff_need_edit->last = stuff.last;
+                    auto orig_price = stuff_need_edit->price;
                     stuff_need_edit->price = stuff.price;
 
                     ret = stuff_need_edit->update_record();
+                    std::string remark = "调整了该计划中的货品单价，原价" + std::to_string(orig_price) + "，现价" + std::to_string(stuff_need_edit->price);
+                    auto related_plans = PA_RPC_get_all_plans_related_by_user(ssid, "belong_stuff_ext_key == %ld AND status < 4", stuff_need_edit->get_pri_id());
+                    for (auto &itr:related_plans)
+                    {
+                        itr.send_wechat_msg(*user, remark);
+                    }
                 }
                 else
                 {

@@ -179,7 +179,11 @@ void PA_WECHAT_send_plan_msg(pa_sql_userinfo &_touser, pa_sql_plan &_plan, const
     std::string total_price = "未知";
     if (count > 0)
     {
-        total_price = std::to_string(_plan.calcu_all_count() * _plan.price);
+        auto stuff_info = _plan.get_parent<pa_sql_stuff_info>("belong_stuff");
+        if (stuff_info)
+        {
+            total_price = std::to_string(_plan.calcu_all_count() * stuff_info->price);
+        }
     }
 
     std::string status = "";

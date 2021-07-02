@@ -168,7 +168,7 @@ public:
                     _return.name = archive_plan->stuff_name;
                     _return.plan_id = plan->get_pri_id();
                     _return.plan_time = archive_plan->plan_time;
-                    _return.price = plan->price;
+                    _return.price = atoi(archive_plan->unit_price.c_str());
                     _return.proxy_company = plan->proxy_company;
                     _return.sale_company = archive_plan->sale_company;
                     _return.status = plan->status;
@@ -222,11 +222,11 @@ public:
                 _return.name = plan->name;
                 _return.plan_id = plan->get_pri_id();
                 _return.plan_time = plan->plan_time;
-                _return.price = plan->price;
                 _return.status = plan->status;
                 auto belong_type = plan->get_parent<pa_sql_stuff_info>("belong_stuff");
                 if (belong_type)
                 {
+                    _return.price = belong_type->price;
                     _return.type_id = belong_type->get_pri_id();
                     auto sale_company = belong_type->get_parent<pa_sql_company>("belong_company");
                     if (sale_company)
