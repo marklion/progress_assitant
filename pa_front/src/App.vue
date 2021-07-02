@@ -12,7 +12,7 @@
         <router-view v-if='!$route.meta.keepAlive' />
     </van-pull-refresh>
     <div style="height: 6rem;"></div>
-    <van-tabbar route fixed>
+    <van-tabbar route fixed v-if="!$route.meta.extra_page">
         <van-tabbar-item v-if="$store.state.userinfo.buyer" replace :to="{name:'Home'}" icon="home-o">主页</van-tabbar-item>
         <van-tabbar-item v-else replace :to="{name:'CompanyHome'}" icon="home-o">主页</van-tabbar-item>
         <van-tabbar-item replace :to="{name:'CompanyOrder'}" icon="orders-o">订单</van-tabbar-item>
@@ -110,6 +110,9 @@ export default {
             this.$router.back(-1);
         },
         get_userinfo() {
+            if (this.$route.meta.extra_page) {
+                return;
+            }
             var vue_this = this;
             var ssid = vue_this.$cookies.get('pa_ssid');
             vue_this.$call_remote_process('user_management', 'get_user_info', [ssid]).then(function (resp) {
