@@ -148,6 +148,15 @@ const routes = [
       private_title: '合同管理',
       has_go_back: true,
     },
+  },{
+    path: '/extra_vichele',
+    name: 'ExtraVichele',
+    component: () => import('../views/ExtraVichele.vue'),
+    meta: {
+      private_title: '货车进厂',
+      has_go_back: false,
+      extra_page:true,
+    },
   },
 ]
 

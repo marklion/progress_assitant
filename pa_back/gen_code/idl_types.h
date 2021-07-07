@@ -67,6 +67,8 @@ class vichele_search_result;
 
 class company_plan_brief;
 
+class vichele_stay_alone;
+
 typedef struct _gen_exp__isset {
   _gen_exp__isset() : msg(false) {}
   bool msg :1;
@@ -1544,6 +1546,96 @@ class company_plan_brief : public virtual ::apache::thrift::TBase {
 void swap(company_plan_brief &a, company_plan_brief &b);
 
 std::ostream& operator<<(std::ostream& out, const company_plan_brief& obj);
+
+typedef struct _vichele_stay_alone__isset {
+  _vichele_stay_alone__isset() : id(false), stuff_name(false), company_name(false), main_vichele_number(false), behind_vichele_number(false), count(false), comment(false), date(false), destination(false) {}
+  bool id :1;
+  bool stuff_name :1;
+  bool company_name :1;
+  bool main_vichele_number :1;
+  bool behind_vichele_number :1;
+  bool count :1;
+  bool comment :1;
+  bool date :1;
+  bool destination :1;
+} _vichele_stay_alone__isset;
+
+class vichele_stay_alone : public virtual ::apache::thrift::TBase {
+ public:
+
+  vichele_stay_alone(const vichele_stay_alone&);
+  vichele_stay_alone& operator=(const vichele_stay_alone&);
+  vichele_stay_alone() : id(0), stuff_name(), company_name(), main_vichele_number(), behind_vichele_number(), count(0), comment(), date(), destination() {
+  }
+
+  virtual ~vichele_stay_alone() noexcept;
+  int64_t id;
+  std::string stuff_name;
+  std::string company_name;
+  std::string main_vichele_number;
+  std::string behind_vichele_number;
+  double count;
+  std::string comment;
+  std::string date;
+  std::string destination;
+
+  _vichele_stay_alone__isset __isset;
+
+  void __set_id(const int64_t val);
+
+  void __set_stuff_name(const std::string& val);
+
+  void __set_company_name(const std::string& val);
+
+  void __set_main_vichele_number(const std::string& val);
+
+  void __set_behind_vichele_number(const std::string& val);
+
+  void __set_count(const double val);
+
+  void __set_comment(const std::string& val);
+
+  void __set_date(const std::string& val);
+
+  void __set_destination(const std::string& val);
+
+  bool operator == (const vichele_stay_alone & rhs) const
+  {
+    if (!(id == rhs.id))
+      return false;
+    if (!(stuff_name == rhs.stuff_name))
+      return false;
+    if (!(company_name == rhs.company_name))
+      return false;
+    if (!(main_vichele_number == rhs.main_vichele_number))
+      return false;
+    if (!(behind_vichele_number == rhs.behind_vichele_number))
+      return false;
+    if (!(count == rhs.count))
+      return false;
+    if (!(comment == rhs.comment))
+      return false;
+    if (!(date == rhs.date))
+      return false;
+    if (!(destination == rhs.destination))
+      return false;
+    return true;
+  }
+  bool operator != (const vichele_stay_alone &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const vichele_stay_alone & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+  virtual void printTo(std::ostream& out) const;
+};
+
+void swap(vichele_stay_alone &a, vichele_stay_alone &b);
+
+std::ostream& operator<<(std::ostream& out, const vichele_stay_alone& obj);
 
 
 

@@ -630,6 +630,7 @@ export default {
                 vue_this.$toast('挂车需要以挂结尾');
                 return;
             }
+            _vichele_number = _vichele_number.toLocaleUpperCase();
             vue_this.$call_remote_process("user_management", 'bind_new_vichele', [vue_this.$cookies.get('pa_ssid'), _vichele_number, _main_vichele]).then(function (resp) {
                 if (resp) {
                     vue_this.fetch_current_vichele();
