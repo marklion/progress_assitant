@@ -3861,3 +3861,255 @@ void company_plan_brief::printTo(std::ostream& out) const {
 }
 
 
+vichele_stay_alone::~vichele_stay_alone() noexcept {
+}
+
+
+void vichele_stay_alone::__set_id(const int64_t val) {
+  this->id = val;
+}
+
+void vichele_stay_alone::__set_stuff_name(const std::string& val) {
+  this->stuff_name = val;
+}
+
+void vichele_stay_alone::__set_company_name(const std::string& val) {
+  this->company_name = val;
+}
+
+void vichele_stay_alone::__set_main_vichele_number(const std::string& val) {
+  this->main_vichele_number = val;
+}
+
+void vichele_stay_alone::__set_behind_vichele_number(const std::string& val) {
+  this->behind_vichele_number = val;
+}
+
+void vichele_stay_alone::__set_count(const double val) {
+  this->count = val;
+}
+
+void vichele_stay_alone::__set_comment(const std::string& val) {
+  this->comment = val;
+}
+
+void vichele_stay_alone::__set_date(const std::string& val) {
+  this->date = val;
+}
+
+void vichele_stay_alone::__set_destination(const std::string& val) {
+  this->destination = val;
+}
+std::ostream& operator<<(std::ostream& out, const vichele_stay_alone& obj)
+{
+  obj.printTo(out);
+  return out;
+}
+
+
+uint32_t vichele_stay_alone::read(::apache::thrift::protocol::TProtocol* iprot) {
+
+  ::apache::thrift::protocol::TInputRecursionTracker tracker(*iprot);
+  uint32_t xfer = 0;
+  std::string fname;
+  ::apache::thrift::protocol::TType ftype;
+  int16_t fid;
+
+  xfer += iprot->readStructBegin(fname);
+
+  using ::apache::thrift::protocol::TProtocolException;
+
+
+  while (true)
+  {
+    xfer += iprot->readFieldBegin(fname, ftype, fid);
+    if (ftype == ::apache::thrift::protocol::T_STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 1:
+        if (ftype == ::apache::thrift::protocol::T_I64) {
+          xfer += iprot->readI64(this->id);
+          this->__isset.id = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 2:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->stuff_name);
+          this->__isset.stuff_name = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 3:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->company_name);
+          this->__isset.company_name = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 4:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->main_vichele_number);
+          this->__isset.main_vichele_number = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 5:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->behind_vichele_number);
+          this->__isset.behind_vichele_number = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 6:
+        if (ftype == ::apache::thrift::protocol::T_DOUBLE) {
+          xfer += iprot->readDouble(this->count);
+          this->__isset.count = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 7:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->comment);
+          this->__isset.comment = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 8:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->date);
+          this->__isset.date = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 9:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->destination);
+          this->__isset.destination = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      default:
+        xfer += iprot->skip(ftype);
+        break;
+    }
+    xfer += iprot->readFieldEnd();
+  }
+
+  xfer += iprot->readStructEnd();
+
+  return xfer;
+}
+
+uint32_t vichele_stay_alone::write(::apache::thrift::protocol::TProtocol* oprot) const {
+  uint32_t xfer = 0;
+  ::apache::thrift::protocol::TOutputRecursionTracker tracker(*oprot);
+  xfer += oprot->writeStructBegin("vichele_stay_alone");
+
+  xfer += oprot->writeFieldBegin("id", ::apache::thrift::protocol::T_I64, 1);
+  xfer += oprot->writeI64(this->id);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("stuff_name", ::apache::thrift::protocol::T_STRING, 2);
+  xfer += oprot->writeString(this->stuff_name);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("company_name", ::apache::thrift::protocol::T_STRING, 3);
+  xfer += oprot->writeString(this->company_name);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("main_vichele_number", ::apache::thrift::protocol::T_STRING, 4);
+  xfer += oprot->writeString(this->main_vichele_number);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("behind_vichele_number", ::apache::thrift::protocol::T_STRING, 5);
+  xfer += oprot->writeString(this->behind_vichele_number);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("count", ::apache::thrift::protocol::T_DOUBLE, 6);
+  xfer += oprot->writeDouble(this->count);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("comment", ::apache::thrift::protocol::T_STRING, 7);
+  xfer += oprot->writeString(this->comment);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("date", ::apache::thrift::protocol::T_STRING, 8);
+  xfer += oprot->writeString(this->date);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("destination", ::apache::thrift::protocol::T_STRING, 9);
+  xfer += oprot->writeString(this->destination);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldStop();
+  xfer += oprot->writeStructEnd();
+  return xfer;
+}
+
+void swap(vichele_stay_alone &a, vichele_stay_alone &b) {
+  using ::std::swap;
+  swap(a.id, b.id);
+  swap(a.stuff_name, b.stuff_name);
+  swap(a.company_name, b.company_name);
+  swap(a.main_vichele_number, b.main_vichele_number);
+  swap(a.behind_vichele_number, b.behind_vichele_number);
+  swap(a.count, b.count);
+  swap(a.comment, b.comment);
+  swap(a.date, b.date);
+  swap(a.destination, b.destination);
+  swap(a.__isset, b.__isset);
+}
+
+vichele_stay_alone::vichele_stay_alone(const vichele_stay_alone& other52) {
+  id = other52.id;
+  stuff_name = other52.stuff_name;
+  company_name = other52.company_name;
+  main_vichele_number = other52.main_vichele_number;
+  behind_vichele_number = other52.behind_vichele_number;
+  count = other52.count;
+  comment = other52.comment;
+  date = other52.date;
+  destination = other52.destination;
+  __isset = other52.__isset;
+}
+vichele_stay_alone& vichele_stay_alone::operator=(const vichele_stay_alone& other53) {
+  id = other53.id;
+  stuff_name = other53.stuff_name;
+  company_name = other53.company_name;
+  main_vichele_number = other53.main_vichele_number;
+  behind_vichele_number = other53.behind_vichele_number;
+  count = other53.count;
+  comment = other53.comment;
+  date = other53.date;
+  destination = other53.destination;
+  __isset = other53.__isset;
+  return *this;
+}
+void vichele_stay_alone::printTo(std::ostream& out) const {
+  using ::apache::thrift::to_string;
+  out << "vichele_stay_alone(";
+  out << "id=" << to_string(id);
+  out << ", " << "stuff_name=" << to_string(stuff_name);
+  out << ", " << "company_name=" << to_string(company_name);
+  out << ", " << "main_vichele_number=" << to_string(main_vichele_number);
+  out << ", " << "behind_vichele_number=" << to_string(behind_vichele_number);
+  out << ", " << "count=" << to_string(count);
+  out << ", " << "comment=" << to_string(comment);
+  out << ", " << "date=" << to_string(date);
+  out << ", " << "destination=" << to_string(destination);
+  out << ")";
+}
+
+

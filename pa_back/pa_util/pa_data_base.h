@@ -510,4 +510,58 @@ public:
     }
 };
 
+class pa_sql_silent_user:public sql_tree_base {
+public:
+    std::string open_id;
+    virtual std::vector<sqlite_orm_column> self_columns_defined()
+    {
+        std::vector<sqlite_orm_column> ret;
+        ret.push_back(sqlite_orm_column("open_id", sqlite_orm_column::STRING, &open_id, SQLITE_ORM_COLUMN_LIMIT_UNIQ));
+
+        return ret;
+    }
+
+    virtual std::string table_name()
+    {
+        return "silent_user_table";
+    }
+
+};
+
+class pa_sql_vichele_stay_alone:public sql_tree_base {
+public:
+    std::string main_vichele_number;
+    std::string behind_vichele_number;
+    std::string company_name;
+    std::string stuff_name;
+    double count = 0;
+    std::string comment;
+    std::string date;
+    pa_sql_vichele_stay_alone() {
+        add_parent_type<pa_sql_silent_user>("created_by");
+        add_parent_type<pa_sql_company>("destination");
+    }
+    virtual std::vector<sqlite_orm_column> self_columns_defined()
+    {
+        std::vector<sqlite_orm_column> ret;
+        ret.push_back(sqlite_orm_column("main_vichele_number", sqlite_orm_column::STRING, &main_vichele_number));
+        ret.push_back(sqlite_orm_column("behind_vichele_number", sqlite_orm_column::STRING, &behind_vichele_number));
+        ret.push_back(sqlite_orm_column("company_name", sqlite_orm_column::STRING, &company_name));
+        ret.push_back(sqlite_orm_column("stuff_name", sqlite_orm_column::STRING, &stuff_name));
+        ret.push_back(sqlite_orm_column("count", sqlite_orm_column::REAL, &count));
+        ret.push_back(sqlite_orm_column("comment", sqlite_orm_column::STRING, &comment));
+        ret.push_back(sqlite_orm_column("date", sqlite_orm_column::STRING, &date));
+
+        return ret;
+    }
+
+    virtual std::string table_name()
+    {
+        return "vichele_stay_alone_table";
+    }
+
+
+};
+
+
 #endif // _PA_DATABSE_H_

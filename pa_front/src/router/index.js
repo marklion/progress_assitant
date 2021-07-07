@@ -153,7 +153,7 @@ const routes = [
     name: 'ExtraVichele',
     component: () => import('../views/ExtraVichele.vue'),
     meta: {
-      private_title: '采购派车',
+      private_title: '货车进厂',
       has_go_back: false,
       extra_page:true,
     },

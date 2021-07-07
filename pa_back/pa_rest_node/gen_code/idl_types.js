@@ -2477,3 +2477,178 @@ company_plan_brief.prototype.write = function(output) {
   return;
 };
 
+var vichele_stay_alone = module.exports.vichele_stay_alone = function(args) {
+  this.id = null;
+  this.stuff_name = null;
+  this.company_name = null;
+  this.main_vichele_number = null;
+  this.behind_vichele_number = null;
+  this.count = null;
+  this.comment = null;
+  this.date = null;
+  this.destination = null;
+  if (args) {
+    if (args.id !== undefined && args.id !== null) {
+      this.id = args.id;
+    }
+    if (args.stuff_name !== undefined && args.stuff_name !== null) {
+      this.stuff_name = args.stuff_name;
+    }
+    if (args.company_name !== undefined && args.company_name !== null) {
+      this.company_name = args.company_name;
+    }
+    if (args.main_vichele_number !== undefined && args.main_vichele_number !== null) {
+      this.main_vichele_number = args.main_vichele_number;
+    }
+    if (args.behind_vichele_number !== undefined && args.behind_vichele_number !== null) {
+      this.behind_vichele_number = args.behind_vichele_number;
+    }
+    if (args.count !== undefined && args.count !== null) {
+      this.count = args.count;
+    }
+    if (args.comment !== undefined && args.comment !== null) {
+      this.comment = args.comment;
+    }
+    if (args.date !== undefined && args.date !== null) {
+      this.date = args.date;
+    }
+    if (args.destination !== undefined && args.destination !== null) {
+      this.destination = args.destination;
+    }
+  }
+};
+vichele_stay_alone.prototype = {};
+vichele_stay_alone.prototype.read = function(input) {
+  input.readStructBegin();
+  while (true) {
+    var ret = input.readFieldBegin();
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    switch (fid) {
+      case 1:
+      if (ftype == Thrift.Type.I64) {
+        this.id = input.readI64();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 2:
+      if (ftype == Thrift.Type.STRING) {
+        this.stuff_name = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 3:
+      if (ftype == Thrift.Type.STRING) {
+        this.company_name = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 4:
+      if (ftype == Thrift.Type.STRING) {
+        this.main_vichele_number = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 5:
+      if (ftype == Thrift.Type.STRING) {
+        this.behind_vichele_number = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 6:
+      if (ftype == Thrift.Type.DOUBLE) {
+        this.count = input.readDouble();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 7:
+      if (ftype == Thrift.Type.STRING) {
+        this.comment = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 8:
+      if (ftype == Thrift.Type.STRING) {
+        this.date = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 9:
+      if (ftype == Thrift.Type.STRING) {
+        this.destination = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      default:
+        input.skip(ftype);
+    }
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+vichele_stay_alone.prototype.write = function(output) {
+  output.writeStructBegin('vichele_stay_alone');
+  if (this.id !== null && this.id !== undefined) {
+    output.writeFieldBegin('id', Thrift.Type.I64, 1);
+    output.writeI64(this.id);
+    output.writeFieldEnd();
+  }
+  if (this.stuff_name !== null && this.stuff_name !== undefined) {
+    output.writeFieldBegin('stuff_name', Thrift.Type.STRING, 2);
+    output.writeString(this.stuff_name);
+    output.writeFieldEnd();
+  }
+  if (this.company_name !== null && this.company_name !== undefined) {
+    output.writeFieldBegin('company_name', Thrift.Type.STRING, 3);
+    output.writeString(this.company_name);
+    output.writeFieldEnd();
+  }
+  if (this.main_vichele_number !== null && this.main_vichele_number !== undefined) {
+    output.writeFieldBegin('main_vichele_number', Thrift.Type.STRING, 4);
+    output.writeString(this.main_vichele_number);
+    output.writeFieldEnd();
+  }
+  if (this.behind_vichele_number !== null && this.behind_vichele_number !== undefined) {
+    output.writeFieldBegin('behind_vichele_number', Thrift.Type.STRING, 5);
+    output.writeString(this.behind_vichele_number);
+    output.writeFieldEnd();
+  }
+  if (this.count !== null && this.count !== undefined) {
+    output.writeFieldBegin('count', Thrift.Type.DOUBLE, 6);
+    output.writeDouble(this.count);
+    output.writeFieldEnd();
+  }
+  if (this.comment !== null && this.comment !== undefined) {
+    output.writeFieldBegin('comment', Thrift.Type.STRING, 7);
+    output.writeString(this.comment);
+    output.writeFieldEnd();
+  }
+  if (this.date !== null && this.date !== undefined) {
+    output.writeFieldBegin('date', Thrift.Type.STRING, 8);
+    output.writeString(this.date);
+    output.writeFieldEnd();
+  }
+  if (this.destination !== null && this.destination !== undefined) {
+    output.writeFieldBegin('destination', Thrift.Type.STRING, 9);
+    output.writeString(this.destination);
+    output.writeFieldEnd();
+  }
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+

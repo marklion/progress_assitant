@@ -273,3 +273,25 @@ service open_api_management {
     bool unregister_api_user(1:string email, 2:string password) throws (1:gen_exp e),
     string get_token(1:string email, 2:string password) throws (1:gen_exp e),
 }
+
+struct vichele_stay_alone {
+    1:i64 id,
+    2:string stuff_name,
+    3:string company_name,
+    4:string main_vichele_number,
+    5:string behind_vichele_number,
+    6:double count,
+    7:string comment,
+    8:string date,
+    9:string destination,
+}
+
+service vichele_management {
+    bool create_vichele_info(1:string open_id, 2:list<vichele_stay_alone> vichele_info) throws (1:gen_exp e),
+    bool delete_vichele_info(1:string open_id, 2:i64 vichele_id) throws (1:gen_exp e),
+    bool update_vichele_info(1:string open_id, 2:vichele_stay_alone vichele_info) throws (1:gen_exp e),
+    list<vichele_stay_alone> get_created_vichele_info(1:string open_id, 2:i64 ancher) throws (1:gen_exp e),
+    string silent_login(1:string code) throws (1:gen_exp e),
+    bool verify_login(1:string open_id) throws (1:gen_exp e),
+    list<string> get_input_history(1:string open_id, 2:vichele_stay_alone search_key) throws (1:gen_exp e),
+}

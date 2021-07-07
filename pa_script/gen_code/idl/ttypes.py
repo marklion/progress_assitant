@@ -2287,6 +2287,151 @@ class company_plan_brief(object):
 
     def __ne__(self, other):
         return not (self == other)
+
+
+class vichele_stay_alone(object):
+    """
+    Attributes:
+     - id
+     - stuff_name
+     - company_name
+     - main_vichele_number
+     - behind_vichele_number
+     - count
+     - comment
+     - date
+     - destination
+
+    """
+
+
+    def __init__(self, id=None, stuff_name=None, company_name=None, main_vichele_number=None, behind_vichele_number=None, count=None, comment=None, date=None, destination=None,):
+        self.id = id
+        self.stuff_name = stuff_name
+        self.company_name = company_name
+        self.main_vichele_number = main_vichele_number
+        self.behind_vichele_number = behind_vichele_number
+        self.count = count
+        self.comment = comment
+        self.date = date
+        self.destination = destination
+
+    def read(self, iprot):
+        if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
+            iprot._fast_decode(self, iprot, [self.__class__, self.thrift_spec])
+            return
+        iprot.readStructBegin()
+        while True:
+            (fname, ftype, fid) = iprot.readFieldBegin()
+            if ftype == TType.STOP:
+                break
+            if fid == 1:
+                if ftype == TType.I64:
+                    self.id = iprot.readI64()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 2:
+                if ftype == TType.STRING:
+                    self.stuff_name = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 3:
+                if ftype == TType.STRING:
+                    self.company_name = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 4:
+                if ftype == TType.STRING:
+                    self.main_vichele_number = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 5:
+                if ftype == TType.STRING:
+                    self.behind_vichele_number = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 6:
+                if ftype == TType.DOUBLE:
+                    self.count = iprot.readDouble()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 7:
+                if ftype == TType.STRING:
+                    self.comment = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 8:
+                if ftype == TType.STRING:
+                    self.date = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 9:
+                if ftype == TType.STRING:
+                    self.destination = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
+            else:
+                iprot.skip(ftype)
+            iprot.readFieldEnd()
+        iprot.readStructEnd()
+
+    def write(self, oprot):
+        if oprot._fast_encode is not None and self.thrift_spec is not None:
+            oprot.trans.write(oprot._fast_encode(self, [self.__class__, self.thrift_spec]))
+            return
+        oprot.writeStructBegin('vichele_stay_alone')
+        if self.id is not None:
+            oprot.writeFieldBegin('id', TType.I64, 1)
+            oprot.writeI64(self.id)
+            oprot.writeFieldEnd()
+        if self.stuff_name is not None:
+            oprot.writeFieldBegin('stuff_name', TType.STRING, 2)
+            oprot.writeString(self.stuff_name.encode('utf-8') if sys.version_info[0] == 2 else self.stuff_name)
+            oprot.writeFieldEnd()
+        if self.company_name is not None:
+            oprot.writeFieldBegin('company_name', TType.STRING, 3)
+            oprot.writeString(self.company_name.encode('utf-8') if sys.version_info[0] == 2 else self.company_name)
+            oprot.writeFieldEnd()
+        if self.main_vichele_number is not None:
+            oprot.writeFieldBegin('main_vichele_number', TType.STRING, 4)
+            oprot.writeString(self.main_vichele_number.encode('utf-8') if sys.version_info[0] == 2 else self.main_vichele_number)
+            oprot.writeFieldEnd()
+        if self.behind_vichele_number is not None:
+            oprot.writeFieldBegin('behind_vichele_number', TType.STRING, 5)
+            oprot.writeString(self.behind_vichele_number.encode('utf-8') if sys.version_info[0] == 2 else self.behind_vichele_number)
+            oprot.writeFieldEnd()
+        if self.count is not None:
+            oprot.writeFieldBegin('count', TType.DOUBLE, 6)
+            oprot.writeDouble(self.count)
+            oprot.writeFieldEnd()
+        if self.comment is not None:
+            oprot.writeFieldBegin('comment', TType.STRING, 7)
+            oprot.writeString(self.comment.encode('utf-8') if sys.version_info[0] == 2 else self.comment)
+            oprot.writeFieldEnd()
+        if self.date is not None:
+            oprot.writeFieldBegin('date', TType.STRING, 8)
+            oprot.writeString(self.date.encode('utf-8') if sys.version_info[0] == 2 else self.date)
+            oprot.writeFieldEnd()
+        if self.destination is not None:
+            oprot.writeFieldBegin('destination', TType.STRING, 9)
+            oprot.writeString(self.destination.encode('utf-8') if sys.version_info[0] == 2 else self.destination)
+            oprot.writeFieldEnd()
+        oprot.writeFieldStop()
+        oprot.writeStructEnd()
+
+    def validate(self):
+        return
+
+    def __repr__(self):
+        L = ['%s=%r' % (key, value)
+             for key, value in self.__dict__.items()]
+        return '%s(%s)' % (self.__class__.__name__, ', '.join(L))
+
+    def __eq__(self, other):
+        return isinstance(other, self.__class__) and self.__dict__ == other.__dict__
+
+    def __ne__(self, other):
+        return not (self == other)
 all_structs.append(gen_exp)
 gen_exp.thrift_spec = (
     None,  # 0
@@ -2486,6 +2631,19 @@ company_plan_brief.thrift_spec = (
     (2, TType.I64, 'today_vichele_count', None, None, ),  # 2
     (3, TType.I64, 'tomorrow_plan_count', None, None, ),  # 3
     (4, TType.I64, 'tomorrow_vichele_count', None, None, ),  # 4
+)
+all_structs.append(vichele_stay_alone)
+vichele_stay_alone.thrift_spec = (
+    None,  # 0
+    (1, TType.I64, 'id', None, None, ),  # 1
+    (2, TType.STRING, 'stuff_name', 'UTF8', None, ),  # 2
+    (3, TType.STRING, 'company_name', 'UTF8', None, ),  # 3
+    (4, TType.STRING, 'main_vichele_number', 'UTF8', None, ),  # 4
+    (5, TType.STRING, 'behind_vichele_number', 'UTF8', None, ),  # 5
+    (6, TType.DOUBLE, 'count', None, None, ),  # 6
+    (7, TType.STRING, 'comment', 'UTF8', None, ),  # 7
+    (8, TType.STRING, 'date', 'UTF8', None, ),  # 8
+    (9, TType.STRING, 'destination', 'UTF8', None, ),  # 9
 )
 fix_spec(all_structs)
 del all_structs

@@ -15,6 +15,7 @@
 #define PA_RETURN_NOPLAN_MSG() PA_RETURN_MSG("计划不存在")
 #define PA_RETURN_RELATED_PLAN_OPEN() PA_RETURN_MSG("计划未关闭无法操作")
 #define PA_RETURN_SALE_CLOSE() PA_RETURN_MSG("卖家已休息，请在上班时间段内操作")
+#define PA_RETURN_OP_FAIL() PA_RETURN_MSG("操作失败")
 
 std::unique_ptr<pa_sql_userinfo> PA_DATAOPT_get_online_user(const std::string &_ssid);
 std::string PA_DATAOPT_store_logo_to_file(const std::string &_logo, const std::string &_upid);
