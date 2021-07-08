@@ -2301,11 +2301,15 @@ class vichele_stay_alone(object):
      - comment
      - date
      - destination
+     - status
+     - creator_name
+     - creator_phone
+     - repeated
 
     """
 
 
-    def __init__(self, id=None, stuff_name=None, company_name=None, main_vichele_number=None, behind_vichele_number=None, count=None, comment=None, date=None, destination=None,):
+    def __init__(self, id=None, stuff_name=None, company_name=None, main_vichele_number=None, behind_vichele_number=None, count=None, comment=None, date=None, destination=None, status=None, creator_name=None, creator_phone=None, repeated=None,):
         self.id = id
         self.stuff_name = stuff_name
         self.company_name = company_name
@@ -2315,6 +2319,10 @@ class vichele_stay_alone(object):
         self.comment = comment
         self.date = date
         self.destination = destination
+        self.status = status
+        self.creator_name = creator_name
+        self.creator_phone = creator_phone
+        self.repeated = repeated
 
     def read(self, iprot):
         if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
@@ -2370,6 +2378,26 @@ class vichele_stay_alone(object):
                     self.destination = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
                 else:
                     iprot.skip(ftype)
+            elif fid == 10:
+                if ftype == TType.I64:
+                    self.status = iprot.readI64()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 11:
+                if ftype == TType.STRING:
+                    self.creator_name = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 12:
+                if ftype == TType.STRING:
+                    self.creator_phone = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 13:
+                if ftype == TType.BOOL:
+                    self.repeated = iprot.readBool()
+                else:
+                    iprot.skip(ftype)
             else:
                 iprot.skip(ftype)
             iprot.readFieldEnd()
@@ -2415,6 +2443,90 @@ class vichele_stay_alone(object):
         if self.destination is not None:
             oprot.writeFieldBegin('destination', TType.STRING, 9)
             oprot.writeString(self.destination.encode('utf-8') if sys.version_info[0] == 2 else self.destination)
+            oprot.writeFieldEnd()
+        if self.status is not None:
+            oprot.writeFieldBegin('status', TType.I64, 10)
+            oprot.writeI64(self.status)
+            oprot.writeFieldEnd()
+        if self.creator_name is not None:
+            oprot.writeFieldBegin('creator_name', TType.STRING, 11)
+            oprot.writeString(self.creator_name.encode('utf-8') if sys.version_info[0] == 2 else self.creator_name)
+            oprot.writeFieldEnd()
+        if self.creator_phone is not None:
+            oprot.writeFieldBegin('creator_phone', TType.STRING, 12)
+            oprot.writeString(self.creator_phone.encode('utf-8') if sys.version_info[0] == 2 else self.creator_phone)
+            oprot.writeFieldEnd()
+        if self.repeated is not None:
+            oprot.writeFieldBegin('repeated', TType.BOOL, 13)
+            oprot.writeBool(self.repeated)
+            oprot.writeFieldEnd()
+        oprot.writeFieldStop()
+        oprot.writeStructEnd()
+
+    def validate(self):
+        return
+
+    def __repr__(self):
+        L = ['%s=%r' % (key, value)
+             for key, value in self.__dict__.items()]
+        return '%s(%s)' % (self.__class__.__name__, ', '.join(L))
+
+    def __eq__(self, other):
+        return isinstance(other, self.__class__) and self.__dict__ == other.__dict__
+
+    def __ne__(self, other):
+        return not (self == other)
+
+
+class silent_user_info(object):
+    """
+    Attributes:
+     - name
+     - phone
+
+    """
+
+
+    def __init__(self, name=None, phone=None,):
+        self.name = name
+        self.phone = phone
+
+    def read(self, iprot):
+        if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
+            iprot._fast_decode(self, iprot, [self.__class__, self.thrift_spec])
+            return
+        iprot.readStructBegin()
+        while True:
+            (fname, ftype, fid) = iprot.readFieldBegin()
+            if ftype == TType.STOP:
+                break
+            if fid == 1:
+                if ftype == TType.STRING:
+                    self.name = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 2:
+                if ftype == TType.STRING:
+                    self.phone = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
+            else:
+                iprot.skip(ftype)
+            iprot.readFieldEnd()
+        iprot.readStructEnd()
+
+    def write(self, oprot):
+        if oprot._fast_encode is not None and self.thrift_spec is not None:
+            oprot.trans.write(oprot._fast_encode(self, [self.__class__, self.thrift_spec]))
+            return
+        oprot.writeStructBegin('silent_user_info')
+        if self.name is not None:
+            oprot.writeFieldBegin('name', TType.STRING, 1)
+            oprot.writeString(self.name.encode('utf-8') if sys.version_info[0] == 2 else self.name)
+            oprot.writeFieldEnd()
+        if self.phone is not None:
+            oprot.writeFieldBegin('phone', TType.STRING, 2)
+            oprot.writeString(self.phone.encode('utf-8') if sys.version_info[0] == 2 else self.phone)
             oprot.writeFieldEnd()
         oprot.writeFieldStop()
         oprot.writeStructEnd()
@@ -2644,6 +2756,16 @@ vichele_stay_alone.thrift_spec = (
     (7, TType.STRING, 'comment', 'UTF8', None, ),  # 7
     (8, TType.STRING, 'date', 'UTF8', None, ),  # 8
     (9, TType.STRING, 'destination', 'UTF8', None, ),  # 9
+    (10, TType.I64, 'status', None, None, ),  # 10
+    (11, TType.STRING, 'creator_name', 'UTF8', None, ),  # 11
+    (12, TType.STRING, 'creator_phone', 'UTF8', None, ),  # 12
+    (13, TType.BOOL, 'repeated', None, None, ),  # 13
+)
+all_structs.append(silent_user_info)
+silent_user_info.thrift_spec = (
+    None,  # 0
+    (1, TType.STRING, 'name', 'UTF8', None, ),  # 1
+    (2, TType.STRING, 'phone', 'UTF8', None, ),  # 2
 )
 fix_spec(all_structs)
 del all_structs

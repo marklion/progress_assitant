@@ -28,7 +28,12 @@ class vichele_managementIf {
   virtual void get_created_vichele_info(std::vector<vichele_stay_alone> & _return, const std::string& open_id, const int64_t ancher) = 0;
   virtual void silent_login(std::string& _return, const std::string& code) = 0;
   virtual bool verify_login(const std::string& open_id) = 0;
+  virtual void get_silent_user_info(silent_user_info& _return, const std::string& open_id) = 0;
+  virtual void set_silent_user_info(const std::string& open_id, const silent_user_info& info) = 0;
   virtual void get_input_history(std::vector<std::string> & _return, const std::string& open_id, const vichele_stay_alone& search_key) = 0;
+  virtual void get_company_vichele_info(std::vector<vichele_stay_alone> & _return, const std::string& ssid, const int64_t anchor) = 0;
+  virtual bool confirm_vichele(const std::string& ssid, const std::vector<vichele_stay_alone> & info) = 0;
+  virtual bool cancel_vichele(const std::string& ssid, const std::vector<vichele_stay_alone> & info) = 0;
 };
 
 class vichele_managementIfFactory {
@@ -80,8 +85,25 @@ class vichele_managementNull : virtual public vichele_managementIf {
     bool _return = false;
     return _return;
   }
+  void get_silent_user_info(silent_user_info& /* _return */, const std::string& /* open_id */) {
+    return;
+  }
+  void set_silent_user_info(const std::string& /* open_id */, const silent_user_info& /* info */) {
+    return;
+  }
   void get_input_history(std::vector<std::string> & /* _return */, const std::string& /* open_id */, const vichele_stay_alone& /* search_key */) {
     return;
+  }
+  void get_company_vichele_info(std::vector<vichele_stay_alone> & /* _return */, const std::string& /* ssid */, const int64_t /* anchor */) {
+    return;
+  }
+  bool confirm_vichele(const std::string& /* ssid */, const std::vector<vichele_stay_alone> & /* info */) {
+    bool _return = false;
+    return _return;
+  }
+  bool cancel_vichele(const std::string& /* ssid */, const std::vector<vichele_stay_alone> & /* info */) {
+    bool _return = false;
+    return _return;
   }
 };
 
@@ -785,6 +807,229 @@ class vichele_management_verify_login_presult {
 
 };
 
+typedef struct _vichele_management_get_silent_user_info_args__isset {
+  _vichele_management_get_silent_user_info_args__isset() : open_id(false) {}
+  bool open_id :1;
+} _vichele_management_get_silent_user_info_args__isset;
+
+class vichele_management_get_silent_user_info_args {
+ public:
+
+  vichele_management_get_silent_user_info_args(const vichele_management_get_silent_user_info_args&);
+  vichele_management_get_silent_user_info_args& operator=(const vichele_management_get_silent_user_info_args&);
+  vichele_management_get_silent_user_info_args() : open_id() {
+  }
+
+  virtual ~vichele_management_get_silent_user_info_args() noexcept;
+  std::string open_id;
+
+  _vichele_management_get_silent_user_info_args__isset __isset;
+
+  void __set_open_id(const std::string& val);
+
+  bool operator == (const vichele_management_get_silent_user_info_args & rhs) const
+  {
+    if (!(open_id == rhs.open_id))
+      return false;
+    return true;
+  }
+  bool operator != (const vichele_management_get_silent_user_info_args &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const vichele_management_get_silent_user_info_args & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+
+class vichele_management_get_silent_user_info_pargs {
+ public:
+
+
+  virtual ~vichele_management_get_silent_user_info_pargs() noexcept;
+  const std::string* open_id;
+
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _vichele_management_get_silent_user_info_result__isset {
+  _vichele_management_get_silent_user_info_result__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _vichele_management_get_silent_user_info_result__isset;
+
+class vichele_management_get_silent_user_info_result {
+ public:
+
+  vichele_management_get_silent_user_info_result(const vichele_management_get_silent_user_info_result&);
+  vichele_management_get_silent_user_info_result& operator=(const vichele_management_get_silent_user_info_result&);
+  vichele_management_get_silent_user_info_result() {
+  }
+
+  virtual ~vichele_management_get_silent_user_info_result() noexcept;
+  silent_user_info success;
+  gen_exp e;
+
+  _vichele_management_get_silent_user_info_result__isset __isset;
+
+  void __set_success(const silent_user_info& val);
+
+  void __set_e(const gen_exp& val);
+
+  bool operator == (const vichele_management_get_silent_user_info_result & rhs) const
+  {
+    if (!(success == rhs.success))
+      return false;
+    if (!(e == rhs.e))
+      return false;
+    return true;
+  }
+  bool operator != (const vichele_management_get_silent_user_info_result &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const vichele_management_get_silent_user_info_result & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _vichele_management_get_silent_user_info_presult__isset {
+  _vichele_management_get_silent_user_info_presult__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _vichele_management_get_silent_user_info_presult__isset;
+
+class vichele_management_get_silent_user_info_presult {
+ public:
+
+
+  virtual ~vichele_management_get_silent_user_info_presult() noexcept;
+  silent_user_info* success;
+  gen_exp e;
+
+  _vichele_management_get_silent_user_info_presult__isset __isset;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+
+};
+
+typedef struct _vichele_management_set_silent_user_info_args__isset {
+  _vichele_management_set_silent_user_info_args__isset() : open_id(false), info(false) {}
+  bool open_id :1;
+  bool info :1;
+} _vichele_management_set_silent_user_info_args__isset;
+
+class vichele_management_set_silent_user_info_args {
+ public:
+
+  vichele_management_set_silent_user_info_args(const vichele_management_set_silent_user_info_args&);
+  vichele_management_set_silent_user_info_args& operator=(const vichele_management_set_silent_user_info_args&);
+  vichele_management_set_silent_user_info_args() : open_id() {
+  }
+
+  virtual ~vichele_management_set_silent_user_info_args() noexcept;
+  std::string open_id;
+  silent_user_info info;
+
+  _vichele_management_set_silent_user_info_args__isset __isset;
+
+  void __set_open_id(const std::string& val);
+
+  void __set_info(const silent_user_info& val);
+
+  bool operator == (const vichele_management_set_silent_user_info_args & rhs) const
+  {
+    if (!(open_id == rhs.open_id))
+      return false;
+    if (!(info == rhs.info))
+      return false;
+    return true;
+  }
+  bool operator != (const vichele_management_set_silent_user_info_args &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const vichele_management_set_silent_user_info_args & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+
+class vichele_management_set_silent_user_info_pargs {
+ public:
+
+
+  virtual ~vichele_management_set_silent_user_info_pargs() noexcept;
+  const std::string* open_id;
+  const silent_user_info* info;
+
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _vichele_management_set_silent_user_info_result__isset {
+  _vichele_management_set_silent_user_info_result__isset() : e(false) {}
+  bool e :1;
+} _vichele_management_set_silent_user_info_result__isset;
+
+class vichele_management_set_silent_user_info_result {
+ public:
+
+  vichele_management_set_silent_user_info_result(const vichele_management_set_silent_user_info_result&);
+  vichele_management_set_silent_user_info_result& operator=(const vichele_management_set_silent_user_info_result&);
+  vichele_management_set_silent_user_info_result() {
+  }
+
+  virtual ~vichele_management_set_silent_user_info_result() noexcept;
+  gen_exp e;
+
+  _vichele_management_set_silent_user_info_result__isset __isset;
+
+  void __set_e(const gen_exp& val);
+
+  bool operator == (const vichele_management_set_silent_user_info_result & rhs) const
+  {
+    if (!(e == rhs.e))
+      return false;
+    return true;
+  }
+  bool operator != (const vichele_management_set_silent_user_info_result &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const vichele_management_set_silent_user_info_result & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _vichele_management_set_silent_user_info_presult__isset {
+  _vichele_management_set_silent_user_info_presult__isset() : e(false) {}
+  bool e :1;
+} _vichele_management_set_silent_user_info_presult__isset;
+
+class vichele_management_set_silent_user_info_presult {
+ public:
+
+
+  virtual ~vichele_management_set_silent_user_info_presult() noexcept;
+  gen_exp e;
+
+  _vichele_management_set_silent_user_info_presult__isset __isset;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+
+};
+
 typedef struct _vichele_management_get_input_history_args__isset {
   _vichele_management_get_input_history_args__isset() : open_id(false), search_key(false) {}
   bool open_id :1;
@@ -904,6 +1149,363 @@ class vichele_management_get_input_history_presult {
 
 };
 
+typedef struct _vichele_management_get_company_vichele_info_args__isset {
+  _vichele_management_get_company_vichele_info_args__isset() : ssid(false), anchor(false) {}
+  bool ssid :1;
+  bool anchor :1;
+} _vichele_management_get_company_vichele_info_args__isset;
+
+class vichele_management_get_company_vichele_info_args {
+ public:
+
+  vichele_management_get_company_vichele_info_args(const vichele_management_get_company_vichele_info_args&);
+  vichele_management_get_company_vichele_info_args& operator=(const vichele_management_get_company_vichele_info_args&);
+  vichele_management_get_company_vichele_info_args() : ssid(), anchor(0) {
+  }
+
+  virtual ~vichele_management_get_company_vichele_info_args() noexcept;
+  std::string ssid;
+  int64_t anchor;
+
+  _vichele_management_get_company_vichele_info_args__isset __isset;
+
+  void __set_ssid(const std::string& val);
+
+  void __set_anchor(const int64_t val);
+
+  bool operator == (const vichele_management_get_company_vichele_info_args & rhs) const
+  {
+    if (!(ssid == rhs.ssid))
+      return false;
+    if (!(anchor == rhs.anchor))
+      return false;
+    return true;
+  }
+  bool operator != (const vichele_management_get_company_vichele_info_args &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const vichele_management_get_company_vichele_info_args & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+
+class vichele_management_get_company_vichele_info_pargs {
+ public:
+
+
+  virtual ~vichele_management_get_company_vichele_info_pargs() noexcept;
+  const std::string* ssid;
+  const int64_t* anchor;
+
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _vichele_management_get_company_vichele_info_result__isset {
+  _vichele_management_get_company_vichele_info_result__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _vichele_management_get_company_vichele_info_result__isset;
+
+class vichele_management_get_company_vichele_info_result {
+ public:
+
+  vichele_management_get_company_vichele_info_result(const vichele_management_get_company_vichele_info_result&);
+  vichele_management_get_company_vichele_info_result& operator=(const vichele_management_get_company_vichele_info_result&);
+  vichele_management_get_company_vichele_info_result() {
+  }
+
+  virtual ~vichele_management_get_company_vichele_info_result() noexcept;
+  std::vector<vichele_stay_alone>  success;
+  gen_exp e;
+
+  _vichele_management_get_company_vichele_info_result__isset __isset;
+
+  void __set_success(const std::vector<vichele_stay_alone> & val);
+
+  void __set_e(const gen_exp& val);
+
+  bool operator == (const vichele_management_get_company_vichele_info_result & rhs) const
+  {
+    if (!(success == rhs.success))
+      return false;
+    if (!(e == rhs.e))
+      return false;
+    return true;
+  }
+  bool operator != (const vichele_management_get_company_vichele_info_result &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const vichele_management_get_company_vichele_info_result & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _vichele_management_get_company_vichele_info_presult__isset {
+  _vichele_management_get_company_vichele_info_presult__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _vichele_management_get_company_vichele_info_presult__isset;
+
+class vichele_management_get_company_vichele_info_presult {
+ public:
+
+
+  virtual ~vichele_management_get_company_vichele_info_presult() noexcept;
+  std::vector<vichele_stay_alone> * success;
+  gen_exp e;
+
+  _vichele_management_get_company_vichele_info_presult__isset __isset;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+
+};
+
+typedef struct _vichele_management_confirm_vichele_args__isset {
+  _vichele_management_confirm_vichele_args__isset() : ssid(false), info(false) {}
+  bool ssid :1;
+  bool info :1;
+} _vichele_management_confirm_vichele_args__isset;
+
+class vichele_management_confirm_vichele_args {
+ public:
+
+  vichele_management_confirm_vichele_args(const vichele_management_confirm_vichele_args&);
+  vichele_management_confirm_vichele_args& operator=(const vichele_management_confirm_vichele_args&);
+  vichele_management_confirm_vichele_args() : ssid() {
+  }
+
+  virtual ~vichele_management_confirm_vichele_args() noexcept;
+  std::string ssid;
+  std::vector<vichele_stay_alone>  info;
+
+  _vichele_management_confirm_vichele_args__isset __isset;
+
+  void __set_ssid(const std::string& val);
+
+  void __set_info(const std::vector<vichele_stay_alone> & val);
+
+  bool operator == (const vichele_management_confirm_vichele_args & rhs) const
+  {
+    if (!(ssid == rhs.ssid))
+      return false;
+    if (!(info == rhs.info))
+      return false;
+    return true;
+  }
+  bool operator != (const vichele_management_confirm_vichele_args &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const vichele_management_confirm_vichele_args & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+
+class vichele_management_confirm_vichele_pargs {
+ public:
+
+
+  virtual ~vichele_management_confirm_vichele_pargs() noexcept;
+  const std::string* ssid;
+  const std::vector<vichele_stay_alone> * info;
+
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _vichele_management_confirm_vichele_result__isset {
+  _vichele_management_confirm_vichele_result__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _vichele_management_confirm_vichele_result__isset;
+
+class vichele_management_confirm_vichele_result {
+ public:
+
+  vichele_management_confirm_vichele_result(const vichele_management_confirm_vichele_result&);
+  vichele_management_confirm_vichele_result& operator=(const vichele_management_confirm_vichele_result&);
+  vichele_management_confirm_vichele_result() : success(0) {
+  }
+
+  virtual ~vichele_management_confirm_vichele_result() noexcept;
+  bool success;
+  gen_exp e;
+
+  _vichele_management_confirm_vichele_result__isset __isset;
+
+  void __set_success(const bool val);
+
+  void __set_e(const gen_exp& val);
+
+  bool operator == (const vichele_management_confirm_vichele_result & rhs) const
+  {
+    if (!(success == rhs.success))
+      return false;
+    if (!(e == rhs.e))
+      return false;
+    return true;
+  }
+  bool operator != (const vichele_management_confirm_vichele_result &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const vichele_management_confirm_vichele_result & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _vichele_management_confirm_vichele_presult__isset {
+  _vichele_management_confirm_vichele_presult__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _vichele_management_confirm_vichele_presult__isset;
+
+class vichele_management_confirm_vichele_presult {
+ public:
+
+
+  virtual ~vichele_management_confirm_vichele_presult() noexcept;
+  bool* success;
+  gen_exp e;
+
+  _vichele_management_confirm_vichele_presult__isset __isset;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+
+};
+
+typedef struct _vichele_management_cancel_vichele_args__isset {
+  _vichele_management_cancel_vichele_args__isset() : ssid(false), info(false) {}
+  bool ssid :1;
+  bool info :1;
+} _vichele_management_cancel_vichele_args__isset;
+
+class vichele_management_cancel_vichele_args {
+ public:
+
+  vichele_management_cancel_vichele_args(const vichele_management_cancel_vichele_args&);
+  vichele_management_cancel_vichele_args& operator=(const vichele_management_cancel_vichele_args&);
+  vichele_management_cancel_vichele_args() : ssid() {
+  }
+
+  virtual ~vichele_management_cancel_vichele_args() noexcept;
+  std::string ssid;
+  std::vector<vichele_stay_alone>  info;
+
+  _vichele_management_cancel_vichele_args__isset __isset;
+
+  void __set_ssid(const std::string& val);
+
+  void __set_info(const std::vector<vichele_stay_alone> & val);
+
+  bool operator == (const vichele_management_cancel_vichele_args & rhs) const
+  {
+    if (!(ssid == rhs.ssid))
+      return false;
+    if (!(info == rhs.info))
+      return false;
+    return true;
+  }
+  bool operator != (const vichele_management_cancel_vichele_args &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const vichele_management_cancel_vichele_args & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+
+class vichele_management_cancel_vichele_pargs {
+ public:
+
+
+  virtual ~vichele_management_cancel_vichele_pargs() noexcept;
+  const std::string* ssid;
+  const std::vector<vichele_stay_alone> * info;
+
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _vichele_management_cancel_vichele_result__isset {
+  _vichele_management_cancel_vichele_result__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _vichele_management_cancel_vichele_result__isset;
+
+class vichele_management_cancel_vichele_result {
+ public:
+
+  vichele_management_cancel_vichele_result(const vichele_management_cancel_vichele_result&);
+  vichele_management_cancel_vichele_result& operator=(const vichele_management_cancel_vichele_result&);
+  vichele_management_cancel_vichele_result() : success(0) {
+  }
+
+  virtual ~vichele_management_cancel_vichele_result() noexcept;
+  bool success;
+  gen_exp e;
+
+  _vichele_management_cancel_vichele_result__isset __isset;
+
+  void __set_success(const bool val);
+
+  void __set_e(const gen_exp& val);
+
+  bool operator == (const vichele_management_cancel_vichele_result & rhs) const
+  {
+    if (!(success == rhs.success))
+      return false;
+    if (!(e == rhs.e))
+      return false;
+    return true;
+  }
+  bool operator != (const vichele_management_cancel_vichele_result &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const vichele_management_cancel_vichele_result & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _vichele_management_cancel_vichele_presult__isset {
+  _vichele_management_cancel_vichele_presult__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _vichele_management_cancel_vichele_presult__isset;
+
+class vichele_management_cancel_vichele_presult {
+ public:
+
+
+  virtual ~vichele_management_cancel_vichele_presult() noexcept;
+  bool* success;
+  gen_exp e;
+
+  _vichele_management_cancel_vichele_presult__isset __isset;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+
+};
+
 class vichele_managementClient : virtual public vichele_managementIf {
  public:
   vichele_managementClient(std::shared_ptr< ::apache::thrift::protocol::TProtocol> prot) {
@@ -947,9 +1549,24 @@ class vichele_managementClient : virtual public vichele_managementIf {
   bool verify_login(const std::string& open_id);
   void send_verify_login(const std::string& open_id);
   bool recv_verify_login();
+  void get_silent_user_info(silent_user_info& _return, const std::string& open_id);
+  void send_get_silent_user_info(const std::string& open_id);
+  void recv_get_silent_user_info(silent_user_info& _return);
+  void set_silent_user_info(const std::string& open_id, const silent_user_info& info);
+  void send_set_silent_user_info(const std::string& open_id, const silent_user_info& info);
+  void recv_set_silent_user_info();
   void get_input_history(std::vector<std::string> & _return, const std::string& open_id, const vichele_stay_alone& search_key);
   void send_get_input_history(const std::string& open_id, const vichele_stay_alone& search_key);
   void recv_get_input_history(std::vector<std::string> & _return);
+  void get_company_vichele_info(std::vector<vichele_stay_alone> & _return, const std::string& ssid, const int64_t anchor);
+  void send_get_company_vichele_info(const std::string& ssid, const int64_t anchor);
+  void recv_get_company_vichele_info(std::vector<vichele_stay_alone> & _return);
+  bool confirm_vichele(const std::string& ssid, const std::vector<vichele_stay_alone> & info);
+  void send_confirm_vichele(const std::string& ssid, const std::vector<vichele_stay_alone> & info);
+  bool recv_confirm_vichele();
+  bool cancel_vichele(const std::string& ssid, const std::vector<vichele_stay_alone> & info);
+  void send_cancel_vichele(const std::string& ssid, const std::vector<vichele_stay_alone> & info);
+  bool recv_cancel_vichele();
  protected:
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> piprot_;
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> poprot_;
@@ -971,7 +1588,12 @@ class vichele_managementProcessor : public ::apache::thrift::TDispatchProcessor 
   void process_get_created_vichele_info(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
   void process_silent_login(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
   void process_verify_login(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
+  void process_get_silent_user_info(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
+  void process_set_silent_user_info(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
   void process_get_input_history(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
+  void process_get_company_vichele_info(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
+  void process_confirm_vichele(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
+  void process_cancel_vichele(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
  public:
   vichele_managementProcessor(::std::shared_ptr<vichele_managementIf> iface) :
     iface_(iface) {
@@ -981,7 +1603,12 @@ class vichele_managementProcessor : public ::apache::thrift::TDispatchProcessor 
     processMap_["get_created_vichele_info"] = &vichele_managementProcessor::process_get_created_vichele_info;
     processMap_["silent_login"] = &vichele_managementProcessor::process_silent_login;
     processMap_["verify_login"] = &vichele_managementProcessor::process_verify_login;
+    processMap_["get_silent_user_info"] = &vichele_managementProcessor::process_get_silent_user_info;
+    processMap_["set_silent_user_info"] = &vichele_managementProcessor::process_set_silent_user_info;
     processMap_["get_input_history"] = &vichele_managementProcessor::process_get_input_history;
+    processMap_["get_company_vichele_info"] = &vichele_managementProcessor::process_get_company_vichele_info;
+    processMap_["confirm_vichele"] = &vichele_managementProcessor::process_confirm_vichele;
+    processMap_["cancel_vichele"] = &vichele_managementProcessor::process_cancel_vichele;
   }
 
   virtual ~vichele_managementProcessor() {}
@@ -1066,6 +1693,25 @@ class vichele_managementMultiface : virtual public vichele_managementIf {
     return ifaces_[i]->verify_login(open_id);
   }
 
+  void get_silent_user_info(silent_user_info& _return, const std::string& open_id) {
+    size_t sz = ifaces_.size();
+    size_t i = 0;
+    for (; i < (sz - 1); ++i) {
+      ifaces_[i]->get_silent_user_info(_return, open_id);
+    }
+    ifaces_[i]->get_silent_user_info(_return, open_id);
+    return;
+  }
+
+  void set_silent_user_info(const std::string& open_id, const silent_user_info& info) {
+    size_t sz = ifaces_.size();
+    size_t i = 0;
+    for (; i < (sz - 1); ++i) {
+      ifaces_[i]->set_silent_user_info(open_id, info);
+    }
+    ifaces_[i]->set_silent_user_info(open_id, info);
+  }
+
   void get_input_history(std::vector<std::string> & _return, const std::string& open_id, const vichele_stay_alone& search_key) {
     size_t sz = ifaces_.size();
     size_t i = 0;
@@ -1074,6 +1720,34 @@ class vichele_managementMultiface : virtual public vichele_managementIf {
     }
     ifaces_[i]->get_input_history(_return, open_id, search_key);
     return;
+  }
+
+  void get_company_vichele_info(std::vector<vichele_stay_alone> & _return, const std::string& ssid, const int64_t anchor) {
+    size_t sz = ifaces_.size();
+    size_t i = 0;
+    for (; i < (sz - 1); ++i) {
+      ifaces_[i]->get_company_vichele_info(_return, ssid, anchor);
+    }
+    ifaces_[i]->get_company_vichele_info(_return, ssid, anchor);
+    return;
+  }
+
+  bool confirm_vichele(const std::string& ssid, const std::vector<vichele_stay_alone> & info) {
+    size_t sz = ifaces_.size();
+    size_t i = 0;
+    for (; i < (sz - 1); ++i) {
+      ifaces_[i]->confirm_vichele(ssid, info);
+    }
+    return ifaces_[i]->confirm_vichele(ssid, info);
+  }
+
+  bool cancel_vichele(const std::string& ssid, const std::vector<vichele_stay_alone> & info) {
+    size_t sz = ifaces_.size();
+    size_t i = 0;
+    for (; i < (sz - 1); ++i) {
+      ifaces_[i]->cancel_vichele(ssid, info);
+    }
+    return ifaces_[i]->cancel_vichele(ssid, info);
   }
 
 };
@@ -1126,9 +1800,24 @@ class vichele_managementConcurrentClient : virtual public vichele_managementIf {
   bool verify_login(const std::string& open_id);
   int32_t send_verify_login(const std::string& open_id);
   bool recv_verify_login(const int32_t seqid);
+  void get_silent_user_info(silent_user_info& _return, const std::string& open_id);
+  int32_t send_get_silent_user_info(const std::string& open_id);
+  void recv_get_silent_user_info(silent_user_info& _return, const int32_t seqid);
+  void set_silent_user_info(const std::string& open_id, const silent_user_info& info);
+  int32_t send_set_silent_user_info(const std::string& open_id, const silent_user_info& info);
+  void recv_set_silent_user_info(const int32_t seqid);
   void get_input_history(std::vector<std::string> & _return, const std::string& open_id, const vichele_stay_alone& search_key);
   int32_t send_get_input_history(const std::string& open_id, const vichele_stay_alone& search_key);
   void recv_get_input_history(std::vector<std::string> & _return, const int32_t seqid);
+  void get_company_vichele_info(std::vector<vichele_stay_alone> & _return, const std::string& ssid, const int64_t anchor);
+  int32_t send_get_company_vichele_info(const std::string& ssid, const int64_t anchor);
+  void recv_get_company_vichele_info(std::vector<vichele_stay_alone> & _return, const int32_t seqid);
+  bool confirm_vichele(const std::string& ssid, const std::vector<vichele_stay_alone> & info);
+  int32_t send_confirm_vichele(const std::string& ssid, const std::vector<vichele_stay_alone> & info);
+  bool recv_confirm_vichele(const int32_t seqid);
+  bool cancel_vichele(const std::string& ssid, const std::vector<vichele_stay_alone> & info);
+  int32_t send_cancel_vichele(const std::string& ssid, const std::vector<vichele_stay_alone> & info);
+  bool recv_cancel_vichele(const int32_t seqid);
  protected:
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> piprot_;
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> poprot_;

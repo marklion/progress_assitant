@@ -69,6 +69,8 @@ class company_plan_brief;
 
 class vichele_stay_alone;
 
+class silent_user_info;
+
 typedef struct _gen_exp__isset {
   _gen_exp__isset() : msg(false) {}
   bool msg :1;
@@ -1548,7 +1550,7 @@ void swap(company_plan_brief &a, company_plan_brief &b);
 std::ostream& operator<<(std::ostream& out, const company_plan_brief& obj);
 
 typedef struct _vichele_stay_alone__isset {
-  _vichele_stay_alone__isset() : id(false), stuff_name(false), company_name(false), main_vichele_number(false), behind_vichele_number(false), count(false), comment(false), date(false), destination(false) {}
+  _vichele_stay_alone__isset() : id(false), stuff_name(false), company_name(false), main_vichele_number(false), behind_vichele_number(false), count(false), comment(false), date(false), destination(false), status(false), creator_name(false), creator_phone(false), repeated(false) {}
   bool id :1;
   bool stuff_name :1;
   bool company_name :1;
@@ -1558,6 +1560,10 @@ typedef struct _vichele_stay_alone__isset {
   bool comment :1;
   bool date :1;
   bool destination :1;
+  bool status :1;
+  bool creator_name :1;
+  bool creator_phone :1;
+  bool repeated :1;
 } _vichele_stay_alone__isset;
 
 class vichele_stay_alone : public virtual ::apache::thrift::TBase {
@@ -1565,7 +1571,7 @@ class vichele_stay_alone : public virtual ::apache::thrift::TBase {
 
   vichele_stay_alone(const vichele_stay_alone&);
   vichele_stay_alone& operator=(const vichele_stay_alone&);
-  vichele_stay_alone() : id(0), stuff_name(), company_name(), main_vichele_number(), behind_vichele_number(), count(0), comment(), date(), destination() {
+  vichele_stay_alone() : id(0), stuff_name(), company_name(), main_vichele_number(), behind_vichele_number(), count(0), comment(), date(), destination(), status(0), creator_name(), creator_phone(), repeated(0) {
   }
 
   virtual ~vichele_stay_alone() noexcept;
@@ -1578,6 +1584,10 @@ class vichele_stay_alone : public virtual ::apache::thrift::TBase {
   std::string comment;
   std::string date;
   std::string destination;
+  int64_t status;
+  std::string creator_name;
+  std::string creator_phone;
+  bool repeated;
 
   _vichele_stay_alone__isset __isset;
 
@@ -1599,6 +1609,14 @@ class vichele_stay_alone : public virtual ::apache::thrift::TBase {
 
   void __set_destination(const std::string& val);
 
+  void __set_status(const int64_t val);
+
+  void __set_creator_name(const std::string& val);
+
+  void __set_creator_phone(const std::string& val);
+
+  void __set_repeated(const bool val);
+
   bool operator == (const vichele_stay_alone & rhs) const
   {
     if (!(id == rhs.id))
@@ -1619,6 +1637,14 @@ class vichele_stay_alone : public virtual ::apache::thrift::TBase {
       return false;
     if (!(destination == rhs.destination))
       return false;
+    if (!(status == rhs.status))
+      return false;
+    if (!(creator_name == rhs.creator_name))
+      return false;
+    if (!(creator_phone == rhs.creator_phone))
+      return false;
+    if (!(repeated == rhs.repeated))
+      return false;
     return true;
   }
   bool operator != (const vichele_stay_alone &rhs) const {
@@ -1636,6 +1662,54 @@ class vichele_stay_alone : public virtual ::apache::thrift::TBase {
 void swap(vichele_stay_alone &a, vichele_stay_alone &b);
 
 std::ostream& operator<<(std::ostream& out, const vichele_stay_alone& obj);
+
+typedef struct _silent_user_info__isset {
+  _silent_user_info__isset() : name(false), phone(false) {}
+  bool name :1;
+  bool phone :1;
+} _silent_user_info__isset;
+
+class silent_user_info : public virtual ::apache::thrift::TBase {
+ public:
+
+  silent_user_info(const silent_user_info&);
+  silent_user_info& operator=(const silent_user_info&);
+  silent_user_info() : name(), phone() {
+  }
+
+  virtual ~silent_user_info() noexcept;
+  std::string name;
+  std::string phone;
+
+  _silent_user_info__isset __isset;
+
+  void __set_name(const std::string& val);
+
+  void __set_phone(const std::string& val);
+
+  bool operator == (const silent_user_info & rhs) const
+  {
+    if (!(name == rhs.name))
+      return false;
+    if (!(phone == rhs.phone))
+      return false;
+    return true;
+  }
+  bool operator != (const silent_user_info &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const silent_user_info & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+  virtual void printTo(std::ostream& out) const;
+};
+
+void swap(silent_user_info &a, silent_user_info &b);
+
+std::ostream& operator<<(std::ostream& out, const silent_user_info& obj);
 
 
 

@@ -243,5 +243,33 @@ void PA_WECHAT_send_process_apply_msg(pa_sql_userinfo &_touser, pa_sql_user_appl
     }
     keywords.push_back(status);
 
-    send_msg_to_wechat(_touser.openid, "uDD0nzIyINulnmC9y47lR9JgGTfEeDQlzifTVVzIw98", "您好，您的申请以审批", keywords, "");
+    send_msg_to_wechat(_touser.openid, "uDD0nzIyINulnmC9y47lR9JgGTfEeDQlzifTVVzIw98", "您好，您的申请已审批", keywords, "");
+}
+
+void PA_WECHAT_send_extra_vichele_msg(pa_sql_vichele_stay_alone &_vichele_info, const std::string &_open_id, const std::string &_remark)
+{
+    std::vector<std::string> keywords;
+    keywords.push_back("货车进厂");
+    keywords.push_back(_vichele_info.date);
+    std::string creator_name = "无";
+    auto silent_user = _vichele_info.get_parent<pa_sql_silent_user>("created_by");
+    if (silent_user)
+    {
+        creator_name = silent_user->name;
+    }
+    keywords.push_back(creator_name);
+    keywords.push_back(_vichele_info.main_vichele_number + " " + _vichele_info.behind_vichele_number);
+
+    std::string url = "/extra_vichele";
+    auto dest_company = _vichele_info.get_parent<pa_sql_company>("destination");
+    if (dest_company)
+    {
+        auto to_user = dest_company->get_children<pa_sql_userinfo>("belong_company", "openid == '%s'", _open_id.c_str());
+        if (to_user)
+        {
+            url = "/company_extra_vichele";
+        }
+    }
+
+    send_msg_to_wechat(_open_id, "sakeNcUuIkHlvhCyatN6Y_i6Ogaf82SrbZVqczw-FEE", "进厂车辆信息", keywords, _remark, url);
 }

@@ -2487,6 +2487,10 @@ var vichele_stay_alone = module.exports.vichele_stay_alone = function(args) {
   this.comment = null;
   this.date = null;
   this.destination = null;
+  this.status = null;
+  this.creator_name = null;
+  this.creator_phone = null;
+  this.repeated = null;
   if (args) {
     if (args.id !== undefined && args.id !== null) {
       this.id = args.id;
@@ -2514,6 +2518,18 @@ var vichele_stay_alone = module.exports.vichele_stay_alone = function(args) {
     }
     if (args.destination !== undefined && args.destination !== null) {
       this.destination = args.destination;
+    }
+    if (args.status !== undefined && args.status !== null) {
+      this.status = args.status;
+    }
+    if (args.creator_name !== undefined && args.creator_name !== null) {
+      this.creator_name = args.creator_name;
+    }
+    if (args.creator_phone !== undefined && args.creator_phone !== null) {
+      this.creator_phone = args.creator_phone;
+    }
+    if (args.repeated !== undefined && args.repeated !== null) {
+      this.repeated = args.repeated;
     }
   }
 };
@@ -2591,6 +2607,34 @@ vichele_stay_alone.prototype.read = function(input) {
         input.skip(ftype);
       }
       break;
+      case 10:
+      if (ftype == Thrift.Type.I64) {
+        this.status = input.readI64();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 11:
+      if (ftype == Thrift.Type.STRING) {
+        this.creator_name = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 12:
+      if (ftype == Thrift.Type.STRING) {
+        this.creator_phone = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 13:
+      if (ftype == Thrift.Type.BOOL) {
+        this.repeated = input.readBool();
+      } else {
+        input.skip(ftype);
+      }
+      break;
       default:
         input.skip(ftype);
     }
@@ -2645,6 +2689,89 @@ vichele_stay_alone.prototype.write = function(output) {
   if (this.destination !== null && this.destination !== undefined) {
     output.writeFieldBegin('destination', Thrift.Type.STRING, 9);
     output.writeString(this.destination);
+    output.writeFieldEnd();
+  }
+  if (this.status !== null && this.status !== undefined) {
+    output.writeFieldBegin('status', Thrift.Type.I64, 10);
+    output.writeI64(this.status);
+    output.writeFieldEnd();
+  }
+  if (this.creator_name !== null && this.creator_name !== undefined) {
+    output.writeFieldBegin('creator_name', Thrift.Type.STRING, 11);
+    output.writeString(this.creator_name);
+    output.writeFieldEnd();
+  }
+  if (this.creator_phone !== null && this.creator_phone !== undefined) {
+    output.writeFieldBegin('creator_phone', Thrift.Type.STRING, 12);
+    output.writeString(this.creator_phone);
+    output.writeFieldEnd();
+  }
+  if (this.repeated !== null && this.repeated !== undefined) {
+    output.writeFieldBegin('repeated', Thrift.Type.BOOL, 13);
+    output.writeBool(this.repeated);
+    output.writeFieldEnd();
+  }
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+
+var silent_user_info = module.exports.silent_user_info = function(args) {
+  this.name = null;
+  this.phone = null;
+  if (args) {
+    if (args.name !== undefined && args.name !== null) {
+      this.name = args.name;
+    }
+    if (args.phone !== undefined && args.phone !== null) {
+      this.phone = args.phone;
+    }
+  }
+};
+silent_user_info.prototype = {};
+silent_user_info.prototype.read = function(input) {
+  input.readStructBegin();
+  while (true) {
+    var ret = input.readFieldBegin();
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    switch (fid) {
+      case 1:
+      if (ftype == Thrift.Type.STRING) {
+        this.name = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 2:
+      if (ftype == Thrift.Type.STRING) {
+        this.phone = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      default:
+        input.skip(ftype);
+    }
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+silent_user_info.prototype.write = function(output) {
+  output.writeStructBegin('silent_user_info');
+  if (this.name !== null && this.name !== undefined) {
+    output.writeFieldBegin('name', Thrift.Type.STRING, 1);
+    output.writeString(this.name);
+    output.writeFieldEnd();
+  }
+  if (this.phone !== null && this.phone !== undefined) {
+    output.writeFieldBegin('phone', Thrift.Type.STRING, 2);
+    output.writeString(this.phone);
     output.writeFieldEnd();
   }
   output.writeFieldStop();
