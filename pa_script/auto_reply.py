@@ -13,6 +13,7 @@ import os
 
 robot = werobot.WeRoBot(token='123456')
 
+
 @robot.text
 def plan_search(message):
     transport = THttpClient('http://localhost:8123/pa_rpc')
@@ -26,13 +27,16 @@ def plan_search(message):
     if len(plan_id) != 0:
         ret = '手机号为{}的司机需要承运的计划：\n'.format(message.content)
         for i in plan_id:
-            ret += '<a href="https://www.d8sis.cn/pa_web/plan_detail/{}">计划{}</a>\n'.format(i.id, i.number)
+            ret += '<a href="https://www.d8sis.cn/pa_web/plan_detail/{}">计划{}</a>\n'.format(
+                i.id, i.number)
 
     return ret
+
 
 @robot.key_click("driver_info")
 def proc_driver_search_click(message):
     return "公众号内回复承运司机手机号，查询相关计划"
+
 
 @robot.subscribe
 def pop_mini_program(message):
@@ -48,7 +52,12 @@ client.create_menu({
     "button": [{
         "type": "click",
         "name": "承运信息",
-        "key": "driver_info"}]
-        })
+        "key": "driver_info"
+    }, {
+        "type": "view",
+        "name": "送货进厂",
+        "url": "https://www.d8sis.cn/pa_web/extra_vichele/"
+    }]
+})
 
 robot.run()
