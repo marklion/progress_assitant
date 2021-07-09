@@ -42,8 +42,17 @@ public:
             tmp.stuff_name = itr.stuff_name;
             tmp.set_parent(*opt_user, "created_by");
             tmp.set_parent(*dest_company, "destination");
+            tmp.is_repeated = itr.repeated?1:0;
 
             ret = tmp.insert_record();
+            if (ret)
+            {
+                auto company_user = dest_company->get_all_children<pa_sql_userinfo>("belong_company");
+                for (auto &itr:company_user)
+                {
+                    PA_WECHAT_send_extra_vichele_msg(tmp, itr.openid, opt_user->name + "创建了进厂申请");
+                }
+            }
         }
 
         return ret;
@@ -63,8 +72,21 @@ public:
             PA_RETURN_OP_FAIL();
         }
 
-        extra_vichele->remove_record();
-        ret = true;
+        auto dest_company = extra_vichele->get_parent<pa_sql_company>("destination");
+        if (!dest_company)
+        {
+            PA_RETURN_OP_FAIL();
+        }
+        extra_vichele->is_drop = 1;
+        ret = extra_vichele->update_record();
+        if (ret)
+        {
+            auto company_user = dest_company->get_all_children<pa_sql_userinfo>("belong_company");
+            for (auto &itr : company_user)
+            {
+                PA_WECHAT_send_extra_vichele_msg(*extra_vichele, itr.openid, opt_user->name + "取消了进厂申请");
+            }
+        }
 
         return ret;
     }
@@ -77,8 +99,14 @@ public:
             PA_RETURN_OP_FAIL();
         }
 
-        auto extra_vichele = opt_user->get_children<pa_sql_vichele_stay_alone>("created_by", "PRI_ID == %ld", vichele_info.id);
+        auto extra_vichele = opt_user->get_children<pa_sql_vichele_stay_alone>("created_by", "PRI_ID == %ld AND is_drop == 0 AND status == 0", vichele_info.id);
         if (!extra_vichele)
+        {
+            PA_RETURN_OP_FAIL();
+        }
+
+        auto dest_company = extra_vichele->get_parent<pa_sql_company>("destination");
+        if (!dest_company)
         {
             PA_RETURN_OP_FAIL();
         }
@@ -90,17 +118,25 @@ public:
         extra_vichele->stuff_name = vichele_info.stuff_name;
 
         ret = extra_vichele->update_record();
-        
+        if (ret)
+        {
+            auto company_user = dest_company->get_all_children<pa_sql_userinfo>("belong_company");
+            for (auto &itr : company_user)
+            {
+                PA_WECHAT_send_extra_vichele_msg(*extra_vichele, itr.openid, opt_user->name + "更新了进厂申请");
+            }
+        }
+
         return ret;
     }
-    virtual void get_created_vichele_info(std::vector<vichele_stay_alone> & _return, const std::string& open_id, const int64_t ancher) 
+    virtual void get_created_vichele_info(std::vector<vichele_stay_alone> &_return, const std::string &open_id, const int64_t ancher)
     {
         auto opt_user = sqlite_orm::search_record<pa_sql_silent_user>("open_id = '%s'", open_id.c_str());
         if (!opt_user)
         {
             PA_RETURN_OP_FAIL();
         }
-        auto vichele_infos = opt_user->get_all_children<pa_sql_vichele_stay_alone>("created_by", "PRI_ID != 0 ORDER BY PRI_ID DESC LIMIT 15 OFFSET %ld", ancher);
+        auto vichele_infos = opt_user->get_all_children<pa_sql_vichele_stay_alone>("created_by", "is_drop == 0 ORDER BY PRI_ID DESC LIMIT 15 OFFSET %ld", ancher);
         for (auto &itr : vichele_infos)
         {
             auto dest_company = itr.get_parent<pa_sql_company>("destination");
@@ -117,6 +153,8 @@ public:
             tmp.main_vichele_number = itr.main_vichele_number;
             tmp.stuff_name = itr.stuff_name;
             tmp.id = itr.get_pri_id();
+            tmp.status = itr.status;
+            tmp.repeated = itr.is_repeated != 0;
             _return.push_back(tmp);
         }
     }
@@ -172,7 +210,7 @@ public:
         if (search_key.destination == "?")
         {
             auto ret = silent_user->get_all_children<pa_sql_vichele_stay_alone>("created_by", "PRI_ID != 0 GROUP BY destination_ext_key");
-            for (auto &itr:ret)
+            for (auto &itr : ret)
             {
                 auto company = itr.get_parent<pa_sql_company>("destination");
                 if (company)
@@ -182,13 +220,140 @@ public:
             }
         }
 
-        for (auto &itr:search_results)
+        for (auto &itr : search_results)
         {
             _return.push_back(itr);
         }
-        
+    }
+
+    virtual void get_silent_user_info(silent_user_info &_return, const std::string &open_id)
+    {
+        auto silent_user = sqlite_orm::search_record<pa_sql_silent_user>("open_id = '%s'", open_id.c_str());
+        if (!silent_user)
+        {
+            PA_RETURN_OP_FAIL();
+        }
+        _return.name = silent_user->name;
+        _return.phone = silent_user->phone;
+    }
+    virtual void set_silent_user_info(const std::string &open_id, const silent_user_info &info)
+    {
+        auto silent_user = sqlite_orm::search_record<pa_sql_silent_user>("open_id = '%s'", open_id.c_str());
+        if (!silent_user)
+        {
+            PA_RETURN_OP_FAIL();
+        }
+        silent_user->name = info.name;
+        silent_user->phone = info.phone;
+        silent_user->update_record();
+    }
+
+    virtual void get_company_vichele_info(std::vector<vichele_stay_alone> &_return, const std::string &ssid, const int64_t anchor)
+    {
+        auto user = PA_DATAOPT_get_online_user(ssid);
+        if (!user)
+        {
+            PA_RETURN_UNLOGIN_MSG();
+        }
+        auto company = user->get_parent<pa_sql_company>("belong_company");
+        if (!company)
+        {
+            PA_RETURN_NOCOMPANY_MSG();
+        }
+        auto extra_vichele = company->get_all_children<pa_sql_vichele_stay_alone>("destination", "is_drop == 0 ORDER BY PRI_ID DESC LIMIT 15 OFFSET %ld", anchor);
+        for (auto &itr : extra_vichele)
+        {
+            vichele_stay_alone tmp;
+            tmp.behind_vichele_number = itr.behind_vichele_number;
+            tmp.comment = itr.comment;
+            tmp.company_name = itr.company_name;
+            tmp.count = itr.count;
+            auto creator = itr.get_parent<pa_sql_silent_user>("created_by");
+            if (creator)
+            {
+                tmp.creator_name = creator->name;
+                tmp.creator_phone = creator->phone;
+            }
+            tmp.date = itr.date;
+            tmp.id = itr.get_pri_id();
+            tmp.main_vichele_number = itr.main_vichele_number;
+            tmp.status = itr.status;
+            tmp.stuff_name = itr.stuff_name;
+            tmp.repeated = itr.is_repeated != 0;
+            _return.push_back(tmp);
+        }
+    }
+
+    virtual bool confirm_vichele(const std::string &ssid, const std::vector<vichele_stay_alone> &info)
+    {
+        auto user = PA_DATAOPT_get_online_user(ssid);
+        if (!user)
+        {
+            PA_RETURN_UNLOGIN_MSG();
+        }
+        auto company = user->get_parent<pa_sql_company>("belong_company");
+        if (!company)
+        {
+            PA_RETURN_NOCOMPANY_MSG();
+        }
+
+        std::string query_cmd = "PRI_ID == 0";
+        for (auto &itr : info)
+        {
+            query_cmd += " OR PRI_ID == " + std::to_string(itr.id);
+        }
+
+        auto extra_vichele = company->get_all_children<pa_sql_vichele_stay_alone>("destination", "(%s) AND status == 0 AND is_drop == 0", query_cmd.c_str());
+        for (auto &itr : extra_vichele)
+        {
+            itr.status = 1;
+            if (itr.update_record())
+            {
+                auto silent_user = itr.get_parent<pa_sql_silent_user>("created_by");
+                if (silent_user)
+                {
+                    PA_WECHAT_send_extra_vichele_msg(itr, silent_user->open_id, user->name + "确认了进厂申请");
+                }
+            }
+        }
+
+        return true;
+    }
+    virtual bool cancel_vichele(const std::string &ssid, const std::vector<vichele_stay_alone> &info)
+    {
+        auto user = PA_DATAOPT_get_online_user(ssid);
+        if (!user)
+        {
+            PA_RETURN_UNLOGIN_MSG();
+        }
+        auto company = user->get_parent<pa_sql_company>("belong_company");
+        if (!company)
+        {
+            PA_RETURN_NOCOMPANY_MSG();
+        }
+
+        std::string query_cmd = "PRI_ID == 0";
+        for (auto &itr : info)
+        {
+            query_cmd += " OR PRI_ID == " + std::to_string(itr.id);
+        }
+
+        auto extra_vichele = company->get_all_children<pa_sql_vichele_stay_alone>("destination", "(%s)  AND is_drop == 0", query_cmd.c_str());
+        for (auto &itr : extra_vichele)
+        {
+            itr.is_drop = 1;
+            if (itr.update_record())
+            {
+                auto silent_user = itr.get_parent<pa_sql_silent_user>("created_by");
+                if (silent_user)
+                {
+                    PA_WECHAT_send_extra_vichele_msg(itr, silent_user->open_id, user->name + "删除了进厂申请");
+                }
+            }
+        }
+
+        return true;
     }
 };
-
 
 #endif // _VICHELE_MANAGEMENT_H_

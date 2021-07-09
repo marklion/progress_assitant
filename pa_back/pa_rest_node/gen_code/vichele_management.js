@@ -807,6 +807,244 @@ vichele_management_verify_login_result.prototype.write = function(output) {
   return;
 };
 
+var vichele_management_get_silent_user_info_args = function(args) {
+  this.open_id = null;
+  if (args) {
+    if (args.open_id !== undefined && args.open_id !== null) {
+      this.open_id = args.open_id;
+    }
+  }
+};
+vichele_management_get_silent_user_info_args.prototype = {};
+vichele_management_get_silent_user_info_args.prototype.read = function(input) {
+  input.readStructBegin();
+  while (true) {
+    var ret = input.readFieldBegin();
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    switch (fid) {
+      case 1:
+      if (ftype == Thrift.Type.STRING) {
+        this.open_id = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 0:
+        input.skip(ftype);
+        break;
+      default:
+        input.skip(ftype);
+    }
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+vichele_management_get_silent_user_info_args.prototype.write = function(output) {
+  output.writeStructBegin('vichele_management_get_silent_user_info_args');
+  if (this.open_id !== null && this.open_id !== undefined) {
+    output.writeFieldBegin('open_id', Thrift.Type.STRING, 1);
+    output.writeString(this.open_id);
+    output.writeFieldEnd();
+  }
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+
+var vichele_management_get_silent_user_info_result = function(args) {
+  this.success = null;
+  this.e = null;
+  if (args instanceof ttypes.gen_exp) {
+    this.e = args;
+    return;
+  }
+  if (args) {
+    if (args.success !== undefined && args.success !== null) {
+      this.success = new ttypes.silent_user_info(args.success);
+    }
+    if (args.e !== undefined && args.e !== null) {
+      this.e = args.e;
+    }
+  }
+};
+vichele_management_get_silent_user_info_result.prototype = {};
+vichele_management_get_silent_user_info_result.prototype.read = function(input) {
+  input.readStructBegin();
+  while (true) {
+    var ret = input.readFieldBegin();
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    switch (fid) {
+      case 0:
+      if (ftype == Thrift.Type.STRUCT) {
+        this.success = new ttypes.silent_user_info();
+        this.success.read(input);
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 1:
+      if (ftype == Thrift.Type.STRUCT) {
+        this.e = new ttypes.gen_exp();
+        this.e.read(input);
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      default:
+        input.skip(ftype);
+    }
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+vichele_management_get_silent_user_info_result.prototype.write = function(output) {
+  output.writeStructBegin('vichele_management_get_silent_user_info_result');
+  if (this.success !== null && this.success !== undefined) {
+    output.writeFieldBegin('success', Thrift.Type.STRUCT, 0);
+    this.success.write(output);
+    output.writeFieldEnd();
+  }
+  if (this.e !== null && this.e !== undefined) {
+    output.writeFieldBegin('e', Thrift.Type.STRUCT, 1);
+    this.e.write(output);
+    output.writeFieldEnd();
+  }
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+
+var vichele_management_set_silent_user_info_args = function(args) {
+  this.open_id = null;
+  this.info = null;
+  if (args) {
+    if (args.open_id !== undefined && args.open_id !== null) {
+      this.open_id = args.open_id;
+    }
+    if (args.info !== undefined && args.info !== null) {
+      this.info = new ttypes.silent_user_info(args.info);
+    }
+  }
+};
+vichele_management_set_silent_user_info_args.prototype = {};
+vichele_management_set_silent_user_info_args.prototype.read = function(input) {
+  input.readStructBegin();
+  while (true) {
+    var ret = input.readFieldBegin();
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    switch (fid) {
+      case 1:
+      if (ftype == Thrift.Type.STRING) {
+        this.open_id = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 2:
+      if (ftype == Thrift.Type.STRUCT) {
+        this.info = new ttypes.silent_user_info();
+        this.info.read(input);
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      default:
+        input.skip(ftype);
+    }
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+vichele_management_set_silent_user_info_args.prototype.write = function(output) {
+  output.writeStructBegin('vichele_management_set_silent_user_info_args');
+  if (this.open_id !== null && this.open_id !== undefined) {
+    output.writeFieldBegin('open_id', Thrift.Type.STRING, 1);
+    output.writeString(this.open_id);
+    output.writeFieldEnd();
+  }
+  if (this.info !== null && this.info !== undefined) {
+    output.writeFieldBegin('info', Thrift.Type.STRUCT, 2);
+    this.info.write(output);
+    output.writeFieldEnd();
+  }
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+
+var vichele_management_set_silent_user_info_result = function(args) {
+  this.e = null;
+  if (args instanceof ttypes.gen_exp) {
+    this.e = args;
+    return;
+  }
+  if (args) {
+    if (args.e !== undefined && args.e !== null) {
+      this.e = args.e;
+    }
+  }
+};
+vichele_management_set_silent_user_info_result.prototype = {};
+vichele_management_set_silent_user_info_result.prototype.read = function(input) {
+  input.readStructBegin();
+  while (true) {
+    var ret = input.readFieldBegin();
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    switch (fid) {
+      case 1:
+      if (ftype == Thrift.Type.STRUCT) {
+        this.e = new ttypes.gen_exp();
+        this.e.read(input);
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 0:
+        input.skip(ftype);
+        break;
+      default:
+        input.skip(ftype);
+    }
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+vichele_management_set_silent_user_info_result.prototype.write = function(output) {
+  output.writeStructBegin('vichele_management_set_silent_user_info_result');
+  if (this.e !== null && this.e !== undefined) {
+    output.writeFieldBegin('e', Thrift.Type.STRUCT, 1);
+    this.e.write(output);
+    output.writeFieldEnd();
+  }
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+
 var vichele_management_get_input_history_args = function(args) {
   this.open_id = null;
   this.search_key = null;
@@ -942,6 +1180,447 @@ vichele_management_get_input_history_result.prototype.write = function(output) {
       }
     }
     output.writeListEnd();
+    output.writeFieldEnd();
+  }
+  if (this.e !== null && this.e !== undefined) {
+    output.writeFieldBegin('e', Thrift.Type.STRUCT, 1);
+    this.e.write(output);
+    output.writeFieldEnd();
+  }
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+
+var vichele_management_get_company_vichele_info_args = function(args) {
+  this.ssid = null;
+  this.anchor = null;
+  if (args) {
+    if (args.ssid !== undefined && args.ssid !== null) {
+      this.ssid = args.ssid;
+    }
+    if (args.anchor !== undefined && args.anchor !== null) {
+      this.anchor = args.anchor;
+    }
+  }
+};
+vichele_management_get_company_vichele_info_args.prototype = {};
+vichele_management_get_company_vichele_info_args.prototype.read = function(input) {
+  input.readStructBegin();
+  while (true) {
+    var ret = input.readFieldBegin();
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    switch (fid) {
+      case 1:
+      if (ftype == Thrift.Type.STRING) {
+        this.ssid = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 2:
+      if (ftype == Thrift.Type.I64) {
+        this.anchor = input.readI64();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      default:
+        input.skip(ftype);
+    }
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+vichele_management_get_company_vichele_info_args.prototype.write = function(output) {
+  output.writeStructBegin('vichele_management_get_company_vichele_info_args');
+  if (this.ssid !== null && this.ssid !== undefined) {
+    output.writeFieldBegin('ssid', Thrift.Type.STRING, 1);
+    output.writeString(this.ssid);
+    output.writeFieldEnd();
+  }
+  if (this.anchor !== null && this.anchor !== undefined) {
+    output.writeFieldBegin('anchor', Thrift.Type.I64, 2);
+    output.writeI64(this.anchor);
+    output.writeFieldEnd();
+  }
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+
+var vichele_management_get_company_vichele_info_result = function(args) {
+  this.success = null;
+  this.e = null;
+  if (args instanceof ttypes.gen_exp) {
+    this.e = args;
+    return;
+  }
+  if (args) {
+    if (args.success !== undefined && args.success !== null) {
+      this.success = Thrift.copyList(args.success, [ttypes.vichele_stay_alone]);
+    }
+    if (args.e !== undefined && args.e !== null) {
+      this.e = args.e;
+    }
+  }
+};
+vichele_management_get_company_vichele_info_result.prototype = {};
+vichele_management_get_company_vichele_info_result.prototype.read = function(input) {
+  input.readStructBegin();
+  while (true) {
+    var ret = input.readFieldBegin();
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    switch (fid) {
+      case 0:
+      if (ftype == Thrift.Type.LIST) {
+        this.success = [];
+        var _rtmp3131 = input.readListBegin();
+        var _size130 = _rtmp3131.size || 0;
+        for (var _i132 = 0; _i132 < _size130; ++_i132) {
+          var elem133 = null;
+          elem133 = new ttypes.vichele_stay_alone();
+          elem133.read(input);
+          this.success.push(elem133);
+        }
+        input.readListEnd();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 1:
+      if (ftype == Thrift.Type.STRUCT) {
+        this.e = new ttypes.gen_exp();
+        this.e.read(input);
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      default:
+        input.skip(ftype);
+    }
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+vichele_management_get_company_vichele_info_result.prototype.write = function(output) {
+  output.writeStructBegin('vichele_management_get_company_vichele_info_result');
+  if (this.success !== null && this.success !== undefined) {
+    output.writeFieldBegin('success', Thrift.Type.LIST, 0);
+    output.writeListBegin(Thrift.Type.STRUCT, this.success.length);
+    for (var iter134 in this.success) {
+      if (this.success.hasOwnProperty(iter134)) {
+        iter134 = this.success[iter134];
+        iter134.write(output);
+      }
+    }
+    output.writeListEnd();
+    output.writeFieldEnd();
+  }
+  if (this.e !== null && this.e !== undefined) {
+    output.writeFieldBegin('e', Thrift.Type.STRUCT, 1);
+    this.e.write(output);
+    output.writeFieldEnd();
+  }
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+
+var vichele_management_confirm_vichele_args = function(args) {
+  this.ssid = null;
+  this.info = null;
+  if (args) {
+    if (args.ssid !== undefined && args.ssid !== null) {
+      this.ssid = args.ssid;
+    }
+    if (args.info !== undefined && args.info !== null) {
+      this.info = Thrift.copyList(args.info, [ttypes.vichele_stay_alone]);
+    }
+  }
+};
+vichele_management_confirm_vichele_args.prototype = {};
+vichele_management_confirm_vichele_args.prototype.read = function(input) {
+  input.readStructBegin();
+  while (true) {
+    var ret = input.readFieldBegin();
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    switch (fid) {
+      case 1:
+      if (ftype == Thrift.Type.STRING) {
+        this.ssid = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 2:
+      if (ftype == Thrift.Type.LIST) {
+        this.info = [];
+        var _rtmp3136 = input.readListBegin();
+        var _size135 = _rtmp3136.size || 0;
+        for (var _i137 = 0; _i137 < _size135; ++_i137) {
+          var elem138 = null;
+          elem138 = new ttypes.vichele_stay_alone();
+          elem138.read(input);
+          this.info.push(elem138);
+        }
+        input.readListEnd();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      default:
+        input.skip(ftype);
+    }
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+vichele_management_confirm_vichele_args.prototype.write = function(output) {
+  output.writeStructBegin('vichele_management_confirm_vichele_args');
+  if (this.ssid !== null && this.ssid !== undefined) {
+    output.writeFieldBegin('ssid', Thrift.Type.STRING, 1);
+    output.writeString(this.ssid);
+    output.writeFieldEnd();
+  }
+  if (this.info !== null && this.info !== undefined) {
+    output.writeFieldBegin('info', Thrift.Type.LIST, 2);
+    output.writeListBegin(Thrift.Type.STRUCT, this.info.length);
+    for (var iter139 in this.info) {
+      if (this.info.hasOwnProperty(iter139)) {
+        iter139 = this.info[iter139];
+        iter139.write(output);
+      }
+    }
+    output.writeListEnd();
+    output.writeFieldEnd();
+  }
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+
+var vichele_management_confirm_vichele_result = function(args) {
+  this.success = null;
+  this.e = null;
+  if (args instanceof ttypes.gen_exp) {
+    this.e = args;
+    return;
+  }
+  if (args) {
+    if (args.success !== undefined && args.success !== null) {
+      this.success = args.success;
+    }
+    if (args.e !== undefined && args.e !== null) {
+      this.e = args.e;
+    }
+  }
+};
+vichele_management_confirm_vichele_result.prototype = {};
+vichele_management_confirm_vichele_result.prototype.read = function(input) {
+  input.readStructBegin();
+  while (true) {
+    var ret = input.readFieldBegin();
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    switch (fid) {
+      case 0:
+      if (ftype == Thrift.Type.BOOL) {
+        this.success = input.readBool();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 1:
+      if (ftype == Thrift.Type.STRUCT) {
+        this.e = new ttypes.gen_exp();
+        this.e.read(input);
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      default:
+        input.skip(ftype);
+    }
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+vichele_management_confirm_vichele_result.prototype.write = function(output) {
+  output.writeStructBegin('vichele_management_confirm_vichele_result');
+  if (this.success !== null && this.success !== undefined) {
+    output.writeFieldBegin('success', Thrift.Type.BOOL, 0);
+    output.writeBool(this.success);
+    output.writeFieldEnd();
+  }
+  if (this.e !== null && this.e !== undefined) {
+    output.writeFieldBegin('e', Thrift.Type.STRUCT, 1);
+    this.e.write(output);
+    output.writeFieldEnd();
+  }
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+
+var vichele_management_cancel_vichele_args = function(args) {
+  this.ssid = null;
+  this.info = null;
+  if (args) {
+    if (args.ssid !== undefined && args.ssid !== null) {
+      this.ssid = args.ssid;
+    }
+    if (args.info !== undefined && args.info !== null) {
+      this.info = Thrift.copyList(args.info, [ttypes.vichele_stay_alone]);
+    }
+  }
+};
+vichele_management_cancel_vichele_args.prototype = {};
+vichele_management_cancel_vichele_args.prototype.read = function(input) {
+  input.readStructBegin();
+  while (true) {
+    var ret = input.readFieldBegin();
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    switch (fid) {
+      case 1:
+      if (ftype == Thrift.Type.STRING) {
+        this.ssid = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 2:
+      if (ftype == Thrift.Type.LIST) {
+        this.info = [];
+        var _rtmp3141 = input.readListBegin();
+        var _size140 = _rtmp3141.size || 0;
+        for (var _i142 = 0; _i142 < _size140; ++_i142) {
+          var elem143 = null;
+          elem143 = new ttypes.vichele_stay_alone();
+          elem143.read(input);
+          this.info.push(elem143);
+        }
+        input.readListEnd();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      default:
+        input.skip(ftype);
+    }
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+vichele_management_cancel_vichele_args.prototype.write = function(output) {
+  output.writeStructBegin('vichele_management_cancel_vichele_args');
+  if (this.ssid !== null && this.ssid !== undefined) {
+    output.writeFieldBegin('ssid', Thrift.Type.STRING, 1);
+    output.writeString(this.ssid);
+    output.writeFieldEnd();
+  }
+  if (this.info !== null && this.info !== undefined) {
+    output.writeFieldBegin('info', Thrift.Type.LIST, 2);
+    output.writeListBegin(Thrift.Type.STRUCT, this.info.length);
+    for (var iter144 in this.info) {
+      if (this.info.hasOwnProperty(iter144)) {
+        iter144 = this.info[iter144];
+        iter144.write(output);
+      }
+    }
+    output.writeListEnd();
+    output.writeFieldEnd();
+  }
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+
+var vichele_management_cancel_vichele_result = function(args) {
+  this.success = null;
+  this.e = null;
+  if (args instanceof ttypes.gen_exp) {
+    this.e = args;
+    return;
+  }
+  if (args) {
+    if (args.success !== undefined && args.success !== null) {
+      this.success = args.success;
+    }
+    if (args.e !== undefined && args.e !== null) {
+      this.e = args.e;
+    }
+  }
+};
+vichele_management_cancel_vichele_result.prototype = {};
+vichele_management_cancel_vichele_result.prototype.read = function(input) {
+  input.readStructBegin();
+  while (true) {
+    var ret = input.readFieldBegin();
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    switch (fid) {
+      case 0:
+      if (ftype == Thrift.Type.BOOL) {
+        this.success = input.readBool();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 1:
+      if (ftype == Thrift.Type.STRUCT) {
+        this.e = new ttypes.gen_exp();
+        this.e.read(input);
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      default:
+        input.skip(ftype);
+    }
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+vichele_management_cancel_vichele_result.prototype.write = function(output) {
+  output.writeStructBegin('vichele_management_cancel_vichele_result');
+  if (this.success !== null && this.success !== undefined) {
+    output.writeFieldBegin('success', Thrift.Type.BOOL, 0);
+    output.writeBool(this.success);
     output.writeFieldEnd();
   }
   if (this.e !== null && this.e !== undefined) {
@@ -1340,6 +2019,128 @@ vichele_managementClient.prototype.recv_verify_login = function(input,mtype,rseq
   return callback('verify_login failed: unknown result');
 };
 
+vichele_managementClient.prototype.get_silent_user_info = function(open_id, callback) {
+  this._seqid = this.new_seqid();
+  if (callback === undefined) {
+    var _defer = Q.defer();
+    this._reqs[this.seqid()] = function(error, result) {
+      if (error) {
+        _defer.reject(error);
+      } else {
+        _defer.resolve(result);
+      }
+    };
+    this.send_get_silent_user_info(open_id);
+    return _defer.promise;
+  } else {
+    this._reqs[this.seqid()] = callback;
+    this.send_get_silent_user_info(open_id);
+  }
+};
+
+vichele_managementClient.prototype.send_get_silent_user_info = function(open_id) {
+  var output = new this.pClass(this.output);
+  var params = {
+    open_id: open_id
+  };
+  var args = new vichele_management_get_silent_user_info_args(params);
+  try {
+    output.writeMessageBegin('get_silent_user_info', Thrift.MessageType.CALL, this.seqid());
+    args.write(output);
+    output.writeMessageEnd();
+    return this.output.flush();
+  }
+  catch (e) {
+    delete this._reqs[this.seqid()];
+    if (typeof output.reset === 'function') {
+      output.reset();
+    }
+    throw e;
+  }
+};
+
+vichele_managementClient.prototype.recv_get_silent_user_info = function(input,mtype,rseqid) {
+  var callback = this._reqs[rseqid] || function() {};
+  delete this._reqs[rseqid];
+  if (mtype == Thrift.MessageType.EXCEPTION) {
+    var x = new Thrift.TApplicationException();
+    x.read(input);
+    input.readMessageEnd();
+    return callback(x);
+  }
+  var result = new vichele_management_get_silent_user_info_result();
+  result.read(input);
+  input.readMessageEnd();
+
+  if (null !== result.e) {
+    return callback(result.e);
+  }
+  if (null !== result.success) {
+    return callback(null, result.success);
+  }
+  return callback('get_silent_user_info failed: unknown result');
+};
+
+vichele_managementClient.prototype.set_silent_user_info = function(open_id, info, callback) {
+  this._seqid = this.new_seqid();
+  if (callback === undefined) {
+    var _defer = Q.defer();
+    this._reqs[this.seqid()] = function(error, result) {
+      if (error) {
+        _defer.reject(error);
+      } else {
+        _defer.resolve(result);
+      }
+    };
+    this.send_set_silent_user_info(open_id, info);
+    return _defer.promise;
+  } else {
+    this._reqs[this.seqid()] = callback;
+    this.send_set_silent_user_info(open_id, info);
+  }
+};
+
+vichele_managementClient.prototype.send_set_silent_user_info = function(open_id, info) {
+  var output = new this.pClass(this.output);
+  var params = {
+    open_id: open_id,
+    info: info
+  };
+  var args = new vichele_management_set_silent_user_info_args(params);
+  try {
+    output.writeMessageBegin('set_silent_user_info', Thrift.MessageType.CALL, this.seqid());
+    args.write(output);
+    output.writeMessageEnd();
+    return this.output.flush();
+  }
+  catch (e) {
+    delete this._reqs[this.seqid()];
+    if (typeof output.reset === 'function') {
+      output.reset();
+    }
+    throw e;
+  }
+};
+
+vichele_managementClient.prototype.recv_set_silent_user_info = function(input,mtype,rseqid) {
+  var callback = this._reqs[rseqid] || function() {};
+  delete this._reqs[rseqid];
+  if (mtype == Thrift.MessageType.EXCEPTION) {
+    var x = new Thrift.TApplicationException();
+    x.read(input);
+    input.readMessageEnd();
+    return callback(x);
+  }
+  var result = new vichele_management_set_silent_user_info_result();
+  result.read(input);
+  input.readMessageEnd();
+
+  if (null !== result.e) {
+    return callback(result.e);
+  }
+  callback(null);
+};
+
 vichele_managementClient.prototype.get_input_history = function(open_id, search_key, callback) {
   this._seqid = this.new_seqid();
   if (callback === undefined) {
@@ -1401,6 +2202,195 @@ vichele_managementClient.prototype.recv_get_input_history = function(input,mtype
     return callback(null, result.success);
   }
   return callback('get_input_history failed: unknown result');
+};
+
+vichele_managementClient.prototype.get_company_vichele_info = function(ssid, anchor, callback) {
+  this._seqid = this.new_seqid();
+  if (callback === undefined) {
+    var _defer = Q.defer();
+    this._reqs[this.seqid()] = function(error, result) {
+      if (error) {
+        _defer.reject(error);
+      } else {
+        _defer.resolve(result);
+      }
+    };
+    this.send_get_company_vichele_info(ssid, anchor);
+    return _defer.promise;
+  } else {
+    this._reqs[this.seqid()] = callback;
+    this.send_get_company_vichele_info(ssid, anchor);
+  }
+};
+
+vichele_managementClient.prototype.send_get_company_vichele_info = function(ssid, anchor) {
+  var output = new this.pClass(this.output);
+  var params = {
+    ssid: ssid,
+    anchor: anchor
+  };
+  var args = new vichele_management_get_company_vichele_info_args(params);
+  try {
+    output.writeMessageBegin('get_company_vichele_info', Thrift.MessageType.CALL, this.seqid());
+    args.write(output);
+    output.writeMessageEnd();
+    return this.output.flush();
+  }
+  catch (e) {
+    delete this._reqs[this.seqid()];
+    if (typeof output.reset === 'function') {
+      output.reset();
+    }
+    throw e;
+  }
+};
+
+vichele_managementClient.prototype.recv_get_company_vichele_info = function(input,mtype,rseqid) {
+  var callback = this._reqs[rseqid] || function() {};
+  delete this._reqs[rseqid];
+  if (mtype == Thrift.MessageType.EXCEPTION) {
+    var x = new Thrift.TApplicationException();
+    x.read(input);
+    input.readMessageEnd();
+    return callback(x);
+  }
+  var result = new vichele_management_get_company_vichele_info_result();
+  result.read(input);
+  input.readMessageEnd();
+
+  if (null !== result.e) {
+    return callback(result.e);
+  }
+  if (null !== result.success) {
+    return callback(null, result.success);
+  }
+  return callback('get_company_vichele_info failed: unknown result');
+};
+
+vichele_managementClient.prototype.confirm_vichele = function(ssid, info, callback) {
+  this._seqid = this.new_seqid();
+  if (callback === undefined) {
+    var _defer = Q.defer();
+    this._reqs[this.seqid()] = function(error, result) {
+      if (error) {
+        _defer.reject(error);
+      } else {
+        _defer.resolve(result);
+      }
+    };
+    this.send_confirm_vichele(ssid, info);
+    return _defer.promise;
+  } else {
+    this._reqs[this.seqid()] = callback;
+    this.send_confirm_vichele(ssid, info);
+  }
+};
+
+vichele_managementClient.prototype.send_confirm_vichele = function(ssid, info) {
+  var output = new this.pClass(this.output);
+  var params = {
+    ssid: ssid,
+    info: info
+  };
+  var args = new vichele_management_confirm_vichele_args(params);
+  try {
+    output.writeMessageBegin('confirm_vichele', Thrift.MessageType.CALL, this.seqid());
+    args.write(output);
+    output.writeMessageEnd();
+    return this.output.flush();
+  }
+  catch (e) {
+    delete this._reqs[this.seqid()];
+    if (typeof output.reset === 'function') {
+      output.reset();
+    }
+    throw e;
+  }
+};
+
+vichele_managementClient.prototype.recv_confirm_vichele = function(input,mtype,rseqid) {
+  var callback = this._reqs[rseqid] || function() {};
+  delete this._reqs[rseqid];
+  if (mtype == Thrift.MessageType.EXCEPTION) {
+    var x = new Thrift.TApplicationException();
+    x.read(input);
+    input.readMessageEnd();
+    return callback(x);
+  }
+  var result = new vichele_management_confirm_vichele_result();
+  result.read(input);
+  input.readMessageEnd();
+
+  if (null !== result.e) {
+    return callback(result.e);
+  }
+  if (null !== result.success) {
+    return callback(null, result.success);
+  }
+  return callback('confirm_vichele failed: unknown result');
+};
+
+vichele_managementClient.prototype.cancel_vichele = function(ssid, info, callback) {
+  this._seqid = this.new_seqid();
+  if (callback === undefined) {
+    var _defer = Q.defer();
+    this._reqs[this.seqid()] = function(error, result) {
+      if (error) {
+        _defer.reject(error);
+      } else {
+        _defer.resolve(result);
+      }
+    };
+    this.send_cancel_vichele(ssid, info);
+    return _defer.promise;
+  } else {
+    this._reqs[this.seqid()] = callback;
+    this.send_cancel_vichele(ssid, info);
+  }
+};
+
+vichele_managementClient.prototype.send_cancel_vichele = function(ssid, info) {
+  var output = new this.pClass(this.output);
+  var params = {
+    ssid: ssid,
+    info: info
+  };
+  var args = new vichele_management_cancel_vichele_args(params);
+  try {
+    output.writeMessageBegin('cancel_vichele', Thrift.MessageType.CALL, this.seqid());
+    args.write(output);
+    output.writeMessageEnd();
+    return this.output.flush();
+  }
+  catch (e) {
+    delete this._reqs[this.seqid()];
+    if (typeof output.reset === 'function') {
+      output.reset();
+    }
+    throw e;
+  }
+};
+
+vichele_managementClient.prototype.recv_cancel_vichele = function(input,mtype,rseqid) {
+  var callback = this._reqs[rseqid] || function() {};
+  delete this._reqs[rseqid];
+  if (mtype == Thrift.MessageType.EXCEPTION) {
+    var x = new Thrift.TApplicationException();
+    x.read(input);
+    input.readMessageEnd();
+    return callback(x);
+  }
+  var result = new vichele_management_cancel_vichele_result();
+  result.read(input);
+  input.readMessageEnd();
+
+  if (null !== result.e) {
+    return callback(result.e);
+  }
+  if (null !== result.success) {
+    return callback(null, result.success);
+  }
+  return callback('cancel_vichele failed: unknown result');
 };
 var vichele_managementProcessor = exports.Processor = function(handler) {
   this._handler = handler;
@@ -1675,6 +2665,91 @@ vichele_managementProcessor.prototype.process_verify_login = function(seqid, inp
     });
   }
 };
+vichele_managementProcessor.prototype.process_get_silent_user_info = function(seqid, input, output) {
+  var args = new vichele_management_get_silent_user_info_args();
+  args.read(input);
+  input.readMessageEnd();
+  if (this._handler.get_silent_user_info.length === 1) {
+    Q.fcall(this._handler.get_silent_user_info.bind(this._handler),
+      args.open_id
+    ).then(function(result) {
+      var result_obj = new vichele_management_get_silent_user_info_result({success: result});
+      output.writeMessageBegin("get_silent_user_info", Thrift.MessageType.REPLY, seqid);
+      result_obj.write(output);
+      output.writeMessageEnd();
+      output.flush();
+    }).catch(function (err) {
+      var result;
+      if (err instanceof ttypes.gen_exp) {
+        result = new vichele_management_get_silent_user_info_result(err);
+        output.writeMessageBegin("get_silent_user_info", Thrift.MessageType.REPLY, seqid);
+      } else {
+        result = new Thrift.TApplicationException(Thrift.TApplicationExceptionType.UNKNOWN, err.message);
+        output.writeMessageBegin("get_silent_user_info", Thrift.MessageType.EXCEPTION, seqid);
+      }
+      result.write(output);
+      output.writeMessageEnd();
+      output.flush();
+    });
+  } else {
+    this._handler.get_silent_user_info(args.open_id, function (err, result) {
+      var result_obj;
+      if ((err === null || typeof err === 'undefined') || err instanceof ttypes.gen_exp) {
+        result_obj = new vichele_management_get_silent_user_info_result((err !== null || typeof err === 'undefined') ? err : {success: result});
+        output.writeMessageBegin("get_silent_user_info", Thrift.MessageType.REPLY, seqid);
+      } else {
+        result_obj = new Thrift.TApplicationException(Thrift.TApplicationExceptionType.UNKNOWN, err.message);
+        output.writeMessageBegin("get_silent_user_info", Thrift.MessageType.EXCEPTION, seqid);
+      }
+      result_obj.write(output);
+      output.writeMessageEnd();
+      output.flush();
+    });
+  }
+};
+vichele_managementProcessor.prototype.process_set_silent_user_info = function(seqid, input, output) {
+  var args = new vichele_management_set_silent_user_info_args();
+  args.read(input);
+  input.readMessageEnd();
+  if (this._handler.set_silent_user_info.length === 2) {
+    Q.fcall(this._handler.set_silent_user_info.bind(this._handler),
+      args.open_id,
+      args.info
+    ).then(function(result) {
+      var result_obj = new vichele_management_set_silent_user_info_result({success: result});
+      output.writeMessageBegin("set_silent_user_info", Thrift.MessageType.REPLY, seqid);
+      result_obj.write(output);
+      output.writeMessageEnd();
+      output.flush();
+    }).catch(function (err) {
+      var result;
+      if (err instanceof ttypes.gen_exp) {
+        result = new vichele_management_set_silent_user_info_result(err);
+        output.writeMessageBegin("set_silent_user_info", Thrift.MessageType.REPLY, seqid);
+      } else {
+        result = new Thrift.TApplicationException(Thrift.TApplicationExceptionType.UNKNOWN, err.message);
+        output.writeMessageBegin("set_silent_user_info", Thrift.MessageType.EXCEPTION, seqid);
+      }
+      result.write(output);
+      output.writeMessageEnd();
+      output.flush();
+    });
+  } else {
+    this._handler.set_silent_user_info(args.open_id, args.info, function (err, result) {
+      var result_obj;
+      if ((err === null || typeof err === 'undefined') || err instanceof ttypes.gen_exp) {
+        result_obj = new vichele_management_set_silent_user_info_result((err !== null || typeof err === 'undefined') ? err : {success: result});
+        output.writeMessageBegin("set_silent_user_info", Thrift.MessageType.REPLY, seqid);
+      } else {
+        result_obj = new Thrift.TApplicationException(Thrift.TApplicationExceptionType.UNKNOWN, err.message);
+        output.writeMessageBegin("set_silent_user_info", Thrift.MessageType.EXCEPTION, seqid);
+      }
+      result_obj.write(output);
+      output.writeMessageEnd();
+      output.flush();
+    });
+  }
+};
 vichele_managementProcessor.prototype.process_get_input_history = function(seqid, input, output) {
   var args = new vichele_management_get_input_history_args();
   args.read(input);
@@ -1711,6 +2786,135 @@ vichele_managementProcessor.prototype.process_get_input_history = function(seqid
       } else {
         result_obj = new Thrift.TApplicationException(Thrift.TApplicationExceptionType.UNKNOWN, err.message);
         output.writeMessageBegin("get_input_history", Thrift.MessageType.EXCEPTION, seqid);
+      }
+      result_obj.write(output);
+      output.writeMessageEnd();
+      output.flush();
+    });
+  }
+};
+vichele_managementProcessor.prototype.process_get_company_vichele_info = function(seqid, input, output) {
+  var args = new vichele_management_get_company_vichele_info_args();
+  args.read(input);
+  input.readMessageEnd();
+  if (this._handler.get_company_vichele_info.length === 2) {
+    Q.fcall(this._handler.get_company_vichele_info.bind(this._handler),
+      args.ssid,
+      args.anchor
+    ).then(function(result) {
+      var result_obj = new vichele_management_get_company_vichele_info_result({success: result});
+      output.writeMessageBegin("get_company_vichele_info", Thrift.MessageType.REPLY, seqid);
+      result_obj.write(output);
+      output.writeMessageEnd();
+      output.flush();
+    }).catch(function (err) {
+      var result;
+      if (err instanceof ttypes.gen_exp) {
+        result = new vichele_management_get_company_vichele_info_result(err);
+        output.writeMessageBegin("get_company_vichele_info", Thrift.MessageType.REPLY, seqid);
+      } else {
+        result = new Thrift.TApplicationException(Thrift.TApplicationExceptionType.UNKNOWN, err.message);
+        output.writeMessageBegin("get_company_vichele_info", Thrift.MessageType.EXCEPTION, seqid);
+      }
+      result.write(output);
+      output.writeMessageEnd();
+      output.flush();
+    });
+  } else {
+    this._handler.get_company_vichele_info(args.ssid, args.anchor, function (err, result) {
+      var result_obj;
+      if ((err === null || typeof err === 'undefined') || err instanceof ttypes.gen_exp) {
+        result_obj = new vichele_management_get_company_vichele_info_result((err !== null || typeof err === 'undefined') ? err : {success: result});
+        output.writeMessageBegin("get_company_vichele_info", Thrift.MessageType.REPLY, seqid);
+      } else {
+        result_obj = new Thrift.TApplicationException(Thrift.TApplicationExceptionType.UNKNOWN, err.message);
+        output.writeMessageBegin("get_company_vichele_info", Thrift.MessageType.EXCEPTION, seqid);
+      }
+      result_obj.write(output);
+      output.writeMessageEnd();
+      output.flush();
+    });
+  }
+};
+vichele_managementProcessor.prototype.process_confirm_vichele = function(seqid, input, output) {
+  var args = new vichele_management_confirm_vichele_args();
+  args.read(input);
+  input.readMessageEnd();
+  if (this._handler.confirm_vichele.length === 2) {
+    Q.fcall(this._handler.confirm_vichele.bind(this._handler),
+      args.ssid,
+      args.info
+    ).then(function(result) {
+      var result_obj = new vichele_management_confirm_vichele_result({success: result});
+      output.writeMessageBegin("confirm_vichele", Thrift.MessageType.REPLY, seqid);
+      result_obj.write(output);
+      output.writeMessageEnd();
+      output.flush();
+    }).catch(function (err) {
+      var result;
+      if (err instanceof ttypes.gen_exp) {
+        result = new vichele_management_confirm_vichele_result(err);
+        output.writeMessageBegin("confirm_vichele", Thrift.MessageType.REPLY, seqid);
+      } else {
+        result = new Thrift.TApplicationException(Thrift.TApplicationExceptionType.UNKNOWN, err.message);
+        output.writeMessageBegin("confirm_vichele", Thrift.MessageType.EXCEPTION, seqid);
+      }
+      result.write(output);
+      output.writeMessageEnd();
+      output.flush();
+    });
+  } else {
+    this._handler.confirm_vichele(args.ssid, args.info, function (err, result) {
+      var result_obj;
+      if ((err === null || typeof err === 'undefined') || err instanceof ttypes.gen_exp) {
+        result_obj = new vichele_management_confirm_vichele_result((err !== null || typeof err === 'undefined') ? err : {success: result});
+        output.writeMessageBegin("confirm_vichele", Thrift.MessageType.REPLY, seqid);
+      } else {
+        result_obj = new Thrift.TApplicationException(Thrift.TApplicationExceptionType.UNKNOWN, err.message);
+        output.writeMessageBegin("confirm_vichele", Thrift.MessageType.EXCEPTION, seqid);
+      }
+      result_obj.write(output);
+      output.writeMessageEnd();
+      output.flush();
+    });
+  }
+};
+vichele_managementProcessor.prototype.process_cancel_vichele = function(seqid, input, output) {
+  var args = new vichele_management_cancel_vichele_args();
+  args.read(input);
+  input.readMessageEnd();
+  if (this._handler.cancel_vichele.length === 2) {
+    Q.fcall(this._handler.cancel_vichele.bind(this._handler),
+      args.ssid,
+      args.info
+    ).then(function(result) {
+      var result_obj = new vichele_management_cancel_vichele_result({success: result});
+      output.writeMessageBegin("cancel_vichele", Thrift.MessageType.REPLY, seqid);
+      result_obj.write(output);
+      output.writeMessageEnd();
+      output.flush();
+    }).catch(function (err) {
+      var result;
+      if (err instanceof ttypes.gen_exp) {
+        result = new vichele_management_cancel_vichele_result(err);
+        output.writeMessageBegin("cancel_vichele", Thrift.MessageType.REPLY, seqid);
+      } else {
+        result = new Thrift.TApplicationException(Thrift.TApplicationExceptionType.UNKNOWN, err.message);
+        output.writeMessageBegin("cancel_vichele", Thrift.MessageType.EXCEPTION, seqid);
+      }
+      result.write(output);
+      output.writeMessageEnd();
+      output.flush();
+    });
+  } else {
+    this._handler.cancel_vichele(args.ssid, args.info, function (err, result) {
+      var result_obj;
+      if ((err === null || typeof err === 'undefined') || err instanceof ttypes.gen_exp) {
+        result_obj = new vichele_management_cancel_vichele_result((err !== null || typeof err === 'undefined') ? err : {success: result});
+        output.writeMessageBegin("cancel_vichele", Thrift.MessageType.REPLY, seqid);
+      } else {
+        result_obj = new Thrift.TApplicationException(Thrift.TApplicationExceptionType.UNKNOWN, err.message);
+        output.writeMessageBegin("cancel_vichele", Thrift.MessageType.EXCEPTION, seqid);
       }
       result_obj.write(output);
       output.writeMessageEnd();

@@ -4,6 +4,8 @@
         <van-tab title="新申请">
             <van-form @submit="onSubmit">
                 <van-divider>承运信息</van-divider>
+                <van-field v-model="user_name" label="提交人" placeholder="您的姓名" :rules="[{ required: true, message: '请填写姓名' }]" />
+                <van-field v-model="user_phone" label="电话" type="tel" placeholder="您的手机号" :rules="[{ required: true, message: '请填写手机号' }]" />
                 <history-input search_key="company_name" v-model="new_form.company_name" :rules="[{ required: true, message: '请填写公司名' }]"></history-input>
                 <history-input search_key="destination" v-model="new_form.destination" :rules="[{ required: true, message: '请填写公司名' }]"></history-input>
                 <van-field center readonly clickable name="datetimePicker" :value="new_form.date" label="到厂日期" placeholder="点击选择日期" @click="show_time_picker = true">
@@ -21,6 +23,11 @@
                     <history-input search_key="stuff_name" v-model="single_vichele.stuff_name" :rules="[{ required: true, message: '请填写货物名称' }]"></history-input>
                     <van-field v-model="single_vichele.count" type="number" name="重量" label="重量（吨）" placeholder="重量" :rules="[{ required: true, message: '请填写重量' }]" />
                     <history-input search_key="comment" v-model="single_vichele.comment"></history-input>
+                    <van-field name="switch" label="多次进厂">
+                        <template #input>
+                            <van-switch v-model="single_vichele.repeated" size="20" />
+                        </template>
+                    </van-field>
                 </div>
                 <van-row type="flex" align="center" justify="right">
                     <van-col :offset="20">
@@ -35,8 +42,7 @@
         <van-tab title="历史申请">
             <van-list ref="all_record" v-model="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
                 <div v-for="(item,index) in created_apply" :key="index" class="one_record_show">
-                    <div style="margin-left:15px;font-size:10px; background-color:pink;">进厂时间：{{item.date}}</div>
-                    <van-cell center :label="item.stuff_name + '(' + item.destination + ')'" :title="item.main_vichele_number + '\n' + item.behind_vichele_number">
+                    <van-cell center :label="item.stuff_name + '(' + item.destination + ')'">
                         <template #title>
                             <div>{{item.main_vichele_number}}</div>
                             <div v-if="item.behind_vichele_number">{{item.behind_vichele_number}}</div>
@@ -45,11 +51,25 @@
                         <div v-if="item.comment">备注：{{item.comment}}</div>
                         <template #right-icon>
                             <div class="opt_button_show">
-                                <van-button type="info" plain size="small" @click="update_vichele(item)">修改</van-button>
-                                <van-button type="danger" plain size="small" @click="delete_vichele(item)">取消</van-button>
+                                <van-button v-if="item.status == 0" type="info" block size="small" @click="update_vichele(item)">修改</van-button>
+                                <van-button type="danger" block size="small" @click="delete_vichele(item)">取消</van-button>
                             </div>
                         </template>
                     </van-cell>
+                    <div style="margin-left:15px;">
+                        <van-row type="flex" align="center" :gutter="10">
+                            <van-col>
+                                <van-tag plain type="primary">进厂时间：{{item.date}}</van-tag>
+                            </van-col>
+                            <van-col>
+                                <van-tag plain type="warning" v-if="item.repeated">多次进厂</van-tag>
+                            </van-col>
+                            <van-col>
+                                <van-tag v-if="item.status == 1" plain type="success">已确认</van-tag>
+                                <van-tag v-else plain type="danger">未确认</van-tag>
+                            </van-col>
+                        </van-row>
+                    </div>
                 </div>
             </van-list>
             <van-dialog v-model="change_show" title="修改车辆信息" :showConfirmButton="false" closeOnClickOverlay>
@@ -114,6 +134,18 @@ import {
     Dialog
 } from 'vant';
 
+import {
+    Checkbox,
+    CheckboxGroup
+} from 'vant';
+import {
+    Switch
+} from 'vant';
+
+Vue.use(Switch);
+
+Vue.use(Checkbox);
+Vue.use(CheckboxGroup);
 // 全局注册
 Vue.use(Dialog);
 Vue.use(Tag);
@@ -154,6 +186,8 @@ export default {
     },
     data: function () {
         return {
+            user_name: '',
+            user_phone: '',
             active: 0,
             show_time_update_picker: false,
             change_show: false,
@@ -180,7 +214,8 @@ export default {
                 behind_vichele_number: '',
                 count: '',
                 comment: '',
-                stuff_name: ''
+                stuff_name: '',
+                repeated: false,
             }],
             created_apply: [],
         };
@@ -190,6 +225,7 @@ export default {
             var vue_this = this;
             Dialog({
                 title: '取消进厂申请',
+                closeOnClickOverlay: true,
                 message: '确定要取消 ' + _item.main_vichele_number + ' ' + _item.behind_vichele_number + ' 吗'
             }).then(function () {
                 vue_this.$call_remote_process('vichele_management', 'delete_vichele_info', [vue_this.$cookies.get('silent_id'), _item.id]).then(function (resp) {
@@ -258,6 +294,7 @@ export default {
         },
         onSubmit: function () {
             var vue_this = this;
+            vue_this.update_user_info();
             var extra_vichele = [];
             vue_this.new_vichele.forEach(element => {
                 extra_vichele.push({
@@ -269,14 +306,15 @@ export default {
                     count: parseFloat(element.count),
                     comment: element.comment,
                     stuff_name: element.stuff_name,
+                    repeated: element.repeated,
                 });
             });
             vue_this.$call_remote_process("vichele_management", 'create_vichele_info', [vue_this.$cookies.get('silent_id'), extra_vichele]).then(function (resp) {
                 if (resp) {
                     vue_this.created_apply = [];
                     vue_this.finished = false;
-                    vue_this.$refs.all_record.check();
                     vue_this.active = 1;
+                    vue_this.$refs.all_record.check();
                 }
             });
         },
@@ -293,8 +331,25 @@ export default {
                 behind_vichele_number: '',
                 count: "",
                 comment: '',
-                stuff_name: ''
+                stuff_name: '',
+                repeated: false,
             });
+        },
+        fetch_user_info: function () {
+            var vue_this = this;
+            vue_this.$call_remote_process("vichele_management", 'get_silent_user_info', [vue_this.$cookies.get('silent_id')]).then(function (resp) {
+                vue_this.user_name = resp.name;
+                vue_this.user_phone = resp.phone;
+            });
+        },
+        update_user_info: function () {
+            var vue_this = this;
+            vue_this.$call_remote_process("vichele_management", 'set_silent_user_info', [vue_this.$cookies.get('silent_id'), {
+                name: vue_this.user_name,
+                phone: vue_this.user_phone
+            }]).then(function () {
+                vue_this.fetch_user_info();
+            })
         },
     },
     beforeMount: function () {
@@ -305,6 +360,7 @@ export default {
             vue_this.$call_remote_process("vichele_management", 'verify_login', [vue_this.$cookies.get('silent_id')]).then(function (resp) {
                 if (resp) {
                     vue_this.is_login = true;
+                    vue_this.fetch_user_info();
                 } else {
                     window.location.href = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxa390f8b6f68e9c6d&redirect_uri=https%3a%2f%2fwww.d8sis.cn%2fpa_web%2fextra_vichele&response_type=code&scope=snsapi_base&state=STATE#wechat_redirect"
                 }
@@ -321,15 +377,21 @@ export default {
     margin-left: 10px;
     margin-right: 10px;
     margin-bottom: 10px;
+    padding-bottom: 8px;
+    padding-left: 10px;
+    padding-top: 8px;
 }
 
 .opt_button_show {
     margin-left: 5px;
+    width: 60px;
 }
 
 .one_record_show {
     border: 1px solid green;
-    border-radius: 15px;
+    border-radius: 8px;
     margin-bottom: 10px;
+    padding-top: 3px;
+    padding-bottom: 6px;
 }
 </style>

@@ -513,10 +513,14 @@ public:
 class pa_sql_silent_user:public sql_tree_base {
 public:
     std::string open_id;
+    std::string name;
+    std::string phone;
     virtual std::vector<sqlite_orm_column> self_columns_defined()
     {
         std::vector<sqlite_orm_column> ret;
         ret.push_back(sqlite_orm_column("open_id", sqlite_orm_column::STRING, &open_id, SQLITE_ORM_COLUMN_LIMIT_UNIQ));
+        ret.push_back(sqlite_orm_column("name", sqlite_orm_column::STRING, &name));
+        ret.push_back(sqlite_orm_column("phone", sqlite_orm_column::STRING, &phone));
 
         return ret;
     }
@@ -537,6 +541,9 @@ public:
     double count = 0;
     std::string comment;
     std::string date;
+    int is_drop = 0;
+    int status = 0;
+    int is_repeated = 0;
     pa_sql_vichele_stay_alone() {
         add_parent_type<pa_sql_silent_user>("created_by");
         add_parent_type<pa_sql_company>("destination");
@@ -551,6 +558,9 @@ public:
         ret.push_back(sqlite_orm_column("count", sqlite_orm_column::REAL, &count));
         ret.push_back(sqlite_orm_column("comment", sqlite_orm_column::STRING, &comment));
         ret.push_back(sqlite_orm_column("date", sqlite_orm_column::STRING, &date));
+        ret.push_back(sqlite_orm_column("is_drop", sqlite_orm_column::INTEGER, &is_drop));
+        ret.push_back(sqlite_orm_column("status", sqlite_orm_column::INTEGER, &status));
+        ret.push_back(sqlite_orm_column("is_repeated", sqlite_orm_column::INTEGER, &is_repeated));
 
         return ret;
     }

@@ -284,6 +284,15 @@ struct vichele_stay_alone {
     7:string comment,
     8:string date,
     9:string destination,
+    10:i64 status,
+    11:string creator_name,
+    12:string creator_phone,
+    13:bool repeated,
+}
+
+struct silent_user_info {
+    1:string name,
+    2:string phone,
 }
 
 service vichele_management {
@@ -293,5 +302,10 @@ service vichele_management {
     list<vichele_stay_alone> get_created_vichele_info(1:string open_id, 2:i64 ancher) throws (1:gen_exp e),
     string silent_login(1:string code) throws (1:gen_exp e),
     bool verify_login(1:string open_id) throws (1:gen_exp e),
+    silent_user_info get_silent_user_info(1:string open_id) throws (1:gen_exp e),
+    void set_silent_user_info(1:string open_id, 2:silent_user_info info) throws (1:gen_exp e),
     list<string> get_input_history(1:string open_id, 2:vichele_stay_alone search_key) throws (1:gen_exp e),
+    list<vichele_stay_alone> get_company_vichele_info(1:string ssid, 2:i64 anchor) throws (1:gen_exp e),
+    bool confirm_vichele(1:string ssid, 2:list<vichele_stay_alone> info) throws (1:gen_exp e),
+    bool cancel_vichele(1:string ssid, 2:list<vichele_stay_alone> info) throws (1:gen_exp e),
 }

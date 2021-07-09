@@ -37,7 +37,7 @@
             <van-field v-model="submit_contract.number" name="编号" label="合同编号" placeholder="请输入合同编号" :rules="[{ required:true, message:'请输入合同编号'}]" />
             <van-field name="calendar1" v-model="submit_contract.start_time" label="开始日期" placeholder="请输入开始日期yyyy/mm/dd" format-trigger="onBlur" :formatter="formatter_input_date" :rules="[{ required:true, message:'请输入开始日期'}]" />
             <van-field name="calendar2" v-model="submit_contract.end_time" label="到期日期" placeholder="请输入到期日期yyyy/mm/dd" format-trigger="onBlur" :formatter="formatter_input_date" :rules="[{ required:true, message:'请输入到期日期'}]" />
-            <van-field v-model="submit_contract.customer_code" name="客户编码" label="客户编码(可选)" placeholder="请输入客户编码"  />
+            <van-field v-model="submit_contract.customer_code" name="客户编码" label="客户编码(可选)" placeholder="请输入客户编码" />
             <div style="margin: 16px;">
                 <van-button round block type="info" native-type="submit">提交</van-button>
             </div>
@@ -49,7 +49,7 @@
             <van-field v-model="submit_contract.number" name="编号" label="合同编号" placeholder="请输入合同编号" :rules="[{ required:true, message:'请输入合同编号'}]" />
             <van-field name="calendar1" v-model="submit_contract.start_time" label="开始日期" placeholder="请输入开始日期yyyy/mm/dd" format-trigger="onBlur" :formatter="formatter_input_date" :rules="[{ required:true, message:'请输入开始日期'}]" />
             <van-field name="calendar2" v-model="submit_contract.end_time" label="到期日期" placeholder="请输入到期日期yyyy/mm/dd" format-trigger="onBlur" :formatter="formatter_input_date" :rules="[{ required:true, message:'请输入到期日期'}]" />
-            <van-field v-model="submit_contract.customer_code" name="客户编码" label="客户编码(可选)" placeholder="请输入客户编码"  />
+            <van-field v-model="submit_contract.customer_code" name="客户编码" label="客户编码(可选)" placeholder="请输入客户编码" />
             <div style="margin: 16px;">
                 <van-button round block type="info" native-type="submit">提交</van-button>
             </div>
@@ -106,7 +106,7 @@ export default {
                 a_side_company: '',
                 start_time: '',
                 end_time: '',
-                customer_code:'',
+                customer_code: '',
             },
             add_contract_show: false,
             update_contract_show: false,
@@ -136,9 +136,13 @@ export default {
         };
     },
     methods: {
-        pre_ask_del:function(_contract) {
+        pre_ask_del: function (_contract) {
             var vue_this = this;
-            Dialog({title:'删除合同', message:'确定要删除 ' + _contract.a_side_company + ' 吗'}).then(function() {
+            Dialog({
+                closeOnClickOverlay: true,
+                title: '删除合同',
+                message: '确定要删除 ' + _contract.a_side_company + ' 吗'
+            }).then(function () {
                 vue_this.del_contract(_contract.id);
             });
         },

@@ -157,6 +157,14 @@ const routes = [
       has_go_back: false,
       extra_page:true,
     },
+  },{
+    path: '/company_extra_vichele',
+    name: 'CompanyExtraVichele',
+    component: () => import('../views/CompanyExtraVichele.vue'),
+    meta: {
+      private_title: '采购进厂',
+      has_go_back: true,
+    },
   },
 ]
 

@@ -3900,6 +3900,22 @@ void vichele_stay_alone::__set_date(const std::string& val) {
 void vichele_stay_alone::__set_destination(const std::string& val) {
   this->destination = val;
 }
+
+void vichele_stay_alone::__set_status(const int64_t val) {
+  this->status = val;
+}
+
+void vichele_stay_alone::__set_creator_name(const std::string& val) {
+  this->creator_name = val;
+}
+
+void vichele_stay_alone::__set_creator_phone(const std::string& val) {
+  this->creator_phone = val;
+}
+
+void vichele_stay_alone::__set_repeated(const bool val) {
+  this->repeated = val;
+}
 std::ostream& operator<<(std::ostream& out, const vichele_stay_alone& obj)
 {
   obj.printTo(out);
@@ -4000,6 +4016,38 @@ uint32_t vichele_stay_alone::read(::apache::thrift::protocol::TProtocol* iprot) 
           xfer += iprot->skip(ftype);
         }
         break;
+      case 10:
+        if (ftype == ::apache::thrift::protocol::T_I64) {
+          xfer += iprot->readI64(this->status);
+          this->__isset.status = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 11:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->creator_name);
+          this->__isset.creator_name = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 12:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->creator_phone);
+          this->__isset.creator_phone = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 13:
+        if (ftype == ::apache::thrift::protocol::T_BOOL) {
+          xfer += iprot->readBool(this->repeated);
+          this->__isset.repeated = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
       default:
         xfer += iprot->skip(ftype);
         break;
@@ -4053,6 +4101,22 @@ uint32_t vichele_stay_alone::write(::apache::thrift::protocol::TProtocol* oprot)
   xfer += oprot->writeString(this->destination);
   xfer += oprot->writeFieldEnd();
 
+  xfer += oprot->writeFieldBegin("status", ::apache::thrift::protocol::T_I64, 10);
+  xfer += oprot->writeI64(this->status);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("creator_name", ::apache::thrift::protocol::T_STRING, 11);
+  xfer += oprot->writeString(this->creator_name);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("creator_phone", ::apache::thrift::protocol::T_STRING, 12);
+  xfer += oprot->writeString(this->creator_phone);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("repeated", ::apache::thrift::protocol::T_BOOL, 13);
+  xfer += oprot->writeBool(this->repeated);
+  xfer += oprot->writeFieldEnd();
+
   xfer += oprot->writeFieldStop();
   xfer += oprot->writeStructEnd();
   return xfer;
@@ -4069,6 +4133,10 @@ void swap(vichele_stay_alone &a, vichele_stay_alone &b) {
   swap(a.comment, b.comment);
   swap(a.date, b.date);
   swap(a.destination, b.destination);
+  swap(a.status, b.status);
+  swap(a.creator_name, b.creator_name);
+  swap(a.creator_phone, b.creator_phone);
+  swap(a.repeated, b.repeated);
   swap(a.__isset, b.__isset);
 }
 
@@ -4082,6 +4150,10 @@ vichele_stay_alone::vichele_stay_alone(const vichele_stay_alone& other52) {
   comment = other52.comment;
   date = other52.date;
   destination = other52.destination;
+  status = other52.status;
+  creator_name = other52.creator_name;
+  creator_phone = other52.creator_phone;
+  repeated = other52.repeated;
   __isset = other52.__isset;
 }
 vichele_stay_alone& vichele_stay_alone::operator=(const vichele_stay_alone& other53) {
@@ -4094,6 +4166,10 @@ vichele_stay_alone& vichele_stay_alone::operator=(const vichele_stay_alone& othe
   comment = other53.comment;
   date = other53.date;
   destination = other53.destination;
+  status = other53.status;
+  creator_name = other53.creator_name;
+  creator_phone = other53.creator_phone;
+  repeated = other53.repeated;
   __isset = other53.__isset;
   return *this;
 }
@@ -4109,6 +4185,122 @@ void vichele_stay_alone::printTo(std::ostream& out) const {
   out << ", " << "comment=" << to_string(comment);
   out << ", " << "date=" << to_string(date);
   out << ", " << "destination=" << to_string(destination);
+  out << ", " << "status=" << to_string(status);
+  out << ", " << "creator_name=" << to_string(creator_name);
+  out << ", " << "creator_phone=" << to_string(creator_phone);
+  out << ", " << "repeated=" << to_string(repeated);
+  out << ")";
+}
+
+
+silent_user_info::~silent_user_info() noexcept {
+}
+
+
+void silent_user_info::__set_name(const std::string& val) {
+  this->name = val;
+}
+
+void silent_user_info::__set_phone(const std::string& val) {
+  this->phone = val;
+}
+std::ostream& operator<<(std::ostream& out, const silent_user_info& obj)
+{
+  obj.printTo(out);
+  return out;
+}
+
+
+uint32_t silent_user_info::read(::apache::thrift::protocol::TProtocol* iprot) {
+
+  ::apache::thrift::protocol::TInputRecursionTracker tracker(*iprot);
+  uint32_t xfer = 0;
+  std::string fname;
+  ::apache::thrift::protocol::TType ftype;
+  int16_t fid;
+
+  xfer += iprot->readStructBegin(fname);
+
+  using ::apache::thrift::protocol::TProtocolException;
+
+
+  while (true)
+  {
+    xfer += iprot->readFieldBegin(fname, ftype, fid);
+    if (ftype == ::apache::thrift::protocol::T_STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 1:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->name);
+          this->__isset.name = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 2:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->phone);
+          this->__isset.phone = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      default:
+        xfer += iprot->skip(ftype);
+        break;
+    }
+    xfer += iprot->readFieldEnd();
+  }
+
+  xfer += iprot->readStructEnd();
+
+  return xfer;
+}
+
+uint32_t silent_user_info::write(::apache::thrift::protocol::TProtocol* oprot) const {
+  uint32_t xfer = 0;
+  ::apache::thrift::protocol::TOutputRecursionTracker tracker(*oprot);
+  xfer += oprot->writeStructBegin("silent_user_info");
+
+  xfer += oprot->writeFieldBegin("name", ::apache::thrift::protocol::T_STRING, 1);
+  xfer += oprot->writeString(this->name);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("phone", ::apache::thrift::protocol::T_STRING, 2);
+  xfer += oprot->writeString(this->phone);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldStop();
+  xfer += oprot->writeStructEnd();
+  return xfer;
+}
+
+void swap(silent_user_info &a, silent_user_info &b) {
+  using ::std::swap;
+  swap(a.name, b.name);
+  swap(a.phone, b.phone);
+  swap(a.__isset, b.__isset);
+}
+
+silent_user_info::silent_user_info(const silent_user_info& other54) {
+  name = other54.name;
+  phone = other54.phone;
+  __isset = other54.__isset;
+}
+silent_user_info& silent_user_info::operator=(const silent_user_info& other55) {
+  name = other55.name;
+  phone = other55.phone;
+  __isset = other55.__isset;
+  return *this;
+}
+void silent_user_info::printTo(std::ostream& out) const {
+  using ::apache::thrift::to_string;
+  out << "silent_user_info(";
+  out << "name=" << to_string(name);
+  out << ", " << "phone=" << to_string(phone);
   out << ")";
 }
 
