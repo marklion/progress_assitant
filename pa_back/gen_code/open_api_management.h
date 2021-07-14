@@ -26,6 +26,7 @@ class open_api_managementIf {
   virtual bool verify_email_code(const std::string& email, const std::string& code) = 0;
   virtual bool unregister_api_user(const std::string& email, const std::string& password) = 0;
   virtual void get_token(std::string& _return, const std::string& email, const std::string& password) = 0;
+  virtual void get_today_transformation(std::vector<api_transformation_info> & _return, const std::string& token) = 0;
 };
 
 class open_api_managementIfFactory {
@@ -68,6 +69,9 @@ class open_api_managementNull : virtual public open_api_managementIf {
     return _return;
   }
   void get_token(std::string& /* _return */, const std::string& /* email */, const std::string& /* password */) {
+    return;
+  }
+  void get_today_transformation(std::vector<api_transformation_info> & /* _return */, const std::string& /* token */) {
     return;
   }
 };
@@ -555,6 +559,118 @@ class open_api_management_get_token_presult {
 
 };
 
+typedef struct _open_api_management_get_today_transformation_args__isset {
+  _open_api_management_get_today_transformation_args__isset() : token(false) {}
+  bool token :1;
+} _open_api_management_get_today_transformation_args__isset;
+
+class open_api_management_get_today_transformation_args {
+ public:
+
+  open_api_management_get_today_transformation_args(const open_api_management_get_today_transformation_args&);
+  open_api_management_get_today_transformation_args& operator=(const open_api_management_get_today_transformation_args&);
+  open_api_management_get_today_transformation_args() : token() {
+  }
+
+  virtual ~open_api_management_get_today_transformation_args() noexcept;
+  std::string token;
+
+  _open_api_management_get_today_transformation_args__isset __isset;
+
+  void __set_token(const std::string& val);
+
+  bool operator == (const open_api_management_get_today_transformation_args & rhs) const
+  {
+    if (!(token == rhs.token))
+      return false;
+    return true;
+  }
+  bool operator != (const open_api_management_get_today_transformation_args &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const open_api_management_get_today_transformation_args & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+
+class open_api_management_get_today_transformation_pargs {
+ public:
+
+
+  virtual ~open_api_management_get_today_transformation_pargs() noexcept;
+  const std::string* token;
+
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _open_api_management_get_today_transformation_result__isset {
+  _open_api_management_get_today_transformation_result__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _open_api_management_get_today_transformation_result__isset;
+
+class open_api_management_get_today_transformation_result {
+ public:
+
+  open_api_management_get_today_transformation_result(const open_api_management_get_today_transformation_result&);
+  open_api_management_get_today_transformation_result& operator=(const open_api_management_get_today_transformation_result&);
+  open_api_management_get_today_transformation_result() {
+  }
+
+  virtual ~open_api_management_get_today_transformation_result() noexcept;
+  std::vector<api_transformation_info>  success;
+  gen_exp e;
+
+  _open_api_management_get_today_transformation_result__isset __isset;
+
+  void __set_success(const std::vector<api_transformation_info> & val);
+
+  void __set_e(const gen_exp& val);
+
+  bool operator == (const open_api_management_get_today_transformation_result & rhs) const
+  {
+    if (!(success == rhs.success))
+      return false;
+    if (!(e == rhs.e))
+      return false;
+    return true;
+  }
+  bool operator != (const open_api_management_get_today_transformation_result &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const open_api_management_get_today_transformation_result & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _open_api_management_get_today_transformation_presult__isset {
+  _open_api_management_get_today_transformation_presult__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _open_api_management_get_today_transformation_presult__isset;
+
+class open_api_management_get_today_transformation_presult {
+ public:
+
+
+  virtual ~open_api_management_get_today_transformation_presult() noexcept;
+  std::vector<api_transformation_info> * success;
+  gen_exp e;
+
+  _open_api_management_get_today_transformation_presult__isset __isset;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+
+};
+
 class open_api_managementClient : virtual public open_api_managementIf {
  public:
   open_api_managementClient(std::shared_ptr< ::apache::thrift::protocol::TProtocol> prot) {
@@ -592,6 +708,9 @@ class open_api_managementClient : virtual public open_api_managementIf {
   void get_token(std::string& _return, const std::string& email, const std::string& password);
   void send_get_token(const std::string& email, const std::string& password);
   void recv_get_token(std::string& _return);
+  void get_today_transformation(std::vector<api_transformation_info> & _return, const std::string& token);
+  void send_get_today_transformation(const std::string& token);
+  void recv_get_today_transformation(std::vector<api_transformation_info> & _return);
  protected:
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> piprot_;
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> poprot_;
@@ -611,6 +730,7 @@ class open_api_managementProcessor : public ::apache::thrift::TDispatchProcessor
   void process_verify_email_code(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
   void process_unregister_api_user(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
   void process_get_token(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
+  void process_get_today_transformation(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
  public:
   open_api_managementProcessor(::std::shared_ptr<open_api_managementIf> iface) :
     iface_(iface) {
@@ -618,6 +738,7 @@ class open_api_managementProcessor : public ::apache::thrift::TDispatchProcessor
     processMap_["verify_email_code"] = &open_api_managementProcessor::process_verify_email_code;
     processMap_["unregister_api_user"] = &open_api_managementProcessor::process_unregister_api_user;
     processMap_["get_token"] = &open_api_managementProcessor::process_get_token;
+    processMap_["get_today_transformation"] = &open_api_managementProcessor::process_get_today_transformation;
   }
 
   virtual ~open_api_managementProcessor() {}
@@ -683,6 +804,16 @@ class open_api_managementMultiface : virtual public open_api_managementIf {
     return;
   }
 
+  void get_today_transformation(std::vector<api_transformation_info> & _return, const std::string& token) {
+    size_t sz = ifaces_.size();
+    size_t i = 0;
+    for (; i < (sz - 1); ++i) {
+      ifaces_[i]->get_today_transformation(_return, token);
+    }
+    ifaces_[i]->get_today_transformation(_return, token);
+    return;
+  }
+
 };
 
 // The 'concurrent' client is a thread safe client that correctly handles
@@ -727,6 +858,9 @@ class open_api_managementConcurrentClient : virtual public open_api_managementIf
   void get_token(std::string& _return, const std::string& email, const std::string& password);
   int32_t send_get_token(const std::string& email, const std::string& password);
   void recv_get_token(std::string& _return, const int32_t seqid);
+  void get_today_transformation(std::vector<api_transformation_info> & _return, const std::string& token);
+  int32_t send_get_today_transformation(const std::string& token);
+  void recv_get_today_transformation(std::vector<api_transformation_info> & _return, const int32_t seqid);
  protected:
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> piprot_;
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> poprot_;

@@ -67,6 +67,10 @@ class vichele_search_result;
 
 class company_plan_brief;
 
+class api_extra_transformation;
+
+class api_transformation_info;
+
 class vichele_stay_alone;
 
 class silent_user_info;
@@ -1548,6 +1552,150 @@ class company_plan_brief : public virtual ::apache::thrift::TBase {
 void swap(company_plan_brief &a, company_plan_brief &b);
 
 std::ostream& operator<<(std::ostream& out, const company_plan_brief& obj);
+
+typedef struct _api_extra_transformation__isset {
+  _api_extra_transformation__isset() : driver_name(false), driver_phone(false), driver_id(false) {}
+  bool driver_name :1;
+  bool driver_phone :1;
+  bool driver_id :1;
+} _api_extra_transformation__isset;
+
+class api_extra_transformation : public virtual ::apache::thrift::TBase {
+ public:
+
+  api_extra_transformation(const api_extra_transformation&);
+  api_extra_transformation& operator=(const api_extra_transformation&);
+  api_extra_transformation() : driver_name(), driver_phone(), driver_id() {
+  }
+
+  virtual ~api_extra_transformation() noexcept;
+  std::string driver_name;
+  std::string driver_phone;
+  std::string driver_id;
+
+  _api_extra_transformation__isset __isset;
+
+  void __set_driver_name(const std::string& val);
+
+  void __set_driver_phone(const std::string& val);
+
+  void __set_driver_id(const std::string& val);
+
+  bool operator == (const api_extra_transformation & rhs) const
+  {
+    if (!(driver_name == rhs.driver_name))
+      return false;
+    if (!(driver_phone == rhs.driver_phone))
+      return false;
+    if (!(driver_id == rhs.driver_id))
+      return false;
+    return true;
+  }
+  bool operator != (const api_extra_transformation &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const api_extra_transformation & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+  virtual void printTo(std::ostream& out) const;
+};
+
+void swap(api_extra_transformation &a, api_extra_transformation &b);
+
+std::ostream& operator<<(std::ostream& out, const api_extra_transformation& obj);
+
+typedef struct _api_transformation_info__isset {
+  _api_transformation_info__isset() : id(false), main_vichele_number(false), behind_vichele_number(false), stuff_name(false), enter_count(false), exit_count(false), company_name(false), extra_info(false), is_sale(false) {}
+  bool id :1;
+  bool main_vichele_number :1;
+  bool behind_vichele_number :1;
+  bool stuff_name :1;
+  bool enter_count :1;
+  bool exit_count :1;
+  bool company_name :1;
+  bool extra_info :1;
+  bool is_sale :1;
+} _api_transformation_info__isset;
+
+class api_transformation_info : public virtual ::apache::thrift::TBase {
+ public:
+
+  api_transformation_info(const api_transformation_info&);
+  api_transformation_info& operator=(const api_transformation_info&);
+  api_transformation_info() : id(0), main_vichele_number(), behind_vichele_number(), stuff_name(), enter_count(0), exit_count(0), company_name(), is_sale(0) {
+  }
+
+  virtual ~api_transformation_info() noexcept;
+  int64_t id;
+  std::string main_vichele_number;
+  std::string behind_vichele_number;
+  std::string stuff_name;
+  double enter_count;
+  double exit_count;
+  std::string company_name;
+  api_extra_transformation extra_info;
+  bool is_sale;
+
+  _api_transformation_info__isset __isset;
+
+  void __set_id(const int64_t val);
+
+  void __set_main_vichele_number(const std::string& val);
+
+  void __set_behind_vichele_number(const std::string& val);
+
+  void __set_stuff_name(const std::string& val);
+
+  void __set_enter_count(const double val);
+
+  void __set_exit_count(const double val);
+
+  void __set_company_name(const std::string& val);
+
+  void __set_extra_info(const api_extra_transformation& val);
+
+  void __set_is_sale(const bool val);
+
+  bool operator == (const api_transformation_info & rhs) const
+  {
+    if (!(id == rhs.id))
+      return false;
+    if (!(main_vichele_number == rhs.main_vichele_number))
+      return false;
+    if (!(behind_vichele_number == rhs.behind_vichele_number))
+      return false;
+    if (!(stuff_name == rhs.stuff_name))
+      return false;
+    if (!(enter_count == rhs.enter_count))
+      return false;
+    if (!(exit_count == rhs.exit_count))
+      return false;
+    if (!(company_name == rhs.company_name))
+      return false;
+    if (!(extra_info == rhs.extra_info))
+      return false;
+    if (!(is_sale == rhs.is_sale))
+      return false;
+    return true;
+  }
+  bool operator != (const api_transformation_info &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const api_transformation_info & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+  virtual void printTo(std::ostream& out) const;
+};
+
+void swap(api_transformation_info &a, api_transformation_info &b);
+
+std::ostream& operator<<(std::ostream& out, const api_transformation_info& obj);
 
 typedef struct _vichele_stay_alone__isset {
   _vichele_stay_alone__isset() : id(false), stuff_name(false), company_name(false), main_vichele_number(false), behind_vichele_number(false), count(false), comment(false), date(false), destination(false), status(false), creator_name(false), creator_phone(false), repeated(false) {}

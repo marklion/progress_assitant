@@ -35,4 +35,6 @@ std::string PA_DATAOPT_current_time();
 int64_t PA_DATAOPT_timestring_2_date(const std::string &_str);
 std::string PA_DATAOPT_date_2_timestring(int64_t _date);
 void PA_DATAOPT_notify_pay(pa_sql_company &_company);
+bool PA_DATAOPT_valid_email(const std::string &_email, pa_sql_company &_company);
+
 #endif // _PA_UTILS_H_

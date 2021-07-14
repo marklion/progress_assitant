@@ -262,9 +262,26 @@ service stuff_plan_management {
     list<vichele_statistics> get_tomorrow_statistics(1:string ssid) throws (1:gen_exp e),
     company_plan_brief get_company_brief(1:string ssid) throws (1:gen_exp e),
     bool push_user_pay(1:string ssid, 2:i64 plan_id) throws (1:gen_exp e),
-    list<vichele_stuff_statistics> get_today_transformation(1:string company_name) throws (1:gen_exp e),
     i64 get_count_by_status(1:string ssid, 2:i64 status) throws (1:gen_exp e),
     bool cancel_vichele_from_plan(1:string ssid, 2:list<i64> ids) throws (1:gen_exp e),
+}
+
+struct api_extra_transformation {
+    1:string driver_name,
+    2:string driver_phone,
+    3:string driver_id,
+}
+
+struct api_transformation_info {
+    1:i64 id,
+    2:string main_vichele_number,
+    3:string behind_vichele_number,
+    4:string stuff_name,
+    5:double enter_count,
+    6:double exit_count,
+    7:string company_name,
+    8:api_extra_transformation extra_info,
+    9:bool is_sale,
 }
 
 service open_api_management {
@@ -272,6 +289,7 @@ service open_api_management {
     bool verify_email_code(1:string email, 2:string code) throws (1:gen_exp e),
     bool unregister_api_user(1:string email, 2:string password) throws (1:gen_exp e),
     string get_token(1:string email, 2:string password) throws (1:gen_exp e),
+    list<api_transformation_info> get_today_transformation(1:string token) throws (1:gen_exp e),
 }
 
 struct vichele_stay_alone {

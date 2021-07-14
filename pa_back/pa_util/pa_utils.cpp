@@ -391,3 +391,33 @@ void PA_DATAOPT_notify_pay(pa_sql_company &_company)
         }
     }
 }
+
+bool PA_DATAOPT_valid_email(const std::string &_email, pa_sql_company &_company)
+{
+    bool ret = false;
+    std::ifstream config_file(SALE_CONFIG_FILE, std::ios::in);
+    std::istreambuf_iterator<char> beg(config_file), end;
+    std::string config_string(beg, end);
+    neb::CJsonObject config(config_string);
+
+    for (size_t i = 0; i < config.GetArraySize(); i++)
+    {
+        auto company_config = config[i];
+        auto company_name = company_config("name");
+        auto company_admin_config = company_config["white_list"];
+        if (company_name == _company.name)
+        {
+            for (size_t j = 0; j < company_admin_config.GetArraySize(); j++)
+            {
+                if (_email == company_admin_config(j))
+                {
+                    ret = true;
+                    break;
+                }
+            }
+            break;
+        }
+    }
+
+    return ret;
+}

@@ -28,6 +28,7 @@ if len(sys.argv) <= 1 or sys.argv[1] == '--help':
     print('  bool verify_email_code(string email, string code)')
     print('  bool unregister_api_user(string email, string password)')
     print('  string get_token(string email, string password)')
+    print('   get_today_transformation(string token)')
     print('')
     sys.exit(0)
 
@@ -130,6 +131,12 @@ elif cmd == 'get_token':
         print('get_token requires 2 args')
         sys.exit(1)
     pp.pprint(client.get_token(args[0], args[1],))
+
+elif cmd == 'get_today_transformation':
+    if len(args) != 1:
+        print('get_today_transformation requires 1 args')
+        sys.exit(1)
+    pp.pprint(client.get_today_transformation(args[0],))
 
 else:
     print('Unrecognized method %s' % cmd)

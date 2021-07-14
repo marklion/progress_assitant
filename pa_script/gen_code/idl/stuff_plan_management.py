@@ -242,14 +242,6 @@ class Iface(object):
         """
         pass
 
-    def get_today_transformation(self, company_name):
-        """
-        Parameters:
-         - company_name
-
-        """
-        pass
-
     def get_count_by_status(self, ssid, status):
         """
         Parameters:
@@ -1174,40 +1166,6 @@ class Client(Iface):
             raise result.e
         raise TApplicationException(TApplicationException.MISSING_RESULT, "push_user_pay failed: unknown result")
 
-    def get_today_transformation(self, company_name):
-        """
-        Parameters:
-         - company_name
-
-        """
-        self.send_get_today_transformation(company_name)
-        return self.recv_get_today_transformation()
-
-    def send_get_today_transformation(self, company_name):
-        self._oprot.writeMessageBegin('get_today_transformation', TMessageType.CALL, self._seqid)
-        args = get_today_transformation_args()
-        args.company_name = company_name
-        args.write(self._oprot)
-        self._oprot.writeMessageEnd()
-        self._oprot.trans.flush()
-
-    def recv_get_today_transformation(self):
-        iprot = self._iprot
-        (fname, mtype, rseqid) = iprot.readMessageBegin()
-        if mtype == TMessageType.EXCEPTION:
-            x = TApplicationException()
-            x.read(iprot)
-            iprot.readMessageEnd()
-            raise x
-        result = get_today_transformation_result()
-        result.read(iprot)
-        iprot.readMessageEnd()
-        if result.success is not None:
-            return result.success
-        if result.e is not None:
-            raise result.e
-        raise TApplicationException(TApplicationException.MISSING_RESULT, "get_today_transformation failed: unknown result")
-
     def get_count_by_status(self, ssid, status):
         """
         Parameters:
@@ -1310,7 +1268,6 @@ class Processor(Iface, TProcessor):
         self._processMap["get_tomorrow_statistics"] = Processor.process_get_tomorrow_statistics
         self._processMap["get_company_brief"] = Processor.process_get_company_brief
         self._processMap["push_user_pay"] = Processor.process_push_user_pay
-        self._processMap["get_today_transformation"] = Processor.process_get_today_transformation
         self._processMap["get_count_by_status"] = Processor.process_get_count_by_status
         self._processMap["cancel_vichele_from_plan"] = Processor.process_cancel_vichele_from_plan
         self._on_message_begin = None
@@ -1981,32 +1938,6 @@ class Processor(Iface, TProcessor):
             msg_type = TMessageType.EXCEPTION
             result = TApplicationException(TApplicationException.INTERNAL_ERROR, 'Internal error')
         oprot.writeMessageBegin("push_user_pay", msg_type, seqid)
-        result.write(oprot)
-        oprot.writeMessageEnd()
-        oprot.trans.flush()
-
-    def process_get_today_transformation(self, seqid, iprot, oprot):
-        args = get_today_transformation_args()
-        args.read(iprot)
-        iprot.readMessageEnd()
-        result = get_today_transformation_result()
-        try:
-            result.success = self._handler.get_today_transformation(args.company_name)
-            msg_type = TMessageType.REPLY
-        except TTransport.TTransportException:
-            raise
-        except gen_exp as e:
-            msg_type = TMessageType.REPLY
-            result.e = e
-        except TApplicationException as ex:
-            logging.exception('TApplication exception in handler')
-            msg_type = TMessageType.EXCEPTION
-            result = ex
-        except Exception:
-            logging.exception('Unexpected exception in handler')
-            msg_type = TMessageType.EXCEPTION
-            result = TApplicationException(TApplicationException.INTERNAL_ERROR, 'Internal error')
-        oprot.writeMessageBegin("get_today_transformation", msg_type, seqid)
         result.write(oprot)
         oprot.writeMessageEnd()
         oprot.trans.flush()
@@ -5840,150 +5771,6 @@ push_user_pay_result.thrift_spec = (
 )
 
 
-class get_today_transformation_args(object):
-    """
-    Attributes:
-     - company_name
-
-    """
-
-
-    def __init__(self, company_name=None,):
-        self.company_name = company_name
-
-    def read(self, iprot):
-        if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
-            iprot._fast_decode(self, iprot, [self.__class__, self.thrift_spec])
-            return
-        iprot.readStructBegin()
-        while True:
-            (fname, ftype, fid) = iprot.readFieldBegin()
-            if ftype == TType.STOP:
-                break
-            if fid == 1:
-                if ftype == TType.STRING:
-                    self.company_name = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
-                else:
-                    iprot.skip(ftype)
-            else:
-                iprot.skip(ftype)
-            iprot.readFieldEnd()
-        iprot.readStructEnd()
-
-    def write(self, oprot):
-        if oprot._fast_encode is not None and self.thrift_spec is not None:
-            oprot.trans.write(oprot._fast_encode(self, [self.__class__, self.thrift_spec]))
-            return
-        oprot.writeStructBegin('get_today_transformation_args')
-        if self.company_name is not None:
-            oprot.writeFieldBegin('company_name', TType.STRING, 1)
-            oprot.writeString(self.company_name.encode('utf-8') if sys.version_info[0] == 2 else self.company_name)
-            oprot.writeFieldEnd()
-        oprot.writeFieldStop()
-        oprot.writeStructEnd()
-
-    def validate(self):
-        return
-
-    def __repr__(self):
-        L = ['%s=%r' % (key, value)
-             for key, value in self.__dict__.items()]
-        return '%s(%s)' % (self.__class__.__name__, ', '.join(L))
-
-    def __eq__(self, other):
-        return isinstance(other, self.__class__) and self.__dict__ == other.__dict__
-
-    def __ne__(self, other):
-        return not (self == other)
-all_structs.append(get_today_transformation_args)
-get_today_transformation_args.thrift_spec = (
-    None,  # 0
-    (1, TType.STRING, 'company_name', 'UTF8', None, ),  # 1
-)
-
-
-class get_today_transformation_result(object):
-    """
-    Attributes:
-     - success
-     - e
-
-    """
-
-
-    def __init__(self, success=None, e=None,):
-        self.success = success
-        self.e = e
-
-    def read(self, iprot):
-        if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
-            iprot._fast_decode(self, iprot, [self.__class__, self.thrift_spec])
-            return
-        iprot.readStructBegin()
-        while True:
-            (fname, ftype, fid) = iprot.readFieldBegin()
-            if ftype == TType.STOP:
-                break
-            if fid == 0:
-                if ftype == TType.LIST:
-                    self.success = []
-                    (_etype150, _size147) = iprot.readListBegin()
-                    for _i151 in range(_size147):
-                        _elem152 = vichele_stuff_statistics()
-                        _elem152.read(iprot)
-                        self.success.append(_elem152)
-                    iprot.readListEnd()
-                else:
-                    iprot.skip(ftype)
-            elif fid == 1:
-                if ftype == TType.STRUCT:
-                    self.e = gen_exp.read(iprot)
-                else:
-                    iprot.skip(ftype)
-            else:
-                iprot.skip(ftype)
-            iprot.readFieldEnd()
-        iprot.readStructEnd()
-
-    def write(self, oprot):
-        if oprot._fast_encode is not None and self.thrift_spec is not None:
-            oprot.trans.write(oprot._fast_encode(self, [self.__class__, self.thrift_spec]))
-            return
-        oprot.writeStructBegin('get_today_transformation_result')
-        if self.success is not None:
-            oprot.writeFieldBegin('success', TType.LIST, 0)
-            oprot.writeListBegin(TType.STRUCT, len(self.success))
-            for iter153 in self.success:
-                iter153.write(oprot)
-            oprot.writeListEnd()
-            oprot.writeFieldEnd()
-        if self.e is not None:
-            oprot.writeFieldBegin('e', TType.STRUCT, 1)
-            self.e.write(oprot)
-            oprot.writeFieldEnd()
-        oprot.writeFieldStop()
-        oprot.writeStructEnd()
-
-    def validate(self):
-        return
-
-    def __repr__(self):
-        L = ['%s=%r' % (key, value)
-             for key, value in self.__dict__.items()]
-        return '%s(%s)' % (self.__class__.__name__, ', '.join(L))
-
-    def __eq__(self, other):
-        return isinstance(other, self.__class__) and self.__dict__ == other.__dict__
-
-    def __ne__(self, other):
-        return not (self == other)
-all_structs.append(get_today_transformation_result)
-get_today_transformation_result.thrift_spec = (
-    (0, TType.LIST, 'success', (TType.STRUCT, [vichele_stuff_statistics, None], False), None, ),  # 0
-    (1, TType.STRUCT, 'e', [gen_exp, None], None, ),  # 1
-)
-
-
 class get_count_by_status_args(object):
     """
     Attributes:
@@ -6161,10 +5948,10 @@ class cancel_vichele_from_plan_args(object):
             elif fid == 2:
                 if ftype == TType.LIST:
                     self.ids = []
-                    (_etype157, _size154) = iprot.readListBegin()
-                    for _i158 in range(_size154):
-                        _elem159 = iprot.readI64()
-                        self.ids.append(_elem159)
+                    (_etype150, _size147) = iprot.readListBegin()
+                    for _i151 in range(_size147):
+                        _elem152 = iprot.readI64()
+                        self.ids.append(_elem152)
                     iprot.readListEnd()
                 else:
                     iprot.skip(ftype)
@@ -6185,8 +5972,8 @@ class cancel_vichele_from_plan_args(object):
         if self.ids is not None:
             oprot.writeFieldBegin('ids', TType.LIST, 2)
             oprot.writeListBegin(TType.I64, len(self.ids))
-            for iter160 in self.ids:
-                oprot.writeI64(iter160)
+            for iter153 in self.ids:
+                oprot.writeI64(iter153)
             oprot.writeListEnd()
             oprot.writeFieldEnd()
         oprot.writeFieldStop()

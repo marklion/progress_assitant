@@ -209,9 +209,6 @@ public:
     int status = 0;
     std::string proxy_company;
     std::string conflict_reason;
-    std::string a_buy_company;
-    std::string a_buy_name;
-    std::string a_sale_company;
     int is_cancel = 0;
     pa_sql_plan() {
         add_parent_type<pa_sql_userinfo>("created_by");

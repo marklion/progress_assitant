@@ -3861,6 +3861,390 @@ void company_plan_brief::printTo(std::ostream& out) const {
 }
 
 
+api_extra_transformation::~api_extra_transformation() noexcept {
+}
+
+
+void api_extra_transformation::__set_driver_name(const std::string& val) {
+  this->driver_name = val;
+}
+
+void api_extra_transformation::__set_driver_phone(const std::string& val) {
+  this->driver_phone = val;
+}
+
+void api_extra_transformation::__set_driver_id(const std::string& val) {
+  this->driver_id = val;
+}
+std::ostream& operator<<(std::ostream& out, const api_extra_transformation& obj)
+{
+  obj.printTo(out);
+  return out;
+}
+
+
+uint32_t api_extra_transformation::read(::apache::thrift::protocol::TProtocol* iprot) {
+
+  ::apache::thrift::protocol::TInputRecursionTracker tracker(*iprot);
+  uint32_t xfer = 0;
+  std::string fname;
+  ::apache::thrift::protocol::TType ftype;
+  int16_t fid;
+
+  xfer += iprot->readStructBegin(fname);
+
+  using ::apache::thrift::protocol::TProtocolException;
+
+
+  while (true)
+  {
+    xfer += iprot->readFieldBegin(fname, ftype, fid);
+    if (ftype == ::apache::thrift::protocol::T_STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 1:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->driver_name);
+          this->__isset.driver_name = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 2:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->driver_phone);
+          this->__isset.driver_phone = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 3:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->driver_id);
+          this->__isset.driver_id = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      default:
+        xfer += iprot->skip(ftype);
+        break;
+    }
+    xfer += iprot->readFieldEnd();
+  }
+
+  xfer += iprot->readStructEnd();
+
+  return xfer;
+}
+
+uint32_t api_extra_transformation::write(::apache::thrift::protocol::TProtocol* oprot) const {
+  uint32_t xfer = 0;
+  ::apache::thrift::protocol::TOutputRecursionTracker tracker(*oprot);
+  xfer += oprot->writeStructBegin("api_extra_transformation");
+
+  xfer += oprot->writeFieldBegin("driver_name", ::apache::thrift::protocol::T_STRING, 1);
+  xfer += oprot->writeString(this->driver_name);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("driver_phone", ::apache::thrift::protocol::T_STRING, 2);
+  xfer += oprot->writeString(this->driver_phone);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("driver_id", ::apache::thrift::protocol::T_STRING, 3);
+  xfer += oprot->writeString(this->driver_id);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldStop();
+  xfer += oprot->writeStructEnd();
+  return xfer;
+}
+
+void swap(api_extra_transformation &a, api_extra_transformation &b) {
+  using ::std::swap;
+  swap(a.driver_name, b.driver_name);
+  swap(a.driver_phone, b.driver_phone);
+  swap(a.driver_id, b.driver_id);
+  swap(a.__isset, b.__isset);
+}
+
+api_extra_transformation::api_extra_transformation(const api_extra_transformation& other52) {
+  driver_name = other52.driver_name;
+  driver_phone = other52.driver_phone;
+  driver_id = other52.driver_id;
+  __isset = other52.__isset;
+}
+api_extra_transformation& api_extra_transformation::operator=(const api_extra_transformation& other53) {
+  driver_name = other53.driver_name;
+  driver_phone = other53.driver_phone;
+  driver_id = other53.driver_id;
+  __isset = other53.__isset;
+  return *this;
+}
+void api_extra_transformation::printTo(std::ostream& out) const {
+  using ::apache::thrift::to_string;
+  out << "api_extra_transformation(";
+  out << "driver_name=" << to_string(driver_name);
+  out << ", " << "driver_phone=" << to_string(driver_phone);
+  out << ", " << "driver_id=" << to_string(driver_id);
+  out << ")";
+}
+
+
+api_transformation_info::~api_transformation_info() noexcept {
+}
+
+
+void api_transformation_info::__set_id(const int64_t val) {
+  this->id = val;
+}
+
+void api_transformation_info::__set_main_vichele_number(const std::string& val) {
+  this->main_vichele_number = val;
+}
+
+void api_transformation_info::__set_behind_vichele_number(const std::string& val) {
+  this->behind_vichele_number = val;
+}
+
+void api_transformation_info::__set_stuff_name(const std::string& val) {
+  this->stuff_name = val;
+}
+
+void api_transformation_info::__set_enter_count(const double val) {
+  this->enter_count = val;
+}
+
+void api_transformation_info::__set_exit_count(const double val) {
+  this->exit_count = val;
+}
+
+void api_transformation_info::__set_company_name(const std::string& val) {
+  this->company_name = val;
+}
+
+void api_transformation_info::__set_extra_info(const api_extra_transformation& val) {
+  this->extra_info = val;
+}
+
+void api_transformation_info::__set_is_sale(const bool val) {
+  this->is_sale = val;
+}
+std::ostream& operator<<(std::ostream& out, const api_transformation_info& obj)
+{
+  obj.printTo(out);
+  return out;
+}
+
+
+uint32_t api_transformation_info::read(::apache::thrift::protocol::TProtocol* iprot) {
+
+  ::apache::thrift::protocol::TInputRecursionTracker tracker(*iprot);
+  uint32_t xfer = 0;
+  std::string fname;
+  ::apache::thrift::protocol::TType ftype;
+  int16_t fid;
+
+  xfer += iprot->readStructBegin(fname);
+
+  using ::apache::thrift::protocol::TProtocolException;
+
+
+  while (true)
+  {
+    xfer += iprot->readFieldBegin(fname, ftype, fid);
+    if (ftype == ::apache::thrift::protocol::T_STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 1:
+        if (ftype == ::apache::thrift::protocol::T_I64) {
+          xfer += iprot->readI64(this->id);
+          this->__isset.id = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 2:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->main_vichele_number);
+          this->__isset.main_vichele_number = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 3:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->behind_vichele_number);
+          this->__isset.behind_vichele_number = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 4:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->stuff_name);
+          this->__isset.stuff_name = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 5:
+        if (ftype == ::apache::thrift::protocol::T_DOUBLE) {
+          xfer += iprot->readDouble(this->enter_count);
+          this->__isset.enter_count = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 6:
+        if (ftype == ::apache::thrift::protocol::T_DOUBLE) {
+          xfer += iprot->readDouble(this->exit_count);
+          this->__isset.exit_count = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 7:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->company_name);
+          this->__isset.company_name = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 8:
+        if (ftype == ::apache::thrift::protocol::T_STRUCT) {
+          xfer += this->extra_info.read(iprot);
+          this->__isset.extra_info = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 9:
+        if (ftype == ::apache::thrift::protocol::T_BOOL) {
+          xfer += iprot->readBool(this->is_sale);
+          this->__isset.is_sale = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      default:
+        xfer += iprot->skip(ftype);
+        break;
+    }
+    xfer += iprot->readFieldEnd();
+  }
+
+  xfer += iprot->readStructEnd();
+
+  return xfer;
+}
+
+uint32_t api_transformation_info::write(::apache::thrift::protocol::TProtocol* oprot) const {
+  uint32_t xfer = 0;
+  ::apache::thrift::protocol::TOutputRecursionTracker tracker(*oprot);
+  xfer += oprot->writeStructBegin("api_transformation_info");
+
+  xfer += oprot->writeFieldBegin("id", ::apache::thrift::protocol::T_I64, 1);
+  xfer += oprot->writeI64(this->id);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("main_vichele_number", ::apache::thrift::protocol::T_STRING, 2);
+  xfer += oprot->writeString(this->main_vichele_number);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("behind_vichele_number", ::apache::thrift::protocol::T_STRING, 3);
+  xfer += oprot->writeString(this->behind_vichele_number);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("stuff_name", ::apache::thrift::protocol::T_STRING, 4);
+  xfer += oprot->writeString(this->stuff_name);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("enter_count", ::apache::thrift::protocol::T_DOUBLE, 5);
+  xfer += oprot->writeDouble(this->enter_count);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("exit_count", ::apache::thrift::protocol::T_DOUBLE, 6);
+  xfer += oprot->writeDouble(this->exit_count);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("company_name", ::apache::thrift::protocol::T_STRING, 7);
+  xfer += oprot->writeString(this->company_name);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("extra_info", ::apache::thrift::protocol::T_STRUCT, 8);
+  xfer += this->extra_info.write(oprot);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("is_sale", ::apache::thrift::protocol::T_BOOL, 9);
+  xfer += oprot->writeBool(this->is_sale);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldStop();
+  xfer += oprot->writeStructEnd();
+  return xfer;
+}
+
+void swap(api_transformation_info &a, api_transformation_info &b) {
+  using ::std::swap;
+  swap(a.id, b.id);
+  swap(a.main_vichele_number, b.main_vichele_number);
+  swap(a.behind_vichele_number, b.behind_vichele_number);
+  swap(a.stuff_name, b.stuff_name);
+  swap(a.enter_count, b.enter_count);
+  swap(a.exit_count, b.exit_count);
+  swap(a.company_name, b.company_name);
+  swap(a.extra_info, b.extra_info);
+  swap(a.is_sale, b.is_sale);
+  swap(a.__isset, b.__isset);
+}
+
+api_transformation_info::api_transformation_info(const api_transformation_info& other54) {
+  id = other54.id;
+  main_vichele_number = other54.main_vichele_number;
+  behind_vichele_number = other54.behind_vichele_number;
+  stuff_name = other54.stuff_name;
+  enter_count = other54.enter_count;
+  exit_count = other54.exit_count;
+  company_name = other54.company_name;
+  extra_info = other54.extra_info;
+  is_sale = other54.is_sale;
+  __isset = other54.__isset;
+}
+api_transformation_info& api_transformation_info::operator=(const api_transformation_info& other55) {
+  id = other55.id;
+  main_vichele_number = other55.main_vichele_number;
+  behind_vichele_number = other55.behind_vichele_number;
+  stuff_name = other55.stuff_name;
+  enter_count = other55.enter_count;
+  exit_count = other55.exit_count;
+  company_name = other55.company_name;
+  extra_info = other55.extra_info;
+  is_sale = other55.is_sale;
+  __isset = other55.__isset;
+  return *this;
+}
+void api_transformation_info::printTo(std::ostream& out) const {
+  using ::apache::thrift::to_string;
+  out << "api_transformation_info(";
+  out << "id=" << to_string(id);
+  out << ", " << "main_vichele_number=" << to_string(main_vichele_number);
+  out << ", " << "behind_vichele_number=" << to_string(behind_vichele_number);
+  out << ", " << "stuff_name=" << to_string(stuff_name);
+  out << ", " << "enter_count=" << to_string(enter_count);
+  out << ", " << "exit_count=" << to_string(exit_count);
+  out << ", " << "company_name=" << to_string(company_name);
+  out << ", " << "extra_info=" << to_string(extra_info);
+  out << ", " << "is_sale=" << to_string(is_sale);
+  out << ")";
+}
+
+
 vichele_stay_alone::~vichele_stay_alone() noexcept {
 }
 
@@ -4140,37 +4524,37 @@ void swap(vichele_stay_alone &a, vichele_stay_alone &b) {
   swap(a.__isset, b.__isset);
 }
 
-vichele_stay_alone::vichele_stay_alone(const vichele_stay_alone& other52) {
-  id = other52.id;
-  stuff_name = other52.stuff_name;
-  company_name = other52.company_name;
-  main_vichele_number = other52.main_vichele_number;
-  behind_vichele_number = other52.behind_vichele_number;
-  count = other52.count;
-  comment = other52.comment;
-  date = other52.date;
-  destination = other52.destination;
-  status = other52.status;
-  creator_name = other52.creator_name;
-  creator_phone = other52.creator_phone;
-  repeated = other52.repeated;
-  __isset = other52.__isset;
+vichele_stay_alone::vichele_stay_alone(const vichele_stay_alone& other56) {
+  id = other56.id;
+  stuff_name = other56.stuff_name;
+  company_name = other56.company_name;
+  main_vichele_number = other56.main_vichele_number;
+  behind_vichele_number = other56.behind_vichele_number;
+  count = other56.count;
+  comment = other56.comment;
+  date = other56.date;
+  destination = other56.destination;
+  status = other56.status;
+  creator_name = other56.creator_name;
+  creator_phone = other56.creator_phone;
+  repeated = other56.repeated;
+  __isset = other56.__isset;
 }
-vichele_stay_alone& vichele_stay_alone::operator=(const vichele_stay_alone& other53) {
-  id = other53.id;
-  stuff_name = other53.stuff_name;
-  company_name = other53.company_name;
-  main_vichele_number = other53.main_vichele_number;
-  behind_vichele_number = other53.behind_vichele_number;
-  count = other53.count;
-  comment = other53.comment;
-  date = other53.date;
-  destination = other53.destination;
-  status = other53.status;
-  creator_name = other53.creator_name;
-  creator_phone = other53.creator_phone;
-  repeated = other53.repeated;
-  __isset = other53.__isset;
+vichele_stay_alone& vichele_stay_alone::operator=(const vichele_stay_alone& other57) {
+  id = other57.id;
+  stuff_name = other57.stuff_name;
+  company_name = other57.company_name;
+  main_vichele_number = other57.main_vichele_number;
+  behind_vichele_number = other57.behind_vichele_number;
+  count = other57.count;
+  comment = other57.comment;
+  date = other57.date;
+  destination = other57.destination;
+  status = other57.status;
+  creator_name = other57.creator_name;
+  creator_phone = other57.creator_phone;
+  repeated = other57.repeated;
+  __isset = other57.__isset;
   return *this;
 }
 void vichele_stay_alone::printTo(std::ostream& out) const {
@@ -4285,15 +4669,15 @@ void swap(silent_user_info &a, silent_user_info &b) {
   swap(a.__isset, b.__isset);
 }
 
-silent_user_info::silent_user_info(const silent_user_info& other54) {
-  name = other54.name;
-  phone = other54.phone;
-  __isset = other54.__isset;
+silent_user_info::silent_user_info(const silent_user_info& other58) {
+  name = other58.name;
+  phone = other58.phone;
+  __isset = other58.__isset;
 }
-silent_user_info& silent_user_info::operator=(const silent_user_info& other55) {
-  name = other55.name;
-  phone = other55.phone;
-  __isset = other55.__isset;
+silent_user_info& silent_user_info::operator=(const silent_user_info& other59) {
+  name = other59.name;
+  phone = other59.phone;
+  __isset = other59.__isset;
   return *this;
 }
 void silent_user_info::printTo(std::ostream& out) const {

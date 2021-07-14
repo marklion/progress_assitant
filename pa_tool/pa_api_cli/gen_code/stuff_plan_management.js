@@ -3483,140 +3483,6 @@ stuff_plan_management_push_user_pay_result.prototype.write = function(output) {
   return;
 };
 
-var stuff_plan_management_get_today_transformation_args = function(args) {
-  this.company_name = null;
-  if (args) {
-    if (args.company_name !== undefined && args.company_name !== null) {
-      this.company_name = args.company_name;
-    }
-  }
-};
-stuff_plan_management_get_today_transformation_args.prototype = {};
-stuff_plan_management_get_today_transformation_args.prototype.read = function(input) {
-  input.readStructBegin();
-  while (true) {
-    var ret = input.readFieldBegin();
-    var ftype = ret.ftype;
-    var fid = ret.fid;
-    if (ftype == Thrift.Type.STOP) {
-      break;
-    }
-    switch (fid) {
-      case 1:
-      if (ftype == Thrift.Type.STRING) {
-        this.company_name = input.readString();
-      } else {
-        input.skip(ftype);
-      }
-      break;
-      case 0:
-        input.skip(ftype);
-        break;
-      default:
-        input.skip(ftype);
-    }
-    input.readFieldEnd();
-  }
-  input.readStructEnd();
-  return;
-};
-
-stuff_plan_management_get_today_transformation_args.prototype.write = function(output) {
-  output.writeStructBegin('stuff_plan_management_get_today_transformation_args');
-  if (this.company_name !== null && this.company_name !== undefined) {
-    output.writeFieldBegin('company_name', Thrift.Type.STRING, 1);
-    output.writeString(this.company_name);
-    output.writeFieldEnd();
-  }
-  output.writeFieldStop();
-  output.writeStructEnd();
-  return;
-};
-
-var stuff_plan_management_get_today_transformation_result = function(args) {
-  this.success = null;
-  this.e = null;
-  if (args instanceof ttypes.gen_exp) {
-    this.e = args;
-    return;
-  }
-  if (args) {
-    if (args.success !== undefined && args.success !== null) {
-      this.success = Thrift.copyList(args.success, [ttypes.vichele_stuff_statistics]);
-    }
-    if (args.e !== undefined && args.e !== null) {
-      this.e = args.e;
-    }
-  }
-};
-stuff_plan_management_get_today_transformation_result.prototype = {};
-stuff_plan_management_get_today_transformation_result.prototype.read = function(input) {
-  input.readStructBegin();
-  while (true) {
-    var ret = input.readFieldBegin();
-    var ftype = ret.ftype;
-    var fid = ret.fid;
-    if (ftype == Thrift.Type.STOP) {
-      break;
-    }
-    switch (fid) {
-      case 0:
-      if (ftype == Thrift.Type.LIST) {
-        this.success = [];
-        var _rtmp3106 = input.readListBegin();
-        var _size105 = _rtmp3106.size || 0;
-        for (var _i107 = 0; _i107 < _size105; ++_i107) {
-          var elem108 = null;
-          elem108 = new ttypes.vichele_stuff_statistics();
-          elem108.read(input);
-          this.success.push(elem108);
-        }
-        input.readListEnd();
-      } else {
-        input.skip(ftype);
-      }
-      break;
-      case 1:
-      if (ftype == Thrift.Type.STRUCT) {
-        this.e = new ttypes.gen_exp();
-        this.e.read(input);
-      } else {
-        input.skip(ftype);
-      }
-      break;
-      default:
-        input.skip(ftype);
-    }
-    input.readFieldEnd();
-  }
-  input.readStructEnd();
-  return;
-};
-
-stuff_plan_management_get_today_transformation_result.prototype.write = function(output) {
-  output.writeStructBegin('stuff_plan_management_get_today_transformation_result');
-  if (this.success !== null && this.success !== undefined) {
-    output.writeFieldBegin('success', Thrift.Type.LIST, 0);
-    output.writeListBegin(Thrift.Type.STRUCT, this.success.length);
-    for (var iter109 in this.success) {
-      if (this.success.hasOwnProperty(iter109)) {
-        iter109 = this.success[iter109];
-        iter109.write(output);
-      }
-    }
-    output.writeListEnd();
-    output.writeFieldEnd();
-  }
-  if (this.e !== null && this.e !== undefined) {
-    output.writeFieldBegin('e', Thrift.Type.STRUCT, 1);
-    this.e.write(output);
-    output.writeFieldEnd();
-  }
-  output.writeFieldStop();
-  output.writeStructEnd();
-  return;
-};
-
 var stuff_plan_management_get_count_by_status_args = function(args) {
   this.ssid = null;
   this.status = null;
@@ -3781,12 +3647,12 @@ stuff_plan_management_cancel_vichele_from_plan_args.prototype.read = function(in
       case 2:
       if (ftype == Thrift.Type.LIST) {
         this.ids = [];
-        var _rtmp3111 = input.readListBegin();
-        var _size110 = _rtmp3111.size || 0;
-        for (var _i112 = 0; _i112 < _size110; ++_i112) {
-          var elem113 = null;
-          elem113 = input.readI64();
-          this.ids.push(elem113);
+        var _rtmp3106 = input.readListBegin();
+        var _size105 = _rtmp3106.size || 0;
+        for (var _i107 = 0; _i107 < _size105; ++_i107) {
+          var elem108 = null;
+          elem108 = input.readI64();
+          this.ids.push(elem108);
         }
         input.readListEnd();
       } else {
@@ -3812,10 +3678,10 @@ stuff_plan_management_cancel_vichele_from_plan_args.prototype.write = function(o
   if (this.ids !== null && this.ids !== undefined) {
     output.writeFieldBegin('ids', Thrift.Type.LIST, 2);
     output.writeListBegin(Thrift.Type.I64, this.ids.length);
-    for (var iter114 in this.ids) {
-      if (this.ids.hasOwnProperty(iter114)) {
-        iter114 = this.ids[iter114];
-        output.writeI64(iter114);
+    for (var iter109 in this.ids) {
+      if (this.ids.hasOwnProperty(iter109)) {
+        iter109 = this.ids[iter109];
+        output.writeI64(iter109);
       }
     }
     output.writeListEnd();
@@ -5476,68 +5342,6 @@ stuff_plan_managementClient.prototype.recv_push_user_pay = function(input,mtype,
   return callback('push_user_pay failed: unknown result');
 };
 
-stuff_plan_managementClient.prototype.get_today_transformation = function(company_name, callback) {
-  this._seqid = this.new_seqid();
-  if (callback === undefined) {
-    var _defer = Q.defer();
-    this._reqs[this.seqid()] = function(error, result) {
-      if (error) {
-        _defer.reject(error);
-      } else {
-        _defer.resolve(result);
-      }
-    };
-    this.send_get_today_transformation(company_name);
-    return _defer.promise;
-  } else {
-    this._reqs[this.seqid()] = callback;
-    this.send_get_today_transformation(company_name);
-  }
-};
-
-stuff_plan_managementClient.prototype.send_get_today_transformation = function(company_name) {
-  var output = new this.pClass(this.output);
-  var params = {
-    company_name: company_name
-  };
-  var args = new stuff_plan_management_get_today_transformation_args(params);
-  try {
-    output.writeMessageBegin('get_today_transformation', Thrift.MessageType.CALL, this.seqid());
-    args.write(output);
-    output.writeMessageEnd();
-    return this.output.flush();
-  }
-  catch (e) {
-    delete this._reqs[this.seqid()];
-    if (typeof output.reset === 'function') {
-      output.reset();
-    }
-    throw e;
-  }
-};
-
-stuff_plan_managementClient.prototype.recv_get_today_transformation = function(input,mtype,rseqid) {
-  var callback = this._reqs[rseqid] || function() {};
-  delete this._reqs[rseqid];
-  if (mtype == Thrift.MessageType.EXCEPTION) {
-    var x = new Thrift.TApplicationException();
-    x.read(input);
-    input.readMessageEnd();
-    return callback(x);
-  }
-  var result = new stuff_plan_management_get_today_transformation_result();
-  result.read(input);
-  input.readMessageEnd();
-
-  if (null !== result.e) {
-    return callback(result.e);
-  }
-  if (null !== result.success) {
-    return callback(null, result.success);
-  }
-  return callback('get_today_transformation failed: unknown result');
-};
-
 stuff_plan_managementClient.prototype.get_count_by_status = function(ssid, status, callback) {
   this._seqid = this.new_seqid();
   if (callback === undefined) {
@@ -6750,48 +6554,6 @@ stuff_plan_managementProcessor.prototype.process_push_user_pay = function(seqid,
       } else {
         result_obj = new Thrift.TApplicationException(Thrift.TApplicationExceptionType.UNKNOWN, err.message);
         output.writeMessageBegin("push_user_pay", Thrift.MessageType.EXCEPTION, seqid);
-      }
-      result_obj.write(output);
-      output.writeMessageEnd();
-      output.flush();
-    });
-  }
-};
-stuff_plan_managementProcessor.prototype.process_get_today_transformation = function(seqid, input, output) {
-  var args = new stuff_plan_management_get_today_transformation_args();
-  args.read(input);
-  input.readMessageEnd();
-  if (this._handler.get_today_transformation.length === 1) {
-    Q.fcall(this._handler.get_today_transformation.bind(this._handler),
-      args.company_name
-    ).then(function(result) {
-      var result_obj = new stuff_plan_management_get_today_transformation_result({success: result});
-      output.writeMessageBegin("get_today_transformation", Thrift.MessageType.REPLY, seqid);
-      result_obj.write(output);
-      output.writeMessageEnd();
-      output.flush();
-    }).catch(function (err) {
-      var result;
-      if (err instanceof ttypes.gen_exp) {
-        result = new stuff_plan_management_get_today_transformation_result(err);
-        output.writeMessageBegin("get_today_transformation", Thrift.MessageType.REPLY, seqid);
-      } else {
-        result = new Thrift.TApplicationException(Thrift.TApplicationExceptionType.UNKNOWN, err.message);
-        output.writeMessageBegin("get_today_transformation", Thrift.MessageType.EXCEPTION, seqid);
-      }
-      result.write(output);
-      output.writeMessageEnd();
-      output.flush();
-    });
-  } else {
-    this._handler.get_today_transformation(args.company_name, function (err, result) {
-      var result_obj;
-      if ((err === null || typeof err === 'undefined') || err instanceof ttypes.gen_exp) {
-        result_obj = new stuff_plan_management_get_today_transformation_result((err !== null || typeof err === 'undefined') ? err : {success: result});
-        output.writeMessageBegin("get_today_transformation", Thrift.MessageType.REPLY, seqid);
-      } else {
-        result_obj = new Thrift.TApplicationException(Thrift.TApplicationExceptionType.UNKNOWN, err.message);
-        output.writeMessageBegin("get_today_transformation", Thrift.MessageType.EXCEPTION, seqid);
       }
       result_obj.write(output);
       output.writeMessageEnd();
