@@ -1255,65 +1255,6 @@ public:
         return true;
     }
 
-    virtual void get_today_transformation(std::vector<vichele_stuff_statistics> &_return, const std::string &company_name)
-    {
-        auto company = sqlite_orm::search_record<pa_sql_company>("name == '%s'", company_name.c_str());
-        if (!company)
-        {
-            PA_RETURN_NOCOMPANY_MSG();
-        }
-        auto saled_stuff = company->get_all_children<pa_sql_stuff_info>("belong_company");
-        for (auto &itr : saled_stuff)
-        {
-            auto current_time = PA_DATAOPT_current_time();
-            auto date_only = current_time.substr(0, 10);
-            auto related_plans = itr.get_all_children<pa_sql_plan>("belong_stuff", "plan_time LIKE '%s%%' AND status > 1 AND is_cancel == 0", date_only.c_str());
-            for (auto &single_plan : related_plans)
-            {
-                std::string buyer_company;
-                if (single_plan.proxy_company.length() > 0)
-                {
-                    buyer_company = single_plan.proxy_company;
-                }
-                else
-                {
-                    auto created_user = single_plan.get_parent<pa_sql_userinfo>("created_by");
-                    if (created_user)
-                    {
-                        auto created_user_company = created_user->get_parent<pa_sql_company>("belong_company");
-                        if (created_user_company)
-                        {
-                            buyer_company = created_user_company->name;
-                        }
-                    }
-                }
-                auto related_vichele_info = single_plan.get_all_children<pa_sql_single_vichele>("belong_plan");
-                for (auto &vichele : related_vichele_info)
-                {
-                    vichele_statistics tmp_vichele;
-                    auto main_vichele = vichele.get_parent<pa_sql_vichele>("main_vichele");
-                    auto behind_vichele = vichele.get_parent<pa_sql_vichele_behind>("behind_vichele");
-                    auto driver = vichele.get_parent<pa_sql_driver>("driver");
-                    if (main_vichele && behind_vichele && driver)
-                    {
-                        tmp_vichele.behind_vichele = behind_vichele->number;
-                        tmp_vichele.company = buyer_company;
-                        tmp_vichele.delivered = vichele.finish == 0 ? false : true;
-                        tmp_vichele.driver_name = driver->name;
-                        tmp_vichele.driver_phone = driver->phone;
-                        tmp_vichele.main_vichele = main_vichele->number;
-                        tmp_vichele.plan_id = single_plan.get_pri_id();
-                        tmp_vichele.plan_order = std::to_string(single_plan.create_time) + std::to_string(single_plan.get_pri_id());
-                        vichele_stuff_statistics tmp;
-                        tmp.vichele = tmp_vichele;
-                        tmp.stuff_name = single_plan.name;
-                        _return.push_back(tmp);
-                    }
-                }
-            }
-        }
-    }
-
     virtual int64_t get_count_by_status(const std::string &ssid, const int64_t status)
     {
         auto plans = PA_RPC_get_all_plans_related_by_user(ssid, "status == %ld", status);

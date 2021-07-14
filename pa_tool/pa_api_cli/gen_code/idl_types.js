@@ -2477,6 +2477,261 @@ company_plan_brief.prototype.write = function(output) {
   return;
 };
 
+var api_extra_transformation = module.exports.api_extra_transformation = function(args) {
+  this.driver_name = null;
+  this.driver_phone = null;
+  this.driver_id = null;
+  if (args) {
+    if (args.driver_name !== undefined && args.driver_name !== null) {
+      this.driver_name = args.driver_name;
+    }
+    if (args.driver_phone !== undefined && args.driver_phone !== null) {
+      this.driver_phone = args.driver_phone;
+    }
+    if (args.driver_id !== undefined && args.driver_id !== null) {
+      this.driver_id = args.driver_id;
+    }
+  }
+};
+api_extra_transformation.prototype = {};
+api_extra_transformation.prototype.read = function(input) {
+  input.readStructBegin();
+  while (true) {
+    var ret = input.readFieldBegin();
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    switch (fid) {
+      case 1:
+      if (ftype == Thrift.Type.STRING) {
+        this.driver_name = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 2:
+      if (ftype == Thrift.Type.STRING) {
+        this.driver_phone = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 3:
+      if (ftype == Thrift.Type.STRING) {
+        this.driver_id = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      default:
+        input.skip(ftype);
+    }
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+api_extra_transformation.prototype.write = function(output) {
+  output.writeStructBegin('api_extra_transformation');
+  if (this.driver_name !== null && this.driver_name !== undefined) {
+    output.writeFieldBegin('driver_name', Thrift.Type.STRING, 1);
+    output.writeString(this.driver_name);
+    output.writeFieldEnd();
+  }
+  if (this.driver_phone !== null && this.driver_phone !== undefined) {
+    output.writeFieldBegin('driver_phone', Thrift.Type.STRING, 2);
+    output.writeString(this.driver_phone);
+    output.writeFieldEnd();
+  }
+  if (this.driver_id !== null && this.driver_id !== undefined) {
+    output.writeFieldBegin('driver_id', Thrift.Type.STRING, 3);
+    output.writeString(this.driver_id);
+    output.writeFieldEnd();
+  }
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+
+var api_transformation_info = module.exports.api_transformation_info = function(args) {
+  this.id = null;
+  this.main_vichele_number = null;
+  this.behind_vichele_number = null;
+  this.stuff_name = null;
+  this.enter_count = null;
+  this.exit_count = null;
+  this.company_name = null;
+  this.extra_info = null;
+  this.is_sale = null;
+  if (args) {
+    if (args.id !== undefined && args.id !== null) {
+      this.id = args.id;
+    }
+    if (args.main_vichele_number !== undefined && args.main_vichele_number !== null) {
+      this.main_vichele_number = args.main_vichele_number;
+    }
+    if (args.behind_vichele_number !== undefined && args.behind_vichele_number !== null) {
+      this.behind_vichele_number = args.behind_vichele_number;
+    }
+    if (args.stuff_name !== undefined && args.stuff_name !== null) {
+      this.stuff_name = args.stuff_name;
+    }
+    if (args.enter_count !== undefined && args.enter_count !== null) {
+      this.enter_count = args.enter_count;
+    }
+    if (args.exit_count !== undefined && args.exit_count !== null) {
+      this.exit_count = args.exit_count;
+    }
+    if (args.company_name !== undefined && args.company_name !== null) {
+      this.company_name = args.company_name;
+    }
+    if (args.extra_info !== undefined && args.extra_info !== null) {
+      this.extra_info = new ttypes.api_extra_transformation(args.extra_info);
+    }
+    if (args.is_sale !== undefined && args.is_sale !== null) {
+      this.is_sale = args.is_sale;
+    }
+  }
+};
+api_transformation_info.prototype = {};
+api_transformation_info.prototype.read = function(input) {
+  input.readStructBegin();
+  while (true) {
+    var ret = input.readFieldBegin();
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    switch (fid) {
+      case 1:
+      if (ftype == Thrift.Type.I64) {
+        this.id = input.readI64();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 2:
+      if (ftype == Thrift.Type.STRING) {
+        this.main_vichele_number = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 3:
+      if (ftype == Thrift.Type.STRING) {
+        this.behind_vichele_number = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 4:
+      if (ftype == Thrift.Type.STRING) {
+        this.stuff_name = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 5:
+      if (ftype == Thrift.Type.DOUBLE) {
+        this.enter_count = input.readDouble();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 6:
+      if (ftype == Thrift.Type.DOUBLE) {
+        this.exit_count = input.readDouble();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 7:
+      if (ftype == Thrift.Type.STRING) {
+        this.company_name = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 8:
+      if (ftype == Thrift.Type.STRUCT) {
+        this.extra_info = new ttypes.api_extra_transformation();
+        this.extra_info.read(input);
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 9:
+      if (ftype == Thrift.Type.BOOL) {
+        this.is_sale = input.readBool();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      default:
+        input.skip(ftype);
+    }
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+api_transformation_info.prototype.write = function(output) {
+  output.writeStructBegin('api_transformation_info');
+  if (this.id !== null && this.id !== undefined) {
+    output.writeFieldBegin('id', Thrift.Type.I64, 1);
+    output.writeI64(this.id);
+    output.writeFieldEnd();
+  }
+  if (this.main_vichele_number !== null && this.main_vichele_number !== undefined) {
+    output.writeFieldBegin('main_vichele_number', Thrift.Type.STRING, 2);
+    output.writeString(this.main_vichele_number);
+    output.writeFieldEnd();
+  }
+  if (this.behind_vichele_number !== null && this.behind_vichele_number !== undefined) {
+    output.writeFieldBegin('behind_vichele_number', Thrift.Type.STRING, 3);
+    output.writeString(this.behind_vichele_number);
+    output.writeFieldEnd();
+  }
+  if (this.stuff_name !== null && this.stuff_name !== undefined) {
+    output.writeFieldBegin('stuff_name', Thrift.Type.STRING, 4);
+    output.writeString(this.stuff_name);
+    output.writeFieldEnd();
+  }
+  if (this.enter_count !== null && this.enter_count !== undefined) {
+    output.writeFieldBegin('enter_count', Thrift.Type.DOUBLE, 5);
+    output.writeDouble(this.enter_count);
+    output.writeFieldEnd();
+  }
+  if (this.exit_count !== null && this.exit_count !== undefined) {
+    output.writeFieldBegin('exit_count', Thrift.Type.DOUBLE, 6);
+    output.writeDouble(this.exit_count);
+    output.writeFieldEnd();
+  }
+  if (this.company_name !== null && this.company_name !== undefined) {
+    output.writeFieldBegin('company_name', Thrift.Type.STRING, 7);
+    output.writeString(this.company_name);
+    output.writeFieldEnd();
+  }
+  if (this.extra_info !== null && this.extra_info !== undefined) {
+    output.writeFieldBegin('extra_info', Thrift.Type.STRUCT, 8);
+    this.extra_info.write(output);
+    output.writeFieldEnd();
+  }
+  if (this.is_sale !== null && this.is_sale !== undefined) {
+    output.writeFieldBegin('is_sale', Thrift.Type.BOOL, 9);
+    output.writeBool(this.is_sale);
+    output.writeFieldEnd();
+  }
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+
 var vichele_stay_alone = module.exports.vichele_stay_alone = function(args) {
   this.id = null;
   this.stuff_name = null;
