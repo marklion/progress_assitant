@@ -41,7 +41,7 @@
         </van-tab>
         <van-tab title="历史申请">
             <van-list ref="all_record" v-model="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
-                <div v-for="(item,index) in created_apply" :key="index" class="one_record_show">
+                <div v-for="(item,index) in created_apply" :key="index" class="one_record_show" :id="item.id" ref="single_record" :class="{highlight_record:$route.query.pos == item.id}">
                     <van-cell center :label="item.stuff_name + '(' + item.destination + ')'">
                         <template #title>
                             <div>{{item.main_vichele_number}}</div>
@@ -220,6 +220,17 @@ export default {
             created_apply: [],
         };
     },
+    watch: {
+        loading: function (_loading) {
+            var vue_this = this;
+            if (!_loading && vue_this.$route.query.pos) {
+                this.$nextTick(() => {
+                    vue_this.$refs.single_record[vue_this.$route.query.pos].scrollIntoView();
+                });
+
+            }
+        },
+    },
     methods: {
         delete_vichele: function (_item) {
             var vue_this = this;
@@ -354,6 +365,10 @@ export default {
     },
     beforeMount: function () {
         var vue_this = this;
+
+        if (this.$route.query.pos) {
+            vue_this.active = 1;
+        }
         if (vue_this.$route.query.code) {
             vue_this.login();
         } else {
@@ -367,6 +382,7 @@ export default {
             });
         }
     },
+
 }
 </script>
 
@@ -393,5 +409,9 @@ export default {
     margin-bottom: 10px;
     padding-top: 3px;
     padding-bottom: 6px;
+}
+
+.highlight_record {
+    border: 1px solid red;
 }
 </style>
