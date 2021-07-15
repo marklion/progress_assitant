@@ -27,6 +27,7 @@ class open_api_managementIf {
   virtual bool unregister_api_user(const std::string& email, const std::string& password) = 0;
   virtual void get_token(std::string& _return, const std::string& email, const std::string& password) = 0;
   virtual void get_today_transformation(std::vector<api_transformation_info> & _return, const std::string& token) = 0;
+  virtual bool push_exit_count(const int64_t id, const double count, const bool is_sale, const std::string& token) = 0;
 };
 
 class open_api_managementIfFactory {
@@ -73,6 +74,10 @@ class open_api_managementNull : virtual public open_api_managementIf {
   }
   void get_today_transformation(std::vector<api_transformation_info> & /* _return */, const std::string& /* token */) {
     return;
+  }
+  bool push_exit_count(const int64_t /* id */, const double /* count */, const bool /* is_sale */, const std::string& /* token */) {
+    bool _return = false;
+    return _return;
   }
 };
 
@@ -671,6 +676,139 @@ class open_api_management_get_today_transformation_presult {
 
 };
 
+typedef struct _open_api_management_push_exit_count_args__isset {
+  _open_api_management_push_exit_count_args__isset() : id(false), count(false), is_sale(false), token(false) {}
+  bool id :1;
+  bool count :1;
+  bool is_sale :1;
+  bool token :1;
+} _open_api_management_push_exit_count_args__isset;
+
+class open_api_management_push_exit_count_args {
+ public:
+
+  open_api_management_push_exit_count_args(const open_api_management_push_exit_count_args&);
+  open_api_management_push_exit_count_args& operator=(const open_api_management_push_exit_count_args&);
+  open_api_management_push_exit_count_args() : id(0), count(0), is_sale(0), token() {
+  }
+
+  virtual ~open_api_management_push_exit_count_args() noexcept;
+  int64_t id;
+  double count;
+  bool is_sale;
+  std::string token;
+
+  _open_api_management_push_exit_count_args__isset __isset;
+
+  void __set_id(const int64_t val);
+
+  void __set_count(const double val);
+
+  void __set_is_sale(const bool val);
+
+  void __set_token(const std::string& val);
+
+  bool operator == (const open_api_management_push_exit_count_args & rhs) const
+  {
+    if (!(id == rhs.id))
+      return false;
+    if (!(count == rhs.count))
+      return false;
+    if (!(is_sale == rhs.is_sale))
+      return false;
+    if (!(token == rhs.token))
+      return false;
+    return true;
+  }
+  bool operator != (const open_api_management_push_exit_count_args &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const open_api_management_push_exit_count_args & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+
+class open_api_management_push_exit_count_pargs {
+ public:
+
+
+  virtual ~open_api_management_push_exit_count_pargs() noexcept;
+  const int64_t* id;
+  const double* count;
+  const bool* is_sale;
+  const std::string* token;
+
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _open_api_management_push_exit_count_result__isset {
+  _open_api_management_push_exit_count_result__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _open_api_management_push_exit_count_result__isset;
+
+class open_api_management_push_exit_count_result {
+ public:
+
+  open_api_management_push_exit_count_result(const open_api_management_push_exit_count_result&);
+  open_api_management_push_exit_count_result& operator=(const open_api_management_push_exit_count_result&);
+  open_api_management_push_exit_count_result() : success(0) {
+  }
+
+  virtual ~open_api_management_push_exit_count_result() noexcept;
+  bool success;
+  gen_exp e;
+
+  _open_api_management_push_exit_count_result__isset __isset;
+
+  void __set_success(const bool val);
+
+  void __set_e(const gen_exp& val);
+
+  bool operator == (const open_api_management_push_exit_count_result & rhs) const
+  {
+    if (!(success == rhs.success))
+      return false;
+    if (!(e == rhs.e))
+      return false;
+    return true;
+  }
+  bool operator != (const open_api_management_push_exit_count_result &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const open_api_management_push_exit_count_result & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _open_api_management_push_exit_count_presult__isset {
+  _open_api_management_push_exit_count_presult__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _open_api_management_push_exit_count_presult__isset;
+
+class open_api_management_push_exit_count_presult {
+ public:
+
+
+  virtual ~open_api_management_push_exit_count_presult() noexcept;
+  bool* success;
+  gen_exp e;
+
+  _open_api_management_push_exit_count_presult__isset __isset;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+
+};
+
 class open_api_managementClient : virtual public open_api_managementIf {
  public:
   open_api_managementClient(std::shared_ptr< ::apache::thrift::protocol::TProtocol> prot) {
@@ -711,6 +849,9 @@ class open_api_managementClient : virtual public open_api_managementIf {
   void get_today_transformation(std::vector<api_transformation_info> & _return, const std::string& token);
   void send_get_today_transformation(const std::string& token);
   void recv_get_today_transformation(std::vector<api_transformation_info> & _return);
+  bool push_exit_count(const int64_t id, const double count, const bool is_sale, const std::string& token);
+  void send_push_exit_count(const int64_t id, const double count, const bool is_sale, const std::string& token);
+  bool recv_push_exit_count();
  protected:
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> piprot_;
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> poprot_;
@@ -731,6 +872,7 @@ class open_api_managementProcessor : public ::apache::thrift::TDispatchProcessor
   void process_unregister_api_user(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
   void process_get_token(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
   void process_get_today_transformation(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
+  void process_push_exit_count(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
  public:
   open_api_managementProcessor(::std::shared_ptr<open_api_managementIf> iface) :
     iface_(iface) {
@@ -739,6 +881,7 @@ class open_api_managementProcessor : public ::apache::thrift::TDispatchProcessor
     processMap_["unregister_api_user"] = &open_api_managementProcessor::process_unregister_api_user;
     processMap_["get_token"] = &open_api_managementProcessor::process_get_token;
     processMap_["get_today_transformation"] = &open_api_managementProcessor::process_get_today_transformation;
+    processMap_["push_exit_count"] = &open_api_managementProcessor::process_push_exit_count;
   }
 
   virtual ~open_api_managementProcessor() {}
@@ -814,6 +957,15 @@ class open_api_managementMultiface : virtual public open_api_managementIf {
     return;
   }
 
+  bool push_exit_count(const int64_t id, const double count, const bool is_sale, const std::string& token) {
+    size_t sz = ifaces_.size();
+    size_t i = 0;
+    for (; i < (sz - 1); ++i) {
+      ifaces_[i]->push_exit_count(id, count, is_sale, token);
+    }
+    return ifaces_[i]->push_exit_count(id, count, is_sale, token);
+  }
+
 };
 
 // The 'concurrent' client is a thread safe client that correctly handles
@@ -861,6 +1013,9 @@ class open_api_managementConcurrentClient : virtual public open_api_managementIf
   void get_today_transformation(std::vector<api_transformation_info> & _return, const std::string& token);
   int32_t send_get_today_transformation(const std::string& token);
   void recv_get_today_transformation(std::vector<api_transformation_info> & _return, const int32_t seqid);
+  bool push_exit_count(const int64_t id, const double count, const bool is_sale, const std::string& token);
+  int32_t send_push_exit_count(const int64_t id, const double count, const bool is_sale, const std::string& token);
+  bool recv_push_exit_count(const int32_t seqid);
  protected:
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> piprot_;
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> poprot_;

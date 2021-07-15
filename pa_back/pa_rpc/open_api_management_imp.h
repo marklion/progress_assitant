@@ -4,6 +4,7 @@
 #include "../gen_code/open_api_management.h"
 #include "../pa_util/pa_data_base.h"
 #include "../pa_util/pa_utils.h"
+#include "stuff_plan_management_imp.h"
 
 #define OPEN_API_MSG_NOCOMPANY "company does not exist"
 #define OPEN_API_MSG_USER_ALREADY_EXIST "user already exists"
@@ -13,6 +14,8 @@
 #define OPEN_API_MSG_WRONG_IDENTITY "user name or password was incorrect"
 #define OPEN_API_MSG_USER_NEED_VERIFY "user should be verified first"
 #define OPEN_API_MSG_BLOCK_EMAIL "email is not in white list, please ask admin for more help"
+#define OPEN_API_MSG_VICHELE_NOT_EXIST "vehicle specificed was not exist"
+#define OPEN_API_MSG_NO_PERMISSION "no permission to do this operation"
 
 class open_api_management_handler : public open_api_managementIf
 {
@@ -194,7 +197,7 @@ public:
                     }
                 }
 
-                auto sale_vicheles = itr.get_all_children<pa_sql_single_vichele>("belong_plan");
+                auto sale_vicheles = itr.get_all_children<pa_sql_single_vichele>("belong_plan", "finish == 0");
                 for (auto &itr:sale_vicheles)
                 {
                     api_transformation_info tmp;
@@ -236,6 +239,60 @@ public:
             tmp.stuff_name = itr.stuff_name;
             _return.push_back(tmp);
         }
+    }
+
+    virtual bool push_exit_count(const int64_t id, const double count, const bool is_sale, const std::string& token)
+    {
+        bool ret = false;
+        log_audit_basedon_token(token, __FUNCTION__);
+
+        if (is_sale)
+        {
+            auto single_vichele = sqlite_orm::search_record<pa_sql_single_vichele>("PRI_ID == %ld AND finish == 0", id);
+            if (!single_vichele)
+            {
+                PA_RETURN_MSG(OPEN_API_MSG_VICHELE_NOT_EXIST);
+            }
+            auto plan = single_vichele->get_parent<pa_sql_plan>("belong_plan");
+            if (!plan)
+            {
+                PA_RETURN_MSG(OPEN_API_MSG_VICHELE_NOT_EXIST);
+            }
+            bool has_permission = false;
+            auto stuff_info = plan->get_parent<pa_sql_stuff_info>("belong_stuff");
+            if (stuff_info)
+            {
+                auto target_company = stuff_info->get_parent<pa_sql_company>("belong_company");
+                auto api_user = sqlite_orm::search_record<pa_sql_api_user>("token == '%s'", token.c_str());
+                if (api_user)
+                {
+                    auto api_user_company = api_user->get_parent<pa_sql_company>("belong_company");
+                    if (api_user_company && target_company && api_user_company->get_pri_id() == target_company->get_pri_id())
+                    {
+                        has_permission = true;
+                    }
+                }
+            }
+
+            if (has_permission)
+            {
+                deliver_info tmp;
+                tmp.count = count;
+                tmp.id = id;
+                std::vector<deliver_info> tmp_list;
+                tmp_list.push_back(tmp);
+
+                stuff_plan_management_handler sp_handler;
+                ret = sp_handler.pri_confirm_deliver(plan->get_pri_id(), *get_sysadmin_user(), tmp_list, "");
+            }
+            else
+            {
+                PA_RETURN_MSG(OPEN_API_MSG_NO_PERMISSION);
+            }
+            
+        }
+
+        return ret;
     }
 };
 

@@ -11,3 +11,5 @@ COPY mutool /bin/
 RUN pip3 install werobot
 RUN pip3 install thrift 
 RUN  apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y nodejs
+RUN  apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y npm 
+RUN npm install -g pm2
