@@ -166,7 +166,45 @@ static void send_msg_to_wechat(const std::string &_touser, const std::string &_t
     auto ret = PA_DATAOPT_rest_post(uni_msg_url, to_wechat.ToString());
     g_log.log("recv from wechat:%s", ret.c_str());
 }
+static void send_pub_msg_to_wechat(const std::string &_touser, const std::string &_tmp_id, const std::string &_first, const std::vector<std::string> &_keywords, const std::string &_remark, const std::string &_url = "/")
+{
+    std::string acc_tok = g_acc_tok.get_content();
 
+    neb::CJsonObject to_wechat;
+    to_wechat.Add("access_token", acc_tok);
+    to_wechat.Add("touser", _touser);
+
+    neb::CJsonObject template_msg;
+    template_msg.Add("appid","wxa390f8b6f68e9c6d");
+    template_msg.Add("template_id", _tmp_id);
+    template_msg.Add("url", "https://www.d8sis.cn/pa_web" + _url);
+
+    neb::CJsonObject msg_data;
+    neb::CJsonObject data_value;
+
+    data_value.Add("value", _first);
+    msg_data.Add("first", data_value);
+
+    int key_index = 1;
+    for (auto &itr:_keywords)
+    {
+        data_value.Replace("value", itr);
+        msg_data.Add("keyword" + std::to_string(key_index++), data_value);
+    }
+
+    data_value.Replace("value", _remark);
+    msg_data.Add("remark", data_value);
+
+    template_msg.Add("data", msg_data);
+
+    to_wechat.Add("mp_template_msg", template_msg);
+
+    std::string uni_msg_url = "https://api.weixin.qq.com/cgi-bin/message/wxopen/template/uniform_send?access_token=" + acc_tok;
+    g_log.log("msg ready to send is :%s", to_wechat.ToFormattedString().c_str());
+
+    auto ret = PA_DATAOPT_rest_post(uni_msg_url, to_wechat.ToString());
+    g_log.log("recv from wechat:%s", ret.c_str());
+}
 void PA_WECHAT_send_plan_msg(pa_sql_userinfo &_touser, pa_sql_plan &_plan, const std::string &_remark)
 {
     std::string created_name = "无";
@@ -260,7 +298,7 @@ void PA_WECHAT_send_extra_vichele_msg(pa_sql_vichele_stay_alone &_vichele_info, 
     keywords.push_back(creator_name);
     keywords.push_back(_vichele_info.main_vichele_number + " " + _vichele_info.behind_vichele_number);
 
-    std::string url = "/extra_vichele";
+    std::string url = "/extra_vichele?pos=" + std::to_string(_vichele_info.get_pri_id());
     auto dest_company = _vichele_info.get_parent<pa_sql_company>("destination");
     if (dest_company)
     {
@@ -270,6 +308,12 @@ void PA_WECHAT_send_extra_vichele_msg(pa_sql_vichele_stay_alone &_vichele_info, 
             url = "/company_extra_vichele";
         }
     }
-
-    send_msg_to_wechat(_open_id, "sakeNcUuIkHlvhCyatN6Y_i6Ogaf82SrbZVqczw-FEE", "进厂车辆信息", keywords, _remark, url);
+    if (silent_user && silent_user->open_id == _open_id)
+    {
+        send_pub_msg_to_wechat(_open_id, "sakeNcUuIkHlvhCyatN6Y_i6Ogaf82SrbZVqczw-FEE", "进厂车辆信息", keywords, _remark, url);
+    }
+    else
+    {
+        send_msg_to_wechat(_open_id, "sakeNcUuIkHlvhCyatN6Y_i6Ogaf82SrbZVqczw-FEE", "进厂车辆信息", keywords, _remark, url);
+    }
 }
