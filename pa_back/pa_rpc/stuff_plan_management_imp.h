@@ -451,16 +451,21 @@ public:
 
         return ret;
     }
-
+    
     virtual bool confirm_deliver(const int64_t plan_id, const std::string &ssid, const std::vector<deliver_info> &deliver_infos, const std::string &reason)
+    {
+        auto opt_user = PA_DATAOPT_get_online_user(ssid);
+        return pri_confirm_deliver(plan_id, *opt_user, deliver_infos, reason);
+    }
+
+    bool pri_confirm_deliver(const int64_t plan_id, pa_sql_userinfo &opt_user, const std::vector<deliver_info> &deliver_infos, const std::string &reason)
     {
         bool ret = false;
         sqlite_orm_lock a;
 
-        auto opt_user = PA_DATAOPT_get_online_user(ssid);
         auto plan = sqlite_orm::search_record<pa_sql_plan>(plan_id);
         auto current_time = PA_DATAOPT_current_time();
-        if (plan && opt_user && plan->status == 3 && PA_STATUS_RULE_can_be_change(*plan, *opt_user, 4))
+        if (plan && plan->status == 3 && PA_STATUS_RULE_can_be_change(*plan, opt_user, 4))
         {
             for (auto &itr : deliver_infos)
             {
@@ -477,10 +482,10 @@ public:
             auto total_count = plan->get_all_children<pa_sql_single_vichele>("belong_plan").size();
             auto deliver_count = plan->get_all_children<pa_sql_single_vichele>("belong_plan", "finish = 1").size();
 
-            ret = PA_STATUS_RULE_action(*plan, *opt_user, PA_DATAOPT_current_time(), "已出货" + std::to_string(deliver_count) + "车/共" + std::to_string(total_count) + "车");
+            ret = PA_STATUS_RULE_action(*plan, opt_user, PA_DATAOPT_current_time(), "已出货" + std::to_string(deliver_count) + "车/共" + std::to_string(total_count) + "车");
             if (deliver_count == total_count)
             {
-                ret &= PA_STATUS_RULE_change_status(*plan, *opt_user);
+                ret &= PA_STATUS_RULE_change_status(*plan, opt_user);
                 ret &= PA_STATUS_RULE_action(*plan, *get_sysadmin_user(), PA_DATAOPT_current_time(), "全部出货，自动归档");
                 pa_sql_archive_plan archive_plan;
                 archive_plan.translate_from_plan(*plan);
@@ -489,8 +494,8 @@ public:
             }
             else if (reason.length() > 0)
             {
-                ret &= PA_STATUS_RULE_change_status(*plan, *opt_user);
-                ret &= PA_STATUS_RULE_action(*plan, *opt_user, PA_DATAOPT_current_time(), reason);
+                ret &= PA_STATUS_RULE_change_status(*plan, opt_user);
+                ret &= PA_STATUS_RULE_action(*plan, opt_user, PA_DATAOPT_current_time(), reason);
                 pa_sql_archive_plan archive_plan;
                 archive_plan.translate_from_plan(*plan);
                 plan->set_parent(archive_plan, "archived");
@@ -498,7 +503,7 @@ public:
             }
             if (ret)
             {
-                plan->send_wechat_msg(*opt_user, "更新，已出货" + std::to_string(deliver_count) + "车/共" + std::to_string(total_count) + "车");
+                plan->send_wechat_msg(opt_user, "更新，已出货" + std::to_string(deliver_count) + "车/共" + std::to_string(total_count) + "车");
             }
         }
         else

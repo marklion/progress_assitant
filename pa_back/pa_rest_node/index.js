@@ -36,8 +36,9 @@ app.get('/pa_rest/today_transformation', async (req, res) => {
         ret.err_msg = "";
         ret.transformation = [];
         transformation.forEach(element => {
+            var id_string = parseInt(element.id);
             ret.transformation.push({
-                id: parseInt(element.id),
+                id: id_string + (element.is_sale?'S':'B'),
                 mv: element.main_vichele_number,
                 bv: element.behind_vichele_number,
                 stuff_name: element.stuff_name,
@@ -51,6 +52,24 @@ app.get('/pa_rest/today_transformation', async (req, res) => {
                 is_sale: element.is_sale,
             });
         });
+    } catch (error) {
+        ret = { err_msg: error.msg };
+    }
+    res.send(ret);
+});
+
+app.get('/pa_rest/push_count/:id', async (req, res) => {
+    var id = req.params.id;
+    var token = req.query.token;
+    var count = parseFloat(req.query.count);
+    var ret = { err_msg: '无权限' };
+    var real_id = parseInt(id);
+    var is_sale = id[id.length - 1] == 'S' ? true : false;
+    try {
+        var resp = await request_rpc("open_api_management", 'push_exit_count', [real_id, count, is_sale, token]);
+        if (resp) {
+            ret.err_msg = "";
+        }
     } catch (error) {
         ret = { err_msg: error.msg };
     }
