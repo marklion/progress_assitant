@@ -16,9 +16,12 @@
 
 class open_api_management_handler : public open_api_managementIf
 {
+    tdf_log m_log;
 public:
+    open_api_management_handler():m_log("api_audit", "/log/audit.log", "/log/audit.log") {}
     virtual bool register_api_user(const std::string &company_name, const std::string &email, const std::string &password)
     {
+        m_log.log("new email:%s register for %s", email.c_str(), company_name.c_str());
         bool ret = false;
         auto company = sqlite_orm::search_record<pa_sql_company>("name == '%s'", company_name.c_str());
         if (!company)
@@ -61,6 +64,7 @@ public:
             if (0 == system(send_mail_cmd.c_str()))
             {
                 ret = true;
+                m_log.log("send verify code %s to email %s", tmp.verify_code.c_str(), email.c_str());
             }
             else
             {
@@ -73,6 +77,7 @@ public:
     virtual bool verify_email_code(const std::string &email, const std::string &code)
     {
         bool ret = false;
+        m_log.log("api user %s try to verify code %s",email.c_str(),code.c_str());
 
         auto api_user = sqlite_orm::search_record<pa_sql_api_user>("email = '%s'", email.c_str());
         if (!api_user)
@@ -93,6 +98,7 @@ public:
                     api_user->verify_code = "";
                     api_user->code_expire = 0;
                     ret = api_user->update_record();
+                    m_log.log("api user %s finish verifying code %s",email.c_str(),code.c_str());
                 }
             }
             else
@@ -107,6 +113,7 @@ public:
     virtual bool unregister_api_user(const std::string &email, const std::string &password)
     {
         bool ret = false;
+        m_log.log("api user %s unregister", email.c_str());
         auto api_user = sqlite_orm::search_record<pa_sql_api_user>("email = '%s'", email.c_str());
         if (api_user && api_user->password_md5 == password)
         {
@@ -124,6 +131,7 @@ public:
 
     virtual void get_token(std::string &_return, const std::string &email, const std::string &password)
     {
+        m_log.log("api user %s try to get token", email.c_str());
         auto api_user = sqlite_orm::search_record<pa_sql_api_user>("email = '%s' AND password_md5 = '%s'", email.c_str(), password.c_str());
         if (!api_user)
         {
@@ -138,8 +146,26 @@ public:
         _return = api_user->token;
     }
 
+    void log_audit_basedon_token(const std::string &_token, const char *_function_name)
+    {
+        auto api_user = sqlite_orm::search_record<pa_sql_api_user>("token == '%s'", _token.c_str());
+        if (!api_user)
+        {
+            m_log.log("some one use invalid token:%s to call %s", _token.c_str(), _function_name);
+            PA_RETURN_MSG(OPEN_API_MSG_USER_NOT_EXIST);
+        }
+        auto company = api_user->get_parent<pa_sql_company>("belong_company");
+        if (!company)
+        {
+            m_log.log("api user %s has not bind to company when calling %s", api_user->email.c_str(), _function_name);
+            PA_RETURN_MSG(OPEN_API_MSG_NOCOMPANY);
+        }
+        m_log.log("api user %s call %s for %s", api_user->email.c_str(), _function_name, company->name.c_str());
+    }
+
     virtual void get_today_transformation(std::vector<api_transformation_info> &_return, const std::string &token)
     {
+        log_audit_basedon_token(token, __FUNCTION__);
         auto api_user = sqlite_orm::search_record<pa_sql_api_user>("token == '%s'", token.c_str());
         if (!api_user)
         {
