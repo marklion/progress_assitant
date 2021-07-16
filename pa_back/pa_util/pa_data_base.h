@@ -566,8 +566,23 @@ public:
     {
         return "vichele_stay_alone_table";
     }
+};
 
+class pa_sql_company_follow:public sql_tree_base {
+public:
+    pa_sql_company_follow() {
+        add_parent_type<pa_sql_company>("follower");
+        add_parent_type<pa_sql_stuff_info>("follow_stuff");
+    }
 
+    virtual std::vector<sqlite_orm_column> self_columns_defined() { 
+        return std::vector<sqlite_orm_column>();
+    }
+
+    virtual std::string table_name()
+    {
+        return "company_follow_table";
+    }
 };
 
 

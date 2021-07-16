@@ -68,6 +68,11 @@ public:
         {
             PA_RETURN_NOPRIVA_MSG();
         }
+        
+        if (proxy_company.length() <= 0 && false == PA_RPC_has_follow_stuff(ssid, stuff_type->get_pri_id()))
+        {
+            PA_RETURN_NOPRIVA_MSG();
+        }
 
         if (false == company_can_work_now(*sale_company))
         {
@@ -294,6 +299,12 @@ public:
         {
             PA_RETURN_SALE_CLOSE();
         }
+
+        if (plan_in_sql->proxy_company.length() <= 0 && false == PA_RPC_has_follow_stuff(ssid, stuff_info->get_pri_id()))
+        {
+            PA_RETURN_NOPRIVA_MSG();
+        }
+
         auto company = opt_user->get_parent<pa_sql_company>("belong_company");
         if (!company)
         {

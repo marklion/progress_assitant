@@ -142,8 +142,13 @@ service company_management {
 }
 
 service stuff_info {
-    list<stuff_detail> get_today() throws (1:gen_exp e),
-    stuff_detail get_stuff_detail(1:i64 type_id) throws (1:gen_exp e),
+    list<stuff_detail> get_today(1:string ssid) throws (1:gen_exp e),
+    list<stuff_detail> get_today_unfollow(1:string ssid) throws (1:gen_exp e),
+    stuff_detail get_stuff_detail(1:i64 type_id, 2:string ssid) throws (1:gen_exp e),
+    bool add_company_follow_stuff(1:string company_name, 2:i64 type_id, 3:string ssid) throws (1:gen_exp e),
+    bool cancle_company_follow_stuff(1:string company_name, 2:i64 type_id, 3:string ssid) throws (1:gen_exp e),
+    list<stuff_detail> get_follow_stuff_by_company(1:string company_name) throws (1:gen_exp e),
+    list<string> get_follow_company_by_stuff(1:i64 type_id, 2:string ssid) throws (1:gen_exp e),
 }
 
 struct plan_confirm_info {

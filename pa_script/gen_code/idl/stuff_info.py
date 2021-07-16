@@ -19,13 +19,64 @@ all_structs = []
 
 
 class Iface(object):
-    def get_today(self):
+    def get_today(self, ssid):
+        """
+        Parameters:
+         - ssid
+
+        """
         pass
 
-    def get_stuff_detail(self, type_id):
+    def get_today_unfollow(self, ssid):
+        """
+        Parameters:
+         - ssid
+
+        """
+        pass
+
+    def get_stuff_detail(self, type_id, ssid):
         """
         Parameters:
          - type_id
+         - ssid
+
+        """
+        pass
+
+    def add_company_follow_stuff(self, company_name, type_id, ssid):
+        """
+        Parameters:
+         - company_name
+         - type_id
+         - ssid
+
+        """
+        pass
+
+    def cancle_company_follow_stuff(self, company_name, type_id, ssid):
+        """
+        Parameters:
+         - company_name
+         - type_id
+         - ssid
+
+        """
+        pass
+
+    def get_follow_stuff_by_company(self, company_name):
+        """
+        Parameters:
+         - company_name
+
+        """
+        pass
+
+    def get_follow_company_by_stuff(self, type_id, ssid):
+        """
+        Parameters:
+         - type_id
+         - ssid
 
         """
         pass
@@ -38,13 +89,19 @@ class Client(Iface):
             self._oprot = oprot
         self._seqid = 0
 
-    def get_today(self):
-        self.send_get_today()
+    def get_today(self, ssid):
+        """
+        Parameters:
+         - ssid
+
+        """
+        self.send_get_today(ssid)
         return self.recv_get_today()
 
-    def send_get_today(self):
+    def send_get_today(self, ssid):
         self._oprot.writeMessageBegin('get_today', TMessageType.CALL, self._seqid)
         args = get_today_args()
+        args.ssid = ssid
         args.write(self._oprot)
         self._oprot.writeMessageEnd()
         self._oprot.trans.flush()
@@ -66,19 +123,55 @@ class Client(Iface):
             raise result.e
         raise TApplicationException(TApplicationException.MISSING_RESULT, "get_today failed: unknown result")
 
-    def get_stuff_detail(self, type_id):
+    def get_today_unfollow(self, ssid):
+        """
+        Parameters:
+         - ssid
+
+        """
+        self.send_get_today_unfollow(ssid)
+        return self.recv_get_today_unfollow()
+
+    def send_get_today_unfollow(self, ssid):
+        self._oprot.writeMessageBegin('get_today_unfollow', TMessageType.CALL, self._seqid)
+        args = get_today_unfollow_args()
+        args.ssid = ssid
+        args.write(self._oprot)
+        self._oprot.writeMessageEnd()
+        self._oprot.trans.flush()
+
+    def recv_get_today_unfollow(self):
+        iprot = self._iprot
+        (fname, mtype, rseqid) = iprot.readMessageBegin()
+        if mtype == TMessageType.EXCEPTION:
+            x = TApplicationException()
+            x.read(iprot)
+            iprot.readMessageEnd()
+            raise x
+        result = get_today_unfollow_result()
+        result.read(iprot)
+        iprot.readMessageEnd()
+        if result.success is not None:
+            return result.success
+        if result.e is not None:
+            raise result.e
+        raise TApplicationException(TApplicationException.MISSING_RESULT, "get_today_unfollow failed: unknown result")
+
+    def get_stuff_detail(self, type_id, ssid):
         """
         Parameters:
          - type_id
+         - ssid
 
         """
-        self.send_get_stuff_detail(type_id)
+        self.send_get_stuff_detail(type_id, ssid)
         return self.recv_get_stuff_detail()
 
-    def send_get_stuff_detail(self, type_id):
+    def send_get_stuff_detail(self, type_id, ssid):
         self._oprot.writeMessageBegin('get_stuff_detail', TMessageType.CALL, self._seqid)
         args = get_stuff_detail_args()
         args.type_id = type_id
+        args.ssid = ssid
         args.write(self._oprot)
         self._oprot.writeMessageEnd()
         self._oprot.trans.flush()
@@ -100,13 +193,164 @@ class Client(Iface):
             raise result.e
         raise TApplicationException(TApplicationException.MISSING_RESULT, "get_stuff_detail failed: unknown result")
 
+    def add_company_follow_stuff(self, company_name, type_id, ssid):
+        """
+        Parameters:
+         - company_name
+         - type_id
+         - ssid
+
+        """
+        self.send_add_company_follow_stuff(company_name, type_id, ssid)
+        return self.recv_add_company_follow_stuff()
+
+    def send_add_company_follow_stuff(self, company_name, type_id, ssid):
+        self._oprot.writeMessageBegin('add_company_follow_stuff', TMessageType.CALL, self._seqid)
+        args = add_company_follow_stuff_args()
+        args.company_name = company_name
+        args.type_id = type_id
+        args.ssid = ssid
+        args.write(self._oprot)
+        self._oprot.writeMessageEnd()
+        self._oprot.trans.flush()
+
+    def recv_add_company_follow_stuff(self):
+        iprot = self._iprot
+        (fname, mtype, rseqid) = iprot.readMessageBegin()
+        if mtype == TMessageType.EXCEPTION:
+            x = TApplicationException()
+            x.read(iprot)
+            iprot.readMessageEnd()
+            raise x
+        result = add_company_follow_stuff_result()
+        result.read(iprot)
+        iprot.readMessageEnd()
+        if result.success is not None:
+            return result.success
+        if result.e is not None:
+            raise result.e
+        raise TApplicationException(TApplicationException.MISSING_RESULT, "add_company_follow_stuff failed: unknown result")
+
+    def cancle_company_follow_stuff(self, company_name, type_id, ssid):
+        """
+        Parameters:
+         - company_name
+         - type_id
+         - ssid
+
+        """
+        self.send_cancle_company_follow_stuff(company_name, type_id, ssid)
+        return self.recv_cancle_company_follow_stuff()
+
+    def send_cancle_company_follow_stuff(self, company_name, type_id, ssid):
+        self._oprot.writeMessageBegin('cancle_company_follow_stuff', TMessageType.CALL, self._seqid)
+        args = cancle_company_follow_stuff_args()
+        args.company_name = company_name
+        args.type_id = type_id
+        args.ssid = ssid
+        args.write(self._oprot)
+        self._oprot.writeMessageEnd()
+        self._oprot.trans.flush()
+
+    def recv_cancle_company_follow_stuff(self):
+        iprot = self._iprot
+        (fname, mtype, rseqid) = iprot.readMessageBegin()
+        if mtype == TMessageType.EXCEPTION:
+            x = TApplicationException()
+            x.read(iprot)
+            iprot.readMessageEnd()
+            raise x
+        result = cancle_company_follow_stuff_result()
+        result.read(iprot)
+        iprot.readMessageEnd()
+        if result.success is not None:
+            return result.success
+        if result.e is not None:
+            raise result.e
+        raise TApplicationException(TApplicationException.MISSING_RESULT, "cancle_company_follow_stuff failed: unknown result")
+
+    def get_follow_stuff_by_company(self, company_name):
+        """
+        Parameters:
+         - company_name
+
+        """
+        self.send_get_follow_stuff_by_company(company_name)
+        return self.recv_get_follow_stuff_by_company()
+
+    def send_get_follow_stuff_by_company(self, company_name):
+        self._oprot.writeMessageBegin('get_follow_stuff_by_company', TMessageType.CALL, self._seqid)
+        args = get_follow_stuff_by_company_args()
+        args.company_name = company_name
+        args.write(self._oprot)
+        self._oprot.writeMessageEnd()
+        self._oprot.trans.flush()
+
+    def recv_get_follow_stuff_by_company(self):
+        iprot = self._iprot
+        (fname, mtype, rseqid) = iprot.readMessageBegin()
+        if mtype == TMessageType.EXCEPTION:
+            x = TApplicationException()
+            x.read(iprot)
+            iprot.readMessageEnd()
+            raise x
+        result = get_follow_stuff_by_company_result()
+        result.read(iprot)
+        iprot.readMessageEnd()
+        if result.success is not None:
+            return result.success
+        if result.e is not None:
+            raise result.e
+        raise TApplicationException(TApplicationException.MISSING_RESULT, "get_follow_stuff_by_company failed: unknown result")
+
+    def get_follow_company_by_stuff(self, type_id, ssid):
+        """
+        Parameters:
+         - type_id
+         - ssid
+
+        """
+        self.send_get_follow_company_by_stuff(type_id, ssid)
+        return self.recv_get_follow_company_by_stuff()
+
+    def send_get_follow_company_by_stuff(self, type_id, ssid):
+        self._oprot.writeMessageBegin('get_follow_company_by_stuff', TMessageType.CALL, self._seqid)
+        args = get_follow_company_by_stuff_args()
+        args.type_id = type_id
+        args.ssid = ssid
+        args.write(self._oprot)
+        self._oprot.writeMessageEnd()
+        self._oprot.trans.flush()
+
+    def recv_get_follow_company_by_stuff(self):
+        iprot = self._iprot
+        (fname, mtype, rseqid) = iprot.readMessageBegin()
+        if mtype == TMessageType.EXCEPTION:
+            x = TApplicationException()
+            x.read(iprot)
+            iprot.readMessageEnd()
+            raise x
+        result = get_follow_company_by_stuff_result()
+        result.read(iprot)
+        iprot.readMessageEnd()
+        if result.success is not None:
+            return result.success
+        if result.e is not None:
+            raise result.e
+        raise TApplicationException(TApplicationException.MISSING_RESULT, "get_follow_company_by_stuff failed: unknown result")
+
 
 class Processor(Iface, TProcessor):
     def __init__(self, handler):
         self._handler = handler
         self._processMap = {}
         self._processMap["get_today"] = Processor.process_get_today
+        self._processMap["get_today_unfollow"] = Processor.process_get_today_unfollow
         self._processMap["get_stuff_detail"] = Processor.process_get_stuff_detail
+        self._processMap["add_company_follow_stuff"] = Processor.process_add_company_follow_stuff
+        self._processMap["cancle_company_follow_stuff"] = Processor.process_cancle_company_follow_stuff
+        self._processMap["get_follow_stuff_by_company"] = Processor.process_get_follow_stuff_by_company
+        self._processMap["get_follow_company_by_stuff"] = Processor.process_get_follow_company_by_stuff
         self._on_message_begin = None
 
     def on_message_begin(self, func):
@@ -135,7 +379,7 @@ class Processor(Iface, TProcessor):
         iprot.readMessageEnd()
         result = get_today_result()
         try:
-            result.success = self._handler.get_today()
+            result.success = self._handler.get_today(args.ssid)
             msg_type = TMessageType.REPLY
         except TTransport.TTransportException:
             raise
@@ -155,13 +399,39 @@ class Processor(Iface, TProcessor):
         oprot.writeMessageEnd()
         oprot.trans.flush()
 
+    def process_get_today_unfollow(self, seqid, iprot, oprot):
+        args = get_today_unfollow_args()
+        args.read(iprot)
+        iprot.readMessageEnd()
+        result = get_today_unfollow_result()
+        try:
+            result.success = self._handler.get_today_unfollow(args.ssid)
+            msg_type = TMessageType.REPLY
+        except TTransport.TTransportException:
+            raise
+        except gen_exp as e:
+            msg_type = TMessageType.REPLY
+            result.e = e
+        except TApplicationException as ex:
+            logging.exception('TApplication exception in handler')
+            msg_type = TMessageType.EXCEPTION
+            result = ex
+        except Exception:
+            logging.exception('Unexpected exception in handler')
+            msg_type = TMessageType.EXCEPTION
+            result = TApplicationException(TApplicationException.INTERNAL_ERROR, 'Internal error')
+        oprot.writeMessageBegin("get_today_unfollow", msg_type, seqid)
+        result.write(oprot)
+        oprot.writeMessageEnd()
+        oprot.trans.flush()
+
     def process_get_stuff_detail(self, seqid, iprot, oprot):
         args = get_stuff_detail_args()
         args.read(iprot)
         iprot.readMessageEnd()
         result = get_stuff_detail_result()
         try:
-            result.success = self._handler.get_stuff_detail(args.type_id)
+            result.success = self._handler.get_stuff_detail(args.type_id, args.ssid)
             msg_type = TMessageType.REPLY
         except TTransport.TTransportException:
             raise
@@ -181,11 +451,123 @@ class Processor(Iface, TProcessor):
         oprot.writeMessageEnd()
         oprot.trans.flush()
 
+    def process_add_company_follow_stuff(self, seqid, iprot, oprot):
+        args = add_company_follow_stuff_args()
+        args.read(iprot)
+        iprot.readMessageEnd()
+        result = add_company_follow_stuff_result()
+        try:
+            result.success = self._handler.add_company_follow_stuff(args.company_name, args.type_id, args.ssid)
+            msg_type = TMessageType.REPLY
+        except TTransport.TTransportException:
+            raise
+        except gen_exp as e:
+            msg_type = TMessageType.REPLY
+            result.e = e
+        except TApplicationException as ex:
+            logging.exception('TApplication exception in handler')
+            msg_type = TMessageType.EXCEPTION
+            result = ex
+        except Exception:
+            logging.exception('Unexpected exception in handler')
+            msg_type = TMessageType.EXCEPTION
+            result = TApplicationException(TApplicationException.INTERNAL_ERROR, 'Internal error')
+        oprot.writeMessageBegin("add_company_follow_stuff", msg_type, seqid)
+        result.write(oprot)
+        oprot.writeMessageEnd()
+        oprot.trans.flush()
+
+    def process_cancle_company_follow_stuff(self, seqid, iprot, oprot):
+        args = cancle_company_follow_stuff_args()
+        args.read(iprot)
+        iprot.readMessageEnd()
+        result = cancle_company_follow_stuff_result()
+        try:
+            result.success = self._handler.cancle_company_follow_stuff(args.company_name, args.type_id, args.ssid)
+            msg_type = TMessageType.REPLY
+        except TTransport.TTransportException:
+            raise
+        except gen_exp as e:
+            msg_type = TMessageType.REPLY
+            result.e = e
+        except TApplicationException as ex:
+            logging.exception('TApplication exception in handler')
+            msg_type = TMessageType.EXCEPTION
+            result = ex
+        except Exception:
+            logging.exception('Unexpected exception in handler')
+            msg_type = TMessageType.EXCEPTION
+            result = TApplicationException(TApplicationException.INTERNAL_ERROR, 'Internal error')
+        oprot.writeMessageBegin("cancle_company_follow_stuff", msg_type, seqid)
+        result.write(oprot)
+        oprot.writeMessageEnd()
+        oprot.trans.flush()
+
+    def process_get_follow_stuff_by_company(self, seqid, iprot, oprot):
+        args = get_follow_stuff_by_company_args()
+        args.read(iprot)
+        iprot.readMessageEnd()
+        result = get_follow_stuff_by_company_result()
+        try:
+            result.success = self._handler.get_follow_stuff_by_company(args.company_name)
+            msg_type = TMessageType.REPLY
+        except TTransport.TTransportException:
+            raise
+        except gen_exp as e:
+            msg_type = TMessageType.REPLY
+            result.e = e
+        except TApplicationException as ex:
+            logging.exception('TApplication exception in handler')
+            msg_type = TMessageType.EXCEPTION
+            result = ex
+        except Exception:
+            logging.exception('Unexpected exception in handler')
+            msg_type = TMessageType.EXCEPTION
+            result = TApplicationException(TApplicationException.INTERNAL_ERROR, 'Internal error')
+        oprot.writeMessageBegin("get_follow_stuff_by_company", msg_type, seqid)
+        result.write(oprot)
+        oprot.writeMessageEnd()
+        oprot.trans.flush()
+
+    def process_get_follow_company_by_stuff(self, seqid, iprot, oprot):
+        args = get_follow_company_by_stuff_args()
+        args.read(iprot)
+        iprot.readMessageEnd()
+        result = get_follow_company_by_stuff_result()
+        try:
+            result.success = self._handler.get_follow_company_by_stuff(args.type_id, args.ssid)
+            msg_type = TMessageType.REPLY
+        except TTransport.TTransportException:
+            raise
+        except gen_exp as e:
+            msg_type = TMessageType.REPLY
+            result.e = e
+        except TApplicationException as ex:
+            logging.exception('TApplication exception in handler')
+            msg_type = TMessageType.EXCEPTION
+            result = ex
+        except Exception:
+            logging.exception('Unexpected exception in handler')
+            msg_type = TMessageType.EXCEPTION
+            result = TApplicationException(TApplicationException.INTERNAL_ERROR, 'Internal error')
+        oprot.writeMessageBegin("get_follow_company_by_stuff", msg_type, seqid)
+        result.write(oprot)
+        oprot.writeMessageEnd()
+        oprot.trans.flush()
+
 # HELPER FUNCTIONS AND STRUCTURES
 
 
 class get_today_args(object):
+    """
+    Attributes:
+     - ssid
 
+    """
+
+
+    def __init__(self, ssid=None,):
+        self.ssid = ssid
 
     def read(self, iprot):
         if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
@@ -196,6 +578,11 @@ class get_today_args(object):
             (fname, ftype, fid) = iprot.readFieldBegin()
             if ftype == TType.STOP:
                 break
+            if fid == 1:
+                if ftype == TType.STRING:
+                    self.ssid = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
             else:
                 iprot.skip(ftype)
             iprot.readFieldEnd()
@@ -206,6 +593,10 @@ class get_today_args(object):
             oprot.trans.write(oprot._fast_encode(self, [self.__class__, self.thrift_spec]))
             return
         oprot.writeStructBegin('get_today_args')
+        if self.ssid is not None:
+            oprot.writeFieldBegin('ssid', TType.STRING, 1)
+            oprot.writeString(self.ssid.encode('utf-8') if sys.version_info[0] == 2 else self.ssid)
+            oprot.writeFieldEnd()
         oprot.writeFieldStop()
         oprot.writeStructEnd()
 
@@ -224,6 +615,8 @@ class get_today_args(object):
         return not (self == other)
 all_structs.append(get_today_args)
 get_today_args.thrift_spec = (
+    None,  # 0
+    (1, TType.STRING, 'ssid', 'UTF8', None, ),  # 1
 )
 
 
@@ -309,16 +702,162 @@ get_today_result.thrift_spec = (
 )
 
 
+class get_today_unfollow_args(object):
+    """
+    Attributes:
+     - ssid
+
+    """
+
+
+    def __init__(self, ssid=None,):
+        self.ssid = ssid
+
+    def read(self, iprot):
+        if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
+            iprot._fast_decode(self, iprot, [self.__class__, self.thrift_spec])
+            return
+        iprot.readStructBegin()
+        while True:
+            (fname, ftype, fid) = iprot.readFieldBegin()
+            if ftype == TType.STOP:
+                break
+            if fid == 1:
+                if ftype == TType.STRING:
+                    self.ssid = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
+            else:
+                iprot.skip(ftype)
+            iprot.readFieldEnd()
+        iprot.readStructEnd()
+
+    def write(self, oprot):
+        if oprot._fast_encode is not None and self.thrift_spec is not None:
+            oprot.trans.write(oprot._fast_encode(self, [self.__class__, self.thrift_spec]))
+            return
+        oprot.writeStructBegin('get_today_unfollow_args')
+        if self.ssid is not None:
+            oprot.writeFieldBegin('ssid', TType.STRING, 1)
+            oprot.writeString(self.ssid.encode('utf-8') if sys.version_info[0] == 2 else self.ssid)
+            oprot.writeFieldEnd()
+        oprot.writeFieldStop()
+        oprot.writeStructEnd()
+
+    def validate(self):
+        return
+
+    def __repr__(self):
+        L = ['%s=%r' % (key, value)
+             for key, value in self.__dict__.items()]
+        return '%s(%s)' % (self.__class__.__name__, ', '.join(L))
+
+    def __eq__(self, other):
+        return isinstance(other, self.__class__) and self.__dict__ == other.__dict__
+
+    def __ne__(self, other):
+        return not (self == other)
+all_structs.append(get_today_unfollow_args)
+get_today_unfollow_args.thrift_spec = (
+    None,  # 0
+    (1, TType.STRING, 'ssid', 'UTF8', None, ),  # 1
+)
+
+
+class get_today_unfollow_result(object):
+    """
+    Attributes:
+     - success
+     - e
+
+    """
+
+
+    def __init__(self, success=None, e=None,):
+        self.success = success
+        self.e = e
+
+    def read(self, iprot):
+        if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
+            iprot._fast_decode(self, iprot, [self.__class__, self.thrift_spec])
+            return
+        iprot.readStructBegin()
+        while True:
+            (fname, ftype, fid) = iprot.readFieldBegin()
+            if ftype == TType.STOP:
+                break
+            if fid == 0:
+                if ftype == TType.LIST:
+                    self.success = []
+                    (_etype80, _size77) = iprot.readListBegin()
+                    for _i81 in range(_size77):
+                        _elem82 = stuff_detail()
+                        _elem82.read(iprot)
+                        self.success.append(_elem82)
+                    iprot.readListEnd()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 1:
+                if ftype == TType.STRUCT:
+                    self.e = gen_exp.read(iprot)
+                else:
+                    iprot.skip(ftype)
+            else:
+                iprot.skip(ftype)
+            iprot.readFieldEnd()
+        iprot.readStructEnd()
+
+    def write(self, oprot):
+        if oprot._fast_encode is not None and self.thrift_spec is not None:
+            oprot.trans.write(oprot._fast_encode(self, [self.__class__, self.thrift_spec]))
+            return
+        oprot.writeStructBegin('get_today_unfollow_result')
+        if self.success is not None:
+            oprot.writeFieldBegin('success', TType.LIST, 0)
+            oprot.writeListBegin(TType.STRUCT, len(self.success))
+            for iter83 in self.success:
+                iter83.write(oprot)
+            oprot.writeListEnd()
+            oprot.writeFieldEnd()
+        if self.e is not None:
+            oprot.writeFieldBegin('e', TType.STRUCT, 1)
+            self.e.write(oprot)
+            oprot.writeFieldEnd()
+        oprot.writeFieldStop()
+        oprot.writeStructEnd()
+
+    def validate(self):
+        return
+
+    def __repr__(self):
+        L = ['%s=%r' % (key, value)
+             for key, value in self.__dict__.items()]
+        return '%s(%s)' % (self.__class__.__name__, ', '.join(L))
+
+    def __eq__(self, other):
+        return isinstance(other, self.__class__) and self.__dict__ == other.__dict__
+
+    def __ne__(self, other):
+        return not (self == other)
+all_structs.append(get_today_unfollow_result)
+get_today_unfollow_result.thrift_spec = (
+    (0, TType.LIST, 'success', (TType.STRUCT, [stuff_detail, None], False), None, ),  # 0
+    (1, TType.STRUCT, 'e', [gen_exp, None], None, ),  # 1
+)
+
+
 class get_stuff_detail_args(object):
     """
     Attributes:
      - type_id
+     - ssid
 
     """
 
 
-    def __init__(self, type_id=None,):
+    def __init__(self, type_id=None, ssid=None,):
         self.type_id = type_id
+        self.ssid = ssid
 
     def read(self, iprot):
         if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
@@ -334,6 +873,11 @@ class get_stuff_detail_args(object):
                     self.type_id = iprot.readI64()
                 else:
                     iprot.skip(ftype)
+            elif fid == 2:
+                if ftype == TType.STRING:
+                    self.ssid = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
             else:
                 iprot.skip(ftype)
             iprot.readFieldEnd()
@@ -347,6 +891,10 @@ class get_stuff_detail_args(object):
         if self.type_id is not None:
             oprot.writeFieldBegin('type_id', TType.I64, 1)
             oprot.writeI64(self.type_id)
+            oprot.writeFieldEnd()
+        if self.ssid is not None:
+            oprot.writeFieldBegin('ssid', TType.STRING, 2)
+            oprot.writeString(self.ssid.encode('utf-8') if sys.version_info[0] == 2 else self.ssid)
             oprot.writeFieldEnd()
         oprot.writeFieldStop()
         oprot.writeStructEnd()
@@ -368,6 +916,7 @@ all_structs.append(get_stuff_detail_args)
 get_stuff_detail_args.thrift_spec = (
     None,  # 0
     (1, TType.I64, 'type_id', None, None, ),  # 1
+    (2, TType.STRING, 'ssid', 'UTF8', None, ),  # 2
 )
 
 
@@ -441,6 +990,623 @@ class get_stuff_detail_result(object):
 all_structs.append(get_stuff_detail_result)
 get_stuff_detail_result.thrift_spec = (
     (0, TType.STRUCT, 'success', [stuff_detail, None], None, ),  # 0
+    (1, TType.STRUCT, 'e', [gen_exp, None], None, ),  # 1
+)
+
+
+class add_company_follow_stuff_args(object):
+    """
+    Attributes:
+     - company_name
+     - type_id
+     - ssid
+
+    """
+
+
+    def __init__(self, company_name=None, type_id=None, ssid=None,):
+        self.company_name = company_name
+        self.type_id = type_id
+        self.ssid = ssid
+
+    def read(self, iprot):
+        if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
+            iprot._fast_decode(self, iprot, [self.__class__, self.thrift_spec])
+            return
+        iprot.readStructBegin()
+        while True:
+            (fname, ftype, fid) = iprot.readFieldBegin()
+            if ftype == TType.STOP:
+                break
+            if fid == 1:
+                if ftype == TType.STRING:
+                    self.company_name = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 2:
+                if ftype == TType.I64:
+                    self.type_id = iprot.readI64()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 3:
+                if ftype == TType.STRING:
+                    self.ssid = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
+            else:
+                iprot.skip(ftype)
+            iprot.readFieldEnd()
+        iprot.readStructEnd()
+
+    def write(self, oprot):
+        if oprot._fast_encode is not None and self.thrift_spec is not None:
+            oprot.trans.write(oprot._fast_encode(self, [self.__class__, self.thrift_spec]))
+            return
+        oprot.writeStructBegin('add_company_follow_stuff_args')
+        if self.company_name is not None:
+            oprot.writeFieldBegin('company_name', TType.STRING, 1)
+            oprot.writeString(self.company_name.encode('utf-8') if sys.version_info[0] == 2 else self.company_name)
+            oprot.writeFieldEnd()
+        if self.type_id is not None:
+            oprot.writeFieldBegin('type_id', TType.I64, 2)
+            oprot.writeI64(self.type_id)
+            oprot.writeFieldEnd()
+        if self.ssid is not None:
+            oprot.writeFieldBegin('ssid', TType.STRING, 3)
+            oprot.writeString(self.ssid.encode('utf-8') if sys.version_info[0] == 2 else self.ssid)
+            oprot.writeFieldEnd()
+        oprot.writeFieldStop()
+        oprot.writeStructEnd()
+
+    def validate(self):
+        return
+
+    def __repr__(self):
+        L = ['%s=%r' % (key, value)
+             for key, value in self.__dict__.items()]
+        return '%s(%s)' % (self.__class__.__name__, ', '.join(L))
+
+    def __eq__(self, other):
+        return isinstance(other, self.__class__) and self.__dict__ == other.__dict__
+
+    def __ne__(self, other):
+        return not (self == other)
+all_structs.append(add_company_follow_stuff_args)
+add_company_follow_stuff_args.thrift_spec = (
+    None,  # 0
+    (1, TType.STRING, 'company_name', 'UTF8', None, ),  # 1
+    (2, TType.I64, 'type_id', None, None, ),  # 2
+    (3, TType.STRING, 'ssid', 'UTF8', None, ),  # 3
+)
+
+
+class add_company_follow_stuff_result(object):
+    """
+    Attributes:
+     - success
+     - e
+
+    """
+
+
+    def __init__(self, success=None, e=None,):
+        self.success = success
+        self.e = e
+
+    def read(self, iprot):
+        if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
+            iprot._fast_decode(self, iprot, [self.__class__, self.thrift_spec])
+            return
+        iprot.readStructBegin()
+        while True:
+            (fname, ftype, fid) = iprot.readFieldBegin()
+            if ftype == TType.STOP:
+                break
+            if fid == 0:
+                if ftype == TType.BOOL:
+                    self.success = iprot.readBool()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 1:
+                if ftype == TType.STRUCT:
+                    self.e = gen_exp.read(iprot)
+                else:
+                    iprot.skip(ftype)
+            else:
+                iprot.skip(ftype)
+            iprot.readFieldEnd()
+        iprot.readStructEnd()
+
+    def write(self, oprot):
+        if oprot._fast_encode is not None and self.thrift_spec is not None:
+            oprot.trans.write(oprot._fast_encode(self, [self.__class__, self.thrift_spec]))
+            return
+        oprot.writeStructBegin('add_company_follow_stuff_result')
+        if self.success is not None:
+            oprot.writeFieldBegin('success', TType.BOOL, 0)
+            oprot.writeBool(self.success)
+            oprot.writeFieldEnd()
+        if self.e is not None:
+            oprot.writeFieldBegin('e', TType.STRUCT, 1)
+            self.e.write(oprot)
+            oprot.writeFieldEnd()
+        oprot.writeFieldStop()
+        oprot.writeStructEnd()
+
+    def validate(self):
+        return
+
+    def __repr__(self):
+        L = ['%s=%r' % (key, value)
+             for key, value in self.__dict__.items()]
+        return '%s(%s)' % (self.__class__.__name__, ', '.join(L))
+
+    def __eq__(self, other):
+        return isinstance(other, self.__class__) and self.__dict__ == other.__dict__
+
+    def __ne__(self, other):
+        return not (self == other)
+all_structs.append(add_company_follow_stuff_result)
+add_company_follow_stuff_result.thrift_spec = (
+    (0, TType.BOOL, 'success', None, None, ),  # 0
+    (1, TType.STRUCT, 'e', [gen_exp, None], None, ),  # 1
+)
+
+
+class cancle_company_follow_stuff_args(object):
+    """
+    Attributes:
+     - company_name
+     - type_id
+     - ssid
+
+    """
+
+
+    def __init__(self, company_name=None, type_id=None, ssid=None,):
+        self.company_name = company_name
+        self.type_id = type_id
+        self.ssid = ssid
+
+    def read(self, iprot):
+        if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
+            iprot._fast_decode(self, iprot, [self.__class__, self.thrift_spec])
+            return
+        iprot.readStructBegin()
+        while True:
+            (fname, ftype, fid) = iprot.readFieldBegin()
+            if ftype == TType.STOP:
+                break
+            if fid == 1:
+                if ftype == TType.STRING:
+                    self.company_name = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 2:
+                if ftype == TType.I64:
+                    self.type_id = iprot.readI64()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 3:
+                if ftype == TType.STRING:
+                    self.ssid = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
+            else:
+                iprot.skip(ftype)
+            iprot.readFieldEnd()
+        iprot.readStructEnd()
+
+    def write(self, oprot):
+        if oprot._fast_encode is not None and self.thrift_spec is not None:
+            oprot.trans.write(oprot._fast_encode(self, [self.__class__, self.thrift_spec]))
+            return
+        oprot.writeStructBegin('cancle_company_follow_stuff_args')
+        if self.company_name is not None:
+            oprot.writeFieldBegin('company_name', TType.STRING, 1)
+            oprot.writeString(self.company_name.encode('utf-8') if sys.version_info[0] == 2 else self.company_name)
+            oprot.writeFieldEnd()
+        if self.type_id is not None:
+            oprot.writeFieldBegin('type_id', TType.I64, 2)
+            oprot.writeI64(self.type_id)
+            oprot.writeFieldEnd()
+        if self.ssid is not None:
+            oprot.writeFieldBegin('ssid', TType.STRING, 3)
+            oprot.writeString(self.ssid.encode('utf-8') if sys.version_info[0] == 2 else self.ssid)
+            oprot.writeFieldEnd()
+        oprot.writeFieldStop()
+        oprot.writeStructEnd()
+
+    def validate(self):
+        return
+
+    def __repr__(self):
+        L = ['%s=%r' % (key, value)
+             for key, value in self.__dict__.items()]
+        return '%s(%s)' % (self.__class__.__name__, ', '.join(L))
+
+    def __eq__(self, other):
+        return isinstance(other, self.__class__) and self.__dict__ == other.__dict__
+
+    def __ne__(self, other):
+        return not (self == other)
+all_structs.append(cancle_company_follow_stuff_args)
+cancle_company_follow_stuff_args.thrift_spec = (
+    None,  # 0
+    (1, TType.STRING, 'company_name', 'UTF8', None, ),  # 1
+    (2, TType.I64, 'type_id', None, None, ),  # 2
+    (3, TType.STRING, 'ssid', 'UTF8', None, ),  # 3
+)
+
+
+class cancle_company_follow_stuff_result(object):
+    """
+    Attributes:
+     - success
+     - e
+
+    """
+
+
+    def __init__(self, success=None, e=None,):
+        self.success = success
+        self.e = e
+
+    def read(self, iprot):
+        if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
+            iprot._fast_decode(self, iprot, [self.__class__, self.thrift_spec])
+            return
+        iprot.readStructBegin()
+        while True:
+            (fname, ftype, fid) = iprot.readFieldBegin()
+            if ftype == TType.STOP:
+                break
+            if fid == 0:
+                if ftype == TType.BOOL:
+                    self.success = iprot.readBool()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 1:
+                if ftype == TType.STRUCT:
+                    self.e = gen_exp.read(iprot)
+                else:
+                    iprot.skip(ftype)
+            else:
+                iprot.skip(ftype)
+            iprot.readFieldEnd()
+        iprot.readStructEnd()
+
+    def write(self, oprot):
+        if oprot._fast_encode is not None and self.thrift_spec is not None:
+            oprot.trans.write(oprot._fast_encode(self, [self.__class__, self.thrift_spec]))
+            return
+        oprot.writeStructBegin('cancle_company_follow_stuff_result')
+        if self.success is not None:
+            oprot.writeFieldBegin('success', TType.BOOL, 0)
+            oprot.writeBool(self.success)
+            oprot.writeFieldEnd()
+        if self.e is not None:
+            oprot.writeFieldBegin('e', TType.STRUCT, 1)
+            self.e.write(oprot)
+            oprot.writeFieldEnd()
+        oprot.writeFieldStop()
+        oprot.writeStructEnd()
+
+    def validate(self):
+        return
+
+    def __repr__(self):
+        L = ['%s=%r' % (key, value)
+             for key, value in self.__dict__.items()]
+        return '%s(%s)' % (self.__class__.__name__, ', '.join(L))
+
+    def __eq__(self, other):
+        return isinstance(other, self.__class__) and self.__dict__ == other.__dict__
+
+    def __ne__(self, other):
+        return not (self == other)
+all_structs.append(cancle_company_follow_stuff_result)
+cancle_company_follow_stuff_result.thrift_spec = (
+    (0, TType.BOOL, 'success', None, None, ),  # 0
+    (1, TType.STRUCT, 'e', [gen_exp, None], None, ),  # 1
+)
+
+
+class get_follow_stuff_by_company_args(object):
+    """
+    Attributes:
+     - company_name
+
+    """
+
+
+    def __init__(self, company_name=None,):
+        self.company_name = company_name
+
+    def read(self, iprot):
+        if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
+            iprot._fast_decode(self, iprot, [self.__class__, self.thrift_spec])
+            return
+        iprot.readStructBegin()
+        while True:
+            (fname, ftype, fid) = iprot.readFieldBegin()
+            if ftype == TType.STOP:
+                break
+            if fid == 1:
+                if ftype == TType.STRING:
+                    self.company_name = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
+            else:
+                iprot.skip(ftype)
+            iprot.readFieldEnd()
+        iprot.readStructEnd()
+
+    def write(self, oprot):
+        if oprot._fast_encode is not None and self.thrift_spec is not None:
+            oprot.trans.write(oprot._fast_encode(self, [self.__class__, self.thrift_spec]))
+            return
+        oprot.writeStructBegin('get_follow_stuff_by_company_args')
+        if self.company_name is not None:
+            oprot.writeFieldBegin('company_name', TType.STRING, 1)
+            oprot.writeString(self.company_name.encode('utf-8') if sys.version_info[0] == 2 else self.company_name)
+            oprot.writeFieldEnd()
+        oprot.writeFieldStop()
+        oprot.writeStructEnd()
+
+    def validate(self):
+        return
+
+    def __repr__(self):
+        L = ['%s=%r' % (key, value)
+             for key, value in self.__dict__.items()]
+        return '%s(%s)' % (self.__class__.__name__, ', '.join(L))
+
+    def __eq__(self, other):
+        return isinstance(other, self.__class__) and self.__dict__ == other.__dict__
+
+    def __ne__(self, other):
+        return not (self == other)
+all_structs.append(get_follow_stuff_by_company_args)
+get_follow_stuff_by_company_args.thrift_spec = (
+    None,  # 0
+    (1, TType.STRING, 'company_name', 'UTF8', None, ),  # 1
+)
+
+
+class get_follow_stuff_by_company_result(object):
+    """
+    Attributes:
+     - success
+     - e
+
+    """
+
+
+    def __init__(self, success=None, e=None,):
+        self.success = success
+        self.e = e
+
+    def read(self, iprot):
+        if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
+            iprot._fast_decode(self, iprot, [self.__class__, self.thrift_spec])
+            return
+        iprot.readStructBegin()
+        while True:
+            (fname, ftype, fid) = iprot.readFieldBegin()
+            if ftype == TType.STOP:
+                break
+            if fid == 0:
+                if ftype == TType.LIST:
+                    self.success = []
+                    (_etype87, _size84) = iprot.readListBegin()
+                    for _i88 in range(_size84):
+                        _elem89 = stuff_detail()
+                        _elem89.read(iprot)
+                        self.success.append(_elem89)
+                    iprot.readListEnd()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 1:
+                if ftype == TType.STRUCT:
+                    self.e = gen_exp.read(iprot)
+                else:
+                    iprot.skip(ftype)
+            else:
+                iprot.skip(ftype)
+            iprot.readFieldEnd()
+        iprot.readStructEnd()
+
+    def write(self, oprot):
+        if oprot._fast_encode is not None and self.thrift_spec is not None:
+            oprot.trans.write(oprot._fast_encode(self, [self.__class__, self.thrift_spec]))
+            return
+        oprot.writeStructBegin('get_follow_stuff_by_company_result')
+        if self.success is not None:
+            oprot.writeFieldBegin('success', TType.LIST, 0)
+            oprot.writeListBegin(TType.STRUCT, len(self.success))
+            for iter90 in self.success:
+                iter90.write(oprot)
+            oprot.writeListEnd()
+            oprot.writeFieldEnd()
+        if self.e is not None:
+            oprot.writeFieldBegin('e', TType.STRUCT, 1)
+            self.e.write(oprot)
+            oprot.writeFieldEnd()
+        oprot.writeFieldStop()
+        oprot.writeStructEnd()
+
+    def validate(self):
+        return
+
+    def __repr__(self):
+        L = ['%s=%r' % (key, value)
+             for key, value in self.__dict__.items()]
+        return '%s(%s)' % (self.__class__.__name__, ', '.join(L))
+
+    def __eq__(self, other):
+        return isinstance(other, self.__class__) and self.__dict__ == other.__dict__
+
+    def __ne__(self, other):
+        return not (self == other)
+all_structs.append(get_follow_stuff_by_company_result)
+get_follow_stuff_by_company_result.thrift_spec = (
+    (0, TType.LIST, 'success', (TType.STRUCT, [stuff_detail, None], False), None, ),  # 0
+    (1, TType.STRUCT, 'e', [gen_exp, None], None, ),  # 1
+)
+
+
+class get_follow_company_by_stuff_args(object):
+    """
+    Attributes:
+     - type_id
+     - ssid
+
+    """
+
+
+    def __init__(self, type_id=None, ssid=None,):
+        self.type_id = type_id
+        self.ssid = ssid
+
+    def read(self, iprot):
+        if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
+            iprot._fast_decode(self, iprot, [self.__class__, self.thrift_spec])
+            return
+        iprot.readStructBegin()
+        while True:
+            (fname, ftype, fid) = iprot.readFieldBegin()
+            if ftype == TType.STOP:
+                break
+            if fid == 1:
+                if ftype == TType.I64:
+                    self.type_id = iprot.readI64()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 2:
+                if ftype == TType.STRING:
+                    self.ssid = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
+            else:
+                iprot.skip(ftype)
+            iprot.readFieldEnd()
+        iprot.readStructEnd()
+
+    def write(self, oprot):
+        if oprot._fast_encode is not None and self.thrift_spec is not None:
+            oprot.trans.write(oprot._fast_encode(self, [self.__class__, self.thrift_spec]))
+            return
+        oprot.writeStructBegin('get_follow_company_by_stuff_args')
+        if self.type_id is not None:
+            oprot.writeFieldBegin('type_id', TType.I64, 1)
+            oprot.writeI64(self.type_id)
+            oprot.writeFieldEnd()
+        if self.ssid is not None:
+            oprot.writeFieldBegin('ssid', TType.STRING, 2)
+            oprot.writeString(self.ssid.encode('utf-8') if sys.version_info[0] == 2 else self.ssid)
+            oprot.writeFieldEnd()
+        oprot.writeFieldStop()
+        oprot.writeStructEnd()
+
+    def validate(self):
+        return
+
+    def __repr__(self):
+        L = ['%s=%r' % (key, value)
+             for key, value in self.__dict__.items()]
+        return '%s(%s)' % (self.__class__.__name__, ', '.join(L))
+
+    def __eq__(self, other):
+        return isinstance(other, self.__class__) and self.__dict__ == other.__dict__
+
+    def __ne__(self, other):
+        return not (self == other)
+all_structs.append(get_follow_company_by_stuff_args)
+get_follow_company_by_stuff_args.thrift_spec = (
+    None,  # 0
+    (1, TType.I64, 'type_id', None, None, ),  # 1
+    (2, TType.STRING, 'ssid', 'UTF8', None, ),  # 2
+)
+
+
+class get_follow_company_by_stuff_result(object):
+    """
+    Attributes:
+     - success
+     - e
+
+    """
+
+
+    def __init__(self, success=None, e=None,):
+        self.success = success
+        self.e = e
+
+    def read(self, iprot):
+        if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
+            iprot._fast_decode(self, iprot, [self.__class__, self.thrift_spec])
+            return
+        iprot.readStructBegin()
+        while True:
+            (fname, ftype, fid) = iprot.readFieldBegin()
+            if ftype == TType.STOP:
+                break
+            if fid == 0:
+                if ftype == TType.LIST:
+                    self.success = []
+                    (_etype94, _size91) = iprot.readListBegin()
+                    for _i95 in range(_size91):
+                        _elem96 = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                        self.success.append(_elem96)
+                    iprot.readListEnd()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 1:
+                if ftype == TType.STRUCT:
+                    self.e = gen_exp.read(iprot)
+                else:
+                    iprot.skip(ftype)
+            else:
+                iprot.skip(ftype)
+            iprot.readFieldEnd()
+        iprot.readStructEnd()
+
+    def write(self, oprot):
+        if oprot._fast_encode is not None and self.thrift_spec is not None:
+            oprot.trans.write(oprot._fast_encode(self, [self.__class__, self.thrift_spec]))
+            return
+        oprot.writeStructBegin('get_follow_company_by_stuff_result')
+        if self.success is not None:
+            oprot.writeFieldBegin('success', TType.LIST, 0)
+            oprot.writeListBegin(TType.STRING, len(self.success))
+            for iter97 in self.success:
+                oprot.writeString(iter97.encode('utf-8') if sys.version_info[0] == 2 else iter97)
+            oprot.writeListEnd()
+            oprot.writeFieldEnd()
+        if self.e is not None:
+            oprot.writeFieldBegin('e', TType.STRUCT, 1)
+            self.e.write(oprot)
+            oprot.writeFieldEnd()
+        oprot.writeFieldStop()
+        oprot.writeStructEnd()
+
+    def validate(self):
+        return
+
+    def __repr__(self):
+        L = ['%s=%r' % (key, value)
+             for key, value in self.__dict__.items()]
+        return '%s(%s)' % (self.__class__.__name__, ', '.join(L))
+
+    def __eq__(self, other):
+        return isinstance(other, self.__class__) and self.__dict__ == other.__dict__
+
+    def __ne__(self, other):
+        return not (self == other)
+all_structs.append(get_follow_company_by_stuff_result)
+get_follow_company_by_stuff_result.thrift_spec = (
+    (0, TType.LIST, 'success', (TType.STRING, 'UTF8', False), None, ),  # 0
     (1, TType.STRUCT, 'e', [gen_exp, None], None, ),  # 1
 )
 fix_spec(all_structs)

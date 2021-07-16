@@ -9,12 +9,13 @@
     <van-dropdown-menu>
         <van-dropdown-item v-model="company_filter" :options="company_option" @change="select_company" />
         <van-dropdown-item v-model="stuff_filter" :options="stuff_option" />
+        <van-dropdown-item v-model="follow_filter" :options="follow_option" />
     </van-dropdown-menu>
-    <van-card class="stuff_card_show" v-for="(single_stuff, index) in stuff_need_show" :key="index" :price="single_stuff.price" :desc="single_stuff.company" :title="single_stuff.name">
+    <van-card class="stuff_card_show" v-for="(single_stuff, index) in stuff_need_show" :key="index" :price="single_stuff.is_unfollow?'关注后可见价格':single_stuff.price" :desc="single_stuff.company" :title="single_stuff.name">
         <template #tags v-if="single_stuff.last">
             <van-tag plain type="danger">{{single_stuff.last}}</van-tag>
         </template>
-        <template #num>
+        <template #num v-if="!single_stuff.is_unfollow">
             <van-row type="flex" justify="end" :gutter="10">
                 <van-col>
                     <van-button round size="small" icon="down" type="warning" @click="nav_to_plan(single_stuff.type_id, false)">导入计划</van-button>
@@ -74,8 +75,19 @@ export default {
                 text: '全部货品',
                 value: 0,
             }],
+            follow_option: [{
+                text: '已关注',
+                value: 0,
+            }, {
+                text: '未关注',
+                value: 1,
+            }, {
+                text: '全部',
+                value: 2,
+            }],
             company_filter: 0,
             stuff_filter: 0,
+            follow_filter: 0,
             has_apply: false,
         };
     },
@@ -93,19 +105,37 @@ export default {
                     ret.push(element);
                 }
             });
+            var tmpret = ret;
+            ret = [];
+            tmpret.forEach(element => {
+                if (vue_this.follow_filter == 2) {
+                    ret.push(element);
+                } else if (vue_this.follow_filter == 1 && element.is_unfollow) {
+                    ret.push(element);
+                } else if (vue_this.follow_filter == 0 && !element.is_unfollow) {
+                    ret.push(element);
+                }
+            });
             return ret;
         },
     },
     beforeMount() {
         var vue_this = this;
-        this.$call_remote_process("stuff_info", 'get_today', []).then(function (resp) {
+        this.$call_remote_process("stuff_info", 'get_today', [vue_this.$cookies.get('pa_ssid')]).then(function (resp) {
             resp.forEach((element, index) => {
                 vue_this.$set(vue_this.today_stuff, index, element)
             });
-            vue_this.orgnize_company();
-            vue_this.orgnize_stuff(vue_this.company_option.find((item) => {
-                return item.value == vue_this.company_filter
-            }).text);
+            vue_this.$call_remote_process("stuff_info", "get_today_unfollow", [vue_this.$cookies.get('pa_ssid')]).then(function (resp) {
+                resp.forEach(element => {
+                    var unfollow_stuff = element;
+                    unfollow_stuff.is_unfollow = true;
+                    vue_this.today_stuff.push(unfollow_stuff);
+                });
+                vue_this.orgnize_company();
+                vue_this.orgnize_stuff(vue_this.company_option.find((item) => {
+                    return item.value == vue_this.company_filter
+                }).text);
+            });
         });
         vue_this.$call_remote_process("user_management", "has_apply", [vue_this.$cookies.get('pa_ssid')]).then(function (resp) {
             vue_this.has_apply = resp;

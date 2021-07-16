@@ -634,13 +634,13 @@ open_api_management_get_today_transformation_result.prototype.read = function(in
       case 0:
       if (ftype == Thrift.Type.LIST) {
         this.success = [];
-        var _rtmp3111 = input.readListBegin();
-        var _size110 = _rtmp3111.size || 0;
-        for (var _i112 = 0; _i112 < _size110; ++_i112) {
-          var elem113 = null;
-          elem113 = new ttypes.api_transformation_info();
-          elem113.read(input);
-          this.success.push(elem113);
+        var _rtmp3126 = input.readListBegin();
+        var _size125 = _rtmp3126.size || 0;
+        for (var _i127 = 0; _i127 < _size125; ++_i127) {
+          var elem128 = null;
+          elem128 = new ttypes.api_transformation_info();
+          elem128.read(input);
+          this.success.push(elem128);
         }
         input.readListEnd();
       } else {
@@ -669,10 +669,10 @@ open_api_management_get_today_transformation_result.prototype.write = function(o
   if (this.success !== null && this.success !== undefined) {
     output.writeFieldBegin('success', Thrift.Type.LIST, 0);
     output.writeListBegin(Thrift.Type.STRUCT, this.success.length);
-    for (var iter114 in this.success) {
-      if (this.success.hasOwnProperty(iter114)) {
-        iter114 = this.success[iter114];
-        iter114.write(output);
+    for (var iter129 in this.success) {
+      if (this.success.hasOwnProperty(iter129)) {
+        iter129 = this.success[iter129];
+        iter129.write(output);
       }
     }
     output.writeListEnd();

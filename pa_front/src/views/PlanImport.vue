@@ -207,7 +207,7 @@ export default {
     },
     beforeMount: function () {
         var vue_this = this;
-        this.$call_remote_process("stuff_info", 'get_stuff_detail', [parseInt(vue_this.$route.params.type_id)]).then(function (resp) {
+        this.$call_remote_process("stuff_info", 'get_stuff_detail', [parseInt(vue_this.$route.params.type_id, vue_this.$cookies.get('pa_ssid'))]).then(function (resp) {
             vue_this.stuff_name = resp.name;
             vue_this.price = resp.price;
         });

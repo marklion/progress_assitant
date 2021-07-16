@@ -22,8 +22,13 @@
 class stuff_infoIf {
  public:
   virtual ~stuff_infoIf() {}
-  virtual void get_today(std::vector<stuff_detail> & _return) = 0;
-  virtual void get_stuff_detail(stuff_detail& _return, const int64_t type_id) = 0;
+  virtual void get_today(std::vector<stuff_detail> & _return, const std::string& ssid) = 0;
+  virtual void get_today_unfollow(std::vector<stuff_detail> & _return, const std::string& ssid) = 0;
+  virtual void get_stuff_detail(stuff_detail& _return, const int64_t type_id, const std::string& ssid) = 0;
+  virtual bool add_company_follow_stuff(const std::string& company_name, const int64_t type_id, const std::string& ssid) = 0;
+  virtual bool cancle_company_follow_stuff(const std::string& company_name, const int64_t type_id, const std::string& ssid) = 0;
+  virtual void get_follow_stuff_by_company(std::vector<stuff_detail> & _return, const std::string& company_name) = 0;
+  virtual void get_follow_company_by_stuff(std::vector<std::string> & _return, const int64_t type_id, const std::string& ssid) = 0;
 };
 
 class stuff_infoIfFactory {
@@ -53,27 +58,55 @@ class stuff_infoIfSingletonFactory : virtual public stuff_infoIfFactory {
 class stuff_infoNull : virtual public stuff_infoIf {
  public:
   virtual ~stuff_infoNull() {}
-  void get_today(std::vector<stuff_detail> & /* _return */) {
+  void get_today(std::vector<stuff_detail> & /* _return */, const std::string& /* ssid */) {
     return;
   }
-  void get_stuff_detail(stuff_detail& /* _return */, const int64_t /* type_id */) {
+  void get_today_unfollow(std::vector<stuff_detail> & /* _return */, const std::string& /* ssid */) {
+    return;
+  }
+  void get_stuff_detail(stuff_detail& /* _return */, const int64_t /* type_id */, const std::string& /* ssid */) {
+    return;
+  }
+  bool add_company_follow_stuff(const std::string& /* company_name */, const int64_t /* type_id */, const std::string& /* ssid */) {
+    bool _return = false;
+    return _return;
+  }
+  bool cancle_company_follow_stuff(const std::string& /* company_name */, const int64_t /* type_id */, const std::string& /* ssid */) {
+    bool _return = false;
+    return _return;
+  }
+  void get_follow_stuff_by_company(std::vector<stuff_detail> & /* _return */, const std::string& /* company_name */) {
+    return;
+  }
+  void get_follow_company_by_stuff(std::vector<std::string> & /* _return */, const int64_t /* type_id */, const std::string& /* ssid */) {
     return;
   }
 };
 
+typedef struct _stuff_info_get_today_args__isset {
+  _stuff_info_get_today_args__isset() : ssid(false) {}
+  bool ssid :1;
+} _stuff_info_get_today_args__isset;
 
 class stuff_info_get_today_args {
  public:
 
   stuff_info_get_today_args(const stuff_info_get_today_args&);
   stuff_info_get_today_args& operator=(const stuff_info_get_today_args&);
-  stuff_info_get_today_args() {
+  stuff_info_get_today_args() : ssid() {
   }
 
   virtual ~stuff_info_get_today_args() noexcept;
+  std::string ssid;
 
-  bool operator == (const stuff_info_get_today_args & /* rhs */) const
+  _stuff_info_get_today_args__isset __isset;
+
+  void __set_ssid(const std::string& val);
+
+  bool operator == (const stuff_info_get_today_args & rhs) const
   {
+    if (!(ssid == rhs.ssid))
+      return false;
     return true;
   }
   bool operator != (const stuff_info_get_today_args &rhs) const {
@@ -93,6 +126,7 @@ class stuff_info_get_today_pargs {
 
 
   virtual ~stuff_info_get_today_pargs() noexcept;
+  const std::string* ssid;
 
   uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
 
@@ -161,9 +195,122 @@ class stuff_info_get_today_presult {
 
 };
 
+typedef struct _stuff_info_get_today_unfollow_args__isset {
+  _stuff_info_get_today_unfollow_args__isset() : ssid(false) {}
+  bool ssid :1;
+} _stuff_info_get_today_unfollow_args__isset;
+
+class stuff_info_get_today_unfollow_args {
+ public:
+
+  stuff_info_get_today_unfollow_args(const stuff_info_get_today_unfollow_args&);
+  stuff_info_get_today_unfollow_args& operator=(const stuff_info_get_today_unfollow_args&);
+  stuff_info_get_today_unfollow_args() : ssid() {
+  }
+
+  virtual ~stuff_info_get_today_unfollow_args() noexcept;
+  std::string ssid;
+
+  _stuff_info_get_today_unfollow_args__isset __isset;
+
+  void __set_ssid(const std::string& val);
+
+  bool operator == (const stuff_info_get_today_unfollow_args & rhs) const
+  {
+    if (!(ssid == rhs.ssid))
+      return false;
+    return true;
+  }
+  bool operator != (const stuff_info_get_today_unfollow_args &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const stuff_info_get_today_unfollow_args & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+
+class stuff_info_get_today_unfollow_pargs {
+ public:
+
+
+  virtual ~stuff_info_get_today_unfollow_pargs() noexcept;
+  const std::string* ssid;
+
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _stuff_info_get_today_unfollow_result__isset {
+  _stuff_info_get_today_unfollow_result__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _stuff_info_get_today_unfollow_result__isset;
+
+class stuff_info_get_today_unfollow_result {
+ public:
+
+  stuff_info_get_today_unfollow_result(const stuff_info_get_today_unfollow_result&);
+  stuff_info_get_today_unfollow_result& operator=(const stuff_info_get_today_unfollow_result&);
+  stuff_info_get_today_unfollow_result() {
+  }
+
+  virtual ~stuff_info_get_today_unfollow_result() noexcept;
+  std::vector<stuff_detail>  success;
+  gen_exp e;
+
+  _stuff_info_get_today_unfollow_result__isset __isset;
+
+  void __set_success(const std::vector<stuff_detail> & val);
+
+  void __set_e(const gen_exp& val);
+
+  bool operator == (const stuff_info_get_today_unfollow_result & rhs) const
+  {
+    if (!(success == rhs.success))
+      return false;
+    if (!(e == rhs.e))
+      return false;
+    return true;
+  }
+  bool operator != (const stuff_info_get_today_unfollow_result &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const stuff_info_get_today_unfollow_result & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _stuff_info_get_today_unfollow_presult__isset {
+  _stuff_info_get_today_unfollow_presult__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _stuff_info_get_today_unfollow_presult__isset;
+
+class stuff_info_get_today_unfollow_presult {
+ public:
+
+
+  virtual ~stuff_info_get_today_unfollow_presult() noexcept;
+  std::vector<stuff_detail> * success;
+  gen_exp e;
+
+  _stuff_info_get_today_unfollow_presult__isset __isset;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+
+};
+
 typedef struct _stuff_info_get_stuff_detail_args__isset {
-  _stuff_info_get_stuff_detail_args__isset() : type_id(false) {}
+  _stuff_info_get_stuff_detail_args__isset() : type_id(false), ssid(false) {}
   bool type_id :1;
+  bool ssid :1;
 } _stuff_info_get_stuff_detail_args__isset;
 
 class stuff_info_get_stuff_detail_args {
@@ -171,19 +318,24 @@ class stuff_info_get_stuff_detail_args {
 
   stuff_info_get_stuff_detail_args(const stuff_info_get_stuff_detail_args&);
   stuff_info_get_stuff_detail_args& operator=(const stuff_info_get_stuff_detail_args&);
-  stuff_info_get_stuff_detail_args() : type_id(0) {
+  stuff_info_get_stuff_detail_args() : type_id(0), ssid() {
   }
 
   virtual ~stuff_info_get_stuff_detail_args() noexcept;
   int64_t type_id;
+  std::string ssid;
 
   _stuff_info_get_stuff_detail_args__isset __isset;
 
   void __set_type_id(const int64_t val);
 
+  void __set_ssid(const std::string& val);
+
   bool operator == (const stuff_info_get_stuff_detail_args & rhs) const
   {
     if (!(type_id == rhs.type_id))
+      return false;
+    if (!(ssid == rhs.ssid))
       return false;
     return true;
   }
@@ -205,6 +357,7 @@ class stuff_info_get_stuff_detail_pargs {
 
   virtual ~stuff_info_get_stuff_detail_pargs() noexcept;
   const int64_t* type_id;
+  const std::string* ssid;
 
   uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
 
@@ -273,6 +426,489 @@ class stuff_info_get_stuff_detail_presult {
 
 };
 
+typedef struct _stuff_info_add_company_follow_stuff_args__isset {
+  _stuff_info_add_company_follow_stuff_args__isset() : company_name(false), type_id(false), ssid(false) {}
+  bool company_name :1;
+  bool type_id :1;
+  bool ssid :1;
+} _stuff_info_add_company_follow_stuff_args__isset;
+
+class stuff_info_add_company_follow_stuff_args {
+ public:
+
+  stuff_info_add_company_follow_stuff_args(const stuff_info_add_company_follow_stuff_args&);
+  stuff_info_add_company_follow_stuff_args& operator=(const stuff_info_add_company_follow_stuff_args&);
+  stuff_info_add_company_follow_stuff_args() : company_name(), type_id(0), ssid() {
+  }
+
+  virtual ~stuff_info_add_company_follow_stuff_args() noexcept;
+  std::string company_name;
+  int64_t type_id;
+  std::string ssid;
+
+  _stuff_info_add_company_follow_stuff_args__isset __isset;
+
+  void __set_company_name(const std::string& val);
+
+  void __set_type_id(const int64_t val);
+
+  void __set_ssid(const std::string& val);
+
+  bool operator == (const stuff_info_add_company_follow_stuff_args & rhs) const
+  {
+    if (!(company_name == rhs.company_name))
+      return false;
+    if (!(type_id == rhs.type_id))
+      return false;
+    if (!(ssid == rhs.ssid))
+      return false;
+    return true;
+  }
+  bool operator != (const stuff_info_add_company_follow_stuff_args &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const stuff_info_add_company_follow_stuff_args & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+
+class stuff_info_add_company_follow_stuff_pargs {
+ public:
+
+
+  virtual ~stuff_info_add_company_follow_stuff_pargs() noexcept;
+  const std::string* company_name;
+  const int64_t* type_id;
+  const std::string* ssid;
+
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _stuff_info_add_company_follow_stuff_result__isset {
+  _stuff_info_add_company_follow_stuff_result__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _stuff_info_add_company_follow_stuff_result__isset;
+
+class stuff_info_add_company_follow_stuff_result {
+ public:
+
+  stuff_info_add_company_follow_stuff_result(const stuff_info_add_company_follow_stuff_result&);
+  stuff_info_add_company_follow_stuff_result& operator=(const stuff_info_add_company_follow_stuff_result&);
+  stuff_info_add_company_follow_stuff_result() : success(0) {
+  }
+
+  virtual ~stuff_info_add_company_follow_stuff_result() noexcept;
+  bool success;
+  gen_exp e;
+
+  _stuff_info_add_company_follow_stuff_result__isset __isset;
+
+  void __set_success(const bool val);
+
+  void __set_e(const gen_exp& val);
+
+  bool operator == (const stuff_info_add_company_follow_stuff_result & rhs) const
+  {
+    if (!(success == rhs.success))
+      return false;
+    if (!(e == rhs.e))
+      return false;
+    return true;
+  }
+  bool operator != (const stuff_info_add_company_follow_stuff_result &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const stuff_info_add_company_follow_stuff_result & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _stuff_info_add_company_follow_stuff_presult__isset {
+  _stuff_info_add_company_follow_stuff_presult__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _stuff_info_add_company_follow_stuff_presult__isset;
+
+class stuff_info_add_company_follow_stuff_presult {
+ public:
+
+
+  virtual ~stuff_info_add_company_follow_stuff_presult() noexcept;
+  bool* success;
+  gen_exp e;
+
+  _stuff_info_add_company_follow_stuff_presult__isset __isset;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+
+};
+
+typedef struct _stuff_info_cancle_company_follow_stuff_args__isset {
+  _stuff_info_cancle_company_follow_stuff_args__isset() : company_name(false), type_id(false), ssid(false) {}
+  bool company_name :1;
+  bool type_id :1;
+  bool ssid :1;
+} _stuff_info_cancle_company_follow_stuff_args__isset;
+
+class stuff_info_cancle_company_follow_stuff_args {
+ public:
+
+  stuff_info_cancle_company_follow_stuff_args(const stuff_info_cancle_company_follow_stuff_args&);
+  stuff_info_cancle_company_follow_stuff_args& operator=(const stuff_info_cancle_company_follow_stuff_args&);
+  stuff_info_cancle_company_follow_stuff_args() : company_name(), type_id(0), ssid() {
+  }
+
+  virtual ~stuff_info_cancle_company_follow_stuff_args() noexcept;
+  std::string company_name;
+  int64_t type_id;
+  std::string ssid;
+
+  _stuff_info_cancle_company_follow_stuff_args__isset __isset;
+
+  void __set_company_name(const std::string& val);
+
+  void __set_type_id(const int64_t val);
+
+  void __set_ssid(const std::string& val);
+
+  bool operator == (const stuff_info_cancle_company_follow_stuff_args & rhs) const
+  {
+    if (!(company_name == rhs.company_name))
+      return false;
+    if (!(type_id == rhs.type_id))
+      return false;
+    if (!(ssid == rhs.ssid))
+      return false;
+    return true;
+  }
+  bool operator != (const stuff_info_cancle_company_follow_stuff_args &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const stuff_info_cancle_company_follow_stuff_args & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+
+class stuff_info_cancle_company_follow_stuff_pargs {
+ public:
+
+
+  virtual ~stuff_info_cancle_company_follow_stuff_pargs() noexcept;
+  const std::string* company_name;
+  const int64_t* type_id;
+  const std::string* ssid;
+
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _stuff_info_cancle_company_follow_stuff_result__isset {
+  _stuff_info_cancle_company_follow_stuff_result__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _stuff_info_cancle_company_follow_stuff_result__isset;
+
+class stuff_info_cancle_company_follow_stuff_result {
+ public:
+
+  stuff_info_cancle_company_follow_stuff_result(const stuff_info_cancle_company_follow_stuff_result&);
+  stuff_info_cancle_company_follow_stuff_result& operator=(const stuff_info_cancle_company_follow_stuff_result&);
+  stuff_info_cancle_company_follow_stuff_result() : success(0) {
+  }
+
+  virtual ~stuff_info_cancle_company_follow_stuff_result() noexcept;
+  bool success;
+  gen_exp e;
+
+  _stuff_info_cancle_company_follow_stuff_result__isset __isset;
+
+  void __set_success(const bool val);
+
+  void __set_e(const gen_exp& val);
+
+  bool operator == (const stuff_info_cancle_company_follow_stuff_result & rhs) const
+  {
+    if (!(success == rhs.success))
+      return false;
+    if (!(e == rhs.e))
+      return false;
+    return true;
+  }
+  bool operator != (const stuff_info_cancle_company_follow_stuff_result &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const stuff_info_cancle_company_follow_stuff_result & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _stuff_info_cancle_company_follow_stuff_presult__isset {
+  _stuff_info_cancle_company_follow_stuff_presult__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _stuff_info_cancle_company_follow_stuff_presult__isset;
+
+class stuff_info_cancle_company_follow_stuff_presult {
+ public:
+
+
+  virtual ~stuff_info_cancle_company_follow_stuff_presult() noexcept;
+  bool* success;
+  gen_exp e;
+
+  _stuff_info_cancle_company_follow_stuff_presult__isset __isset;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+
+};
+
+typedef struct _stuff_info_get_follow_stuff_by_company_args__isset {
+  _stuff_info_get_follow_stuff_by_company_args__isset() : company_name(false) {}
+  bool company_name :1;
+} _stuff_info_get_follow_stuff_by_company_args__isset;
+
+class stuff_info_get_follow_stuff_by_company_args {
+ public:
+
+  stuff_info_get_follow_stuff_by_company_args(const stuff_info_get_follow_stuff_by_company_args&);
+  stuff_info_get_follow_stuff_by_company_args& operator=(const stuff_info_get_follow_stuff_by_company_args&);
+  stuff_info_get_follow_stuff_by_company_args() : company_name() {
+  }
+
+  virtual ~stuff_info_get_follow_stuff_by_company_args() noexcept;
+  std::string company_name;
+
+  _stuff_info_get_follow_stuff_by_company_args__isset __isset;
+
+  void __set_company_name(const std::string& val);
+
+  bool operator == (const stuff_info_get_follow_stuff_by_company_args & rhs) const
+  {
+    if (!(company_name == rhs.company_name))
+      return false;
+    return true;
+  }
+  bool operator != (const stuff_info_get_follow_stuff_by_company_args &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const stuff_info_get_follow_stuff_by_company_args & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+
+class stuff_info_get_follow_stuff_by_company_pargs {
+ public:
+
+
+  virtual ~stuff_info_get_follow_stuff_by_company_pargs() noexcept;
+  const std::string* company_name;
+
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _stuff_info_get_follow_stuff_by_company_result__isset {
+  _stuff_info_get_follow_stuff_by_company_result__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _stuff_info_get_follow_stuff_by_company_result__isset;
+
+class stuff_info_get_follow_stuff_by_company_result {
+ public:
+
+  stuff_info_get_follow_stuff_by_company_result(const stuff_info_get_follow_stuff_by_company_result&);
+  stuff_info_get_follow_stuff_by_company_result& operator=(const stuff_info_get_follow_stuff_by_company_result&);
+  stuff_info_get_follow_stuff_by_company_result() {
+  }
+
+  virtual ~stuff_info_get_follow_stuff_by_company_result() noexcept;
+  std::vector<stuff_detail>  success;
+  gen_exp e;
+
+  _stuff_info_get_follow_stuff_by_company_result__isset __isset;
+
+  void __set_success(const std::vector<stuff_detail> & val);
+
+  void __set_e(const gen_exp& val);
+
+  bool operator == (const stuff_info_get_follow_stuff_by_company_result & rhs) const
+  {
+    if (!(success == rhs.success))
+      return false;
+    if (!(e == rhs.e))
+      return false;
+    return true;
+  }
+  bool operator != (const stuff_info_get_follow_stuff_by_company_result &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const stuff_info_get_follow_stuff_by_company_result & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _stuff_info_get_follow_stuff_by_company_presult__isset {
+  _stuff_info_get_follow_stuff_by_company_presult__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _stuff_info_get_follow_stuff_by_company_presult__isset;
+
+class stuff_info_get_follow_stuff_by_company_presult {
+ public:
+
+
+  virtual ~stuff_info_get_follow_stuff_by_company_presult() noexcept;
+  std::vector<stuff_detail> * success;
+  gen_exp e;
+
+  _stuff_info_get_follow_stuff_by_company_presult__isset __isset;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+
+};
+
+typedef struct _stuff_info_get_follow_company_by_stuff_args__isset {
+  _stuff_info_get_follow_company_by_stuff_args__isset() : type_id(false), ssid(false) {}
+  bool type_id :1;
+  bool ssid :1;
+} _stuff_info_get_follow_company_by_stuff_args__isset;
+
+class stuff_info_get_follow_company_by_stuff_args {
+ public:
+
+  stuff_info_get_follow_company_by_stuff_args(const stuff_info_get_follow_company_by_stuff_args&);
+  stuff_info_get_follow_company_by_stuff_args& operator=(const stuff_info_get_follow_company_by_stuff_args&);
+  stuff_info_get_follow_company_by_stuff_args() : type_id(0), ssid() {
+  }
+
+  virtual ~stuff_info_get_follow_company_by_stuff_args() noexcept;
+  int64_t type_id;
+  std::string ssid;
+
+  _stuff_info_get_follow_company_by_stuff_args__isset __isset;
+
+  void __set_type_id(const int64_t val);
+
+  void __set_ssid(const std::string& val);
+
+  bool operator == (const stuff_info_get_follow_company_by_stuff_args & rhs) const
+  {
+    if (!(type_id == rhs.type_id))
+      return false;
+    if (!(ssid == rhs.ssid))
+      return false;
+    return true;
+  }
+  bool operator != (const stuff_info_get_follow_company_by_stuff_args &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const stuff_info_get_follow_company_by_stuff_args & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+
+class stuff_info_get_follow_company_by_stuff_pargs {
+ public:
+
+
+  virtual ~stuff_info_get_follow_company_by_stuff_pargs() noexcept;
+  const int64_t* type_id;
+  const std::string* ssid;
+
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _stuff_info_get_follow_company_by_stuff_result__isset {
+  _stuff_info_get_follow_company_by_stuff_result__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _stuff_info_get_follow_company_by_stuff_result__isset;
+
+class stuff_info_get_follow_company_by_stuff_result {
+ public:
+
+  stuff_info_get_follow_company_by_stuff_result(const stuff_info_get_follow_company_by_stuff_result&);
+  stuff_info_get_follow_company_by_stuff_result& operator=(const stuff_info_get_follow_company_by_stuff_result&);
+  stuff_info_get_follow_company_by_stuff_result() {
+  }
+
+  virtual ~stuff_info_get_follow_company_by_stuff_result() noexcept;
+  std::vector<std::string>  success;
+  gen_exp e;
+
+  _stuff_info_get_follow_company_by_stuff_result__isset __isset;
+
+  void __set_success(const std::vector<std::string> & val);
+
+  void __set_e(const gen_exp& val);
+
+  bool operator == (const stuff_info_get_follow_company_by_stuff_result & rhs) const
+  {
+    if (!(success == rhs.success))
+      return false;
+    if (!(e == rhs.e))
+      return false;
+    return true;
+  }
+  bool operator != (const stuff_info_get_follow_company_by_stuff_result &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const stuff_info_get_follow_company_by_stuff_result & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _stuff_info_get_follow_company_by_stuff_presult__isset {
+  _stuff_info_get_follow_company_by_stuff_presult__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _stuff_info_get_follow_company_by_stuff_presult__isset;
+
+class stuff_info_get_follow_company_by_stuff_presult {
+ public:
+
+
+  virtual ~stuff_info_get_follow_company_by_stuff_presult() noexcept;
+  std::vector<std::string> * success;
+  gen_exp e;
+
+  _stuff_info_get_follow_company_by_stuff_presult__isset __isset;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+
+};
+
 class stuff_infoClient : virtual public stuff_infoIf {
  public:
   stuff_infoClient(std::shared_ptr< ::apache::thrift::protocol::TProtocol> prot) {
@@ -298,12 +934,27 @@ class stuff_infoClient : virtual public stuff_infoIf {
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> getOutputProtocol() {
     return poprot_;
   }
-  void get_today(std::vector<stuff_detail> & _return);
-  void send_get_today();
+  void get_today(std::vector<stuff_detail> & _return, const std::string& ssid);
+  void send_get_today(const std::string& ssid);
   void recv_get_today(std::vector<stuff_detail> & _return);
-  void get_stuff_detail(stuff_detail& _return, const int64_t type_id);
-  void send_get_stuff_detail(const int64_t type_id);
+  void get_today_unfollow(std::vector<stuff_detail> & _return, const std::string& ssid);
+  void send_get_today_unfollow(const std::string& ssid);
+  void recv_get_today_unfollow(std::vector<stuff_detail> & _return);
+  void get_stuff_detail(stuff_detail& _return, const int64_t type_id, const std::string& ssid);
+  void send_get_stuff_detail(const int64_t type_id, const std::string& ssid);
   void recv_get_stuff_detail(stuff_detail& _return);
+  bool add_company_follow_stuff(const std::string& company_name, const int64_t type_id, const std::string& ssid);
+  void send_add_company_follow_stuff(const std::string& company_name, const int64_t type_id, const std::string& ssid);
+  bool recv_add_company_follow_stuff();
+  bool cancle_company_follow_stuff(const std::string& company_name, const int64_t type_id, const std::string& ssid);
+  void send_cancle_company_follow_stuff(const std::string& company_name, const int64_t type_id, const std::string& ssid);
+  bool recv_cancle_company_follow_stuff();
+  void get_follow_stuff_by_company(std::vector<stuff_detail> & _return, const std::string& company_name);
+  void send_get_follow_stuff_by_company(const std::string& company_name);
+  void recv_get_follow_stuff_by_company(std::vector<stuff_detail> & _return);
+  void get_follow_company_by_stuff(std::vector<std::string> & _return, const int64_t type_id, const std::string& ssid);
+  void send_get_follow_company_by_stuff(const int64_t type_id, const std::string& ssid);
+  void recv_get_follow_company_by_stuff(std::vector<std::string> & _return);
  protected:
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> piprot_;
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> poprot_;
@@ -320,12 +971,22 @@ class stuff_infoProcessor : public ::apache::thrift::TDispatchProcessor {
   typedef std::map<std::string, ProcessFunction> ProcessMap;
   ProcessMap processMap_;
   void process_get_today(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
+  void process_get_today_unfollow(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
   void process_get_stuff_detail(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
+  void process_add_company_follow_stuff(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
+  void process_cancle_company_follow_stuff(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
+  void process_get_follow_stuff_by_company(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
+  void process_get_follow_company_by_stuff(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
  public:
   stuff_infoProcessor(::std::shared_ptr<stuff_infoIf> iface) :
     iface_(iface) {
     processMap_["get_today"] = &stuff_infoProcessor::process_get_today;
+    processMap_["get_today_unfollow"] = &stuff_infoProcessor::process_get_today_unfollow;
     processMap_["get_stuff_detail"] = &stuff_infoProcessor::process_get_stuff_detail;
+    processMap_["add_company_follow_stuff"] = &stuff_infoProcessor::process_add_company_follow_stuff;
+    processMap_["cancle_company_follow_stuff"] = &stuff_infoProcessor::process_cancle_company_follow_stuff;
+    processMap_["get_follow_stuff_by_company"] = &stuff_infoProcessor::process_get_follow_stuff_by_company;
+    processMap_["get_follow_company_by_stuff"] = &stuff_infoProcessor::process_get_follow_company_by_stuff;
   }
 
   virtual ~stuff_infoProcessor() {}
@@ -354,23 +1015,71 @@ class stuff_infoMultiface : virtual public stuff_infoIf {
     ifaces_.push_back(iface);
   }
  public:
-  void get_today(std::vector<stuff_detail> & _return) {
+  void get_today(std::vector<stuff_detail> & _return, const std::string& ssid) {
     size_t sz = ifaces_.size();
     size_t i = 0;
     for (; i < (sz - 1); ++i) {
-      ifaces_[i]->get_today(_return);
+      ifaces_[i]->get_today(_return, ssid);
     }
-    ifaces_[i]->get_today(_return);
+    ifaces_[i]->get_today(_return, ssid);
     return;
   }
 
-  void get_stuff_detail(stuff_detail& _return, const int64_t type_id) {
+  void get_today_unfollow(std::vector<stuff_detail> & _return, const std::string& ssid) {
     size_t sz = ifaces_.size();
     size_t i = 0;
     for (; i < (sz - 1); ++i) {
-      ifaces_[i]->get_stuff_detail(_return, type_id);
+      ifaces_[i]->get_today_unfollow(_return, ssid);
     }
-    ifaces_[i]->get_stuff_detail(_return, type_id);
+    ifaces_[i]->get_today_unfollow(_return, ssid);
+    return;
+  }
+
+  void get_stuff_detail(stuff_detail& _return, const int64_t type_id, const std::string& ssid) {
+    size_t sz = ifaces_.size();
+    size_t i = 0;
+    for (; i < (sz - 1); ++i) {
+      ifaces_[i]->get_stuff_detail(_return, type_id, ssid);
+    }
+    ifaces_[i]->get_stuff_detail(_return, type_id, ssid);
+    return;
+  }
+
+  bool add_company_follow_stuff(const std::string& company_name, const int64_t type_id, const std::string& ssid) {
+    size_t sz = ifaces_.size();
+    size_t i = 0;
+    for (; i < (sz - 1); ++i) {
+      ifaces_[i]->add_company_follow_stuff(company_name, type_id, ssid);
+    }
+    return ifaces_[i]->add_company_follow_stuff(company_name, type_id, ssid);
+  }
+
+  bool cancle_company_follow_stuff(const std::string& company_name, const int64_t type_id, const std::string& ssid) {
+    size_t sz = ifaces_.size();
+    size_t i = 0;
+    for (; i < (sz - 1); ++i) {
+      ifaces_[i]->cancle_company_follow_stuff(company_name, type_id, ssid);
+    }
+    return ifaces_[i]->cancle_company_follow_stuff(company_name, type_id, ssid);
+  }
+
+  void get_follow_stuff_by_company(std::vector<stuff_detail> & _return, const std::string& company_name) {
+    size_t sz = ifaces_.size();
+    size_t i = 0;
+    for (; i < (sz - 1); ++i) {
+      ifaces_[i]->get_follow_stuff_by_company(_return, company_name);
+    }
+    ifaces_[i]->get_follow_stuff_by_company(_return, company_name);
+    return;
+  }
+
+  void get_follow_company_by_stuff(std::vector<std::string> & _return, const int64_t type_id, const std::string& ssid) {
+    size_t sz = ifaces_.size();
+    size_t i = 0;
+    for (; i < (sz - 1); ++i) {
+      ifaces_[i]->get_follow_company_by_stuff(_return, type_id, ssid);
+    }
+    ifaces_[i]->get_follow_company_by_stuff(_return, type_id, ssid);
     return;
   }
 
@@ -406,12 +1115,27 @@ class stuff_infoConcurrentClient : virtual public stuff_infoIf {
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> getOutputProtocol() {
     return poprot_;
   }
-  void get_today(std::vector<stuff_detail> & _return);
-  int32_t send_get_today();
+  void get_today(std::vector<stuff_detail> & _return, const std::string& ssid);
+  int32_t send_get_today(const std::string& ssid);
   void recv_get_today(std::vector<stuff_detail> & _return, const int32_t seqid);
-  void get_stuff_detail(stuff_detail& _return, const int64_t type_id);
-  int32_t send_get_stuff_detail(const int64_t type_id);
+  void get_today_unfollow(std::vector<stuff_detail> & _return, const std::string& ssid);
+  int32_t send_get_today_unfollow(const std::string& ssid);
+  void recv_get_today_unfollow(std::vector<stuff_detail> & _return, const int32_t seqid);
+  void get_stuff_detail(stuff_detail& _return, const int64_t type_id, const std::string& ssid);
+  int32_t send_get_stuff_detail(const int64_t type_id, const std::string& ssid);
   void recv_get_stuff_detail(stuff_detail& _return, const int32_t seqid);
+  bool add_company_follow_stuff(const std::string& company_name, const int64_t type_id, const std::string& ssid);
+  int32_t send_add_company_follow_stuff(const std::string& company_name, const int64_t type_id, const std::string& ssid);
+  bool recv_add_company_follow_stuff(const int32_t seqid);
+  bool cancle_company_follow_stuff(const std::string& company_name, const int64_t type_id, const std::string& ssid);
+  int32_t send_cancle_company_follow_stuff(const std::string& company_name, const int64_t type_id, const std::string& ssid);
+  bool recv_cancle_company_follow_stuff(const int32_t seqid);
+  void get_follow_stuff_by_company(std::vector<stuff_detail> & _return, const std::string& company_name);
+  int32_t send_get_follow_stuff_by_company(const std::string& company_name);
+  void recv_get_follow_stuff_by_company(std::vector<stuff_detail> & _return, const int32_t seqid);
+  void get_follow_company_by_stuff(std::vector<std::string> & _return, const int64_t type_id, const std::string& ssid);
+  int32_t send_get_follow_company_by_stuff(const int64_t type_id, const std::string& ssid);
+  void recv_get_follow_company_by_stuff(std::vector<std::string> & _return, const int32_t seqid);
  protected:
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> piprot_;
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> poprot_;
