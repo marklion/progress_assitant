@@ -9,28 +9,47 @@
                 </van-col>
             </van-row>
         </template>
-        <van-cell v-for="(single_contract, index) in contract" :key="index" center :label="'合同编号：' + single_contract.number">
-            <template #title>
-                <span>{{my_side(single_contract)}}</span>
-                <span v-if="!$store.state.userinfo.buyer && single_contract.customer_code">({{single_contract.customer_code}})</span>
-                <span class="status_show">
-                    <van-tag :type="contract_status[single_contract.status].type">{{contract_status[single_contract.status].text}}</van-tag>
-                </span>
-            </template>
-            <template #right-icon v-if="!$store.state.userinfo.buyer">
-                <div class="del_show">
-                    <div>
-                        <van-button plain size="small" type="info" icon="edit" @click="show_update_contract(single_contract)"></van-button>
+        <div class="single_contract_show" v-for="(single_contract, index) in contract" :key="index">
+            <van-cell center :label="'合同编号：' + single_contract.number">
+                <template #title>
+                    <span>{{my_side(single_contract)}}</span>
+                    <span v-if="!$store.state.userinfo.buyer && single_contract.customer_code">({{single_contract.customer_code}})</span>
+                    <span class="status_show">
+                        <van-tag :type="contract_status[single_contract.status].type">{{contract_status[single_contract.status].text}}</van-tag>
+                    </span>
+                </template>
+                <template #right-icon v-if="!$store.state.userinfo.buyer">
+                    <div class="del_show">
+                        <div>
+                            <van-button plain size="small" type="info" icon="edit" @click="show_update_contract(single_contract)"></van-button>
+                        </div>
+                        <div>
+                            <van-button plain size="small" type="danger" icon="delete-o" @click="pre_ask_del(single_contract)"></van-button>
+                        </div>
                     </div>
-                    <div>
-                        <van-button plain size="small" type="danger" icon="delete-o" @click="pre_ask_del(single_contract)"></van-button>
-                    </div>
-                </div>
-            </template>
-            <div>开始日期：{{single_contract.start_time}}</div>
-            <div>到期日期：{{single_contract.end_time}}</div>
-        </van-cell>
+                </template>
+                <div>开始日期：{{single_contract.start_time}}</div>
+                <div>到期日期：{{single_contract.end_time}}</div>
+            </van-cell>
+            <div class="follow_status_show">
+                <van-row type="flex" :gutter="5" align="center">
+                    <van-col>已关注：</van-col>
+                    <van-col v-for="(single_stuff, stuff_index) in single_contract.follow_stuff" :key="stuff_index">
+                        <van-tag plain type="primary">{{single_stuff}}</van-tag>
+                    </van-col>
+                    <van-col v-if="!$store.state.userinfo.buyer">
+                        <van-button size="small" type="primary" icon="plus" round @click="focus_company = single_contract.a_side_company;popover_switch = true"></van-button>
+                    </van-col>
+                    <van-col v-if="!$store.state.userinfo.buyer">
+                        <van-button size="small" type="danger" icon="minus" round @click="focus_company = single_contract.a_side_company;popover_switch_off = true"></van-button>
+                    </van-col>
+                </van-row>
+
+            </div>
+        </div>
     </van-cell-group>
+    <van-action-sheet v-model="popover_switch" :actions="actions" @select="onSelect" />
+    <van-action-sheet v-model="popover_switch_off" :actions="actions" @select="onSelect_off" />
     <van-dialog v-model="add_contract_show" title="添加合同" :showConfirmButton="false" closeOnClickOverlay>
         <van-form @submit="add_contract">
             <van-field v-model="submit_contract.a_side_company" name="甲方" label="甲方" placeholder="请输入甲方公司名" :rules="[{ required:true, message:'请输入甲方公司'}]" />
@@ -86,7 +105,15 @@ import {
 import {
     Tag
 } from 'vant';
+import {
+    Popover
+} from 'vant';
+import {
+    ActionSheet
+} from 'vant';
 
+Vue.use(ActionSheet);
+Vue.use(Popover);
 Vue.use(Tag);
 Vue.use(Calendar);
 Vue.use(Form);
@@ -101,6 +128,9 @@ export default {
     name: 'Contract',
     data: function () {
         return {
+            actions: [],
+            popover_switch: false,
+            popover_switch_off: false,
             submit_contract: {
                 number: '',
                 a_side_company: '',
@@ -133,6 +163,7 @@ export default {
                 text: '未签',
                 type: "danger",
             }, ],
+            focus_company: '',
         };
     },
     methods: {
@@ -193,16 +224,57 @@ export default {
             vue_this.$call_remote_process("company_management", "get_all_contract", [vue_this.$cookies.get('pa_ssid')]).then(function (resp) {
                 vue_this.contract = [];
                 resp.forEach((element, index) => {
-                    vue_this.$set(vue_this.contract, index, element);
+                    var single_contract = element;
+                    single_contract.follow_stuff = [];
+                    vue_this.$call_remote_process("stuff_info", "get_follow_stuff_by_company", [element.a_side_company]).then(function (resp) {
+                        resp.forEach(element => {
+                            single_contract.follow_stuff.push(element.name);
+                        });
+                        vue_this.$set(vue_this.contract, index, single_contract);
+                    });
                 });
             });
             var cur_date = new Date();
             vue_this.min_date.setFullYear(cur_date.getFullYear() - 1);
             vue_this.max_date.setFullYear(cur_date.getFullYear() + 3);
         },
+        get_type_detail: function (_id) {
+            var vue_this = this;
+            this.$call_remote_process("stuff_info", 'get_stuff_detail', [_id, vue_this.$cookies.get('pa_ssid')]).then(function (resp) {
+                vue_this.$set(vue_this.actions, vue_this.actions.length, {
+                    name: resp.name,
+                    type_id: resp.type_id
+                });
+            });
+        },
+        onSelect: function (_action) {
+            var vue_this = this;
+            vue_this.$call_remote_process("stuff_info", 'add_company_follow_stuff', [vue_this.focus_company, _action.type_id, vue_this.$cookies.get('pa_ssid')]).then(function (resp) {
+                if (resp) {
+                    vue_this.init_contract_data();
+                    vue_this.popover_switch = false;
+                }
+            });
+        },
+        onSelect_off: function (_action) {
+            var vue_this = this;
+            vue_this.$call_remote_process("stuff_info", 'cancle_company_follow_stuff', [vue_this.focus_company, _action.type_id, vue_this.$cookies.get('pa_ssid')]).then(function (resp) {
+                if (resp) {
+                    vue_this.init_contract_data();
+                    vue_this.popover_switch_off = false;
+                }
+            });
+        },
     },
     beforeMount: function () {
         this.init_contract_data();
+        var vue_this = this;
+        vue_this.$call_remote_process("company_management", 'get_all_type', [vue_this.$cookies.get('pa_ssid')]).then(function (resp) {
+            vue_this.actions = [];
+            resp.forEach(function (element) {
+                vue_this.get_type_detail(element);
+            });
+        });
     }
 }
 </script>
@@ -214,5 +286,14 @@ export default {
 
 .status_show {
     margin-left: 5px;
+}
+
+.follow_status_show {
+    margin-left: 15px;
+}
+
+.single_contract_show {
+    border: 1px solid gray;
+    margin-bottom: 5px;
 }
 </style>

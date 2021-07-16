@@ -75,7 +75,7 @@ export default {
             vue_this.proxy_company = resp.proxy_company;
             vue_this.type_id = resp.type_id;
             vue_this.sale_company = resp.sale_company;
-            vue_this.$call_remote_process("stuff_info", "get_stuff_detail", [vue_this.type_id]).then(function (resp) {
+            vue_this.$call_remote_process("stuff_info", "get_stuff_detail", [vue_this.type_id, vue_this.$cookies.get('pa_ssid')]).then(function (resp) {
                 vue_this.price = resp.price;
                 vue_this.$call_remote_process("company_management", 'get_notice', [resp.company]).then(function (resp) {
                     vue_this.company_notice = resp;

@@ -32,7 +32,20 @@ uint32_t stuff_info_get_today_args::read(::apache::thrift::protocol::TProtocol* 
     if (ftype == ::apache::thrift::protocol::T_STOP) {
       break;
     }
-    xfer += iprot->skip(ftype);
+    switch (fid)
+    {
+      case 1:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->ssid);
+          this->__isset.ssid = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      default:
+        xfer += iprot->skip(ftype);
+        break;
+    }
     xfer += iprot->readFieldEnd();
   }
 
@@ -45,6 +58,10 @@ uint32_t stuff_info_get_today_args::write(::apache::thrift::protocol::TProtocol*
   uint32_t xfer = 0;
   ::apache::thrift::protocol::TOutputRecursionTracker tracker(*oprot);
   xfer += oprot->writeStructBegin("stuff_info_get_today_args");
+
+  xfer += oprot->writeFieldBegin("ssid", ::apache::thrift::protocol::T_STRING, 1);
+  xfer += oprot->writeString(this->ssid);
+  xfer += oprot->writeFieldEnd();
 
   xfer += oprot->writeFieldStop();
   xfer += oprot->writeStructEnd();
@@ -60,6 +77,10 @@ uint32_t stuff_info_get_today_pargs::write(::apache::thrift::protocol::TProtocol
   uint32_t xfer = 0;
   ::apache::thrift::protocol::TOutputRecursionTracker tracker(*oprot);
   xfer += oprot->writeStructBegin("stuff_info_get_today_pargs");
+
+  xfer += oprot->writeFieldBegin("ssid", ::apache::thrift::protocol::T_STRING, 1);
+  xfer += oprot->writeString((*(this->ssid)));
+  xfer += oprot->writeFieldEnd();
 
   xfer += oprot->writeFieldStop();
   xfer += oprot->writeStructEnd();
@@ -227,6 +248,245 @@ uint32_t stuff_info_get_today_presult::read(::apache::thrift::protocol::TProtoco
 }
 
 
+stuff_info_get_today_unfollow_args::~stuff_info_get_today_unfollow_args() noexcept {
+}
+
+
+uint32_t stuff_info_get_today_unfollow_args::read(::apache::thrift::protocol::TProtocol* iprot) {
+
+  ::apache::thrift::protocol::TInputRecursionTracker tracker(*iprot);
+  uint32_t xfer = 0;
+  std::string fname;
+  ::apache::thrift::protocol::TType ftype;
+  int16_t fid;
+
+  xfer += iprot->readStructBegin(fname);
+
+  using ::apache::thrift::protocol::TProtocolException;
+
+
+  while (true)
+  {
+    xfer += iprot->readFieldBegin(fname, ftype, fid);
+    if (ftype == ::apache::thrift::protocol::T_STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 1:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->ssid);
+          this->__isset.ssid = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      default:
+        xfer += iprot->skip(ftype);
+        break;
+    }
+    xfer += iprot->readFieldEnd();
+  }
+
+  xfer += iprot->readStructEnd();
+
+  return xfer;
+}
+
+uint32_t stuff_info_get_today_unfollow_args::write(::apache::thrift::protocol::TProtocol* oprot) const {
+  uint32_t xfer = 0;
+  ::apache::thrift::protocol::TOutputRecursionTracker tracker(*oprot);
+  xfer += oprot->writeStructBegin("stuff_info_get_today_unfollow_args");
+
+  xfer += oprot->writeFieldBegin("ssid", ::apache::thrift::protocol::T_STRING, 1);
+  xfer += oprot->writeString(this->ssid);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldStop();
+  xfer += oprot->writeStructEnd();
+  return xfer;
+}
+
+
+stuff_info_get_today_unfollow_pargs::~stuff_info_get_today_unfollow_pargs() noexcept {
+}
+
+
+uint32_t stuff_info_get_today_unfollow_pargs::write(::apache::thrift::protocol::TProtocol* oprot) const {
+  uint32_t xfer = 0;
+  ::apache::thrift::protocol::TOutputRecursionTracker tracker(*oprot);
+  xfer += oprot->writeStructBegin("stuff_info_get_today_unfollow_pargs");
+
+  xfer += oprot->writeFieldBegin("ssid", ::apache::thrift::protocol::T_STRING, 1);
+  xfer += oprot->writeString((*(this->ssid)));
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldStop();
+  xfer += oprot->writeStructEnd();
+  return xfer;
+}
+
+
+stuff_info_get_today_unfollow_result::~stuff_info_get_today_unfollow_result() noexcept {
+}
+
+
+uint32_t stuff_info_get_today_unfollow_result::read(::apache::thrift::protocol::TProtocol* iprot) {
+
+  ::apache::thrift::protocol::TInputRecursionTracker tracker(*iprot);
+  uint32_t xfer = 0;
+  std::string fname;
+  ::apache::thrift::protocol::TType ftype;
+  int16_t fid;
+
+  xfer += iprot->readStructBegin(fname);
+
+  using ::apache::thrift::protocol::TProtocolException;
+
+
+  while (true)
+  {
+    xfer += iprot->readFieldBegin(fname, ftype, fid);
+    if (ftype == ::apache::thrift::protocol::T_STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 0:
+        if (ftype == ::apache::thrift::protocol::T_LIST) {
+          {
+            this->success.clear();
+            uint32_t _size170;
+            ::apache::thrift::protocol::TType _etype173;
+            xfer += iprot->readListBegin(_etype173, _size170);
+            this->success.resize(_size170);
+            uint32_t _i174;
+            for (_i174 = 0; _i174 < _size170; ++_i174)
+            {
+              xfer += this->success[_i174].read(iprot);
+            }
+            xfer += iprot->readListEnd();
+          }
+          this->__isset.success = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 1:
+        if (ftype == ::apache::thrift::protocol::T_STRUCT) {
+          xfer += this->e.read(iprot);
+          this->__isset.e = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      default:
+        xfer += iprot->skip(ftype);
+        break;
+    }
+    xfer += iprot->readFieldEnd();
+  }
+
+  xfer += iprot->readStructEnd();
+
+  return xfer;
+}
+
+uint32_t stuff_info_get_today_unfollow_result::write(::apache::thrift::protocol::TProtocol* oprot) const {
+
+  uint32_t xfer = 0;
+
+  xfer += oprot->writeStructBegin("stuff_info_get_today_unfollow_result");
+
+  if (this->__isset.success) {
+    xfer += oprot->writeFieldBegin("success", ::apache::thrift::protocol::T_LIST, 0);
+    {
+      xfer += oprot->writeListBegin(::apache::thrift::protocol::T_STRUCT, static_cast<uint32_t>(this->success.size()));
+      std::vector<stuff_detail> ::const_iterator _iter175;
+      for (_iter175 = this->success.begin(); _iter175 != this->success.end(); ++_iter175)
+      {
+        xfer += (*_iter175).write(oprot);
+      }
+      xfer += oprot->writeListEnd();
+    }
+    xfer += oprot->writeFieldEnd();
+  } else if (this->__isset.e) {
+    xfer += oprot->writeFieldBegin("e", ::apache::thrift::protocol::T_STRUCT, 1);
+    xfer += this->e.write(oprot);
+    xfer += oprot->writeFieldEnd();
+  }
+  xfer += oprot->writeFieldStop();
+  xfer += oprot->writeStructEnd();
+  return xfer;
+}
+
+
+stuff_info_get_today_unfollow_presult::~stuff_info_get_today_unfollow_presult() noexcept {
+}
+
+
+uint32_t stuff_info_get_today_unfollow_presult::read(::apache::thrift::protocol::TProtocol* iprot) {
+
+  ::apache::thrift::protocol::TInputRecursionTracker tracker(*iprot);
+  uint32_t xfer = 0;
+  std::string fname;
+  ::apache::thrift::protocol::TType ftype;
+  int16_t fid;
+
+  xfer += iprot->readStructBegin(fname);
+
+  using ::apache::thrift::protocol::TProtocolException;
+
+
+  while (true)
+  {
+    xfer += iprot->readFieldBegin(fname, ftype, fid);
+    if (ftype == ::apache::thrift::protocol::T_STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 0:
+        if (ftype == ::apache::thrift::protocol::T_LIST) {
+          {
+            (*(this->success)).clear();
+            uint32_t _size176;
+            ::apache::thrift::protocol::TType _etype179;
+            xfer += iprot->readListBegin(_etype179, _size176);
+            (*(this->success)).resize(_size176);
+            uint32_t _i180;
+            for (_i180 = 0; _i180 < _size176; ++_i180)
+            {
+              xfer += (*(this->success))[_i180].read(iprot);
+            }
+            xfer += iprot->readListEnd();
+          }
+          this->__isset.success = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 1:
+        if (ftype == ::apache::thrift::protocol::T_STRUCT) {
+          xfer += this->e.read(iprot);
+          this->__isset.e = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      default:
+        xfer += iprot->skip(ftype);
+        break;
+    }
+    xfer += iprot->readFieldEnd();
+  }
+
+  xfer += iprot->readStructEnd();
+
+  return xfer;
+}
+
+
 stuff_info_get_stuff_detail_args::~stuff_info_get_stuff_detail_args() noexcept {
 }
 
@@ -260,6 +520,14 @@ uint32_t stuff_info_get_stuff_detail_args::read(::apache::thrift::protocol::TPro
           xfer += iprot->skip(ftype);
         }
         break;
+      case 2:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->ssid);
+          this->__isset.ssid = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
       default:
         xfer += iprot->skip(ftype);
         break;
@@ -281,6 +549,10 @@ uint32_t stuff_info_get_stuff_detail_args::write(::apache::thrift::protocol::TPr
   xfer += oprot->writeI64(this->type_id);
   xfer += oprot->writeFieldEnd();
 
+  xfer += oprot->writeFieldBegin("ssid", ::apache::thrift::protocol::T_STRING, 2);
+  xfer += oprot->writeString(this->ssid);
+  xfer += oprot->writeFieldEnd();
+
   xfer += oprot->writeFieldStop();
   xfer += oprot->writeStructEnd();
   return xfer;
@@ -298,6 +570,10 @@ uint32_t stuff_info_get_stuff_detail_pargs::write(::apache::thrift::protocol::TP
 
   xfer += oprot->writeFieldBegin("type_id", ::apache::thrift::protocol::T_I64, 1);
   xfer += oprot->writeI64((*(this->type_id)));
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("ssid", ::apache::thrift::protocol::T_STRING, 2);
+  xfer += oprot->writeString((*(this->ssid)));
   xfer += oprot->writeFieldEnd();
 
   xfer += oprot->writeFieldStop();
@@ -433,18 +709,991 @@ uint32_t stuff_info_get_stuff_detail_presult::read(::apache::thrift::protocol::T
   return xfer;
 }
 
-void stuff_infoClient::get_today(std::vector<stuff_detail> & _return)
+
+stuff_info_add_company_follow_stuff_args::~stuff_info_add_company_follow_stuff_args() noexcept {
+}
+
+
+uint32_t stuff_info_add_company_follow_stuff_args::read(::apache::thrift::protocol::TProtocol* iprot) {
+
+  ::apache::thrift::protocol::TInputRecursionTracker tracker(*iprot);
+  uint32_t xfer = 0;
+  std::string fname;
+  ::apache::thrift::protocol::TType ftype;
+  int16_t fid;
+
+  xfer += iprot->readStructBegin(fname);
+
+  using ::apache::thrift::protocol::TProtocolException;
+
+
+  while (true)
+  {
+    xfer += iprot->readFieldBegin(fname, ftype, fid);
+    if (ftype == ::apache::thrift::protocol::T_STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 1:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->company_name);
+          this->__isset.company_name = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 2:
+        if (ftype == ::apache::thrift::protocol::T_I64) {
+          xfer += iprot->readI64(this->type_id);
+          this->__isset.type_id = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 3:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->ssid);
+          this->__isset.ssid = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      default:
+        xfer += iprot->skip(ftype);
+        break;
+    }
+    xfer += iprot->readFieldEnd();
+  }
+
+  xfer += iprot->readStructEnd();
+
+  return xfer;
+}
+
+uint32_t stuff_info_add_company_follow_stuff_args::write(::apache::thrift::protocol::TProtocol* oprot) const {
+  uint32_t xfer = 0;
+  ::apache::thrift::protocol::TOutputRecursionTracker tracker(*oprot);
+  xfer += oprot->writeStructBegin("stuff_info_add_company_follow_stuff_args");
+
+  xfer += oprot->writeFieldBegin("company_name", ::apache::thrift::protocol::T_STRING, 1);
+  xfer += oprot->writeString(this->company_name);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("type_id", ::apache::thrift::protocol::T_I64, 2);
+  xfer += oprot->writeI64(this->type_id);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("ssid", ::apache::thrift::protocol::T_STRING, 3);
+  xfer += oprot->writeString(this->ssid);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldStop();
+  xfer += oprot->writeStructEnd();
+  return xfer;
+}
+
+
+stuff_info_add_company_follow_stuff_pargs::~stuff_info_add_company_follow_stuff_pargs() noexcept {
+}
+
+
+uint32_t stuff_info_add_company_follow_stuff_pargs::write(::apache::thrift::protocol::TProtocol* oprot) const {
+  uint32_t xfer = 0;
+  ::apache::thrift::protocol::TOutputRecursionTracker tracker(*oprot);
+  xfer += oprot->writeStructBegin("stuff_info_add_company_follow_stuff_pargs");
+
+  xfer += oprot->writeFieldBegin("company_name", ::apache::thrift::protocol::T_STRING, 1);
+  xfer += oprot->writeString((*(this->company_name)));
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("type_id", ::apache::thrift::protocol::T_I64, 2);
+  xfer += oprot->writeI64((*(this->type_id)));
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("ssid", ::apache::thrift::protocol::T_STRING, 3);
+  xfer += oprot->writeString((*(this->ssid)));
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldStop();
+  xfer += oprot->writeStructEnd();
+  return xfer;
+}
+
+
+stuff_info_add_company_follow_stuff_result::~stuff_info_add_company_follow_stuff_result() noexcept {
+}
+
+
+uint32_t stuff_info_add_company_follow_stuff_result::read(::apache::thrift::protocol::TProtocol* iprot) {
+
+  ::apache::thrift::protocol::TInputRecursionTracker tracker(*iprot);
+  uint32_t xfer = 0;
+  std::string fname;
+  ::apache::thrift::protocol::TType ftype;
+  int16_t fid;
+
+  xfer += iprot->readStructBegin(fname);
+
+  using ::apache::thrift::protocol::TProtocolException;
+
+
+  while (true)
+  {
+    xfer += iprot->readFieldBegin(fname, ftype, fid);
+    if (ftype == ::apache::thrift::protocol::T_STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 0:
+        if (ftype == ::apache::thrift::protocol::T_BOOL) {
+          xfer += iprot->readBool(this->success);
+          this->__isset.success = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 1:
+        if (ftype == ::apache::thrift::protocol::T_STRUCT) {
+          xfer += this->e.read(iprot);
+          this->__isset.e = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      default:
+        xfer += iprot->skip(ftype);
+        break;
+    }
+    xfer += iprot->readFieldEnd();
+  }
+
+  xfer += iprot->readStructEnd();
+
+  return xfer;
+}
+
+uint32_t stuff_info_add_company_follow_stuff_result::write(::apache::thrift::protocol::TProtocol* oprot) const {
+
+  uint32_t xfer = 0;
+
+  xfer += oprot->writeStructBegin("stuff_info_add_company_follow_stuff_result");
+
+  if (this->__isset.success) {
+    xfer += oprot->writeFieldBegin("success", ::apache::thrift::protocol::T_BOOL, 0);
+    xfer += oprot->writeBool(this->success);
+    xfer += oprot->writeFieldEnd();
+  } else if (this->__isset.e) {
+    xfer += oprot->writeFieldBegin("e", ::apache::thrift::protocol::T_STRUCT, 1);
+    xfer += this->e.write(oprot);
+    xfer += oprot->writeFieldEnd();
+  }
+  xfer += oprot->writeFieldStop();
+  xfer += oprot->writeStructEnd();
+  return xfer;
+}
+
+
+stuff_info_add_company_follow_stuff_presult::~stuff_info_add_company_follow_stuff_presult() noexcept {
+}
+
+
+uint32_t stuff_info_add_company_follow_stuff_presult::read(::apache::thrift::protocol::TProtocol* iprot) {
+
+  ::apache::thrift::protocol::TInputRecursionTracker tracker(*iprot);
+  uint32_t xfer = 0;
+  std::string fname;
+  ::apache::thrift::protocol::TType ftype;
+  int16_t fid;
+
+  xfer += iprot->readStructBegin(fname);
+
+  using ::apache::thrift::protocol::TProtocolException;
+
+
+  while (true)
+  {
+    xfer += iprot->readFieldBegin(fname, ftype, fid);
+    if (ftype == ::apache::thrift::protocol::T_STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 0:
+        if (ftype == ::apache::thrift::protocol::T_BOOL) {
+          xfer += iprot->readBool((*(this->success)));
+          this->__isset.success = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 1:
+        if (ftype == ::apache::thrift::protocol::T_STRUCT) {
+          xfer += this->e.read(iprot);
+          this->__isset.e = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      default:
+        xfer += iprot->skip(ftype);
+        break;
+    }
+    xfer += iprot->readFieldEnd();
+  }
+
+  xfer += iprot->readStructEnd();
+
+  return xfer;
+}
+
+
+stuff_info_cancle_company_follow_stuff_args::~stuff_info_cancle_company_follow_stuff_args() noexcept {
+}
+
+
+uint32_t stuff_info_cancle_company_follow_stuff_args::read(::apache::thrift::protocol::TProtocol* iprot) {
+
+  ::apache::thrift::protocol::TInputRecursionTracker tracker(*iprot);
+  uint32_t xfer = 0;
+  std::string fname;
+  ::apache::thrift::protocol::TType ftype;
+  int16_t fid;
+
+  xfer += iprot->readStructBegin(fname);
+
+  using ::apache::thrift::protocol::TProtocolException;
+
+
+  while (true)
+  {
+    xfer += iprot->readFieldBegin(fname, ftype, fid);
+    if (ftype == ::apache::thrift::protocol::T_STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 1:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->company_name);
+          this->__isset.company_name = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 2:
+        if (ftype == ::apache::thrift::protocol::T_I64) {
+          xfer += iprot->readI64(this->type_id);
+          this->__isset.type_id = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 3:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->ssid);
+          this->__isset.ssid = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      default:
+        xfer += iprot->skip(ftype);
+        break;
+    }
+    xfer += iprot->readFieldEnd();
+  }
+
+  xfer += iprot->readStructEnd();
+
+  return xfer;
+}
+
+uint32_t stuff_info_cancle_company_follow_stuff_args::write(::apache::thrift::protocol::TProtocol* oprot) const {
+  uint32_t xfer = 0;
+  ::apache::thrift::protocol::TOutputRecursionTracker tracker(*oprot);
+  xfer += oprot->writeStructBegin("stuff_info_cancle_company_follow_stuff_args");
+
+  xfer += oprot->writeFieldBegin("company_name", ::apache::thrift::protocol::T_STRING, 1);
+  xfer += oprot->writeString(this->company_name);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("type_id", ::apache::thrift::protocol::T_I64, 2);
+  xfer += oprot->writeI64(this->type_id);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("ssid", ::apache::thrift::protocol::T_STRING, 3);
+  xfer += oprot->writeString(this->ssid);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldStop();
+  xfer += oprot->writeStructEnd();
+  return xfer;
+}
+
+
+stuff_info_cancle_company_follow_stuff_pargs::~stuff_info_cancle_company_follow_stuff_pargs() noexcept {
+}
+
+
+uint32_t stuff_info_cancle_company_follow_stuff_pargs::write(::apache::thrift::protocol::TProtocol* oprot) const {
+  uint32_t xfer = 0;
+  ::apache::thrift::protocol::TOutputRecursionTracker tracker(*oprot);
+  xfer += oprot->writeStructBegin("stuff_info_cancle_company_follow_stuff_pargs");
+
+  xfer += oprot->writeFieldBegin("company_name", ::apache::thrift::protocol::T_STRING, 1);
+  xfer += oprot->writeString((*(this->company_name)));
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("type_id", ::apache::thrift::protocol::T_I64, 2);
+  xfer += oprot->writeI64((*(this->type_id)));
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("ssid", ::apache::thrift::protocol::T_STRING, 3);
+  xfer += oprot->writeString((*(this->ssid)));
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldStop();
+  xfer += oprot->writeStructEnd();
+  return xfer;
+}
+
+
+stuff_info_cancle_company_follow_stuff_result::~stuff_info_cancle_company_follow_stuff_result() noexcept {
+}
+
+
+uint32_t stuff_info_cancle_company_follow_stuff_result::read(::apache::thrift::protocol::TProtocol* iprot) {
+
+  ::apache::thrift::protocol::TInputRecursionTracker tracker(*iprot);
+  uint32_t xfer = 0;
+  std::string fname;
+  ::apache::thrift::protocol::TType ftype;
+  int16_t fid;
+
+  xfer += iprot->readStructBegin(fname);
+
+  using ::apache::thrift::protocol::TProtocolException;
+
+
+  while (true)
+  {
+    xfer += iprot->readFieldBegin(fname, ftype, fid);
+    if (ftype == ::apache::thrift::protocol::T_STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 0:
+        if (ftype == ::apache::thrift::protocol::T_BOOL) {
+          xfer += iprot->readBool(this->success);
+          this->__isset.success = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 1:
+        if (ftype == ::apache::thrift::protocol::T_STRUCT) {
+          xfer += this->e.read(iprot);
+          this->__isset.e = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      default:
+        xfer += iprot->skip(ftype);
+        break;
+    }
+    xfer += iprot->readFieldEnd();
+  }
+
+  xfer += iprot->readStructEnd();
+
+  return xfer;
+}
+
+uint32_t stuff_info_cancle_company_follow_stuff_result::write(::apache::thrift::protocol::TProtocol* oprot) const {
+
+  uint32_t xfer = 0;
+
+  xfer += oprot->writeStructBegin("stuff_info_cancle_company_follow_stuff_result");
+
+  if (this->__isset.success) {
+    xfer += oprot->writeFieldBegin("success", ::apache::thrift::protocol::T_BOOL, 0);
+    xfer += oprot->writeBool(this->success);
+    xfer += oprot->writeFieldEnd();
+  } else if (this->__isset.e) {
+    xfer += oprot->writeFieldBegin("e", ::apache::thrift::protocol::T_STRUCT, 1);
+    xfer += this->e.write(oprot);
+    xfer += oprot->writeFieldEnd();
+  }
+  xfer += oprot->writeFieldStop();
+  xfer += oprot->writeStructEnd();
+  return xfer;
+}
+
+
+stuff_info_cancle_company_follow_stuff_presult::~stuff_info_cancle_company_follow_stuff_presult() noexcept {
+}
+
+
+uint32_t stuff_info_cancle_company_follow_stuff_presult::read(::apache::thrift::protocol::TProtocol* iprot) {
+
+  ::apache::thrift::protocol::TInputRecursionTracker tracker(*iprot);
+  uint32_t xfer = 0;
+  std::string fname;
+  ::apache::thrift::protocol::TType ftype;
+  int16_t fid;
+
+  xfer += iprot->readStructBegin(fname);
+
+  using ::apache::thrift::protocol::TProtocolException;
+
+
+  while (true)
+  {
+    xfer += iprot->readFieldBegin(fname, ftype, fid);
+    if (ftype == ::apache::thrift::protocol::T_STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 0:
+        if (ftype == ::apache::thrift::protocol::T_BOOL) {
+          xfer += iprot->readBool((*(this->success)));
+          this->__isset.success = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 1:
+        if (ftype == ::apache::thrift::protocol::T_STRUCT) {
+          xfer += this->e.read(iprot);
+          this->__isset.e = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      default:
+        xfer += iprot->skip(ftype);
+        break;
+    }
+    xfer += iprot->readFieldEnd();
+  }
+
+  xfer += iprot->readStructEnd();
+
+  return xfer;
+}
+
+
+stuff_info_get_follow_stuff_by_company_args::~stuff_info_get_follow_stuff_by_company_args() noexcept {
+}
+
+
+uint32_t stuff_info_get_follow_stuff_by_company_args::read(::apache::thrift::protocol::TProtocol* iprot) {
+
+  ::apache::thrift::protocol::TInputRecursionTracker tracker(*iprot);
+  uint32_t xfer = 0;
+  std::string fname;
+  ::apache::thrift::protocol::TType ftype;
+  int16_t fid;
+
+  xfer += iprot->readStructBegin(fname);
+
+  using ::apache::thrift::protocol::TProtocolException;
+
+
+  while (true)
+  {
+    xfer += iprot->readFieldBegin(fname, ftype, fid);
+    if (ftype == ::apache::thrift::protocol::T_STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 1:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->company_name);
+          this->__isset.company_name = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      default:
+        xfer += iprot->skip(ftype);
+        break;
+    }
+    xfer += iprot->readFieldEnd();
+  }
+
+  xfer += iprot->readStructEnd();
+
+  return xfer;
+}
+
+uint32_t stuff_info_get_follow_stuff_by_company_args::write(::apache::thrift::protocol::TProtocol* oprot) const {
+  uint32_t xfer = 0;
+  ::apache::thrift::protocol::TOutputRecursionTracker tracker(*oprot);
+  xfer += oprot->writeStructBegin("stuff_info_get_follow_stuff_by_company_args");
+
+  xfer += oprot->writeFieldBegin("company_name", ::apache::thrift::protocol::T_STRING, 1);
+  xfer += oprot->writeString(this->company_name);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldStop();
+  xfer += oprot->writeStructEnd();
+  return xfer;
+}
+
+
+stuff_info_get_follow_stuff_by_company_pargs::~stuff_info_get_follow_stuff_by_company_pargs() noexcept {
+}
+
+
+uint32_t stuff_info_get_follow_stuff_by_company_pargs::write(::apache::thrift::protocol::TProtocol* oprot) const {
+  uint32_t xfer = 0;
+  ::apache::thrift::protocol::TOutputRecursionTracker tracker(*oprot);
+  xfer += oprot->writeStructBegin("stuff_info_get_follow_stuff_by_company_pargs");
+
+  xfer += oprot->writeFieldBegin("company_name", ::apache::thrift::protocol::T_STRING, 1);
+  xfer += oprot->writeString((*(this->company_name)));
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldStop();
+  xfer += oprot->writeStructEnd();
+  return xfer;
+}
+
+
+stuff_info_get_follow_stuff_by_company_result::~stuff_info_get_follow_stuff_by_company_result() noexcept {
+}
+
+
+uint32_t stuff_info_get_follow_stuff_by_company_result::read(::apache::thrift::protocol::TProtocol* iprot) {
+
+  ::apache::thrift::protocol::TInputRecursionTracker tracker(*iprot);
+  uint32_t xfer = 0;
+  std::string fname;
+  ::apache::thrift::protocol::TType ftype;
+  int16_t fid;
+
+  xfer += iprot->readStructBegin(fname);
+
+  using ::apache::thrift::protocol::TProtocolException;
+
+
+  while (true)
+  {
+    xfer += iprot->readFieldBegin(fname, ftype, fid);
+    if (ftype == ::apache::thrift::protocol::T_STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 0:
+        if (ftype == ::apache::thrift::protocol::T_LIST) {
+          {
+            this->success.clear();
+            uint32_t _size181;
+            ::apache::thrift::protocol::TType _etype184;
+            xfer += iprot->readListBegin(_etype184, _size181);
+            this->success.resize(_size181);
+            uint32_t _i185;
+            for (_i185 = 0; _i185 < _size181; ++_i185)
+            {
+              xfer += this->success[_i185].read(iprot);
+            }
+            xfer += iprot->readListEnd();
+          }
+          this->__isset.success = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 1:
+        if (ftype == ::apache::thrift::protocol::T_STRUCT) {
+          xfer += this->e.read(iprot);
+          this->__isset.e = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      default:
+        xfer += iprot->skip(ftype);
+        break;
+    }
+    xfer += iprot->readFieldEnd();
+  }
+
+  xfer += iprot->readStructEnd();
+
+  return xfer;
+}
+
+uint32_t stuff_info_get_follow_stuff_by_company_result::write(::apache::thrift::protocol::TProtocol* oprot) const {
+
+  uint32_t xfer = 0;
+
+  xfer += oprot->writeStructBegin("stuff_info_get_follow_stuff_by_company_result");
+
+  if (this->__isset.success) {
+    xfer += oprot->writeFieldBegin("success", ::apache::thrift::protocol::T_LIST, 0);
+    {
+      xfer += oprot->writeListBegin(::apache::thrift::protocol::T_STRUCT, static_cast<uint32_t>(this->success.size()));
+      std::vector<stuff_detail> ::const_iterator _iter186;
+      for (_iter186 = this->success.begin(); _iter186 != this->success.end(); ++_iter186)
+      {
+        xfer += (*_iter186).write(oprot);
+      }
+      xfer += oprot->writeListEnd();
+    }
+    xfer += oprot->writeFieldEnd();
+  } else if (this->__isset.e) {
+    xfer += oprot->writeFieldBegin("e", ::apache::thrift::protocol::T_STRUCT, 1);
+    xfer += this->e.write(oprot);
+    xfer += oprot->writeFieldEnd();
+  }
+  xfer += oprot->writeFieldStop();
+  xfer += oprot->writeStructEnd();
+  return xfer;
+}
+
+
+stuff_info_get_follow_stuff_by_company_presult::~stuff_info_get_follow_stuff_by_company_presult() noexcept {
+}
+
+
+uint32_t stuff_info_get_follow_stuff_by_company_presult::read(::apache::thrift::protocol::TProtocol* iprot) {
+
+  ::apache::thrift::protocol::TInputRecursionTracker tracker(*iprot);
+  uint32_t xfer = 0;
+  std::string fname;
+  ::apache::thrift::protocol::TType ftype;
+  int16_t fid;
+
+  xfer += iprot->readStructBegin(fname);
+
+  using ::apache::thrift::protocol::TProtocolException;
+
+
+  while (true)
+  {
+    xfer += iprot->readFieldBegin(fname, ftype, fid);
+    if (ftype == ::apache::thrift::protocol::T_STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 0:
+        if (ftype == ::apache::thrift::protocol::T_LIST) {
+          {
+            (*(this->success)).clear();
+            uint32_t _size187;
+            ::apache::thrift::protocol::TType _etype190;
+            xfer += iprot->readListBegin(_etype190, _size187);
+            (*(this->success)).resize(_size187);
+            uint32_t _i191;
+            for (_i191 = 0; _i191 < _size187; ++_i191)
+            {
+              xfer += (*(this->success))[_i191].read(iprot);
+            }
+            xfer += iprot->readListEnd();
+          }
+          this->__isset.success = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 1:
+        if (ftype == ::apache::thrift::protocol::T_STRUCT) {
+          xfer += this->e.read(iprot);
+          this->__isset.e = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      default:
+        xfer += iprot->skip(ftype);
+        break;
+    }
+    xfer += iprot->readFieldEnd();
+  }
+
+  xfer += iprot->readStructEnd();
+
+  return xfer;
+}
+
+
+stuff_info_get_follow_company_by_stuff_args::~stuff_info_get_follow_company_by_stuff_args() noexcept {
+}
+
+
+uint32_t stuff_info_get_follow_company_by_stuff_args::read(::apache::thrift::protocol::TProtocol* iprot) {
+
+  ::apache::thrift::protocol::TInputRecursionTracker tracker(*iprot);
+  uint32_t xfer = 0;
+  std::string fname;
+  ::apache::thrift::protocol::TType ftype;
+  int16_t fid;
+
+  xfer += iprot->readStructBegin(fname);
+
+  using ::apache::thrift::protocol::TProtocolException;
+
+
+  while (true)
+  {
+    xfer += iprot->readFieldBegin(fname, ftype, fid);
+    if (ftype == ::apache::thrift::protocol::T_STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 1:
+        if (ftype == ::apache::thrift::protocol::T_I64) {
+          xfer += iprot->readI64(this->type_id);
+          this->__isset.type_id = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 2:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->ssid);
+          this->__isset.ssid = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      default:
+        xfer += iprot->skip(ftype);
+        break;
+    }
+    xfer += iprot->readFieldEnd();
+  }
+
+  xfer += iprot->readStructEnd();
+
+  return xfer;
+}
+
+uint32_t stuff_info_get_follow_company_by_stuff_args::write(::apache::thrift::protocol::TProtocol* oprot) const {
+  uint32_t xfer = 0;
+  ::apache::thrift::protocol::TOutputRecursionTracker tracker(*oprot);
+  xfer += oprot->writeStructBegin("stuff_info_get_follow_company_by_stuff_args");
+
+  xfer += oprot->writeFieldBegin("type_id", ::apache::thrift::protocol::T_I64, 1);
+  xfer += oprot->writeI64(this->type_id);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("ssid", ::apache::thrift::protocol::T_STRING, 2);
+  xfer += oprot->writeString(this->ssid);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldStop();
+  xfer += oprot->writeStructEnd();
+  return xfer;
+}
+
+
+stuff_info_get_follow_company_by_stuff_pargs::~stuff_info_get_follow_company_by_stuff_pargs() noexcept {
+}
+
+
+uint32_t stuff_info_get_follow_company_by_stuff_pargs::write(::apache::thrift::protocol::TProtocol* oprot) const {
+  uint32_t xfer = 0;
+  ::apache::thrift::protocol::TOutputRecursionTracker tracker(*oprot);
+  xfer += oprot->writeStructBegin("stuff_info_get_follow_company_by_stuff_pargs");
+
+  xfer += oprot->writeFieldBegin("type_id", ::apache::thrift::protocol::T_I64, 1);
+  xfer += oprot->writeI64((*(this->type_id)));
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("ssid", ::apache::thrift::protocol::T_STRING, 2);
+  xfer += oprot->writeString((*(this->ssid)));
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldStop();
+  xfer += oprot->writeStructEnd();
+  return xfer;
+}
+
+
+stuff_info_get_follow_company_by_stuff_result::~stuff_info_get_follow_company_by_stuff_result() noexcept {
+}
+
+
+uint32_t stuff_info_get_follow_company_by_stuff_result::read(::apache::thrift::protocol::TProtocol* iprot) {
+
+  ::apache::thrift::protocol::TInputRecursionTracker tracker(*iprot);
+  uint32_t xfer = 0;
+  std::string fname;
+  ::apache::thrift::protocol::TType ftype;
+  int16_t fid;
+
+  xfer += iprot->readStructBegin(fname);
+
+  using ::apache::thrift::protocol::TProtocolException;
+
+
+  while (true)
+  {
+    xfer += iprot->readFieldBegin(fname, ftype, fid);
+    if (ftype == ::apache::thrift::protocol::T_STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 0:
+        if (ftype == ::apache::thrift::protocol::T_LIST) {
+          {
+            this->success.clear();
+            uint32_t _size192;
+            ::apache::thrift::protocol::TType _etype195;
+            xfer += iprot->readListBegin(_etype195, _size192);
+            this->success.resize(_size192);
+            uint32_t _i196;
+            for (_i196 = 0; _i196 < _size192; ++_i196)
+            {
+              xfer += iprot->readString(this->success[_i196]);
+            }
+            xfer += iprot->readListEnd();
+          }
+          this->__isset.success = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 1:
+        if (ftype == ::apache::thrift::protocol::T_STRUCT) {
+          xfer += this->e.read(iprot);
+          this->__isset.e = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      default:
+        xfer += iprot->skip(ftype);
+        break;
+    }
+    xfer += iprot->readFieldEnd();
+  }
+
+  xfer += iprot->readStructEnd();
+
+  return xfer;
+}
+
+uint32_t stuff_info_get_follow_company_by_stuff_result::write(::apache::thrift::protocol::TProtocol* oprot) const {
+
+  uint32_t xfer = 0;
+
+  xfer += oprot->writeStructBegin("stuff_info_get_follow_company_by_stuff_result");
+
+  if (this->__isset.success) {
+    xfer += oprot->writeFieldBegin("success", ::apache::thrift::protocol::T_LIST, 0);
+    {
+      xfer += oprot->writeListBegin(::apache::thrift::protocol::T_STRING, static_cast<uint32_t>(this->success.size()));
+      std::vector<std::string> ::const_iterator _iter197;
+      for (_iter197 = this->success.begin(); _iter197 != this->success.end(); ++_iter197)
+      {
+        xfer += oprot->writeString((*_iter197));
+      }
+      xfer += oprot->writeListEnd();
+    }
+    xfer += oprot->writeFieldEnd();
+  } else if (this->__isset.e) {
+    xfer += oprot->writeFieldBegin("e", ::apache::thrift::protocol::T_STRUCT, 1);
+    xfer += this->e.write(oprot);
+    xfer += oprot->writeFieldEnd();
+  }
+  xfer += oprot->writeFieldStop();
+  xfer += oprot->writeStructEnd();
+  return xfer;
+}
+
+
+stuff_info_get_follow_company_by_stuff_presult::~stuff_info_get_follow_company_by_stuff_presult() noexcept {
+}
+
+
+uint32_t stuff_info_get_follow_company_by_stuff_presult::read(::apache::thrift::protocol::TProtocol* iprot) {
+
+  ::apache::thrift::protocol::TInputRecursionTracker tracker(*iprot);
+  uint32_t xfer = 0;
+  std::string fname;
+  ::apache::thrift::protocol::TType ftype;
+  int16_t fid;
+
+  xfer += iprot->readStructBegin(fname);
+
+  using ::apache::thrift::protocol::TProtocolException;
+
+
+  while (true)
+  {
+    xfer += iprot->readFieldBegin(fname, ftype, fid);
+    if (ftype == ::apache::thrift::protocol::T_STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 0:
+        if (ftype == ::apache::thrift::protocol::T_LIST) {
+          {
+            (*(this->success)).clear();
+            uint32_t _size198;
+            ::apache::thrift::protocol::TType _etype201;
+            xfer += iprot->readListBegin(_etype201, _size198);
+            (*(this->success)).resize(_size198);
+            uint32_t _i202;
+            for (_i202 = 0; _i202 < _size198; ++_i202)
+            {
+              xfer += iprot->readString((*(this->success))[_i202]);
+            }
+            xfer += iprot->readListEnd();
+          }
+          this->__isset.success = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 1:
+        if (ftype == ::apache::thrift::protocol::T_STRUCT) {
+          xfer += this->e.read(iprot);
+          this->__isset.e = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      default:
+        xfer += iprot->skip(ftype);
+        break;
+    }
+    xfer += iprot->readFieldEnd();
+  }
+
+  xfer += iprot->readStructEnd();
+
+  return xfer;
+}
+
+void stuff_infoClient::get_today(std::vector<stuff_detail> & _return, const std::string& ssid)
 {
-  send_get_today();
+  send_get_today(ssid);
   recv_get_today(_return);
 }
 
-void stuff_infoClient::send_get_today()
+void stuff_infoClient::send_get_today(const std::string& ssid)
 {
   int32_t cseqid = 0;
   oprot_->writeMessageBegin("get_today", ::apache::thrift::protocol::T_CALL, cseqid);
 
   stuff_info_get_today_pargs args;
+  args.ssid = &ssid;
   args.write(oprot_);
 
   oprot_->writeMessageEnd();
@@ -493,19 +1742,81 @@ void stuff_infoClient::recv_get_today(std::vector<stuff_detail> & _return)
   throw ::apache::thrift::TApplicationException(::apache::thrift::TApplicationException::MISSING_RESULT, "get_today failed: unknown result");
 }
 
-void stuff_infoClient::get_stuff_detail(stuff_detail& _return, const int64_t type_id)
+void stuff_infoClient::get_today_unfollow(std::vector<stuff_detail> & _return, const std::string& ssid)
 {
-  send_get_stuff_detail(type_id);
+  send_get_today_unfollow(ssid);
+  recv_get_today_unfollow(_return);
+}
+
+void stuff_infoClient::send_get_today_unfollow(const std::string& ssid)
+{
+  int32_t cseqid = 0;
+  oprot_->writeMessageBegin("get_today_unfollow", ::apache::thrift::protocol::T_CALL, cseqid);
+
+  stuff_info_get_today_unfollow_pargs args;
+  args.ssid = &ssid;
+  args.write(oprot_);
+
+  oprot_->writeMessageEnd();
+  oprot_->getTransport()->writeEnd();
+  oprot_->getTransport()->flush();
+}
+
+void stuff_infoClient::recv_get_today_unfollow(std::vector<stuff_detail> & _return)
+{
+
+  int32_t rseqid = 0;
+  std::string fname;
+  ::apache::thrift::protocol::TMessageType mtype;
+
+  iprot_->readMessageBegin(fname, mtype, rseqid);
+  if (mtype == ::apache::thrift::protocol::T_EXCEPTION) {
+    ::apache::thrift::TApplicationException x;
+    x.read(iprot_);
+    iprot_->readMessageEnd();
+    iprot_->getTransport()->readEnd();
+    throw x;
+  }
+  if (mtype != ::apache::thrift::protocol::T_REPLY) {
+    iprot_->skip(::apache::thrift::protocol::T_STRUCT);
+    iprot_->readMessageEnd();
+    iprot_->getTransport()->readEnd();
+  }
+  if (fname.compare("get_today_unfollow") != 0) {
+    iprot_->skip(::apache::thrift::protocol::T_STRUCT);
+    iprot_->readMessageEnd();
+    iprot_->getTransport()->readEnd();
+  }
+  stuff_info_get_today_unfollow_presult result;
+  result.success = &_return;
+  result.read(iprot_);
+  iprot_->readMessageEnd();
+  iprot_->getTransport()->readEnd();
+
+  if (result.__isset.success) {
+    // _return pointer has now been filled
+    return;
+  }
+  if (result.__isset.e) {
+    throw result.e;
+  }
+  throw ::apache::thrift::TApplicationException(::apache::thrift::TApplicationException::MISSING_RESULT, "get_today_unfollow failed: unknown result");
+}
+
+void stuff_infoClient::get_stuff_detail(stuff_detail& _return, const int64_t type_id, const std::string& ssid)
+{
+  send_get_stuff_detail(type_id, ssid);
   recv_get_stuff_detail(_return);
 }
 
-void stuff_infoClient::send_get_stuff_detail(const int64_t type_id)
+void stuff_infoClient::send_get_stuff_detail(const int64_t type_id, const std::string& ssid)
 {
   int32_t cseqid = 0;
   oprot_->writeMessageBegin("get_stuff_detail", ::apache::thrift::protocol::T_CALL, cseqid);
 
   stuff_info_get_stuff_detail_pargs args;
   args.type_id = &type_id;
+  args.ssid = &ssid;
   args.write(oprot_);
 
   oprot_->writeMessageEnd();
@@ -554,6 +1865,255 @@ void stuff_infoClient::recv_get_stuff_detail(stuff_detail& _return)
   throw ::apache::thrift::TApplicationException(::apache::thrift::TApplicationException::MISSING_RESULT, "get_stuff_detail failed: unknown result");
 }
 
+bool stuff_infoClient::add_company_follow_stuff(const std::string& company_name, const int64_t type_id, const std::string& ssid)
+{
+  send_add_company_follow_stuff(company_name, type_id, ssid);
+  return recv_add_company_follow_stuff();
+}
+
+void stuff_infoClient::send_add_company_follow_stuff(const std::string& company_name, const int64_t type_id, const std::string& ssid)
+{
+  int32_t cseqid = 0;
+  oprot_->writeMessageBegin("add_company_follow_stuff", ::apache::thrift::protocol::T_CALL, cseqid);
+
+  stuff_info_add_company_follow_stuff_pargs args;
+  args.company_name = &company_name;
+  args.type_id = &type_id;
+  args.ssid = &ssid;
+  args.write(oprot_);
+
+  oprot_->writeMessageEnd();
+  oprot_->getTransport()->writeEnd();
+  oprot_->getTransport()->flush();
+}
+
+bool stuff_infoClient::recv_add_company_follow_stuff()
+{
+
+  int32_t rseqid = 0;
+  std::string fname;
+  ::apache::thrift::protocol::TMessageType mtype;
+
+  iprot_->readMessageBegin(fname, mtype, rseqid);
+  if (mtype == ::apache::thrift::protocol::T_EXCEPTION) {
+    ::apache::thrift::TApplicationException x;
+    x.read(iprot_);
+    iprot_->readMessageEnd();
+    iprot_->getTransport()->readEnd();
+    throw x;
+  }
+  if (mtype != ::apache::thrift::protocol::T_REPLY) {
+    iprot_->skip(::apache::thrift::protocol::T_STRUCT);
+    iprot_->readMessageEnd();
+    iprot_->getTransport()->readEnd();
+  }
+  if (fname.compare("add_company_follow_stuff") != 0) {
+    iprot_->skip(::apache::thrift::protocol::T_STRUCT);
+    iprot_->readMessageEnd();
+    iprot_->getTransport()->readEnd();
+  }
+  bool _return;
+  stuff_info_add_company_follow_stuff_presult result;
+  result.success = &_return;
+  result.read(iprot_);
+  iprot_->readMessageEnd();
+  iprot_->getTransport()->readEnd();
+
+  if (result.__isset.success) {
+    return _return;
+  }
+  if (result.__isset.e) {
+    throw result.e;
+  }
+  throw ::apache::thrift::TApplicationException(::apache::thrift::TApplicationException::MISSING_RESULT, "add_company_follow_stuff failed: unknown result");
+}
+
+bool stuff_infoClient::cancle_company_follow_stuff(const std::string& company_name, const int64_t type_id, const std::string& ssid)
+{
+  send_cancle_company_follow_stuff(company_name, type_id, ssid);
+  return recv_cancle_company_follow_stuff();
+}
+
+void stuff_infoClient::send_cancle_company_follow_stuff(const std::string& company_name, const int64_t type_id, const std::string& ssid)
+{
+  int32_t cseqid = 0;
+  oprot_->writeMessageBegin("cancle_company_follow_stuff", ::apache::thrift::protocol::T_CALL, cseqid);
+
+  stuff_info_cancle_company_follow_stuff_pargs args;
+  args.company_name = &company_name;
+  args.type_id = &type_id;
+  args.ssid = &ssid;
+  args.write(oprot_);
+
+  oprot_->writeMessageEnd();
+  oprot_->getTransport()->writeEnd();
+  oprot_->getTransport()->flush();
+}
+
+bool stuff_infoClient::recv_cancle_company_follow_stuff()
+{
+
+  int32_t rseqid = 0;
+  std::string fname;
+  ::apache::thrift::protocol::TMessageType mtype;
+
+  iprot_->readMessageBegin(fname, mtype, rseqid);
+  if (mtype == ::apache::thrift::protocol::T_EXCEPTION) {
+    ::apache::thrift::TApplicationException x;
+    x.read(iprot_);
+    iprot_->readMessageEnd();
+    iprot_->getTransport()->readEnd();
+    throw x;
+  }
+  if (mtype != ::apache::thrift::protocol::T_REPLY) {
+    iprot_->skip(::apache::thrift::protocol::T_STRUCT);
+    iprot_->readMessageEnd();
+    iprot_->getTransport()->readEnd();
+  }
+  if (fname.compare("cancle_company_follow_stuff") != 0) {
+    iprot_->skip(::apache::thrift::protocol::T_STRUCT);
+    iprot_->readMessageEnd();
+    iprot_->getTransport()->readEnd();
+  }
+  bool _return;
+  stuff_info_cancle_company_follow_stuff_presult result;
+  result.success = &_return;
+  result.read(iprot_);
+  iprot_->readMessageEnd();
+  iprot_->getTransport()->readEnd();
+
+  if (result.__isset.success) {
+    return _return;
+  }
+  if (result.__isset.e) {
+    throw result.e;
+  }
+  throw ::apache::thrift::TApplicationException(::apache::thrift::TApplicationException::MISSING_RESULT, "cancle_company_follow_stuff failed: unknown result");
+}
+
+void stuff_infoClient::get_follow_stuff_by_company(std::vector<stuff_detail> & _return, const std::string& company_name)
+{
+  send_get_follow_stuff_by_company(company_name);
+  recv_get_follow_stuff_by_company(_return);
+}
+
+void stuff_infoClient::send_get_follow_stuff_by_company(const std::string& company_name)
+{
+  int32_t cseqid = 0;
+  oprot_->writeMessageBegin("get_follow_stuff_by_company", ::apache::thrift::protocol::T_CALL, cseqid);
+
+  stuff_info_get_follow_stuff_by_company_pargs args;
+  args.company_name = &company_name;
+  args.write(oprot_);
+
+  oprot_->writeMessageEnd();
+  oprot_->getTransport()->writeEnd();
+  oprot_->getTransport()->flush();
+}
+
+void stuff_infoClient::recv_get_follow_stuff_by_company(std::vector<stuff_detail> & _return)
+{
+
+  int32_t rseqid = 0;
+  std::string fname;
+  ::apache::thrift::protocol::TMessageType mtype;
+
+  iprot_->readMessageBegin(fname, mtype, rseqid);
+  if (mtype == ::apache::thrift::protocol::T_EXCEPTION) {
+    ::apache::thrift::TApplicationException x;
+    x.read(iprot_);
+    iprot_->readMessageEnd();
+    iprot_->getTransport()->readEnd();
+    throw x;
+  }
+  if (mtype != ::apache::thrift::protocol::T_REPLY) {
+    iprot_->skip(::apache::thrift::protocol::T_STRUCT);
+    iprot_->readMessageEnd();
+    iprot_->getTransport()->readEnd();
+  }
+  if (fname.compare("get_follow_stuff_by_company") != 0) {
+    iprot_->skip(::apache::thrift::protocol::T_STRUCT);
+    iprot_->readMessageEnd();
+    iprot_->getTransport()->readEnd();
+  }
+  stuff_info_get_follow_stuff_by_company_presult result;
+  result.success = &_return;
+  result.read(iprot_);
+  iprot_->readMessageEnd();
+  iprot_->getTransport()->readEnd();
+
+  if (result.__isset.success) {
+    // _return pointer has now been filled
+    return;
+  }
+  if (result.__isset.e) {
+    throw result.e;
+  }
+  throw ::apache::thrift::TApplicationException(::apache::thrift::TApplicationException::MISSING_RESULT, "get_follow_stuff_by_company failed: unknown result");
+}
+
+void stuff_infoClient::get_follow_company_by_stuff(std::vector<std::string> & _return, const int64_t type_id, const std::string& ssid)
+{
+  send_get_follow_company_by_stuff(type_id, ssid);
+  recv_get_follow_company_by_stuff(_return);
+}
+
+void stuff_infoClient::send_get_follow_company_by_stuff(const int64_t type_id, const std::string& ssid)
+{
+  int32_t cseqid = 0;
+  oprot_->writeMessageBegin("get_follow_company_by_stuff", ::apache::thrift::protocol::T_CALL, cseqid);
+
+  stuff_info_get_follow_company_by_stuff_pargs args;
+  args.type_id = &type_id;
+  args.ssid = &ssid;
+  args.write(oprot_);
+
+  oprot_->writeMessageEnd();
+  oprot_->getTransport()->writeEnd();
+  oprot_->getTransport()->flush();
+}
+
+void stuff_infoClient::recv_get_follow_company_by_stuff(std::vector<std::string> & _return)
+{
+
+  int32_t rseqid = 0;
+  std::string fname;
+  ::apache::thrift::protocol::TMessageType mtype;
+
+  iprot_->readMessageBegin(fname, mtype, rseqid);
+  if (mtype == ::apache::thrift::protocol::T_EXCEPTION) {
+    ::apache::thrift::TApplicationException x;
+    x.read(iprot_);
+    iprot_->readMessageEnd();
+    iprot_->getTransport()->readEnd();
+    throw x;
+  }
+  if (mtype != ::apache::thrift::protocol::T_REPLY) {
+    iprot_->skip(::apache::thrift::protocol::T_STRUCT);
+    iprot_->readMessageEnd();
+    iprot_->getTransport()->readEnd();
+  }
+  if (fname.compare("get_follow_company_by_stuff") != 0) {
+    iprot_->skip(::apache::thrift::protocol::T_STRUCT);
+    iprot_->readMessageEnd();
+    iprot_->getTransport()->readEnd();
+  }
+  stuff_info_get_follow_company_by_stuff_presult result;
+  result.success = &_return;
+  result.read(iprot_);
+  iprot_->readMessageEnd();
+  iprot_->getTransport()->readEnd();
+
+  if (result.__isset.success) {
+    // _return pointer has now been filled
+    return;
+  }
+  if (result.__isset.e) {
+    throw result.e;
+  }
+  throw ::apache::thrift::TApplicationException(::apache::thrift::TApplicationException::MISSING_RESULT, "get_follow_company_by_stuff failed: unknown result");
+}
+
 bool stuff_infoProcessor::dispatchCall(::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, const std::string& fname, int32_t seqid, void* callContext) {
   ProcessMap::iterator pfn;
   pfn = processMap_.find(fname);
@@ -596,7 +2156,7 @@ void stuff_infoProcessor::process_get_today(int32_t seqid, ::apache::thrift::pro
 
   stuff_info_get_today_result result;
   try {
-    iface_->get_today(result.success);
+    iface_->get_today(result.success, args.ssid);
     result.__isset.success = true;
   } catch (gen_exp &e) {
     result.e = e;
@@ -630,6 +2190,63 @@ void stuff_infoProcessor::process_get_today(int32_t seqid, ::apache::thrift::pro
   }
 }
 
+void stuff_infoProcessor::process_get_today_unfollow(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext)
+{
+  void* ctx = nullptr;
+  if (this->eventHandler_.get() != nullptr) {
+    ctx = this->eventHandler_->getContext("stuff_info.get_today_unfollow", callContext);
+  }
+  ::apache::thrift::TProcessorContextFreer freer(this->eventHandler_.get(), ctx, "stuff_info.get_today_unfollow");
+
+  if (this->eventHandler_.get() != nullptr) {
+    this->eventHandler_->preRead(ctx, "stuff_info.get_today_unfollow");
+  }
+
+  stuff_info_get_today_unfollow_args args;
+  args.read(iprot);
+  iprot->readMessageEnd();
+  uint32_t bytes = iprot->getTransport()->readEnd();
+
+  if (this->eventHandler_.get() != nullptr) {
+    this->eventHandler_->postRead(ctx, "stuff_info.get_today_unfollow", bytes);
+  }
+
+  stuff_info_get_today_unfollow_result result;
+  try {
+    iface_->get_today_unfollow(result.success, args.ssid);
+    result.__isset.success = true;
+  } catch (gen_exp &e) {
+    result.e = e;
+    result.__isset.e = true;
+  } catch (const std::exception& e) {
+    if (this->eventHandler_.get() != nullptr) {
+      this->eventHandler_->handlerError(ctx, "stuff_info.get_today_unfollow");
+    }
+
+    ::apache::thrift::TApplicationException x(e.what());
+    oprot->writeMessageBegin("get_today_unfollow", ::apache::thrift::protocol::T_EXCEPTION, seqid);
+    x.write(oprot);
+    oprot->writeMessageEnd();
+    oprot->getTransport()->writeEnd();
+    oprot->getTransport()->flush();
+    return;
+  }
+
+  if (this->eventHandler_.get() != nullptr) {
+    this->eventHandler_->preWrite(ctx, "stuff_info.get_today_unfollow");
+  }
+
+  oprot->writeMessageBegin("get_today_unfollow", ::apache::thrift::protocol::T_REPLY, seqid);
+  result.write(oprot);
+  oprot->writeMessageEnd();
+  bytes = oprot->getTransport()->writeEnd();
+  oprot->getTransport()->flush();
+
+  if (this->eventHandler_.get() != nullptr) {
+    this->eventHandler_->postWrite(ctx, "stuff_info.get_today_unfollow", bytes);
+  }
+}
+
 void stuff_infoProcessor::process_get_stuff_detail(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext)
 {
   void* ctx = nullptr;
@@ -653,7 +2270,7 @@ void stuff_infoProcessor::process_get_stuff_detail(int32_t seqid, ::apache::thri
 
   stuff_info_get_stuff_detail_result result;
   try {
-    iface_->get_stuff_detail(result.success, args.type_id);
+    iface_->get_stuff_detail(result.success, args.type_id, args.ssid);
     result.__isset.success = true;
   } catch (gen_exp &e) {
     result.e = e;
@@ -687,6 +2304,234 @@ void stuff_infoProcessor::process_get_stuff_detail(int32_t seqid, ::apache::thri
   }
 }
 
+void stuff_infoProcessor::process_add_company_follow_stuff(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext)
+{
+  void* ctx = nullptr;
+  if (this->eventHandler_.get() != nullptr) {
+    ctx = this->eventHandler_->getContext("stuff_info.add_company_follow_stuff", callContext);
+  }
+  ::apache::thrift::TProcessorContextFreer freer(this->eventHandler_.get(), ctx, "stuff_info.add_company_follow_stuff");
+
+  if (this->eventHandler_.get() != nullptr) {
+    this->eventHandler_->preRead(ctx, "stuff_info.add_company_follow_stuff");
+  }
+
+  stuff_info_add_company_follow_stuff_args args;
+  args.read(iprot);
+  iprot->readMessageEnd();
+  uint32_t bytes = iprot->getTransport()->readEnd();
+
+  if (this->eventHandler_.get() != nullptr) {
+    this->eventHandler_->postRead(ctx, "stuff_info.add_company_follow_stuff", bytes);
+  }
+
+  stuff_info_add_company_follow_stuff_result result;
+  try {
+    result.success = iface_->add_company_follow_stuff(args.company_name, args.type_id, args.ssid);
+    result.__isset.success = true;
+  } catch (gen_exp &e) {
+    result.e = e;
+    result.__isset.e = true;
+  } catch (const std::exception& e) {
+    if (this->eventHandler_.get() != nullptr) {
+      this->eventHandler_->handlerError(ctx, "stuff_info.add_company_follow_stuff");
+    }
+
+    ::apache::thrift::TApplicationException x(e.what());
+    oprot->writeMessageBegin("add_company_follow_stuff", ::apache::thrift::protocol::T_EXCEPTION, seqid);
+    x.write(oprot);
+    oprot->writeMessageEnd();
+    oprot->getTransport()->writeEnd();
+    oprot->getTransport()->flush();
+    return;
+  }
+
+  if (this->eventHandler_.get() != nullptr) {
+    this->eventHandler_->preWrite(ctx, "stuff_info.add_company_follow_stuff");
+  }
+
+  oprot->writeMessageBegin("add_company_follow_stuff", ::apache::thrift::protocol::T_REPLY, seqid);
+  result.write(oprot);
+  oprot->writeMessageEnd();
+  bytes = oprot->getTransport()->writeEnd();
+  oprot->getTransport()->flush();
+
+  if (this->eventHandler_.get() != nullptr) {
+    this->eventHandler_->postWrite(ctx, "stuff_info.add_company_follow_stuff", bytes);
+  }
+}
+
+void stuff_infoProcessor::process_cancle_company_follow_stuff(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext)
+{
+  void* ctx = nullptr;
+  if (this->eventHandler_.get() != nullptr) {
+    ctx = this->eventHandler_->getContext("stuff_info.cancle_company_follow_stuff", callContext);
+  }
+  ::apache::thrift::TProcessorContextFreer freer(this->eventHandler_.get(), ctx, "stuff_info.cancle_company_follow_stuff");
+
+  if (this->eventHandler_.get() != nullptr) {
+    this->eventHandler_->preRead(ctx, "stuff_info.cancle_company_follow_stuff");
+  }
+
+  stuff_info_cancle_company_follow_stuff_args args;
+  args.read(iprot);
+  iprot->readMessageEnd();
+  uint32_t bytes = iprot->getTransport()->readEnd();
+
+  if (this->eventHandler_.get() != nullptr) {
+    this->eventHandler_->postRead(ctx, "stuff_info.cancle_company_follow_stuff", bytes);
+  }
+
+  stuff_info_cancle_company_follow_stuff_result result;
+  try {
+    result.success = iface_->cancle_company_follow_stuff(args.company_name, args.type_id, args.ssid);
+    result.__isset.success = true;
+  } catch (gen_exp &e) {
+    result.e = e;
+    result.__isset.e = true;
+  } catch (const std::exception& e) {
+    if (this->eventHandler_.get() != nullptr) {
+      this->eventHandler_->handlerError(ctx, "stuff_info.cancle_company_follow_stuff");
+    }
+
+    ::apache::thrift::TApplicationException x(e.what());
+    oprot->writeMessageBegin("cancle_company_follow_stuff", ::apache::thrift::protocol::T_EXCEPTION, seqid);
+    x.write(oprot);
+    oprot->writeMessageEnd();
+    oprot->getTransport()->writeEnd();
+    oprot->getTransport()->flush();
+    return;
+  }
+
+  if (this->eventHandler_.get() != nullptr) {
+    this->eventHandler_->preWrite(ctx, "stuff_info.cancle_company_follow_stuff");
+  }
+
+  oprot->writeMessageBegin("cancle_company_follow_stuff", ::apache::thrift::protocol::T_REPLY, seqid);
+  result.write(oprot);
+  oprot->writeMessageEnd();
+  bytes = oprot->getTransport()->writeEnd();
+  oprot->getTransport()->flush();
+
+  if (this->eventHandler_.get() != nullptr) {
+    this->eventHandler_->postWrite(ctx, "stuff_info.cancle_company_follow_stuff", bytes);
+  }
+}
+
+void stuff_infoProcessor::process_get_follow_stuff_by_company(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext)
+{
+  void* ctx = nullptr;
+  if (this->eventHandler_.get() != nullptr) {
+    ctx = this->eventHandler_->getContext("stuff_info.get_follow_stuff_by_company", callContext);
+  }
+  ::apache::thrift::TProcessorContextFreer freer(this->eventHandler_.get(), ctx, "stuff_info.get_follow_stuff_by_company");
+
+  if (this->eventHandler_.get() != nullptr) {
+    this->eventHandler_->preRead(ctx, "stuff_info.get_follow_stuff_by_company");
+  }
+
+  stuff_info_get_follow_stuff_by_company_args args;
+  args.read(iprot);
+  iprot->readMessageEnd();
+  uint32_t bytes = iprot->getTransport()->readEnd();
+
+  if (this->eventHandler_.get() != nullptr) {
+    this->eventHandler_->postRead(ctx, "stuff_info.get_follow_stuff_by_company", bytes);
+  }
+
+  stuff_info_get_follow_stuff_by_company_result result;
+  try {
+    iface_->get_follow_stuff_by_company(result.success, args.company_name);
+    result.__isset.success = true;
+  } catch (gen_exp &e) {
+    result.e = e;
+    result.__isset.e = true;
+  } catch (const std::exception& e) {
+    if (this->eventHandler_.get() != nullptr) {
+      this->eventHandler_->handlerError(ctx, "stuff_info.get_follow_stuff_by_company");
+    }
+
+    ::apache::thrift::TApplicationException x(e.what());
+    oprot->writeMessageBegin("get_follow_stuff_by_company", ::apache::thrift::protocol::T_EXCEPTION, seqid);
+    x.write(oprot);
+    oprot->writeMessageEnd();
+    oprot->getTransport()->writeEnd();
+    oprot->getTransport()->flush();
+    return;
+  }
+
+  if (this->eventHandler_.get() != nullptr) {
+    this->eventHandler_->preWrite(ctx, "stuff_info.get_follow_stuff_by_company");
+  }
+
+  oprot->writeMessageBegin("get_follow_stuff_by_company", ::apache::thrift::protocol::T_REPLY, seqid);
+  result.write(oprot);
+  oprot->writeMessageEnd();
+  bytes = oprot->getTransport()->writeEnd();
+  oprot->getTransport()->flush();
+
+  if (this->eventHandler_.get() != nullptr) {
+    this->eventHandler_->postWrite(ctx, "stuff_info.get_follow_stuff_by_company", bytes);
+  }
+}
+
+void stuff_infoProcessor::process_get_follow_company_by_stuff(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext)
+{
+  void* ctx = nullptr;
+  if (this->eventHandler_.get() != nullptr) {
+    ctx = this->eventHandler_->getContext("stuff_info.get_follow_company_by_stuff", callContext);
+  }
+  ::apache::thrift::TProcessorContextFreer freer(this->eventHandler_.get(), ctx, "stuff_info.get_follow_company_by_stuff");
+
+  if (this->eventHandler_.get() != nullptr) {
+    this->eventHandler_->preRead(ctx, "stuff_info.get_follow_company_by_stuff");
+  }
+
+  stuff_info_get_follow_company_by_stuff_args args;
+  args.read(iprot);
+  iprot->readMessageEnd();
+  uint32_t bytes = iprot->getTransport()->readEnd();
+
+  if (this->eventHandler_.get() != nullptr) {
+    this->eventHandler_->postRead(ctx, "stuff_info.get_follow_company_by_stuff", bytes);
+  }
+
+  stuff_info_get_follow_company_by_stuff_result result;
+  try {
+    iface_->get_follow_company_by_stuff(result.success, args.type_id, args.ssid);
+    result.__isset.success = true;
+  } catch (gen_exp &e) {
+    result.e = e;
+    result.__isset.e = true;
+  } catch (const std::exception& e) {
+    if (this->eventHandler_.get() != nullptr) {
+      this->eventHandler_->handlerError(ctx, "stuff_info.get_follow_company_by_stuff");
+    }
+
+    ::apache::thrift::TApplicationException x(e.what());
+    oprot->writeMessageBegin("get_follow_company_by_stuff", ::apache::thrift::protocol::T_EXCEPTION, seqid);
+    x.write(oprot);
+    oprot->writeMessageEnd();
+    oprot->getTransport()->writeEnd();
+    oprot->getTransport()->flush();
+    return;
+  }
+
+  if (this->eventHandler_.get() != nullptr) {
+    this->eventHandler_->preWrite(ctx, "stuff_info.get_follow_company_by_stuff");
+  }
+
+  oprot->writeMessageBegin("get_follow_company_by_stuff", ::apache::thrift::protocol::T_REPLY, seqid);
+  result.write(oprot);
+  oprot->writeMessageEnd();
+  bytes = oprot->getTransport()->writeEnd();
+  oprot->getTransport()->flush();
+
+  if (this->eventHandler_.get() != nullptr) {
+    this->eventHandler_->postWrite(ctx, "stuff_info.get_follow_company_by_stuff", bytes);
+  }
+}
+
 ::std::shared_ptr< ::apache::thrift::TProcessor > stuff_infoProcessorFactory::getProcessor(const ::apache::thrift::TConnectionInfo& connInfo) {
   ::apache::thrift::ReleaseHandler< stuff_infoIfFactory > cleanup(handlerFactory_);
   ::std::shared_ptr< stuff_infoIf > handler(handlerFactory_->getHandler(connInfo), cleanup);
@@ -694,19 +2539,20 @@ void stuff_infoProcessor::process_get_stuff_detail(int32_t seqid, ::apache::thri
   return processor;
 }
 
-void stuff_infoConcurrentClient::get_today(std::vector<stuff_detail> & _return)
+void stuff_infoConcurrentClient::get_today(std::vector<stuff_detail> & _return, const std::string& ssid)
 {
-  int32_t seqid = send_get_today();
+  int32_t seqid = send_get_today(ssid);
   recv_get_today(_return, seqid);
 }
 
-int32_t stuff_infoConcurrentClient::send_get_today()
+int32_t stuff_infoConcurrentClient::send_get_today(const std::string& ssid)
 {
   int32_t cseqid = this->sync_->generateSeqId();
   ::apache::thrift::async::TConcurrentSendSentry sentry(this->sync_.get());
   oprot_->writeMessageBegin("get_today", ::apache::thrift::protocol::T_CALL, cseqid);
 
   stuff_info_get_today_pargs args;
+  args.ssid = &ssid;
   args.write(oprot_);
 
   oprot_->writeMessageEnd();
@@ -781,13 +2627,101 @@ void stuff_infoConcurrentClient::recv_get_today(std::vector<stuff_detail> & _ret
   } // end while(true)
 }
 
-void stuff_infoConcurrentClient::get_stuff_detail(stuff_detail& _return, const int64_t type_id)
+void stuff_infoConcurrentClient::get_today_unfollow(std::vector<stuff_detail> & _return, const std::string& ssid)
 {
-  int32_t seqid = send_get_stuff_detail(type_id);
+  int32_t seqid = send_get_today_unfollow(ssid);
+  recv_get_today_unfollow(_return, seqid);
+}
+
+int32_t stuff_infoConcurrentClient::send_get_today_unfollow(const std::string& ssid)
+{
+  int32_t cseqid = this->sync_->generateSeqId();
+  ::apache::thrift::async::TConcurrentSendSentry sentry(this->sync_.get());
+  oprot_->writeMessageBegin("get_today_unfollow", ::apache::thrift::protocol::T_CALL, cseqid);
+
+  stuff_info_get_today_unfollow_pargs args;
+  args.ssid = &ssid;
+  args.write(oprot_);
+
+  oprot_->writeMessageEnd();
+  oprot_->getTransport()->writeEnd();
+  oprot_->getTransport()->flush();
+
+  sentry.commit();
+  return cseqid;
+}
+
+void stuff_infoConcurrentClient::recv_get_today_unfollow(std::vector<stuff_detail> & _return, const int32_t seqid)
+{
+
+  int32_t rseqid = 0;
+  std::string fname;
+  ::apache::thrift::protocol::TMessageType mtype;
+
+  // the read mutex gets dropped and reacquired as part of waitForWork()
+  // The destructor of this sentry wakes up other clients
+  ::apache::thrift::async::TConcurrentRecvSentry sentry(this->sync_.get(), seqid);
+
+  while(true) {
+    if(!this->sync_->getPending(fname, mtype, rseqid)) {
+      iprot_->readMessageBegin(fname, mtype, rseqid);
+    }
+    if(seqid == rseqid) {
+      if (mtype == ::apache::thrift::protocol::T_EXCEPTION) {
+        ::apache::thrift::TApplicationException x;
+        x.read(iprot_);
+        iprot_->readMessageEnd();
+        iprot_->getTransport()->readEnd();
+        sentry.commit();
+        throw x;
+      }
+      if (mtype != ::apache::thrift::protocol::T_REPLY) {
+        iprot_->skip(::apache::thrift::protocol::T_STRUCT);
+        iprot_->readMessageEnd();
+        iprot_->getTransport()->readEnd();
+      }
+      if (fname.compare("get_today_unfollow") != 0) {
+        iprot_->skip(::apache::thrift::protocol::T_STRUCT);
+        iprot_->readMessageEnd();
+        iprot_->getTransport()->readEnd();
+
+        // in a bad state, don't commit
+        using ::apache::thrift::protocol::TProtocolException;
+        throw TProtocolException(TProtocolException::INVALID_DATA);
+      }
+      stuff_info_get_today_unfollow_presult result;
+      result.success = &_return;
+      result.read(iprot_);
+      iprot_->readMessageEnd();
+      iprot_->getTransport()->readEnd();
+
+      if (result.__isset.success) {
+        // _return pointer has now been filled
+        sentry.commit();
+        return;
+      }
+      if (result.__isset.e) {
+        sentry.commit();
+        throw result.e;
+      }
+      // in a bad state, don't commit
+      throw ::apache::thrift::TApplicationException(::apache::thrift::TApplicationException::MISSING_RESULT, "get_today_unfollow failed: unknown result");
+    }
+    // seqid != rseqid
+    this->sync_->updatePending(fname, mtype, rseqid);
+
+    // this will temporarily unlock the readMutex, and let other clients get work done
+    this->sync_->waitForWork(seqid);
+  } // end while(true)
+}
+
+void stuff_infoConcurrentClient::get_stuff_detail(stuff_detail& _return, const int64_t type_id, const std::string& ssid)
+{
+  int32_t seqid = send_get_stuff_detail(type_id, ssid);
   recv_get_stuff_detail(_return, seqid);
 }
 
-int32_t stuff_infoConcurrentClient::send_get_stuff_detail(const int64_t type_id)
+int32_t stuff_infoConcurrentClient::send_get_stuff_detail(const int64_t type_id, const std::string& ssid)
 {
   int32_t cseqid = this->sync_->generateSeqId();
   ::apache::thrift::async::TConcurrentSendSentry sentry(this->sync_.get());
@@ -795,6 +2729,7 @@ int32_t stuff_infoConcurrentClient::send_get_stuff_detail(const int64_t type_id)
 
   stuff_info_get_stuff_detail_pargs args;
   args.type_id = &type_id;
+  args.ssid = &ssid;
   args.write(oprot_);
 
   oprot_->writeMessageEnd();
@@ -860,6 +2795,363 @@ void stuff_infoConcurrentClient::recv_get_stuff_detail(stuff_detail& _return, co
       }
       // in a bad state, don't commit
       throw ::apache::thrift::TApplicationException(::apache::thrift::TApplicationException::MISSING_RESULT, "get_stuff_detail failed: unknown result");
+    }
+    // seqid != rseqid
+    this->sync_->updatePending(fname, mtype, rseqid);
+
+    // this will temporarily unlock the readMutex, and let other clients get work done
+    this->sync_->waitForWork(seqid);
+  } // end while(true)
+}
+
+bool stuff_infoConcurrentClient::add_company_follow_stuff(const std::string& company_name, const int64_t type_id, const std::string& ssid)
+{
+  int32_t seqid = send_add_company_follow_stuff(company_name, type_id, ssid);
+  return recv_add_company_follow_stuff(seqid);
+}
+
+int32_t stuff_infoConcurrentClient::send_add_company_follow_stuff(const std::string& company_name, const int64_t type_id, const std::string& ssid)
+{
+  int32_t cseqid = this->sync_->generateSeqId();
+  ::apache::thrift::async::TConcurrentSendSentry sentry(this->sync_.get());
+  oprot_->writeMessageBegin("add_company_follow_stuff", ::apache::thrift::protocol::T_CALL, cseqid);
+
+  stuff_info_add_company_follow_stuff_pargs args;
+  args.company_name = &company_name;
+  args.type_id = &type_id;
+  args.ssid = &ssid;
+  args.write(oprot_);
+
+  oprot_->writeMessageEnd();
+  oprot_->getTransport()->writeEnd();
+  oprot_->getTransport()->flush();
+
+  sentry.commit();
+  return cseqid;
+}
+
+bool stuff_infoConcurrentClient::recv_add_company_follow_stuff(const int32_t seqid)
+{
+
+  int32_t rseqid = 0;
+  std::string fname;
+  ::apache::thrift::protocol::TMessageType mtype;
+
+  // the read mutex gets dropped and reacquired as part of waitForWork()
+  // The destructor of this sentry wakes up other clients
+  ::apache::thrift::async::TConcurrentRecvSentry sentry(this->sync_.get(), seqid);
+
+  while(true) {
+    if(!this->sync_->getPending(fname, mtype, rseqid)) {
+      iprot_->readMessageBegin(fname, mtype, rseqid);
+    }
+    if(seqid == rseqid) {
+      if (mtype == ::apache::thrift::protocol::T_EXCEPTION) {
+        ::apache::thrift::TApplicationException x;
+        x.read(iprot_);
+        iprot_->readMessageEnd();
+        iprot_->getTransport()->readEnd();
+        sentry.commit();
+        throw x;
+      }
+      if (mtype != ::apache::thrift::protocol::T_REPLY) {
+        iprot_->skip(::apache::thrift::protocol::T_STRUCT);
+        iprot_->readMessageEnd();
+        iprot_->getTransport()->readEnd();
+      }
+      if (fname.compare("add_company_follow_stuff") != 0) {
+        iprot_->skip(::apache::thrift::protocol::T_STRUCT);
+        iprot_->readMessageEnd();
+        iprot_->getTransport()->readEnd();
+
+        // in a bad state, don't commit
+        using ::apache::thrift::protocol::TProtocolException;
+        throw TProtocolException(TProtocolException::INVALID_DATA);
+      }
+      bool _return;
+      stuff_info_add_company_follow_stuff_presult result;
+      result.success = &_return;
+      result.read(iprot_);
+      iprot_->readMessageEnd();
+      iprot_->getTransport()->readEnd();
+
+      if (result.__isset.success) {
+        sentry.commit();
+        return _return;
+      }
+      if (result.__isset.e) {
+        sentry.commit();
+        throw result.e;
+      }
+      // in a bad state, don't commit
+      throw ::apache::thrift::TApplicationException(::apache::thrift::TApplicationException::MISSING_RESULT, "add_company_follow_stuff failed: unknown result");
+    }
+    // seqid != rseqid
+    this->sync_->updatePending(fname, mtype, rseqid);
+
+    // this will temporarily unlock the readMutex, and let other clients get work done
+    this->sync_->waitForWork(seqid);
+  } // end while(true)
+}
+
+bool stuff_infoConcurrentClient::cancle_company_follow_stuff(const std::string& company_name, const int64_t type_id, const std::string& ssid)
+{
+  int32_t seqid = send_cancle_company_follow_stuff(company_name, type_id, ssid);
+  return recv_cancle_company_follow_stuff(seqid);
+}
+
+int32_t stuff_infoConcurrentClient::send_cancle_company_follow_stuff(const std::string& company_name, const int64_t type_id, const std::string& ssid)
+{
+  int32_t cseqid = this->sync_->generateSeqId();
+  ::apache::thrift::async::TConcurrentSendSentry sentry(this->sync_.get());
+  oprot_->writeMessageBegin("cancle_company_follow_stuff", ::apache::thrift::protocol::T_CALL, cseqid);
+
+  stuff_info_cancle_company_follow_stuff_pargs args;
+  args.company_name = &company_name;
+  args.type_id = &type_id;
+  args.ssid = &ssid;
+  args.write(oprot_);
+
+  oprot_->writeMessageEnd();
+  oprot_->getTransport()->writeEnd();
+  oprot_->getTransport()->flush();
+
+  sentry.commit();
+  return cseqid;
+}
+
+bool stuff_infoConcurrentClient::recv_cancle_company_follow_stuff(const int32_t seqid)
+{
+
+  int32_t rseqid = 0;
+  std::string fname;
+  ::apache::thrift::protocol::TMessageType mtype;
+
+  // the read mutex gets dropped and reacquired as part of waitForWork()
+  // The destructor of this sentry wakes up other clients
+  ::apache::thrift::async::TConcurrentRecvSentry sentry(this->sync_.get(), seqid);
+
+  while(true) {
+    if(!this->sync_->getPending(fname, mtype, rseqid)) {
+      iprot_->readMessageBegin(fname, mtype, rseqid);
+    }
+    if(seqid == rseqid) {
+      if (mtype == ::apache::thrift::protocol::T_EXCEPTION) {
+        ::apache::thrift::TApplicationException x;
+        x.read(iprot_);
+        iprot_->readMessageEnd();
+        iprot_->getTransport()->readEnd();
+        sentry.commit();
+        throw x;
+      }
+      if (mtype != ::apache::thrift::protocol::T_REPLY) {
+        iprot_->skip(::apache::thrift::protocol::T_STRUCT);
+        iprot_->readMessageEnd();
+        iprot_->getTransport()->readEnd();
+      }
+      if (fname.compare("cancle_company_follow_stuff") != 0) {
+        iprot_->skip(::apache::thrift::protocol::T_STRUCT);
+        iprot_->readMessageEnd();
+        iprot_->getTransport()->readEnd();
+
+        // in a bad state, don't commit
+        using ::apache::thrift::protocol::TProtocolException;
+        throw TProtocolException(TProtocolException::INVALID_DATA);
+      }
+      bool _return;
+      stuff_info_cancle_company_follow_stuff_presult result;
+      result.success = &_return;
+      result.read(iprot_);
+      iprot_->readMessageEnd();
+      iprot_->getTransport()->readEnd();
+
+      if (result.__isset.success) {
+        sentry.commit();
+        return _return;
+      }
+      if (result.__isset.e) {
+        sentry.commit();
+        throw result.e;
+      }
+      // in a bad state, don't commit
+      throw ::apache::thrift::TApplicationException(::apache::thrift::TApplicationException::MISSING_RESULT, "cancle_company_follow_stuff failed: unknown result");
+    }
+    // seqid != rseqid
+    this->sync_->updatePending(fname, mtype, rseqid);
+
+    // this will temporarily unlock the readMutex, and let other clients get work done
+    this->sync_->waitForWork(seqid);
+  } // end while(true)
+}
+
+void stuff_infoConcurrentClient::get_follow_stuff_by_company(std::vector<stuff_detail> & _return, const std::string& company_name)
+{
+  int32_t seqid = send_get_follow_stuff_by_company(company_name);
+  recv_get_follow_stuff_by_company(_return, seqid);
+}
+
+int32_t stuff_infoConcurrentClient::send_get_follow_stuff_by_company(const std::string& company_name)
+{
+  int32_t cseqid = this->sync_->generateSeqId();
+  ::apache::thrift::async::TConcurrentSendSentry sentry(this->sync_.get());
+  oprot_->writeMessageBegin("get_follow_stuff_by_company", ::apache::thrift::protocol::T_CALL, cseqid);
+
+  stuff_info_get_follow_stuff_by_company_pargs args;
+  args.company_name = &company_name;
+  args.write(oprot_);
+
+  oprot_->writeMessageEnd();
+  oprot_->getTransport()->writeEnd();
+  oprot_->getTransport()->flush();
+
+  sentry.commit();
+  return cseqid;
+}
+
+void stuff_infoConcurrentClient::recv_get_follow_stuff_by_company(std::vector<stuff_detail> & _return, const int32_t seqid)
+{
+
+  int32_t rseqid = 0;
+  std::string fname;
+  ::apache::thrift::protocol::TMessageType mtype;
+
+  // the read mutex gets dropped and reacquired as part of waitForWork()
+  // The destructor of this sentry wakes up other clients
+  ::apache::thrift::async::TConcurrentRecvSentry sentry(this->sync_.get(), seqid);
+
+  while(true) {
+    if(!this->sync_->getPending(fname, mtype, rseqid)) {
+      iprot_->readMessageBegin(fname, mtype, rseqid);
+    }
+    if(seqid == rseqid) {
+      if (mtype == ::apache::thrift::protocol::T_EXCEPTION) {
+        ::apache::thrift::TApplicationException x;
+        x.read(iprot_);
+        iprot_->readMessageEnd();
+        iprot_->getTransport()->readEnd();
+        sentry.commit();
+        throw x;
+      }
+      if (mtype != ::apache::thrift::protocol::T_REPLY) {
+        iprot_->skip(::apache::thrift::protocol::T_STRUCT);
+        iprot_->readMessageEnd();
+        iprot_->getTransport()->readEnd();
+      }
+      if (fname.compare("get_follow_stuff_by_company") != 0) {
+        iprot_->skip(::apache::thrift::protocol::T_STRUCT);
+        iprot_->readMessageEnd();
+        iprot_->getTransport()->readEnd();
+
+        // in a bad state, don't commit
+        using ::apache::thrift::protocol::TProtocolException;
+        throw TProtocolException(TProtocolException::INVALID_DATA);
+      }
+      stuff_info_get_follow_stuff_by_company_presult result;
+      result.success = &_return;
+      result.read(iprot_);
+      iprot_->readMessageEnd();
+      iprot_->getTransport()->readEnd();
+
+      if (result.__isset.success) {
+        // _return pointer has now been filled
+        sentry.commit();
+        return;
+      }
+      if (result.__isset.e) {
+        sentry.commit();
+        throw result.e;
+      }
+      // in a bad state, don't commit
+      throw ::apache::thrift::TApplicationException(::apache::thrift::TApplicationException::MISSING_RESULT, "get_follow_stuff_by_company failed: unknown result");
+    }
+    // seqid != rseqid
+    this->sync_->updatePending(fname, mtype, rseqid);
+
+    // this will temporarily unlock the readMutex, and let other clients get work done
+    this->sync_->waitForWork(seqid);
+  } // end while(true)
+}
+
+void stuff_infoConcurrentClient::get_follow_company_by_stuff(std::vector<std::string> & _return, const int64_t type_id, const std::string& ssid)
+{
+  int32_t seqid = send_get_follow_company_by_stuff(type_id, ssid);
+  recv_get_follow_company_by_stuff(_return, seqid);
+}
+
+int32_t stuff_infoConcurrentClient::send_get_follow_company_by_stuff(const int64_t type_id, const std::string& ssid)
+{
+  int32_t cseqid = this->sync_->generateSeqId();
+  ::apache::thrift::async::TConcurrentSendSentry sentry(this->sync_.get());
+  oprot_->writeMessageBegin("get_follow_company_by_stuff", ::apache::thrift::protocol::T_CALL, cseqid);
+
+  stuff_info_get_follow_company_by_stuff_pargs args;
+  args.type_id = &type_id;
+  args.ssid = &ssid;
+  args.write(oprot_);
+
+  oprot_->writeMessageEnd();
+  oprot_->getTransport()->writeEnd();
+  oprot_->getTransport()->flush();
+
+  sentry.commit();
+  return cseqid;
+}
+
+void stuff_infoConcurrentClient::recv_get_follow_company_by_stuff(std::vector<std::string> & _return, const int32_t seqid)
+{
+
+  int32_t rseqid = 0;
+  std::string fname;
+  ::apache::thrift::protocol::TMessageType mtype;
+
+  // the read mutex gets dropped and reacquired as part of waitForWork()
+  // The destructor of this sentry wakes up other clients
+  ::apache::thrift::async::TConcurrentRecvSentry sentry(this->sync_.get(), seqid);
+
+  while(true) {
+    if(!this->sync_->getPending(fname, mtype, rseqid)) {
+      iprot_->readMessageBegin(fname, mtype, rseqid);
+    }
+    if(seqid == rseqid) {
+      if (mtype == ::apache::thrift::protocol::T_EXCEPTION) {
+        ::apache::thrift::TApplicationException x;
+        x.read(iprot_);
+        iprot_->readMessageEnd();
+        iprot_->getTransport()->readEnd();
+        sentry.commit();
+        throw x;
+      }
+      if (mtype != ::apache::thrift::protocol::T_REPLY) {
+        iprot_->skip(::apache::thrift::protocol::T_STRUCT);
+        iprot_->readMessageEnd();
+        iprot_->getTransport()->readEnd();
+      }
+      if (fname.compare("get_follow_company_by_stuff") != 0) {
+        iprot_->skip(::apache::thrift::protocol::T_STRUCT);
+        iprot_->readMessageEnd();
+        iprot_->getTransport()->readEnd();
+
+        // in a bad state, don't commit
+        using ::apache::thrift::protocol::TProtocolException;
+        throw TProtocolException(TProtocolException::INVALID_DATA);
+      }
+      stuff_info_get_follow_company_by_stuff_presult result;
+      result.success = &_return;
+      result.read(iprot_);
+      iprot_->readMessageEnd();
+      iprot_->getTransport()->readEnd();
+
+      if (result.__isset.success) {
+        // _return pointer has now been filled
+        sentry.commit();
+        return;
+      }
+      if (result.__isset.e) {
+        sentry.commit();
+        throw result.e;
+      }
+      // in a bad state, don't commit
+      throw ::apache::thrift::TApplicationException(::apache::thrift::TApplicationException::MISSING_RESULT, "get_follow_company_by_stuff failed: unknown result");
     }
     // seqid != rseqid
     this->sync_->updatePending(fname, mtype, rseqid);

@@ -24,8 +24,13 @@ if len(sys.argv) <= 1 or sys.argv[1] == '--help':
     print('Usage: ' + sys.argv[0] + ' [-h host[:port]] [-u url] [-f[ramed]] [-s[sl]] [-novalidate] [-ca_certs certs] [-keyfile keyfile] [-certfile certfile] function [arg1 [arg2...]]')
     print('')
     print('Functions:')
-    print('   get_today()')
-    print('  stuff_detail get_stuff_detail(i64 type_id)')
+    print('   get_today(string ssid)')
+    print('   get_today_unfollow(string ssid)')
+    print('  stuff_detail get_stuff_detail(i64 type_id, string ssid)')
+    print('  bool add_company_follow_stuff(string company_name, i64 type_id, string ssid)')
+    print('  bool cancle_company_follow_stuff(string company_name, i64 type_id, string ssid)')
+    print('   get_follow_stuff_by_company(string company_name)')
+    print('   get_follow_company_by_stuff(i64 type_id, string ssid)')
     print('')
     sys.exit(0)
 
@@ -106,16 +111,46 @@ client = stuff_info.Client(protocol)
 transport.open()
 
 if cmd == 'get_today':
-    if len(args) != 0:
-        print('get_today requires 0 args')
+    if len(args) != 1:
+        print('get_today requires 1 args')
         sys.exit(1)
-    pp.pprint(client.get_today())
+    pp.pprint(client.get_today(args[0],))
+
+elif cmd == 'get_today_unfollow':
+    if len(args) != 1:
+        print('get_today_unfollow requires 1 args')
+        sys.exit(1)
+    pp.pprint(client.get_today_unfollow(args[0],))
 
 elif cmd == 'get_stuff_detail':
-    if len(args) != 1:
-        print('get_stuff_detail requires 1 args')
+    if len(args) != 2:
+        print('get_stuff_detail requires 2 args')
         sys.exit(1)
-    pp.pprint(client.get_stuff_detail(eval(args[0]),))
+    pp.pprint(client.get_stuff_detail(eval(args[0]), args[1],))
+
+elif cmd == 'add_company_follow_stuff':
+    if len(args) != 3:
+        print('add_company_follow_stuff requires 3 args')
+        sys.exit(1)
+    pp.pprint(client.add_company_follow_stuff(args[0], eval(args[1]), args[2],))
+
+elif cmd == 'cancle_company_follow_stuff':
+    if len(args) != 3:
+        print('cancle_company_follow_stuff requires 3 args')
+        sys.exit(1)
+    pp.pprint(client.cancle_company_follow_stuff(args[0], eval(args[1]), args[2],))
+
+elif cmd == 'get_follow_stuff_by_company':
+    if len(args) != 1:
+        print('get_follow_stuff_by_company requires 1 args')
+        sys.exit(1)
+    pp.pprint(client.get_follow_stuff_by_company(args[0],))
+
+elif cmd == 'get_follow_company_by_stuff':
+    if len(args) != 2:
+        print('get_follow_company_by_stuff requires 2 args')
+        sys.exit(1)
+    pp.pprint(client.get_follow_company_by_stuff(eval(args[0]), args[1],))
 
 else:
     print('Unrecognized method %s' % cmd)

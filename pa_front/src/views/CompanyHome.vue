@@ -486,7 +486,7 @@ export default {
         get_type_detail: function (_id) {
             var vue_this = this;
             vue_this.all_type = [];
-            this.$call_remote_process("stuff_info", 'get_stuff_detail', [_id]).then(function (resp) {
+            this.$call_remote_process("stuff_info", 'get_stuff_detail', [_id, vue_this.$cookies.get('pa_ssid')]).then(function (resp) {
                 vue_this.$set(vue_this.all_type, vue_this.all_type.length, resp);
                 vue_this.all_type.sort((a, b) => {
                     return b.saling - a.saling;

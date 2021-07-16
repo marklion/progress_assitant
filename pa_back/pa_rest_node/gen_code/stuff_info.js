@@ -15,6 +15,12 @@ var ttypes = require('./idl_types');
 //HELPER FUNCTIONS AND STRUCTURES
 
 var stuff_info_get_today_args = function(args) {
+  this.ssid = null;
+  if (args) {
+    if (args.ssid !== undefined && args.ssid !== null) {
+      this.ssid = args.ssid;
+    }
+  }
 };
 stuff_info_get_today_args.prototype = {};
 stuff_info_get_today_args.prototype.read = function(input) {
@@ -22,10 +28,24 @@ stuff_info_get_today_args.prototype.read = function(input) {
   while (true) {
     var ret = input.readFieldBegin();
     var ftype = ret.ftype;
+    var fid = ret.fid;
     if (ftype == Thrift.Type.STOP) {
       break;
     }
-    input.skip(ftype);
+    switch (fid) {
+      case 1:
+      if (ftype == Thrift.Type.STRING) {
+        this.ssid = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 0:
+        input.skip(ftype);
+        break;
+      default:
+        input.skip(ftype);
+    }
     input.readFieldEnd();
   }
   input.readStructEnd();
@@ -34,6 +54,11 @@ stuff_info_get_today_args.prototype.read = function(input) {
 
 stuff_info_get_today_args.prototype.write = function(output) {
   output.writeStructBegin('stuff_info_get_today_args');
+  if (this.ssid !== null && this.ssid !== undefined) {
+    output.writeFieldBegin('ssid', Thrift.Type.STRING, 1);
+    output.writeString(this.ssid);
+    output.writeFieldEnd();
+  }
   output.writeFieldStop();
   output.writeStructEnd();
   return;
@@ -123,11 +148,149 @@ stuff_info_get_today_result.prototype.write = function(output) {
   return;
 };
 
+var stuff_info_get_today_unfollow_args = function(args) {
+  this.ssid = null;
+  if (args) {
+    if (args.ssid !== undefined && args.ssid !== null) {
+      this.ssid = args.ssid;
+    }
+  }
+};
+stuff_info_get_today_unfollow_args.prototype = {};
+stuff_info_get_today_unfollow_args.prototype.read = function(input) {
+  input.readStructBegin();
+  while (true) {
+    var ret = input.readFieldBegin();
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    switch (fid) {
+      case 1:
+      if (ftype == Thrift.Type.STRING) {
+        this.ssid = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 0:
+        input.skip(ftype);
+        break;
+      default:
+        input.skip(ftype);
+    }
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+stuff_info_get_today_unfollow_args.prototype.write = function(output) {
+  output.writeStructBegin('stuff_info_get_today_unfollow_args');
+  if (this.ssid !== null && this.ssid !== undefined) {
+    output.writeFieldBegin('ssid', Thrift.Type.STRING, 1);
+    output.writeString(this.ssid);
+    output.writeFieldEnd();
+  }
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+
+var stuff_info_get_today_unfollow_result = function(args) {
+  this.success = null;
+  this.e = null;
+  if (args instanceof ttypes.gen_exp) {
+    this.e = args;
+    return;
+  }
+  if (args) {
+    if (args.success !== undefined && args.success !== null) {
+      this.success = Thrift.copyList(args.success, [ttypes.stuff_detail]);
+    }
+    if (args.e !== undefined && args.e !== null) {
+      this.e = args.e;
+    }
+  }
+};
+stuff_info_get_today_unfollow_result.prototype = {};
+stuff_info_get_today_unfollow_result.prototype.read = function(input) {
+  input.readStructBegin();
+  while (true) {
+    var ret = input.readFieldBegin();
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    switch (fid) {
+      case 0:
+      if (ftype == Thrift.Type.LIST) {
+        this.success = [];
+        var _rtmp356 = input.readListBegin();
+        var _size55 = _rtmp356.size || 0;
+        for (var _i57 = 0; _i57 < _size55; ++_i57) {
+          var elem58 = null;
+          elem58 = new ttypes.stuff_detail();
+          elem58.read(input);
+          this.success.push(elem58);
+        }
+        input.readListEnd();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 1:
+      if (ftype == Thrift.Type.STRUCT) {
+        this.e = new ttypes.gen_exp();
+        this.e.read(input);
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      default:
+        input.skip(ftype);
+    }
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+stuff_info_get_today_unfollow_result.prototype.write = function(output) {
+  output.writeStructBegin('stuff_info_get_today_unfollow_result');
+  if (this.success !== null && this.success !== undefined) {
+    output.writeFieldBegin('success', Thrift.Type.LIST, 0);
+    output.writeListBegin(Thrift.Type.STRUCT, this.success.length);
+    for (var iter59 in this.success) {
+      if (this.success.hasOwnProperty(iter59)) {
+        iter59 = this.success[iter59];
+        iter59.write(output);
+      }
+    }
+    output.writeListEnd();
+    output.writeFieldEnd();
+  }
+  if (this.e !== null && this.e !== undefined) {
+    output.writeFieldBegin('e', Thrift.Type.STRUCT, 1);
+    this.e.write(output);
+    output.writeFieldEnd();
+  }
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+
 var stuff_info_get_stuff_detail_args = function(args) {
   this.type_id = null;
+  this.ssid = null;
   if (args) {
     if (args.type_id !== undefined && args.type_id !== null) {
       this.type_id = args.type_id;
+    }
+    if (args.ssid !== undefined && args.ssid !== null) {
+      this.ssid = args.ssid;
     }
   }
 };
@@ -149,9 +312,13 @@ stuff_info_get_stuff_detail_args.prototype.read = function(input) {
         input.skip(ftype);
       }
       break;
-      case 0:
+      case 2:
+      if (ftype == Thrift.Type.STRING) {
+        this.ssid = input.readString();
+      } else {
         input.skip(ftype);
-        break;
+      }
+      break;
       default:
         input.skip(ftype);
     }
@@ -166,6 +333,11 @@ stuff_info_get_stuff_detail_args.prototype.write = function(output) {
   if (this.type_id !== null && this.type_id !== undefined) {
     output.writeFieldBegin('type_id', Thrift.Type.I64, 1);
     output.writeI64(this.type_id);
+    output.writeFieldEnd();
+  }
+  if (this.ssid !== null && this.ssid !== undefined) {
+    output.writeFieldBegin('ssid', Thrift.Type.STRING, 2);
+    output.writeString(this.ssid);
     output.writeFieldEnd();
   }
   output.writeFieldStop();
@@ -242,6 +414,580 @@ stuff_info_get_stuff_detail_result.prototype.write = function(output) {
   return;
 };
 
+var stuff_info_add_company_follow_stuff_args = function(args) {
+  this.company_name = null;
+  this.type_id = null;
+  this.ssid = null;
+  if (args) {
+    if (args.company_name !== undefined && args.company_name !== null) {
+      this.company_name = args.company_name;
+    }
+    if (args.type_id !== undefined && args.type_id !== null) {
+      this.type_id = args.type_id;
+    }
+    if (args.ssid !== undefined && args.ssid !== null) {
+      this.ssid = args.ssid;
+    }
+  }
+};
+stuff_info_add_company_follow_stuff_args.prototype = {};
+stuff_info_add_company_follow_stuff_args.prototype.read = function(input) {
+  input.readStructBegin();
+  while (true) {
+    var ret = input.readFieldBegin();
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    switch (fid) {
+      case 1:
+      if (ftype == Thrift.Type.STRING) {
+        this.company_name = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 2:
+      if (ftype == Thrift.Type.I64) {
+        this.type_id = input.readI64();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 3:
+      if (ftype == Thrift.Type.STRING) {
+        this.ssid = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      default:
+        input.skip(ftype);
+    }
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+stuff_info_add_company_follow_stuff_args.prototype.write = function(output) {
+  output.writeStructBegin('stuff_info_add_company_follow_stuff_args');
+  if (this.company_name !== null && this.company_name !== undefined) {
+    output.writeFieldBegin('company_name', Thrift.Type.STRING, 1);
+    output.writeString(this.company_name);
+    output.writeFieldEnd();
+  }
+  if (this.type_id !== null && this.type_id !== undefined) {
+    output.writeFieldBegin('type_id', Thrift.Type.I64, 2);
+    output.writeI64(this.type_id);
+    output.writeFieldEnd();
+  }
+  if (this.ssid !== null && this.ssid !== undefined) {
+    output.writeFieldBegin('ssid', Thrift.Type.STRING, 3);
+    output.writeString(this.ssid);
+    output.writeFieldEnd();
+  }
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+
+var stuff_info_add_company_follow_stuff_result = function(args) {
+  this.success = null;
+  this.e = null;
+  if (args instanceof ttypes.gen_exp) {
+    this.e = args;
+    return;
+  }
+  if (args) {
+    if (args.success !== undefined && args.success !== null) {
+      this.success = args.success;
+    }
+    if (args.e !== undefined && args.e !== null) {
+      this.e = args.e;
+    }
+  }
+};
+stuff_info_add_company_follow_stuff_result.prototype = {};
+stuff_info_add_company_follow_stuff_result.prototype.read = function(input) {
+  input.readStructBegin();
+  while (true) {
+    var ret = input.readFieldBegin();
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    switch (fid) {
+      case 0:
+      if (ftype == Thrift.Type.BOOL) {
+        this.success = input.readBool();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 1:
+      if (ftype == Thrift.Type.STRUCT) {
+        this.e = new ttypes.gen_exp();
+        this.e.read(input);
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      default:
+        input.skip(ftype);
+    }
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+stuff_info_add_company_follow_stuff_result.prototype.write = function(output) {
+  output.writeStructBegin('stuff_info_add_company_follow_stuff_result');
+  if (this.success !== null && this.success !== undefined) {
+    output.writeFieldBegin('success', Thrift.Type.BOOL, 0);
+    output.writeBool(this.success);
+    output.writeFieldEnd();
+  }
+  if (this.e !== null && this.e !== undefined) {
+    output.writeFieldBegin('e', Thrift.Type.STRUCT, 1);
+    this.e.write(output);
+    output.writeFieldEnd();
+  }
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+
+var stuff_info_cancle_company_follow_stuff_args = function(args) {
+  this.company_name = null;
+  this.type_id = null;
+  this.ssid = null;
+  if (args) {
+    if (args.company_name !== undefined && args.company_name !== null) {
+      this.company_name = args.company_name;
+    }
+    if (args.type_id !== undefined && args.type_id !== null) {
+      this.type_id = args.type_id;
+    }
+    if (args.ssid !== undefined && args.ssid !== null) {
+      this.ssid = args.ssid;
+    }
+  }
+};
+stuff_info_cancle_company_follow_stuff_args.prototype = {};
+stuff_info_cancle_company_follow_stuff_args.prototype.read = function(input) {
+  input.readStructBegin();
+  while (true) {
+    var ret = input.readFieldBegin();
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    switch (fid) {
+      case 1:
+      if (ftype == Thrift.Type.STRING) {
+        this.company_name = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 2:
+      if (ftype == Thrift.Type.I64) {
+        this.type_id = input.readI64();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 3:
+      if (ftype == Thrift.Type.STRING) {
+        this.ssid = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      default:
+        input.skip(ftype);
+    }
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+stuff_info_cancle_company_follow_stuff_args.prototype.write = function(output) {
+  output.writeStructBegin('stuff_info_cancle_company_follow_stuff_args');
+  if (this.company_name !== null && this.company_name !== undefined) {
+    output.writeFieldBegin('company_name', Thrift.Type.STRING, 1);
+    output.writeString(this.company_name);
+    output.writeFieldEnd();
+  }
+  if (this.type_id !== null && this.type_id !== undefined) {
+    output.writeFieldBegin('type_id', Thrift.Type.I64, 2);
+    output.writeI64(this.type_id);
+    output.writeFieldEnd();
+  }
+  if (this.ssid !== null && this.ssid !== undefined) {
+    output.writeFieldBegin('ssid', Thrift.Type.STRING, 3);
+    output.writeString(this.ssid);
+    output.writeFieldEnd();
+  }
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+
+var stuff_info_cancle_company_follow_stuff_result = function(args) {
+  this.success = null;
+  this.e = null;
+  if (args instanceof ttypes.gen_exp) {
+    this.e = args;
+    return;
+  }
+  if (args) {
+    if (args.success !== undefined && args.success !== null) {
+      this.success = args.success;
+    }
+    if (args.e !== undefined && args.e !== null) {
+      this.e = args.e;
+    }
+  }
+};
+stuff_info_cancle_company_follow_stuff_result.prototype = {};
+stuff_info_cancle_company_follow_stuff_result.prototype.read = function(input) {
+  input.readStructBegin();
+  while (true) {
+    var ret = input.readFieldBegin();
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    switch (fid) {
+      case 0:
+      if (ftype == Thrift.Type.BOOL) {
+        this.success = input.readBool();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 1:
+      if (ftype == Thrift.Type.STRUCT) {
+        this.e = new ttypes.gen_exp();
+        this.e.read(input);
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      default:
+        input.skip(ftype);
+    }
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+stuff_info_cancle_company_follow_stuff_result.prototype.write = function(output) {
+  output.writeStructBegin('stuff_info_cancle_company_follow_stuff_result');
+  if (this.success !== null && this.success !== undefined) {
+    output.writeFieldBegin('success', Thrift.Type.BOOL, 0);
+    output.writeBool(this.success);
+    output.writeFieldEnd();
+  }
+  if (this.e !== null && this.e !== undefined) {
+    output.writeFieldBegin('e', Thrift.Type.STRUCT, 1);
+    this.e.write(output);
+    output.writeFieldEnd();
+  }
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+
+var stuff_info_get_follow_stuff_by_company_args = function(args) {
+  this.company_name = null;
+  if (args) {
+    if (args.company_name !== undefined && args.company_name !== null) {
+      this.company_name = args.company_name;
+    }
+  }
+};
+stuff_info_get_follow_stuff_by_company_args.prototype = {};
+stuff_info_get_follow_stuff_by_company_args.prototype.read = function(input) {
+  input.readStructBegin();
+  while (true) {
+    var ret = input.readFieldBegin();
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    switch (fid) {
+      case 1:
+      if (ftype == Thrift.Type.STRING) {
+        this.company_name = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 0:
+        input.skip(ftype);
+        break;
+      default:
+        input.skip(ftype);
+    }
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+stuff_info_get_follow_stuff_by_company_args.prototype.write = function(output) {
+  output.writeStructBegin('stuff_info_get_follow_stuff_by_company_args');
+  if (this.company_name !== null && this.company_name !== undefined) {
+    output.writeFieldBegin('company_name', Thrift.Type.STRING, 1);
+    output.writeString(this.company_name);
+    output.writeFieldEnd();
+  }
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+
+var stuff_info_get_follow_stuff_by_company_result = function(args) {
+  this.success = null;
+  this.e = null;
+  if (args instanceof ttypes.gen_exp) {
+    this.e = args;
+    return;
+  }
+  if (args) {
+    if (args.success !== undefined && args.success !== null) {
+      this.success = Thrift.copyList(args.success, [ttypes.stuff_detail]);
+    }
+    if (args.e !== undefined && args.e !== null) {
+      this.e = args.e;
+    }
+  }
+};
+stuff_info_get_follow_stuff_by_company_result.prototype = {};
+stuff_info_get_follow_stuff_by_company_result.prototype.read = function(input) {
+  input.readStructBegin();
+  while (true) {
+    var ret = input.readFieldBegin();
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    switch (fid) {
+      case 0:
+      if (ftype == Thrift.Type.LIST) {
+        this.success = [];
+        var _rtmp361 = input.readListBegin();
+        var _size60 = _rtmp361.size || 0;
+        for (var _i62 = 0; _i62 < _size60; ++_i62) {
+          var elem63 = null;
+          elem63 = new ttypes.stuff_detail();
+          elem63.read(input);
+          this.success.push(elem63);
+        }
+        input.readListEnd();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 1:
+      if (ftype == Thrift.Type.STRUCT) {
+        this.e = new ttypes.gen_exp();
+        this.e.read(input);
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      default:
+        input.skip(ftype);
+    }
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+stuff_info_get_follow_stuff_by_company_result.prototype.write = function(output) {
+  output.writeStructBegin('stuff_info_get_follow_stuff_by_company_result');
+  if (this.success !== null && this.success !== undefined) {
+    output.writeFieldBegin('success', Thrift.Type.LIST, 0);
+    output.writeListBegin(Thrift.Type.STRUCT, this.success.length);
+    for (var iter64 in this.success) {
+      if (this.success.hasOwnProperty(iter64)) {
+        iter64 = this.success[iter64];
+        iter64.write(output);
+      }
+    }
+    output.writeListEnd();
+    output.writeFieldEnd();
+  }
+  if (this.e !== null && this.e !== undefined) {
+    output.writeFieldBegin('e', Thrift.Type.STRUCT, 1);
+    this.e.write(output);
+    output.writeFieldEnd();
+  }
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+
+var stuff_info_get_follow_company_by_stuff_args = function(args) {
+  this.type_id = null;
+  this.ssid = null;
+  if (args) {
+    if (args.type_id !== undefined && args.type_id !== null) {
+      this.type_id = args.type_id;
+    }
+    if (args.ssid !== undefined && args.ssid !== null) {
+      this.ssid = args.ssid;
+    }
+  }
+};
+stuff_info_get_follow_company_by_stuff_args.prototype = {};
+stuff_info_get_follow_company_by_stuff_args.prototype.read = function(input) {
+  input.readStructBegin();
+  while (true) {
+    var ret = input.readFieldBegin();
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    switch (fid) {
+      case 1:
+      if (ftype == Thrift.Type.I64) {
+        this.type_id = input.readI64();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 2:
+      if (ftype == Thrift.Type.STRING) {
+        this.ssid = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      default:
+        input.skip(ftype);
+    }
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+stuff_info_get_follow_company_by_stuff_args.prototype.write = function(output) {
+  output.writeStructBegin('stuff_info_get_follow_company_by_stuff_args');
+  if (this.type_id !== null && this.type_id !== undefined) {
+    output.writeFieldBegin('type_id', Thrift.Type.I64, 1);
+    output.writeI64(this.type_id);
+    output.writeFieldEnd();
+  }
+  if (this.ssid !== null && this.ssid !== undefined) {
+    output.writeFieldBegin('ssid', Thrift.Type.STRING, 2);
+    output.writeString(this.ssid);
+    output.writeFieldEnd();
+  }
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+
+var stuff_info_get_follow_company_by_stuff_result = function(args) {
+  this.success = null;
+  this.e = null;
+  if (args instanceof ttypes.gen_exp) {
+    this.e = args;
+    return;
+  }
+  if (args) {
+    if (args.success !== undefined && args.success !== null) {
+      this.success = Thrift.copyList(args.success, [null]);
+    }
+    if (args.e !== undefined && args.e !== null) {
+      this.e = args.e;
+    }
+  }
+};
+stuff_info_get_follow_company_by_stuff_result.prototype = {};
+stuff_info_get_follow_company_by_stuff_result.prototype.read = function(input) {
+  input.readStructBegin();
+  while (true) {
+    var ret = input.readFieldBegin();
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    switch (fid) {
+      case 0:
+      if (ftype == Thrift.Type.LIST) {
+        this.success = [];
+        var _rtmp366 = input.readListBegin();
+        var _size65 = _rtmp366.size || 0;
+        for (var _i67 = 0; _i67 < _size65; ++_i67) {
+          var elem68 = null;
+          elem68 = input.readString();
+          this.success.push(elem68);
+        }
+        input.readListEnd();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 1:
+      if (ftype == Thrift.Type.STRUCT) {
+        this.e = new ttypes.gen_exp();
+        this.e.read(input);
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      default:
+        input.skip(ftype);
+    }
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+stuff_info_get_follow_company_by_stuff_result.prototype.write = function(output) {
+  output.writeStructBegin('stuff_info_get_follow_company_by_stuff_result');
+  if (this.success !== null && this.success !== undefined) {
+    output.writeFieldBegin('success', Thrift.Type.LIST, 0);
+    output.writeListBegin(Thrift.Type.STRING, this.success.length);
+    for (var iter69 in this.success) {
+      if (this.success.hasOwnProperty(iter69)) {
+        iter69 = this.success[iter69];
+        output.writeString(iter69);
+      }
+    }
+    output.writeListEnd();
+    output.writeFieldEnd();
+  }
+  if (this.e !== null && this.e !== undefined) {
+    output.writeFieldBegin('e', Thrift.Type.STRUCT, 1);
+    this.e.write(output);
+    output.writeFieldEnd();
+  }
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+
 var stuff_infoClient = exports.Client = function(output, pClass) {
   this.output = output;
   this.pClass = pClass;
@@ -252,7 +998,7 @@ stuff_infoClient.prototype = {};
 stuff_infoClient.prototype.seqid = function() { return this._seqid; };
 stuff_infoClient.prototype.new_seqid = function() { return this._seqid += 1; };
 
-stuff_infoClient.prototype.get_today = function(callback) {
+stuff_infoClient.prototype.get_today = function(ssid, callback) {
   this._seqid = this.new_seqid();
   if (callback === undefined) {
     var _defer = Q.defer();
@@ -263,17 +1009,20 @@ stuff_infoClient.prototype.get_today = function(callback) {
         _defer.resolve(result);
       }
     };
-    this.send_get_today();
+    this.send_get_today(ssid);
     return _defer.promise;
   } else {
     this._reqs[this.seqid()] = callback;
-    this.send_get_today();
+    this.send_get_today(ssid);
   }
 };
 
-stuff_infoClient.prototype.send_get_today = function() {
+stuff_infoClient.prototype.send_get_today = function(ssid) {
   var output = new this.pClass(this.output);
-  var args = new stuff_info_get_today_args();
+  var params = {
+    ssid: ssid
+  };
+  var args = new stuff_info_get_today_args(params);
   try {
     output.writeMessageBegin('get_today', Thrift.MessageType.CALL, this.seqid());
     args.write(output);
@@ -311,7 +1060,7 @@ stuff_infoClient.prototype.recv_get_today = function(input,mtype,rseqid) {
   return callback('get_today failed: unknown result');
 };
 
-stuff_infoClient.prototype.get_stuff_detail = function(type_id, callback) {
+stuff_infoClient.prototype.get_today_unfollow = function(ssid, callback) {
   this._seqid = this.new_seqid();
   if (callback === undefined) {
     var _defer = Q.defer();
@@ -322,18 +1071,81 @@ stuff_infoClient.prototype.get_stuff_detail = function(type_id, callback) {
         _defer.resolve(result);
       }
     };
-    this.send_get_stuff_detail(type_id);
+    this.send_get_today_unfollow(ssid);
     return _defer.promise;
   } else {
     this._reqs[this.seqid()] = callback;
-    this.send_get_stuff_detail(type_id);
+    this.send_get_today_unfollow(ssid);
   }
 };
 
-stuff_infoClient.prototype.send_get_stuff_detail = function(type_id) {
+stuff_infoClient.prototype.send_get_today_unfollow = function(ssid) {
   var output = new this.pClass(this.output);
   var params = {
-    type_id: type_id
+    ssid: ssid
+  };
+  var args = new stuff_info_get_today_unfollow_args(params);
+  try {
+    output.writeMessageBegin('get_today_unfollow', Thrift.MessageType.CALL, this.seqid());
+    args.write(output);
+    output.writeMessageEnd();
+    return this.output.flush();
+  }
+  catch (e) {
+    delete this._reqs[this.seqid()];
+    if (typeof output.reset === 'function') {
+      output.reset();
+    }
+    throw e;
+  }
+};
+
+stuff_infoClient.prototype.recv_get_today_unfollow = function(input,mtype,rseqid) {
+  var callback = this._reqs[rseqid] || function() {};
+  delete this._reqs[rseqid];
+  if (mtype == Thrift.MessageType.EXCEPTION) {
+    var x = new Thrift.TApplicationException();
+    x.read(input);
+    input.readMessageEnd();
+    return callback(x);
+  }
+  var result = new stuff_info_get_today_unfollow_result();
+  result.read(input);
+  input.readMessageEnd();
+
+  if (null !== result.e) {
+    return callback(result.e);
+  }
+  if (null !== result.success) {
+    return callback(null, result.success);
+  }
+  return callback('get_today_unfollow failed: unknown result');
+};
+
+stuff_infoClient.prototype.get_stuff_detail = function(type_id, ssid, callback) {
+  this._seqid = this.new_seqid();
+  if (callback === undefined) {
+    var _defer = Q.defer();
+    this._reqs[this.seqid()] = function(error, result) {
+      if (error) {
+        _defer.reject(error);
+      } else {
+        _defer.resolve(result);
+      }
+    };
+    this.send_get_stuff_detail(type_id, ssid);
+    return _defer.promise;
+  } else {
+    this._reqs[this.seqid()] = callback;
+    this.send_get_stuff_detail(type_id, ssid);
+  }
+};
+
+stuff_infoClient.prototype.send_get_stuff_detail = function(type_id, ssid) {
+  var output = new this.pClass(this.output);
+  var params = {
+    type_id: type_id,
+    ssid: ssid
   };
   var args = new stuff_info_get_stuff_detail_args(params);
   try {
@@ -372,6 +1184,259 @@ stuff_infoClient.prototype.recv_get_stuff_detail = function(input,mtype,rseqid) 
   }
   return callback('get_stuff_detail failed: unknown result');
 };
+
+stuff_infoClient.prototype.add_company_follow_stuff = function(company_name, type_id, ssid, callback) {
+  this._seqid = this.new_seqid();
+  if (callback === undefined) {
+    var _defer = Q.defer();
+    this._reqs[this.seqid()] = function(error, result) {
+      if (error) {
+        _defer.reject(error);
+      } else {
+        _defer.resolve(result);
+      }
+    };
+    this.send_add_company_follow_stuff(company_name, type_id, ssid);
+    return _defer.promise;
+  } else {
+    this._reqs[this.seqid()] = callback;
+    this.send_add_company_follow_stuff(company_name, type_id, ssid);
+  }
+};
+
+stuff_infoClient.prototype.send_add_company_follow_stuff = function(company_name, type_id, ssid) {
+  var output = new this.pClass(this.output);
+  var params = {
+    company_name: company_name,
+    type_id: type_id,
+    ssid: ssid
+  };
+  var args = new stuff_info_add_company_follow_stuff_args(params);
+  try {
+    output.writeMessageBegin('add_company_follow_stuff', Thrift.MessageType.CALL, this.seqid());
+    args.write(output);
+    output.writeMessageEnd();
+    return this.output.flush();
+  }
+  catch (e) {
+    delete this._reqs[this.seqid()];
+    if (typeof output.reset === 'function') {
+      output.reset();
+    }
+    throw e;
+  }
+};
+
+stuff_infoClient.prototype.recv_add_company_follow_stuff = function(input,mtype,rseqid) {
+  var callback = this._reqs[rseqid] || function() {};
+  delete this._reqs[rseqid];
+  if (mtype == Thrift.MessageType.EXCEPTION) {
+    var x = new Thrift.TApplicationException();
+    x.read(input);
+    input.readMessageEnd();
+    return callback(x);
+  }
+  var result = new stuff_info_add_company_follow_stuff_result();
+  result.read(input);
+  input.readMessageEnd();
+
+  if (null !== result.e) {
+    return callback(result.e);
+  }
+  if (null !== result.success) {
+    return callback(null, result.success);
+  }
+  return callback('add_company_follow_stuff failed: unknown result');
+};
+
+stuff_infoClient.prototype.cancle_company_follow_stuff = function(company_name, type_id, ssid, callback) {
+  this._seqid = this.new_seqid();
+  if (callback === undefined) {
+    var _defer = Q.defer();
+    this._reqs[this.seqid()] = function(error, result) {
+      if (error) {
+        _defer.reject(error);
+      } else {
+        _defer.resolve(result);
+      }
+    };
+    this.send_cancle_company_follow_stuff(company_name, type_id, ssid);
+    return _defer.promise;
+  } else {
+    this._reqs[this.seqid()] = callback;
+    this.send_cancle_company_follow_stuff(company_name, type_id, ssid);
+  }
+};
+
+stuff_infoClient.prototype.send_cancle_company_follow_stuff = function(company_name, type_id, ssid) {
+  var output = new this.pClass(this.output);
+  var params = {
+    company_name: company_name,
+    type_id: type_id,
+    ssid: ssid
+  };
+  var args = new stuff_info_cancle_company_follow_stuff_args(params);
+  try {
+    output.writeMessageBegin('cancle_company_follow_stuff', Thrift.MessageType.CALL, this.seqid());
+    args.write(output);
+    output.writeMessageEnd();
+    return this.output.flush();
+  }
+  catch (e) {
+    delete this._reqs[this.seqid()];
+    if (typeof output.reset === 'function') {
+      output.reset();
+    }
+    throw e;
+  }
+};
+
+stuff_infoClient.prototype.recv_cancle_company_follow_stuff = function(input,mtype,rseqid) {
+  var callback = this._reqs[rseqid] || function() {};
+  delete this._reqs[rseqid];
+  if (mtype == Thrift.MessageType.EXCEPTION) {
+    var x = new Thrift.TApplicationException();
+    x.read(input);
+    input.readMessageEnd();
+    return callback(x);
+  }
+  var result = new stuff_info_cancle_company_follow_stuff_result();
+  result.read(input);
+  input.readMessageEnd();
+
+  if (null !== result.e) {
+    return callback(result.e);
+  }
+  if (null !== result.success) {
+    return callback(null, result.success);
+  }
+  return callback('cancle_company_follow_stuff failed: unknown result');
+};
+
+stuff_infoClient.prototype.get_follow_stuff_by_company = function(company_name, callback) {
+  this._seqid = this.new_seqid();
+  if (callback === undefined) {
+    var _defer = Q.defer();
+    this._reqs[this.seqid()] = function(error, result) {
+      if (error) {
+        _defer.reject(error);
+      } else {
+        _defer.resolve(result);
+      }
+    };
+    this.send_get_follow_stuff_by_company(company_name);
+    return _defer.promise;
+  } else {
+    this._reqs[this.seqid()] = callback;
+    this.send_get_follow_stuff_by_company(company_name);
+  }
+};
+
+stuff_infoClient.prototype.send_get_follow_stuff_by_company = function(company_name) {
+  var output = new this.pClass(this.output);
+  var params = {
+    company_name: company_name
+  };
+  var args = new stuff_info_get_follow_stuff_by_company_args(params);
+  try {
+    output.writeMessageBegin('get_follow_stuff_by_company', Thrift.MessageType.CALL, this.seqid());
+    args.write(output);
+    output.writeMessageEnd();
+    return this.output.flush();
+  }
+  catch (e) {
+    delete this._reqs[this.seqid()];
+    if (typeof output.reset === 'function') {
+      output.reset();
+    }
+    throw e;
+  }
+};
+
+stuff_infoClient.prototype.recv_get_follow_stuff_by_company = function(input,mtype,rseqid) {
+  var callback = this._reqs[rseqid] || function() {};
+  delete this._reqs[rseqid];
+  if (mtype == Thrift.MessageType.EXCEPTION) {
+    var x = new Thrift.TApplicationException();
+    x.read(input);
+    input.readMessageEnd();
+    return callback(x);
+  }
+  var result = new stuff_info_get_follow_stuff_by_company_result();
+  result.read(input);
+  input.readMessageEnd();
+
+  if (null !== result.e) {
+    return callback(result.e);
+  }
+  if (null !== result.success) {
+    return callback(null, result.success);
+  }
+  return callback('get_follow_stuff_by_company failed: unknown result');
+};
+
+stuff_infoClient.prototype.get_follow_company_by_stuff = function(type_id, ssid, callback) {
+  this._seqid = this.new_seqid();
+  if (callback === undefined) {
+    var _defer = Q.defer();
+    this._reqs[this.seqid()] = function(error, result) {
+      if (error) {
+        _defer.reject(error);
+      } else {
+        _defer.resolve(result);
+      }
+    };
+    this.send_get_follow_company_by_stuff(type_id, ssid);
+    return _defer.promise;
+  } else {
+    this._reqs[this.seqid()] = callback;
+    this.send_get_follow_company_by_stuff(type_id, ssid);
+  }
+};
+
+stuff_infoClient.prototype.send_get_follow_company_by_stuff = function(type_id, ssid) {
+  var output = new this.pClass(this.output);
+  var params = {
+    type_id: type_id,
+    ssid: ssid
+  };
+  var args = new stuff_info_get_follow_company_by_stuff_args(params);
+  try {
+    output.writeMessageBegin('get_follow_company_by_stuff', Thrift.MessageType.CALL, this.seqid());
+    args.write(output);
+    output.writeMessageEnd();
+    return this.output.flush();
+  }
+  catch (e) {
+    delete this._reqs[this.seqid()];
+    if (typeof output.reset === 'function') {
+      output.reset();
+    }
+    throw e;
+  }
+};
+
+stuff_infoClient.prototype.recv_get_follow_company_by_stuff = function(input,mtype,rseqid) {
+  var callback = this._reqs[rseqid] || function() {};
+  delete this._reqs[rseqid];
+  if (mtype == Thrift.MessageType.EXCEPTION) {
+    var x = new Thrift.TApplicationException();
+    x.read(input);
+    input.readMessageEnd();
+    return callback(x);
+  }
+  var result = new stuff_info_get_follow_company_by_stuff_result();
+  result.read(input);
+  input.readMessageEnd();
+
+  if (null !== result.e) {
+    return callback(result.e);
+  }
+  if (null !== result.success) {
+    return callback(null, result.success);
+  }
+  return callback('get_follow_company_by_stuff failed: unknown result');
+};
 var stuff_infoProcessor = exports.Processor = function(handler) {
   this._handler = handler;
 };
@@ -393,8 +1458,9 @@ stuff_infoProcessor.prototype.process_get_today = function(seqid, input, output)
   var args = new stuff_info_get_today_args();
   args.read(input);
   input.readMessageEnd();
-  if (this._handler.get_today.length === 0) {
-    Q.fcall(this._handler.get_today.bind(this._handler)
+  if (this._handler.get_today.length === 1) {
+    Q.fcall(this._handler.get_today.bind(this._handler),
+      args.ssid
     ).then(function(result) {
       var result_obj = new stuff_info_get_today_result({success: result});
       output.writeMessageBegin("get_today", Thrift.MessageType.REPLY, seqid);
@@ -415,7 +1481,7 @@ stuff_infoProcessor.prototype.process_get_today = function(seqid, input, output)
       output.flush();
     });
   } else {
-    this._handler.get_today(function (err, result) {
+    this._handler.get_today(args.ssid, function (err, result) {
       var result_obj;
       if ((err === null || typeof err === 'undefined') || err instanceof ttypes.gen_exp) {
         result_obj = new stuff_info_get_today_result((err !== null || typeof err === 'undefined') ? err : {success: result});
@@ -430,13 +1496,56 @@ stuff_infoProcessor.prototype.process_get_today = function(seqid, input, output)
     });
   }
 };
+stuff_infoProcessor.prototype.process_get_today_unfollow = function(seqid, input, output) {
+  var args = new stuff_info_get_today_unfollow_args();
+  args.read(input);
+  input.readMessageEnd();
+  if (this._handler.get_today_unfollow.length === 1) {
+    Q.fcall(this._handler.get_today_unfollow.bind(this._handler),
+      args.ssid
+    ).then(function(result) {
+      var result_obj = new stuff_info_get_today_unfollow_result({success: result});
+      output.writeMessageBegin("get_today_unfollow", Thrift.MessageType.REPLY, seqid);
+      result_obj.write(output);
+      output.writeMessageEnd();
+      output.flush();
+    }).catch(function (err) {
+      var result;
+      if (err instanceof ttypes.gen_exp) {
+        result = new stuff_info_get_today_unfollow_result(err);
+        output.writeMessageBegin("get_today_unfollow", Thrift.MessageType.REPLY, seqid);
+      } else {
+        result = new Thrift.TApplicationException(Thrift.TApplicationExceptionType.UNKNOWN, err.message);
+        output.writeMessageBegin("get_today_unfollow", Thrift.MessageType.EXCEPTION, seqid);
+      }
+      result.write(output);
+      output.writeMessageEnd();
+      output.flush();
+    });
+  } else {
+    this._handler.get_today_unfollow(args.ssid, function (err, result) {
+      var result_obj;
+      if ((err === null || typeof err === 'undefined') || err instanceof ttypes.gen_exp) {
+        result_obj = new stuff_info_get_today_unfollow_result((err !== null || typeof err === 'undefined') ? err : {success: result});
+        output.writeMessageBegin("get_today_unfollow", Thrift.MessageType.REPLY, seqid);
+      } else {
+        result_obj = new Thrift.TApplicationException(Thrift.TApplicationExceptionType.UNKNOWN, err.message);
+        output.writeMessageBegin("get_today_unfollow", Thrift.MessageType.EXCEPTION, seqid);
+      }
+      result_obj.write(output);
+      output.writeMessageEnd();
+      output.flush();
+    });
+  }
+};
 stuff_infoProcessor.prototype.process_get_stuff_detail = function(seqid, input, output) {
   var args = new stuff_info_get_stuff_detail_args();
   args.read(input);
   input.readMessageEnd();
-  if (this._handler.get_stuff_detail.length === 1) {
+  if (this._handler.get_stuff_detail.length === 2) {
     Q.fcall(this._handler.get_stuff_detail.bind(this._handler),
-      args.type_id
+      args.type_id,
+      args.ssid
     ).then(function(result) {
       var result_obj = new stuff_info_get_stuff_detail_result({success: result});
       output.writeMessageBegin("get_stuff_detail", Thrift.MessageType.REPLY, seqid);
@@ -457,7 +1566,7 @@ stuff_infoProcessor.prototype.process_get_stuff_detail = function(seqid, input, 
       output.flush();
     });
   } else {
-    this._handler.get_stuff_detail(args.type_id, function (err, result) {
+    this._handler.get_stuff_detail(args.type_id, args.ssid, function (err, result) {
       var result_obj;
       if ((err === null || typeof err === 'undefined') || err instanceof ttypes.gen_exp) {
         result_obj = new stuff_info_get_stuff_detail_result((err !== null || typeof err === 'undefined') ? err : {success: result});
@@ -465,6 +1574,179 @@ stuff_infoProcessor.prototype.process_get_stuff_detail = function(seqid, input, 
       } else {
         result_obj = new Thrift.TApplicationException(Thrift.TApplicationExceptionType.UNKNOWN, err.message);
         output.writeMessageBegin("get_stuff_detail", Thrift.MessageType.EXCEPTION, seqid);
+      }
+      result_obj.write(output);
+      output.writeMessageEnd();
+      output.flush();
+    });
+  }
+};
+stuff_infoProcessor.prototype.process_add_company_follow_stuff = function(seqid, input, output) {
+  var args = new stuff_info_add_company_follow_stuff_args();
+  args.read(input);
+  input.readMessageEnd();
+  if (this._handler.add_company_follow_stuff.length === 3) {
+    Q.fcall(this._handler.add_company_follow_stuff.bind(this._handler),
+      args.company_name,
+      args.type_id,
+      args.ssid
+    ).then(function(result) {
+      var result_obj = new stuff_info_add_company_follow_stuff_result({success: result});
+      output.writeMessageBegin("add_company_follow_stuff", Thrift.MessageType.REPLY, seqid);
+      result_obj.write(output);
+      output.writeMessageEnd();
+      output.flush();
+    }).catch(function (err) {
+      var result;
+      if (err instanceof ttypes.gen_exp) {
+        result = new stuff_info_add_company_follow_stuff_result(err);
+        output.writeMessageBegin("add_company_follow_stuff", Thrift.MessageType.REPLY, seqid);
+      } else {
+        result = new Thrift.TApplicationException(Thrift.TApplicationExceptionType.UNKNOWN, err.message);
+        output.writeMessageBegin("add_company_follow_stuff", Thrift.MessageType.EXCEPTION, seqid);
+      }
+      result.write(output);
+      output.writeMessageEnd();
+      output.flush();
+    });
+  } else {
+    this._handler.add_company_follow_stuff(args.company_name, args.type_id, args.ssid, function (err, result) {
+      var result_obj;
+      if ((err === null || typeof err === 'undefined') || err instanceof ttypes.gen_exp) {
+        result_obj = new stuff_info_add_company_follow_stuff_result((err !== null || typeof err === 'undefined') ? err : {success: result});
+        output.writeMessageBegin("add_company_follow_stuff", Thrift.MessageType.REPLY, seqid);
+      } else {
+        result_obj = new Thrift.TApplicationException(Thrift.TApplicationExceptionType.UNKNOWN, err.message);
+        output.writeMessageBegin("add_company_follow_stuff", Thrift.MessageType.EXCEPTION, seqid);
+      }
+      result_obj.write(output);
+      output.writeMessageEnd();
+      output.flush();
+    });
+  }
+};
+stuff_infoProcessor.prototype.process_cancle_company_follow_stuff = function(seqid, input, output) {
+  var args = new stuff_info_cancle_company_follow_stuff_args();
+  args.read(input);
+  input.readMessageEnd();
+  if (this._handler.cancle_company_follow_stuff.length === 3) {
+    Q.fcall(this._handler.cancle_company_follow_stuff.bind(this._handler),
+      args.company_name,
+      args.type_id,
+      args.ssid
+    ).then(function(result) {
+      var result_obj = new stuff_info_cancle_company_follow_stuff_result({success: result});
+      output.writeMessageBegin("cancle_company_follow_stuff", Thrift.MessageType.REPLY, seqid);
+      result_obj.write(output);
+      output.writeMessageEnd();
+      output.flush();
+    }).catch(function (err) {
+      var result;
+      if (err instanceof ttypes.gen_exp) {
+        result = new stuff_info_cancle_company_follow_stuff_result(err);
+        output.writeMessageBegin("cancle_company_follow_stuff", Thrift.MessageType.REPLY, seqid);
+      } else {
+        result = new Thrift.TApplicationException(Thrift.TApplicationExceptionType.UNKNOWN, err.message);
+        output.writeMessageBegin("cancle_company_follow_stuff", Thrift.MessageType.EXCEPTION, seqid);
+      }
+      result.write(output);
+      output.writeMessageEnd();
+      output.flush();
+    });
+  } else {
+    this._handler.cancle_company_follow_stuff(args.company_name, args.type_id, args.ssid, function (err, result) {
+      var result_obj;
+      if ((err === null || typeof err === 'undefined') || err instanceof ttypes.gen_exp) {
+        result_obj = new stuff_info_cancle_company_follow_stuff_result((err !== null || typeof err === 'undefined') ? err : {success: result});
+        output.writeMessageBegin("cancle_company_follow_stuff", Thrift.MessageType.REPLY, seqid);
+      } else {
+        result_obj = new Thrift.TApplicationException(Thrift.TApplicationExceptionType.UNKNOWN, err.message);
+        output.writeMessageBegin("cancle_company_follow_stuff", Thrift.MessageType.EXCEPTION, seqid);
+      }
+      result_obj.write(output);
+      output.writeMessageEnd();
+      output.flush();
+    });
+  }
+};
+stuff_infoProcessor.prototype.process_get_follow_stuff_by_company = function(seqid, input, output) {
+  var args = new stuff_info_get_follow_stuff_by_company_args();
+  args.read(input);
+  input.readMessageEnd();
+  if (this._handler.get_follow_stuff_by_company.length === 1) {
+    Q.fcall(this._handler.get_follow_stuff_by_company.bind(this._handler),
+      args.company_name
+    ).then(function(result) {
+      var result_obj = new stuff_info_get_follow_stuff_by_company_result({success: result});
+      output.writeMessageBegin("get_follow_stuff_by_company", Thrift.MessageType.REPLY, seqid);
+      result_obj.write(output);
+      output.writeMessageEnd();
+      output.flush();
+    }).catch(function (err) {
+      var result;
+      if (err instanceof ttypes.gen_exp) {
+        result = new stuff_info_get_follow_stuff_by_company_result(err);
+        output.writeMessageBegin("get_follow_stuff_by_company", Thrift.MessageType.REPLY, seqid);
+      } else {
+        result = new Thrift.TApplicationException(Thrift.TApplicationExceptionType.UNKNOWN, err.message);
+        output.writeMessageBegin("get_follow_stuff_by_company", Thrift.MessageType.EXCEPTION, seqid);
+      }
+      result.write(output);
+      output.writeMessageEnd();
+      output.flush();
+    });
+  } else {
+    this._handler.get_follow_stuff_by_company(args.company_name, function (err, result) {
+      var result_obj;
+      if ((err === null || typeof err === 'undefined') || err instanceof ttypes.gen_exp) {
+        result_obj = new stuff_info_get_follow_stuff_by_company_result((err !== null || typeof err === 'undefined') ? err : {success: result});
+        output.writeMessageBegin("get_follow_stuff_by_company", Thrift.MessageType.REPLY, seqid);
+      } else {
+        result_obj = new Thrift.TApplicationException(Thrift.TApplicationExceptionType.UNKNOWN, err.message);
+        output.writeMessageBegin("get_follow_stuff_by_company", Thrift.MessageType.EXCEPTION, seqid);
+      }
+      result_obj.write(output);
+      output.writeMessageEnd();
+      output.flush();
+    });
+  }
+};
+stuff_infoProcessor.prototype.process_get_follow_company_by_stuff = function(seqid, input, output) {
+  var args = new stuff_info_get_follow_company_by_stuff_args();
+  args.read(input);
+  input.readMessageEnd();
+  if (this._handler.get_follow_company_by_stuff.length === 2) {
+    Q.fcall(this._handler.get_follow_company_by_stuff.bind(this._handler),
+      args.type_id,
+      args.ssid
+    ).then(function(result) {
+      var result_obj = new stuff_info_get_follow_company_by_stuff_result({success: result});
+      output.writeMessageBegin("get_follow_company_by_stuff", Thrift.MessageType.REPLY, seqid);
+      result_obj.write(output);
+      output.writeMessageEnd();
+      output.flush();
+    }).catch(function (err) {
+      var result;
+      if (err instanceof ttypes.gen_exp) {
+        result = new stuff_info_get_follow_company_by_stuff_result(err);
+        output.writeMessageBegin("get_follow_company_by_stuff", Thrift.MessageType.REPLY, seqid);
+      } else {
+        result = new Thrift.TApplicationException(Thrift.TApplicationExceptionType.UNKNOWN, err.message);
+        output.writeMessageBegin("get_follow_company_by_stuff", Thrift.MessageType.EXCEPTION, seqid);
+      }
+      result.write(output);
+      output.writeMessageEnd();
+      output.flush();
+    });
+  } else {
+    this._handler.get_follow_company_by_stuff(args.type_id, args.ssid, function (err, result) {
+      var result_obj;
+      if ((err === null || typeof err === 'undefined') || err instanceof ttypes.gen_exp) {
+        result_obj = new stuff_info_get_follow_company_by_stuff_result((err !== null || typeof err === 'undefined') ? err : {success: result});
+        output.writeMessageBegin("get_follow_company_by_stuff", Thrift.MessageType.REPLY, seqid);
+      } else {
+        result_obj = new Thrift.TApplicationException(Thrift.TApplicationExceptionType.UNKNOWN, err.message);
+        output.writeMessageBegin("get_follow_company_by_stuff", Thrift.MessageType.EXCEPTION, seqid);
       }
       result_obj.write(output);
       output.writeMessageEnd();

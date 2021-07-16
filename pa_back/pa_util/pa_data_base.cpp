@@ -196,3 +196,24 @@ void pa_sql_contract::update_status()
     }
     this->update_record();
 }
+
+bool PA_RPC_has_follow_stuff(const std::string &ssid, int64_t stuff_id)
+{
+    bool ret = false;
+
+    auto opt_user = PA_DATAOPT_get_online_user(ssid);
+    if (opt_user)
+    {
+        auto company = opt_user->get_parent<pa_sql_company>("belong_company");
+        if (company)
+        {
+            auto follow_info = company->get_children<pa_sql_company_follow>("follower", "follow_stuff_ext_key == %ld", stuff_id);
+            if (follow_info)
+            {
+                ret = true;
+            }
+        }
+    }
+
+    return ret;
+}
