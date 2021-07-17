@@ -45,7 +45,7 @@ public:
             auto opt_user = PA_DATAOPT_get_online_user(ssid);
             if (company && opt_user)
             {
-                if (company->get_children<pa_sql_company>("belong_company", "PRI_ID = %ld", opt_user->get_pri_id()))
+                if (company->get_children<pa_sql_userinfo>("belong_company", "PRI_ID = %ld", opt_user->get_pri_id()))
                 {
                     detail_permission = true;
                 }
