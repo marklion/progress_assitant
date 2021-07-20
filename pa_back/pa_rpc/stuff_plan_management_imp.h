@@ -1282,7 +1282,7 @@ public:
         for (auto &itr:ids)
         {
             auto single_vichele = sqlite_orm::search_record<pa_sql_single_vichele>(itr);
-            if (single_vichele)
+            if (single_vichele && single_vichele->finish == 0)
             {
                 auto belong_plan = single_vichele->get_parent<pa_sql_plan>("belong_plan");
                 if (belong_plan && belong_plan->status < 4)
