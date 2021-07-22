@@ -4174,6 +4174,125 @@ company_management_get_work_time_result.prototype.write = function(output) {
   return;
 };
 
+var company_management_get_company_position_config_args = function(args) {
+  this.company_name = null;
+  if (args) {
+    if (args.company_name !== undefined && args.company_name !== null) {
+      this.company_name = args.company_name;
+    }
+  }
+};
+company_management_get_company_position_config_args.prototype = {};
+company_management_get_company_position_config_args.prototype.read = function(input) {
+  input.readStructBegin();
+  while (true) {
+    var ret = input.readFieldBegin();
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    switch (fid) {
+      case 1:
+      if (ftype == Thrift.Type.STRING) {
+        this.company_name = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 0:
+        input.skip(ftype);
+        break;
+      default:
+        input.skip(ftype);
+    }
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+company_management_get_company_position_config_args.prototype.write = function(output) {
+  output.writeStructBegin('company_management_get_company_position_config_args');
+  if (this.company_name !== null && this.company_name !== undefined) {
+    output.writeFieldBegin('company_name', Thrift.Type.STRING, 1);
+    output.writeString(this.company_name);
+    output.writeFieldEnd();
+  }
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+
+var company_management_get_company_position_config_result = function(args) {
+  this.success = null;
+  this.e = null;
+  if (args instanceof ttypes.gen_exp) {
+    this.e = args;
+    return;
+  }
+  if (args) {
+    if (args.success !== undefined && args.success !== null) {
+      this.success = new ttypes.company_positon_lat_lag(args.success);
+    }
+    if (args.e !== undefined && args.e !== null) {
+      this.e = args.e;
+    }
+  }
+};
+company_management_get_company_position_config_result.prototype = {};
+company_management_get_company_position_config_result.prototype.read = function(input) {
+  input.readStructBegin();
+  while (true) {
+    var ret = input.readFieldBegin();
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    switch (fid) {
+      case 0:
+      if (ftype == Thrift.Type.STRUCT) {
+        this.success = new ttypes.company_positon_lat_lag();
+        this.success.read(input);
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 1:
+      if (ftype == Thrift.Type.STRUCT) {
+        this.e = new ttypes.gen_exp();
+        this.e.read(input);
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      default:
+        input.skip(ftype);
+    }
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+company_management_get_company_position_config_result.prototype.write = function(output) {
+  output.writeStructBegin('company_management_get_company_position_config_result');
+  if (this.success !== null && this.success !== undefined) {
+    output.writeFieldBegin('success', Thrift.Type.STRUCT, 0);
+    this.success.write(output);
+    output.writeFieldEnd();
+  }
+  if (this.e !== null && this.e !== undefined) {
+    output.writeFieldBegin('e', Thrift.Type.STRUCT, 1);
+    this.e.write(output);
+    output.writeFieldEnd();
+  }
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+
 var company_managementClient = exports.Client = function(output, pClass) {
   this.output = output;
   this.pClass = pClass;
@@ -6178,6 +6297,68 @@ company_managementClient.prototype.recv_get_work_time = function(input,mtype,rse
   }
   return callback('get_work_time failed: unknown result');
 };
+
+company_managementClient.prototype.get_company_position_config = function(company_name, callback) {
+  this._seqid = this.new_seqid();
+  if (callback === undefined) {
+    var _defer = Q.defer();
+    this._reqs[this.seqid()] = function(error, result) {
+      if (error) {
+        _defer.reject(error);
+      } else {
+        _defer.resolve(result);
+      }
+    };
+    this.send_get_company_position_config(company_name);
+    return _defer.promise;
+  } else {
+    this._reqs[this.seqid()] = callback;
+    this.send_get_company_position_config(company_name);
+  }
+};
+
+company_managementClient.prototype.send_get_company_position_config = function(company_name) {
+  var output = new this.pClass(this.output);
+  var params = {
+    company_name: company_name
+  };
+  var args = new company_management_get_company_position_config_args(params);
+  try {
+    output.writeMessageBegin('get_company_position_config', Thrift.MessageType.CALL, this.seqid());
+    args.write(output);
+    output.writeMessageEnd();
+    return this.output.flush();
+  }
+  catch (e) {
+    delete this._reqs[this.seqid()];
+    if (typeof output.reset === 'function') {
+      output.reset();
+    }
+    throw e;
+  }
+};
+
+company_managementClient.prototype.recv_get_company_position_config = function(input,mtype,rseqid) {
+  var callback = this._reqs[rseqid] || function() {};
+  delete this._reqs[rseqid];
+  if (mtype == Thrift.MessageType.EXCEPTION) {
+    var x = new Thrift.TApplicationException();
+    x.read(input);
+    input.readMessageEnd();
+    return callback(x);
+  }
+  var result = new company_management_get_company_position_config_result();
+  result.read(input);
+  input.readMessageEnd();
+
+  if (null !== result.e) {
+    return callback(result.e);
+  }
+  if (null !== result.success) {
+    return callback(null, result.success);
+  }
+  return callback('get_company_position_config failed: unknown result');
+};
 var company_managementProcessor = exports.Processor = function(handler) {
   this._handler = handler;
 };
@@ -7555,6 +7736,48 @@ company_managementProcessor.prototype.process_get_work_time = function(seqid, in
       } else {
         result_obj = new Thrift.TApplicationException(Thrift.TApplicationExceptionType.UNKNOWN, err.message);
         output.writeMessageBegin("get_work_time", Thrift.MessageType.EXCEPTION, seqid);
+      }
+      result_obj.write(output);
+      output.writeMessageEnd();
+      output.flush();
+    });
+  }
+};
+company_managementProcessor.prototype.process_get_company_position_config = function(seqid, input, output) {
+  var args = new company_management_get_company_position_config_args();
+  args.read(input);
+  input.readMessageEnd();
+  if (this._handler.get_company_position_config.length === 1) {
+    Q.fcall(this._handler.get_company_position_config.bind(this._handler),
+      args.company_name
+    ).then(function(result) {
+      var result_obj = new company_management_get_company_position_config_result({success: result});
+      output.writeMessageBegin("get_company_position_config", Thrift.MessageType.REPLY, seqid);
+      result_obj.write(output);
+      output.writeMessageEnd();
+      output.flush();
+    }).catch(function (err) {
+      var result;
+      if (err instanceof ttypes.gen_exp) {
+        result = new company_management_get_company_position_config_result(err);
+        output.writeMessageBegin("get_company_position_config", Thrift.MessageType.REPLY, seqid);
+      } else {
+        result = new Thrift.TApplicationException(Thrift.TApplicationExceptionType.UNKNOWN, err.message);
+        output.writeMessageBegin("get_company_position_config", Thrift.MessageType.EXCEPTION, seqid);
+      }
+      result.write(output);
+      output.writeMessageEnd();
+      output.flush();
+    });
+  } else {
+    this._handler.get_company_position_config(args.company_name, function (err, result) {
+      var result_obj;
+      if ((err === null || typeof err === 'undefined') || err instanceof ttypes.gen_exp) {
+        result_obj = new company_management_get_company_position_config_result((err !== null || typeof err === 'undefined') ? err : {success: result});
+        output.writeMessageBegin("get_company_position_config", Thrift.MessageType.REPLY, seqid);
+      } else {
+        result_obj = new Thrift.TApplicationException(Thrift.TApplicationExceptionType.UNKNOWN, err.message);
+        output.writeMessageBegin("get_company_position_config", Thrift.MessageType.EXCEPTION, seqid);
       }
       result_obj.write(output);
       output.writeMessageEnd();

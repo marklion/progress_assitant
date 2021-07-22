@@ -45,6 +45,8 @@ class real_access_record;
 
 class company_work_time;
 
+class company_positon_lat_lag;
+
 class plan_confirm_info;
 
 class pay_confirm_info;
@@ -66,6 +68,8 @@ class vichele_stuff_statistics;
 class vichele_search_result;
 
 class company_plan_brief;
+
+class today_driver_info;
 
 class api_extra_transformation;
 
@@ -815,6 +819,60 @@ void swap(company_work_time &a, company_work_time &b);
 
 std::ostream& operator<<(std::ostream& out, const company_work_time& obj);
 
+typedef struct _company_positon_lat_lag__isset {
+  _company_positon_lat_lag__isset() : lat(false), lag(false), distance(false) {}
+  bool lat :1;
+  bool lag :1;
+  bool distance :1;
+} _company_positon_lat_lag__isset;
+
+class company_positon_lat_lag : public virtual ::apache::thrift::TBase {
+ public:
+
+  company_positon_lat_lag(const company_positon_lat_lag&);
+  company_positon_lat_lag& operator=(const company_positon_lat_lag&);
+  company_positon_lat_lag() : lat(0), lag(0), distance(0) {
+  }
+
+  virtual ~company_positon_lat_lag() noexcept;
+  double lat;
+  double lag;
+  double distance;
+
+  _company_positon_lat_lag__isset __isset;
+
+  void __set_lat(const double val);
+
+  void __set_lag(const double val);
+
+  void __set_distance(const double val);
+
+  bool operator == (const company_positon_lat_lag & rhs) const
+  {
+    if (!(lat == rhs.lat))
+      return false;
+    if (!(lag == rhs.lag))
+      return false;
+    if (!(distance == rhs.distance))
+      return false;
+    return true;
+  }
+  bool operator != (const company_positon_lat_lag &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const company_positon_lat_lag & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+  virtual void printTo(std::ostream& out) const;
+};
+
+void swap(company_positon_lat_lag &a, company_positon_lat_lag &b);
+
+std::ostream& operator<<(std::ostream& out, const company_positon_lat_lag& obj);
+
 typedef struct _plan_confirm_info__isset {
   _plan_confirm_info__isset() : timestamp(false), name(false) {}
   bool timestamp :1;
@@ -1552,6 +1610,108 @@ class company_plan_brief : public virtual ::apache::thrift::TBase {
 void swap(company_plan_brief &a, company_plan_brief &b);
 
 std::ostream& operator<<(std::ostream& out, const company_plan_brief& obj);
+
+typedef struct _today_driver_info__isset {
+  _today_driver_info__isset() : id(false), destination_company(false), destination_address(false), order_company(false), main_vichele(false), behind_vichele(false), stuff_name(false), register_timestamp(false), register_number(false), enter_location(false), is_registered(false) {}
+  bool id :1;
+  bool destination_company :1;
+  bool destination_address :1;
+  bool order_company :1;
+  bool main_vichele :1;
+  bool behind_vichele :1;
+  bool stuff_name :1;
+  bool register_timestamp :1;
+  bool register_number :1;
+  bool enter_location :1;
+  bool is_registered :1;
+} _today_driver_info__isset;
+
+class today_driver_info : public virtual ::apache::thrift::TBase {
+ public:
+
+  today_driver_info(const today_driver_info&);
+  today_driver_info& operator=(const today_driver_info&);
+  today_driver_info() : id(0), destination_company(), destination_address(), order_company(), main_vichele(), behind_vichele(), stuff_name(), register_timestamp(), register_number(), enter_location(), is_registered(0) {
+  }
+
+  virtual ~today_driver_info() noexcept;
+  int64_t id;
+  std::string destination_company;
+  std::string destination_address;
+  std::string order_company;
+  std::string main_vichele;
+  std::string behind_vichele;
+  std::string stuff_name;
+  std::string register_timestamp;
+  std::string register_number;
+  std::string enter_location;
+  bool is_registered;
+
+  _today_driver_info__isset __isset;
+
+  void __set_id(const int64_t val);
+
+  void __set_destination_company(const std::string& val);
+
+  void __set_destination_address(const std::string& val);
+
+  void __set_order_company(const std::string& val);
+
+  void __set_main_vichele(const std::string& val);
+
+  void __set_behind_vichele(const std::string& val);
+
+  void __set_stuff_name(const std::string& val);
+
+  void __set_register_timestamp(const std::string& val);
+
+  void __set_register_number(const std::string& val);
+
+  void __set_enter_location(const std::string& val);
+
+  void __set_is_registered(const bool val);
+
+  bool operator == (const today_driver_info & rhs) const
+  {
+    if (!(id == rhs.id))
+      return false;
+    if (!(destination_company == rhs.destination_company))
+      return false;
+    if (!(destination_address == rhs.destination_address))
+      return false;
+    if (!(order_company == rhs.order_company))
+      return false;
+    if (!(main_vichele == rhs.main_vichele))
+      return false;
+    if (!(behind_vichele == rhs.behind_vichele))
+      return false;
+    if (!(stuff_name == rhs.stuff_name))
+      return false;
+    if (!(register_timestamp == rhs.register_timestamp))
+      return false;
+    if (!(register_number == rhs.register_number))
+      return false;
+    if (!(enter_location == rhs.enter_location))
+      return false;
+    if (!(is_registered == rhs.is_registered))
+      return false;
+    return true;
+  }
+  bool operator != (const today_driver_info &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const today_driver_info & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+  virtual void printTo(std::ostream& out) const;
+};
+
+void swap(today_driver_info &a, today_driver_info &b);
+
+std::ostream& operator<<(std::ostream& out, const today_driver_info& obj);
 
 typedef struct _api_extra_transformation__isset {
   _api_extra_transformation__isset() : driver_name(false), driver_phone(false), driver_id(false) {}

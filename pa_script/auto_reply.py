@@ -32,12 +32,6 @@ def plan_search(message):
 
     return ret
 
-
-@robot.key_click("driver_info")
-def proc_driver_search_click(message):
-    return "公众号内回复承运司机手机号，查询相关计划"
-
-
 @robot.subscribe
 def pop_mini_program(message):
     return '<a href="http://www.qq.com" data-miniprogram-appid="wxfbf41c757510dc4c" data-miniprogram-path="/pages/index/index">进入掌易</a>'
@@ -50,9 +44,9 @@ robot.config["APP_SECRET"] = os.getenv("WECHAT_SECRET")
 client = robot.client
 client.create_menu({
     "button": [{
-        "type": "click",
+        "type": "view",
         "name": "承运信息",
-        "key": "driver_info"
+        "url": "https://www.d8sis.cn/pa_web/driver_register/"
     }, {
         "type": "view",
         "name": "送货进厂",

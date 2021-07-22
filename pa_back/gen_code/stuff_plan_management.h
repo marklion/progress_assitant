@@ -49,6 +49,12 @@ class stuff_plan_managementIf {
   virtual bool push_user_pay(const std::string& ssid, const int64_t plan_id) = 0;
   virtual int64_t get_count_by_status(const std::string& ssid, const int64_t status) = 0;
   virtual bool cancel_vichele_from_plan(const std::string& ssid, const std::vector<int64_t> & ids) = 0;
+  virtual void driver_silent_login(std::string& _return, const std::string& code) = 0;
+  virtual bool driver_silent_send_sms(const std::string& driver_phone) = 0;
+  virtual void driver_silent_register(std::string& _return, const std::string& code, const std::string& driver_id, const std::string& driver_phone, const std::string& verify_code) = 0;
+  virtual void driver_silent_unregister(const std::string& silent_id) = 0;
+  virtual bool verify_driver_silent_login(const std::string& silent_id) = 0;
+  virtual void get_today_driver_info(std::vector<today_driver_info> & _return, const std::string& silent_id) = 0;
 };
 
 class stuff_plan_managementIfFactory {
@@ -170,6 +176,26 @@ class stuff_plan_managementNull : virtual public stuff_plan_managementIf {
   bool cancel_vichele_from_plan(const std::string& /* ssid */, const std::vector<int64_t> & /* ids */) {
     bool _return = false;
     return _return;
+  }
+  void driver_silent_login(std::string& /* _return */, const std::string& /* code */) {
+    return;
+  }
+  bool driver_silent_send_sms(const std::string& /* driver_phone */) {
+    bool _return = false;
+    return _return;
+  }
+  void driver_silent_register(std::string& /* _return */, const std::string& /* code */, const std::string& /* driver_id */, const std::string& /* driver_phone */, const std::string& /* verify_code */) {
+    return;
+  }
+  void driver_silent_unregister(const std::string& /* silent_id */) {
+    return;
+  }
+  bool verify_driver_silent_login(const std::string& /* silent_id */) {
+    bool _return = false;
+    return _return;
+  }
+  void get_today_driver_info(std::vector<today_driver_info> & /* _return */, const std::string& /* silent_id */) {
+    return;
   }
 };
 
@@ -3387,6 +3413,691 @@ class stuff_plan_management_cancel_vichele_from_plan_presult {
 
 };
 
+typedef struct _stuff_plan_management_driver_silent_login_args__isset {
+  _stuff_plan_management_driver_silent_login_args__isset() : code(false) {}
+  bool code :1;
+} _stuff_plan_management_driver_silent_login_args__isset;
+
+class stuff_plan_management_driver_silent_login_args {
+ public:
+
+  stuff_plan_management_driver_silent_login_args(const stuff_plan_management_driver_silent_login_args&);
+  stuff_plan_management_driver_silent_login_args& operator=(const stuff_plan_management_driver_silent_login_args&);
+  stuff_plan_management_driver_silent_login_args() : code() {
+  }
+
+  virtual ~stuff_plan_management_driver_silent_login_args() noexcept;
+  std::string code;
+
+  _stuff_plan_management_driver_silent_login_args__isset __isset;
+
+  void __set_code(const std::string& val);
+
+  bool operator == (const stuff_plan_management_driver_silent_login_args & rhs) const
+  {
+    if (!(code == rhs.code))
+      return false;
+    return true;
+  }
+  bool operator != (const stuff_plan_management_driver_silent_login_args &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const stuff_plan_management_driver_silent_login_args & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+
+class stuff_plan_management_driver_silent_login_pargs {
+ public:
+
+
+  virtual ~stuff_plan_management_driver_silent_login_pargs() noexcept;
+  const std::string* code;
+
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _stuff_plan_management_driver_silent_login_result__isset {
+  _stuff_plan_management_driver_silent_login_result__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _stuff_plan_management_driver_silent_login_result__isset;
+
+class stuff_plan_management_driver_silent_login_result {
+ public:
+
+  stuff_plan_management_driver_silent_login_result(const stuff_plan_management_driver_silent_login_result&);
+  stuff_plan_management_driver_silent_login_result& operator=(const stuff_plan_management_driver_silent_login_result&);
+  stuff_plan_management_driver_silent_login_result() : success() {
+  }
+
+  virtual ~stuff_plan_management_driver_silent_login_result() noexcept;
+  std::string success;
+  gen_exp e;
+
+  _stuff_plan_management_driver_silent_login_result__isset __isset;
+
+  void __set_success(const std::string& val);
+
+  void __set_e(const gen_exp& val);
+
+  bool operator == (const stuff_plan_management_driver_silent_login_result & rhs) const
+  {
+    if (!(success == rhs.success))
+      return false;
+    if (!(e == rhs.e))
+      return false;
+    return true;
+  }
+  bool operator != (const stuff_plan_management_driver_silent_login_result &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const stuff_plan_management_driver_silent_login_result & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _stuff_plan_management_driver_silent_login_presult__isset {
+  _stuff_plan_management_driver_silent_login_presult__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _stuff_plan_management_driver_silent_login_presult__isset;
+
+class stuff_plan_management_driver_silent_login_presult {
+ public:
+
+
+  virtual ~stuff_plan_management_driver_silent_login_presult() noexcept;
+  std::string* success;
+  gen_exp e;
+
+  _stuff_plan_management_driver_silent_login_presult__isset __isset;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+
+};
+
+typedef struct _stuff_plan_management_driver_silent_send_sms_args__isset {
+  _stuff_plan_management_driver_silent_send_sms_args__isset() : driver_phone(false) {}
+  bool driver_phone :1;
+} _stuff_plan_management_driver_silent_send_sms_args__isset;
+
+class stuff_plan_management_driver_silent_send_sms_args {
+ public:
+
+  stuff_plan_management_driver_silent_send_sms_args(const stuff_plan_management_driver_silent_send_sms_args&);
+  stuff_plan_management_driver_silent_send_sms_args& operator=(const stuff_plan_management_driver_silent_send_sms_args&);
+  stuff_plan_management_driver_silent_send_sms_args() : driver_phone() {
+  }
+
+  virtual ~stuff_plan_management_driver_silent_send_sms_args() noexcept;
+  std::string driver_phone;
+
+  _stuff_plan_management_driver_silent_send_sms_args__isset __isset;
+
+  void __set_driver_phone(const std::string& val);
+
+  bool operator == (const stuff_plan_management_driver_silent_send_sms_args & rhs) const
+  {
+    if (!(driver_phone == rhs.driver_phone))
+      return false;
+    return true;
+  }
+  bool operator != (const stuff_plan_management_driver_silent_send_sms_args &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const stuff_plan_management_driver_silent_send_sms_args & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+
+class stuff_plan_management_driver_silent_send_sms_pargs {
+ public:
+
+
+  virtual ~stuff_plan_management_driver_silent_send_sms_pargs() noexcept;
+  const std::string* driver_phone;
+
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _stuff_plan_management_driver_silent_send_sms_result__isset {
+  _stuff_plan_management_driver_silent_send_sms_result__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _stuff_plan_management_driver_silent_send_sms_result__isset;
+
+class stuff_plan_management_driver_silent_send_sms_result {
+ public:
+
+  stuff_plan_management_driver_silent_send_sms_result(const stuff_plan_management_driver_silent_send_sms_result&);
+  stuff_plan_management_driver_silent_send_sms_result& operator=(const stuff_plan_management_driver_silent_send_sms_result&);
+  stuff_plan_management_driver_silent_send_sms_result() : success(0) {
+  }
+
+  virtual ~stuff_plan_management_driver_silent_send_sms_result() noexcept;
+  bool success;
+  gen_exp e;
+
+  _stuff_plan_management_driver_silent_send_sms_result__isset __isset;
+
+  void __set_success(const bool val);
+
+  void __set_e(const gen_exp& val);
+
+  bool operator == (const stuff_plan_management_driver_silent_send_sms_result & rhs) const
+  {
+    if (!(success == rhs.success))
+      return false;
+    if (!(e == rhs.e))
+      return false;
+    return true;
+  }
+  bool operator != (const stuff_plan_management_driver_silent_send_sms_result &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const stuff_plan_management_driver_silent_send_sms_result & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _stuff_plan_management_driver_silent_send_sms_presult__isset {
+  _stuff_plan_management_driver_silent_send_sms_presult__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _stuff_plan_management_driver_silent_send_sms_presult__isset;
+
+class stuff_plan_management_driver_silent_send_sms_presult {
+ public:
+
+
+  virtual ~stuff_plan_management_driver_silent_send_sms_presult() noexcept;
+  bool* success;
+  gen_exp e;
+
+  _stuff_plan_management_driver_silent_send_sms_presult__isset __isset;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+
+};
+
+typedef struct _stuff_plan_management_driver_silent_register_args__isset {
+  _stuff_plan_management_driver_silent_register_args__isset() : code(false), driver_id(false), driver_phone(false), verify_code(false) {}
+  bool code :1;
+  bool driver_id :1;
+  bool driver_phone :1;
+  bool verify_code :1;
+} _stuff_plan_management_driver_silent_register_args__isset;
+
+class stuff_plan_management_driver_silent_register_args {
+ public:
+
+  stuff_plan_management_driver_silent_register_args(const stuff_plan_management_driver_silent_register_args&);
+  stuff_plan_management_driver_silent_register_args& operator=(const stuff_plan_management_driver_silent_register_args&);
+  stuff_plan_management_driver_silent_register_args() : code(), driver_id(), driver_phone(), verify_code() {
+  }
+
+  virtual ~stuff_plan_management_driver_silent_register_args() noexcept;
+  std::string code;
+  std::string driver_id;
+  std::string driver_phone;
+  std::string verify_code;
+
+  _stuff_plan_management_driver_silent_register_args__isset __isset;
+
+  void __set_code(const std::string& val);
+
+  void __set_driver_id(const std::string& val);
+
+  void __set_driver_phone(const std::string& val);
+
+  void __set_verify_code(const std::string& val);
+
+  bool operator == (const stuff_plan_management_driver_silent_register_args & rhs) const
+  {
+    if (!(code == rhs.code))
+      return false;
+    if (!(driver_id == rhs.driver_id))
+      return false;
+    if (!(driver_phone == rhs.driver_phone))
+      return false;
+    if (!(verify_code == rhs.verify_code))
+      return false;
+    return true;
+  }
+  bool operator != (const stuff_plan_management_driver_silent_register_args &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const stuff_plan_management_driver_silent_register_args & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+
+class stuff_plan_management_driver_silent_register_pargs {
+ public:
+
+
+  virtual ~stuff_plan_management_driver_silent_register_pargs() noexcept;
+  const std::string* code;
+  const std::string* driver_id;
+  const std::string* driver_phone;
+  const std::string* verify_code;
+
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _stuff_plan_management_driver_silent_register_result__isset {
+  _stuff_plan_management_driver_silent_register_result__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _stuff_plan_management_driver_silent_register_result__isset;
+
+class stuff_plan_management_driver_silent_register_result {
+ public:
+
+  stuff_plan_management_driver_silent_register_result(const stuff_plan_management_driver_silent_register_result&);
+  stuff_plan_management_driver_silent_register_result& operator=(const stuff_plan_management_driver_silent_register_result&);
+  stuff_plan_management_driver_silent_register_result() : success() {
+  }
+
+  virtual ~stuff_plan_management_driver_silent_register_result() noexcept;
+  std::string success;
+  gen_exp e;
+
+  _stuff_plan_management_driver_silent_register_result__isset __isset;
+
+  void __set_success(const std::string& val);
+
+  void __set_e(const gen_exp& val);
+
+  bool operator == (const stuff_plan_management_driver_silent_register_result & rhs) const
+  {
+    if (!(success == rhs.success))
+      return false;
+    if (!(e == rhs.e))
+      return false;
+    return true;
+  }
+  bool operator != (const stuff_plan_management_driver_silent_register_result &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const stuff_plan_management_driver_silent_register_result & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _stuff_plan_management_driver_silent_register_presult__isset {
+  _stuff_plan_management_driver_silent_register_presult__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _stuff_plan_management_driver_silent_register_presult__isset;
+
+class stuff_plan_management_driver_silent_register_presult {
+ public:
+
+
+  virtual ~stuff_plan_management_driver_silent_register_presult() noexcept;
+  std::string* success;
+  gen_exp e;
+
+  _stuff_plan_management_driver_silent_register_presult__isset __isset;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+
+};
+
+typedef struct _stuff_plan_management_driver_silent_unregister_args__isset {
+  _stuff_plan_management_driver_silent_unregister_args__isset() : silent_id(false) {}
+  bool silent_id :1;
+} _stuff_plan_management_driver_silent_unregister_args__isset;
+
+class stuff_plan_management_driver_silent_unregister_args {
+ public:
+
+  stuff_plan_management_driver_silent_unregister_args(const stuff_plan_management_driver_silent_unregister_args&);
+  stuff_plan_management_driver_silent_unregister_args& operator=(const stuff_plan_management_driver_silent_unregister_args&);
+  stuff_plan_management_driver_silent_unregister_args() : silent_id() {
+  }
+
+  virtual ~stuff_plan_management_driver_silent_unregister_args() noexcept;
+  std::string silent_id;
+
+  _stuff_plan_management_driver_silent_unregister_args__isset __isset;
+
+  void __set_silent_id(const std::string& val);
+
+  bool operator == (const stuff_plan_management_driver_silent_unregister_args & rhs) const
+  {
+    if (!(silent_id == rhs.silent_id))
+      return false;
+    return true;
+  }
+  bool operator != (const stuff_plan_management_driver_silent_unregister_args &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const stuff_plan_management_driver_silent_unregister_args & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+
+class stuff_plan_management_driver_silent_unregister_pargs {
+ public:
+
+
+  virtual ~stuff_plan_management_driver_silent_unregister_pargs() noexcept;
+  const std::string* silent_id;
+
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _stuff_plan_management_driver_silent_unregister_result__isset {
+  _stuff_plan_management_driver_silent_unregister_result__isset() : e(false) {}
+  bool e :1;
+} _stuff_plan_management_driver_silent_unregister_result__isset;
+
+class stuff_plan_management_driver_silent_unregister_result {
+ public:
+
+  stuff_plan_management_driver_silent_unregister_result(const stuff_plan_management_driver_silent_unregister_result&);
+  stuff_plan_management_driver_silent_unregister_result& operator=(const stuff_plan_management_driver_silent_unregister_result&);
+  stuff_plan_management_driver_silent_unregister_result() {
+  }
+
+  virtual ~stuff_plan_management_driver_silent_unregister_result() noexcept;
+  gen_exp e;
+
+  _stuff_plan_management_driver_silent_unregister_result__isset __isset;
+
+  void __set_e(const gen_exp& val);
+
+  bool operator == (const stuff_plan_management_driver_silent_unregister_result & rhs) const
+  {
+    if (!(e == rhs.e))
+      return false;
+    return true;
+  }
+  bool operator != (const stuff_plan_management_driver_silent_unregister_result &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const stuff_plan_management_driver_silent_unregister_result & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _stuff_plan_management_driver_silent_unregister_presult__isset {
+  _stuff_plan_management_driver_silent_unregister_presult__isset() : e(false) {}
+  bool e :1;
+} _stuff_plan_management_driver_silent_unregister_presult__isset;
+
+class stuff_plan_management_driver_silent_unregister_presult {
+ public:
+
+
+  virtual ~stuff_plan_management_driver_silent_unregister_presult() noexcept;
+  gen_exp e;
+
+  _stuff_plan_management_driver_silent_unregister_presult__isset __isset;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+
+};
+
+typedef struct _stuff_plan_management_verify_driver_silent_login_args__isset {
+  _stuff_plan_management_verify_driver_silent_login_args__isset() : silent_id(false) {}
+  bool silent_id :1;
+} _stuff_plan_management_verify_driver_silent_login_args__isset;
+
+class stuff_plan_management_verify_driver_silent_login_args {
+ public:
+
+  stuff_plan_management_verify_driver_silent_login_args(const stuff_plan_management_verify_driver_silent_login_args&);
+  stuff_plan_management_verify_driver_silent_login_args& operator=(const stuff_plan_management_verify_driver_silent_login_args&);
+  stuff_plan_management_verify_driver_silent_login_args() : silent_id() {
+  }
+
+  virtual ~stuff_plan_management_verify_driver_silent_login_args() noexcept;
+  std::string silent_id;
+
+  _stuff_plan_management_verify_driver_silent_login_args__isset __isset;
+
+  void __set_silent_id(const std::string& val);
+
+  bool operator == (const stuff_plan_management_verify_driver_silent_login_args & rhs) const
+  {
+    if (!(silent_id == rhs.silent_id))
+      return false;
+    return true;
+  }
+  bool operator != (const stuff_plan_management_verify_driver_silent_login_args &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const stuff_plan_management_verify_driver_silent_login_args & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+
+class stuff_plan_management_verify_driver_silent_login_pargs {
+ public:
+
+
+  virtual ~stuff_plan_management_verify_driver_silent_login_pargs() noexcept;
+  const std::string* silent_id;
+
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _stuff_plan_management_verify_driver_silent_login_result__isset {
+  _stuff_plan_management_verify_driver_silent_login_result__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _stuff_plan_management_verify_driver_silent_login_result__isset;
+
+class stuff_plan_management_verify_driver_silent_login_result {
+ public:
+
+  stuff_plan_management_verify_driver_silent_login_result(const stuff_plan_management_verify_driver_silent_login_result&);
+  stuff_plan_management_verify_driver_silent_login_result& operator=(const stuff_plan_management_verify_driver_silent_login_result&);
+  stuff_plan_management_verify_driver_silent_login_result() : success(0) {
+  }
+
+  virtual ~stuff_plan_management_verify_driver_silent_login_result() noexcept;
+  bool success;
+  gen_exp e;
+
+  _stuff_plan_management_verify_driver_silent_login_result__isset __isset;
+
+  void __set_success(const bool val);
+
+  void __set_e(const gen_exp& val);
+
+  bool operator == (const stuff_plan_management_verify_driver_silent_login_result & rhs) const
+  {
+    if (!(success == rhs.success))
+      return false;
+    if (!(e == rhs.e))
+      return false;
+    return true;
+  }
+  bool operator != (const stuff_plan_management_verify_driver_silent_login_result &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const stuff_plan_management_verify_driver_silent_login_result & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _stuff_plan_management_verify_driver_silent_login_presult__isset {
+  _stuff_plan_management_verify_driver_silent_login_presult__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _stuff_plan_management_verify_driver_silent_login_presult__isset;
+
+class stuff_plan_management_verify_driver_silent_login_presult {
+ public:
+
+
+  virtual ~stuff_plan_management_verify_driver_silent_login_presult() noexcept;
+  bool* success;
+  gen_exp e;
+
+  _stuff_plan_management_verify_driver_silent_login_presult__isset __isset;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+
+};
+
+typedef struct _stuff_plan_management_get_today_driver_info_args__isset {
+  _stuff_plan_management_get_today_driver_info_args__isset() : silent_id(false) {}
+  bool silent_id :1;
+} _stuff_plan_management_get_today_driver_info_args__isset;
+
+class stuff_plan_management_get_today_driver_info_args {
+ public:
+
+  stuff_plan_management_get_today_driver_info_args(const stuff_plan_management_get_today_driver_info_args&);
+  stuff_plan_management_get_today_driver_info_args& operator=(const stuff_plan_management_get_today_driver_info_args&);
+  stuff_plan_management_get_today_driver_info_args() : silent_id() {
+  }
+
+  virtual ~stuff_plan_management_get_today_driver_info_args() noexcept;
+  std::string silent_id;
+
+  _stuff_plan_management_get_today_driver_info_args__isset __isset;
+
+  void __set_silent_id(const std::string& val);
+
+  bool operator == (const stuff_plan_management_get_today_driver_info_args & rhs) const
+  {
+    if (!(silent_id == rhs.silent_id))
+      return false;
+    return true;
+  }
+  bool operator != (const stuff_plan_management_get_today_driver_info_args &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const stuff_plan_management_get_today_driver_info_args & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+
+class stuff_plan_management_get_today_driver_info_pargs {
+ public:
+
+
+  virtual ~stuff_plan_management_get_today_driver_info_pargs() noexcept;
+  const std::string* silent_id;
+
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _stuff_plan_management_get_today_driver_info_result__isset {
+  _stuff_plan_management_get_today_driver_info_result__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _stuff_plan_management_get_today_driver_info_result__isset;
+
+class stuff_plan_management_get_today_driver_info_result {
+ public:
+
+  stuff_plan_management_get_today_driver_info_result(const stuff_plan_management_get_today_driver_info_result&);
+  stuff_plan_management_get_today_driver_info_result& operator=(const stuff_plan_management_get_today_driver_info_result&);
+  stuff_plan_management_get_today_driver_info_result() {
+  }
+
+  virtual ~stuff_plan_management_get_today_driver_info_result() noexcept;
+  std::vector<today_driver_info>  success;
+  gen_exp e;
+
+  _stuff_plan_management_get_today_driver_info_result__isset __isset;
+
+  void __set_success(const std::vector<today_driver_info> & val);
+
+  void __set_e(const gen_exp& val);
+
+  bool operator == (const stuff_plan_management_get_today_driver_info_result & rhs) const
+  {
+    if (!(success == rhs.success))
+      return false;
+    if (!(e == rhs.e))
+      return false;
+    return true;
+  }
+  bool operator != (const stuff_plan_management_get_today_driver_info_result &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const stuff_plan_management_get_today_driver_info_result & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _stuff_plan_management_get_today_driver_info_presult__isset {
+  _stuff_plan_management_get_today_driver_info_presult__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _stuff_plan_management_get_today_driver_info_presult__isset;
+
+class stuff_plan_management_get_today_driver_info_presult {
+ public:
+
+
+  virtual ~stuff_plan_management_get_today_driver_info_presult() noexcept;
+  std::vector<today_driver_info> * success;
+  gen_exp e;
+
+  _stuff_plan_management_get_today_driver_info_presult__isset __isset;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+
+};
+
 class stuff_plan_managementClient : virtual public stuff_plan_managementIf {
  public:
   stuff_plan_managementClient(std::shared_ptr< ::apache::thrift::protocol::TProtocol> prot) {
@@ -3493,6 +4204,24 @@ class stuff_plan_managementClient : virtual public stuff_plan_managementIf {
   bool cancel_vichele_from_plan(const std::string& ssid, const std::vector<int64_t> & ids);
   void send_cancel_vichele_from_plan(const std::string& ssid, const std::vector<int64_t> & ids);
   bool recv_cancel_vichele_from_plan();
+  void driver_silent_login(std::string& _return, const std::string& code);
+  void send_driver_silent_login(const std::string& code);
+  void recv_driver_silent_login(std::string& _return);
+  bool driver_silent_send_sms(const std::string& driver_phone);
+  void send_driver_silent_send_sms(const std::string& driver_phone);
+  bool recv_driver_silent_send_sms();
+  void driver_silent_register(std::string& _return, const std::string& code, const std::string& driver_id, const std::string& driver_phone, const std::string& verify_code);
+  void send_driver_silent_register(const std::string& code, const std::string& driver_id, const std::string& driver_phone, const std::string& verify_code);
+  void recv_driver_silent_register(std::string& _return);
+  void driver_silent_unregister(const std::string& silent_id);
+  void send_driver_silent_unregister(const std::string& silent_id);
+  void recv_driver_silent_unregister();
+  bool verify_driver_silent_login(const std::string& silent_id);
+  void send_verify_driver_silent_login(const std::string& silent_id);
+  bool recv_verify_driver_silent_login();
+  void get_today_driver_info(std::vector<today_driver_info> & _return, const std::string& silent_id);
+  void send_get_today_driver_info(const std::string& silent_id);
+  void recv_get_today_driver_info(std::vector<today_driver_info> & _return);
  protected:
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> piprot_;
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> poprot_;
@@ -3535,6 +4264,12 @@ class stuff_plan_managementProcessor : public ::apache::thrift::TDispatchProcess
   void process_push_user_pay(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
   void process_get_count_by_status(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
   void process_cancel_vichele_from_plan(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
+  void process_driver_silent_login(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
+  void process_driver_silent_send_sms(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
+  void process_driver_silent_register(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
+  void process_driver_silent_unregister(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
+  void process_verify_driver_silent_login(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
+  void process_get_today_driver_info(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
  public:
   stuff_plan_managementProcessor(::std::shared_ptr<stuff_plan_managementIf> iface) :
     iface_(iface) {
@@ -3565,6 +4300,12 @@ class stuff_plan_managementProcessor : public ::apache::thrift::TDispatchProcess
     processMap_["push_user_pay"] = &stuff_plan_managementProcessor::process_push_user_pay;
     processMap_["get_count_by_status"] = &stuff_plan_managementProcessor::process_get_count_by_status;
     processMap_["cancel_vichele_from_plan"] = &stuff_plan_managementProcessor::process_cancel_vichele_from_plan;
+    processMap_["driver_silent_login"] = &stuff_plan_managementProcessor::process_driver_silent_login;
+    processMap_["driver_silent_send_sms"] = &stuff_plan_managementProcessor::process_driver_silent_send_sms;
+    processMap_["driver_silent_register"] = &stuff_plan_managementProcessor::process_driver_silent_register;
+    processMap_["driver_silent_unregister"] = &stuff_plan_managementProcessor::process_driver_silent_unregister;
+    processMap_["verify_driver_silent_login"] = &stuff_plan_managementProcessor::process_verify_driver_silent_login;
+    processMap_["get_today_driver_info"] = &stuff_plan_managementProcessor::process_get_today_driver_info;
   }
 
   virtual ~stuff_plan_managementProcessor() {}
@@ -3850,6 +4591,63 @@ class stuff_plan_managementMultiface : virtual public stuff_plan_managementIf {
     return ifaces_[i]->cancel_vichele_from_plan(ssid, ids);
   }
 
+  void driver_silent_login(std::string& _return, const std::string& code) {
+    size_t sz = ifaces_.size();
+    size_t i = 0;
+    for (; i < (sz - 1); ++i) {
+      ifaces_[i]->driver_silent_login(_return, code);
+    }
+    ifaces_[i]->driver_silent_login(_return, code);
+    return;
+  }
+
+  bool driver_silent_send_sms(const std::string& driver_phone) {
+    size_t sz = ifaces_.size();
+    size_t i = 0;
+    for (; i < (sz - 1); ++i) {
+      ifaces_[i]->driver_silent_send_sms(driver_phone);
+    }
+    return ifaces_[i]->driver_silent_send_sms(driver_phone);
+  }
+
+  void driver_silent_register(std::string& _return, const std::string& code, const std::string& driver_id, const std::string& driver_phone, const std::string& verify_code) {
+    size_t sz = ifaces_.size();
+    size_t i = 0;
+    for (; i < (sz - 1); ++i) {
+      ifaces_[i]->driver_silent_register(_return, code, driver_id, driver_phone, verify_code);
+    }
+    ifaces_[i]->driver_silent_register(_return, code, driver_id, driver_phone, verify_code);
+    return;
+  }
+
+  void driver_silent_unregister(const std::string& silent_id) {
+    size_t sz = ifaces_.size();
+    size_t i = 0;
+    for (; i < (sz - 1); ++i) {
+      ifaces_[i]->driver_silent_unregister(silent_id);
+    }
+    ifaces_[i]->driver_silent_unregister(silent_id);
+  }
+
+  bool verify_driver_silent_login(const std::string& silent_id) {
+    size_t sz = ifaces_.size();
+    size_t i = 0;
+    for (; i < (sz - 1); ++i) {
+      ifaces_[i]->verify_driver_silent_login(silent_id);
+    }
+    return ifaces_[i]->verify_driver_silent_login(silent_id);
+  }
+
+  void get_today_driver_info(std::vector<today_driver_info> & _return, const std::string& silent_id) {
+    size_t sz = ifaces_.size();
+    size_t i = 0;
+    for (; i < (sz - 1); ++i) {
+      ifaces_[i]->get_today_driver_info(_return, silent_id);
+    }
+    ifaces_[i]->get_today_driver_info(_return, silent_id);
+    return;
+  }
+
 };
 
 // The 'concurrent' client is a thread safe client that correctly handles
@@ -3963,6 +4761,24 @@ class stuff_plan_managementConcurrentClient : virtual public stuff_plan_manageme
   bool cancel_vichele_from_plan(const std::string& ssid, const std::vector<int64_t> & ids);
   int32_t send_cancel_vichele_from_plan(const std::string& ssid, const std::vector<int64_t> & ids);
   bool recv_cancel_vichele_from_plan(const int32_t seqid);
+  void driver_silent_login(std::string& _return, const std::string& code);
+  int32_t send_driver_silent_login(const std::string& code);
+  void recv_driver_silent_login(std::string& _return, const int32_t seqid);
+  bool driver_silent_send_sms(const std::string& driver_phone);
+  int32_t send_driver_silent_send_sms(const std::string& driver_phone);
+  bool recv_driver_silent_send_sms(const int32_t seqid);
+  void driver_silent_register(std::string& _return, const std::string& code, const std::string& driver_id, const std::string& driver_phone, const std::string& verify_code);
+  int32_t send_driver_silent_register(const std::string& code, const std::string& driver_id, const std::string& driver_phone, const std::string& verify_code);
+  void recv_driver_silent_register(std::string& _return, const int32_t seqid);
+  void driver_silent_unregister(const std::string& silent_id);
+  int32_t send_driver_silent_unregister(const std::string& silent_id);
+  void recv_driver_silent_unregister(const int32_t seqid);
+  bool verify_driver_silent_login(const std::string& silent_id);
+  int32_t send_verify_driver_silent_login(const std::string& silent_id);
+  bool recv_verify_driver_silent_login(const int32_t seqid);
+  void get_today_driver_info(std::vector<today_driver_info> & _return, const std::string& silent_id);
+  int32_t send_get_today_driver_info(const std::string& silent_id);
+  void recv_get_today_driver_info(std::vector<today_driver_info> & _return, const int32_t seqid);
  protected:
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> piprot_;
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> poprot_;

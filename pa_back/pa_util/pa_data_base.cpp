@@ -66,7 +66,36 @@ bool pa_sql_sms_verify::code_is_valid(const std::string &_code)
 
     return ret;
 }
+void pa_sql_driver_sms_verify::generate_code()
+{
+    this->verify_code = "";
+    for (size_t i = 0; i < 6; i++)
+    {
+        int num = e() % 10;
+        verify_code.push_back('0' + num);
+    }
+    timestamp = time(nullptr) / 60;
+}
 
+bool pa_sql_driver_sms_verify::code_is_valid(const std::string &_code)
+{
+    bool ret = false;
+    auto current_time = time(nullptr) / 60;
+
+    if (current_time - timestamp < 5 && current_time >= timestamp)
+    {
+        if (_code == verify_code)
+        {
+            ret = true;
+            remove_record();
+        }
+    }
+    else {
+        remove_record();
+    }
+
+    return ret;
+}
 void pa_sql_archive_plan::translate_from_plan(pa_sql_plan &_plan)
 {
     auto created_user = _plan.get_parent<pa_sql_userinfo>("created_by");

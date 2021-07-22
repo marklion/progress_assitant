@@ -56,6 +56,7 @@ if len(sys.argv) <= 1 or sys.argv[1] == '--help':
     print('  common_contract get_contract(string a_side_company, string b_side_company)')
     print('  bool set_work_time(string ssid, i64 start_work_time, i64 end_work_time)')
     print('  company_work_time get_work_time(string company_name)')
+    print('  company_positon_lat_lag get_company_position_config(string company_name)')
     print('')
     sys.exit(0)
 
@@ -326,6 +327,12 @@ elif cmd == 'get_work_time':
         print('get_work_time requires 1 args')
         sys.exit(1)
     pp.pprint(client.get_work_time(args[0],))
+
+elif cmd == 'get_company_position_config':
+    if len(args) != 1:
+        print('get_company_position_config requires 1 args')
+        sys.exit(1)
+    pp.pprint(client.get_company_position_config(args[0],))
 
 else:
     print('Unrecognized method %s' % cmd)

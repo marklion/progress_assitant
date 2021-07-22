@@ -1145,6 +1145,85 @@ class company_work_time(object):
         return not (self == other)
 
 
+class company_positon_lat_lag(object):
+    """
+    Attributes:
+     - lat
+     - lag
+     - distance
+
+    """
+
+
+    def __init__(self, lat=None, lag=None, distance=None,):
+        self.lat = lat
+        self.lag = lag
+        self.distance = distance
+
+    def read(self, iprot):
+        if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
+            iprot._fast_decode(self, iprot, [self.__class__, self.thrift_spec])
+            return
+        iprot.readStructBegin()
+        while True:
+            (fname, ftype, fid) = iprot.readFieldBegin()
+            if ftype == TType.STOP:
+                break
+            if fid == 1:
+                if ftype == TType.DOUBLE:
+                    self.lat = iprot.readDouble()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 2:
+                if ftype == TType.DOUBLE:
+                    self.lag = iprot.readDouble()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 3:
+                if ftype == TType.DOUBLE:
+                    self.distance = iprot.readDouble()
+                else:
+                    iprot.skip(ftype)
+            else:
+                iprot.skip(ftype)
+            iprot.readFieldEnd()
+        iprot.readStructEnd()
+
+    def write(self, oprot):
+        if oprot._fast_encode is not None and self.thrift_spec is not None:
+            oprot.trans.write(oprot._fast_encode(self, [self.__class__, self.thrift_spec]))
+            return
+        oprot.writeStructBegin('company_positon_lat_lag')
+        if self.lat is not None:
+            oprot.writeFieldBegin('lat', TType.DOUBLE, 1)
+            oprot.writeDouble(self.lat)
+            oprot.writeFieldEnd()
+        if self.lag is not None:
+            oprot.writeFieldBegin('lag', TType.DOUBLE, 2)
+            oprot.writeDouble(self.lag)
+            oprot.writeFieldEnd()
+        if self.distance is not None:
+            oprot.writeFieldBegin('distance', TType.DOUBLE, 3)
+            oprot.writeDouble(self.distance)
+            oprot.writeFieldEnd()
+        oprot.writeFieldStop()
+        oprot.writeStructEnd()
+
+    def validate(self):
+        return
+
+    def __repr__(self):
+        L = ['%s=%r' % (key, value)
+             for key, value in self.__dict__.items()]
+        return '%s(%s)' % (self.__class__.__name__, ', '.join(L))
+
+    def __eq__(self, other):
+        return isinstance(other, self.__class__) and self.__dict__ == other.__dict__
+
+    def __ne__(self, other):
+        return not (self == other)
+
+
 class plan_confirm_info(object):
     """
     Attributes:
@@ -2289,6 +2368,173 @@ class company_plan_brief(object):
         return not (self == other)
 
 
+class today_driver_info(object):
+    """
+    Attributes:
+     - id
+     - destination_company
+     - destination_address
+     - order_company
+     - main_vichele
+     - behind_vichele
+     - stuff_name
+     - register_timestamp
+     - register_number
+     - enter_location
+     - is_registered
+
+    """
+
+
+    def __init__(self, id=None, destination_company=None, destination_address=None, order_company=None, main_vichele=None, behind_vichele=None, stuff_name=None, register_timestamp=None, register_number=None, enter_location=None, is_registered=None,):
+        self.id = id
+        self.destination_company = destination_company
+        self.destination_address = destination_address
+        self.order_company = order_company
+        self.main_vichele = main_vichele
+        self.behind_vichele = behind_vichele
+        self.stuff_name = stuff_name
+        self.register_timestamp = register_timestamp
+        self.register_number = register_number
+        self.enter_location = enter_location
+        self.is_registered = is_registered
+
+    def read(self, iprot):
+        if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
+            iprot._fast_decode(self, iprot, [self.__class__, self.thrift_spec])
+            return
+        iprot.readStructBegin()
+        while True:
+            (fname, ftype, fid) = iprot.readFieldBegin()
+            if ftype == TType.STOP:
+                break
+            if fid == 1:
+                if ftype == TType.I64:
+                    self.id = iprot.readI64()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 2:
+                if ftype == TType.STRING:
+                    self.destination_company = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 3:
+                if ftype == TType.STRING:
+                    self.destination_address = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 4:
+                if ftype == TType.STRING:
+                    self.order_company = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 5:
+                if ftype == TType.STRING:
+                    self.main_vichele = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 6:
+                if ftype == TType.STRING:
+                    self.behind_vichele = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 7:
+                if ftype == TType.STRING:
+                    self.stuff_name = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 8:
+                if ftype == TType.STRING:
+                    self.register_timestamp = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 9:
+                if ftype == TType.STRING:
+                    self.register_number = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 10:
+                if ftype == TType.STRING:
+                    self.enter_location = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 11:
+                if ftype == TType.BOOL:
+                    self.is_registered = iprot.readBool()
+                else:
+                    iprot.skip(ftype)
+            else:
+                iprot.skip(ftype)
+            iprot.readFieldEnd()
+        iprot.readStructEnd()
+
+    def write(self, oprot):
+        if oprot._fast_encode is not None and self.thrift_spec is not None:
+            oprot.trans.write(oprot._fast_encode(self, [self.__class__, self.thrift_spec]))
+            return
+        oprot.writeStructBegin('today_driver_info')
+        if self.id is not None:
+            oprot.writeFieldBegin('id', TType.I64, 1)
+            oprot.writeI64(self.id)
+            oprot.writeFieldEnd()
+        if self.destination_company is not None:
+            oprot.writeFieldBegin('destination_company', TType.STRING, 2)
+            oprot.writeString(self.destination_company.encode('utf-8') if sys.version_info[0] == 2 else self.destination_company)
+            oprot.writeFieldEnd()
+        if self.destination_address is not None:
+            oprot.writeFieldBegin('destination_address', TType.STRING, 3)
+            oprot.writeString(self.destination_address.encode('utf-8') if sys.version_info[0] == 2 else self.destination_address)
+            oprot.writeFieldEnd()
+        if self.order_company is not None:
+            oprot.writeFieldBegin('order_company', TType.STRING, 4)
+            oprot.writeString(self.order_company.encode('utf-8') if sys.version_info[0] == 2 else self.order_company)
+            oprot.writeFieldEnd()
+        if self.main_vichele is not None:
+            oprot.writeFieldBegin('main_vichele', TType.STRING, 5)
+            oprot.writeString(self.main_vichele.encode('utf-8') if sys.version_info[0] == 2 else self.main_vichele)
+            oprot.writeFieldEnd()
+        if self.behind_vichele is not None:
+            oprot.writeFieldBegin('behind_vichele', TType.STRING, 6)
+            oprot.writeString(self.behind_vichele.encode('utf-8') if sys.version_info[0] == 2 else self.behind_vichele)
+            oprot.writeFieldEnd()
+        if self.stuff_name is not None:
+            oprot.writeFieldBegin('stuff_name', TType.STRING, 7)
+            oprot.writeString(self.stuff_name.encode('utf-8') if sys.version_info[0] == 2 else self.stuff_name)
+            oprot.writeFieldEnd()
+        if self.register_timestamp is not None:
+            oprot.writeFieldBegin('register_timestamp', TType.STRING, 8)
+            oprot.writeString(self.register_timestamp.encode('utf-8') if sys.version_info[0] == 2 else self.register_timestamp)
+            oprot.writeFieldEnd()
+        if self.register_number is not None:
+            oprot.writeFieldBegin('register_number', TType.STRING, 9)
+            oprot.writeString(self.register_number.encode('utf-8') if sys.version_info[0] == 2 else self.register_number)
+            oprot.writeFieldEnd()
+        if self.enter_location is not None:
+            oprot.writeFieldBegin('enter_location', TType.STRING, 10)
+            oprot.writeString(self.enter_location.encode('utf-8') if sys.version_info[0] == 2 else self.enter_location)
+            oprot.writeFieldEnd()
+        if self.is_registered is not None:
+            oprot.writeFieldBegin('is_registered', TType.BOOL, 11)
+            oprot.writeBool(self.is_registered)
+            oprot.writeFieldEnd()
+        oprot.writeFieldStop()
+        oprot.writeStructEnd()
+
+    def validate(self):
+        return
+
+    def __repr__(self):
+        L = ['%s=%r' % (key, value)
+             for key, value in self.__dict__.items()]
+        return '%s(%s)' % (self.__class__.__name__, ', '.join(L))
+
+    def __eq__(self, other):
+        return isinstance(other, self.__class__) and self.__dict__ == other.__dict__
+
+    def __ne__(self, other):
+        return not (self == other)
+
+
 class api_extra_transformation(object):
     """
     Attributes:
@@ -2868,6 +3114,13 @@ company_work_time.thrift_spec = (
     (1, TType.I64, 'start_time', None, None, ),  # 1
     (2, TType.I64, 'end_time', None, None, ),  # 2
 )
+all_structs.append(company_positon_lat_lag)
+company_positon_lat_lag.thrift_spec = (
+    None,  # 0
+    (1, TType.DOUBLE, 'lat', None, None, ),  # 1
+    (2, TType.DOUBLE, 'lag', None, None, ),  # 2
+    (3, TType.DOUBLE, 'distance', None, None, ),  # 3
+)
 all_structs.append(plan_confirm_info)
 plan_confirm_info.thrift_spec = (
     None,  # 0
@@ -2968,6 +3221,21 @@ company_plan_brief.thrift_spec = (
     (2, TType.I64, 'today_vichele_count', None, None, ),  # 2
     (3, TType.I64, 'tomorrow_plan_count', None, None, ),  # 3
     (4, TType.I64, 'tomorrow_vichele_count', None, None, ),  # 4
+)
+all_structs.append(today_driver_info)
+today_driver_info.thrift_spec = (
+    None,  # 0
+    (1, TType.I64, 'id', None, None, ),  # 1
+    (2, TType.STRING, 'destination_company', 'UTF8', None, ),  # 2
+    (3, TType.STRING, 'destination_address', 'UTF8', None, ),  # 3
+    (4, TType.STRING, 'order_company', 'UTF8', None, ),  # 4
+    (5, TType.STRING, 'main_vichele', 'UTF8', None, ),  # 5
+    (6, TType.STRING, 'behind_vichele', 'UTF8', None, ),  # 6
+    (7, TType.STRING, 'stuff_name', 'UTF8', None, ),  # 7
+    (8, TType.STRING, 'register_timestamp', 'UTF8', None, ),  # 8
+    (9, TType.STRING, 'register_number', 'UTF8', None, ),  # 9
+    (10, TType.STRING, 'enter_location', 'UTF8', None, ),  # 10
+    (11, TType.BOOL, 'is_registered', None, None, ),  # 11
 )
 all_structs.append(api_extra_transformation)
 api_extra_transformation.thrift_spec = (

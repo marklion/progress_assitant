@@ -1182,11 +1182,11 @@ class get_today_transformation_result(object):
             if fid == 0:
                 if ftype == TType.LIST:
                     self.success = []
-                    (_etype178, _size175) = iprot.readListBegin()
-                    for _i179 in range(_size175):
-                        _elem180 = api_transformation_info()
-                        _elem180.read(iprot)
-                        self.success.append(_elem180)
+                    (_etype185, _size182) = iprot.readListBegin()
+                    for _i186 in range(_size182):
+                        _elem187 = api_transformation_info()
+                        _elem187.read(iprot)
+                        self.success.append(_elem187)
                     iprot.readListEnd()
                 else:
                     iprot.skip(ftype)
@@ -1208,8 +1208,8 @@ class get_today_transformation_result(object):
         if self.success is not None:
             oprot.writeFieldBegin('success', TType.LIST, 0)
             oprot.writeListBegin(TType.STRUCT, len(self.success))
-            for iter181 in self.success:
-                iter181.write(oprot)
+            for iter188 in self.success:
+                iter188.write(oprot)
             oprot.writeListEnd()
             oprot.writeFieldEnd()
         if self.e is not None:

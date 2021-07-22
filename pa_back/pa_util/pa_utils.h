@@ -17,6 +17,12 @@
 #define PA_RETURN_SALE_CLOSE() PA_RETURN_MSG("卖家已休息，请在上班时间段内操作")
 #define PA_RETURN_OP_FAIL() PA_RETURN_MSG("操作失败")
 
+struct pa_util_company_position_config {
+    double lat = 0;
+    double lag = 0;
+    double distance = 0;
+};
+
 std::unique_ptr<pa_sql_userinfo> PA_DATAOPT_get_online_user(const std::string &_ssid);
 std::string PA_DATAOPT_store_logo_to_file(const std::string &_logo, const std::string &_upid);
 std::string PA_DATAOPT_store_attach_file(const std::string &_content, bool _is_pdf, const std::string &_name);
@@ -27,6 +33,7 @@ std::string PA_DATAOPT_rest_post(const std::string &_url, const std::string &_js
 void PA_DATAOPT_init_config();
 std::vector<std::string> PA_DATAOPT_get_admin(const std::string &_company);
 bool PA_DATAOPT_is_admin(const std::string &_phone, const std::string &_company);
+pa_util_company_position_config PA_DATAOPT_get_position_config(const std::string &_company);
 
 std::string PA_DATAOPT_get_company_by_assignee(const std::string &_assignee);
 bool PA_DATAOPT_create_user_apply(const std::string &_assignee, const std::string &_assigner);

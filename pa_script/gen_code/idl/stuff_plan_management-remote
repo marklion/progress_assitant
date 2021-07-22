@@ -51,6 +51,12 @@ if len(sys.argv) <= 1 or sys.argv[1] == '--help':
     print('  bool push_user_pay(string ssid, i64 plan_id)')
     print('  i64 get_count_by_status(string ssid, i64 status)')
     print('  bool cancel_vichele_from_plan(string ssid,  ids)')
+    print('  string driver_silent_login(string code)')
+    print('  bool driver_silent_send_sms(string driver_phone)')
+    print('  string driver_silent_register(string code, string driver_id, string driver_phone, string verify_code)')
+    print('  void driver_silent_unregister(string silent_id)')
+    print('  bool verify_driver_silent_login(string silent_id)')
+    print('   get_today_driver_info(string silent_id)')
     print('')
     sys.exit(0)
 
@@ -291,6 +297,42 @@ elif cmd == 'cancel_vichele_from_plan':
         print('cancel_vichele_from_plan requires 2 args')
         sys.exit(1)
     pp.pprint(client.cancel_vichele_from_plan(args[0], eval(args[1]),))
+
+elif cmd == 'driver_silent_login':
+    if len(args) != 1:
+        print('driver_silent_login requires 1 args')
+        sys.exit(1)
+    pp.pprint(client.driver_silent_login(args[0],))
+
+elif cmd == 'driver_silent_send_sms':
+    if len(args) != 1:
+        print('driver_silent_send_sms requires 1 args')
+        sys.exit(1)
+    pp.pprint(client.driver_silent_send_sms(args[0],))
+
+elif cmd == 'driver_silent_register':
+    if len(args) != 4:
+        print('driver_silent_register requires 4 args')
+        sys.exit(1)
+    pp.pprint(client.driver_silent_register(args[0], args[1], args[2], args[3],))
+
+elif cmd == 'driver_silent_unregister':
+    if len(args) != 1:
+        print('driver_silent_unregister requires 1 args')
+        sys.exit(1)
+    pp.pprint(client.driver_silent_unregister(args[0],))
+
+elif cmd == 'verify_driver_silent_login':
+    if len(args) != 1:
+        print('verify_driver_silent_login requires 1 args')
+        sys.exit(1)
+    pp.pprint(client.verify_driver_silent_login(args[0],))
+
+elif cmd == 'get_today_driver_info':
+    if len(args) != 1:
+        print('get_today_driver_info requires 1 args')
+        sys.exit(1)
+    pp.pprint(client.get_today_driver_info(args[0],))
 
 else:
     print('Unrecognized method %s' % cmd)
