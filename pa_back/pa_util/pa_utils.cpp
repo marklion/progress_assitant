@@ -421,3 +421,27 @@ bool PA_DATAOPT_valid_email(const std::string &_email, pa_sql_company &_company)
 
     return ret;
 }
+
+pa_util_company_position_config PA_DATAOPT_get_position_config(const std::string &_company)
+{
+    std::ifstream config_file(SALE_CONFIG_FILE, std::ios::in);
+    std::istreambuf_iterator<char> beg(config_file), end;
+    std::string config_string(beg, end);
+    neb::CJsonObject config(config_string);
+    pa_util_company_position_config ret;
+
+    for (size_t i = 0; i < config.GetArraySize(); i++)
+    {
+        auto company_config = config[i];
+        auto company_name = company_config("name");
+        auto position_config = company_config["position"];
+        if (company_name == _company)
+        {
+            position_config.Get("lat", ret.lat);
+            position_config.Get("lag", ret.lag);
+            position_config.Get("distance", ret.distance);
+        }
+    }
+
+    return ret;
+}

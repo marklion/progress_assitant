@@ -1223,6 +1223,87 @@ company_work_time = class {
   }
 
 };
+company_positon_lat_lag = class {
+  constructor(args) {
+    this.lat = null;
+    this.lag = null;
+    this.distance = null;
+    if (args) {
+      if (args.lat !== undefined && args.lat !== null) {
+        this.lat = args.lat;
+      }
+      if (args.lag !== undefined && args.lag !== null) {
+        this.lag = args.lag;
+      }
+      if (args.distance !== undefined && args.distance !== null) {
+        this.distance = args.distance;
+      }
+    }
+  }
+
+  read (input) {
+    input.readStructBegin();
+    while (true) {
+      const ret = input.readFieldBegin();
+      const ftype = ret.ftype;
+      const fid = ret.fid;
+      if (ftype == Thrift.Type.STOP) {
+        break;
+      }
+      switch (fid) {
+        case 1:
+        if (ftype == Thrift.Type.DOUBLE) {
+          this.lat = input.readDouble().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        case 2:
+        if (ftype == Thrift.Type.DOUBLE) {
+          this.lag = input.readDouble().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        case 3:
+        if (ftype == Thrift.Type.DOUBLE) {
+          this.distance = input.readDouble().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        default:
+          input.skip(ftype);
+      }
+      input.readFieldEnd();
+    }
+    input.readStructEnd();
+    return;
+  }
+
+  write (output) {
+    output.writeStructBegin('company_positon_lat_lag');
+    if (this.lat !== null && this.lat !== undefined) {
+      output.writeFieldBegin('lat', Thrift.Type.DOUBLE, 1);
+      output.writeDouble(this.lat);
+      output.writeFieldEnd();
+    }
+    if (this.lag !== null && this.lag !== undefined) {
+      output.writeFieldBegin('lag', Thrift.Type.DOUBLE, 2);
+      output.writeDouble(this.lag);
+      output.writeFieldEnd();
+    }
+    if (this.distance !== null && this.distance !== undefined) {
+      output.writeFieldBegin('distance', Thrift.Type.DOUBLE, 3);
+      output.writeDouble(this.distance);
+      output.writeFieldEnd();
+    }
+    output.writeFieldStop();
+    output.writeStructEnd();
+    return;
+  }
+
+};
 plan_confirm_info = class {
   constructor(args) {
     this.timestamp = null;
@@ -2508,6 +2589,215 @@ company_plan_brief = class {
     if (this.tomorrow_vichele_count !== null && this.tomorrow_vichele_count !== undefined) {
       output.writeFieldBegin('tomorrow_vichele_count', Thrift.Type.I64, 4);
       output.writeI64(this.tomorrow_vichele_count);
+      output.writeFieldEnd();
+    }
+    output.writeFieldStop();
+    output.writeStructEnd();
+    return;
+  }
+
+};
+today_driver_info = class {
+  constructor(args) {
+    this.id = null;
+    this.destination_company = null;
+    this.destination_address = null;
+    this.order_company = null;
+    this.main_vichele = null;
+    this.behind_vichele = null;
+    this.stuff_name = null;
+    this.register_timestamp = null;
+    this.register_number = null;
+    this.enter_location = null;
+    this.is_registered = null;
+    if (args) {
+      if (args.id !== undefined && args.id !== null) {
+        this.id = args.id;
+      }
+      if (args.destination_company !== undefined && args.destination_company !== null) {
+        this.destination_company = args.destination_company;
+      }
+      if (args.destination_address !== undefined && args.destination_address !== null) {
+        this.destination_address = args.destination_address;
+      }
+      if (args.order_company !== undefined && args.order_company !== null) {
+        this.order_company = args.order_company;
+      }
+      if (args.main_vichele !== undefined && args.main_vichele !== null) {
+        this.main_vichele = args.main_vichele;
+      }
+      if (args.behind_vichele !== undefined && args.behind_vichele !== null) {
+        this.behind_vichele = args.behind_vichele;
+      }
+      if (args.stuff_name !== undefined && args.stuff_name !== null) {
+        this.stuff_name = args.stuff_name;
+      }
+      if (args.register_timestamp !== undefined && args.register_timestamp !== null) {
+        this.register_timestamp = args.register_timestamp;
+      }
+      if (args.register_number !== undefined && args.register_number !== null) {
+        this.register_number = args.register_number;
+      }
+      if (args.enter_location !== undefined && args.enter_location !== null) {
+        this.enter_location = args.enter_location;
+      }
+      if (args.is_registered !== undefined && args.is_registered !== null) {
+        this.is_registered = args.is_registered;
+      }
+    }
+  }
+
+  read (input) {
+    input.readStructBegin();
+    while (true) {
+      const ret = input.readFieldBegin();
+      const ftype = ret.ftype;
+      const fid = ret.fid;
+      if (ftype == Thrift.Type.STOP) {
+        break;
+      }
+      switch (fid) {
+        case 1:
+        if (ftype == Thrift.Type.I64) {
+          this.id = input.readI64().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        case 2:
+        if (ftype == Thrift.Type.STRING) {
+          this.destination_company = input.readString().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        case 3:
+        if (ftype == Thrift.Type.STRING) {
+          this.destination_address = input.readString().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        case 4:
+        if (ftype == Thrift.Type.STRING) {
+          this.order_company = input.readString().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        case 5:
+        if (ftype == Thrift.Type.STRING) {
+          this.main_vichele = input.readString().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        case 6:
+        if (ftype == Thrift.Type.STRING) {
+          this.behind_vichele = input.readString().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        case 7:
+        if (ftype == Thrift.Type.STRING) {
+          this.stuff_name = input.readString().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        case 8:
+        if (ftype == Thrift.Type.STRING) {
+          this.register_timestamp = input.readString().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        case 9:
+        if (ftype == Thrift.Type.STRING) {
+          this.register_number = input.readString().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        case 10:
+        if (ftype == Thrift.Type.STRING) {
+          this.enter_location = input.readString().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        case 11:
+        if (ftype == Thrift.Type.BOOL) {
+          this.is_registered = input.readBool().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        default:
+          input.skip(ftype);
+      }
+      input.readFieldEnd();
+    }
+    input.readStructEnd();
+    return;
+  }
+
+  write (output) {
+    output.writeStructBegin('today_driver_info');
+    if (this.id !== null && this.id !== undefined) {
+      output.writeFieldBegin('id', Thrift.Type.I64, 1);
+      output.writeI64(this.id);
+      output.writeFieldEnd();
+    }
+    if (this.destination_company !== null && this.destination_company !== undefined) {
+      output.writeFieldBegin('destination_company', Thrift.Type.STRING, 2);
+      output.writeString(this.destination_company);
+      output.writeFieldEnd();
+    }
+    if (this.destination_address !== null && this.destination_address !== undefined) {
+      output.writeFieldBegin('destination_address', Thrift.Type.STRING, 3);
+      output.writeString(this.destination_address);
+      output.writeFieldEnd();
+    }
+    if (this.order_company !== null && this.order_company !== undefined) {
+      output.writeFieldBegin('order_company', Thrift.Type.STRING, 4);
+      output.writeString(this.order_company);
+      output.writeFieldEnd();
+    }
+    if (this.main_vichele !== null && this.main_vichele !== undefined) {
+      output.writeFieldBegin('main_vichele', Thrift.Type.STRING, 5);
+      output.writeString(this.main_vichele);
+      output.writeFieldEnd();
+    }
+    if (this.behind_vichele !== null && this.behind_vichele !== undefined) {
+      output.writeFieldBegin('behind_vichele', Thrift.Type.STRING, 6);
+      output.writeString(this.behind_vichele);
+      output.writeFieldEnd();
+    }
+    if (this.stuff_name !== null && this.stuff_name !== undefined) {
+      output.writeFieldBegin('stuff_name', Thrift.Type.STRING, 7);
+      output.writeString(this.stuff_name);
+      output.writeFieldEnd();
+    }
+    if (this.register_timestamp !== null && this.register_timestamp !== undefined) {
+      output.writeFieldBegin('register_timestamp', Thrift.Type.STRING, 8);
+      output.writeString(this.register_timestamp);
+      output.writeFieldEnd();
+    }
+    if (this.register_number !== null && this.register_number !== undefined) {
+      output.writeFieldBegin('register_number', Thrift.Type.STRING, 9);
+      output.writeString(this.register_number);
+      output.writeFieldEnd();
+    }
+    if (this.enter_location !== null && this.enter_location !== undefined) {
+      output.writeFieldBegin('enter_location', Thrift.Type.STRING, 10);
+      output.writeString(this.enter_location);
+      output.writeFieldEnd();
+    }
+    if (this.is_registered !== null && this.is_registered !== undefined) {
+      output.writeFieldBegin('is_registered', Thrift.Type.BOOL, 11);
+      output.writeBool(this.is_registered);
       output.writeFieldEnd();
     }
     output.writeFieldStop();

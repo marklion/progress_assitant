@@ -179,6 +179,8 @@ public:
     std::string name;
     std::string phone;
     int is_drop = 0;
+    std::string silent_id;
+    std::string driver_id;
     pa_sql_driver() {
         add_parent_type<pa_sql_company>("belong_company");
     }
@@ -188,6 +190,8 @@ public:
         ret.push_back(sqlite_orm_column("name", sqlite_orm_column::STRING, &name));
         ret.push_back(sqlite_orm_column("phone", sqlite_orm_column::STRING, &phone));
         ret.push_back(sqlite_orm_column("is_drop", sqlite_orm_column::INTEGER, &is_drop));
+        ret.push_back(sqlite_orm_column("silent_id", sqlite_orm_column::STRING, &silent_id));
+        ret.push_back(sqlite_orm_column("driver_id", sqlite_orm_column::STRING, &driver_id));
 
         return ret;
     }
@@ -340,6 +344,34 @@ public:
     virtual std::string table_name()
     {
         return "sms_verify_table";
+    }
+    void generate_code();
+    bool code_is_valid(const std::string &_code);
+};
+
+class pa_sql_driver_sms_verify : public sql_tree_base
+{
+public:
+    long timestamp = 0;
+    std::string verify_code;
+    std::string open_id;
+    pa_sql_driver_sms_verify()
+    {
+        add_parent_type<pa_sql_driver>("belong_user");
+    }
+    virtual std::vector<sqlite_orm_column> self_columns_defined()
+    {
+        std::vector<sqlite_orm_column> ret;
+        ret.push_back(sqlite_orm_column("timestamp", sqlite_orm_column::INTEGER, &timestamp));
+        ret.push_back(sqlite_orm_column("verify_code", sqlite_orm_column::STRING, &verify_code));
+        ret.push_back(sqlite_orm_column("open_id", sqlite_orm_column::STRING, &open_id));
+
+        return ret;
+    }
+
+    virtual std::string table_name()
+    {
+        return "driver_sms_verify_table";
     }
     void generate_code();
     bool code_is_valid(const std::string &_code);
@@ -582,6 +614,30 @@ public:
     virtual std::string table_name()
     {
         return "company_follow_table";
+    }
+};
+
+class pa_sql_driver_register:public sql_tree_base {
+public:
+    std::string timestamp;
+    std::string enter_location;
+    std::string number;
+    pa_sql_driver_register() { 
+        add_parent_type<pa_sql_single_vichele>("belong_vichele");
+    }
+
+    virtual std::vector<sqlite_orm_column> self_columns_defined() { 
+        std::vector<sqlite_orm_column> ret;
+        ret.push_back(sqlite_orm_column("timestamp", sqlite_orm_column::STRING, &timestamp));
+        ret.push_back(sqlite_orm_column("enter_location", sqlite_orm_column::STRING, &enter_location));
+        ret.push_back(sqlite_orm_column("number", sqlite_orm_column::STRING, &number));
+
+        return ret;
+    }
+
+    virtual std::string table_name()
+    {
+        return "driver_register_table";
     }
 };
 

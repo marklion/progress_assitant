@@ -3760,6 +3760,762 @@ stuff_plan_management_cancel_vichele_from_plan_result.prototype.write = function
   return;
 };
 
+var stuff_plan_management_driver_silent_login_args = function(args) {
+  this.code = null;
+  if (args) {
+    if (args.code !== undefined && args.code !== null) {
+      this.code = args.code;
+    }
+  }
+};
+stuff_plan_management_driver_silent_login_args.prototype = {};
+stuff_plan_management_driver_silent_login_args.prototype.read = function(input) {
+  input.readStructBegin();
+  while (true) {
+    var ret = input.readFieldBegin();
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    switch (fid) {
+      case 1:
+      if (ftype == Thrift.Type.STRING) {
+        this.code = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 0:
+        input.skip(ftype);
+        break;
+      default:
+        input.skip(ftype);
+    }
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+stuff_plan_management_driver_silent_login_args.prototype.write = function(output) {
+  output.writeStructBegin('stuff_plan_management_driver_silent_login_args');
+  if (this.code !== null && this.code !== undefined) {
+    output.writeFieldBegin('code', Thrift.Type.STRING, 1);
+    output.writeString(this.code);
+    output.writeFieldEnd();
+  }
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+
+var stuff_plan_management_driver_silent_login_result = function(args) {
+  this.success = null;
+  this.e = null;
+  if (args instanceof ttypes.gen_exp) {
+    this.e = args;
+    return;
+  }
+  if (args) {
+    if (args.success !== undefined && args.success !== null) {
+      this.success = args.success;
+    }
+    if (args.e !== undefined && args.e !== null) {
+      this.e = args.e;
+    }
+  }
+};
+stuff_plan_management_driver_silent_login_result.prototype = {};
+stuff_plan_management_driver_silent_login_result.prototype.read = function(input) {
+  input.readStructBegin();
+  while (true) {
+    var ret = input.readFieldBegin();
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    switch (fid) {
+      case 0:
+      if (ftype == Thrift.Type.STRING) {
+        this.success = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 1:
+      if (ftype == Thrift.Type.STRUCT) {
+        this.e = new ttypes.gen_exp();
+        this.e.read(input);
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      default:
+        input.skip(ftype);
+    }
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+stuff_plan_management_driver_silent_login_result.prototype.write = function(output) {
+  output.writeStructBegin('stuff_plan_management_driver_silent_login_result');
+  if (this.success !== null && this.success !== undefined) {
+    output.writeFieldBegin('success', Thrift.Type.STRING, 0);
+    output.writeString(this.success);
+    output.writeFieldEnd();
+  }
+  if (this.e !== null && this.e !== undefined) {
+    output.writeFieldBegin('e', Thrift.Type.STRUCT, 1);
+    this.e.write(output);
+    output.writeFieldEnd();
+  }
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+
+var stuff_plan_management_driver_silent_send_sms_args = function(args) {
+  this.driver_phone = null;
+  if (args) {
+    if (args.driver_phone !== undefined && args.driver_phone !== null) {
+      this.driver_phone = args.driver_phone;
+    }
+  }
+};
+stuff_plan_management_driver_silent_send_sms_args.prototype = {};
+stuff_plan_management_driver_silent_send_sms_args.prototype.read = function(input) {
+  input.readStructBegin();
+  while (true) {
+    var ret = input.readFieldBegin();
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    switch (fid) {
+      case 1:
+      if (ftype == Thrift.Type.STRING) {
+        this.driver_phone = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 0:
+        input.skip(ftype);
+        break;
+      default:
+        input.skip(ftype);
+    }
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+stuff_plan_management_driver_silent_send_sms_args.prototype.write = function(output) {
+  output.writeStructBegin('stuff_plan_management_driver_silent_send_sms_args');
+  if (this.driver_phone !== null && this.driver_phone !== undefined) {
+    output.writeFieldBegin('driver_phone', Thrift.Type.STRING, 1);
+    output.writeString(this.driver_phone);
+    output.writeFieldEnd();
+  }
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+
+var stuff_plan_management_driver_silent_send_sms_result = function(args) {
+  this.success = null;
+  this.e = null;
+  if (args instanceof ttypes.gen_exp) {
+    this.e = args;
+    return;
+  }
+  if (args) {
+    if (args.success !== undefined && args.success !== null) {
+      this.success = args.success;
+    }
+    if (args.e !== undefined && args.e !== null) {
+      this.e = args.e;
+    }
+  }
+};
+stuff_plan_management_driver_silent_send_sms_result.prototype = {};
+stuff_plan_management_driver_silent_send_sms_result.prototype.read = function(input) {
+  input.readStructBegin();
+  while (true) {
+    var ret = input.readFieldBegin();
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    switch (fid) {
+      case 0:
+      if (ftype == Thrift.Type.BOOL) {
+        this.success = input.readBool();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 1:
+      if (ftype == Thrift.Type.STRUCT) {
+        this.e = new ttypes.gen_exp();
+        this.e.read(input);
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      default:
+        input.skip(ftype);
+    }
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+stuff_plan_management_driver_silent_send_sms_result.prototype.write = function(output) {
+  output.writeStructBegin('stuff_plan_management_driver_silent_send_sms_result');
+  if (this.success !== null && this.success !== undefined) {
+    output.writeFieldBegin('success', Thrift.Type.BOOL, 0);
+    output.writeBool(this.success);
+    output.writeFieldEnd();
+  }
+  if (this.e !== null && this.e !== undefined) {
+    output.writeFieldBegin('e', Thrift.Type.STRUCT, 1);
+    this.e.write(output);
+    output.writeFieldEnd();
+  }
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+
+var stuff_plan_management_driver_silent_register_args = function(args) {
+  this.code = null;
+  this.driver_id = null;
+  this.driver_phone = null;
+  this.verify_code = null;
+  if (args) {
+    if (args.code !== undefined && args.code !== null) {
+      this.code = args.code;
+    }
+    if (args.driver_id !== undefined && args.driver_id !== null) {
+      this.driver_id = args.driver_id;
+    }
+    if (args.driver_phone !== undefined && args.driver_phone !== null) {
+      this.driver_phone = args.driver_phone;
+    }
+    if (args.verify_code !== undefined && args.verify_code !== null) {
+      this.verify_code = args.verify_code;
+    }
+  }
+};
+stuff_plan_management_driver_silent_register_args.prototype = {};
+stuff_plan_management_driver_silent_register_args.prototype.read = function(input) {
+  input.readStructBegin();
+  while (true) {
+    var ret = input.readFieldBegin();
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    switch (fid) {
+      case 1:
+      if (ftype == Thrift.Type.STRING) {
+        this.code = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 2:
+      if (ftype == Thrift.Type.STRING) {
+        this.driver_id = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 3:
+      if (ftype == Thrift.Type.STRING) {
+        this.driver_phone = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 4:
+      if (ftype == Thrift.Type.STRING) {
+        this.verify_code = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      default:
+        input.skip(ftype);
+    }
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+stuff_plan_management_driver_silent_register_args.prototype.write = function(output) {
+  output.writeStructBegin('stuff_plan_management_driver_silent_register_args');
+  if (this.code !== null && this.code !== undefined) {
+    output.writeFieldBegin('code', Thrift.Type.STRING, 1);
+    output.writeString(this.code);
+    output.writeFieldEnd();
+  }
+  if (this.driver_id !== null && this.driver_id !== undefined) {
+    output.writeFieldBegin('driver_id', Thrift.Type.STRING, 2);
+    output.writeString(this.driver_id);
+    output.writeFieldEnd();
+  }
+  if (this.driver_phone !== null && this.driver_phone !== undefined) {
+    output.writeFieldBegin('driver_phone', Thrift.Type.STRING, 3);
+    output.writeString(this.driver_phone);
+    output.writeFieldEnd();
+  }
+  if (this.verify_code !== null && this.verify_code !== undefined) {
+    output.writeFieldBegin('verify_code', Thrift.Type.STRING, 4);
+    output.writeString(this.verify_code);
+    output.writeFieldEnd();
+  }
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+
+var stuff_plan_management_driver_silent_register_result = function(args) {
+  this.success = null;
+  this.e = null;
+  if (args instanceof ttypes.gen_exp) {
+    this.e = args;
+    return;
+  }
+  if (args) {
+    if (args.success !== undefined && args.success !== null) {
+      this.success = args.success;
+    }
+    if (args.e !== undefined && args.e !== null) {
+      this.e = args.e;
+    }
+  }
+};
+stuff_plan_management_driver_silent_register_result.prototype = {};
+stuff_plan_management_driver_silent_register_result.prototype.read = function(input) {
+  input.readStructBegin();
+  while (true) {
+    var ret = input.readFieldBegin();
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    switch (fid) {
+      case 0:
+      if (ftype == Thrift.Type.STRING) {
+        this.success = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 1:
+      if (ftype == Thrift.Type.STRUCT) {
+        this.e = new ttypes.gen_exp();
+        this.e.read(input);
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      default:
+        input.skip(ftype);
+    }
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+stuff_plan_management_driver_silent_register_result.prototype.write = function(output) {
+  output.writeStructBegin('stuff_plan_management_driver_silent_register_result');
+  if (this.success !== null && this.success !== undefined) {
+    output.writeFieldBegin('success', Thrift.Type.STRING, 0);
+    output.writeString(this.success);
+    output.writeFieldEnd();
+  }
+  if (this.e !== null && this.e !== undefined) {
+    output.writeFieldBegin('e', Thrift.Type.STRUCT, 1);
+    this.e.write(output);
+    output.writeFieldEnd();
+  }
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+
+var stuff_plan_management_driver_silent_unregister_args = function(args) {
+  this.silent_id = null;
+  if (args) {
+    if (args.silent_id !== undefined && args.silent_id !== null) {
+      this.silent_id = args.silent_id;
+    }
+  }
+};
+stuff_plan_management_driver_silent_unregister_args.prototype = {};
+stuff_plan_management_driver_silent_unregister_args.prototype.read = function(input) {
+  input.readStructBegin();
+  while (true) {
+    var ret = input.readFieldBegin();
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    switch (fid) {
+      case 1:
+      if (ftype == Thrift.Type.STRING) {
+        this.silent_id = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 0:
+        input.skip(ftype);
+        break;
+      default:
+        input.skip(ftype);
+    }
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+stuff_plan_management_driver_silent_unregister_args.prototype.write = function(output) {
+  output.writeStructBegin('stuff_plan_management_driver_silent_unregister_args');
+  if (this.silent_id !== null && this.silent_id !== undefined) {
+    output.writeFieldBegin('silent_id', Thrift.Type.STRING, 1);
+    output.writeString(this.silent_id);
+    output.writeFieldEnd();
+  }
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+
+var stuff_plan_management_driver_silent_unregister_result = function(args) {
+  this.e = null;
+  if (args instanceof ttypes.gen_exp) {
+    this.e = args;
+    return;
+  }
+  if (args) {
+    if (args.e !== undefined && args.e !== null) {
+      this.e = args.e;
+    }
+  }
+};
+stuff_plan_management_driver_silent_unregister_result.prototype = {};
+stuff_plan_management_driver_silent_unregister_result.prototype.read = function(input) {
+  input.readStructBegin();
+  while (true) {
+    var ret = input.readFieldBegin();
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    switch (fid) {
+      case 1:
+      if (ftype == Thrift.Type.STRUCT) {
+        this.e = new ttypes.gen_exp();
+        this.e.read(input);
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 0:
+        input.skip(ftype);
+        break;
+      default:
+        input.skip(ftype);
+    }
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+stuff_plan_management_driver_silent_unregister_result.prototype.write = function(output) {
+  output.writeStructBegin('stuff_plan_management_driver_silent_unregister_result');
+  if (this.e !== null && this.e !== undefined) {
+    output.writeFieldBegin('e', Thrift.Type.STRUCT, 1);
+    this.e.write(output);
+    output.writeFieldEnd();
+  }
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+
+var stuff_plan_management_verify_driver_silent_login_args = function(args) {
+  this.silent_id = null;
+  if (args) {
+    if (args.silent_id !== undefined && args.silent_id !== null) {
+      this.silent_id = args.silent_id;
+    }
+  }
+};
+stuff_plan_management_verify_driver_silent_login_args.prototype = {};
+stuff_plan_management_verify_driver_silent_login_args.prototype.read = function(input) {
+  input.readStructBegin();
+  while (true) {
+    var ret = input.readFieldBegin();
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    switch (fid) {
+      case 1:
+      if (ftype == Thrift.Type.STRING) {
+        this.silent_id = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 0:
+        input.skip(ftype);
+        break;
+      default:
+        input.skip(ftype);
+    }
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+stuff_plan_management_verify_driver_silent_login_args.prototype.write = function(output) {
+  output.writeStructBegin('stuff_plan_management_verify_driver_silent_login_args');
+  if (this.silent_id !== null && this.silent_id !== undefined) {
+    output.writeFieldBegin('silent_id', Thrift.Type.STRING, 1);
+    output.writeString(this.silent_id);
+    output.writeFieldEnd();
+  }
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+
+var stuff_plan_management_verify_driver_silent_login_result = function(args) {
+  this.success = null;
+  this.e = null;
+  if (args instanceof ttypes.gen_exp) {
+    this.e = args;
+    return;
+  }
+  if (args) {
+    if (args.success !== undefined && args.success !== null) {
+      this.success = args.success;
+    }
+    if (args.e !== undefined && args.e !== null) {
+      this.e = args.e;
+    }
+  }
+};
+stuff_plan_management_verify_driver_silent_login_result.prototype = {};
+stuff_plan_management_verify_driver_silent_login_result.prototype.read = function(input) {
+  input.readStructBegin();
+  while (true) {
+    var ret = input.readFieldBegin();
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    switch (fid) {
+      case 0:
+      if (ftype == Thrift.Type.BOOL) {
+        this.success = input.readBool();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 1:
+      if (ftype == Thrift.Type.STRUCT) {
+        this.e = new ttypes.gen_exp();
+        this.e.read(input);
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      default:
+        input.skip(ftype);
+    }
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+stuff_plan_management_verify_driver_silent_login_result.prototype.write = function(output) {
+  output.writeStructBegin('stuff_plan_management_verify_driver_silent_login_result');
+  if (this.success !== null && this.success !== undefined) {
+    output.writeFieldBegin('success', Thrift.Type.BOOL, 0);
+    output.writeBool(this.success);
+    output.writeFieldEnd();
+  }
+  if (this.e !== null && this.e !== undefined) {
+    output.writeFieldBegin('e', Thrift.Type.STRUCT, 1);
+    this.e.write(output);
+    output.writeFieldEnd();
+  }
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+
+var stuff_plan_management_get_today_driver_info_args = function(args) {
+  this.silent_id = null;
+  if (args) {
+    if (args.silent_id !== undefined && args.silent_id !== null) {
+      this.silent_id = args.silent_id;
+    }
+  }
+};
+stuff_plan_management_get_today_driver_info_args.prototype = {};
+stuff_plan_management_get_today_driver_info_args.prototype.read = function(input) {
+  input.readStructBegin();
+  while (true) {
+    var ret = input.readFieldBegin();
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    switch (fid) {
+      case 1:
+      if (ftype == Thrift.Type.STRING) {
+        this.silent_id = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 0:
+        input.skip(ftype);
+        break;
+      default:
+        input.skip(ftype);
+    }
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+stuff_plan_management_get_today_driver_info_args.prototype.write = function(output) {
+  output.writeStructBegin('stuff_plan_management_get_today_driver_info_args');
+  if (this.silent_id !== null && this.silent_id !== undefined) {
+    output.writeFieldBegin('silent_id', Thrift.Type.STRING, 1);
+    output.writeString(this.silent_id);
+    output.writeFieldEnd();
+  }
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+
+var stuff_plan_management_get_today_driver_info_result = function(args) {
+  this.success = null;
+  this.e = null;
+  if (args instanceof ttypes.gen_exp) {
+    this.e = args;
+    return;
+  }
+  if (args) {
+    if (args.success !== undefined && args.success !== null) {
+      this.success = Thrift.copyList(args.success, [ttypes.today_driver_info]);
+    }
+    if (args.e !== undefined && args.e !== null) {
+      this.e = args.e;
+    }
+  }
+};
+stuff_plan_management_get_today_driver_info_result.prototype = {};
+stuff_plan_management_get_today_driver_info_result.prototype.read = function(input) {
+  input.readStructBegin();
+  while (true) {
+    var ret = input.readFieldBegin();
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    switch (fid) {
+      case 0:
+      if (ftype == Thrift.Type.LIST) {
+        this.success = [];
+        var _rtmp3126 = input.readListBegin();
+        var _size125 = _rtmp3126.size || 0;
+        for (var _i127 = 0; _i127 < _size125; ++_i127) {
+          var elem128 = null;
+          elem128 = new ttypes.today_driver_info();
+          elem128.read(input);
+          this.success.push(elem128);
+        }
+        input.readListEnd();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 1:
+      if (ftype == Thrift.Type.STRUCT) {
+        this.e = new ttypes.gen_exp();
+        this.e.read(input);
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      default:
+        input.skip(ftype);
+    }
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+stuff_plan_management_get_today_driver_info_result.prototype.write = function(output) {
+  output.writeStructBegin('stuff_plan_management_get_today_driver_info_result');
+  if (this.success !== null && this.success !== undefined) {
+    output.writeFieldBegin('success', Thrift.Type.LIST, 0);
+    output.writeListBegin(Thrift.Type.STRUCT, this.success.length);
+    for (var iter129 in this.success) {
+      if (this.success.hasOwnProperty(iter129)) {
+        iter129 = this.success[iter129];
+        iter129.write(output);
+      }
+    }
+    output.writeListEnd();
+    output.writeFieldEnd();
+  }
+  if (this.e !== null && this.e !== undefined) {
+    output.writeFieldBegin('e', Thrift.Type.STRUCT, 1);
+    this.e.write(output);
+    output.writeFieldEnd();
+  }
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+
 var stuff_plan_managementClient = exports.Client = function(output, pClass) {
   this.output = output;
   this.pClass = pClass;
@@ -5467,6 +6223,378 @@ stuff_plan_managementClient.prototype.recv_cancel_vichele_from_plan = function(i
   }
   return callback('cancel_vichele_from_plan failed: unknown result');
 };
+
+stuff_plan_managementClient.prototype.driver_silent_login = function(code, callback) {
+  this._seqid = this.new_seqid();
+  if (callback === undefined) {
+    var _defer = Q.defer();
+    this._reqs[this.seqid()] = function(error, result) {
+      if (error) {
+        _defer.reject(error);
+      } else {
+        _defer.resolve(result);
+      }
+    };
+    this.send_driver_silent_login(code);
+    return _defer.promise;
+  } else {
+    this._reqs[this.seqid()] = callback;
+    this.send_driver_silent_login(code);
+  }
+};
+
+stuff_plan_managementClient.prototype.send_driver_silent_login = function(code) {
+  var output = new this.pClass(this.output);
+  var params = {
+    code: code
+  };
+  var args = new stuff_plan_management_driver_silent_login_args(params);
+  try {
+    output.writeMessageBegin('driver_silent_login', Thrift.MessageType.CALL, this.seqid());
+    args.write(output);
+    output.writeMessageEnd();
+    return this.output.flush();
+  }
+  catch (e) {
+    delete this._reqs[this.seqid()];
+    if (typeof output.reset === 'function') {
+      output.reset();
+    }
+    throw e;
+  }
+};
+
+stuff_plan_managementClient.prototype.recv_driver_silent_login = function(input,mtype,rseqid) {
+  var callback = this._reqs[rseqid] || function() {};
+  delete this._reqs[rseqid];
+  if (mtype == Thrift.MessageType.EXCEPTION) {
+    var x = new Thrift.TApplicationException();
+    x.read(input);
+    input.readMessageEnd();
+    return callback(x);
+  }
+  var result = new stuff_plan_management_driver_silent_login_result();
+  result.read(input);
+  input.readMessageEnd();
+
+  if (null !== result.e) {
+    return callback(result.e);
+  }
+  if (null !== result.success) {
+    return callback(null, result.success);
+  }
+  return callback('driver_silent_login failed: unknown result');
+};
+
+stuff_plan_managementClient.prototype.driver_silent_send_sms = function(driver_phone, callback) {
+  this._seqid = this.new_seqid();
+  if (callback === undefined) {
+    var _defer = Q.defer();
+    this._reqs[this.seqid()] = function(error, result) {
+      if (error) {
+        _defer.reject(error);
+      } else {
+        _defer.resolve(result);
+      }
+    };
+    this.send_driver_silent_send_sms(driver_phone);
+    return _defer.promise;
+  } else {
+    this._reqs[this.seqid()] = callback;
+    this.send_driver_silent_send_sms(driver_phone);
+  }
+};
+
+stuff_plan_managementClient.prototype.send_driver_silent_send_sms = function(driver_phone) {
+  var output = new this.pClass(this.output);
+  var params = {
+    driver_phone: driver_phone
+  };
+  var args = new stuff_plan_management_driver_silent_send_sms_args(params);
+  try {
+    output.writeMessageBegin('driver_silent_send_sms', Thrift.MessageType.CALL, this.seqid());
+    args.write(output);
+    output.writeMessageEnd();
+    return this.output.flush();
+  }
+  catch (e) {
+    delete this._reqs[this.seqid()];
+    if (typeof output.reset === 'function') {
+      output.reset();
+    }
+    throw e;
+  }
+};
+
+stuff_plan_managementClient.prototype.recv_driver_silent_send_sms = function(input,mtype,rseqid) {
+  var callback = this._reqs[rseqid] || function() {};
+  delete this._reqs[rseqid];
+  if (mtype == Thrift.MessageType.EXCEPTION) {
+    var x = new Thrift.TApplicationException();
+    x.read(input);
+    input.readMessageEnd();
+    return callback(x);
+  }
+  var result = new stuff_plan_management_driver_silent_send_sms_result();
+  result.read(input);
+  input.readMessageEnd();
+
+  if (null !== result.e) {
+    return callback(result.e);
+  }
+  if (null !== result.success) {
+    return callback(null, result.success);
+  }
+  return callback('driver_silent_send_sms failed: unknown result');
+};
+
+stuff_plan_managementClient.prototype.driver_silent_register = function(code, driver_id, driver_phone, verify_code, callback) {
+  this._seqid = this.new_seqid();
+  if (callback === undefined) {
+    var _defer = Q.defer();
+    this._reqs[this.seqid()] = function(error, result) {
+      if (error) {
+        _defer.reject(error);
+      } else {
+        _defer.resolve(result);
+      }
+    };
+    this.send_driver_silent_register(code, driver_id, driver_phone, verify_code);
+    return _defer.promise;
+  } else {
+    this._reqs[this.seqid()] = callback;
+    this.send_driver_silent_register(code, driver_id, driver_phone, verify_code);
+  }
+};
+
+stuff_plan_managementClient.prototype.send_driver_silent_register = function(code, driver_id, driver_phone, verify_code) {
+  var output = new this.pClass(this.output);
+  var params = {
+    code: code,
+    driver_id: driver_id,
+    driver_phone: driver_phone,
+    verify_code: verify_code
+  };
+  var args = new stuff_plan_management_driver_silent_register_args(params);
+  try {
+    output.writeMessageBegin('driver_silent_register', Thrift.MessageType.CALL, this.seqid());
+    args.write(output);
+    output.writeMessageEnd();
+    return this.output.flush();
+  }
+  catch (e) {
+    delete this._reqs[this.seqid()];
+    if (typeof output.reset === 'function') {
+      output.reset();
+    }
+    throw e;
+  }
+};
+
+stuff_plan_managementClient.prototype.recv_driver_silent_register = function(input,mtype,rseqid) {
+  var callback = this._reqs[rseqid] || function() {};
+  delete this._reqs[rseqid];
+  if (mtype == Thrift.MessageType.EXCEPTION) {
+    var x = new Thrift.TApplicationException();
+    x.read(input);
+    input.readMessageEnd();
+    return callback(x);
+  }
+  var result = new stuff_plan_management_driver_silent_register_result();
+  result.read(input);
+  input.readMessageEnd();
+
+  if (null !== result.e) {
+    return callback(result.e);
+  }
+  if (null !== result.success) {
+    return callback(null, result.success);
+  }
+  return callback('driver_silent_register failed: unknown result');
+};
+
+stuff_plan_managementClient.prototype.driver_silent_unregister = function(silent_id, callback) {
+  this._seqid = this.new_seqid();
+  if (callback === undefined) {
+    var _defer = Q.defer();
+    this._reqs[this.seqid()] = function(error, result) {
+      if (error) {
+        _defer.reject(error);
+      } else {
+        _defer.resolve(result);
+      }
+    };
+    this.send_driver_silent_unregister(silent_id);
+    return _defer.promise;
+  } else {
+    this._reqs[this.seqid()] = callback;
+    this.send_driver_silent_unregister(silent_id);
+  }
+};
+
+stuff_plan_managementClient.prototype.send_driver_silent_unregister = function(silent_id) {
+  var output = new this.pClass(this.output);
+  var params = {
+    silent_id: silent_id
+  };
+  var args = new stuff_plan_management_driver_silent_unregister_args(params);
+  try {
+    output.writeMessageBegin('driver_silent_unregister', Thrift.MessageType.CALL, this.seqid());
+    args.write(output);
+    output.writeMessageEnd();
+    return this.output.flush();
+  }
+  catch (e) {
+    delete this._reqs[this.seqid()];
+    if (typeof output.reset === 'function') {
+      output.reset();
+    }
+    throw e;
+  }
+};
+
+stuff_plan_managementClient.prototype.recv_driver_silent_unregister = function(input,mtype,rseqid) {
+  var callback = this._reqs[rseqid] || function() {};
+  delete this._reqs[rseqid];
+  if (mtype == Thrift.MessageType.EXCEPTION) {
+    var x = new Thrift.TApplicationException();
+    x.read(input);
+    input.readMessageEnd();
+    return callback(x);
+  }
+  var result = new stuff_plan_management_driver_silent_unregister_result();
+  result.read(input);
+  input.readMessageEnd();
+
+  if (null !== result.e) {
+    return callback(result.e);
+  }
+  callback(null);
+};
+
+stuff_plan_managementClient.prototype.verify_driver_silent_login = function(silent_id, callback) {
+  this._seqid = this.new_seqid();
+  if (callback === undefined) {
+    var _defer = Q.defer();
+    this._reqs[this.seqid()] = function(error, result) {
+      if (error) {
+        _defer.reject(error);
+      } else {
+        _defer.resolve(result);
+      }
+    };
+    this.send_verify_driver_silent_login(silent_id);
+    return _defer.promise;
+  } else {
+    this._reqs[this.seqid()] = callback;
+    this.send_verify_driver_silent_login(silent_id);
+  }
+};
+
+stuff_plan_managementClient.prototype.send_verify_driver_silent_login = function(silent_id) {
+  var output = new this.pClass(this.output);
+  var params = {
+    silent_id: silent_id
+  };
+  var args = new stuff_plan_management_verify_driver_silent_login_args(params);
+  try {
+    output.writeMessageBegin('verify_driver_silent_login', Thrift.MessageType.CALL, this.seqid());
+    args.write(output);
+    output.writeMessageEnd();
+    return this.output.flush();
+  }
+  catch (e) {
+    delete this._reqs[this.seqid()];
+    if (typeof output.reset === 'function') {
+      output.reset();
+    }
+    throw e;
+  }
+};
+
+stuff_plan_managementClient.prototype.recv_verify_driver_silent_login = function(input,mtype,rseqid) {
+  var callback = this._reqs[rseqid] || function() {};
+  delete this._reqs[rseqid];
+  if (mtype == Thrift.MessageType.EXCEPTION) {
+    var x = new Thrift.TApplicationException();
+    x.read(input);
+    input.readMessageEnd();
+    return callback(x);
+  }
+  var result = new stuff_plan_management_verify_driver_silent_login_result();
+  result.read(input);
+  input.readMessageEnd();
+
+  if (null !== result.e) {
+    return callback(result.e);
+  }
+  if (null !== result.success) {
+    return callback(null, result.success);
+  }
+  return callback('verify_driver_silent_login failed: unknown result');
+};
+
+stuff_plan_managementClient.prototype.get_today_driver_info = function(silent_id, callback) {
+  this._seqid = this.new_seqid();
+  if (callback === undefined) {
+    var _defer = Q.defer();
+    this._reqs[this.seqid()] = function(error, result) {
+      if (error) {
+        _defer.reject(error);
+      } else {
+        _defer.resolve(result);
+      }
+    };
+    this.send_get_today_driver_info(silent_id);
+    return _defer.promise;
+  } else {
+    this._reqs[this.seqid()] = callback;
+    this.send_get_today_driver_info(silent_id);
+  }
+};
+
+stuff_plan_managementClient.prototype.send_get_today_driver_info = function(silent_id) {
+  var output = new this.pClass(this.output);
+  var params = {
+    silent_id: silent_id
+  };
+  var args = new stuff_plan_management_get_today_driver_info_args(params);
+  try {
+    output.writeMessageBegin('get_today_driver_info', Thrift.MessageType.CALL, this.seqid());
+    args.write(output);
+    output.writeMessageEnd();
+    return this.output.flush();
+  }
+  catch (e) {
+    delete this._reqs[this.seqid()];
+    if (typeof output.reset === 'function') {
+      output.reset();
+    }
+    throw e;
+  }
+};
+
+stuff_plan_managementClient.prototype.recv_get_today_driver_info = function(input,mtype,rseqid) {
+  var callback = this._reqs[rseqid] || function() {};
+  delete this._reqs[rseqid];
+  if (mtype == Thrift.MessageType.EXCEPTION) {
+    var x = new Thrift.TApplicationException();
+    x.read(input);
+    input.readMessageEnd();
+    return callback(x);
+  }
+  var result = new stuff_plan_management_get_today_driver_info_result();
+  result.read(input);
+  input.readMessageEnd();
+
+  if (null !== result.e) {
+    return callback(result.e);
+  }
+  if (null !== result.success) {
+    return callback(null, result.success);
+  }
+  return callback('get_today_driver_info failed: unknown result');
+};
 var stuff_plan_managementProcessor = exports.Processor = function(handler) {
   this._handler = handler;
 };
@@ -6640,6 +7768,261 @@ stuff_plan_managementProcessor.prototype.process_cancel_vichele_from_plan = func
       } else {
         result_obj = new Thrift.TApplicationException(Thrift.TApplicationExceptionType.UNKNOWN, err.message);
         output.writeMessageBegin("cancel_vichele_from_plan", Thrift.MessageType.EXCEPTION, seqid);
+      }
+      result_obj.write(output);
+      output.writeMessageEnd();
+      output.flush();
+    });
+  }
+};
+stuff_plan_managementProcessor.prototype.process_driver_silent_login = function(seqid, input, output) {
+  var args = new stuff_plan_management_driver_silent_login_args();
+  args.read(input);
+  input.readMessageEnd();
+  if (this._handler.driver_silent_login.length === 1) {
+    Q.fcall(this._handler.driver_silent_login.bind(this._handler),
+      args.code
+    ).then(function(result) {
+      var result_obj = new stuff_plan_management_driver_silent_login_result({success: result});
+      output.writeMessageBegin("driver_silent_login", Thrift.MessageType.REPLY, seqid);
+      result_obj.write(output);
+      output.writeMessageEnd();
+      output.flush();
+    }).catch(function (err) {
+      var result;
+      if (err instanceof ttypes.gen_exp) {
+        result = new stuff_plan_management_driver_silent_login_result(err);
+        output.writeMessageBegin("driver_silent_login", Thrift.MessageType.REPLY, seqid);
+      } else {
+        result = new Thrift.TApplicationException(Thrift.TApplicationExceptionType.UNKNOWN, err.message);
+        output.writeMessageBegin("driver_silent_login", Thrift.MessageType.EXCEPTION, seqid);
+      }
+      result.write(output);
+      output.writeMessageEnd();
+      output.flush();
+    });
+  } else {
+    this._handler.driver_silent_login(args.code, function (err, result) {
+      var result_obj;
+      if ((err === null || typeof err === 'undefined') || err instanceof ttypes.gen_exp) {
+        result_obj = new stuff_plan_management_driver_silent_login_result((err !== null || typeof err === 'undefined') ? err : {success: result});
+        output.writeMessageBegin("driver_silent_login", Thrift.MessageType.REPLY, seqid);
+      } else {
+        result_obj = new Thrift.TApplicationException(Thrift.TApplicationExceptionType.UNKNOWN, err.message);
+        output.writeMessageBegin("driver_silent_login", Thrift.MessageType.EXCEPTION, seqid);
+      }
+      result_obj.write(output);
+      output.writeMessageEnd();
+      output.flush();
+    });
+  }
+};
+stuff_plan_managementProcessor.prototype.process_driver_silent_send_sms = function(seqid, input, output) {
+  var args = new stuff_plan_management_driver_silent_send_sms_args();
+  args.read(input);
+  input.readMessageEnd();
+  if (this._handler.driver_silent_send_sms.length === 1) {
+    Q.fcall(this._handler.driver_silent_send_sms.bind(this._handler),
+      args.driver_phone
+    ).then(function(result) {
+      var result_obj = new stuff_plan_management_driver_silent_send_sms_result({success: result});
+      output.writeMessageBegin("driver_silent_send_sms", Thrift.MessageType.REPLY, seqid);
+      result_obj.write(output);
+      output.writeMessageEnd();
+      output.flush();
+    }).catch(function (err) {
+      var result;
+      if (err instanceof ttypes.gen_exp) {
+        result = new stuff_plan_management_driver_silent_send_sms_result(err);
+        output.writeMessageBegin("driver_silent_send_sms", Thrift.MessageType.REPLY, seqid);
+      } else {
+        result = new Thrift.TApplicationException(Thrift.TApplicationExceptionType.UNKNOWN, err.message);
+        output.writeMessageBegin("driver_silent_send_sms", Thrift.MessageType.EXCEPTION, seqid);
+      }
+      result.write(output);
+      output.writeMessageEnd();
+      output.flush();
+    });
+  } else {
+    this._handler.driver_silent_send_sms(args.driver_phone, function (err, result) {
+      var result_obj;
+      if ((err === null || typeof err === 'undefined') || err instanceof ttypes.gen_exp) {
+        result_obj = new stuff_plan_management_driver_silent_send_sms_result((err !== null || typeof err === 'undefined') ? err : {success: result});
+        output.writeMessageBegin("driver_silent_send_sms", Thrift.MessageType.REPLY, seqid);
+      } else {
+        result_obj = new Thrift.TApplicationException(Thrift.TApplicationExceptionType.UNKNOWN, err.message);
+        output.writeMessageBegin("driver_silent_send_sms", Thrift.MessageType.EXCEPTION, seqid);
+      }
+      result_obj.write(output);
+      output.writeMessageEnd();
+      output.flush();
+    });
+  }
+};
+stuff_plan_managementProcessor.prototype.process_driver_silent_register = function(seqid, input, output) {
+  var args = new stuff_plan_management_driver_silent_register_args();
+  args.read(input);
+  input.readMessageEnd();
+  if (this._handler.driver_silent_register.length === 4) {
+    Q.fcall(this._handler.driver_silent_register.bind(this._handler),
+      args.code,
+      args.driver_id,
+      args.driver_phone,
+      args.verify_code
+    ).then(function(result) {
+      var result_obj = new stuff_plan_management_driver_silent_register_result({success: result});
+      output.writeMessageBegin("driver_silent_register", Thrift.MessageType.REPLY, seqid);
+      result_obj.write(output);
+      output.writeMessageEnd();
+      output.flush();
+    }).catch(function (err) {
+      var result;
+      if (err instanceof ttypes.gen_exp) {
+        result = new stuff_plan_management_driver_silent_register_result(err);
+        output.writeMessageBegin("driver_silent_register", Thrift.MessageType.REPLY, seqid);
+      } else {
+        result = new Thrift.TApplicationException(Thrift.TApplicationExceptionType.UNKNOWN, err.message);
+        output.writeMessageBegin("driver_silent_register", Thrift.MessageType.EXCEPTION, seqid);
+      }
+      result.write(output);
+      output.writeMessageEnd();
+      output.flush();
+    });
+  } else {
+    this._handler.driver_silent_register(args.code, args.driver_id, args.driver_phone, args.verify_code, function (err, result) {
+      var result_obj;
+      if ((err === null || typeof err === 'undefined') || err instanceof ttypes.gen_exp) {
+        result_obj = new stuff_plan_management_driver_silent_register_result((err !== null || typeof err === 'undefined') ? err : {success: result});
+        output.writeMessageBegin("driver_silent_register", Thrift.MessageType.REPLY, seqid);
+      } else {
+        result_obj = new Thrift.TApplicationException(Thrift.TApplicationExceptionType.UNKNOWN, err.message);
+        output.writeMessageBegin("driver_silent_register", Thrift.MessageType.EXCEPTION, seqid);
+      }
+      result_obj.write(output);
+      output.writeMessageEnd();
+      output.flush();
+    });
+  }
+};
+stuff_plan_managementProcessor.prototype.process_driver_silent_unregister = function(seqid, input, output) {
+  var args = new stuff_plan_management_driver_silent_unregister_args();
+  args.read(input);
+  input.readMessageEnd();
+  if (this._handler.driver_silent_unregister.length === 1) {
+    Q.fcall(this._handler.driver_silent_unregister.bind(this._handler),
+      args.silent_id
+    ).then(function(result) {
+      var result_obj = new stuff_plan_management_driver_silent_unregister_result({success: result});
+      output.writeMessageBegin("driver_silent_unregister", Thrift.MessageType.REPLY, seqid);
+      result_obj.write(output);
+      output.writeMessageEnd();
+      output.flush();
+    }).catch(function (err) {
+      var result;
+      if (err instanceof ttypes.gen_exp) {
+        result = new stuff_plan_management_driver_silent_unregister_result(err);
+        output.writeMessageBegin("driver_silent_unregister", Thrift.MessageType.REPLY, seqid);
+      } else {
+        result = new Thrift.TApplicationException(Thrift.TApplicationExceptionType.UNKNOWN, err.message);
+        output.writeMessageBegin("driver_silent_unregister", Thrift.MessageType.EXCEPTION, seqid);
+      }
+      result.write(output);
+      output.writeMessageEnd();
+      output.flush();
+    });
+  } else {
+    this._handler.driver_silent_unregister(args.silent_id, function (err, result) {
+      var result_obj;
+      if ((err === null || typeof err === 'undefined') || err instanceof ttypes.gen_exp) {
+        result_obj = new stuff_plan_management_driver_silent_unregister_result((err !== null || typeof err === 'undefined') ? err : {success: result});
+        output.writeMessageBegin("driver_silent_unregister", Thrift.MessageType.REPLY, seqid);
+      } else {
+        result_obj = new Thrift.TApplicationException(Thrift.TApplicationExceptionType.UNKNOWN, err.message);
+        output.writeMessageBegin("driver_silent_unregister", Thrift.MessageType.EXCEPTION, seqid);
+      }
+      result_obj.write(output);
+      output.writeMessageEnd();
+      output.flush();
+    });
+  }
+};
+stuff_plan_managementProcessor.prototype.process_verify_driver_silent_login = function(seqid, input, output) {
+  var args = new stuff_plan_management_verify_driver_silent_login_args();
+  args.read(input);
+  input.readMessageEnd();
+  if (this._handler.verify_driver_silent_login.length === 1) {
+    Q.fcall(this._handler.verify_driver_silent_login.bind(this._handler),
+      args.silent_id
+    ).then(function(result) {
+      var result_obj = new stuff_plan_management_verify_driver_silent_login_result({success: result});
+      output.writeMessageBegin("verify_driver_silent_login", Thrift.MessageType.REPLY, seqid);
+      result_obj.write(output);
+      output.writeMessageEnd();
+      output.flush();
+    }).catch(function (err) {
+      var result;
+      if (err instanceof ttypes.gen_exp) {
+        result = new stuff_plan_management_verify_driver_silent_login_result(err);
+        output.writeMessageBegin("verify_driver_silent_login", Thrift.MessageType.REPLY, seqid);
+      } else {
+        result = new Thrift.TApplicationException(Thrift.TApplicationExceptionType.UNKNOWN, err.message);
+        output.writeMessageBegin("verify_driver_silent_login", Thrift.MessageType.EXCEPTION, seqid);
+      }
+      result.write(output);
+      output.writeMessageEnd();
+      output.flush();
+    });
+  } else {
+    this._handler.verify_driver_silent_login(args.silent_id, function (err, result) {
+      var result_obj;
+      if ((err === null || typeof err === 'undefined') || err instanceof ttypes.gen_exp) {
+        result_obj = new stuff_plan_management_verify_driver_silent_login_result((err !== null || typeof err === 'undefined') ? err : {success: result});
+        output.writeMessageBegin("verify_driver_silent_login", Thrift.MessageType.REPLY, seqid);
+      } else {
+        result_obj = new Thrift.TApplicationException(Thrift.TApplicationExceptionType.UNKNOWN, err.message);
+        output.writeMessageBegin("verify_driver_silent_login", Thrift.MessageType.EXCEPTION, seqid);
+      }
+      result_obj.write(output);
+      output.writeMessageEnd();
+      output.flush();
+    });
+  }
+};
+stuff_plan_managementProcessor.prototype.process_get_today_driver_info = function(seqid, input, output) {
+  var args = new stuff_plan_management_get_today_driver_info_args();
+  args.read(input);
+  input.readMessageEnd();
+  if (this._handler.get_today_driver_info.length === 1) {
+    Q.fcall(this._handler.get_today_driver_info.bind(this._handler),
+      args.silent_id
+    ).then(function(result) {
+      var result_obj = new stuff_plan_management_get_today_driver_info_result({success: result});
+      output.writeMessageBegin("get_today_driver_info", Thrift.MessageType.REPLY, seqid);
+      result_obj.write(output);
+      output.writeMessageEnd();
+      output.flush();
+    }).catch(function (err) {
+      var result;
+      if (err instanceof ttypes.gen_exp) {
+        result = new stuff_plan_management_get_today_driver_info_result(err);
+        output.writeMessageBegin("get_today_driver_info", Thrift.MessageType.REPLY, seqid);
+      } else {
+        result = new Thrift.TApplicationException(Thrift.TApplicationExceptionType.UNKNOWN, err.message);
+        output.writeMessageBegin("get_today_driver_info", Thrift.MessageType.EXCEPTION, seqid);
+      }
+      result.write(output);
+      output.writeMessageEnd();
+      output.flush();
+    });
+  } else {
+    this._handler.get_today_driver_info(args.silent_id, function (err, result) {
+      var result_obj;
+      if ((err === null || typeof err === 'undefined') || err instanceof ttypes.gen_exp) {
+        result_obj = new stuff_plan_management_get_today_driver_info_result((err !== null || typeof err === 'undefined') ? err : {success: result});
+        output.writeMessageBegin("get_today_driver_info", Thrift.MessageType.REPLY, seqid);
+      } else {
+        result_obj = new Thrift.TApplicationException(Thrift.TApplicationExceptionType.UNKNOWN, err.message);
+        output.writeMessageBegin("get_today_driver_info", Thrift.MessageType.EXCEPTION, seqid);
       }
       result_obj.write(output);
       output.writeMessageEnd();

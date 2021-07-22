@@ -106,6 +106,12 @@ struct company_work_time{
     2:i64 end_time,
 }
 
+struct company_positon_lat_lag {
+    1:double lat,
+    2:double lag,
+    3:double distance,
+}
+
 service company_management {
     list<i64> get_all_type(1:string ssid) throws (1:gen_exp e),
     i64 add_type(1:string name, 2:i64 price, 3:string last,  4:string ssid) throws (1:gen_exp e),
@@ -139,6 +145,7 @@ service company_management {
     common_contract get_contract(1:string a_side_company, 2:string b_side_company) throws (1:gen_exp e),
     bool set_work_time(1:string ssid, 2:i64 start_work_time, 3:i64 end_work_time) throws (1:gen_exp e),
     company_work_time get_work_time(1:string company_name) throws (1:gen_exp e),
+    company_positon_lat_lag get_company_position_config(1:string company_name) throws (1:gen_exp e),
 }
 
 service stuff_info {
@@ -241,6 +248,20 @@ struct company_plan_brief {
     4:i64 tomorrow_vichele_count,
 }
 
+struct today_driver_info {
+    1:i64 id,
+    2:string destination_company,
+    3:string destination_address,
+    4:string order_company,
+    5:string main_vichele,
+    6:string behind_vichele,
+    7:string stuff_name,
+    8:string register_timestamp,
+    9:string register_number,
+    10:string enter_location,
+    11:bool is_registered,
+}
+
 service stuff_plan_management {
     i64 create_plan(1:stuff_plan plan, 2:string ssid, 3:string proxy_company) throws (1:gen_exp e),
     list<plan_status> get_created_plan(1:string ssid, 2:i64 anchor) throws (1:gen_exp e),
@@ -269,6 +290,12 @@ service stuff_plan_management {
     bool push_user_pay(1:string ssid, 2:i64 plan_id) throws (1:gen_exp e),
     i64 get_count_by_status(1:string ssid, 2:i64 status) throws (1:gen_exp e),
     bool cancel_vichele_from_plan(1:string ssid, 2:list<i64> ids) throws (1:gen_exp e),
+    string driver_silent_login(1:string code) throws (1:gen_exp e),
+    bool driver_silent_send_sms(1:string driver_phone) throws (1:gen_exp e),
+    string driver_silent_register(1:string code, 2:string driver_id, 3:string driver_phone, 4:string verify_code) throws (1:gen_exp e),
+    void driver_silent_unregister(1:string silent_id) throws (1:gen_exp e),
+    bool verify_driver_silent_login(1:string silent_id) throws (1:gen_exp e),
+    list<today_driver_info> get_today_driver_info(1:string silent_id) throws (1:gen_exp e),
 }
 
 struct api_extra_transformation {

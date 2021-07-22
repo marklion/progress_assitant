@@ -54,6 +54,7 @@ class company_managementIf {
   virtual void get_contract(common_contract& _return, const std::string& a_side_company, const std::string& b_side_company) = 0;
   virtual bool set_work_time(const std::string& ssid, const int64_t start_work_time, const int64_t end_work_time) = 0;
   virtual void get_work_time(company_work_time& _return, const std::string& company_name) = 0;
+  virtual void get_company_position_config(company_positon_lat_lag& _return, const std::string& company_name) = 0;
 };
 
 class company_managementIfFactory {
@@ -189,6 +190,9 @@ class company_managementNull : virtual public company_managementIf {
     return _return;
   }
   void get_work_time(company_work_time& /* _return */, const std::string& /* company_name */) {
+    return;
+  }
+  void get_company_position_config(company_positon_lat_lag& /* _return */, const std::string& /* company_name */) {
     return;
   }
 };
@@ -3906,6 +3910,118 @@ class company_management_get_work_time_presult {
 
 };
 
+typedef struct _company_management_get_company_position_config_args__isset {
+  _company_management_get_company_position_config_args__isset() : company_name(false) {}
+  bool company_name :1;
+} _company_management_get_company_position_config_args__isset;
+
+class company_management_get_company_position_config_args {
+ public:
+
+  company_management_get_company_position_config_args(const company_management_get_company_position_config_args&);
+  company_management_get_company_position_config_args& operator=(const company_management_get_company_position_config_args&);
+  company_management_get_company_position_config_args() : company_name() {
+  }
+
+  virtual ~company_management_get_company_position_config_args() noexcept;
+  std::string company_name;
+
+  _company_management_get_company_position_config_args__isset __isset;
+
+  void __set_company_name(const std::string& val);
+
+  bool operator == (const company_management_get_company_position_config_args & rhs) const
+  {
+    if (!(company_name == rhs.company_name))
+      return false;
+    return true;
+  }
+  bool operator != (const company_management_get_company_position_config_args &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const company_management_get_company_position_config_args & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+
+class company_management_get_company_position_config_pargs {
+ public:
+
+
+  virtual ~company_management_get_company_position_config_pargs() noexcept;
+  const std::string* company_name;
+
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _company_management_get_company_position_config_result__isset {
+  _company_management_get_company_position_config_result__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _company_management_get_company_position_config_result__isset;
+
+class company_management_get_company_position_config_result {
+ public:
+
+  company_management_get_company_position_config_result(const company_management_get_company_position_config_result&);
+  company_management_get_company_position_config_result& operator=(const company_management_get_company_position_config_result&);
+  company_management_get_company_position_config_result() {
+  }
+
+  virtual ~company_management_get_company_position_config_result() noexcept;
+  company_positon_lat_lag success;
+  gen_exp e;
+
+  _company_management_get_company_position_config_result__isset __isset;
+
+  void __set_success(const company_positon_lat_lag& val);
+
+  void __set_e(const gen_exp& val);
+
+  bool operator == (const company_management_get_company_position_config_result & rhs) const
+  {
+    if (!(success == rhs.success))
+      return false;
+    if (!(e == rhs.e))
+      return false;
+    return true;
+  }
+  bool operator != (const company_management_get_company_position_config_result &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const company_management_get_company_position_config_result & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _company_management_get_company_position_config_presult__isset {
+  _company_management_get_company_position_config_presult__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _company_management_get_company_position_config_presult__isset;
+
+class company_management_get_company_position_config_presult {
+ public:
+
+
+  virtual ~company_management_get_company_position_config_presult() noexcept;
+  company_positon_lat_lag* success;
+  gen_exp e;
+
+  _company_management_get_company_position_config_presult__isset __isset;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+
+};
+
 class company_managementClient : virtual public company_managementIf {
  public:
   company_managementClient(std::shared_ptr< ::apache::thrift::protocol::TProtocol> prot) {
@@ -4027,6 +4143,9 @@ class company_managementClient : virtual public company_managementIf {
   void get_work_time(company_work_time& _return, const std::string& company_name);
   void send_get_work_time(const std::string& company_name);
   void recv_get_work_time(company_work_time& _return);
+  void get_company_position_config(company_positon_lat_lag& _return, const std::string& company_name);
+  void send_get_company_position_config(const std::string& company_name);
+  void recv_get_company_position_config(company_positon_lat_lag& _return);
  protected:
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> piprot_;
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> poprot_;
@@ -4074,6 +4193,7 @@ class company_managementProcessor : public ::apache::thrift::TDispatchProcessor 
   void process_get_contract(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
   void process_set_work_time(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
   void process_get_work_time(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
+  void process_get_company_position_config(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
  public:
   company_managementProcessor(::std::shared_ptr<company_managementIf> iface) :
     iface_(iface) {
@@ -4109,6 +4229,7 @@ class company_managementProcessor : public ::apache::thrift::TDispatchProcessor 
     processMap_["get_contract"] = &company_managementProcessor::process_get_contract;
     processMap_["set_work_time"] = &company_managementProcessor::process_set_work_time;
     processMap_["get_work_time"] = &company_managementProcessor::process_get_work_time;
+    processMap_["get_company_position_config"] = &company_managementProcessor::process_get_company_position_config;
   }
 
   virtual ~company_managementProcessor() {}
@@ -4441,6 +4562,16 @@ class company_managementMultiface : virtual public company_managementIf {
     return;
   }
 
+  void get_company_position_config(company_positon_lat_lag& _return, const std::string& company_name) {
+    size_t sz = ifaces_.size();
+    size_t i = 0;
+    for (; i < (sz - 1); ++i) {
+      ifaces_[i]->get_company_position_config(_return, company_name);
+    }
+    ifaces_[i]->get_company_position_config(_return, company_name);
+    return;
+  }
+
 };
 
 // The 'concurrent' client is a thread safe client that correctly handles
@@ -4569,6 +4700,9 @@ class company_managementConcurrentClient : virtual public company_managementIf {
   void get_work_time(company_work_time& _return, const std::string& company_name);
   int32_t send_get_work_time(const std::string& company_name);
   void recv_get_work_time(company_work_time& _return, const int32_t seqid);
+  void get_company_position_config(company_positon_lat_lag& _return, const std::string& company_name);
+  int32_t send_get_company_position_config(const std::string& company_name);
+  void recv_get_company_position_config(company_positon_lat_lag& _return, const int32_t seqid);
  protected:
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> piprot_;
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> poprot_;

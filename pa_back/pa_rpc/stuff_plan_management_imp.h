@@ -1305,6 +1305,188 @@ public:
 
         return true;
     }
+
+    virtual void driver_silent_login(std::string &_return, const std::string &code)
+    {
+        std::string wechat_secret(getenv("WECHAT_SECRET"));
+        std::string req = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=wxa390f8b6f68e9c6d&secret=" + wechat_secret + "&code=" + code + "&grant_type=authorization_code";
+
+        std::string in_buff = PA_DATAOPT_rest_req(req);
+        neb::CJsonObject oJson(in_buff);
+
+        if (oJson.KeyExist("errcode"))
+        {
+            PA_RETURN_MSG("微信登陆失败");
+        }
+
+        auto open_id = oJson("openid");
+        if (sqlite_orm::search_record<pa_sql_driver>("silent_id = '%s'", open_id.c_str()))
+        {
+            _return = open_id;
+        }
+        else
+        {
+            _return = "";
+        }
+    }
+    virtual bool driver_silent_send_sms(const std::string &driver_phone)
+    {
+        sqlite_orm_lock a;
+        bool ret = false;
+        auto user = sqlite_orm::search_record<pa_sql_driver>("phone == '%s'", driver_phone.c_str());
+        if (user)
+        {
+            std::string send_cmd = "/script/send_sms.py " + driver_phone;
+            pa_sql_driver_sms_verify verify;
+            verify.generate_code();
+            verify.set_parent(*user, "belong_user");
+            send_cmd += " " + verify.verify_code;
+            if (0 == system(send_cmd.c_str()))
+            {
+                ret = true;
+                auto exist_verify = user->get_children<pa_sql_driver_sms_verify>("belong_user");
+                if (exist_verify)
+                {
+                    exist_verify->verify_code = verify.verify_code;
+                    exist_verify->timestamp = verify.timestamp;
+                    exist_verify->update_record();
+                }
+                else
+                {
+                    verify.insert_record();
+                }
+            }
+            else
+            {
+                PA_RETURN_MSG("验证码发送失败");
+            }
+        }
+        else
+        {
+            PA_RETURN_MSG("没有查找到该手机号对应的司机信息");
+        }
+        return ret;
+    }
+    virtual void driver_silent_register(std::string &_return, const std::string &code, const std::string &driver_id, const std::string &driver_phone, const std::string &verify_code)
+    {
+        sqlite_orm_lock a;
+        auto driver = sqlite_orm::search_record<pa_sql_driver>("phone == '%s'", driver_phone.c_str());
+        if (!driver)
+        {
+            PA_RETURN_MSG("用户不存在");
+        }
+        auto verify_info = driver->get_children<pa_sql_driver_sms_verify>("belong_user");
+        if (verify_info && verify_info->code_is_valid(verify_code))
+        {
+            std::string wechat_secret(getenv("WECHAT_SECRET"));
+            std::string req = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=wxa390f8b6f68e9c6d&secret=" + wechat_secret + "&code=" + code + "&grant_type=authorization_code";
+
+            std::string in_buff = PA_DATAOPT_rest_req(req);
+            neb::CJsonObject oJson(in_buff);
+
+            if (oJson.KeyExist("errcode"))
+            {
+                PA_RETURN_MSG("微信登陆失败");
+            }
+
+            auto open_id = oJson("openid");
+            _return = open_id;
+            auto all_same_phone_driver = sqlite_orm::search_record_all<pa_sql_driver>("phone == '%s'", driver_phone.c_str());
+            for (auto &itr:all_same_phone_driver)
+            {
+                itr.driver_id = driver_id;
+                itr.silent_id = open_id;
+                itr.update_record();
+            }
+        }
+        else
+        {
+            PA_RETURN_MSG("验证码错误");
+        }
+    }
+    virtual bool verify_driver_silent_login(const std::string &silent_id)
+    {
+        bool ret = false;
+
+        if (silent_id.length() > 0)
+        {
+            auto driver = sqlite_orm::search_record<pa_sql_driver>("silent_id == '%s'", silent_id.c_str());
+            if (driver)
+            {
+                ret = true;
+            }
+        }
+
+        return ret;
+    }
+
+    virtual void driver_silent_unregister(const std::string &silent_id)
+    {
+        auto driver = sqlite_orm::search_record<pa_sql_driver>("silent_id == '%s'", silent_id.c_str());
+        if (driver)
+        {
+            driver->silent_id = "";
+            driver->driver_id = "";
+            driver->update_record();
+        }
+    }
+
+    virtual void get_today_driver_info(std::vector<today_driver_info> &_return, const std::string &silent_id)
+    {
+        auto sample_driver = sqlite_orm::search_record<pa_sql_driver>("silent_id == '%s'", silent_id.c_str());
+        std::string sample_phone = "xxxxxx";
+        if (sample_driver)
+        {
+            sample_phone = sample_driver->phone;
+        }
+        auto drivers = sqlite_orm::search_record_all<pa_sql_driver>("phone == '%s'", sample_phone.c_str());
+        for (auto &itr:drivers)
+        {
+            auto current_time = PA_DATAOPT_current_time();
+            auto date_only = current_time.substr(0, 10);
+            auto related_plans = sqlite_orm::search_record_all<pa_sql_plan>("plan_time LIKE '%s%%' AND status == 3 AND is_cancel == 0", date_only.c_str());
+            for (auto &single_plan:related_plans)
+            {
+                auto related_single_vicheles = single_plan.get_all_children<pa_sql_single_vichele>("belong_plan", "finish == 0 AND driver_ext_key == %ld", itr.get_pri_id());
+                for (auto &info:related_single_vicheles)
+                {
+                    today_driver_info tmp;
+                    auto main_vichele = info.get_parent<pa_sql_vichele>("main_vichele");
+                    auto behind_vichele = info.get_parent<pa_sql_vichele_behind>("behind_vichele");
+                    auto stuff_info = single_plan.get_parent<pa_sql_stuff_info>("belong_stuff");
+                    auto creator = single_plan.get_parent<pa_sql_userinfo>("created_by");
+                    std::string destination_company;
+                    std::string destination_address;
+                    std::string order_company;
+                    if (main_vichele && behind_vichele && stuff_info && creator)
+                    {
+                        auto create_company = creator->get_parent<pa_sql_company>("belong_company");
+                        auto sale_company = stuff_info->get_parent<pa_sql_company>("belong_company");
+                        if (create_company && sale_company)
+                        {
+                            tmp.behind_vichele = behind_vichele->number;
+                            tmp.destination_address = sale_company->address;
+                            tmp.destination_company = sale_company->name;
+                            tmp.id = info.get_pri_id();
+                            tmp.main_vichele = main_vichele->number;
+                            tmp.order_company = single_plan.proxy_company.length()==0?create_company->name:single_plan.proxy_company;
+                            tmp.stuff_name = stuff_info->name;
+                            tmp.is_registered = false;
+                            auto register_info = info.get_children<pa_sql_driver_register>("belong_vichele");
+                            if (register_info)
+                            {
+                                tmp.register_timestamp = register_info->timestamp;
+                                tmp.register_number = register_info->number;
+                                tmp.enter_location = register_info->enter_location;
+                                tmp.is_registered = true;
+                            }
+                            _return.push_back(tmp);
+                        }
+                    }
+                }
+            }
+        }
+    }
 };
 
 #endif // _STUFF_PLAN_MANAGEMENT_H_

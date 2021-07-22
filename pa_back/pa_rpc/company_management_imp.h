@@ -873,5 +873,19 @@ public:
 
         return ret;
     }
+
+    virtual void get_company_position_config(company_positon_lat_lag &_return, const std::string &company_name)
+    {
+        auto company = sqlite_orm::search_record<pa_sql_company>("name = '%s'", company_name.c_str());
+        if (!company)
+        {
+            PA_RETURN_MSG("公司不存在");
+        }
+
+        auto positon = PA_DATAOPT_get_position_config(company_name);
+        _return.distance = positon.distance;
+        _return.lag = positon.lag;
+        _return.lat = positon.lat;
+    }
 };
 #endif // _COMPANY_MANAGEMENT_IMP_H_

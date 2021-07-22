@@ -165,6 +165,15 @@ const routes = [
       private_title: '采购进厂',
       has_go_back: true,
     },
+  },{
+    path: '/driver_register',
+    name: 'DriverRegister',
+    component: () => import('../views/DriverRegister.vue'),
+    meta: {
+      private_title: '进厂排号',
+      has_go_back: false,
+      extra_page:true,
+    },
   },
 ]
 
