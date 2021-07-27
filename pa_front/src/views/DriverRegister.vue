@@ -1,6 +1,16 @@
 <template>
 <div class="driver_register_show">
     <div v-if="is_login">
+        <van-row type="flex" align="center">
+            <van-col :span="20">
+                <van-divider>司机信息</van-divider>
+            </van-col>
+            <van-col>
+                <van-button size="small" type="danger" @click="reset_user">重置</van-button>
+            </van-col>
+        </van-row>
+        <van-cell title="电话号" :value="driver_phone"></van-cell>
+        <van-cell title="身份证号" :value="driver_id"></van-cell>
         <van-divider>今日承运信息</van-divider>
         <div class="single_record_show" v-for="(single_trans, index) in trans_info" :key="index">
             <van-cell :title="single_trans.main_vichele + '-' + single_trans.behind_vichele" :value="single_trans.stuff_name" :label="single_trans.order_company" />
@@ -14,9 +24,10 @@
     <div v-if="need_bind_info">
         <van-form @submit="register_driver">
             <van-field v-model="bind_info.phone" name="手机号" type="tel" label="手机号" placeholder="手机号" :rules="[{ required: true, message: '请填写手机号' }]" />
-            <van-field v-model="bind_info.verify_code" type="digit" name="验证码" label="验证码" placeholder="验证码" :rules="[{ required: true, message: '请填写验证码' }]">
+            <van-field v-model="bind_info.verify_code" maxlength="6" type="digit" name="验证码" label="验证码" placeholder="验证码" :rules="[{ required: true, message: '请填写验证码' }]">
                 <template #button>
-                    <van-button size="small" type="primary" native-type="button" @click="send_sms">发送验证码</van-button>
+                    <van-button v-if="current_count_down == 0" size="small" type="primary" native-type="button" @click="send_sms">发送验证码</van-button>
+                    <van-count-down v-else format="ss秒后再次发送" :time="current_count_down" @finish="current_count_down = 0" />
                 </template>
             </van-field>
             <van-field v-model="bind_info.id" name="身份证号" label="身份证号" placeholder="身份证号" :rules="[{ required: true, message: '请填写身份证号' }]" />
@@ -53,7 +64,9 @@ import {
     Cell,
     CellGroup
 } from 'vant';
+import { CountDown } from 'vant';
 
+Vue.use(CountDown);
 Vue.use(Cell);
 Vue.use(CellGroup);
 Vue.use(Col);
@@ -75,14 +88,24 @@ export default {
                 verify_code: '',
             },
             trans_info: [],
+            driver_id: '',
+            driver_phone: '',
+            current_count_down: 0,
         };
     },
     methods: {
+        reset_user: function () {
+            var vue_this = this;
+            vue_this.$call_remote_process("stuff_plan_management", 'driver_silent_unregister', [vue_this.$cookies.get('driver_silent_id')]).then(function () {
+                vue_this.$router.go(0);
+            });
+        },
         send_sms: function () {
             var vue_this = this;
             vue_this.$call_remote_process("stuff_plan_management", "driver_silent_send_sms", [vue_this.bind_info.phone]).then(function (resp) {
                 if (resp) {
                     vue_this.$toast("验证码已发送");
+                    vue_this.current_count_down = 60000;
                 }
             });
         },
@@ -153,12 +176,19 @@ export default {
                 if (config_position.distance >= real_distance) {
                     vue_this.$toast("签到成功");
                 } else {
-                    vue_this.$toast("当前距离厂区" + (real_distance/1000).toFixed(1) + "公里, 请在" + config_position.distance / 1000 + "公里范围内签到");
+                    vue_this.$toast("当前距离厂区" + (real_distance / 1000).toFixed(1) + "公里, 请在" + config_position.distance / 1000 + "公里范围内签到");
                 }
             } catch (error) {
                 vue_this.$toast("获取定位失败。");
             }
 
+        },
+        get_driver_info: function () {
+            var vue_this = this;
+            vue_this.$call_remote_process("stuff_plan_management", "get_driver_info", [vue_this.$cookies.get('driver_silent_id')]).then(function (resp) {
+                vue_this.driver_id = resp.id;
+                vue_this.driver_phone = resp.phone;
+            });
         },
     },
     beforeMount: function () {
@@ -172,6 +202,7 @@ export default {
                 if (resp) {
                     vue_this.is_login = true;
                     vue_this.get_trans_info();
+                    vue_this.get_driver_info();
                 } else {
                     window.location.href = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxa390f8b6f68e9c6d&redirect_uri=https%3a%2f%2fwww.d8sis.cn%2fpa_web%2fdriver_register&response_type=code&scope=snsapi_base&state=STATE#wechat_redirect"
                 }

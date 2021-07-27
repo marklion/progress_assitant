@@ -55,6 +55,7 @@ class stuff_plan_managementIf {
   virtual void driver_silent_unregister(const std::string& silent_id) = 0;
   virtual bool verify_driver_silent_login(const std::string& silent_id) = 0;
   virtual void get_today_driver_info(std::vector<today_driver_info> & _return, const std::string& silent_id) = 0;
+  virtual void get_driver_info(driver_detail_info& _return, const std::string& silent_id) = 0;
 };
 
 class stuff_plan_managementIfFactory {
@@ -195,6 +196,9 @@ class stuff_plan_managementNull : virtual public stuff_plan_managementIf {
     return _return;
   }
   void get_today_driver_info(std::vector<today_driver_info> & /* _return */, const std::string& /* silent_id */) {
+    return;
+  }
+  void get_driver_info(driver_detail_info& /* _return */, const std::string& /* silent_id */) {
     return;
   }
 };
@@ -4098,6 +4102,118 @@ class stuff_plan_management_get_today_driver_info_presult {
 
 };
 
+typedef struct _stuff_plan_management_get_driver_info_args__isset {
+  _stuff_plan_management_get_driver_info_args__isset() : silent_id(false) {}
+  bool silent_id :1;
+} _stuff_plan_management_get_driver_info_args__isset;
+
+class stuff_plan_management_get_driver_info_args {
+ public:
+
+  stuff_plan_management_get_driver_info_args(const stuff_plan_management_get_driver_info_args&);
+  stuff_plan_management_get_driver_info_args& operator=(const stuff_plan_management_get_driver_info_args&);
+  stuff_plan_management_get_driver_info_args() : silent_id() {
+  }
+
+  virtual ~stuff_plan_management_get_driver_info_args() noexcept;
+  std::string silent_id;
+
+  _stuff_plan_management_get_driver_info_args__isset __isset;
+
+  void __set_silent_id(const std::string& val);
+
+  bool operator == (const stuff_plan_management_get_driver_info_args & rhs) const
+  {
+    if (!(silent_id == rhs.silent_id))
+      return false;
+    return true;
+  }
+  bool operator != (const stuff_plan_management_get_driver_info_args &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const stuff_plan_management_get_driver_info_args & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+
+class stuff_plan_management_get_driver_info_pargs {
+ public:
+
+
+  virtual ~stuff_plan_management_get_driver_info_pargs() noexcept;
+  const std::string* silent_id;
+
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _stuff_plan_management_get_driver_info_result__isset {
+  _stuff_plan_management_get_driver_info_result__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _stuff_plan_management_get_driver_info_result__isset;
+
+class stuff_plan_management_get_driver_info_result {
+ public:
+
+  stuff_plan_management_get_driver_info_result(const stuff_plan_management_get_driver_info_result&);
+  stuff_plan_management_get_driver_info_result& operator=(const stuff_plan_management_get_driver_info_result&);
+  stuff_plan_management_get_driver_info_result() {
+  }
+
+  virtual ~stuff_plan_management_get_driver_info_result() noexcept;
+  driver_detail_info success;
+  gen_exp e;
+
+  _stuff_plan_management_get_driver_info_result__isset __isset;
+
+  void __set_success(const driver_detail_info& val);
+
+  void __set_e(const gen_exp& val);
+
+  bool operator == (const stuff_plan_management_get_driver_info_result & rhs) const
+  {
+    if (!(success == rhs.success))
+      return false;
+    if (!(e == rhs.e))
+      return false;
+    return true;
+  }
+  bool operator != (const stuff_plan_management_get_driver_info_result &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const stuff_plan_management_get_driver_info_result & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _stuff_plan_management_get_driver_info_presult__isset {
+  _stuff_plan_management_get_driver_info_presult__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _stuff_plan_management_get_driver_info_presult__isset;
+
+class stuff_plan_management_get_driver_info_presult {
+ public:
+
+
+  virtual ~stuff_plan_management_get_driver_info_presult() noexcept;
+  driver_detail_info* success;
+  gen_exp e;
+
+  _stuff_plan_management_get_driver_info_presult__isset __isset;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+
+};
+
 class stuff_plan_managementClient : virtual public stuff_plan_managementIf {
  public:
   stuff_plan_managementClient(std::shared_ptr< ::apache::thrift::protocol::TProtocol> prot) {
@@ -4222,6 +4338,9 @@ class stuff_plan_managementClient : virtual public stuff_plan_managementIf {
   void get_today_driver_info(std::vector<today_driver_info> & _return, const std::string& silent_id);
   void send_get_today_driver_info(const std::string& silent_id);
   void recv_get_today_driver_info(std::vector<today_driver_info> & _return);
+  void get_driver_info(driver_detail_info& _return, const std::string& silent_id);
+  void send_get_driver_info(const std::string& silent_id);
+  void recv_get_driver_info(driver_detail_info& _return);
  protected:
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> piprot_;
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> poprot_;
@@ -4270,6 +4389,7 @@ class stuff_plan_managementProcessor : public ::apache::thrift::TDispatchProcess
   void process_driver_silent_unregister(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
   void process_verify_driver_silent_login(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
   void process_get_today_driver_info(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
+  void process_get_driver_info(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
  public:
   stuff_plan_managementProcessor(::std::shared_ptr<stuff_plan_managementIf> iface) :
     iface_(iface) {
@@ -4306,6 +4426,7 @@ class stuff_plan_managementProcessor : public ::apache::thrift::TDispatchProcess
     processMap_["driver_silent_unregister"] = &stuff_plan_managementProcessor::process_driver_silent_unregister;
     processMap_["verify_driver_silent_login"] = &stuff_plan_managementProcessor::process_verify_driver_silent_login;
     processMap_["get_today_driver_info"] = &stuff_plan_managementProcessor::process_get_today_driver_info;
+    processMap_["get_driver_info"] = &stuff_plan_managementProcessor::process_get_driver_info;
   }
 
   virtual ~stuff_plan_managementProcessor() {}
@@ -4648,6 +4769,16 @@ class stuff_plan_managementMultiface : virtual public stuff_plan_managementIf {
     return;
   }
 
+  void get_driver_info(driver_detail_info& _return, const std::string& silent_id) {
+    size_t sz = ifaces_.size();
+    size_t i = 0;
+    for (; i < (sz - 1); ++i) {
+      ifaces_[i]->get_driver_info(_return, silent_id);
+    }
+    ifaces_[i]->get_driver_info(_return, silent_id);
+    return;
+  }
+
 };
 
 // The 'concurrent' client is a thread safe client that correctly handles
@@ -4779,6 +4910,9 @@ class stuff_plan_managementConcurrentClient : virtual public stuff_plan_manageme
   void get_today_driver_info(std::vector<today_driver_info> & _return, const std::string& silent_id);
   int32_t send_get_today_driver_info(const std::string& silent_id);
   void recv_get_today_driver_info(std::vector<today_driver_info> & _return, const int32_t seqid);
+  void get_driver_info(driver_detail_info& _return, const std::string& silent_id);
+  int32_t send_get_driver_info(const std::string& silent_id);
+  void recv_get_driver_info(driver_detail_info& _return, const int32_t seqid);
  protected:
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> piprot_;
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> poprot_;

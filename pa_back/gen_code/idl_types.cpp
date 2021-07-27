@@ -4285,6 +4285,118 @@ void today_driver_info::printTo(std::ostream& out) const {
 }
 
 
+driver_detail_info::~driver_detail_info() noexcept {
+}
+
+
+void driver_detail_info::__set_phone(const std::string& val) {
+  this->phone = val;
+}
+
+void driver_detail_info::__set_id(const std::string& val) {
+  this->id = val;
+}
+std::ostream& operator<<(std::ostream& out, const driver_detail_info& obj)
+{
+  obj.printTo(out);
+  return out;
+}
+
+
+uint32_t driver_detail_info::read(::apache::thrift::protocol::TProtocol* iprot) {
+
+  ::apache::thrift::protocol::TInputRecursionTracker tracker(*iprot);
+  uint32_t xfer = 0;
+  std::string fname;
+  ::apache::thrift::protocol::TType ftype;
+  int16_t fid;
+
+  xfer += iprot->readStructBegin(fname);
+
+  using ::apache::thrift::protocol::TProtocolException;
+
+
+  while (true)
+  {
+    xfer += iprot->readFieldBegin(fname, ftype, fid);
+    if (ftype == ::apache::thrift::protocol::T_STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 1:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->phone);
+          this->__isset.phone = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 2:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->id);
+          this->__isset.id = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      default:
+        xfer += iprot->skip(ftype);
+        break;
+    }
+    xfer += iprot->readFieldEnd();
+  }
+
+  xfer += iprot->readStructEnd();
+
+  return xfer;
+}
+
+uint32_t driver_detail_info::write(::apache::thrift::protocol::TProtocol* oprot) const {
+  uint32_t xfer = 0;
+  ::apache::thrift::protocol::TOutputRecursionTracker tracker(*oprot);
+  xfer += oprot->writeStructBegin("driver_detail_info");
+
+  xfer += oprot->writeFieldBegin("phone", ::apache::thrift::protocol::T_STRING, 1);
+  xfer += oprot->writeString(this->phone);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("id", ::apache::thrift::protocol::T_STRING, 2);
+  xfer += oprot->writeString(this->id);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldStop();
+  xfer += oprot->writeStructEnd();
+  return xfer;
+}
+
+void swap(driver_detail_info &a, driver_detail_info &b) {
+  using ::std::swap;
+  swap(a.phone, b.phone);
+  swap(a.id, b.id);
+  swap(a.__isset, b.__isset);
+}
+
+driver_detail_info::driver_detail_info(const driver_detail_info& other56) {
+  phone = other56.phone;
+  id = other56.id;
+  __isset = other56.__isset;
+}
+driver_detail_info& driver_detail_info::operator=(const driver_detail_info& other57) {
+  phone = other57.phone;
+  id = other57.id;
+  __isset = other57.__isset;
+  return *this;
+}
+void driver_detail_info::printTo(std::ostream& out) const {
+  using ::apache::thrift::to_string;
+  out << "driver_detail_info(";
+  out << "phone=" << to_string(phone);
+  out << ", " << "id=" << to_string(id);
+  out << ")";
+}
+
+
 api_extra_transformation::~api_extra_transformation() noexcept {
 }
 
@@ -4394,17 +4506,17 @@ void swap(api_extra_transformation &a, api_extra_transformation &b) {
   swap(a.__isset, b.__isset);
 }
 
-api_extra_transformation::api_extra_transformation(const api_extra_transformation& other56) {
-  driver_name = other56.driver_name;
-  driver_phone = other56.driver_phone;
-  driver_id = other56.driver_id;
-  __isset = other56.__isset;
+api_extra_transformation::api_extra_transformation(const api_extra_transformation& other58) {
+  driver_name = other58.driver_name;
+  driver_phone = other58.driver_phone;
+  driver_id = other58.driver_id;
+  __isset = other58.__isset;
 }
-api_extra_transformation& api_extra_transformation::operator=(const api_extra_transformation& other57) {
-  driver_name = other57.driver_name;
-  driver_phone = other57.driver_phone;
-  driver_id = other57.driver_id;
-  __isset = other57.__isset;
+api_extra_transformation& api_extra_transformation::operator=(const api_extra_transformation& other59) {
+  driver_name = other59.driver_name;
+  driver_phone = other59.driver_phone;
+  driver_id = other59.driver_id;
+  __isset = other59.__isset;
   return *this;
 }
 void api_extra_transformation::printTo(std::ostream& out) const {
@@ -4628,29 +4740,29 @@ void swap(api_transformation_info &a, api_transformation_info &b) {
   swap(a.__isset, b.__isset);
 }
 
-api_transformation_info::api_transformation_info(const api_transformation_info& other58) {
-  id = other58.id;
-  main_vichele_number = other58.main_vichele_number;
-  behind_vichele_number = other58.behind_vichele_number;
-  stuff_name = other58.stuff_name;
-  enter_count = other58.enter_count;
-  exit_count = other58.exit_count;
-  company_name = other58.company_name;
-  extra_info = other58.extra_info;
-  is_sale = other58.is_sale;
-  __isset = other58.__isset;
+api_transformation_info::api_transformation_info(const api_transformation_info& other60) {
+  id = other60.id;
+  main_vichele_number = other60.main_vichele_number;
+  behind_vichele_number = other60.behind_vichele_number;
+  stuff_name = other60.stuff_name;
+  enter_count = other60.enter_count;
+  exit_count = other60.exit_count;
+  company_name = other60.company_name;
+  extra_info = other60.extra_info;
+  is_sale = other60.is_sale;
+  __isset = other60.__isset;
 }
-api_transformation_info& api_transformation_info::operator=(const api_transformation_info& other59) {
-  id = other59.id;
-  main_vichele_number = other59.main_vichele_number;
-  behind_vichele_number = other59.behind_vichele_number;
-  stuff_name = other59.stuff_name;
-  enter_count = other59.enter_count;
-  exit_count = other59.exit_count;
-  company_name = other59.company_name;
-  extra_info = other59.extra_info;
-  is_sale = other59.is_sale;
-  __isset = other59.__isset;
+api_transformation_info& api_transformation_info::operator=(const api_transformation_info& other61) {
+  id = other61.id;
+  main_vichele_number = other61.main_vichele_number;
+  behind_vichele_number = other61.behind_vichele_number;
+  stuff_name = other61.stuff_name;
+  enter_count = other61.enter_count;
+  exit_count = other61.exit_count;
+  company_name = other61.company_name;
+  extra_info = other61.extra_info;
+  is_sale = other61.is_sale;
+  __isset = other61.__isset;
   return *this;
 }
 void api_transformation_info::printTo(std::ostream& out) const {
@@ -4948,37 +5060,37 @@ void swap(vichele_stay_alone &a, vichele_stay_alone &b) {
   swap(a.__isset, b.__isset);
 }
 
-vichele_stay_alone::vichele_stay_alone(const vichele_stay_alone& other60) {
-  id = other60.id;
-  stuff_name = other60.stuff_name;
-  company_name = other60.company_name;
-  main_vichele_number = other60.main_vichele_number;
-  behind_vichele_number = other60.behind_vichele_number;
-  count = other60.count;
-  comment = other60.comment;
-  date = other60.date;
-  destination = other60.destination;
-  status = other60.status;
-  creator_name = other60.creator_name;
-  creator_phone = other60.creator_phone;
-  repeated = other60.repeated;
-  __isset = other60.__isset;
+vichele_stay_alone::vichele_stay_alone(const vichele_stay_alone& other62) {
+  id = other62.id;
+  stuff_name = other62.stuff_name;
+  company_name = other62.company_name;
+  main_vichele_number = other62.main_vichele_number;
+  behind_vichele_number = other62.behind_vichele_number;
+  count = other62.count;
+  comment = other62.comment;
+  date = other62.date;
+  destination = other62.destination;
+  status = other62.status;
+  creator_name = other62.creator_name;
+  creator_phone = other62.creator_phone;
+  repeated = other62.repeated;
+  __isset = other62.__isset;
 }
-vichele_stay_alone& vichele_stay_alone::operator=(const vichele_stay_alone& other61) {
-  id = other61.id;
-  stuff_name = other61.stuff_name;
-  company_name = other61.company_name;
-  main_vichele_number = other61.main_vichele_number;
-  behind_vichele_number = other61.behind_vichele_number;
-  count = other61.count;
-  comment = other61.comment;
-  date = other61.date;
-  destination = other61.destination;
-  status = other61.status;
-  creator_name = other61.creator_name;
-  creator_phone = other61.creator_phone;
-  repeated = other61.repeated;
-  __isset = other61.__isset;
+vichele_stay_alone& vichele_stay_alone::operator=(const vichele_stay_alone& other63) {
+  id = other63.id;
+  stuff_name = other63.stuff_name;
+  company_name = other63.company_name;
+  main_vichele_number = other63.main_vichele_number;
+  behind_vichele_number = other63.behind_vichele_number;
+  count = other63.count;
+  comment = other63.comment;
+  date = other63.date;
+  destination = other63.destination;
+  status = other63.status;
+  creator_name = other63.creator_name;
+  creator_phone = other63.creator_phone;
+  repeated = other63.repeated;
+  __isset = other63.__isset;
   return *this;
 }
 void vichele_stay_alone::printTo(std::ostream& out) const {
@@ -5093,15 +5205,15 @@ void swap(silent_user_info &a, silent_user_info &b) {
   swap(a.__isset, b.__isset);
 }
 
-silent_user_info::silent_user_info(const silent_user_info& other62) {
-  name = other62.name;
-  phone = other62.phone;
-  __isset = other62.__isset;
+silent_user_info::silent_user_info(const silent_user_info& other64) {
+  name = other64.name;
+  phone = other64.phone;
+  __isset = other64.__isset;
 }
-silent_user_info& silent_user_info::operator=(const silent_user_info& other63) {
-  name = other63.name;
-  phone = other63.phone;
-  __isset = other63.__isset;
+silent_user_info& silent_user_info::operator=(const silent_user_info& other65) {
+  name = other65.name;
+  phone = other65.phone;
+  __isset = other65.__isset;
   return *this;
 }
 void silent_user_info::printTo(std::ostream& out) const {

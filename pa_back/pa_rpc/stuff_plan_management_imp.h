@@ -1391,13 +1391,9 @@ public:
 
             auto open_id = oJson("openid");
             _return = open_id;
-            auto all_same_phone_driver = sqlite_orm::search_record_all<pa_sql_driver>("phone == '%s'", driver_phone.c_str());
-            for (auto &itr:all_same_phone_driver)
-            {
-                itr.driver_id = driver_id;
-                itr.silent_id = open_id;
-                itr.update_record();
-            }
+            driver->driver_id = driver_id;
+            driver->silent_id = open_id;
+            driver->update_record();
         }
         else
         {
@@ -1422,17 +1418,24 @@ public:
 
     virtual void driver_silent_unregister(const std::string &silent_id)
     {
-        auto driver = sqlite_orm::search_record<pa_sql_driver>("silent_id == '%s'", silent_id.c_str());
-        if (driver)
+        if (silent_id.length() > 0)
         {
-            driver->silent_id = "";
-            driver->driver_id = "";
-            driver->update_record();
+            auto drivers = sqlite_orm::search_record_all<pa_sql_driver>("silent_id == '%s'", silent_id.c_str());
+            for (auto &driver : drivers)
+            {
+                driver.silent_id = "";
+                driver.driver_id = "";
+                driver.update_record();
+            }
         }
     }
 
     virtual void get_today_driver_info(std::vector<today_driver_info> &_return, const std::string &silent_id)
     {
+        if (silent_id.length() <= 0)
+        {
+            PA_RETURN_MSG("无数据");
+        }
         auto sample_driver = sqlite_orm::search_record<pa_sql_driver>("silent_id == '%s'", silent_id.c_str());
         std::string sample_phone = "xxxxxx";
         if (sample_driver)
@@ -1440,15 +1443,15 @@ public:
             sample_phone = sample_driver->phone;
         }
         auto drivers = sqlite_orm::search_record_all<pa_sql_driver>("phone == '%s'", sample_phone.c_str());
-        for (auto &itr:drivers)
+        for (auto &itr : drivers)
         {
             auto current_time = PA_DATAOPT_current_time();
             auto date_only = current_time.substr(0, 10);
             auto related_plans = sqlite_orm::search_record_all<pa_sql_plan>("plan_time LIKE '%s%%' AND status == 3 AND is_cancel == 0", date_only.c_str());
-            for (auto &single_plan:related_plans)
+            for (auto &single_plan : related_plans)
             {
                 auto related_single_vicheles = single_plan.get_all_children<pa_sql_single_vichele>("belong_plan", "finish == 0 AND driver_ext_key == %ld", itr.get_pri_id());
-                for (auto &info:related_single_vicheles)
+                for (auto &info : related_single_vicheles)
                 {
                     today_driver_info tmp;
                     auto main_vichele = info.get_parent<pa_sql_vichele>("main_vichele");
@@ -1469,7 +1472,7 @@ public:
                             tmp.destination_company = sale_company->name;
                             tmp.id = info.get_pri_id();
                             tmp.main_vichele = main_vichele->number;
-                            tmp.order_company = single_plan.proxy_company.length()==0?create_company->name:single_plan.proxy_company;
+                            tmp.order_company = single_plan.proxy_company.length() == 0 ? create_company->name : single_plan.proxy_company;
                             tmp.stuff_name = stuff_info->name;
                             tmp.is_registered = false;
                             auto register_info = info.get_children<pa_sql_driver_register>("belong_vichele");
@@ -1484,6 +1487,19 @@ public:
                         }
                     }
                 }
+            }
+        }
+    }
+
+    virtual void get_driver_info(driver_detail_info &_return, const std::string &silent_id)
+    {
+        if (silent_id.length() > 0)
+        {
+            auto driver = sqlite_orm::search_record<pa_sql_driver>("silent_id == '%s'", silent_id.c_str());
+            if (driver)
+            {
+                _return.id = driver->driver_id;
+                _return.phone = driver->phone;
             }
         }
     }
