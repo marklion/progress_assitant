@@ -262,6 +262,11 @@ struct today_driver_info {
     11:bool is_registered,
 }
 
+struct driver_detail_info {
+    1:string phone,
+    2:string id,
+}
+
 service stuff_plan_management {
     i64 create_plan(1:stuff_plan plan, 2:string ssid, 3:string proxy_company) throws (1:gen_exp e),
     list<plan_status> get_created_plan(1:string ssid, 2:i64 anchor) throws (1:gen_exp e),
@@ -296,6 +301,7 @@ service stuff_plan_management {
     void driver_silent_unregister(1:string silent_id) throws (1:gen_exp e),
     bool verify_driver_silent_login(1:string silent_id) throws (1:gen_exp e),
     list<today_driver_info> get_today_driver_info(1:string silent_id) throws (1:gen_exp e),
+    driver_detail_info get_driver_info(1:string silent_id) throws (1:gen_exp e),
 }
 
 struct api_extra_transformation {

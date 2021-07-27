@@ -2806,6 +2806,71 @@ today_driver_info = class {
   }
 
 };
+driver_detail_info = class {
+  constructor(args) {
+    this.phone = null;
+    this.id = null;
+    if (args) {
+      if (args.phone !== undefined && args.phone !== null) {
+        this.phone = args.phone;
+      }
+      if (args.id !== undefined && args.id !== null) {
+        this.id = args.id;
+      }
+    }
+  }
+
+  read (input) {
+    input.readStructBegin();
+    while (true) {
+      const ret = input.readFieldBegin();
+      const ftype = ret.ftype;
+      const fid = ret.fid;
+      if (ftype == Thrift.Type.STOP) {
+        break;
+      }
+      switch (fid) {
+        case 1:
+        if (ftype == Thrift.Type.STRING) {
+          this.phone = input.readString().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        case 2:
+        if (ftype == Thrift.Type.STRING) {
+          this.id = input.readString().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        default:
+          input.skip(ftype);
+      }
+      input.readFieldEnd();
+    }
+    input.readStructEnd();
+    return;
+  }
+
+  write (output) {
+    output.writeStructBegin('driver_detail_info');
+    if (this.phone !== null && this.phone !== undefined) {
+      output.writeFieldBegin('phone', Thrift.Type.STRING, 1);
+      output.writeString(this.phone);
+      output.writeFieldEnd();
+    }
+    if (this.id !== null && this.id !== undefined) {
+      output.writeFieldBegin('id', Thrift.Type.STRING, 2);
+      output.writeString(this.id);
+      output.writeFieldEnd();
+    }
+    output.writeFieldStop();
+    output.writeStructEnd();
+    return;
+  }
+
+};
 api_extra_transformation = class {
   constructor(args) {
     this.driver_name = null;

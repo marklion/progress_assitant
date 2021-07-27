@@ -57,6 +57,7 @@ if len(sys.argv) <= 1 or sys.argv[1] == '--help':
     print('  void driver_silent_unregister(string silent_id)')
     print('  bool verify_driver_silent_login(string silent_id)')
     print('   get_today_driver_info(string silent_id)')
+    print('  driver_detail_info get_driver_info(string silent_id)')
     print('')
     sys.exit(0)
 
@@ -333,6 +334,12 @@ elif cmd == 'get_today_driver_info':
         print('get_today_driver_info requires 1 args')
         sys.exit(1)
     pp.pprint(client.get_today_driver_info(args[0],))
+
+elif cmd == 'get_driver_info':
+    if len(args) != 1:
+        print('get_driver_info requires 1 args')
+        sys.exit(1)
+    pp.pprint(client.get_driver_info(args[0],))
 
 else:
     print('Unrecognized method %s' % cmd)

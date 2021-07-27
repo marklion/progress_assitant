@@ -71,6 +71,8 @@ class company_plan_brief;
 
 class today_driver_info;
 
+class driver_detail_info;
+
 class api_extra_transformation;
 
 class api_transformation_info;
@@ -1712,6 +1714,54 @@ class today_driver_info : public virtual ::apache::thrift::TBase {
 void swap(today_driver_info &a, today_driver_info &b);
 
 std::ostream& operator<<(std::ostream& out, const today_driver_info& obj);
+
+typedef struct _driver_detail_info__isset {
+  _driver_detail_info__isset() : phone(false), id(false) {}
+  bool phone :1;
+  bool id :1;
+} _driver_detail_info__isset;
+
+class driver_detail_info : public virtual ::apache::thrift::TBase {
+ public:
+
+  driver_detail_info(const driver_detail_info&);
+  driver_detail_info& operator=(const driver_detail_info&);
+  driver_detail_info() : phone(), id() {
+  }
+
+  virtual ~driver_detail_info() noexcept;
+  std::string phone;
+  std::string id;
+
+  _driver_detail_info__isset __isset;
+
+  void __set_phone(const std::string& val);
+
+  void __set_id(const std::string& val);
+
+  bool operator == (const driver_detail_info & rhs) const
+  {
+    if (!(phone == rhs.phone))
+      return false;
+    if (!(id == rhs.id))
+      return false;
+    return true;
+  }
+  bool operator != (const driver_detail_info &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const driver_detail_info & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+  virtual void printTo(std::ostream& out) const;
+};
+
+void swap(driver_detail_info &a, driver_detail_info &b);
+
+std::ostream& operator<<(std::ostream& out, const driver_detail_info& obj);
 
 typedef struct _api_extra_transformation__isset {
   _api_extra_transformation__isset() : driver_name(false), driver_phone(false), driver_id(false) {}
