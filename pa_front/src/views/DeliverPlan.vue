@@ -6,19 +6,34 @@
     </van-cell-group>
     <van-checkbox-group v-model="pre_deliver_vichele_index">
         <van-cell-group title="未出货车辆">
-            <van-cell v-for="(item, index) in undelivered_vichele" center :key="index" :title="item.main_vichele + '-' + item.behind_vichele" :label="item.driver_name + '-' + item.driver_phone">
-                <template #icon>
-                    <van-checkbox style="margin-right:10px" :name="index" ref="checkboxes" v-if="can_change_to(4)"/>
-                </template>
-                <van-row type="flex" align="center" justify="end" v-if="can_change_to(4)">
-                    <van-col>
-                        <van-stepper v-model="item.count" />
-                    </van-col>
-                    <van-col>
-                        吨
-                    </van-col>
-                </van-row>
-            </van-cell>
+            <div class="single_vichele_show" v-for="(item, index) in undelivered_vichele" :key="index">
+                <van-cell center :title="item.main_vichele + '-' + item.behind_vichele" :label="item.driver_name + '-' + item.driver_phone">
+                    <template #icon>
+                        <van-checkbox style="margin-right:10px" :name="index" ref="checkboxes" v-if="can_change_to(4)" />
+                    </template>
+                    <van-row type="flex" align="center" justify="end" v-if="can_change_to(4)">
+                        <van-col>
+                            <van-stepper v-model="item.count" />
+                        </van-col>
+                        <van-col>
+                            吨
+                        </van-col>
+                    </van-row>
+                </van-cell>
+                <div v-if="item.register_number" class="register_info_show">
+                    <van-row type="flex" align="center" justify="space-between">
+                        <van-col :span="8">
+                            进厂序号：{{item.register_number}}
+                        </van-col>
+                        <van-col :span="8">
+                            进厂位置：{{item.enter_location}}
+                        </van-col>
+                        <van-col :span="8">
+                            {{item.register_timestamp}}
+                        </van-col>
+                    </van-row>
+                </div>
+            </div>
         </van-cell-group>
     </van-checkbox-group>
     <van-row :gutter="10" type="flex" justify="center" align="center" v-if="can_change_to(4)">
@@ -215,6 +230,13 @@ export default {
 }
 </script>
 
-<style>
-
+<style scoped>
+.single_vichele_show{
+    border: 1px solid gray;
+    margin-bottom: 5px;
+}
+.register_info_show {
+    font-size: 12px;
+    padding-left: 5px;
+}
 </style>

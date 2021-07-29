@@ -258,6 +258,13 @@ public:
                         tmp.vichele_id = itr.get_pri_id();
                         tmp.finish = itr.finish == 0?false:true;
                         tmp.deliver_timestamp = itr.deliver_timestamp;
+                        auto register_info = itr.get_children<pa_sql_driver_register>("belong_vichele");
+                        if (register_info)
+                        {
+                            tmp.register_number = register_info->number;
+                            tmp.register_timestamp = register_info->timestamp;
+                            tmp.enter_location = register_info->enter_location;
+                        }
                         _return.vichele_info.push_back(tmp);
                     }
                 }
@@ -1502,6 +1509,70 @@ public:
                 _return.phone = driver->phone;
             }
         }
+    }
+
+    std::string pri_urlencode(const std::string &str)
+    {
+        char *cmem = new char[str.size() * 3 + 1];
+        memset(cmem, 0, str.size() * 3 + 1);
+        for (size_t i = 0; i < str.size(); ++i)
+        {
+            sprintf(cmem + i * 3, "%%%02X", (unsigned char)str[i]);
+        }
+        std::string sencoded(cmem);
+        delete[] cmem;
+        cmem = NULL;
+        return sencoded;
+    }
+    void stub_huoda_server_proc_register(const std::string &id)
+    {
+        auto location_after_encode = pri_urlencode("北门");
+        PA_DATAOPT_rest_req("localhost/pa_rest/push_arrange/" + id + "S?token=CD15F88C5B264BBEA1B9F0008597640D&order=1&location=" + location_after_encode);
+    }
+    void stub_huoda_server_proc_unregister(const std::string &id)
+    {
+        PA_DATAOPT_rest_req("localhost/pa_rest/push_arrange/" + id + "S?token=CD15F88C5B264BBEA1B9F0008597640D&order=0");
+    }
+
+    virtual bool register_vichele(const std::string &silent_id, const int64_t vichele_id)
+    {
+        bool ret = false;
+        if (silent_id.length() > 0)
+        {
+            auto driver = sqlite_orm::search_record<pa_sql_driver>("silent_id == '%s'", silent_id.c_str());
+            auto vichele_info = sqlite_orm::search_record<pa_sql_single_vichele>(vichele_id);
+            if (driver && vichele_info)
+            {
+                auto real_driver = vichele_info->get_parent<pa_sql_driver>("driver");
+                if (real_driver && real_driver->phone == driver->phone)
+                {
+                    stub_huoda_server_proc_register(std::to_string(vichele_info->get_pri_id()));
+                    ret = true;
+                }
+            }
+        }
+
+        return ret;
+    }
+    virtual bool unregister_vichele(const std::string &silent_id, const int64_t vichele_id)
+    {
+        bool ret = false;
+        if (silent_id.length() > 0)
+        {
+            auto driver = sqlite_orm::search_record<pa_sql_driver>("silent_id == '%s'", silent_id.c_str());
+            auto vichele_info = sqlite_orm::search_record<pa_sql_single_vichele>(vichele_id);
+            if (driver && vichele_info)
+            {
+                auto real_driver = vichele_info->get_parent<pa_sql_driver>("driver");
+                if (real_driver && real_driver->phone == driver->phone)
+                {
+                    stub_huoda_server_proc_unregister(std::to_string(vichele_info->get_pri_id()));
+                    ret = true;
+                }
+            }
+        }
+
+        return ret;
     }
 };
 

@@ -14,11 +14,19 @@
         <van-divider>今日承运信息</van-divider>
         <div class="single_record_show" v-for="(single_trans, index) in trans_info" :key="index">
             <van-cell :title="single_trans.main_vichele + '-' + single_trans.behind_vichele" :value="single_trans.stuff_name" :label="single_trans.order_company" />
-            <van-cell :title="single_trans.destination_company" center :value="single_trans.destination_address">
+            <van-cell :title="single_trans.destination_company" center>
                 <template #right-icon>
-                    <van-button type="info" size="small" @click="register_vichele(single_trans.destination_company)">排号</van-button>
+                    <div style="margin-left:8px;">
+                        <van-button v-if="!single_trans.is_registered" type="info" size="small" @click="register_vichele(single_trans.destination_company, single_trans.id)">排号</van-button>
+                        <van-button v-else type="danger" size="small" @click="unregister_vichele(single_trans.id)">取消排号</van-button>
+                    </div>
                 </template>
+                <div v-if="single_trans.is_registered">
+                    进厂序号：{{single_trans.register_number}}
+                </div>
             </van-cell>
+            <van-cell title="详细地址：" :value="single_trans.destination_address"></van-cell>
+            <van-cell v-if="single_trans.is_registered" title="进厂位置：" :value="single_trans.enter_location" :label="'签到时间:' + single_trans.register_timestamp"></van-cell>
         </div>
     </div>
     <div v-if="need_bind_info">
@@ -64,7 +72,9 @@ import {
     Cell,
     CellGroup
 } from 'vant';
-import { CountDown } from 'vant';
+import {
+    CountDown
+} from 'vant';
 
 Vue.use(CountDown);
 Vue.use(Cell);
@@ -166,15 +176,28 @@ export default {
             return resultPromise
         },
 
-        register_vichele: async function (_dest) {
+        unregister_vichele: function (_id) {
+            var vue_this = this;
+            vue_this.$call_remote_process("stuff_plan_management", 'unregister_vichele', [vue_this.$cookies.get('driver_silent_id'), _id]).then(function (resp) {
+                if (resp) {
+                    vue_this.$router.go(0);
+                }
+            });
+        },
+
+        register_vichele: async function (_dest, _id) {
             var vue_this = this;
 
             try {
                 var current_position = await vue_this.getLocation();
                 var config_position = await vue_this.$call_remote_process("company_management", "get_company_position_config", [_dest]);
                 var real_distance = vue_this.getDistance(current_position.coords.latitude, current_position.coords.longitude, config_position.lat, config_position.lag);
-                if (config_position.distance >= real_distance) {
-                    vue_this.$toast("签到成功");
+                if (config_position.distance > 0) {
+                    var resp = await vue_this.$call_remote_process("stuff_plan_management", 'register_vichele', [vue_this.$cookies.get('driver_silent_id'), _id]);
+                    if (resp) {
+                        vue_this.$toast("签到成功");
+                        vue_this.$router.go(0);
+                    }
                 } else {
                     vue_this.$toast("当前距离厂区" + (real_distance / 1000).toFixed(1) + "公里, 请在" + config_position.distance / 1000 + "公里范围内签到");
                 }

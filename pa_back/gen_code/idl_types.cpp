@@ -2308,6 +2308,18 @@ void vichele_in_plan::__set_finish(const bool val) {
 void vichele_in_plan::__set_deliver_timestamp(const std::string& val) {
   this->deliver_timestamp = val;
 }
+
+void vichele_in_plan::__set_register_timestamp(const std::string& val) {
+  this->register_timestamp = val;
+}
+
+void vichele_in_plan::__set_register_number(const std::string& val) {
+  this->register_number = val;
+}
+
+void vichele_in_plan::__set_enter_location(const std::string& val) {
+  this->enter_location = val;
+}
 std::ostream& operator<<(std::ostream& out, const vichele_in_plan& obj)
 {
   obj.printTo(out);
@@ -2416,6 +2428,30 @@ uint32_t vichele_in_plan::read(::apache::thrift::protocol::TProtocol* iprot) {
           xfer += iprot->skip(ftype);
         }
         break;
+      case 11:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->register_timestamp);
+          this->__isset.register_timestamp = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 12:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->register_number);
+          this->__isset.register_number = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 13:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->enter_location);
+          this->__isset.enter_location = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
       default:
         xfer += iprot->skip(ftype);
         break;
@@ -2473,6 +2509,18 @@ uint32_t vichele_in_plan::write(::apache::thrift::protocol::TProtocol* oprot) co
   xfer += oprot->writeString(this->deliver_timestamp);
   xfer += oprot->writeFieldEnd();
 
+  xfer += oprot->writeFieldBegin("register_timestamp", ::apache::thrift::protocol::T_STRING, 11);
+  xfer += oprot->writeString(this->register_timestamp);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("register_number", ::apache::thrift::protocol::T_STRING, 12);
+  xfer += oprot->writeString(this->register_number);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("enter_location", ::apache::thrift::protocol::T_STRING, 13);
+  xfer += oprot->writeString(this->enter_location);
+  xfer += oprot->writeFieldEnd();
+
   xfer += oprot->writeFieldStop();
   xfer += oprot->writeStructEnd();
   return xfer;
@@ -2490,6 +2538,9 @@ void swap(vichele_in_plan &a, vichele_in_plan &b) {
   swap(a.vichele_id, b.vichele_id);
   swap(a.finish, b.finish);
   swap(a.deliver_timestamp, b.deliver_timestamp);
+  swap(a.register_timestamp, b.register_timestamp);
+  swap(a.register_number, b.register_number);
+  swap(a.enter_location, b.enter_location);
   swap(a.__isset, b.__isset);
 }
 
@@ -2504,6 +2555,9 @@ vichele_in_plan::vichele_in_plan(const vichele_in_plan& other30) {
   vichele_id = other30.vichele_id;
   finish = other30.finish;
   deliver_timestamp = other30.deliver_timestamp;
+  register_timestamp = other30.register_timestamp;
+  register_number = other30.register_number;
+  enter_location = other30.enter_location;
   __isset = other30.__isset;
 }
 vichele_in_plan& vichele_in_plan::operator=(const vichele_in_plan& other31) {
@@ -2517,6 +2571,9 @@ vichele_in_plan& vichele_in_plan::operator=(const vichele_in_plan& other31) {
   vichele_id = other31.vichele_id;
   finish = other31.finish;
   deliver_timestamp = other31.deliver_timestamp;
+  register_timestamp = other31.register_timestamp;
+  register_number = other31.register_number;
+  enter_location = other31.enter_location;
   __isset = other31.__isset;
   return *this;
 }
@@ -2533,6 +2590,9 @@ void vichele_in_plan::printTo(std::ostream& out) const {
   out << ", " << "vichele_id=" << to_string(vichele_id);
   out << ", " << "finish=" << to_string(finish);
   out << ", " << "deliver_timestamp=" << to_string(deliver_timestamp);
+  out << ", " << "register_timestamp=" << to_string(register_timestamp);
+  out << ", " << "register_number=" << to_string(register_number);
+  out << ", " << "enter_location=" << to_string(enter_location);
   out << ")";
 }
 

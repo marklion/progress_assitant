@@ -28,6 +28,7 @@ class open_api_managementIf {
   virtual void get_token(std::string& _return, const std::string& email, const std::string& password) = 0;
   virtual void get_today_transformation(std::vector<api_transformation_info> & _return, const std::string& token) = 0;
   virtual bool push_exit_count(const int64_t id, const double count, const bool is_sale, const std::string& token) = 0;
+  virtual bool push_arrange(const int64_t id, const std::string& order, const bool is_sale, const std::string& location, const std::string& token) = 0;
 };
 
 class open_api_managementIfFactory {
@@ -76,6 +77,10 @@ class open_api_managementNull : virtual public open_api_managementIf {
     return;
   }
   bool push_exit_count(const int64_t /* id */, const double /* count */, const bool /* is_sale */, const std::string& /* token */) {
+    bool _return = false;
+    return _return;
+  }
+  bool push_arrange(const int64_t /* id */, const std::string& /* order */, const bool /* is_sale */, const std::string& /* location */, const std::string& /* token */) {
     bool _return = false;
     return _return;
   }
@@ -809,6 +814,146 @@ class open_api_management_push_exit_count_presult {
 
 };
 
+typedef struct _open_api_management_push_arrange_args__isset {
+  _open_api_management_push_arrange_args__isset() : id(false), order(false), is_sale(false), location(false), token(false) {}
+  bool id :1;
+  bool order :1;
+  bool is_sale :1;
+  bool location :1;
+  bool token :1;
+} _open_api_management_push_arrange_args__isset;
+
+class open_api_management_push_arrange_args {
+ public:
+
+  open_api_management_push_arrange_args(const open_api_management_push_arrange_args&);
+  open_api_management_push_arrange_args& operator=(const open_api_management_push_arrange_args&);
+  open_api_management_push_arrange_args() : id(0), order(), is_sale(0), location(), token() {
+  }
+
+  virtual ~open_api_management_push_arrange_args() noexcept;
+  int64_t id;
+  std::string order;
+  bool is_sale;
+  std::string location;
+  std::string token;
+
+  _open_api_management_push_arrange_args__isset __isset;
+
+  void __set_id(const int64_t val);
+
+  void __set_order(const std::string& val);
+
+  void __set_is_sale(const bool val);
+
+  void __set_location(const std::string& val);
+
+  void __set_token(const std::string& val);
+
+  bool operator == (const open_api_management_push_arrange_args & rhs) const
+  {
+    if (!(id == rhs.id))
+      return false;
+    if (!(order == rhs.order))
+      return false;
+    if (!(is_sale == rhs.is_sale))
+      return false;
+    if (!(location == rhs.location))
+      return false;
+    if (!(token == rhs.token))
+      return false;
+    return true;
+  }
+  bool operator != (const open_api_management_push_arrange_args &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const open_api_management_push_arrange_args & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+
+class open_api_management_push_arrange_pargs {
+ public:
+
+
+  virtual ~open_api_management_push_arrange_pargs() noexcept;
+  const int64_t* id;
+  const std::string* order;
+  const bool* is_sale;
+  const std::string* location;
+  const std::string* token;
+
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _open_api_management_push_arrange_result__isset {
+  _open_api_management_push_arrange_result__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _open_api_management_push_arrange_result__isset;
+
+class open_api_management_push_arrange_result {
+ public:
+
+  open_api_management_push_arrange_result(const open_api_management_push_arrange_result&);
+  open_api_management_push_arrange_result& operator=(const open_api_management_push_arrange_result&);
+  open_api_management_push_arrange_result() : success(0) {
+  }
+
+  virtual ~open_api_management_push_arrange_result() noexcept;
+  bool success;
+  gen_exp e;
+
+  _open_api_management_push_arrange_result__isset __isset;
+
+  void __set_success(const bool val);
+
+  void __set_e(const gen_exp& val);
+
+  bool operator == (const open_api_management_push_arrange_result & rhs) const
+  {
+    if (!(success == rhs.success))
+      return false;
+    if (!(e == rhs.e))
+      return false;
+    return true;
+  }
+  bool operator != (const open_api_management_push_arrange_result &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const open_api_management_push_arrange_result & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _open_api_management_push_arrange_presult__isset {
+  _open_api_management_push_arrange_presult__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _open_api_management_push_arrange_presult__isset;
+
+class open_api_management_push_arrange_presult {
+ public:
+
+
+  virtual ~open_api_management_push_arrange_presult() noexcept;
+  bool* success;
+  gen_exp e;
+
+  _open_api_management_push_arrange_presult__isset __isset;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+
+};
+
 class open_api_managementClient : virtual public open_api_managementIf {
  public:
   open_api_managementClient(std::shared_ptr< ::apache::thrift::protocol::TProtocol> prot) {
@@ -852,6 +997,9 @@ class open_api_managementClient : virtual public open_api_managementIf {
   bool push_exit_count(const int64_t id, const double count, const bool is_sale, const std::string& token);
   void send_push_exit_count(const int64_t id, const double count, const bool is_sale, const std::string& token);
   bool recv_push_exit_count();
+  bool push_arrange(const int64_t id, const std::string& order, const bool is_sale, const std::string& location, const std::string& token);
+  void send_push_arrange(const int64_t id, const std::string& order, const bool is_sale, const std::string& location, const std::string& token);
+  bool recv_push_arrange();
  protected:
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> piprot_;
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> poprot_;
@@ -873,6 +1021,7 @@ class open_api_managementProcessor : public ::apache::thrift::TDispatchProcessor
   void process_get_token(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
   void process_get_today_transformation(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
   void process_push_exit_count(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
+  void process_push_arrange(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
  public:
   open_api_managementProcessor(::std::shared_ptr<open_api_managementIf> iface) :
     iface_(iface) {
@@ -882,6 +1031,7 @@ class open_api_managementProcessor : public ::apache::thrift::TDispatchProcessor
     processMap_["get_token"] = &open_api_managementProcessor::process_get_token;
     processMap_["get_today_transformation"] = &open_api_managementProcessor::process_get_today_transformation;
     processMap_["push_exit_count"] = &open_api_managementProcessor::process_push_exit_count;
+    processMap_["push_arrange"] = &open_api_managementProcessor::process_push_arrange;
   }
 
   virtual ~open_api_managementProcessor() {}
@@ -966,6 +1116,15 @@ class open_api_managementMultiface : virtual public open_api_managementIf {
     return ifaces_[i]->push_exit_count(id, count, is_sale, token);
   }
 
+  bool push_arrange(const int64_t id, const std::string& order, const bool is_sale, const std::string& location, const std::string& token) {
+    size_t sz = ifaces_.size();
+    size_t i = 0;
+    for (; i < (sz - 1); ++i) {
+      ifaces_[i]->push_arrange(id, order, is_sale, location, token);
+    }
+    return ifaces_[i]->push_arrange(id, order, is_sale, location, token);
+  }
+
 };
 
 // The 'concurrent' client is a thread safe client that correctly handles
@@ -1016,6 +1175,9 @@ class open_api_managementConcurrentClient : virtual public open_api_managementIf
   bool push_exit_count(const int64_t id, const double count, const bool is_sale, const std::string& token);
   int32_t send_push_exit_count(const int64_t id, const double count, const bool is_sale, const std::string& token);
   bool recv_push_exit_count(const int32_t seqid);
+  bool push_arrange(const int64_t id, const std::string& order, const bool is_sale, const std::string& location, const std::string& token);
+  int32_t send_push_arrange(const int64_t id, const std::string& order, const bool is_sale, const std::string& location, const std::string& token);
+  bool recv_push_arrange(const int32_t seqid);
  protected:
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> piprot_;
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> poprot_;

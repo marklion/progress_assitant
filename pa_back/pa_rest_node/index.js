@@ -76,6 +76,25 @@ app.get('/pa_rest/push_count/:id', async (req, res) => {
     res.send(ret);
 });
 
+app.get('/pa_rest/push_arrange/:id', async (req, res) => {
+    var id = req.params.id;
+    var token = req.query.token;
+    var order = req.query.order;
+    var location = req.query.location?req.query.location:'';
+    var ret = { err_msg: '无权限' };
+    var real_id = parseInt(id);
+    var is_sale = id[id.length - 1] == 'S' ? true : false;
+    try {
+        var resp = await request_rpc("open_api_management", 'push_arrange', [real_id, order, is_sale, location, token]);
+        if (resp) {
+            ret.err_msg = "";
+        }
+    } catch (error) {
+        ret = { err_msg: error.msg };
+    }
+    res.send(ret);
+});
+
 app.listen(port, () => {
     console.log('rest is runing');
 });

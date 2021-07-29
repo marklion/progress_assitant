@@ -972,7 +972,7 @@ void swap(pay_confirm_info &a, pay_confirm_info &b);
 std::ostream& operator<<(std::ostream& out, const pay_confirm_info& obj);
 
 typedef struct _vichele_in_plan__isset {
-  _vichele_in_plan__isset() : main_vichele(false), behind_vichele(false), driver_name(false), driver_phone(false), count(false), drop_address(false), use_for(false), vichele_id(false), finish(false), deliver_timestamp(false) {}
+  _vichele_in_plan__isset() : main_vichele(false), behind_vichele(false), driver_name(false), driver_phone(false), count(false), drop_address(false), use_for(false), vichele_id(false), finish(false), deliver_timestamp(false), register_timestamp(false), register_number(false), enter_location(false) {}
   bool main_vichele :1;
   bool behind_vichele :1;
   bool driver_name :1;
@@ -983,6 +983,9 @@ typedef struct _vichele_in_plan__isset {
   bool vichele_id :1;
   bool finish :1;
   bool deliver_timestamp :1;
+  bool register_timestamp :1;
+  bool register_number :1;
+  bool enter_location :1;
 } _vichele_in_plan__isset;
 
 class vichele_in_plan : public virtual ::apache::thrift::TBase {
@@ -990,7 +993,7 @@ class vichele_in_plan : public virtual ::apache::thrift::TBase {
 
   vichele_in_plan(const vichele_in_plan&);
   vichele_in_plan& operator=(const vichele_in_plan&);
-  vichele_in_plan() : main_vichele(), behind_vichele(), driver_name(), driver_phone(), count(0), drop_address(), use_for(), vichele_id(0), finish(0), deliver_timestamp() {
+  vichele_in_plan() : main_vichele(), behind_vichele(), driver_name(), driver_phone(), count(0), drop_address(), use_for(), vichele_id(0), finish(0), deliver_timestamp(), register_timestamp(), register_number(), enter_location() {
   }
 
   virtual ~vichele_in_plan() noexcept;
@@ -1004,6 +1007,9 @@ class vichele_in_plan : public virtual ::apache::thrift::TBase {
   int64_t vichele_id;
   bool finish;
   std::string deliver_timestamp;
+  std::string register_timestamp;
+  std::string register_number;
+  std::string enter_location;
 
   _vichele_in_plan__isset __isset;
 
@@ -1027,6 +1033,12 @@ class vichele_in_plan : public virtual ::apache::thrift::TBase {
 
   void __set_deliver_timestamp(const std::string& val);
 
+  void __set_register_timestamp(const std::string& val);
+
+  void __set_register_number(const std::string& val);
+
+  void __set_enter_location(const std::string& val);
+
   bool operator == (const vichele_in_plan & rhs) const
   {
     if (!(main_vichele == rhs.main_vichele))
@@ -1048,6 +1060,12 @@ class vichele_in_plan : public virtual ::apache::thrift::TBase {
     if (!(finish == rhs.finish))
       return false;
     if (!(deliver_timestamp == rhs.deliver_timestamp))
+      return false;
+    if (!(register_timestamp == rhs.register_timestamp))
+      return false;
+    if (!(register_number == rhs.register_number))
+      return false;
+    if (!(enter_location == rhs.enter_location))
       return false;
     return true;
   }

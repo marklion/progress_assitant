@@ -1373,11 +1373,14 @@ class vichele_in_plan(object):
      - vichele_id
      - finish
      - deliver_timestamp
+     - register_timestamp
+     - register_number
+     - enter_location
 
     """
 
 
-    def __init__(self, main_vichele=None, behind_vichele=None, driver_name=None, driver_phone=None, count=None, drop_address=None, use_for=None, vichele_id=None, finish=None, deliver_timestamp=None,):
+    def __init__(self, main_vichele=None, behind_vichele=None, driver_name=None, driver_phone=None, count=None, drop_address=None, use_for=None, vichele_id=None, finish=None, deliver_timestamp=None, register_timestamp=None, register_number=None, enter_location=None,):
         self.main_vichele = main_vichele
         self.behind_vichele = behind_vichele
         self.driver_name = driver_name
@@ -1388,6 +1391,9 @@ class vichele_in_plan(object):
         self.vichele_id = vichele_id
         self.finish = finish
         self.deliver_timestamp = deliver_timestamp
+        self.register_timestamp = register_timestamp
+        self.register_number = register_number
+        self.enter_location = enter_location
 
     def read(self, iprot):
         if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
@@ -1448,6 +1454,21 @@ class vichele_in_plan(object):
                     self.deliver_timestamp = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
                 else:
                     iprot.skip(ftype)
+            elif fid == 11:
+                if ftype == TType.STRING:
+                    self.register_timestamp = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 12:
+                if ftype == TType.STRING:
+                    self.register_number = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 13:
+                if ftype == TType.STRING:
+                    self.enter_location = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
             else:
                 iprot.skip(ftype)
             iprot.readFieldEnd()
@@ -1497,6 +1518,18 @@ class vichele_in_plan(object):
         if self.deliver_timestamp is not None:
             oprot.writeFieldBegin('deliver_timestamp', TType.STRING, 10)
             oprot.writeString(self.deliver_timestamp.encode('utf-8') if sys.version_info[0] == 2 else self.deliver_timestamp)
+            oprot.writeFieldEnd()
+        if self.register_timestamp is not None:
+            oprot.writeFieldBegin('register_timestamp', TType.STRING, 11)
+            oprot.writeString(self.register_timestamp.encode('utf-8') if sys.version_info[0] == 2 else self.register_timestamp)
+            oprot.writeFieldEnd()
+        if self.register_number is not None:
+            oprot.writeFieldBegin('register_number', TType.STRING, 12)
+            oprot.writeString(self.register_number.encode('utf-8') if sys.version_info[0] == 2 else self.register_number)
+            oprot.writeFieldEnd()
+        if self.enter_location is not None:
+            oprot.writeFieldBegin('enter_location', TType.STRING, 13)
+            oprot.writeString(self.enter_location.encode('utf-8') if sys.version_info[0] == 2 else self.enter_location)
             oprot.writeFieldEnd()
         oprot.writeFieldStop()
         oprot.writeStructEnd()
@@ -3214,6 +3247,9 @@ vichele_in_plan.thrift_spec = (
     (8, TType.I64, 'vichele_id', None, None, ),  # 8
     (9, TType.BOOL, 'finish', None, None, ),  # 9
     (10, TType.STRING, 'deliver_timestamp', 'UTF8', None, ),  # 10
+    (11, TType.STRING, 'register_timestamp', 'UTF8', None, ),  # 11
+    (12, TType.STRING, 'register_number', 'UTF8', None, ),  # 12
+    (13, TType.STRING, 'enter_location', 'UTF8', None, ),  # 13
 )
 all_structs.append(stuff_plan)
 stuff_plan.thrift_spec = (
