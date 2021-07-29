@@ -30,6 +30,7 @@ if len(sys.argv) <= 1 or sys.argv[1] == '--help':
     print('  string get_token(string email, string password)')
     print('   get_today_transformation(string token)')
     print('  bool push_exit_count(i64 id, double count, bool is_sale, string token)')
+    print('  bool push_arrange(i64 id, string order, bool is_sale, string location, string token)')
     print('')
     sys.exit(0)
 
@@ -144,6 +145,12 @@ elif cmd == 'push_exit_count':
         print('push_exit_count requires 4 args')
         sys.exit(1)
     pp.pprint(client.push_exit_count(eval(args[0]), eval(args[1]), eval(args[2]), args[3],))
+
+elif cmd == 'push_arrange':
+    if len(args) != 5:
+        print('push_arrange requires 5 args')
+        sys.exit(1)
+    pp.pprint(client.push_arrange(eval(args[0]), args[1], eval(args[2]), args[3], args[4],))
 
 else:
     print('Unrecognized method %s' % cmd)

@@ -179,6 +179,9 @@ struct vichele_in_plan {
     8:i64 vichele_id,
     9:bool finish,
     10:string deliver_timestamp,
+    11:string register_timestamp,
+    12:string register_number,
+    13:string enter_location,
 }
 
 struct stuff_plan {
@@ -302,6 +305,8 @@ service stuff_plan_management {
     bool verify_driver_silent_login(1:string silent_id) throws (1:gen_exp e),
     list<today_driver_info> get_today_driver_info(1:string silent_id) throws (1:gen_exp e),
     driver_detail_info get_driver_info(1:string silent_id) throws (1:gen_exp e),
+    bool register_vichele(1:string silent_id, 2:i64 vichele_id) throws (1:gen_exp e),
+    bool unregister_vichele(1:string silent_id, 2:i64 vichele_id) throws (1:gen_exp e),
 }
 
 struct api_extra_transformation {
@@ -329,6 +334,7 @@ service open_api_management {
     string get_token(1:string email, 2:string password) throws (1:gen_exp e),
     list<api_transformation_info> get_today_transformation(1:string token) throws (1:gen_exp e),
     bool push_exit_count(1:i64 id, 2:double count, 3:bool is_sale, 4:string token) throws (1:gen_exp e),
+    bool push_arrange(1:i64 id, 2:string order, 3:bool is_sale, 4:string location, 5:string token) throws (1:gen_exp e),
 }
 
 struct vichele_stay_alone {

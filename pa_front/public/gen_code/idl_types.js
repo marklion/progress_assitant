@@ -1446,6 +1446,9 @@ vichele_in_plan = class {
     this.vichele_id = null;
     this.finish = null;
     this.deliver_timestamp = null;
+    this.register_timestamp = null;
+    this.register_number = null;
+    this.enter_location = null;
     if (args) {
       if (args.main_vichele !== undefined && args.main_vichele !== null) {
         this.main_vichele = args.main_vichele;
@@ -1476,6 +1479,15 @@ vichele_in_plan = class {
       }
       if (args.deliver_timestamp !== undefined && args.deliver_timestamp !== null) {
         this.deliver_timestamp = args.deliver_timestamp;
+      }
+      if (args.register_timestamp !== undefined && args.register_timestamp !== null) {
+        this.register_timestamp = args.register_timestamp;
+      }
+      if (args.register_number !== undefined && args.register_number !== null) {
+        this.register_number = args.register_number;
+      }
+      if (args.enter_location !== undefined && args.enter_location !== null) {
+        this.enter_location = args.enter_location;
       }
     }
   }
@@ -1560,6 +1572,27 @@ vichele_in_plan = class {
           input.skip(ftype);
         }
         break;
+        case 11:
+        if (ftype == Thrift.Type.STRING) {
+          this.register_timestamp = input.readString().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        case 12:
+        if (ftype == Thrift.Type.STRING) {
+          this.register_number = input.readString().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        case 13:
+        if (ftype == Thrift.Type.STRING) {
+          this.enter_location = input.readString().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
         default:
           input.skip(ftype);
       }
@@ -1619,6 +1652,21 @@ vichele_in_plan = class {
     if (this.deliver_timestamp !== null && this.deliver_timestamp !== undefined) {
       output.writeFieldBegin('deliver_timestamp', Thrift.Type.STRING, 10);
       output.writeString(this.deliver_timestamp);
+      output.writeFieldEnd();
+    }
+    if (this.register_timestamp !== null && this.register_timestamp !== undefined) {
+      output.writeFieldBegin('register_timestamp', Thrift.Type.STRING, 11);
+      output.writeString(this.register_timestamp);
+      output.writeFieldEnd();
+    }
+    if (this.register_number !== null && this.register_number !== undefined) {
+      output.writeFieldBegin('register_number', Thrift.Type.STRING, 12);
+      output.writeString(this.register_number);
+      output.writeFieldEnd();
+    }
+    if (this.enter_location !== null && this.enter_location !== undefined) {
+      output.writeFieldBegin('enter_location', Thrift.Type.STRING, 13);
+      output.writeString(this.enter_location);
       output.writeFieldEnd();
     }
     output.writeFieldStop();

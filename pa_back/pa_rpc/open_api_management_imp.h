@@ -260,7 +260,7 @@ public:
             }
             bool has_permission = false;
             auto stuff_info = plan->get_parent<pa_sql_stuff_info>("belong_stuff");
-            if (stuff_info)
+            if (stuff_info && plan->status == 3)
             {
                 auto target_company = stuff_info->get_parent<pa_sql_company>("belong_company");
                 auto api_user = sqlite_orm::search_record<pa_sql_api_user>("token == '%s'", token.c_str());
@@ -290,6 +290,85 @@ public:
                 PA_RETURN_MSG(OPEN_API_MSG_NO_PERMISSION);
             }
             
+        }
+
+        return ret;
+    }
+
+    virtual bool push_arrange(const int64_t id, const std::string &order, const bool is_sale, const std::string &location, const std::string &token)
+    {
+        bool ret = false;
+        log_audit_basedon_token(token, __FUNCTION__);
+        if (is_sale)
+        {
+            auto single_vichele = sqlite_orm::search_record<pa_sql_single_vichele>("PRI_ID == %ld AND finish == 0", id);
+            if (!single_vichele)
+            {
+                PA_RETURN_MSG(OPEN_API_MSG_VICHELE_NOT_EXIST);
+            }
+            auto plan = single_vichele->get_parent<pa_sql_plan>("belong_plan");
+            if (!plan)
+            {
+                PA_RETURN_MSG(OPEN_API_MSG_VICHELE_NOT_EXIST);
+            }
+            bool has_permission = false;
+            auto stuff_info = plan->get_parent<pa_sql_stuff_info>("belong_stuff");
+            if (stuff_info && plan->status == 3)
+            {
+                auto target_company = stuff_info->get_parent<pa_sql_company>("belong_company");
+                auto api_user = sqlite_orm::search_record<pa_sql_api_user>("token == '%s'", token.c_str());
+                if (api_user)
+                {
+                    auto api_user_company = api_user->get_parent<pa_sql_company>("belong_company");
+                    if (api_user_company && target_company && api_user_company->get_pri_id() == target_company->get_pri_id())
+                    {
+                        has_permission = true;
+                    }
+                }
+            }
+            if (has_permission)
+            {
+                auto exist_register_info = single_vichele->get_children<pa_sql_driver_register>("belong_vichele");
+                if (exist_register_info)
+                {
+                    if (order == "0")
+                    {
+                        exist_register_info->remove_record();
+                        ret = true;
+                    }
+                    else
+                    {
+                        exist_register_info->enter_location = location;
+                        exist_register_info->number = order;
+                        exist_register_info->timestamp = PA_DATAOPT_current_time();
+                        ret = exist_register_info->update_record();
+                    }
+                }
+                else
+                {
+                    if (order == "0")
+                    {
+                        ret = true;
+                    }
+                    else
+                    {
+                        pa_sql_driver_register tmp;
+                        tmp.enter_location = location;
+                        tmp.number = order;
+                        tmp.timestamp = PA_DATAOPT_current_time();
+                        tmp.set_parent(*single_vichele, "belong_vichele");
+                        ret = tmp.insert_record();
+                    }
+                }
+            }
+            else
+            {
+                PA_RETURN_MSG(OPEN_API_MSG_NO_PERMISSION);
+            }
+        }
+        else
+        {
+            PA_RETURN_MSG(OPEN_API_MSG_NO_PERMISSION);
         }
 
         return ret;

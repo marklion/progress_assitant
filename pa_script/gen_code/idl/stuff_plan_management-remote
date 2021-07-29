@@ -58,6 +58,8 @@ if len(sys.argv) <= 1 or sys.argv[1] == '--help':
     print('  bool verify_driver_silent_login(string silent_id)')
     print('   get_today_driver_info(string silent_id)')
     print('  driver_detail_info get_driver_info(string silent_id)')
+    print('  bool register_vichele(string silent_id, i64 vichele_id)')
+    print('  bool unregister_vichele(string silent_id, i64 vichele_id)')
     print('')
     sys.exit(0)
 
@@ -340,6 +342,18 @@ elif cmd == 'get_driver_info':
         print('get_driver_info requires 1 args')
         sys.exit(1)
     pp.pprint(client.get_driver_info(args[0],))
+
+elif cmd == 'register_vichele':
+    if len(args) != 2:
+        print('register_vichele requires 2 args')
+        sys.exit(1)
+    pp.pprint(client.register_vichele(args[0], eval(args[1]),))
+
+elif cmd == 'unregister_vichele':
+    if len(args) != 2:
+        print('unregister_vichele requires 2 args')
+        sys.exit(1)
+    pp.pprint(client.unregister_vichele(args[0], eval(args[1]),))
 
 else:
     print('Unrecognized method %s' % cmd)
