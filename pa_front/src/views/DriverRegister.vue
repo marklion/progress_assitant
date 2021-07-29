@@ -193,6 +193,7 @@ export default {
                 var config_position = await vue_this.$call_remote_process("company_management", "get_company_position_config", [_dest]);
                 var real_distance = vue_this.getDistance(current_position.coords.latitude, current_position.coords.longitude, config_position.lat, config_position.lag);
                 if (config_position.distance > real_distance) {
+
                     var resp = await vue_this.$call_remote_process("stuff_plan_management", 'register_vichele', [vue_this.$cookies.get('driver_silent_id'), _id]);
                     if (resp) {
                         vue_this.$toast("签到成功");
