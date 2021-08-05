@@ -1944,6 +1944,7 @@ var plan_status = module.exports.plan_status = function(args) {
   this.conflict_reason = null;
   this.status_prompt = null;
   this.is_cancel = null;
+  this.stuff_type = null;
   if (args) {
     if (args.plan_id !== undefined && args.plan_id !== null) {
       this.plan_id = args.plan_id;
@@ -1962,6 +1963,9 @@ var plan_status = module.exports.plan_status = function(args) {
     }
     if (args.is_cancel !== undefined && args.is_cancel !== null) {
       this.is_cancel = args.is_cancel;
+    }
+    if (args.stuff_type !== undefined && args.stuff_type !== null) {
+      this.stuff_type = args.stuff_type;
     }
   }
 };
@@ -2018,6 +2022,13 @@ plan_status.prototype.read = function(input) {
         input.skip(ftype);
       }
       break;
+      case 7:
+      if (ftype == Thrift.Type.STRING) {
+        this.stuff_type = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
       default:
         input.skip(ftype);
     }
@@ -2057,6 +2068,11 @@ plan_status.prototype.write = function(output) {
   if (this.is_cancel !== null && this.is_cancel !== undefined) {
     output.writeFieldBegin('is_cancel', Thrift.Type.BOOL, 6);
     output.writeBool(this.is_cancel);
+    output.writeFieldEnd();
+  }
+  if (this.stuff_type !== null && this.stuff_type !== undefined) {
+    output.writeFieldBegin('stuff_type', Thrift.Type.STRING, 7);
+    output.writeString(this.stuff_type);
     output.writeFieldEnd();
   }
   output.writeFieldStop();

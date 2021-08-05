@@ -146,6 +146,11 @@ public:
                 }
                 tmp.status_prompt = status_prompt;
                 tmp.is_cancel = itr.is_cancel == 0?false:true;
+                auto stuff_info = itr.get_parent<pa_sql_stuff_info>("belong_stuff");
+                if (stuff_info)
+                {
+                    tmp.stuff_type = stuff_info->name;
+                }
 
                 _return.push_back(tmp);
             }
@@ -392,6 +397,11 @@ public:
                     }
                     tmp.status_prompt = status_prompt;
                     tmp.is_cancel = single_plan.is_cancel == 0?false:true;
+                    auto stuff_info = single_plan.get_parent<pa_sql_stuff_info>("belong_stuff");
+                    if (stuff_info)
+                    {
+                        tmp.stuff_type = stuff_info->name;
+                    }
                     _return.push_back(tmp);
                 }
             }

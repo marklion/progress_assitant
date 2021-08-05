@@ -224,5 +224,18 @@ public:
             }
         }
     }
+
+    virtual void get_related_stuff(std::vector<std::string> &_return, const std::string &ssid)
+    {
+        auto all_plan_group_by_stuff = PA_RPC_get_all_plans_related_by_user(ssid, "PRI_ID != 0 GROUP BY belong_stuff_ext_key");
+        for (auto &itr:all_plan_group_by_stuff)
+        {
+            auto stuff_info = itr.get_parent<pa_sql_stuff_info>("belong_stuff");
+            if (stuff_info)
+            {
+                _return.push_back(stuff_info->name);
+            }
+        }
+    }
 };
 #endif // _STUFF_INFO_IMP_H_

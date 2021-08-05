@@ -7,6 +7,7 @@
                     <van-dropdown-menu>
                         <van-dropdown-item v-model="date_filter" :options="date_option" @close="recheck_list" />
                         <van-dropdown-item v-model="cancel_filter" :options="cancel_option" @change="recheck_list" />
+                        <van-dropdown-item v-model="stuff_type_filter" :options="stuff_type_option" @change="recheck_list" />
                     </van-dropdown-menu>
                 </van-col>
                 <van-col :span="4">
@@ -148,6 +149,10 @@ export default {
                 text: '本周进厂',
                 value: 3
             }],
+            stuff_type_option: [{
+                text: '所有货品',
+                value: 0,
+            }],
             cancel_option: [{
                 text: '只看有效计划',
                 value: 0,
@@ -156,6 +161,7 @@ export default {
                 value: 1,
             }],
             date_filter: 0,
+            stuff_type_filter: 0,
             show_export_email: false,
             export_file_path: '',
             cancel_filter: 0,
@@ -237,6 +243,19 @@ export default {
                     filter_ret.push(element);
                 } else if (!element.is_cancel) {
                     filter_ret.push(element);
+                }
+            });
+            var stuff_filter_ret = filter_ret;
+            filter_ret = [];
+            stuff_filter_ret.forEach(element => {
+                if (vue_this.stuff_type_filter == 0) {
+                    filter_ret.push(element);
+                } else {
+                    if (vue_this.stuff_type_option.find(itr => {
+                            return itr.value == vue_this.stuff_type_filter
+                        }).text == element.stuff_type) {
+                        filter_ret.push(element);
+                    }
                 }
             });
             return filter_ret;
@@ -351,6 +370,15 @@ export default {
     },
     beforeMount: function () {
         this.init_orders();
+        var vue_this = this;
+        vue_this.$call_remote_process("stuff_info", 'get_related_stuff', [vue_this.$cookies.get('pa_ssid')]).then(function (resp) {
+            resp.forEach(element => {
+                vue_this.stuff_type_option.push({
+                    text: element,
+                    value: vue_this.stuff_type_option.length
+                });
+            });
+        });
 
     },
     activated() {
