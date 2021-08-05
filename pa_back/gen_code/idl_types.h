@@ -1212,13 +1212,14 @@ void swap(stuff_plan &a, stuff_plan &b);
 std::ostream& operator<<(std::ostream& out, const stuff_plan& obj);
 
 typedef struct _plan_status__isset {
-  _plan_status__isset() : plan_id(false), status(false), plan_time(false), conflict_reason(false), status_prompt(false), is_cancel(false) {}
+  _plan_status__isset() : plan_id(false), status(false), plan_time(false), conflict_reason(false), status_prompt(false), is_cancel(false), stuff_type(false) {}
   bool plan_id :1;
   bool status :1;
   bool plan_time :1;
   bool conflict_reason :1;
   bool status_prompt :1;
   bool is_cancel :1;
+  bool stuff_type :1;
 } _plan_status__isset;
 
 class plan_status : public virtual ::apache::thrift::TBase {
@@ -1226,7 +1227,7 @@ class plan_status : public virtual ::apache::thrift::TBase {
 
   plan_status(const plan_status&);
   plan_status& operator=(const plan_status&);
-  plan_status() : plan_id(0), status(0), plan_time(0), conflict_reason(), status_prompt(), is_cancel(0) {
+  plan_status() : plan_id(0), status(0), plan_time(0), conflict_reason(), status_prompt(), is_cancel(0), stuff_type() {
   }
 
   virtual ~plan_status() noexcept;
@@ -1236,6 +1237,7 @@ class plan_status : public virtual ::apache::thrift::TBase {
   std::string conflict_reason;
   std::string status_prompt;
   bool is_cancel;
+  std::string stuff_type;
 
   _plan_status__isset __isset;
 
@@ -1251,6 +1253,8 @@ class plan_status : public virtual ::apache::thrift::TBase {
 
   void __set_is_cancel(const bool val);
 
+  void __set_stuff_type(const std::string& val);
+
   bool operator == (const plan_status & rhs) const
   {
     if (!(plan_id == rhs.plan_id))
@@ -1264,6 +1268,8 @@ class plan_status : public virtual ::apache::thrift::TBase {
     if (!(status_prompt == rhs.status_prompt))
       return false;
     if (!(is_cancel == rhs.is_cancel))
+      return false;
+    if (!(stuff_type == rhs.stuff_type))
       return false;
     return true;
   }

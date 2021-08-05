@@ -31,6 +31,7 @@ if len(sys.argv) <= 1 or sys.argv[1] == '--help':
     print('  bool cancle_company_follow_stuff(string company_name, i64 type_id, string ssid)')
     print('   get_follow_stuff_by_company(string company_name)')
     print('   get_follow_company_by_stuff(i64 type_id, string ssid)')
+    print('   get_related_stuff(string ssid)')
     print('')
     sys.exit(0)
 
@@ -151,6 +152,12 @@ elif cmd == 'get_follow_company_by_stuff':
         print('get_follow_company_by_stuff requires 2 args')
         sys.exit(1)
     pp.pprint(client.get_follow_company_by_stuff(eval(args[0]), args[1],))
+
+elif cmd == 'get_related_stuff':
+    if len(args) != 1:
+        print('get_related_stuff requires 1 args')
+        sys.exit(1)
+    pp.pprint(client.get_related_stuff(args[0],))
 
 else:
     print('Unrecognized method %s' % cmd)

@@ -3016,6 +3016,10 @@ void plan_status::__set_status_prompt(const std::string& val) {
 void plan_status::__set_is_cancel(const bool val) {
   this->is_cancel = val;
 }
+
+void plan_status::__set_stuff_type(const std::string& val) {
+  this->stuff_type = val;
+}
 std::ostream& operator<<(std::ostream& out, const plan_status& obj)
 {
   obj.printTo(out);
@@ -3092,6 +3096,14 @@ uint32_t plan_status::read(::apache::thrift::protocol::TProtocol* iprot) {
           xfer += iprot->skip(ftype);
         }
         break;
+      case 7:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->stuff_type);
+          this->__isset.stuff_type = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
       default:
         xfer += iprot->skip(ftype);
         break;
@@ -3133,6 +3145,10 @@ uint32_t plan_status::write(::apache::thrift::protocol::TProtocol* oprot) const 
   xfer += oprot->writeBool(this->is_cancel);
   xfer += oprot->writeFieldEnd();
 
+  xfer += oprot->writeFieldBegin("stuff_type", ::apache::thrift::protocol::T_STRING, 7);
+  xfer += oprot->writeString(this->stuff_type);
+  xfer += oprot->writeFieldEnd();
+
   xfer += oprot->writeFieldStop();
   xfer += oprot->writeStructEnd();
   return xfer;
@@ -3146,6 +3162,7 @@ void swap(plan_status &a, plan_status &b) {
   swap(a.conflict_reason, b.conflict_reason);
   swap(a.status_prompt, b.status_prompt);
   swap(a.is_cancel, b.is_cancel);
+  swap(a.stuff_type, b.stuff_type);
   swap(a.__isset, b.__isset);
 }
 
@@ -3156,6 +3173,7 @@ plan_status::plan_status(const plan_status& other40) {
   conflict_reason = other40.conflict_reason;
   status_prompt = other40.status_prompt;
   is_cancel = other40.is_cancel;
+  stuff_type = other40.stuff_type;
   __isset = other40.__isset;
 }
 plan_status& plan_status::operator=(const plan_status& other41) {
@@ -3165,6 +3183,7 @@ plan_status& plan_status::operator=(const plan_status& other41) {
   conflict_reason = other41.conflict_reason;
   status_prompt = other41.status_prompt;
   is_cancel = other41.is_cancel;
+  stuff_type = other41.stuff_type;
   __isset = other41.__isset;
   return *this;
 }
@@ -3177,6 +3196,7 @@ void plan_status::printTo(std::ostream& out) const {
   out << ", " << "conflict_reason=" << to_string(conflict_reason);
   out << ", " << "status_prompt=" << to_string(status_prompt);
   out << ", " << "is_cancel=" << to_string(is_cancel);
+  out << ", " << "stuff_type=" << to_string(stuff_type);
   out << ")";
 }
 

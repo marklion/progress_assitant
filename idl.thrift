@@ -156,6 +156,7 @@ service stuff_info {
     bool cancle_company_follow_stuff(1:string company_name, 2:i64 type_id, 3:string ssid) throws (1:gen_exp e),
     list<stuff_detail> get_follow_stuff_by_company(1:string company_name) throws (1:gen_exp e),
     list<string> get_follow_company_by_stuff(1:i64 type_id, 2:string ssid) throws (1:gen_exp e),
+    list<string> get_related_stuff(1:string ssid) throws (1:gen_exp e),
 }
 
 struct plan_confirm_info {
@@ -209,6 +210,7 @@ struct plan_status {
     4:string conflict_reason,
     5:string status_prompt,
     6:bool is_cancel,
+    7:string stuff_type,
 }
 
 struct plan_number_id{

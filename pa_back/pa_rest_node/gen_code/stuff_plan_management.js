@@ -255,13 +255,13 @@ stuff_plan_management_get_created_plan_result.prototype.read = function(input) {
       case 0:
       if (ftype == Thrift.Type.LIST) {
         this.success = [];
-        var _rtmp371 = input.readListBegin();
-        var _size70 = _rtmp371.size || 0;
-        for (var _i72 = 0; _i72 < _size70; ++_i72) {
-          var elem73 = null;
-          elem73 = new ttypes.plan_status();
-          elem73.read(input);
-          this.success.push(elem73);
+        var _rtmp376 = input.readListBegin();
+        var _size75 = _rtmp376.size || 0;
+        for (var _i77 = 0; _i77 < _size75; ++_i77) {
+          var elem78 = null;
+          elem78 = new ttypes.plan_status();
+          elem78.read(input);
+          this.success.push(elem78);
         }
         input.readListEnd();
       } else {
@@ -290,10 +290,10 @@ stuff_plan_management_get_created_plan_result.prototype.write = function(output)
   if (this.success !== null && this.success !== undefined) {
     output.writeFieldBegin('success', Thrift.Type.LIST, 0);
     output.writeListBegin(Thrift.Type.STRUCT, this.success.length);
-    for (var iter74 in this.success) {
-      if (this.success.hasOwnProperty(iter74)) {
-        iter74 = this.success[iter74];
-        iter74.write(output);
+    for (var iter79 in this.success) {
+      if (this.success.hasOwnProperty(iter79)) {
+        iter79 = this.success[iter79];
+        iter79.write(output);
       }
     }
     output.writeListEnd();
@@ -402,13 +402,13 @@ stuff_plan_management_get_company_plan_result.prototype.read = function(input) {
       case 0:
       if (ftype == Thrift.Type.LIST) {
         this.success = [];
-        var _rtmp376 = input.readListBegin();
-        var _size75 = _rtmp376.size || 0;
-        for (var _i77 = 0; _i77 < _size75; ++_i77) {
-          var elem78 = null;
-          elem78 = new ttypes.plan_status();
-          elem78.read(input);
-          this.success.push(elem78);
+        var _rtmp381 = input.readListBegin();
+        var _size80 = _rtmp381.size || 0;
+        for (var _i82 = 0; _i82 < _size80; ++_i82) {
+          var elem83 = null;
+          elem83 = new ttypes.plan_status();
+          elem83.read(input);
+          this.success.push(elem83);
         }
         input.readListEnd();
       } else {
@@ -437,10 +437,10 @@ stuff_plan_management_get_company_plan_result.prototype.write = function(output)
   if (this.success !== null && this.success !== undefined) {
     output.writeFieldBegin('success', Thrift.Type.LIST, 0);
     output.writeListBegin(Thrift.Type.STRUCT, this.success.length);
-    for (var iter79 in this.success) {
-      if (this.success.hasOwnProperty(iter79)) {
-        iter79 = this.success[iter79];
-        iter79.write(output);
+    for (var iter84 in this.success) {
+      if (this.success.hasOwnProperty(iter84)) {
+        iter84 = this.success[iter84];
+        iter84.write(output);
       }
     }
     output.writeListEnd();
@@ -1049,13 +1049,13 @@ stuff_plan_management_confirm_deliver_args.prototype.read = function(input) {
       case 3:
       if (ftype == Thrift.Type.LIST) {
         this.deliver_infos = [];
-        var _rtmp381 = input.readListBegin();
-        var _size80 = _rtmp381.size || 0;
-        for (var _i82 = 0; _i82 < _size80; ++_i82) {
-          var elem83 = null;
-          elem83 = new ttypes.deliver_info();
-          elem83.read(input);
-          this.deliver_infos.push(elem83);
+        var _rtmp386 = input.readListBegin();
+        var _size85 = _rtmp386.size || 0;
+        for (var _i87 = 0; _i87 < _size85; ++_i87) {
+          var elem88 = null;
+          elem88 = new ttypes.deliver_info();
+          elem88.read(input);
+          this.deliver_infos.push(elem88);
         }
         input.readListEnd();
       } else {
@@ -1093,10 +1093,10 @@ stuff_plan_management_confirm_deliver_args.prototype.write = function(output) {
   if (this.deliver_infos !== null && this.deliver_infos !== undefined) {
     output.writeFieldBegin('deliver_infos', Thrift.Type.LIST, 3);
     output.writeListBegin(Thrift.Type.STRUCT, this.deliver_infos.length);
-    for (var iter84 in this.deliver_infos) {
-      if (this.deliver_infos.hasOwnProperty(iter84)) {
-        iter84 = this.deliver_infos[iter84];
-        iter84.write(output);
+    for (var iter89 in this.deliver_infos) {
+      if (this.deliver_infos.hasOwnProperty(iter89)) {
+        iter89 = this.deliver_infos[iter89];
+        iter89.write(output);
       }
     }
     output.writeListEnd();
@@ -1213,12 +1213,12 @@ stuff_plan_management_export_plan_args.prototype.read = function(input) {
       case 2:
       if (ftype == Thrift.Type.LIST) {
         this.plan_ids = [];
-        var _rtmp386 = input.readListBegin();
-        var _size85 = _rtmp386.size || 0;
-        for (var _i87 = 0; _i87 < _size85; ++_i87) {
-          var elem88 = null;
-          elem88 = input.readI64();
-          this.plan_ids.push(elem88);
+        var _rtmp391 = input.readListBegin();
+        var _size90 = _rtmp391.size || 0;
+        for (var _i92 = 0; _i92 < _size90; ++_i92) {
+          var elem93 = null;
+          elem93 = input.readI64();
+          this.plan_ids.push(elem93);
         }
         input.readListEnd();
       } else {
@@ -1244,10 +1244,10 @@ stuff_plan_management_export_plan_args.prototype.write = function(output) {
   if (this.plan_ids !== null && this.plan_ids !== undefined) {
     output.writeFieldBegin('plan_ids', Thrift.Type.LIST, 2);
     output.writeListBegin(Thrift.Type.I64, this.plan_ids.length);
-    for (var iter89 in this.plan_ids) {
-      if (this.plan_ids.hasOwnProperty(iter89)) {
-        iter89 = this.plan_ids[iter89];
-        output.writeI64(iter89);
+    for (var iter94 in this.plan_ids) {
+      if (this.plan_ids.hasOwnProperty(iter94)) {
+        iter94 = this.plan_ids[iter94];
+        output.writeI64(iter94);
       }
     }
     output.writeListEnd();
@@ -1979,13 +1979,13 @@ stuff_plan_management_search_plan_by_driver_phone_result.prototype.read = functi
       case 0:
       if (ftype == Thrift.Type.LIST) {
         this.success = [];
-        var _rtmp391 = input.readListBegin();
-        var _size90 = _rtmp391.size || 0;
-        for (var _i92 = 0; _i92 < _size90; ++_i92) {
-          var elem93 = null;
-          elem93 = new ttypes.plan_number_id();
-          elem93.read(input);
-          this.success.push(elem93);
+        var _rtmp396 = input.readListBegin();
+        var _size95 = _rtmp396.size || 0;
+        for (var _i97 = 0; _i97 < _size95; ++_i97) {
+          var elem98 = null;
+          elem98 = new ttypes.plan_number_id();
+          elem98.read(input);
+          this.success.push(elem98);
         }
         input.readListEnd();
       } else {
@@ -2014,10 +2014,10 @@ stuff_plan_management_search_plan_by_driver_phone_result.prototype.write = funct
   if (this.success !== null && this.success !== undefined) {
     output.writeFieldBegin('success', Thrift.Type.LIST, 0);
     output.writeListBegin(Thrift.Type.STRUCT, this.success.length);
-    for (var iter94 in this.success) {
-      if (this.success.hasOwnProperty(iter94)) {
-        iter94 = this.success[iter94];
-        iter94.write(output);
+    for (var iter99 in this.success) {
+      if (this.success.hasOwnProperty(iter99)) {
+        iter99 = this.success[iter99];
+        iter99.write(output);
       }
     }
     output.writeListEnd();
@@ -2113,13 +2113,13 @@ stuff_plan_management_get_status_rule_result.prototype.read = function(input) {
       case 0:
       if (ftype == Thrift.Type.LIST) {
         this.success = [];
-        var _rtmp396 = input.readListBegin();
-        var _size95 = _rtmp396.size || 0;
-        for (var _i97 = 0; _i97 < _size95; ++_i97) {
-          var elem98 = null;
-          elem98 = new ttypes.plan_status_rule();
-          elem98.read(input);
-          this.success.push(elem98);
+        var _rtmp3101 = input.readListBegin();
+        var _size100 = _rtmp3101.size || 0;
+        for (var _i102 = 0; _i102 < _size100; ++_i102) {
+          var elem103 = null;
+          elem103 = new ttypes.plan_status_rule();
+          elem103.read(input);
+          this.success.push(elem103);
         }
         input.readListEnd();
       } else {
@@ -2148,10 +2148,10 @@ stuff_plan_management_get_status_rule_result.prototype.write = function(output) 
   if (this.success !== null && this.success !== undefined) {
     output.writeFieldBegin('success', Thrift.Type.LIST, 0);
     output.writeListBegin(Thrift.Type.STRUCT, this.success.length);
-    for (var iter99 in this.success) {
-      if (this.success.hasOwnProperty(iter99)) {
-        iter99 = this.success[iter99];
-        iter99.write(output);
+    for (var iter104 in this.success) {
+      if (this.success.hasOwnProperty(iter104)) {
+        iter104 = this.success[iter104];
+        iter104.write(output);
       }
     }
     output.writeListEnd();
@@ -2260,12 +2260,12 @@ stuff_plan_management_get_change_rule_result.prototype.read = function(input) {
       case 0:
       if (ftype == Thrift.Type.LIST) {
         this.success = [];
-        var _rtmp3101 = input.readListBegin();
-        var _size100 = _rtmp3101.size || 0;
-        for (var _i102 = 0; _i102 < _size100; ++_i102) {
-          var elem103 = null;
-          elem103 = input.readBool();
-          this.success.push(elem103);
+        var _rtmp3106 = input.readListBegin();
+        var _size105 = _rtmp3106.size || 0;
+        for (var _i107 = 0; _i107 < _size105; ++_i107) {
+          var elem108 = null;
+          elem108 = input.readBool();
+          this.success.push(elem108);
         }
         input.readListEnd();
       } else {
@@ -2294,10 +2294,10 @@ stuff_plan_management_get_change_rule_result.prototype.write = function(output) 
   if (this.success !== null && this.success !== undefined) {
     output.writeFieldBegin('success', Thrift.Type.LIST, 0);
     output.writeListBegin(Thrift.Type.BOOL, this.success.length);
-    for (var iter104 in this.success) {
-      if (this.success.hasOwnProperty(iter104)) {
-        iter104 = this.success[iter104];
-        output.writeBool(iter104);
+    for (var iter109 in this.success) {
+      if (this.success.hasOwnProperty(iter109)) {
+        iter109 = this.success[iter109];
+        output.writeBool(iter109);
       }
     }
     output.writeListEnd();
@@ -2473,13 +2473,13 @@ stuff_plan_management_get_today_statistics_result.prototype.read = function(inpu
       case 0:
       if (ftype == Thrift.Type.LIST) {
         this.success = [];
-        var _rtmp3106 = input.readListBegin();
-        var _size105 = _rtmp3106.size || 0;
-        for (var _i107 = 0; _i107 < _size105; ++_i107) {
-          var elem108 = null;
-          elem108 = new ttypes.vichele_statistics();
-          elem108.read(input);
-          this.success.push(elem108);
+        var _rtmp3111 = input.readListBegin();
+        var _size110 = _rtmp3111.size || 0;
+        for (var _i112 = 0; _i112 < _size110; ++_i112) {
+          var elem113 = null;
+          elem113 = new ttypes.vichele_statistics();
+          elem113.read(input);
+          this.success.push(elem113);
         }
         input.readListEnd();
       } else {
@@ -2508,10 +2508,10 @@ stuff_plan_management_get_today_statistics_result.prototype.write = function(out
   if (this.success !== null && this.success !== undefined) {
     output.writeFieldBegin('success', Thrift.Type.LIST, 0);
     output.writeListBegin(Thrift.Type.STRUCT, this.success.length);
-    for (var iter109 in this.success) {
-      if (this.success.hasOwnProperty(iter109)) {
-        iter109 = this.success[iter109];
-        iter109.write(output);
+    for (var iter114 in this.success) {
+      if (this.success.hasOwnProperty(iter114)) {
+        iter114 = this.success[iter114];
+        iter114.write(output);
       }
     }
     output.writeListEnd();
@@ -3045,13 +3045,13 @@ stuff_plan_management_search_plan_by_vichele_number_result.prototype.read = func
       case 0:
       if (ftype == Thrift.Type.LIST) {
         this.success = [];
-        var _rtmp3111 = input.readListBegin();
-        var _size110 = _rtmp3111.size || 0;
-        for (var _i112 = 0; _i112 < _size110; ++_i112) {
-          var elem113 = null;
-          elem113 = new ttypes.vichele_search_result();
-          elem113.read(input);
-          this.success.push(elem113);
+        var _rtmp3116 = input.readListBegin();
+        var _size115 = _rtmp3116.size || 0;
+        for (var _i117 = 0; _i117 < _size115; ++_i117) {
+          var elem118 = null;
+          elem118 = new ttypes.vichele_search_result();
+          elem118.read(input);
+          this.success.push(elem118);
         }
         input.readListEnd();
       } else {
@@ -3080,10 +3080,10 @@ stuff_plan_management_search_plan_by_vichele_number_result.prototype.write = fun
   if (this.success !== null && this.success !== undefined) {
     output.writeFieldBegin('success', Thrift.Type.LIST, 0);
     output.writeListBegin(Thrift.Type.STRUCT, this.success.length);
-    for (var iter114 in this.success) {
-      if (this.success.hasOwnProperty(iter114)) {
-        iter114 = this.success[iter114];
-        iter114.write(output);
+    for (var iter119 in this.success) {
+      if (this.success.hasOwnProperty(iter119)) {
+        iter119 = this.success[iter119];
+        iter119.write(output);
       }
     }
     output.writeListEnd();
@@ -3179,13 +3179,13 @@ stuff_plan_management_get_tomorrow_statistics_result.prototype.read = function(i
       case 0:
       if (ftype == Thrift.Type.LIST) {
         this.success = [];
-        var _rtmp3116 = input.readListBegin();
-        var _size115 = _rtmp3116.size || 0;
-        for (var _i117 = 0; _i117 < _size115; ++_i117) {
-          var elem118 = null;
-          elem118 = new ttypes.vichele_statistics();
-          elem118.read(input);
-          this.success.push(elem118);
+        var _rtmp3121 = input.readListBegin();
+        var _size120 = _rtmp3121.size || 0;
+        for (var _i122 = 0; _i122 < _size120; ++_i122) {
+          var elem123 = null;
+          elem123 = new ttypes.vichele_statistics();
+          elem123.read(input);
+          this.success.push(elem123);
         }
         input.readListEnd();
       } else {
@@ -3214,10 +3214,10 @@ stuff_plan_management_get_tomorrow_statistics_result.prototype.write = function(
   if (this.success !== null && this.success !== undefined) {
     output.writeFieldBegin('success', Thrift.Type.LIST, 0);
     output.writeListBegin(Thrift.Type.STRUCT, this.success.length);
-    for (var iter119 in this.success) {
-      if (this.success.hasOwnProperty(iter119)) {
-        iter119 = this.success[iter119];
-        iter119.write(output);
+    for (var iter124 in this.success) {
+      if (this.success.hasOwnProperty(iter124)) {
+        iter124 = this.success[iter124];
+        iter124.write(output);
       }
     }
     output.writeListEnd();
@@ -3647,12 +3647,12 @@ stuff_plan_management_cancel_vichele_from_plan_args.prototype.read = function(in
       case 2:
       if (ftype == Thrift.Type.LIST) {
         this.ids = [];
-        var _rtmp3121 = input.readListBegin();
-        var _size120 = _rtmp3121.size || 0;
-        for (var _i122 = 0; _i122 < _size120; ++_i122) {
-          var elem123 = null;
-          elem123 = input.readI64();
-          this.ids.push(elem123);
+        var _rtmp3126 = input.readListBegin();
+        var _size125 = _rtmp3126.size || 0;
+        for (var _i127 = 0; _i127 < _size125; ++_i127) {
+          var elem128 = null;
+          elem128 = input.readI64();
+          this.ids.push(elem128);
         }
         input.readListEnd();
       } else {
@@ -3678,10 +3678,10 @@ stuff_plan_management_cancel_vichele_from_plan_args.prototype.write = function(o
   if (this.ids !== null && this.ids !== undefined) {
     output.writeFieldBegin('ids', Thrift.Type.LIST, 2);
     output.writeListBegin(Thrift.Type.I64, this.ids.length);
-    for (var iter124 in this.ids) {
-      if (this.ids.hasOwnProperty(iter124)) {
-        iter124 = this.ids[iter124];
-        output.writeI64(iter124);
+    for (var iter129 in this.ids) {
+      if (this.ids.hasOwnProperty(iter129)) {
+        iter129 = this.ids[iter129];
+        output.writeI64(iter129);
       }
     }
     output.writeListEnd();
@@ -4462,13 +4462,13 @@ stuff_plan_management_get_today_driver_info_result.prototype.read = function(inp
       case 0:
       if (ftype == Thrift.Type.LIST) {
         this.success = [];
-        var _rtmp3126 = input.readListBegin();
-        var _size125 = _rtmp3126.size || 0;
-        for (var _i127 = 0; _i127 < _size125; ++_i127) {
-          var elem128 = null;
-          elem128 = new ttypes.today_driver_info();
-          elem128.read(input);
-          this.success.push(elem128);
+        var _rtmp3131 = input.readListBegin();
+        var _size130 = _rtmp3131.size || 0;
+        for (var _i132 = 0; _i132 < _size130; ++_i132) {
+          var elem133 = null;
+          elem133 = new ttypes.today_driver_info();
+          elem133.read(input);
+          this.success.push(elem133);
         }
         input.readListEnd();
       } else {
@@ -4497,10 +4497,10 @@ stuff_plan_management_get_today_driver_info_result.prototype.write = function(ou
   if (this.success !== null && this.success !== undefined) {
     output.writeFieldBegin('success', Thrift.Type.LIST, 0);
     output.writeListBegin(Thrift.Type.STRUCT, this.success.length);
-    for (var iter129 in this.success) {
-      if (this.success.hasOwnProperty(iter129)) {
-        iter129 = this.success[iter129];
-        iter129.write(output);
+    for (var iter134 in this.success) {
+      if (this.success.hasOwnProperty(iter134)) {
+        iter134 = this.success[iter134];
+        iter134.write(output);
       }
     }
     output.writeListEnd();

@@ -1778,17 +1778,19 @@ class plan_status(object):
      - conflict_reason
      - status_prompt
      - is_cancel
+     - stuff_type
 
     """
 
 
-    def __init__(self, plan_id=None, status=None, plan_time=None, conflict_reason=None, status_prompt=None, is_cancel=None,):
+    def __init__(self, plan_id=None, status=None, plan_time=None, conflict_reason=None, status_prompt=None, is_cancel=None, stuff_type=None,):
         self.plan_id = plan_id
         self.status = status
         self.plan_time = plan_time
         self.conflict_reason = conflict_reason
         self.status_prompt = status_prompt
         self.is_cancel = is_cancel
+        self.stuff_type = stuff_type
 
     def read(self, iprot):
         if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
@@ -1829,6 +1831,11 @@ class plan_status(object):
                     self.is_cancel = iprot.readBool()
                 else:
                     iprot.skip(ftype)
+            elif fid == 7:
+                if ftype == TType.STRING:
+                    self.stuff_type = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
             else:
                 iprot.skip(ftype)
             iprot.readFieldEnd()
@@ -1862,6 +1869,10 @@ class plan_status(object):
         if self.is_cancel is not None:
             oprot.writeFieldBegin('is_cancel', TType.BOOL, 6)
             oprot.writeBool(self.is_cancel)
+            oprot.writeFieldEnd()
+        if self.stuff_type is not None:
+            oprot.writeFieldBegin('stuff_type', TType.STRING, 7)
+            oprot.writeString(self.stuff_type.encode('utf-8') if sys.version_info[0] == 2 else self.stuff_type)
             oprot.writeFieldEnd()
         oprot.writeFieldStop()
         oprot.writeStructEnd()
@@ -3279,6 +3290,7 @@ plan_status.thrift_spec = (
     (4, TType.STRING, 'conflict_reason', 'UTF8', None, ),  # 4
     (5, TType.STRING, 'status_prompt', 'UTF8', None, ),  # 5
     (6, TType.BOOL, 'is_cancel', None, None, ),  # 6
+    (7, TType.STRING, 'stuff_type', 'UTF8', None, ),  # 7
 )
 all_structs.append(plan_number_id)
 plan_number_id.thrift_spec = (
