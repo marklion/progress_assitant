@@ -777,7 +777,7 @@ public:
         {
             query = "a_side";
         }
-        auto all_contract = company->get_all_children<pa_sql_contract>(query);
+        auto all_contract = company->get_all_children<pa_sql_contract>(query, "PRI_ID != 0 ORDER BY PRI_ID DESC");
         for (auto &itr:all_contract)
         {
             itr.update_status();
