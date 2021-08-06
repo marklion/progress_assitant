@@ -23,7 +23,7 @@
             <van-cell icon="records" is-link :to="{name:'Statistics'}" title="交易统计"></van-cell>
             <van-cell icon="info-o" is-link :to="{name:'BoundInfo'}" title="公司数据"></van-cell>
             <van-cell icon="sign" is-link :to="{name:'Contract'}" title="合同管理"></van-cell>
-            <van-cell icon="notes-o" is-link :to="{name:'CompanyExtraVichele'}" title="采购进厂"></van-cell>
+            <van-cell v-if="!$store.state.userinfo.buyer" icon="notes-o" is-link :to="{name:'CompanyExtraVichele'}" title="采购进厂"></van-cell>
         </van-cell-group>
         <van-divider />
 
