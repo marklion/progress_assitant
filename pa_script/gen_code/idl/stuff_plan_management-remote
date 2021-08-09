@@ -25,8 +25,8 @@ if len(sys.argv) <= 1 or sys.argv[1] == '--help':
     print('')
     print('Functions:')
     print('  i64 create_plan(stuff_plan plan, string ssid, string proxy_company)')
-    print('   get_created_plan(string ssid, i64 anchor)')
-    print('   get_company_plan(string ssid, i64 anchor)')
+    print('   get_created_plan(string ssid, i64 anchor, i64 status, string stuff_name)')
+    print('   get_company_plan(string ssid, i64 anchor, i64 status, string stuff_name)')
     print('  stuff_plan get_plan(i64 plan_id)')
     print('  bool update_plan(stuff_plan plan, string ssid)')
     print('  bool confirm_plan(i64 plan_id, string ssid, string comment)')
@@ -60,6 +60,7 @@ if len(sys.argv) <= 1 or sys.argv[1] == '--help':
     print('  driver_detail_info get_driver_info(string silent_id)')
     print('  bool register_vichele(string silent_id, i64 vichele_id)')
     print('  bool unregister_vichele(string silent_id, i64 vichele_id)')
+    print('  bool multi_confirm_plan(string ssid,  plan_ids)')
     print('')
     sys.exit(0)
 
@@ -146,16 +147,16 @@ if cmd == 'create_plan':
     pp.pprint(client.create_plan(eval(args[0]), args[1], args[2],))
 
 elif cmd == 'get_created_plan':
-    if len(args) != 2:
-        print('get_created_plan requires 2 args')
+    if len(args) != 4:
+        print('get_created_plan requires 4 args')
         sys.exit(1)
-    pp.pprint(client.get_created_plan(args[0], eval(args[1]),))
+    pp.pprint(client.get_created_plan(args[0], eval(args[1]), eval(args[2]), args[3],))
 
 elif cmd == 'get_company_plan':
-    if len(args) != 2:
-        print('get_company_plan requires 2 args')
+    if len(args) != 4:
+        print('get_company_plan requires 4 args')
         sys.exit(1)
-    pp.pprint(client.get_company_plan(args[0], eval(args[1]),))
+    pp.pprint(client.get_company_plan(args[0], eval(args[1]), eval(args[2]), args[3],))
 
 elif cmd == 'get_plan':
     if len(args) != 1:
@@ -354,6 +355,12 @@ elif cmd == 'unregister_vichele':
         print('unregister_vichele requires 2 args')
         sys.exit(1)
     pp.pprint(client.unregister_vichele(args[0], eval(args[1]),))
+
+elif cmd == 'multi_confirm_plan':
+    if len(args) != 2:
+        print('multi_confirm_plan requires 2 args')
+        sys.exit(1)
+    pp.pprint(client.multi_confirm_plan(args[0], eval(args[1]),))
 
 else:
     print('Unrecognized method %s' % cmd)

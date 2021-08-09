@@ -16,17 +16,34 @@
             </van-row>
             <van-notice-bar left-icon="info-o" :text="'今日计划 ' + company_plan_brief.today_plan_count + '单 ' + company_plan_brief.today_vichele_count + '辆车  明日计划 ' + company_plan_brief.tomorrow_plan_count + '单 ' + company_plan_brief.tomorrow_vichele_count + '辆车'" />
             <van-search v-model="vichele_number_search" label="车牌号" placeholder="请输入车牌号搜索当天计划" @search="search_plan_by_vichele_number" />
-            <van-row v-if="show_export">
-                <van-col :span="8">
-                    <van-button type="info" block @click="select_all_plan">全选</van-button>
-                </van-col>
-                <van-col :span="8">
-                    <van-button type="danger" block @click="cancle_select">取消多选</van-button>
-                </van-col>
-                <van-col :span="8">
-                    <van-button type="primary" block @click="show_export_prompt">导出所选{{item_need_export.length}}项</van-button>
-                </van-col>
-            </van-row>
+            <div v-if="show_export">
+                <van-row v-if="$store.state.userinfo.buyer">
+                    <van-col :span="8">
+                        <van-button type="info" block @click="select_all_plan">全选</van-button>
+                    </van-col>
+                    <van-col :span="8">
+                        <van-button type="danger" block @click="cancle_select">取消多选</van-button>
+                    </van-col>
+                    <van-col :span="8">
+                        <van-button type="primary" block @click="show_export_prompt">导出所选{{item_need_export.length}}项</van-button>
+                    </van-col>
+                </van-row>
+                <van-row v-else>
+                    <van-col :span="6">
+                        <van-button type="info" block @click="select_all_plan">全选</van-button>
+                    </van-col>
+                    <van-col :span="6">
+                        <van-button type="danger" block @click="cancle_select">取消多选</van-button>
+                    </van-col>
+                    <van-col :span="6">
+                        <van-button type="primary" block @click="show_export_prompt">导出所选{{item_need_export.length}}项</van-button>
+                    </van-col>
+                    <van-col :span="6">
+                        <van-button type="warning" block @click="multi_confirm">批量确认{{item_need_export.length}}项</van-button>
+                    </van-col>
+                </van-row>
+
+            </div>
         </van-tab>
     </van-tabs>
     <van-list ref="order_list" v-model="lazy_loading" :finished="lazy_finished" finished-text="没有更多了" @load="get_orders_by_ancher">
@@ -292,6 +309,14 @@ export default {
                 vue_this.show_export_file = true;
             });
         },
+        multi_confirm: function () {
+            var vue_this = this;
+            vue_this.$call_remote_process("stuff_plan_management", "multi_confirm_plan", [vue_this.$cookies.get('pa_ssid'), vue_this.item_need_export]).then(function (resp) {
+                if (resp) {
+                    vue_this.$router.go(0);
+                }
+            });
+        },
         tab_change: function () {
             this.recheck_list();
         },
@@ -316,7 +341,12 @@ export default {
             if (vue_this.$store.state.userinfo.buyer) {
                 func = "get_created_plan";
             }
-            vue_this.$call_remote_process("stuff_plan_management", func, [vue_this.$cookies.get('pa_ssid'), vue_this.orders.length]).then(function (resp) {
+            var stuff_name = vue_this.stuff_type_option[vue_this.stuff_type_filter].text;
+            if (vue_this.stuff_type_filter == 0)
+            {
+                stuff_name = "";
+            }
+            vue_this.$call_remote_process("stuff_plan_management", func, [vue_this.$cookies.get('pa_ssid'), vue_this.orders.length, vue_this.status_name_map[vue_this.active].status, stuff_name]).then(function (resp) {
                 if (_init && _init == true) {
                     vue_this.orders = [];
                     vue_this.lazy_finished = false;
@@ -391,6 +421,8 @@ export default {
 }
 </script>
 
-<style>
-
+<style scoped>
+.multi_button {
+    width: 100%;
+}
 </style>

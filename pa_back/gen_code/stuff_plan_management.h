@@ -23,8 +23,8 @@ class stuff_plan_managementIf {
  public:
   virtual ~stuff_plan_managementIf() {}
   virtual int64_t create_plan(const stuff_plan& plan, const std::string& ssid, const std::string& proxy_company) = 0;
-  virtual void get_created_plan(std::vector<plan_status> & _return, const std::string& ssid, const int64_t anchor) = 0;
-  virtual void get_company_plan(std::vector<plan_status> & _return, const std::string& ssid, const int64_t anchor) = 0;
+  virtual void get_created_plan(std::vector<plan_status> & _return, const std::string& ssid, const int64_t anchor, const int64_t status, const std::string& stuff_name) = 0;
+  virtual void get_company_plan(std::vector<plan_status> & _return, const std::string& ssid, const int64_t anchor, const int64_t status, const std::string& stuff_name) = 0;
   virtual void get_plan(stuff_plan& _return, const int64_t plan_id) = 0;
   virtual bool update_plan(const stuff_plan& plan, const std::string& ssid) = 0;
   virtual bool confirm_plan(const int64_t plan_id, const std::string& ssid, const std::string& comment) = 0;
@@ -58,6 +58,7 @@ class stuff_plan_managementIf {
   virtual void get_driver_info(driver_detail_info& _return, const std::string& silent_id) = 0;
   virtual bool register_vichele(const std::string& silent_id, const int64_t vichele_id) = 0;
   virtual bool unregister_vichele(const std::string& silent_id, const int64_t vichele_id) = 0;
+  virtual bool multi_confirm_plan(const std::string& ssid, const std::vector<int64_t> & plan_ids) = 0;
 };
 
 class stuff_plan_managementIfFactory {
@@ -91,10 +92,10 @@ class stuff_plan_managementNull : virtual public stuff_plan_managementIf {
     int64_t _return = 0;
     return _return;
   }
-  void get_created_plan(std::vector<plan_status> & /* _return */, const std::string& /* ssid */, const int64_t /* anchor */) {
+  void get_created_plan(std::vector<plan_status> & /* _return */, const std::string& /* ssid */, const int64_t /* anchor */, const int64_t /* status */, const std::string& /* stuff_name */) {
     return;
   }
-  void get_company_plan(std::vector<plan_status> & /* _return */, const std::string& /* ssid */, const int64_t /* anchor */) {
+  void get_company_plan(std::vector<plan_status> & /* _return */, const std::string& /* ssid */, const int64_t /* anchor */, const int64_t /* status */, const std::string& /* stuff_name */) {
     return;
   }
   void get_plan(stuff_plan& /* _return */, const int64_t /* plan_id */) {
@@ -208,6 +209,10 @@ class stuff_plan_managementNull : virtual public stuff_plan_managementIf {
     return _return;
   }
   bool unregister_vichele(const std::string& /* silent_id */, const int64_t /* vichele_id */) {
+    bool _return = false;
+    return _return;
+  }
+  bool multi_confirm_plan(const std::string& /* ssid */, const std::vector<int64_t> & /* plan_ids */) {
     bool _return = false;
     return _return;
   }
@@ -340,9 +345,11 @@ class stuff_plan_management_create_plan_presult {
 };
 
 typedef struct _stuff_plan_management_get_created_plan_args__isset {
-  _stuff_plan_management_get_created_plan_args__isset() : ssid(false), anchor(false) {}
+  _stuff_plan_management_get_created_plan_args__isset() : ssid(false), anchor(false), status(false), stuff_name(false) {}
   bool ssid :1;
   bool anchor :1;
+  bool status :1;
+  bool stuff_name :1;
 } _stuff_plan_management_get_created_plan_args__isset;
 
 class stuff_plan_management_get_created_plan_args {
@@ -350,12 +357,14 @@ class stuff_plan_management_get_created_plan_args {
 
   stuff_plan_management_get_created_plan_args(const stuff_plan_management_get_created_plan_args&);
   stuff_plan_management_get_created_plan_args& operator=(const stuff_plan_management_get_created_plan_args&);
-  stuff_plan_management_get_created_plan_args() : ssid(), anchor(0) {
+  stuff_plan_management_get_created_plan_args() : ssid(), anchor(0), status(0), stuff_name() {
   }
 
   virtual ~stuff_plan_management_get_created_plan_args() noexcept;
   std::string ssid;
   int64_t anchor;
+  int64_t status;
+  std::string stuff_name;
 
   _stuff_plan_management_get_created_plan_args__isset __isset;
 
@@ -363,11 +372,19 @@ class stuff_plan_management_get_created_plan_args {
 
   void __set_anchor(const int64_t val);
 
+  void __set_status(const int64_t val);
+
+  void __set_stuff_name(const std::string& val);
+
   bool operator == (const stuff_plan_management_get_created_plan_args & rhs) const
   {
     if (!(ssid == rhs.ssid))
       return false;
     if (!(anchor == rhs.anchor))
+      return false;
+    if (!(status == rhs.status))
+      return false;
+    if (!(stuff_name == rhs.stuff_name))
       return false;
     return true;
   }
@@ -390,6 +407,8 @@ class stuff_plan_management_get_created_plan_pargs {
   virtual ~stuff_plan_management_get_created_plan_pargs() noexcept;
   const std::string* ssid;
   const int64_t* anchor;
+  const int64_t* status;
+  const std::string* stuff_name;
 
   uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
 
@@ -459,9 +478,11 @@ class stuff_plan_management_get_created_plan_presult {
 };
 
 typedef struct _stuff_plan_management_get_company_plan_args__isset {
-  _stuff_plan_management_get_company_plan_args__isset() : ssid(false), anchor(false) {}
+  _stuff_plan_management_get_company_plan_args__isset() : ssid(false), anchor(false), status(false), stuff_name(false) {}
   bool ssid :1;
   bool anchor :1;
+  bool status :1;
+  bool stuff_name :1;
 } _stuff_plan_management_get_company_plan_args__isset;
 
 class stuff_plan_management_get_company_plan_args {
@@ -469,12 +490,14 @@ class stuff_plan_management_get_company_plan_args {
 
   stuff_plan_management_get_company_plan_args(const stuff_plan_management_get_company_plan_args&);
   stuff_plan_management_get_company_plan_args& operator=(const stuff_plan_management_get_company_plan_args&);
-  stuff_plan_management_get_company_plan_args() : ssid(), anchor(0) {
+  stuff_plan_management_get_company_plan_args() : ssid(), anchor(0), status(0), stuff_name() {
   }
 
   virtual ~stuff_plan_management_get_company_plan_args() noexcept;
   std::string ssid;
   int64_t anchor;
+  int64_t status;
+  std::string stuff_name;
 
   _stuff_plan_management_get_company_plan_args__isset __isset;
 
@@ -482,11 +505,19 @@ class stuff_plan_management_get_company_plan_args {
 
   void __set_anchor(const int64_t val);
 
+  void __set_status(const int64_t val);
+
+  void __set_stuff_name(const std::string& val);
+
   bool operator == (const stuff_plan_management_get_company_plan_args & rhs) const
   {
     if (!(ssid == rhs.ssid))
       return false;
     if (!(anchor == rhs.anchor))
+      return false;
+    if (!(status == rhs.status))
+      return false;
+    if (!(stuff_name == rhs.stuff_name))
       return false;
     return true;
   }
@@ -509,6 +540,8 @@ class stuff_plan_management_get_company_plan_pargs {
   virtual ~stuff_plan_management_get_company_plan_pargs() noexcept;
   const std::string* ssid;
   const int64_t* anchor;
+  const int64_t* status;
+  const std::string* stuff_name;
 
   uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
 
@@ -4462,6 +4495,125 @@ class stuff_plan_management_unregister_vichele_presult {
 
 };
 
+typedef struct _stuff_plan_management_multi_confirm_plan_args__isset {
+  _stuff_plan_management_multi_confirm_plan_args__isset() : ssid(false), plan_ids(false) {}
+  bool ssid :1;
+  bool plan_ids :1;
+} _stuff_plan_management_multi_confirm_plan_args__isset;
+
+class stuff_plan_management_multi_confirm_plan_args {
+ public:
+
+  stuff_plan_management_multi_confirm_plan_args(const stuff_plan_management_multi_confirm_plan_args&);
+  stuff_plan_management_multi_confirm_plan_args& operator=(const stuff_plan_management_multi_confirm_plan_args&);
+  stuff_plan_management_multi_confirm_plan_args() : ssid() {
+  }
+
+  virtual ~stuff_plan_management_multi_confirm_plan_args() noexcept;
+  std::string ssid;
+  std::vector<int64_t>  plan_ids;
+
+  _stuff_plan_management_multi_confirm_plan_args__isset __isset;
+
+  void __set_ssid(const std::string& val);
+
+  void __set_plan_ids(const std::vector<int64_t> & val);
+
+  bool operator == (const stuff_plan_management_multi_confirm_plan_args & rhs) const
+  {
+    if (!(ssid == rhs.ssid))
+      return false;
+    if (!(plan_ids == rhs.plan_ids))
+      return false;
+    return true;
+  }
+  bool operator != (const stuff_plan_management_multi_confirm_plan_args &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const stuff_plan_management_multi_confirm_plan_args & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+
+class stuff_plan_management_multi_confirm_plan_pargs {
+ public:
+
+
+  virtual ~stuff_plan_management_multi_confirm_plan_pargs() noexcept;
+  const std::string* ssid;
+  const std::vector<int64_t> * plan_ids;
+
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _stuff_plan_management_multi_confirm_plan_result__isset {
+  _stuff_plan_management_multi_confirm_plan_result__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _stuff_plan_management_multi_confirm_plan_result__isset;
+
+class stuff_plan_management_multi_confirm_plan_result {
+ public:
+
+  stuff_plan_management_multi_confirm_plan_result(const stuff_plan_management_multi_confirm_plan_result&);
+  stuff_plan_management_multi_confirm_plan_result& operator=(const stuff_plan_management_multi_confirm_plan_result&);
+  stuff_plan_management_multi_confirm_plan_result() : success(0) {
+  }
+
+  virtual ~stuff_plan_management_multi_confirm_plan_result() noexcept;
+  bool success;
+  gen_exp e;
+
+  _stuff_plan_management_multi_confirm_plan_result__isset __isset;
+
+  void __set_success(const bool val);
+
+  void __set_e(const gen_exp& val);
+
+  bool operator == (const stuff_plan_management_multi_confirm_plan_result & rhs) const
+  {
+    if (!(success == rhs.success))
+      return false;
+    if (!(e == rhs.e))
+      return false;
+    return true;
+  }
+  bool operator != (const stuff_plan_management_multi_confirm_plan_result &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const stuff_plan_management_multi_confirm_plan_result & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _stuff_plan_management_multi_confirm_plan_presult__isset {
+  _stuff_plan_management_multi_confirm_plan_presult__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _stuff_plan_management_multi_confirm_plan_presult__isset;
+
+class stuff_plan_management_multi_confirm_plan_presult {
+ public:
+
+
+  virtual ~stuff_plan_management_multi_confirm_plan_presult() noexcept;
+  bool* success;
+  gen_exp e;
+
+  _stuff_plan_management_multi_confirm_plan_presult__isset __isset;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+
+};
+
 class stuff_plan_managementClient : virtual public stuff_plan_managementIf {
  public:
   stuff_plan_managementClient(std::shared_ptr< ::apache::thrift::protocol::TProtocol> prot) {
@@ -4490,11 +4642,11 @@ class stuff_plan_managementClient : virtual public stuff_plan_managementIf {
   int64_t create_plan(const stuff_plan& plan, const std::string& ssid, const std::string& proxy_company);
   void send_create_plan(const stuff_plan& plan, const std::string& ssid, const std::string& proxy_company);
   int64_t recv_create_plan();
-  void get_created_plan(std::vector<plan_status> & _return, const std::string& ssid, const int64_t anchor);
-  void send_get_created_plan(const std::string& ssid, const int64_t anchor);
+  void get_created_plan(std::vector<plan_status> & _return, const std::string& ssid, const int64_t anchor, const int64_t status, const std::string& stuff_name);
+  void send_get_created_plan(const std::string& ssid, const int64_t anchor, const int64_t status, const std::string& stuff_name);
   void recv_get_created_plan(std::vector<plan_status> & _return);
-  void get_company_plan(std::vector<plan_status> & _return, const std::string& ssid, const int64_t anchor);
-  void send_get_company_plan(const std::string& ssid, const int64_t anchor);
+  void get_company_plan(std::vector<plan_status> & _return, const std::string& ssid, const int64_t anchor, const int64_t status, const std::string& stuff_name);
+  void send_get_company_plan(const std::string& ssid, const int64_t anchor, const int64_t status, const std::string& stuff_name);
   void recv_get_company_plan(std::vector<plan_status> & _return);
   void get_plan(stuff_plan& _return, const int64_t plan_id);
   void send_get_plan(const int64_t plan_id);
@@ -4595,6 +4747,9 @@ class stuff_plan_managementClient : virtual public stuff_plan_managementIf {
   bool unregister_vichele(const std::string& silent_id, const int64_t vichele_id);
   void send_unregister_vichele(const std::string& silent_id, const int64_t vichele_id);
   bool recv_unregister_vichele();
+  bool multi_confirm_plan(const std::string& ssid, const std::vector<int64_t> & plan_ids);
+  void send_multi_confirm_plan(const std::string& ssid, const std::vector<int64_t> & plan_ids);
+  bool recv_multi_confirm_plan();
  protected:
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> piprot_;
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> poprot_;
@@ -4646,6 +4801,7 @@ class stuff_plan_managementProcessor : public ::apache::thrift::TDispatchProcess
   void process_get_driver_info(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
   void process_register_vichele(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
   void process_unregister_vichele(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
+  void process_multi_confirm_plan(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
  public:
   stuff_plan_managementProcessor(::std::shared_ptr<stuff_plan_managementIf> iface) :
     iface_(iface) {
@@ -4685,6 +4841,7 @@ class stuff_plan_managementProcessor : public ::apache::thrift::TDispatchProcess
     processMap_["get_driver_info"] = &stuff_plan_managementProcessor::process_get_driver_info;
     processMap_["register_vichele"] = &stuff_plan_managementProcessor::process_register_vichele;
     processMap_["unregister_vichele"] = &stuff_plan_managementProcessor::process_unregister_vichele;
+    processMap_["multi_confirm_plan"] = &stuff_plan_managementProcessor::process_multi_confirm_plan;
   }
 
   virtual ~stuff_plan_managementProcessor() {}
@@ -4722,23 +4879,23 @@ class stuff_plan_managementMultiface : virtual public stuff_plan_managementIf {
     return ifaces_[i]->create_plan(plan, ssid, proxy_company);
   }
 
-  void get_created_plan(std::vector<plan_status> & _return, const std::string& ssid, const int64_t anchor) {
+  void get_created_plan(std::vector<plan_status> & _return, const std::string& ssid, const int64_t anchor, const int64_t status, const std::string& stuff_name) {
     size_t sz = ifaces_.size();
     size_t i = 0;
     for (; i < (sz - 1); ++i) {
-      ifaces_[i]->get_created_plan(_return, ssid, anchor);
+      ifaces_[i]->get_created_plan(_return, ssid, anchor, status, stuff_name);
     }
-    ifaces_[i]->get_created_plan(_return, ssid, anchor);
+    ifaces_[i]->get_created_plan(_return, ssid, anchor, status, stuff_name);
     return;
   }
 
-  void get_company_plan(std::vector<plan_status> & _return, const std::string& ssid, const int64_t anchor) {
+  void get_company_plan(std::vector<plan_status> & _return, const std::string& ssid, const int64_t anchor, const int64_t status, const std::string& stuff_name) {
     size_t sz = ifaces_.size();
     size_t i = 0;
     for (; i < (sz - 1); ++i) {
-      ifaces_[i]->get_company_plan(_return, ssid, anchor);
+      ifaces_[i]->get_company_plan(_return, ssid, anchor, status, stuff_name);
     }
-    ifaces_[i]->get_company_plan(_return, ssid, anchor);
+    ifaces_[i]->get_company_plan(_return, ssid, anchor, status, stuff_name);
     return;
   }
 
@@ -5055,6 +5212,15 @@ class stuff_plan_managementMultiface : virtual public stuff_plan_managementIf {
     return ifaces_[i]->unregister_vichele(silent_id, vichele_id);
   }
 
+  bool multi_confirm_plan(const std::string& ssid, const std::vector<int64_t> & plan_ids) {
+    size_t sz = ifaces_.size();
+    size_t i = 0;
+    for (; i < (sz - 1); ++i) {
+      ifaces_[i]->multi_confirm_plan(ssid, plan_ids);
+    }
+    return ifaces_[i]->multi_confirm_plan(ssid, plan_ids);
+  }
+
 };
 
 // The 'concurrent' client is a thread safe client that correctly handles
@@ -5090,11 +5256,11 @@ class stuff_plan_managementConcurrentClient : virtual public stuff_plan_manageme
   int64_t create_plan(const stuff_plan& plan, const std::string& ssid, const std::string& proxy_company);
   int32_t send_create_plan(const stuff_plan& plan, const std::string& ssid, const std::string& proxy_company);
   int64_t recv_create_plan(const int32_t seqid);
-  void get_created_plan(std::vector<plan_status> & _return, const std::string& ssid, const int64_t anchor);
-  int32_t send_get_created_plan(const std::string& ssid, const int64_t anchor);
+  void get_created_plan(std::vector<plan_status> & _return, const std::string& ssid, const int64_t anchor, const int64_t status, const std::string& stuff_name);
+  int32_t send_get_created_plan(const std::string& ssid, const int64_t anchor, const int64_t status, const std::string& stuff_name);
   void recv_get_created_plan(std::vector<plan_status> & _return, const int32_t seqid);
-  void get_company_plan(std::vector<plan_status> & _return, const std::string& ssid, const int64_t anchor);
-  int32_t send_get_company_plan(const std::string& ssid, const int64_t anchor);
+  void get_company_plan(std::vector<plan_status> & _return, const std::string& ssid, const int64_t anchor, const int64_t status, const std::string& stuff_name);
+  int32_t send_get_company_plan(const std::string& ssid, const int64_t anchor, const int64_t status, const std::string& stuff_name);
   void recv_get_company_plan(std::vector<plan_status> & _return, const int32_t seqid);
   void get_plan(stuff_plan& _return, const int64_t plan_id);
   int32_t send_get_plan(const int64_t plan_id);
@@ -5195,6 +5361,9 @@ class stuff_plan_managementConcurrentClient : virtual public stuff_plan_manageme
   bool unregister_vichele(const std::string& silent_id, const int64_t vichele_id);
   int32_t send_unregister_vichele(const std::string& silent_id, const int64_t vichele_id);
   bool recv_unregister_vichele(const int32_t seqid);
+  bool multi_confirm_plan(const std::string& ssid, const std::vector<int64_t> & plan_ids);
+  int32_t send_multi_confirm_plan(const std::string& ssid, const std::vector<int64_t> & plan_ids);
+  bool recv_multi_confirm_plan(const int32_t seqid);
  protected:
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> piprot_;
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> poprot_;

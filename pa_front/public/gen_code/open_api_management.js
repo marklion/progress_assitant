@@ -649,13 +649,13 @@ open_api_management_get_today_transformation_result = class {
         case 0:
         if (ftype == Thrift.Type.LIST) {
           this.success = [];
-          const _rtmp3136 = input.readListBegin();
-          const _size135 = _rtmp3136.size || 0;
-          for (let _i137 = 0; _i137 < _size135; ++_i137) {
-            let elem138 = null;
-            elem138 = new api_transformation_info();
-            elem138.read(input);
-            this.success.push(elem138);
+          const _rtmp3141 = input.readListBegin();
+          const _size140 = _rtmp3141.size || 0;
+          for (let _i142 = 0; _i142 < _size140; ++_i142) {
+            let elem143 = null;
+            elem143 = new api_transformation_info();
+            elem143.read(input);
+            this.success.push(elem143);
           }
           input.readListEnd();
         } else {
@@ -684,10 +684,10 @@ open_api_management_get_today_transformation_result = class {
     if (this.success !== null && this.success !== undefined) {
       output.writeFieldBegin('success', Thrift.Type.LIST, 0);
       output.writeListBegin(Thrift.Type.STRUCT, this.success.length);
-      for (let iter139 in this.success) {
-        if (this.success.hasOwnProperty(iter139)) {
-          iter139 = this.success[iter139];
-          iter139.write(output);
+      for (let iter144 in this.success) {
+        if (this.success.hasOwnProperty(iter144)) {
+          iter144 = this.success[iter144];
+          iter144.write(output);
         }
       }
       output.writeListEnd();

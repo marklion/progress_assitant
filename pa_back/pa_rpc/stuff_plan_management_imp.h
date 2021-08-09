@@ -68,7 +68,7 @@ public:
         {
             PA_RETURN_NOPRIVA_MSG();
         }
-        
+
         if (proxy_company.length() <= 0 && false == PA_RPC_has_follow_stuff(ssid, stuff_type->get_pri_id()))
         {
             PA_RETURN_NOPRIVA_MSG();
@@ -125,12 +125,21 @@ public:
         }
         return ret;
     }
-    virtual void get_created_plan(std::vector<plan_status> &_return, const std::string &ssid, const int64_t anchor)
+    virtual void get_created_plan(std::vector<plan_status> &_return, const std::string &ssid, const int64_t anchor, const int64_t status, const std::string &stuff_name)
     {
         auto opt_user = PA_DATAOPT_get_online_user(ssid);
         if (opt_user)
         {
-            auto plans = opt_user->get_all_children<pa_sql_plan>("created_by", "PRI_ID != 0 ORDER BY create_time DESC LIMIT 15 OFFSET %ld", anchor);
+            std::string qurey_cmd = "PRI_ID != 0";
+            if (status >= 0 && status < 5)
+            {
+                qurey_cmd += " AND status == " + std::to_string(status);
+            }
+            if (stuff_name.length() > 0)
+            {
+                qurey_cmd += " AND name == '" + stuff_name + "'";
+            }
+            auto plans = opt_user->get_all_children<pa_sql_plan>("created_by", "%s ORDER BY create_time DESC LIMIT 15 OFFSET %ld", qurey_cmd.c_str(), anchor);
             for (auto &itr : plans)
             {
                 plan_status tmp;
@@ -145,7 +154,7 @@ public:
                     status_prompt = statuses[itr.status]->get_prompt();
                 }
                 tmp.status_prompt = status_prompt;
-                tmp.is_cancel = itr.is_cancel == 0?false:true;
+                tmp.is_cancel = itr.is_cancel == 0 ? false : true;
                 auto stuff_info = itr.get_parent<pa_sql_stuff_info>("belong_stuff");
                 if (stuff_info)
                 {
@@ -174,7 +183,7 @@ public:
                     _return.count = plan->calcu_all_count();
                     _return.created_time = plan->create_time;
                     _return.created_user_name = archive_plan->created_user;
-                    
+
                     _return.name = archive_plan->stuff_name;
                     _return.plan_id = plan->get_pri_id();
                     _return.plan_time = archive_plan->plan_time;
@@ -182,14 +191,14 @@ public:
                     _return.proxy_company = plan->proxy_company;
                     _return.sale_company = archive_plan->sale_company;
                     _return.status = plan->status;
-                    _return.is_cancel = plan->is_cancel == 0?false:true;
+                    _return.is_cancel = plan->is_cancel == 0 ? false : true;
                     auto belong_type = plan->get_parent<pa_sql_stuff_info>("belong_stuff");
                     if (belong_type)
                     {
                         _return.type_id = belong_type->get_pri_id();
                     }
                     auto archive_vichele = archive_plan->get_all_children<pa_sql_archive_vichele_plan>("belong_plan");
-                    for (auto &itr:archive_vichele)
+                    for (auto &itr : archive_vichele)
                     {
                         vichele_in_plan tmp;
                         tmp.behind_vichele = itr.behind_vichele;
@@ -199,7 +208,7 @@ public:
                         tmp.drop_address = itr.drop_address;
                         tmp.main_vichele = itr.main_vichele;
                         tmp.use_for = itr.use_for;
-                        tmp.finish = itr.finish == 0?false:true;
+                        tmp.finish = itr.finish == 0 ? false : true;
                         tmp.deliver_timestamp = itr.deliver_timestamp;
                         _return.vichele_info.push_back(tmp);
                     }
@@ -261,7 +270,7 @@ public:
                         tmp.main_vichele = main_vichele->number;
                         tmp.use_for = itr.use_for;
                         tmp.vichele_id = itr.get_pri_id();
-                        tmp.finish = itr.finish == 0?false:true;
+                        tmp.finish = itr.finish == 0 ? false : true;
                         tmp.deliver_timestamp = itr.deliver_timestamp;
                         auto register_info = itr.get_children<pa_sql_driver_register>("belong_vichele");
                         if (register_info)
@@ -367,7 +376,7 @@ public:
 
         return ret;
     }
-    virtual void get_company_plan(std::vector<plan_status> &_return, const std::string &ssid, const int64_t anchor)
+    virtual void get_company_plan(std::vector<plan_status> &_return, const std::string &ssid, const int64_t anchor, const int64_t status, const std::string &stuff_name)
     {
         auto opt_user = PA_DATAOPT_get_online_user(ssid);
         if (opt_user && opt_user->buyer == false)
@@ -375,13 +384,22 @@ public:
             auto company = opt_user->get_parent<pa_sql_company>("belong_company");
             if (company)
             {
-                std::string connect_param = "belong_stuff_ext_key = 0";
+                std::string connect_param = "(belong_stuff_ext_key = 0";
                 auto stuffs = company->get_all_children<pa_sql_stuff_info>("belong_company");
                 for (auto &itr : stuffs)
                 {
                     connect_param.append(" OR belong_stuff_ext_key = " + std::to_string(itr.get_pri_id()));
                 }
-                auto plans = sqlite_orm::search_record_all<pa_sql_plan>("%s ORDER BY create_time DESC LIMIT 15 OFFSET %ld",connect_param.c_str(), anchor);
+                connect_param += ")";
+                if (status >= 0 && status < 5)
+                {
+                    connect_param += " AND (status == " + std::to_string(status) + ")";
+                }
+                if (stuff_name.length() > 0)
+                {
+                    connect_param += " AND name == '" + stuff_name + "'";
+                }
+                auto plans = sqlite_orm::search_record_all<pa_sql_plan>("%s ORDER BY create_time DESC LIMIT 15 OFFSET %ld", connect_param.c_str(), anchor);
                 for (auto &single_plan : plans)
                 {
                     plan_status tmp;
@@ -396,7 +414,7 @@ public:
                         status_prompt = statuses[single_plan.status]->get_prompt();
                     }
                     tmp.status_prompt = status_prompt;
-                    tmp.is_cancel = single_plan.is_cancel == 0?false:true;
+                    tmp.is_cancel = single_plan.is_cancel == 0 ? false : true;
                     auto stuff_info = single_plan.get_parent<pa_sql_stuff_info>("belong_stuff");
                     if (stuff_info)
                     {
@@ -479,7 +497,7 @@ public:
 
         return ret;
     }
-    
+
     virtual bool confirm_deliver(const int64_t plan_id, const std::string &ssid, const std::vector<deliver_info> &deliver_infos, const std::string &reason)
     {
         auto opt_user = PA_DATAOPT_get_online_user(ssid);
@@ -555,7 +573,7 @@ public:
             stream << csv_bom;
             csv2::Writer<csv2::delimiter<','>> writer(stream);
             std::vector<std::string> table_header = {
-                "装液日期", "客户名称", "货名", "车牌", "车挂", "司机姓名", "司机电话","当前状态", "卸车地点", "用途" };
+                "装液日期", "客户名称", "货名", "车牌", "车挂", "司机姓名", "司机电话", "当前状态", "卸车地点", "用途"};
             if (!user->buyer)
             {
                 table_header.insert(table_header.begin() + 1, "客户编码");
@@ -599,7 +617,7 @@ public:
                             }
                         }
                     }
-                    
+
                     std::string customer_code;
                     if (!user->buyer)
                     {
@@ -680,9 +698,11 @@ public:
             std::string py_converter =
                 "import pandas as pd\n"
                 "import sys\n"
-                "csv = pd.read_csv('" + file_name + "', encoding='utf-8')\n"
-                "csv.index = csv.index + 1\n"
-                "csv.to_excel('/dist/logo_res/" + file_name_no_ext + ".xlsx', sheet_name='data')\n";
+                "csv = pd.read_csv('" +
+                file_name + "', encoding='utf-8')\n"
+                            "csv.index = csv.index + 1\n"
+                            "csv.to_excel('/dist/logo_res/" +
+                file_name_no_ext + ".xlsx', sheet_name='data')\n";
 
             if (Py_IsInitialized())
             {
@@ -1296,7 +1316,7 @@ public:
 
     virtual bool cancel_vichele_from_plan(const std::string &ssid, const std::vector<int64_t> &ids)
     {
-        for (auto &itr:ids)
+        for (auto &itr : ids)
         {
             auto single_vichele = sqlite_orm::search_record<pa_sql_single_vichele>(itr);
             if (single_vichele && single_vichele->finish == 0)
@@ -1583,6 +1603,34 @@ public:
         }
 
         return ret;
+    }
+
+    virtual bool multi_confirm_plan(const std::string &ssid, const std::vector<int64_t> &plan_ids)
+    {
+        for (auto &itr : plan_ids)
+        {
+            auto plan = sqlite_orm::search_record<pa_sql_plan>(itr);
+            bool need_confirm = true;
+            if (plan && plan->status == 2)
+            {
+                need_confirm = false;
+            }
+            try
+            {
+                if (need_confirm)
+                {
+                    confirm_plan(itr, ssid, "");
+                }
+                else
+                {
+                    confirm_pay(itr, ssid, "");
+                }
+            }
+            catch (gen_exp &e)
+            {
+            }
+        }
+        return true;
     }
 };
 
