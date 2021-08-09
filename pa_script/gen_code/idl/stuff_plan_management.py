@@ -29,20 +29,24 @@ class Iface(object):
         """
         pass
 
-    def get_created_plan(self, ssid, anchor):
+    def get_created_plan(self, ssid, anchor, status, stuff_name):
         """
         Parameters:
          - ssid
          - anchor
+         - status
+         - stuff_name
 
         """
         pass
 
-    def get_company_plan(self, ssid, anchor):
+    def get_company_plan(self, ssid, anchor, status, stuff_name):
         """
         Parameters:
          - ssid
          - anchor
+         - status
+         - stuff_name
 
         """
         pass
@@ -337,6 +341,15 @@ class Iface(object):
         """
         pass
 
+    def multi_confirm_plan(self, ssid, plan_ids):
+        """
+        Parameters:
+         - ssid
+         - plan_ids
+
+        """
+        pass
+
 
 class Client(Iface):
     def __init__(self, iprot, oprot=None):
@@ -383,21 +396,25 @@ class Client(Iface):
             raise result.e
         raise TApplicationException(TApplicationException.MISSING_RESULT, "create_plan failed: unknown result")
 
-    def get_created_plan(self, ssid, anchor):
+    def get_created_plan(self, ssid, anchor, status, stuff_name):
         """
         Parameters:
          - ssid
          - anchor
+         - status
+         - stuff_name
 
         """
-        self.send_get_created_plan(ssid, anchor)
+        self.send_get_created_plan(ssid, anchor, status, stuff_name)
         return self.recv_get_created_plan()
 
-    def send_get_created_plan(self, ssid, anchor):
+    def send_get_created_plan(self, ssid, anchor, status, stuff_name):
         self._oprot.writeMessageBegin('get_created_plan', TMessageType.CALL, self._seqid)
         args = get_created_plan_args()
         args.ssid = ssid
         args.anchor = anchor
+        args.status = status
+        args.stuff_name = stuff_name
         args.write(self._oprot)
         self._oprot.writeMessageEnd()
         self._oprot.trans.flush()
@@ -419,21 +436,25 @@ class Client(Iface):
             raise result.e
         raise TApplicationException(TApplicationException.MISSING_RESULT, "get_created_plan failed: unknown result")
 
-    def get_company_plan(self, ssid, anchor):
+    def get_company_plan(self, ssid, anchor, status, stuff_name):
         """
         Parameters:
          - ssid
          - anchor
+         - status
+         - stuff_name
 
         """
-        self.send_get_company_plan(ssid, anchor)
+        self.send_get_company_plan(ssid, anchor, status, stuff_name)
         return self.recv_get_company_plan()
 
-    def send_get_company_plan(self, ssid, anchor):
+    def send_get_company_plan(self, ssid, anchor, status, stuff_name):
         self._oprot.writeMessageBegin('get_company_plan', TMessageType.CALL, self._seqid)
         args = get_company_plan_args()
         args.ssid = ssid
         args.anchor = anchor
+        args.status = status
+        args.stuff_name = stuff_name
         args.write(self._oprot)
         self._oprot.writeMessageEnd()
         self._oprot.trans.flush()
@@ -1629,6 +1650,42 @@ class Client(Iface):
             raise result.e
         raise TApplicationException(TApplicationException.MISSING_RESULT, "unregister_vichele failed: unknown result")
 
+    def multi_confirm_plan(self, ssid, plan_ids):
+        """
+        Parameters:
+         - ssid
+         - plan_ids
+
+        """
+        self.send_multi_confirm_plan(ssid, plan_ids)
+        return self.recv_multi_confirm_plan()
+
+    def send_multi_confirm_plan(self, ssid, plan_ids):
+        self._oprot.writeMessageBegin('multi_confirm_plan', TMessageType.CALL, self._seqid)
+        args = multi_confirm_plan_args()
+        args.ssid = ssid
+        args.plan_ids = plan_ids
+        args.write(self._oprot)
+        self._oprot.writeMessageEnd()
+        self._oprot.trans.flush()
+
+    def recv_multi_confirm_plan(self):
+        iprot = self._iprot
+        (fname, mtype, rseqid) = iprot.readMessageBegin()
+        if mtype == TMessageType.EXCEPTION:
+            x = TApplicationException()
+            x.read(iprot)
+            iprot.readMessageEnd()
+            raise x
+        result = multi_confirm_plan_result()
+        result.read(iprot)
+        iprot.readMessageEnd()
+        if result.success is not None:
+            return result.success
+        if result.e is not None:
+            raise result.e
+        raise TApplicationException(TApplicationException.MISSING_RESULT, "multi_confirm_plan failed: unknown result")
+
 
 class Processor(Iface, TProcessor):
     def __init__(self, handler):
@@ -1670,6 +1727,7 @@ class Processor(Iface, TProcessor):
         self._processMap["get_driver_info"] = Processor.process_get_driver_info
         self._processMap["register_vichele"] = Processor.process_register_vichele
         self._processMap["unregister_vichele"] = Processor.process_unregister_vichele
+        self._processMap["multi_confirm_plan"] = Processor.process_multi_confirm_plan
         self._on_message_begin = None
 
     def on_message_begin(self, func):
@@ -1724,7 +1782,7 @@ class Processor(Iface, TProcessor):
         iprot.readMessageEnd()
         result = get_created_plan_result()
         try:
-            result.success = self._handler.get_created_plan(args.ssid, args.anchor)
+            result.success = self._handler.get_created_plan(args.ssid, args.anchor, args.status, args.stuff_name)
             msg_type = TMessageType.REPLY
         except TTransport.TTransportException:
             raise
@@ -1750,7 +1808,7 @@ class Processor(Iface, TProcessor):
         iprot.readMessageEnd()
         result = get_company_plan_result()
         try:
-            result.success = self._handler.get_company_plan(args.ssid, args.anchor)
+            result.success = self._handler.get_company_plan(args.ssid, args.anchor, args.status, args.stuff_name)
             msg_type = TMessageType.REPLY
         except TTransport.TTransportException:
             raise
@@ -2628,6 +2686,32 @@ class Processor(Iface, TProcessor):
         oprot.writeMessageEnd()
         oprot.trans.flush()
 
+    def process_multi_confirm_plan(self, seqid, iprot, oprot):
+        args = multi_confirm_plan_args()
+        args.read(iprot)
+        iprot.readMessageEnd()
+        result = multi_confirm_plan_result()
+        try:
+            result.success = self._handler.multi_confirm_plan(args.ssid, args.plan_ids)
+            msg_type = TMessageType.REPLY
+        except TTransport.TTransportException:
+            raise
+        except gen_exp as e:
+            msg_type = TMessageType.REPLY
+            result.e = e
+        except TApplicationException as ex:
+            logging.exception('TApplication exception in handler')
+            msg_type = TMessageType.EXCEPTION
+            result = ex
+        except Exception:
+            logging.exception('Unexpected exception in handler')
+            msg_type = TMessageType.EXCEPTION
+            result = TApplicationException(TApplicationException.INTERNAL_ERROR, 'Internal error')
+        oprot.writeMessageBegin("multi_confirm_plan", msg_type, seqid)
+        result.write(oprot)
+        oprot.writeMessageEnd()
+        oprot.trans.flush()
+
 # HELPER FUNCTIONS AND STRUCTURES
 
 
@@ -2796,13 +2880,17 @@ class get_created_plan_args(object):
     Attributes:
      - ssid
      - anchor
+     - status
+     - stuff_name
 
     """
 
 
-    def __init__(self, ssid=None, anchor=None,):
+    def __init__(self, ssid=None, anchor=None, status=None, stuff_name=None,):
         self.ssid = ssid
         self.anchor = anchor
+        self.status = status
+        self.stuff_name = stuff_name
 
     def read(self, iprot):
         if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
@@ -2823,6 +2911,16 @@ class get_created_plan_args(object):
                     self.anchor = iprot.readI64()
                 else:
                     iprot.skip(ftype)
+            elif fid == 3:
+                if ftype == TType.I64:
+                    self.status = iprot.readI64()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 4:
+                if ftype == TType.STRING:
+                    self.stuff_name = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
             else:
                 iprot.skip(ftype)
             iprot.readFieldEnd()
@@ -2840,6 +2938,14 @@ class get_created_plan_args(object):
         if self.anchor is not None:
             oprot.writeFieldBegin('anchor', TType.I64, 2)
             oprot.writeI64(self.anchor)
+            oprot.writeFieldEnd()
+        if self.status is not None:
+            oprot.writeFieldBegin('status', TType.I64, 3)
+            oprot.writeI64(self.status)
+            oprot.writeFieldEnd()
+        if self.stuff_name is not None:
+            oprot.writeFieldBegin('stuff_name', TType.STRING, 4)
+            oprot.writeString(self.stuff_name.encode('utf-8') if sys.version_info[0] == 2 else self.stuff_name)
             oprot.writeFieldEnd()
         oprot.writeFieldStop()
         oprot.writeStructEnd()
@@ -2862,6 +2968,8 @@ get_created_plan_args.thrift_spec = (
     None,  # 0
     (1, TType.STRING, 'ssid', 'UTF8', None, ),  # 1
     (2, TType.I64, 'anchor', None, None, ),  # 2
+    (3, TType.I64, 'status', None, None, ),  # 3
+    (4, TType.STRING, 'stuff_name', 'UTF8', None, ),  # 4
 )
 
 
@@ -2952,13 +3060,17 @@ class get_company_plan_args(object):
     Attributes:
      - ssid
      - anchor
+     - status
+     - stuff_name
 
     """
 
 
-    def __init__(self, ssid=None, anchor=None,):
+    def __init__(self, ssid=None, anchor=None, status=None, stuff_name=None,):
         self.ssid = ssid
         self.anchor = anchor
+        self.status = status
+        self.stuff_name = stuff_name
 
     def read(self, iprot):
         if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
@@ -2979,6 +3091,16 @@ class get_company_plan_args(object):
                     self.anchor = iprot.readI64()
                 else:
                     iprot.skip(ftype)
+            elif fid == 3:
+                if ftype == TType.I64:
+                    self.status = iprot.readI64()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 4:
+                if ftype == TType.STRING:
+                    self.stuff_name = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
             else:
                 iprot.skip(ftype)
             iprot.readFieldEnd()
@@ -2996,6 +3118,14 @@ class get_company_plan_args(object):
         if self.anchor is not None:
             oprot.writeFieldBegin('anchor', TType.I64, 2)
             oprot.writeI64(self.anchor)
+            oprot.writeFieldEnd()
+        if self.status is not None:
+            oprot.writeFieldBegin('status', TType.I64, 3)
+            oprot.writeI64(self.status)
+            oprot.writeFieldEnd()
+        if self.stuff_name is not None:
+            oprot.writeFieldBegin('stuff_name', TType.STRING, 4)
+            oprot.writeString(self.stuff_name.encode('utf-8') if sys.version_info[0] == 2 else self.stuff_name)
             oprot.writeFieldEnd()
         oprot.writeFieldStop()
         oprot.writeStructEnd()
@@ -3018,6 +3148,8 @@ get_company_plan_args.thrift_spec = (
     None,  # 0
     (1, TType.STRING, 'ssid', 'UTF8', None, ),  # 1
     (2, TType.I64, 'anchor', None, None, ),  # 2
+    (3, TType.I64, 'status', None, None, ),  # 3
+    (4, TType.STRING, 'stuff_name', 'UTF8', None, ),  # 4
 )
 
 
@@ -7976,6 +8108,161 @@ class unregister_vichele_result(object):
         return not (self == other)
 all_structs.append(unregister_vichele_result)
 unregister_vichele_result.thrift_spec = (
+    (0, TType.BOOL, 'success', None, None, ),  # 0
+    (1, TType.STRUCT, 'e', [gen_exp, None], None, ),  # 1
+)
+
+
+class multi_confirm_plan_args(object):
+    """
+    Attributes:
+     - ssid
+     - plan_ids
+
+    """
+
+
+    def __init__(self, ssid=None, plan_ids=None,):
+        self.ssid = ssid
+        self.plan_ids = plan_ids
+
+    def read(self, iprot):
+        if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
+            iprot._fast_decode(self, iprot, [self.__class__, self.thrift_spec])
+            return
+        iprot.readStructBegin()
+        while True:
+            (fname, ftype, fid) = iprot.readFieldBegin()
+            if ftype == TType.STOP:
+                break
+            if fid == 1:
+                if ftype == TType.STRING:
+                    self.ssid = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 2:
+                if ftype == TType.LIST:
+                    self.plan_ids = []
+                    (_etype192, _size189) = iprot.readListBegin()
+                    for _i193 in range(_size189):
+                        _elem194 = iprot.readI64()
+                        self.plan_ids.append(_elem194)
+                    iprot.readListEnd()
+                else:
+                    iprot.skip(ftype)
+            else:
+                iprot.skip(ftype)
+            iprot.readFieldEnd()
+        iprot.readStructEnd()
+
+    def write(self, oprot):
+        if oprot._fast_encode is not None and self.thrift_spec is not None:
+            oprot.trans.write(oprot._fast_encode(self, [self.__class__, self.thrift_spec]))
+            return
+        oprot.writeStructBegin('multi_confirm_plan_args')
+        if self.ssid is not None:
+            oprot.writeFieldBegin('ssid', TType.STRING, 1)
+            oprot.writeString(self.ssid.encode('utf-8') if sys.version_info[0] == 2 else self.ssid)
+            oprot.writeFieldEnd()
+        if self.plan_ids is not None:
+            oprot.writeFieldBegin('plan_ids', TType.LIST, 2)
+            oprot.writeListBegin(TType.I64, len(self.plan_ids))
+            for iter195 in self.plan_ids:
+                oprot.writeI64(iter195)
+            oprot.writeListEnd()
+            oprot.writeFieldEnd()
+        oprot.writeFieldStop()
+        oprot.writeStructEnd()
+
+    def validate(self):
+        return
+
+    def __repr__(self):
+        L = ['%s=%r' % (key, value)
+             for key, value in self.__dict__.items()]
+        return '%s(%s)' % (self.__class__.__name__, ', '.join(L))
+
+    def __eq__(self, other):
+        return isinstance(other, self.__class__) and self.__dict__ == other.__dict__
+
+    def __ne__(self, other):
+        return not (self == other)
+all_structs.append(multi_confirm_plan_args)
+multi_confirm_plan_args.thrift_spec = (
+    None,  # 0
+    (1, TType.STRING, 'ssid', 'UTF8', None, ),  # 1
+    (2, TType.LIST, 'plan_ids', (TType.I64, None, False), None, ),  # 2
+)
+
+
+class multi_confirm_plan_result(object):
+    """
+    Attributes:
+     - success
+     - e
+
+    """
+
+
+    def __init__(self, success=None, e=None,):
+        self.success = success
+        self.e = e
+
+    def read(self, iprot):
+        if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
+            iprot._fast_decode(self, iprot, [self.__class__, self.thrift_spec])
+            return
+        iprot.readStructBegin()
+        while True:
+            (fname, ftype, fid) = iprot.readFieldBegin()
+            if ftype == TType.STOP:
+                break
+            if fid == 0:
+                if ftype == TType.BOOL:
+                    self.success = iprot.readBool()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 1:
+                if ftype == TType.STRUCT:
+                    self.e = gen_exp.read(iprot)
+                else:
+                    iprot.skip(ftype)
+            else:
+                iprot.skip(ftype)
+            iprot.readFieldEnd()
+        iprot.readStructEnd()
+
+    def write(self, oprot):
+        if oprot._fast_encode is not None and self.thrift_spec is not None:
+            oprot.trans.write(oprot._fast_encode(self, [self.__class__, self.thrift_spec]))
+            return
+        oprot.writeStructBegin('multi_confirm_plan_result')
+        if self.success is not None:
+            oprot.writeFieldBegin('success', TType.BOOL, 0)
+            oprot.writeBool(self.success)
+            oprot.writeFieldEnd()
+        if self.e is not None:
+            oprot.writeFieldBegin('e', TType.STRUCT, 1)
+            self.e.write(oprot)
+            oprot.writeFieldEnd()
+        oprot.writeFieldStop()
+        oprot.writeStructEnd()
+
+    def validate(self):
+        return
+
+    def __repr__(self):
+        L = ['%s=%r' % (key, value)
+             for key, value in self.__dict__.items()]
+        return '%s(%s)' % (self.__class__.__name__, ', '.join(L))
+
+    def __eq__(self, other):
+        return isinstance(other, self.__class__) and self.__dict__ == other.__dict__
+
+    def __ne__(self, other):
+        return not (self == other)
+all_structs.append(multi_confirm_plan_result)
+multi_confirm_plan_result.thrift_spec = (
     (0, TType.BOOL, 'success', None, None, ),  # 0
     (1, TType.STRUCT, 'e', [gen_exp, None], None, ),  # 1
 )

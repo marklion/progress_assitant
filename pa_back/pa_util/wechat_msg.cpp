@@ -163,8 +163,14 @@ static void send_msg_to_wechat(const std::string &_touser, const std::string &_t
     std::string uni_msg_url = "https://api.weixin.qq.com/cgi-bin/message/wxopen/template/uniform_send?access_token=" + acc_tok;
     g_log.log("msg ready to send is :%s", to_wechat.ToFormattedString().c_str());
 
-    auto ret = PA_DATAOPT_rest_post(uni_msg_url, to_wechat.ToString());
-    g_log.log("recv from wechat:%s", ret.c_str());
+    tdf_main::get_inst().Async_to_workthread([](void *_private, const std::string &chact) -> void
+                                             {
+                                                 std::string *to_wechat = (std::string *)_private;
+                                                 auto ret = PA_DATAOPT_rest_post(chact, *to_wechat);
+                                                 g_log.log("recv from wechat:%s", ret.c_str());
+                                                 delete to_wechat;
+                                             },
+                                             new std::string(to_wechat.ToString()), uni_msg_url);
 }
 static void send_pub_msg_to_wechat(const std::string &_touser, const std::string &_tmp_id, const std::string &_first, const std::vector<std::string> &_keywords, const std::string &_remark, const std::string &_url = "/")
 {
@@ -175,7 +181,7 @@ static void send_pub_msg_to_wechat(const std::string &_touser, const std::string
     to_wechat.Add("touser", _touser);
 
     neb::CJsonObject template_msg;
-    template_msg.Add("appid","wxa390f8b6f68e9c6d");
+    template_msg.Add("appid", "wxa390f8b6f68e9c6d");
     template_msg.Add("template_id", _tmp_id);
     template_msg.Add("url", "https://www.d8sis.cn/pa_web" + _url);
 
@@ -186,7 +192,7 @@ static void send_pub_msg_to_wechat(const std::string &_touser, const std::string
     msg_data.Add("first", data_value);
 
     int key_index = 1;
-    for (auto &itr:_keywords)
+    for (auto &itr : _keywords)
     {
         data_value.Replace("value", itr);
         msg_data.Add("keyword" + std::to_string(key_index++), data_value);

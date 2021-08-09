@@ -165,12 +165,20 @@ stuff_plan_management_create_plan_result.prototype.write = function(output) {
 var stuff_plan_management_get_created_plan_args = function(args) {
   this.ssid = null;
   this.anchor = null;
+  this.status = null;
+  this.stuff_name = null;
   if (args) {
     if (args.ssid !== undefined && args.ssid !== null) {
       this.ssid = args.ssid;
     }
     if (args.anchor !== undefined && args.anchor !== null) {
       this.anchor = args.anchor;
+    }
+    if (args.status !== undefined && args.status !== null) {
+      this.status = args.status;
+    }
+    if (args.stuff_name !== undefined && args.stuff_name !== null) {
+      this.stuff_name = args.stuff_name;
     }
   }
 };
@@ -199,6 +207,20 @@ stuff_plan_management_get_created_plan_args.prototype.read = function(input) {
         input.skip(ftype);
       }
       break;
+      case 3:
+      if (ftype == Thrift.Type.I64) {
+        this.status = input.readI64();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 4:
+      if (ftype == Thrift.Type.STRING) {
+        this.stuff_name = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
       default:
         input.skip(ftype);
     }
@@ -218,6 +240,16 @@ stuff_plan_management_get_created_plan_args.prototype.write = function(output) {
   if (this.anchor !== null && this.anchor !== undefined) {
     output.writeFieldBegin('anchor', Thrift.Type.I64, 2);
     output.writeI64(this.anchor);
+    output.writeFieldEnd();
+  }
+  if (this.status !== null && this.status !== undefined) {
+    output.writeFieldBegin('status', Thrift.Type.I64, 3);
+    output.writeI64(this.status);
+    output.writeFieldEnd();
+  }
+  if (this.stuff_name !== null && this.stuff_name !== undefined) {
+    output.writeFieldBegin('stuff_name', Thrift.Type.STRING, 4);
+    output.writeString(this.stuff_name);
     output.writeFieldEnd();
   }
   output.writeFieldStop();
@@ -312,12 +344,20 @@ stuff_plan_management_get_created_plan_result.prototype.write = function(output)
 var stuff_plan_management_get_company_plan_args = function(args) {
   this.ssid = null;
   this.anchor = null;
+  this.status = null;
+  this.stuff_name = null;
   if (args) {
     if (args.ssid !== undefined && args.ssid !== null) {
       this.ssid = args.ssid;
     }
     if (args.anchor !== undefined && args.anchor !== null) {
       this.anchor = args.anchor;
+    }
+    if (args.status !== undefined && args.status !== null) {
+      this.status = args.status;
+    }
+    if (args.stuff_name !== undefined && args.stuff_name !== null) {
+      this.stuff_name = args.stuff_name;
     }
   }
 };
@@ -346,6 +386,20 @@ stuff_plan_management_get_company_plan_args.prototype.read = function(input) {
         input.skip(ftype);
       }
       break;
+      case 3:
+      if (ftype == Thrift.Type.I64) {
+        this.status = input.readI64();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 4:
+      if (ftype == Thrift.Type.STRING) {
+        this.stuff_name = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
       default:
         input.skip(ftype);
     }
@@ -365,6 +419,16 @@ stuff_plan_management_get_company_plan_args.prototype.write = function(output) {
   if (this.anchor !== null && this.anchor !== undefined) {
     output.writeFieldBegin('anchor', Thrift.Type.I64, 2);
     output.writeI64(this.anchor);
+    output.writeFieldEnd();
+  }
+  if (this.status !== null && this.status !== undefined) {
+    output.writeFieldBegin('status', Thrift.Type.I64, 3);
+    output.writeI64(this.status);
+    output.writeFieldEnd();
+  }
+  if (this.stuff_name !== null && this.stuff_name !== undefined) {
+    output.writeFieldBegin('stuff_name', Thrift.Type.STRING, 4);
+    output.writeString(this.stuff_name);
     output.writeFieldEnd();
   }
   output.writeFieldStop();
@@ -4897,6 +4961,152 @@ stuff_plan_management_unregister_vichele_result.prototype.write = function(outpu
   return;
 };
 
+var stuff_plan_management_multi_confirm_plan_args = function(args) {
+  this.ssid = null;
+  this.plan_ids = null;
+  if (args) {
+    if (args.ssid !== undefined && args.ssid !== null) {
+      this.ssid = args.ssid;
+    }
+    if (args.plan_ids !== undefined && args.plan_ids !== null) {
+      this.plan_ids = Thrift.copyList(args.plan_ids, [null]);
+    }
+  }
+};
+stuff_plan_management_multi_confirm_plan_args.prototype = {};
+stuff_plan_management_multi_confirm_plan_args.prototype.read = function(input) {
+  input.readStructBegin();
+  while (true) {
+    var ret = input.readFieldBegin();
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    switch (fid) {
+      case 1:
+      if (ftype == Thrift.Type.STRING) {
+        this.ssid = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 2:
+      if (ftype == Thrift.Type.LIST) {
+        this.plan_ids = [];
+        var _rtmp3136 = input.readListBegin();
+        var _size135 = _rtmp3136.size || 0;
+        for (var _i137 = 0; _i137 < _size135; ++_i137) {
+          var elem138 = null;
+          elem138 = input.readI64();
+          this.plan_ids.push(elem138);
+        }
+        input.readListEnd();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      default:
+        input.skip(ftype);
+    }
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+stuff_plan_management_multi_confirm_plan_args.prototype.write = function(output) {
+  output.writeStructBegin('stuff_plan_management_multi_confirm_plan_args');
+  if (this.ssid !== null && this.ssid !== undefined) {
+    output.writeFieldBegin('ssid', Thrift.Type.STRING, 1);
+    output.writeString(this.ssid);
+    output.writeFieldEnd();
+  }
+  if (this.plan_ids !== null && this.plan_ids !== undefined) {
+    output.writeFieldBegin('plan_ids', Thrift.Type.LIST, 2);
+    output.writeListBegin(Thrift.Type.I64, this.plan_ids.length);
+    for (var iter139 in this.plan_ids) {
+      if (this.plan_ids.hasOwnProperty(iter139)) {
+        iter139 = this.plan_ids[iter139];
+        output.writeI64(iter139);
+      }
+    }
+    output.writeListEnd();
+    output.writeFieldEnd();
+  }
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+
+var stuff_plan_management_multi_confirm_plan_result = function(args) {
+  this.success = null;
+  this.e = null;
+  if (args instanceof ttypes.gen_exp) {
+    this.e = args;
+    return;
+  }
+  if (args) {
+    if (args.success !== undefined && args.success !== null) {
+      this.success = args.success;
+    }
+    if (args.e !== undefined && args.e !== null) {
+      this.e = args.e;
+    }
+  }
+};
+stuff_plan_management_multi_confirm_plan_result.prototype = {};
+stuff_plan_management_multi_confirm_plan_result.prototype.read = function(input) {
+  input.readStructBegin();
+  while (true) {
+    var ret = input.readFieldBegin();
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    switch (fid) {
+      case 0:
+      if (ftype == Thrift.Type.BOOL) {
+        this.success = input.readBool();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 1:
+      if (ftype == Thrift.Type.STRUCT) {
+        this.e = new ttypes.gen_exp();
+        this.e.read(input);
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      default:
+        input.skip(ftype);
+    }
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+stuff_plan_management_multi_confirm_plan_result.prototype.write = function(output) {
+  output.writeStructBegin('stuff_plan_management_multi_confirm_plan_result');
+  if (this.success !== null && this.success !== undefined) {
+    output.writeFieldBegin('success', Thrift.Type.BOOL, 0);
+    output.writeBool(this.success);
+    output.writeFieldEnd();
+  }
+  if (this.e !== null && this.e !== undefined) {
+    output.writeFieldBegin('e', Thrift.Type.STRUCT, 1);
+    this.e.write(output);
+    output.writeFieldEnd();
+  }
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+
 var stuff_plan_managementClient = exports.Client = function(output, pClass) {
   this.output = output;
   this.pClass = pClass;
@@ -4971,7 +5181,7 @@ stuff_plan_managementClient.prototype.recv_create_plan = function(input,mtype,rs
   return callback('create_plan failed: unknown result');
 };
 
-stuff_plan_managementClient.prototype.get_created_plan = function(ssid, anchor, callback) {
+stuff_plan_managementClient.prototype.get_created_plan = function(ssid, anchor, status, stuff_name, callback) {
   this._seqid = this.new_seqid();
   if (callback === undefined) {
     var _defer = Q.defer();
@@ -4982,19 +5192,21 @@ stuff_plan_managementClient.prototype.get_created_plan = function(ssid, anchor, 
         _defer.resolve(result);
       }
     };
-    this.send_get_created_plan(ssid, anchor);
+    this.send_get_created_plan(ssid, anchor, status, stuff_name);
     return _defer.promise;
   } else {
     this._reqs[this.seqid()] = callback;
-    this.send_get_created_plan(ssid, anchor);
+    this.send_get_created_plan(ssid, anchor, status, stuff_name);
   }
 };
 
-stuff_plan_managementClient.prototype.send_get_created_plan = function(ssid, anchor) {
+stuff_plan_managementClient.prototype.send_get_created_plan = function(ssid, anchor, status, stuff_name) {
   var output = new this.pClass(this.output);
   var params = {
     ssid: ssid,
-    anchor: anchor
+    anchor: anchor,
+    status: status,
+    stuff_name: stuff_name
   };
   var args = new stuff_plan_management_get_created_plan_args(params);
   try {
@@ -5034,7 +5246,7 @@ stuff_plan_managementClient.prototype.recv_get_created_plan = function(input,mty
   return callback('get_created_plan failed: unknown result');
 };
 
-stuff_plan_managementClient.prototype.get_company_plan = function(ssid, anchor, callback) {
+stuff_plan_managementClient.prototype.get_company_plan = function(ssid, anchor, status, stuff_name, callback) {
   this._seqid = this.new_seqid();
   if (callback === undefined) {
     var _defer = Q.defer();
@@ -5045,19 +5257,21 @@ stuff_plan_managementClient.prototype.get_company_plan = function(ssid, anchor, 
         _defer.resolve(result);
       }
     };
-    this.send_get_company_plan(ssid, anchor);
+    this.send_get_company_plan(ssid, anchor, status, stuff_name);
     return _defer.promise;
   } else {
     this._reqs[this.seqid()] = callback;
-    this.send_get_company_plan(ssid, anchor);
+    this.send_get_company_plan(ssid, anchor, status, stuff_name);
   }
 };
 
-stuff_plan_managementClient.prototype.send_get_company_plan = function(ssid, anchor) {
+stuff_plan_managementClient.prototype.send_get_company_plan = function(ssid, anchor, status, stuff_name) {
   var output = new this.pClass(this.output);
   var params = {
     ssid: ssid,
-    anchor: anchor
+    anchor: anchor,
+    status: status,
+    stuff_name: stuff_name
   };
   var args = new stuff_plan_management_get_company_plan_args(params);
   try {
@@ -7164,6 +7378,69 @@ stuff_plan_managementClient.prototype.recv_unregister_vichele = function(input,m
   }
   return callback('unregister_vichele failed: unknown result');
 };
+
+stuff_plan_managementClient.prototype.multi_confirm_plan = function(ssid, plan_ids, callback) {
+  this._seqid = this.new_seqid();
+  if (callback === undefined) {
+    var _defer = Q.defer();
+    this._reqs[this.seqid()] = function(error, result) {
+      if (error) {
+        _defer.reject(error);
+      } else {
+        _defer.resolve(result);
+      }
+    };
+    this.send_multi_confirm_plan(ssid, plan_ids);
+    return _defer.promise;
+  } else {
+    this._reqs[this.seqid()] = callback;
+    this.send_multi_confirm_plan(ssid, plan_ids);
+  }
+};
+
+stuff_plan_managementClient.prototype.send_multi_confirm_plan = function(ssid, plan_ids) {
+  var output = new this.pClass(this.output);
+  var params = {
+    ssid: ssid,
+    plan_ids: plan_ids
+  };
+  var args = new stuff_plan_management_multi_confirm_plan_args(params);
+  try {
+    output.writeMessageBegin('multi_confirm_plan', Thrift.MessageType.CALL, this.seqid());
+    args.write(output);
+    output.writeMessageEnd();
+    return this.output.flush();
+  }
+  catch (e) {
+    delete this._reqs[this.seqid()];
+    if (typeof output.reset === 'function') {
+      output.reset();
+    }
+    throw e;
+  }
+};
+
+stuff_plan_managementClient.prototype.recv_multi_confirm_plan = function(input,mtype,rseqid) {
+  var callback = this._reqs[rseqid] || function() {};
+  delete this._reqs[rseqid];
+  if (mtype == Thrift.MessageType.EXCEPTION) {
+    var x = new Thrift.TApplicationException();
+    x.read(input);
+    input.readMessageEnd();
+    return callback(x);
+  }
+  var result = new stuff_plan_management_multi_confirm_plan_result();
+  result.read(input);
+  input.readMessageEnd();
+
+  if (null !== result.e) {
+    return callback(result.e);
+  }
+  if (null !== result.success) {
+    return callback(null, result.success);
+  }
+  return callback('multi_confirm_plan failed: unknown result');
+};
 var stuff_plan_managementProcessor = exports.Processor = function(handler) {
   this._handler = handler;
 };
@@ -7229,10 +7506,12 @@ stuff_plan_managementProcessor.prototype.process_get_created_plan = function(seq
   var args = new stuff_plan_management_get_created_plan_args();
   args.read(input);
   input.readMessageEnd();
-  if (this._handler.get_created_plan.length === 2) {
+  if (this._handler.get_created_plan.length === 4) {
     Q.fcall(this._handler.get_created_plan.bind(this._handler),
       args.ssid,
-      args.anchor
+      args.anchor,
+      args.status,
+      args.stuff_name
     ).then(function(result) {
       var result_obj = new stuff_plan_management_get_created_plan_result({success: result});
       output.writeMessageBegin("get_created_plan", Thrift.MessageType.REPLY, seqid);
@@ -7253,7 +7532,7 @@ stuff_plan_managementProcessor.prototype.process_get_created_plan = function(seq
       output.flush();
     });
   } else {
-    this._handler.get_created_plan(args.ssid, args.anchor, function (err, result) {
+    this._handler.get_created_plan(args.ssid, args.anchor, args.status, args.stuff_name, function (err, result) {
       var result_obj;
       if ((err === null || typeof err === 'undefined') || err instanceof ttypes.gen_exp) {
         result_obj = new stuff_plan_management_get_created_plan_result((err !== null || typeof err === 'undefined') ? err : {success: result});
@@ -7272,10 +7551,12 @@ stuff_plan_managementProcessor.prototype.process_get_company_plan = function(seq
   var args = new stuff_plan_management_get_company_plan_args();
   args.read(input);
   input.readMessageEnd();
-  if (this._handler.get_company_plan.length === 2) {
+  if (this._handler.get_company_plan.length === 4) {
     Q.fcall(this._handler.get_company_plan.bind(this._handler),
       args.ssid,
-      args.anchor
+      args.anchor,
+      args.status,
+      args.stuff_name
     ).then(function(result) {
       var result_obj = new stuff_plan_management_get_company_plan_result({success: result});
       output.writeMessageBegin("get_company_plan", Thrift.MessageType.REPLY, seqid);
@@ -7296,7 +7577,7 @@ stuff_plan_managementProcessor.prototype.process_get_company_plan = function(seq
       output.flush();
     });
   } else {
-    this._handler.get_company_plan(args.ssid, args.anchor, function (err, result) {
+    this._handler.get_company_plan(args.ssid, args.anchor, args.status, args.stuff_name, function (err, result) {
       var result_obj;
       if ((err === null || typeof err === 'undefined') || err instanceof ttypes.gen_exp) {
         result_obj = new stuff_plan_management_get_company_plan_result((err !== null || typeof err === 'undefined') ? err : {success: result});
@@ -8720,6 +9001,49 @@ stuff_plan_managementProcessor.prototype.process_unregister_vichele = function(s
       } else {
         result_obj = new Thrift.TApplicationException(Thrift.TApplicationExceptionType.UNKNOWN, err.message);
         output.writeMessageBegin("unregister_vichele", Thrift.MessageType.EXCEPTION, seqid);
+      }
+      result_obj.write(output);
+      output.writeMessageEnd();
+      output.flush();
+    });
+  }
+};
+stuff_plan_managementProcessor.prototype.process_multi_confirm_plan = function(seqid, input, output) {
+  var args = new stuff_plan_management_multi_confirm_plan_args();
+  args.read(input);
+  input.readMessageEnd();
+  if (this._handler.multi_confirm_plan.length === 2) {
+    Q.fcall(this._handler.multi_confirm_plan.bind(this._handler),
+      args.ssid,
+      args.plan_ids
+    ).then(function(result) {
+      var result_obj = new stuff_plan_management_multi_confirm_plan_result({success: result});
+      output.writeMessageBegin("multi_confirm_plan", Thrift.MessageType.REPLY, seqid);
+      result_obj.write(output);
+      output.writeMessageEnd();
+      output.flush();
+    }).catch(function (err) {
+      var result;
+      if (err instanceof ttypes.gen_exp) {
+        result = new stuff_plan_management_multi_confirm_plan_result(err);
+        output.writeMessageBegin("multi_confirm_plan", Thrift.MessageType.REPLY, seqid);
+      } else {
+        result = new Thrift.TApplicationException(Thrift.TApplicationExceptionType.UNKNOWN, err.message);
+        output.writeMessageBegin("multi_confirm_plan", Thrift.MessageType.EXCEPTION, seqid);
+      }
+      result.write(output);
+      output.writeMessageEnd();
+      output.flush();
+    });
+  } else {
+    this._handler.multi_confirm_plan(args.ssid, args.plan_ids, function (err, result) {
+      var result_obj;
+      if ((err === null || typeof err === 'undefined') || err instanceof ttypes.gen_exp) {
+        result_obj = new stuff_plan_management_multi_confirm_plan_result((err !== null || typeof err === 'undefined') ? err : {success: result});
+        output.writeMessageBegin("multi_confirm_plan", Thrift.MessageType.REPLY, seqid);
+      } else {
+        result_obj = new Thrift.TApplicationException(Thrift.TApplicationExceptionType.UNKNOWN, err.message);
+        output.writeMessageBegin("multi_confirm_plan", Thrift.MessageType.EXCEPTION, seqid);
       }
       result_obj.write(output);
       output.writeMessageEnd();

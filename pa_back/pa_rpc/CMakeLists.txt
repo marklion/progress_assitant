@@ -12,7 +12,7 @@ aux_source_directory(../gen_code RPC_IMP_SRC)
 add_executable(pa_rpc ${RPC_SRC} ${RPC_IMP_SRC})
 
 find_library(SQLITE_ORM_LIB libsqlite_orm.so ${PRJ_INTERNAL_BUILD}/lib)
-find_library(TCP_FRAMEWORK_LIB libtcp_framework.a ${PRJ_INTERNAL_BUILD}/lib)
+find_library(TCP_FRAMEWORK_LIB libtcp_framework.so ${PRJ_INTERNAL_BUILD}/lib)
 find_library(PA_UTIL_LIB libpa_util.so ${PRJ_INTERNAL_BUILD}/lib)
 find_library(EXTERNAL_SRC_LIB libexternal_src.so ${PRJ_INTERNAL_BUILD}/lib)
 
