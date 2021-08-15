@@ -7,7 +7,8 @@ const pa_rpc_open_api_management= require('./gen_code/open_api_management')
 
 const fs = require('fs');
 
-
+app.use(express.json()) // for parsing application/json
+app.use(express.urlencoded({ extended: true })) // for parsing application/x-www-form-urlencoded
 function request_rpc(service_name, process_name, params) {
     var mp = new thrift.Multiplexer();
     var options = {
@@ -92,6 +93,22 @@ app.get('/pa_rest/push_arrange/:id', async (req, res) => {
     } catch (error) {
         ret = { err_msg: error.msg };
     }
+    res.send(ret);
+});
+
+app.post('/pa_rest/call_vehicle', async (req, res)=>{
+    var token = req.query.token;
+    var ret = { err_msg: '无权限' };
+
+    try {
+        var resp = await request_rpc("open_api_management", 'proc_call_vehicle', [req.body, token]);
+        if (resp) {
+            ret.err_msg = "";
+        }
+    } catch (error) {
+        ret = { err_msg: error.msg };
+    }
+
     res.send(ret);
 });
 

@@ -77,6 +77,8 @@ class api_extra_transformation;
 
 class api_transformation_info;
 
+class call_vehicle_req;
+
 class vichele_stay_alone;
 
 class silent_user_info;
@@ -1930,6 +1932,66 @@ class api_transformation_info : public virtual ::apache::thrift::TBase {
 void swap(api_transformation_info &a, api_transformation_info &b);
 
 std::ostream& operator<<(std::ostream& out, const api_transformation_info& obj);
+
+typedef struct _call_vehicle_req__isset {
+  _call_vehicle_req__isset() : plateNo(false), driverName(false), index(false), stationName(false) {}
+  bool plateNo :1;
+  bool driverName :1;
+  bool index :1;
+  bool stationName :1;
+} _call_vehicle_req__isset;
+
+class call_vehicle_req : public virtual ::apache::thrift::TBase {
+ public:
+
+  call_vehicle_req(const call_vehicle_req&);
+  call_vehicle_req& operator=(const call_vehicle_req&);
+  call_vehicle_req() : plateNo(), driverName(), index(0), stationName() {
+  }
+
+  virtual ~call_vehicle_req() noexcept;
+  std::string plateNo;
+  std::string driverName;
+  int64_t index;
+  std::string stationName;
+
+  _call_vehicle_req__isset __isset;
+
+  void __set_plateNo(const std::string& val);
+
+  void __set_driverName(const std::string& val);
+
+  void __set_index(const int64_t val);
+
+  void __set_stationName(const std::string& val);
+
+  bool operator == (const call_vehicle_req & rhs) const
+  {
+    if (!(plateNo == rhs.plateNo))
+      return false;
+    if (!(driverName == rhs.driverName))
+      return false;
+    if (!(index == rhs.index))
+      return false;
+    if (!(stationName == rhs.stationName))
+      return false;
+    return true;
+  }
+  bool operator != (const call_vehicle_req &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const call_vehicle_req & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+  virtual void printTo(std::ostream& out) const;
+};
+
+void swap(call_vehicle_req &a, call_vehicle_req &b);
+
+std::ostream& operator<<(std::ostream& out, const call_vehicle_req& obj);
 
 typedef struct _vichele_stay_alone__isset {
   _vichele_stay_alone__isset() : id(false), stuff_name(false), company_name(false), main_vichele_number(false), behind_vichele_number(false), count(false), comment(false), date(false), destination(false), status(false), creator_name(false), creator_phone(false), repeated(false) {}

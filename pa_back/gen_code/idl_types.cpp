@@ -4861,6 +4861,158 @@ void api_transformation_info::printTo(std::ostream& out) const {
 }
 
 
+call_vehicle_req::~call_vehicle_req() noexcept {
+}
+
+
+void call_vehicle_req::__set_plateNo(const std::string& val) {
+  this->plateNo = val;
+}
+
+void call_vehicle_req::__set_driverName(const std::string& val) {
+  this->driverName = val;
+}
+
+void call_vehicle_req::__set_index(const int64_t val) {
+  this->index = val;
+}
+
+void call_vehicle_req::__set_stationName(const std::string& val) {
+  this->stationName = val;
+}
+std::ostream& operator<<(std::ostream& out, const call_vehicle_req& obj)
+{
+  obj.printTo(out);
+  return out;
+}
+
+
+uint32_t call_vehicle_req::read(::apache::thrift::protocol::TProtocol* iprot) {
+
+  ::apache::thrift::protocol::TInputRecursionTracker tracker(*iprot);
+  uint32_t xfer = 0;
+  std::string fname;
+  ::apache::thrift::protocol::TType ftype;
+  int16_t fid;
+
+  xfer += iprot->readStructBegin(fname);
+
+  using ::apache::thrift::protocol::TProtocolException;
+
+
+  while (true)
+  {
+    xfer += iprot->readFieldBegin(fname, ftype, fid);
+    if (ftype == ::apache::thrift::protocol::T_STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 1:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->plateNo);
+          this->__isset.plateNo = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 2:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->driverName);
+          this->__isset.driverName = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 3:
+        if (ftype == ::apache::thrift::protocol::T_I64) {
+          xfer += iprot->readI64(this->index);
+          this->__isset.index = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 4:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->stationName);
+          this->__isset.stationName = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      default:
+        xfer += iprot->skip(ftype);
+        break;
+    }
+    xfer += iprot->readFieldEnd();
+  }
+
+  xfer += iprot->readStructEnd();
+
+  return xfer;
+}
+
+uint32_t call_vehicle_req::write(::apache::thrift::protocol::TProtocol* oprot) const {
+  uint32_t xfer = 0;
+  ::apache::thrift::protocol::TOutputRecursionTracker tracker(*oprot);
+  xfer += oprot->writeStructBegin("call_vehicle_req");
+
+  xfer += oprot->writeFieldBegin("plateNo", ::apache::thrift::protocol::T_STRING, 1);
+  xfer += oprot->writeString(this->plateNo);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("driverName", ::apache::thrift::protocol::T_STRING, 2);
+  xfer += oprot->writeString(this->driverName);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("index", ::apache::thrift::protocol::T_I64, 3);
+  xfer += oprot->writeI64(this->index);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("stationName", ::apache::thrift::protocol::T_STRING, 4);
+  xfer += oprot->writeString(this->stationName);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldStop();
+  xfer += oprot->writeStructEnd();
+  return xfer;
+}
+
+void swap(call_vehicle_req &a, call_vehicle_req &b) {
+  using ::std::swap;
+  swap(a.plateNo, b.plateNo);
+  swap(a.driverName, b.driverName);
+  swap(a.index, b.index);
+  swap(a.stationName, b.stationName);
+  swap(a.__isset, b.__isset);
+}
+
+call_vehicle_req::call_vehicle_req(const call_vehicle_req& other62) {
+  plateNo = other62.plateNo;
+  driverName = other62.driverName;
+  index = other62.index;
+  stationName = other62.stationName;
+  __isset = other62.__isset;
+}
+call_vehicle_req& call_vehicle_req::operator=(const call_vehicle_req& other63) {
+  plateNo = other63.plateNo;
+  driverName = other63.driverName;
+  index = other63.index;
+  stationName = other63.stationName;
+  __isset = other63.__isset;
+  return *this;
+}
+void call_vehicle_req::printTo(std::ostream& out) const {
+  using ::apache::thrift::to_string;
+  out << "call_vehicle_req(";
+  out << "plateNo=" << to_string(plateNo);
+  out << ", " << "driverName=" << to_string(driverName);
+  out << ", " << "index=" << to_string(index);
+  out << ", " << "stationName=" << to_string(stationName);
+  out << ")";
+}
+
+
 vichele_stay_alone::~vichele_stay_alone() noexcept {
 }
 
@@ -5140,37 +5292,37 @@ void swap(vichele_stay_alone &a, vichele_stay_alone &b) {
   swap(a.__isset, b.__isset);
 }
 
-vichele_stay_alone::vichele_stay_alone(const vichele_stay_alone& other62) {
-  id = other62.id;
-  stuff_name = other62.stuff_name;
-  company_name = other62.company_name;
-  main_vichele_number = other62.main_vichele_number;
-  behind_vichele_number = other62.behind_vichele_number;
-  count = other62.count;
-  comment = other62.comment;
-  date = other62.date;
-  destination = other62.destination;
-  status = other62.status;
-  creator_name = other62.creator_name;
-  creator_phone = other62.creator_phone;
-  repeated = other62.repeated;
-  __isset = other62.__isset;
+vichele_stay_alone::vichele_stay_alone(const vichele_stay_alone& other64) {
+  id = other64.id;
+  stuff_name = other64.stuff_name;
+  company_name = other64.company_name;
+  main_vichele_number = other64.main_vichele_number;
+  behind_vichele_number = other64.behind_vichele_number;
+  count = other64.count;
+  comment = other64.comment;
+  date = other64.date;
+  destination = other64.destination;
+  status = other64.status;
+  creator_name = other64.creator_name;
+  creator_phone = other64.creator_phone;
+  repeated = other64.repeated;
+  __isset = other64.__isset;
 }
-vichele_stay_alone& vichele_stay_alone::operator=(const vichele_stay_alone& other63) {
-  id = other63.id;
-  stuff_name = other63.stuff_name;
-  company_name = other63.company_name;
-  main_vichele_number = other63.main_vichele_number;
-  behind_vichele_number = other63.behind_vichele_number;
-  count = other63.count;
-  comment = other63.comment;
-  date = other63.date;
-  destination = other63.destination;
-  status = other63.status;
-  creator_name = other63.creator_name;
-  creator_phone = other63.creator_phone;
-  repeated = other63.repeated;
-  __isset = other63.__isset;
+vichele_stay_alone& vichele_stay_alone::operator=(const vichele_stay_alone& other65) {
+  id = other65.id;
+  stuff_name = other65.stuff_name;
+  company_name = other65.company_name;
+  main_vichele_number = other65.main_vichele_number;
+  behind_vichele_number = other65.behind_vichele_number;
+  count = other65.count;
+  comment = other65.comment;
+  date = other65.date;
+  destination = other65.destination;
+  status = other65.status;
+  creator_name = other65.creator_name;
+  creator_phone = other65.creator_phone;
+  repeated = other65.repeated;
+  __isset = other65.__isset;
   return *this;
 }
 void vichele_stay_alone::printTo(std::ostream& out) const {
@@ -5285,15 +5437,15 @@ void swap(silent_user_info &a, silent_user_info &b) {
   swap(a.__isset, b.__isset);
 }
 
-silent_user_info::silent_user_info(const silent_user_info& other64) {
-  name = other64.name;
-  phone = other64.phone;
-  __isset = other64.__isset;
+silent_user_info::silent_user_info(const silent_user_info& other66) {
+  name = other66.name;
+  phone = other66.phone;
+  __isset = other66.__isset;
 }
-silent_user_info& silent_user_info::operator=(const silent_user_info& other65) {
-  name = other65.name;
-  phone = other65.phone;
-  __isset = other65.__isset;
+silent_user_info& silent_user_info::operator=(const silent_user_info& other67) {
+  name = other67.name;
+  phone = other67.phone;
+  __isset = other67.__isset;
   return *this;
 }
 void silent_user_info::printTo(std::ostream& out) const {

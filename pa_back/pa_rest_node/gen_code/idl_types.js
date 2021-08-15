@@ -3145,6 +3145,101 @@ api_transformation_info.prototype.write = function(output) {
   return;
 };
 
+var call_vehicle_req = module.exports.call_vehicle_req = function(args) {
+  this.plateNo = null;
+  this.driverName = null;
+  this.index = null;
+  this.stationName = null;
+  if (args) {
+    if (args.plateNo !== undefined && args.plateNo !== null) {
+      this.plateNo = args.plateNo;
+    }
+    if (args.driverName !== undefined && args.driverName !== null) {
+      this.driverName = args.driverName;
+    }
+    if (args.index !== undefined && args.index !== null) {
+      this.index = args.index;
+    }
+    if (args.stationName !== undefined && args.stationName !== null) {
+      this.stationName = args.stationName;
+    }
+  }
+};
+call_vehicle_req.prototype = {};
+call_vehicle_req.prototype.read = function(input) {
+  input.readStructBegin();
+  while (true) {
+    var ret = input.readFieldBegin();
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    switch (fid) {
+      case 1:
+      if (ftype == Thrift.Type.STRING) {
+        this.plateNo = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 2:
+      if (ftype == Thrift.Type.STRING) {
+        this.driverName = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 3:
+      if (ftype == Thrift.Type.I64) {
+        this.index = input.readI64();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 4:
+      if (ftype == Thrift.Type.STRING) {
+        this.stationName = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      default:
+        input.skip(ftype);
+    }
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+call_vehicle_req.prototype.write = function(output) {
+  output.writeStructBegin('call_vehicle_req');
+  if (this.plateNo !== null && this.plateNo !== undefined) {
+    output.writeFieldBegin('plateNo', Thrift.Type.STRING, 1);
+    output.writeString(this.plateNo);
+    output.writeFieldEnd();
+  }
+  if (this.driverName !== null && this.driverName !== undefined) {
+    output.writeFieldBegin('driverName', Thrift.Type.STRING, 2);
+    output.writeString(this.driverName);
+    output.writeFieldEnd();
+  }
+  if (this.index !== null && this.index !== undefined) {
+    output.writeFieldBegin('index', Thrift.Type.I64, 3);
+    output.writeI64(this.index);
+    output.writeFieldEnd();
+  }
+  if (this.stationName !== null && this.stationName !== undefined) {
+    output.writeFieldBegin('stationName', Thrift.Type.STRING, 4);
+    output.writeString(this.stationName);
+    output.writeFieldEnd();
+  }
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+
 var vichele_stay_alone = module.exports.vichele_stay_alone = function(args) {
   this.id = null;
   this.stuff_name = null;

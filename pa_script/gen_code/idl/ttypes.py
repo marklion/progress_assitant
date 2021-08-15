@@ -2872,6 +2872,96 @@ class api_transformation_info(object):
         return not (self == other)
 
 
+class call_vehicle_req(object):
+    """
+    Attributes:
+     - plateNo
+     - driverName
+     - index
+     - stationName
+
+    """
+
+
+    def __init__(self, plateNo=None, driverName=None, index=None, stationName=None,):
+        self.plateNo = plateNo
+        self.driverName = driverName
+        self.index = index
+        self.stationName = stationName
+
+    def read(self, iprot):
+        if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
+            iprot._fast_decode(self, iprot, [self.__class__, self.thrift_spec])
+            return
+        iprot.readStructBegin()
+        while True:
+            (fname, ftype, fid) = iprot.readFieldBegin()
+            if ftype == TType.STOP:
+                break
+            if fid == 1:
+                if ftype == TType.STRING:
+                    self.plateNo = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 2:
+                if ftype == TType.STRING:
+                    self.driverName = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 3:
+                if ftype == TType.I64:
+                    self.index = iprot.readI64()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 4:
+                if ftype == TType.STRING:
+                    self.stationName = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
+            else:
+                iprot.skip(ftype)
+            iprot.readFieldEnd()
+        iprot.readStructEnd()
+
+    def write(self, oprot):
+        if oprot._fast_encode is not None and self.thrift_spec is not None:
+            oprot.trans.write(oprot._fast_encode(self, [self.__class__, self.thrift_spec]))
+            return
+        oprot.writeStructBegin('call_vehicle_req')
+        if self.plateNo is not None:
+            oprot.writeFieldBegin('plateNo', TType.STRING, 1)
+            oprot.writeString(self.plateNo.encode('utf-8') if sys.version_info[0] == 2 else self.plateNo)
+            oprot.writeFieldEnd()
+        if self.driverName is not None:
+            oprot.writeFieldBegin('driverName', TType.STRING, 2)
+            oprot.writeString(self.driverName.encode('utf-8') if sys.version_info[0] == 2 else self.driverName)
+            oprot.writeFieldEnd()
+        if self.index is not None:
+            oprot.writeFieldBegin('index', TType.I64, 3)
+            oprot.writeI64(self.index)
+            oprot.writeFieldEnd()
+        if self.stationName is not None:
+            oprot.writeFieldBegin('stationName', TType.STRING, 4)
+            oprot.writeString(self.stationName.encode('utf-8') if sys.version_info[0] == 2 else self.stationName)
+            oprot.writeFieldEnd()
+        oprot.writeFieldStop()
+        oprot.writeStructEnd()
+
+    def validate(self):
+        return
+
+    def __repr__(self):
+        L = ['%s=%r' % (key, value)
+             for key, value in self.__dict__.items()]
+        return '%s(%s)' % (self.__class__.__name__, ', '.join(L))
+
+    def __eq__(self, other):
+        return isinstance(other, self.__class__) and self.__dict__ == other.__dict__
+
+    def __ne__(self, other):
+        return not (self == other)
+
+
 class vichele_stay_alone(object):
     """
     Attributes:
@@ -3378,6 +3468,14 @@ api_transformation_info.thrift_spec = (
     (7, TType.STRING, 'company_name', 'UTF8', None, ),  # 7
     (8, TType.STRUCT, 'extra_info', [api_extra_transformation, None], None, ),  # 8
     (9, TType.BOOL, 'is_sale', None, None, ),  # 9
+)
+all_structs.append(call_vehicle_req)
+call_vehicle_req.thrift_spec = (
+    None,  # 0
+    (1, TType.STRING, 'plateNo', 'UTF8', None, ),  # 1
+    (2, TType.STRING, 'driverName', 'UTF8', None, ),  # 2
+    (3, TType.I64, 'index', None, None, ),  # 3
+    (4, TType.STRING, 'stationName', 'UTF8', None, ),  # 4
 )
 all_structs.append(vichele_stay_alone)
 vichele_stay_alone.thrift_spec = (

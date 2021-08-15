@@ -330,6 +330,13 @@ struct api_transformation_info {
     9:bool is_sale,
 }
 
+struct call_vehicle_req {
+    1:string plateNo,
+    2:string driverName,
+    3:i64 index,
+    4:string stationName,
+}
+
 service open_api_management {
     bool register_api_user(1:string company_name, 2:string email, 3:string password) throws (1:gen_exp e),
     bool verify_email_code(1:string email, 2:string code) throws (1:gen_exp e),
@@ -338,6 +345,7 @@ service open_api_management {
     list<api_transformation_info> get_today_transformation(1:string token) throws (1:gen_exp e),
     bool push_exit_count(1:i64 id, 2:double count, 3:bool is_sale, 4:string token) throws (1:gen_exp e),
     bool push_arrange(1:i64 id, 2:string order, 3:bool is_sale, 4:string location, 5:string token) throws (1:gen_exp e),
+    bool proc_call_vehicle(1:call_vehicle_req _req, 2:string token) throws (1:gen_exp e),
 }
 
 struct vichele_stay_alone {
