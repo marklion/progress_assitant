@@ -373,6 +373,51 @@ public:
 
         return ret;
     }
+
+    std::unique_ptr<pa_sql_company> _get_token_company(const std::string &_token) {
+        auto api_user = sqlite_orm::search_record<pa_sql_api_user>("token == '%s'", _token.c_str());
+        if (api_user)
+        {
+            return api_user->get_parent<pa_sql_company>("belong_company");
+        }
+
+        return std::unique_ptr<pa_sql_company>();
+    }
+
+    virtual bool proc_call_vehicle(const call_vehicle_req &_req, const std::string &token)
+    {
+        bool ret = false;
+        log_audit_basedon_token(token, __FUNCTION__);
+
+        auto company = _get_token_company(token);
+        if (!company)
+        {
+            PA_RETURN_MSG(OPEN_API_MSG_NO_PERMISSION);
+        }
+
+        auto all_active_plan = PA_RPC_get_all_plans_related_by_company(*company, "status == 3");
+        for (auto& plan : all_active_plan)
+        {
+            auto all_vichele_info = plan.get_all_children<pa_sql_single_vichele>("belong_plan");
+            for (auto &itr:all_vichele_info) 
+            {
+                auto main_vichele = itr.get_parent<pa_sql_vichele>("main_vichele");
+                auto driver = itr.get_parent<pa_sql_driver>("driver");
+                if (main_vichele && driver)
+                {
+                    if (main_vichele->number == _req.plateNo && driver->name == _req.driverName)
+                    {
+                        ret = true;
+                        PA_WECHAT_send_call_vichele_msg(driver->silent_id, main_vichele->number, _req.stationName, std::to_string(_req.index));
+                        return ret;
+                    }
+                }
+            }
+        }
+
+
+        return ret;
+    }
 };
 
 #endif // _OPEN_API_MANAGEMENT_H_
