@@ -404,35 +404,44 @@ public:
             {
                 auto main_vichele = itr.get_parent<pa_sql_vichele>("main_vichele");
                 auto driver = itr.get_parent<pa_sql_driver>("driver");
+
                 if (main_vichele && driver)
                 {
-                    if (main_vichele->number == _req.plateNo && driver->name == _req.driverName)
+                    auto has_id_driver = sqlite_orm::search_record<pa_sql_driver>("silent_id IS NOT NULL AND silent_id != '' AND phone == '%s'", driver->phone.c_str());
+                    if (has_id_driver)
                     {
-                        ret = true;
-                        PA_WECHAT_send_call_vichele_msg(driver->silent_id, main_vichele->number, _req.stationName, std::to_string(_req.index));
-                        return ret;
+                        if (main_vichele->number == _req.plateNo && has_id_driver->name == _req.driverName)
+                        {
+                            ret = true;
+                            PA_WECHAT_send_call_vichele_msg(has_id_driver->silent_id, main_vichele->number, _req.stationName, std::to_string(_req.index));
+                            return ret;
+                        }
                     }
                 }
             }
         }
 
-
         return ret;
     }
 
-    vehicle_info_resp make_resp_from_single_vichele(pa_sql_single_vichele &_vichele) {
+    vehicle_info_resp make_resp_from_single_vichele(pa_sql_single_vichele &_vichele)
+    {
         vehicle_info_resp ret;
         ret.id = std::to_string(_vichele.get_pri_id()) + "S";
         auto main_vichele = _vichele.get_parent<pa_sql_vichele>("main_vichele");
-        auto driver = _vichele.get_parent<pa_sql_driver>("driver");
+        auto this_driver = _vichele.get_parent<pa_sql_driver>("driver");
         auto behind_vichele = _vichele.get_parent<pa_sql_vichele_behind>("behind_vichele");
-        if (main_vichele && driver && behind_vichele)
+        if (main_vichele && this_driver && behind_vichele)
         {
+            auto driver = sqlite_orm::search_record<pa_sql_driver>("silent_id IS NOT NULL AND silent_id != '' AND phone == '%s'", this_driver->phone.c_str());
+            if (driver)
+            {
+                ret.driverName = driver->name;
+                ret.driverPhone = driver->phone;
+                ret.driverId = driver->driver_id;
+            }
             ret.plateNo = main_vichele->number;
             ret.backPlateNo = behind_vichele->number;
-            ret.driverName = driver->name;
-            ret.driverPhone = driver->phone;
-            ret.driverId = driver->driver_id;
         }
         auto plan = _vichele.get_parent<pa_sql_plan>("belong_plan");
         if (plan)
@@ -485,8 +494,8 @@ public:
         auto destination = _vichele.get_parent<pa_sql_company>("destination");
         if (destination)
         {
-            auto same_vicheles = sqlite_orm::search_record_all<pa_sql_vichele_stay_alone>("main_vichele_number == '%s' AND behind_vichele_number == '%s' AND destination_ext_key == %ld AND is_drop == 0 AND status == 1",_vichele.main_vichele_number.c_str(), _vichele.behind_vichele_number.c_str(), destination->get_pri_id());
-            for (auto &itr:same_vicheles)
+            auto same_vicheles = sqlite_orm::search_record_all<pa_sql_vichele_stay_alone>("main_vichele_number == '%s' AND behind_vichele_number == '%s' AND destination_ext_key == %ld AND is_drop == 0 AND status == 1", _vichele.main_vichele_number.c_str(), _vichele.behind_vichele_number.c_str(), destination->get_pri_id());
+            for (auto &itr : same_vicheles)
             {
                 meta_stuff_info tmp;
                 tmp.stuffName = itr.stuff_name;
@@ -529,7 +538,8 @@ public:
                     }
                     else
                     {
-                        if (driver->driver_id == driverId)
+                        auto has_id_driver = sqlite_orm::search_record<pa_sql_driver>("silent_id IS NOT NULL AND silent_id != '' AND phone == '%s'", driver->phone.c_str());
+                        if (has_id_driver && has_id_driver->driver_id == driverId)
                         {
                             _return = make_resp_from_single_vichele(itr);
                             return;
@@ -539,8 +549,8 @@ public:
             }
         }
 
-        auto buyer_vehicles = company->get_all_children<pa_sql_vichele_stay_alone>("destination", "status == 1 AND is_drop == 0");
-        for (auto &itr:buyer_vehicles)
+        auto buyer_vehicles = company->get_all_children<pa_sql_vichele_stay_alone>("destination", "status == 1 AND is_drop == 0 GROUP BY main_vichele_number");
+        for (auto &itr : buyer_vehicles)
         {
             if (itr.main_vichele_number == plateNo || (itr.driver_id == driverId && itr.driver_id.length() > 0))
             {
@@ -550,7 +560,7 @@ public:
                 _return.driverId = itr.driver_id;
                 _return.driverName = itr.driver_name;
                 _return.driverPhone = itr.driver_phone;
-                
+
                 _return.enterWeight = itr.count;
                 _return.isSale = false;
                 _return.plateNo = itr.main_vichele_number;
@@ -588,6 +598,70 @@ public:
         if (_return.id.length() <= 0)
         {
             PA_RETURN_MSG(OPEN_API_MSG_NO_DATA_FOUND);
+        }
+    }
+
+    virtual void proc_all_vehicle_info(std::vector<vehicle_info_resp> &_return, const std::string &token)
+    {
+        log_audit_basedon_token(token, __FUNCTION__);
+
+        auto company = _get_token_company(token);
+        if (!company)
+        {
+            PA_RETURN_MSG(OPEN_API_MSG_NO_PERMISSION);
+        }
+        auto all_active_plan = PA_RPC_get_all_plans_related_by_company(*company, "status == 3");
+        for (auto &plan : all_active_plan)
+        {
+            auto all_vichele_info = plan.get_all_children<pa_sql_single_vichele>("belong_plan");
+            for (auto &itr : all_vichele_info)
+            {
+                vehicle_info_resp tmp;
+                tmp = make_resp_from_single_vichele(itr);
+                _return.push_back(tmp);
+            }
+        }
+
+        auto buyer_vehicles = company->get_all_children<pa_sql_vichele_stay_alone>("destination", "status == 1 AND is_drop == 0 GROUP BY main_vichele_number");
+        for (auto &itr : buyer_vehicles)
+        {
+            vehicle_info_resp tmp;
+            tmp.id = std::to_string(itr.get_pri_id()) + "B";
+            tmp.backPlateNo = itr.behind_vichele_number;
+            tmp.createTime = itr.timestamp;
+            tmp.driverId = itr.driver_id;
+            tmp.driverName = itr.driver_name;
+            tmp.driverPhone = itr.driver_phone;
+
+            tmp.enterWeight = itr.count;
+            tmp.isSale = false;
+            tmp.plateNo = itr.main_vichele_number;
+            tmp.stuffName = itr.stuff_name;
+            tmp.stuffId = PA_RPC_search_base_id_info_by_name(tmp.stuffName, "stuff");
+
+            tmp.supplierName = itr.company_name;
+            tmp.supplierId = PA_RPC_search_base_id_info_by_name(tmp.supplierName, "supplier");
+            tmp.vehicleTeamName = itr.transfor_company;
+            tmp.vehicleTeamId = PA_RPC_search_base_id_info_by_name(tmp.vehicleTeamName, "vehicleTeam");
+            auto multi_stuff = search_multi_stuff(itr);
+            if (multi_stuff.size() > 1)
+            {
+                tmp.isMulti = true;
+                tmp.multiStuff = multi_stuff;
+                tmp.stuffName = "";
+                tmp.stuffId = "";
+                tmp.enterWeight = [=]() -> double
+                {
+                    double ret = 0;
+                    for (auto &itr : multi_stuff)
+                    {
+                        ret += itr.weight;
+                    }
+
+                    return ret;
+                }();
+            }
+            _return.push_back(tmp);
         }
     }
 };

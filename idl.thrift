@@ -377,6 +377,7 @@ service open_api_management {
     bool push_arrange(1:i64 id, 2:string order, 3:bool is_sale, 4:string location, 5:string token) throws (1:gen_exp e),
     bool proc_call_vehicle(1:call_vehicle_req _req, 2:string token) throws (1:gen_exp e),
     vehicle_info_resp proc_vehicle_info(1:string plateNo, 2:string driverId, 3:string token) throws (1:gen_exp e),
+    list<vehicle_info_resp> proc_all_vehicle_info(1:string token) throws (1:gen_exp e),
 }
 
 struct vichele_stay_alone {

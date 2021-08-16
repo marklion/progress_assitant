@@ -131,6 +131,22 @@ app.post('/pa_rest/vehicle_info', async (req, res) => {
     res.send(ret);
 });
 
+app.get('/pa_rest/all_vehicle_info', async (req, res)=>{
+    var token = req.query.token;
+    var ret = { err_msg: '无权限' };
+    try {
+        var resp = await request_rpc("open_api_management", 'proc_all_vehicle_info', [token]);
+        if (resp) {
+            ret.err_msg = "";
+            ret.result = resp;
+        }
+    } catch (error) {
+        ret = { err_msg: error.msg };
+    }
+
+    res.send(ret);
+});
+
 app.listen(port, () => {
     console.log('rest is runing');
 });
