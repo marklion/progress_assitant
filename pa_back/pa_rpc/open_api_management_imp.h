@@ -16,6 +16,7 @@
 #define OPEN_API_MSG_BLOCK_EMAIL "email is not in white list, please ask admin for more help"
 #define OPEN_API_MSG_VICHELE_NOT_EXIST "vehicle specificed was not exist"
 #define OPEN_API_MSG_NO_PERMISSION "no permission to do this operation"
+#define OPEN_API_MSG_NO_DATA_FOUND "no data was found"
 
 class open_api_management_handler : public open_api_managementIf
 {
@@ -417,6 +418,177 @@ public:
 
 
         return ret;
+    }
+
+    vehicle_info_resp make_resp_from_single_vichele(pa_sql_single_vichele &_vichele) {
+        vehicle_info_resp ret;
+        ret.id = std::to_string(_vichele.get_pri_id()) + "S";
+        auto main_vichele = _vichele.get_parent<pa_sql_vichele>("main_vichele");
+        auto driver = _vichele.get_parent<pa_sql_driver>("driver");
+        auto behind_vichele = _vichele.get_parent<pa_sql_vichele_behind>("behind_vichele");
+        if (main_vichele && driver && behind_vichele)
+        {
+            ret.plateNo = main_vichele->number;
+            ret.backPlateNo = behind_vichele->number;
+            ret.driverName = driver->name;
+            ret.driverPhone = driver->phone;
+            ret.driverId = driver->driver_id;
+        }
+        auto plan = _vichele.get_parent<pa_sql_plan>("belong_plan");
+        if (plan)
+        {
+            ret.stuffName = plan->name;
+            auto stuff_base_info = PA_RPC_search_base_info_by_name(plan->name, "stuff");
+            if (stuff_base_info)
+            {
+                ret.stuffId = stuff_base_info->id;
+            }
+            auto creator = plan->get_parent<pa_sql_userinfo>("created_by");
+            if (creator)
+            {
+                auto create_company = creator->get_parent<pa_sql_company>("belong_company");
+                if (create_company)
+                {
+                    ret.companyName = create_company->name;
+                    if (plan->proxy_company.length() > 0)
+                    {
+                        ret.companyName = plan->proxy_company;
+                    }
+                }
+            }
+
+            auto stuff_info = plan->get_parent<pa_sql_stuff_info>("belong_stuff");
+            if (stuff_info)
+            {
+                ret.price = stuff_info->price;
+            }
+
+            ret.createTime = PA_DATAOPT_date_2_timestring(plan->create_time);
+            ret.orderNo = std::to_string(plan->create_time) + std::to_string(plan->get_pri_id());
+        }
+
+        ret.isSale = true;
+        auto customer_base_info = PA_RPC_search_base_info_by_name(ret.companyName, "customer");
+        if (customer_base_info)
+        {
+            ret.customerId = customer_base_info->id;
+        }
+        ret.isMulti = false;
+        ret.vehicleTeamName = ret.companyName;
+        ret.vehicleTeamId = ret.customerId;
+        return ret;
+    }
+
+    std::vector<meta_stuff_info> search_multi_stuff(pa_sql_vichele_stay_alone _vichele)
+    {
+        std::vector<meta_stuff_info> ret;
+        auto destination = _vichele.get_parent<pa_sql_company>("destination");
+        if (destination)
+        {
+            auto same_vicheles = sqlite_orm::search_record_all<pa_sql_vichele_stay_alone>("main_vichele_number == '%s' AND behind_vichele_number == '%s' AND destination_ext_key == %ld AND is_drop == 0 AND status == 1",_vichele.main_vichele_number.c_str(), _vichele.behind_vichele_number.c_str(), destination->get_pri_id());
+            for (auto &itr:same_vicheles)
+            {
+                meta_stuff_info tmp;
+                tmp.stuffName = itr.stuff_name;
+                tmp.weight = itr.count;
+                tmp.stuffId = PA_RPC_search_base_id_info_by_name(tmp.stuffName, "stuff");
+                ret.push_back(tmp);
+            }
+        }
+
+        return ret;
+    }
+
+    virtual void proc_vehicle_info(vehicle_info_resp &_return, const std::string &plateNo, const std::string &driverId, const std::string &token)
+    {
+        log_audit_basedon_token(token, __FUNCTION__);
+
+        auto company = _get_token_company(token);
+        if (!company)
+        {
+            PA_RETURN_MSG(OPEN_API_MSG_NO_PERMISSION);
+        }
+
+        auto all_active_plan = PA_RPC_get_all_plans_related_by_company(*company, "status == 3");
+        for (auto &plan : all_active_plan)
+        {
+            auto all_vichele_info = plan.get_all_children<pa_sql_single_vichele>("belong_plan");
+            for (auto &itr : all_vichele_info)
+            {
+                auto main_vichele = itr.get_parent<pa_sql_vichele>("main_vichele");
+                auto driver = itr.get_parent<pa_sql_driver>("driver");
+                if (main_vichele && driver)
+                {
+                    if (plateNo.length() > 0)
+                    {
+                        if (main_vichele->number == plateNo)
+                        {
+                            _return = make_resp_from_single_vichele(itr);
+                            return;
+                        }
+                    }
+                    else
+                    {
+                        if (driver->driver_id == driverId)
+                        {
+                            _return = make_resp_from_single_vichele(itr);
+                            return;
+                        }
+                    }
+                }
+            }
+        }
+
+        auto buyer_vehicles = company->get_all_children<pa_sql_vichele_stay_alone>("destination", "status == 1 AND is_drop == 0");
+        for (auto &itr:buyer_vehicles)
+        {
+            if (itr.main_vichele_number == plateNo || (itr.driver_id == driverId && itr.driver_id.length() > 0))
+            {
+                _return.id = std::to_string(itr.get_pri_id()) + "B";
+                _return.backPlateNo = itr.behind_vichele_number;
+                _return.createTime = itr.timestamp;
+                _return.driverId = itr.driver_id;
+                _return.driverName = itr.driver_name;
+                _return.driverPhone = itr.driver_phone;
+                
+                _return.enterWeight = itr.count;
+                _return.isSale = false;
+                _return.plateNo = itr.main_vichele_number;
+                _return.stuffName = itr.stuff_name;
+                auto stuff_base_info = PA_RPC_search_base_info_by_name(_return.stuffName, "stuff");
+                if (stuff_base_info)
+                {
+                    _return.stuffId = stuff_base_info->id;
+                }
+                _return.supplierName = itr.company_name;
+                _return.supplierId = PA_RPC_search_base_id_info_by_name(_return.supplierName, "supplier");
+                _return.vehicleTeamName = itr.transfor_company;
+                _return.vehicleTeamId = PA_RPC_search_base_id_info_by_name(_return.vehicleTeamName, "vehicleTeam");
+                auto multi_stuff = search_multi_stuff(itr);
+                if (multi_stuff.size() > 1)
+                {
+                    _return.isMulti = true;
+                    _return.multiStuff = multi_stuff;
+                    _return.stuffName = "";
+                    _return.stuffId = "";
+                    _return.enterWeight = [=]() -> double
+                    {
+                        double ret = 0;
+                        for (auto &itr : multi_stuff)
+                        {
+                            ret += itr.weight;
+                        }
+
+                        return ret;
+                    }();
+                }
+                return;
+            }
+        }
+        if (_return.id.length() <= 0)
+        {
+            PA_RETURN_MSG(OPEN_API_MSG_NO_DATA_FOUND);
+        }
     }
 };
 

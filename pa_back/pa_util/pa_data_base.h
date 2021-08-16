@@ -573,6 +573,11 @@ public:
     int is_drop = 0;
     int status = 0;
     int is_repeated = 0;
+    std::string timestamp;
+    std::string driver_name;
+    std::string driver_phone;
+    std::string driver_id;
+    std::string transfor_company;
     pa_sql_vichele_stay_alone() {
         add_parent_type<pa_sql_silent_user>("created_by");
         add_parent_type<pa_sql_company>("destination");
@@ -590,6 +595,11 @@ public:
         ret.push_back(sqlite_orm_column("is_drop", sqlite_orm_column::INTEGER, &is_drop));
         ret.push_back(sqlite_orm_column("status", sqlite_orm_column::INTEGER, &status));
         ret.push_back(sqlite_orm_column("is_repeated", sqlite_orm_column::INTEGER, &is_repeated));
+        ret.push_back(sqlite_orm_column("timestamp", sqlite_orm_column::STRING, &timestamp));
+        ret.push_back(sqlite_orm_column("driver_name", sqlite_orm_column::STRING, &driver_name));
+        ret.push_back(sqlite_orm_column("driver_phone", sqlite_orm_column::STRING, &driver_phone));
+        ret.push_back(sqlite_orm_column("driver_id", sqlite_orm_column::STRING, &driver_id));
+        ret.push_back(sqlite_orm_column("transfor_company", sqlite_orm_column::STRING, &transfor_company));
 
         return ret;
     }

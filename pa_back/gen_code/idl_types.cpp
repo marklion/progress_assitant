@@ -5013,6 +5013,650 @@ void call_vehicle_req::printTo(std::ostream& out) const {
 }
 
 
+meta_stuff_info::~meta_stuff_info() noexcept {
+}
+
+
+void meta_stuff_info::__set_stuffId(const std::string& val) {
+  this->stuffId = val;
+}
+
+void meta_stuff_info::__set_stuffName(const std::string& val) {
+  this->stuffName = val;
+}
+
+void meta_stuff_info::__set_weight(const double val) {
+  this->weight = val;
+}
+std::ostream& operator<<(std::ostream& out, const meta_stuff_info& obj)
+{
+  obj.printTo(out);
+  return out;
+}
+
+
+uint32_t meta_stuff_info::read(::apache::thrift::protocol::TProtocol* iprot) {
+
+  ::apache::thrift::protocol::TInputRecursionTracker tracker(*iprot);
+  uint32_t xfer = 0;
+  std::string fname;
+  ::apache::thrift::protocol::TType ftype;
+  int16_t fid;
+
+  xfer += iprot->readStructBegin(fname);
+
+  using ::apache::thrift::protocol::TProtocolException;
+
+
+  while (true)
+  {
+    xfer += iprot->readFieldBegin(fname, ftype, fid);
+    if (ftype == ::apache::thrift::protocol::T_STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 1:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->stuffId);
+          this->__isset.stuffId = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 2:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->stuffName);
+          this->__isset.stuffName = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 3:
+        if (ftype == ::apache::thrift::protocol::T_DOUBLE) {
+          xfer += iprot->readDouble(this->weight);
+          this->__isset.weight = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      default:
+        xfer += iprot->skip(ftype);
+        break;
+    }
+    xfer += iprot->readFieldEnd();
+  }
+
+  xfer += iprot->readStructEnd();
+
+  return xfer;
+}
+
+uint32_t meta_stuff_info::write(::apache::thrift::protocol::TProtocol* oprot) const {
+  uint32_t xfer = 0;
+  ::apache::thrift::protocol::TOutputRecursionTracker tracker(*oprot);
+  xfer += oprot->writeStructBegin("meta_stuff_info");
+
+  xfer += oprot->writeFieldBegin("stuffId", ::apache::thrift::protocol::T_STRING, 1);
+  xfer += oprot->writeString(this->stuffId);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("stuffName", ::apache::thrift::protocol::T_STRING, 2);
+  xfer += oprot->writeString(this->stuffName);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("weight", ::apache::thrift::protocol::T_DOUBLE, 3);
+  xfer += oprot->writeDouble(this->weight);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldStop();
+  xfer += oprot->writeStructEnd();
+  return xfer;
+}
+
+void swap(meta_stuff_info &a, meta_stuff_info &b) {
+  using ::std::swap;
+  swap(a.stuffId, b.stuffId);
+  swap(a.stuffName, b.stuffName);
+  swap(a.weight, b.weight);
+  swap(a.__isset, b.__isset);
+}
+
+meta_stuff_info::meta_stuff_info(const meta_stuff_info& other64) {
+  stuffId = other64.stuffId;
+  stuffName = other64.stuffName;
+  weight = other64.weight;
+  __isset = other64.__isset;
+}
+meta_stuff_info& meta_stuff_info::operator=(const meta_stuff_info& other65) {
+  stuffId = other65.stuffId;
+  stuffName = other65.stuffName;
+  weight = other65.weight;
+  __isset = other65.__isset;
+  return *this;
+}
+void meta_stuff_info::printTo(std::ostream& out) const {
+  using ::apache::thrift::to_string;
+  out << "meta_stuff_info(";
+  out << "stuffId=" << to_string(stuffId);
+  out << ", " << "stuffName=" << to_string(stuffName);
+  out << ", " << "weight=" << to_string(weight);
+  out << ")";
+}
+
+
+vehicle_info_resp::~vehicle_info_resp() noexcept {
+}
+
+
+void vehicle_info_resp::__set_id(const std::string& val) {
+  this->id = val;
+}
+
+void vehicle_info_resp::__set_plateNo(const std::string& val) {
+  this->plateNo = val;
+}
+
+void vehicle_info_resp::__set_backPlateNo(const std::string& val) {
+  this->backPlateNo = val;
+}
+
+void vehicle_info_resp::__set_stuffName(const std::string& val) {
+  this->stuffName = val;
+}
+
+void vehicle_info_resp::__set_stuffId(const std::string& val) {
+  this->stuffId = val;
+}
+
+void vehicle_info_resp::__set_enterWeight(const double val) {
+  this->enterWeight = val;
+}
+
+void vehicle_info_resp::__set_companyName(const std::string& val) {
+  this->companyName = val;
+}
+
+void vehicle_info_resp::__set_driverName(const std::string& val) {
+  this->driverName = val;
+}
+
+void vehicle_info_resp::__set_isSale(const bool val) {
+  this->isSale = val;
+}
+
+void vehicle_info_resp::__set_price(const double val) {
+  this->price = val;
+}
+
+void vehicle_info_resp::__set_customerId(const std::string& val) {
+  this->customerId = val;
+}
+
+void vehicle_info_resp::__set_orderNo(const std::string& val) {
+  this->orderNo = val;
+}
+
+void vehicle_info_resp::__set_multiStuff(const std::vector<meta_stuff_info> & val) {
+  this->multiStuff = val;
+}
+
+void vehicle_info_resp::__set_isMulti(const bool val) {
+  this->isMulti = val;
+}
+
+void vehicle_info_resp::__set_createTime(const std::string& val) {
+  this->createTime = val;
+}
+
+void vehicle_info_resp::__set_driverPhone(const std::string& val) {
+  this->driverPhone = val;
+}
+
+void vehicle_info_resp::__set_driverId(const std::string& val) {
+  this->driverId = val;
+}
+
+void vehicle_info_resp::__set_supplierName(const std::string& val) {
+  this->supplierName = val;
+}
+
+void vehicle_info_resp::__set_supplierId(const std::string& val) {
+  this->supplierId = val;
+}
+
+void vehicle_info_resp::__set_vehicleTeamName(const std::string& val) {
+  this->vehicleTeamName = val;
+}
+
+void vehicle_info_resp::__set_vehicleTeamId(const std::string& val) {
+  this->vehicleTeamId = val;
+}
+std::ostream& operator<<(std::ostream& out, const vehicle_info_resp& obj)
+{
+  obj.printTo(out);
+  return out;
+}
+
+
+uint32_t vehicle_info_resp::read(::apache::thrift::protocol::TProtocol* iprot) {
+
+  ::apache::thrift::protocol::TInputRecursionTracker tracker(*iprot);
+  uint32_t xfer = 0;
+  std::string fname;
+  ::apache::thrift::protocol::TType ftype;
+  int16_t fid;
+
+  xfer += iprot->readStructBegin(fname);
+
+  using ::apache::thrift::protocol::TProtocolException;
+
+
+  while (true)
+  {
+    xfer += iprot->readFieldBegin(fname, ftype, fid);
+    if (ftype == ::apache::thrift::protocol::T_STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 1:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->id);
+          this->__isset.id = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 2:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->plateNo);
+          this->__isset.plateNo = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 3:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->backPlateNo);
+          this->__isset.backPlateNo = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 4:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->stuffName);
+          this->__isset.stuffName = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 5:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->stuffId);
+          this->__isset.stuffId = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 6:
+        if (ftype == ::apache::thrift::protocol::T_DOUBLE) {
+          xfer += iprot->readDouble(this->enterWeight);
+          this->__isset.enterWeight = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 7:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->companyName);
+          this->__isset.companyName = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 8:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->driverName);
+          this->__isset.driverName = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 9:
+        if (ftype == ::apache::thrift::protocol::T_BOOL) {
+          xfer += iprot->readBool(this->isSale);
+          this->__isset.isSale = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 10:
+        if (ftype == ::apache::thrift::protocol::T_DOUBLE) {
+          xfer += iprot->readDouble(this->price);
+          this->__isset.price = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 11:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->customerId);
+          this->__isset.customerId = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 12:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->orderNo);
+          this->__isset.orderNo = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 13:
+        if (ftype == ::apache::thrift::protocol::T_LIST) {
+          {
+            this->multiStuff.clear();
+            uint32_t _size66;
+            ::apache::thrift::protocol::TType _etype69;
+            xfer += iprot->readListBegin(_etype69, _size66);
+            this->multiStuff.resize(_size66);
+            uint32_t _i70;
+            for (_i70 = 0; _i70 < _size66; ++_i70)
+            {
+              xfer += this->multiStuff[_i70].read(iprot);
+            }
+            xfer += iprot->readListEnd();
+          }
+          this->__isset.multiStuff = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 14:
+        if (ftype == ::apache::thrift::protocol::T_BOOL) {
+          xfer += iprot->readBool(this->isMulti);
+          this->__isset.isMulti = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 15:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->createTime);
+          this->__isset.createTime = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 16:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->driverPhone);
+          this->__isset.driverPhone = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 17:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->driverId);
+          this->__isset.driverId = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 18:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->supplierName);
+          this->__isset.supplierName = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 19:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->supplierId);
+          this->__isset.supplierId = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 20:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->vehicleTeamName);
+          this->__isset.vehicleTeamName = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 21:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->vehicleTeamId);
+          this->__isset.vehicleTeamId = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      default:
+        xfer += iprot->skip(ftype);
+        break;
+    }
+    xfer += iprot->readFieldEnd();
+  }
+
+  xfer += iprot->readStructEnd();
+
+  return xfer;
+}
+
+uint32_t vehicle_info_resp::write(::apache::thrift::protocol::TProtocol* oprot) const {
+  uint32_t xfer = 0;
+  ::apache::thrift::protocol::TOutputRecursionTracker tracker(*oprot);
+  xfer += oprot->writeStructBegin("vehicle_info_resp");
+
+  xfer += oprot->writeFieldBegin("id", ::apache::thrift::protocol::T_STRING, 1);
+  xfer += oprot->writeString(this->id);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("plateNo", ::apache::thrift::protocol::T_STRING, 2);
+  xfer += oprot->writeString(this->plateNo);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("backPlateNo", ::apache::thrift::protocol::T_STRING, 3);
+  xfer += oprot->writeString(this->backPlateNo);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("stuffName", ::apache::thrift::protocol::T_STRING, 4);
+  xfer += oprot->writeString(this->stuffName);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("stuffId", ::apache::thrift::protocol::T_STRING, 5);
+  xfer += oprot->writeString(this->stuffId);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("enterWeight", ::apache::thrift::protocol::T_DOUBLE, 6);
+  xfer += oprot->writeDouble(this->enterWeight);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("companyName", ::apache::thrift::protocol::T_STRING, 7);
+  xfer += oprot->writeString(this->companyName);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("driverName", ::apache::thrift::protocol::T_STRING, 8);
+  xfer += oprot->writeString(this->driverName);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("isSale", ::apache::thrift::protocol::T_BOOL, 9);
+  xfer += oprot->writeBool(this->isSale);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("price", ::apache::thrift::protocol::T_DOUBLE, 10);
+  xfer += oprot->writeDouble(this->price);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("customerId", ::apache::thrift::protocol::T_STRING, 11);
+  xfer += oprot->writeString(this->customerId);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("orderNo", ::apache::thrift::protocol::T_STRING, 12);
+  xfer += oprot->writeString(this->orderNo);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("multiStuff", ::apache::thrift::protocol::T_LIST, 13);
+  {
+    xfer += oprot->writeListBegin(::apache::thrift::protocol::T_STRUCT, static_cast<uint32_t>(this->multiStuff.size()));
+    std::vector<meta_stuff_info> ::const_iterator _iter71;
+    for (_iter71 = this->multiStuff.begin(); _iter71 != this->multiStuff.end(); ++_iter71)
+    {
+      xfer += (*_iter71).write(oprot);
+    }
+    xfer += oprot->writeListEnd();
+  }
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("isMulti", ::apache::thrift::protocol::T_BOOL, 14);
+  xfer += oprot->writeBool(this->isMulti);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("createTime", ::apache::thrift::protocol::T_STRING, 15);
+  xfer += oprot->writeString(this->createTime);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("driverPhone", ::apache::thrift::protocol::T_STRING, 16);
+  xfer += oprot->writeString(this->driverPhone);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("driverId", ::apache::thrift::protocol::T_STRING, 17);
+  xfer += oprot->writeString(this->driverId);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("supplierName", ::apache::thrift::protocol::T_STRING, 18);
+  xfer += oprot->writeString(this->supplierName);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("supplierId", ::apache::thrift::protocol::T_STRING, 19);
+  xfer += oprot->writeString(this->supplierId);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("vehicleTeamName", ::apache::thrift::protocol::T_STRING, 20);
+  xfer += oprot->writeString(this->vehicleTeamName);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("vehicleTeamId", ::apache::thrift::protocol::T_STRING, 21);
+  xfer += oprot->writeString(this->vehicleTeamId);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldStop();
+  xfer += oprot->writeStructEnd();
+  return xfer;
+}
+
+void swap(vehicle_info_resp &a, vehicle_info_resp &b) {
+  using ::std::swap;
+  swap(a.id, b.id);
+  swap(a.plateNo, b.plateNo);
+  swap(a.backPlateNo, b.backPlateNo);
+  swap(a.stuffName, b.stuffName);
+  swap(a.stuffId, b.stuffId);
+  swap(a.enterWeight, b.enterWeight);
+  swap(a.companyName, b.companyName);
+  swap(a.driverName, b.driverName);
+  swap(a.isSale, b.isSale);
+  swap(a.price, b.price);
+  swap(a.customerId, b.customerId);
+  swap(a.orderNo, b.orderNo);
+  swap(a.multiStuff, b.multiStuff);
+  swap(a.isMulti, b.isMulti);
+  swap(a.createTime, b.createTime);
+  swap(a.driverPhone, b.driverPhone);
+  swap(a.driverId, b.driverId);
+  swap(a.supplierName, b.supplierName);
+  swap(a.supplierId, b.supplierId);
+  swap(a.vehicleTeamName, b.vehicleTeamName);
+  swap(a.vehicleTeamId, b.vehicleTeamId);
+  swap(a.__isset, b.__isset);
+}
+
+vehicle_info_resp::vehicle_info_resp(const vehicle_info_resp& other72) {
+  id = other72.id;
+  plateNo = other72.plateNo;
+  backPlateNo = other72.backPlateNo;
+  stuffName = other72.stuffName;
+  stuffId = other72.stuffId;
+  enterWeight = other72.enterWeight;
+  companyName = other72.companyName;
+  driverName = other72.driverName;
+  isSale = other72.isSale;
+  price = other72.price;
+  customerId = other72.customerId;
+  orderNo = other72.orderNo;
+  multiStuff = other72.multiStuff;
+  isMulti = other72.isMulti;
+  createTime = other72.createTime;
+  driverPhone = other72.driverPhone;
+  driverId = other72.driverId;
+  supplierName = other72.supplierName;
+  supplierId = other72.supplierId;
+  vehicleTeamName = other72.vehicleTeamName;
+  vehicleTeamId = other72.vehicleTeamId;
+  __isset = other72.__isset;
+}
+vehicle_info_resp& vehicle_info_resp::operator=(const vehicle_info_resp& other73) {
+  id = other73.id;
+  plateNo = other73.plateNo;
+  backPlateNo = other73.backPlateNo;
+  stuffName = other73.stuffName;
+  stuffId = other73.stuffId;
+  enterWeight = other73.enterWeight;
+  companyName = other73.companyName;
+  driverName = other73.driverName;
+  isSale = other73.isSale;
+  price = other73.price;
+  customerId = other73.customerId;
+  orderNo = other73.orderNo;
+  multiStuff = other73.multiStuff;
+  isMulti = other73.isMulti;
+  createTime = other73.createTime;
+  driverPhone = other73.driverPhone;
+  driverId = other73.driverId;
+  supplierName = other73.supplierName;
+  supplierId = other73.supplierId;
+  vehicleTeamName = other73.vehicleTeamName;
+  vehicleTeamId = other73.vehicleTeamId;
+  __isset = other73.__isset;
+  return *this;
+}
+void vehicle_info_resp::printTo(std::ostream& out) const {
+  using ::apache::thrift::to_string;
+  out << "vehicle_info_resp(";
+  out << "id=" << to_string(id);
+  out << ", " << "plateNo=" << to_string(plateNo);
+  out << ", " << "backPlateNo=" << to_string(backPlateNo);
+  out << ", " << "stuffName=" << to_string(stuffName);
+  out << ", " << "stuffId=" << to_string(stuffId);
+  out << ", " << "enterWeight=" << to_string(enterWeight);
+  out << ", " << "companyName=" << to_string(companyName);
+  out << ", " << "driverName=" << to_string(driverName);
+  out << ", " << "isSale=" << to_string(isSale);
+  out << ", " << "price=" << to_string(price);
+  out << ", " << "customerId=" << to_string(customerId);
+  out << ", " << "orderNo=" << to_string(orderNo);
+  out << ", " << "multiStuff=" << to_string(multiStuff);
+  out << ", " << "isMulti=" << to_string(isMulti);
+  out << ", " << "createTime=" << to_string(createTime);
+  out << ", " << "driverPhone=" << to_string(driverPhone);
+  out << ", " << "driverId=" << to_string(driverId);
+  out << ", " << "supplierName=" << to_string(supplierName);
+  out << ", " << "supplierId=" << to_string(supplierId);
+  out << ", " << "vehicleTeamName=" << to_string(vehicleTeamName);
+  out << ", " << "vehicleTeamId=" << to_string(vehicleTeamId);
+  out << ")";
+}
+
+
 vichele_stay_alone::~vichele_stay_alone() noexcept {
 }
 
@@ -5067,6 +5711,22 @@ void vichele_stay_alone::__set_creator_phone(const std::string& val) {
 
 void vichele_stay_alone::__set_repeated(const bool val) {
   this->repeated = val;
+}
+
+void vichele_stay_alone::__set_driver_name(const std::string& val) {
+  this->driver_name = val;
+}
+
+void vichele_stay_alone::__set_driver_phone(const std::string& val) {
+  this->driver_phone = val;
+}
+
+void vichele_stay_alone::__set_driver_id(const std::string& val) {
+  this->driver_id = val;
+}
+
+void vichele_stay_alone::__set_transfor_company(const std::string& val) {
+  this->transfor_company = val;
 }
 std::ostream& operator<<(std::ostream& out, const vichele_stay_alone& obj)
 {
@@ -5200,6 +5860,38 @@ uint32_t vichele_stay_alone::read(::apache::thrift::protocol::TProtocol* iprot) 
           xfer += iprot->skip(ftype);
         }
         break;
+      case 14:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->driver_name);
+          this->__isset.driver_name = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 15:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->driver_phone);
+          this->__isset.driver_phone = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 16:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->driver_id);
+          this->__isset.driver_id = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 17:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->transfor_company);
+          this->__isset.transfor_company = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
       default:
         xfer += iprot->skip(ftype);
         break;
@@ -5269,6 +5961,22 @@ uint32_t vichele_stay_alone::write(::apache::thrift::protocol::TProtocol* oprot)
   xfer += oprot->writeBool(this->repeated);
   xfer += oprot->writeFieldEnd();
 
+  xfer += oprot->writeFieldBegin("driver_name", ::apache::thrift::protocol::T_STRING, 14);
+  xfer += oprot->writeString(this->driver_name);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("driver_phone", ::apache::thrift::protocol::T_STRING, 15);
+  xfer += oprot->writeString(this->driver_phone);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("driver_id", ::apache::thrift::protocol::T_STRING, 16);
+  xfer += oprot->writeString(this->driver_id);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("transfor_company", ::apache::thrift::protocol::T_STRING, 17);
+  xfer += oprot->writeString(this->transfor_company);
+  xfer += oprot->writeFieldEnd();
+
   xfer += oprot->writeFieldStop();
   xfer += oprot->writeStructEnd();
   return xfer;
@@ -5289,40 +5997,52 @@ void swap(vichele_stay_alone &a, vichele_stay_alone &b) {
   swap(a.creator_name, b.creator_name);
   swap(a.creator_phone, b.creator_phone);
   swap(a.repeated, b.repeated);
+  swap(a.driver_name, b.driver_name);
+  swap(a.driver_phone, b.driver_phone);
+  swap(a.driver_id, b.driver_id);
+  swap(a.transfor_company, b.transfor_company);
   swap(a.__isset, b.__isset);
 }
 
-vichele_stay_alone::vichele_stay_alone(const vichele_stay_alone& other64) {
-  id = other64.id;
-  stuff_name = other64.stuff_name;
-  company_name = other64.company_name;
-  main_vichele_number = other64.main_vichele_number;
-  behind_vichele_number = other64.behind_vichele_number;
-  count = other64.count;
-  comment = other64.comment;
-  date = other64.date;
-  destination = other64.destination;
-  status = other64.status;
-  creator_name = other64.creator_name;
-  creator_phone = other64.creator_phone;
-  repeated = other64.repeated;
-  __isset = other64.__isset;
+vichele_stay_alone::vichele_stay_alone(const vichele_stay_alone& other74) {
+  id = other74.id;
+  stuff_name = other74.stuff_name;
+  company_name = other74.company_name;
+  main_vichele_number = other74.main_vichele_number;
+  behind_vichele_number = other74.behind_vichele_number;
+  count = other74.count;
+  comment = other74.comment;
+  date = other74.date;
+  destination = other74.destination;
+  status = other74.status;
+  creator_name = other74.creator_name;
+  creator_phone = other74.creator_phone;
+  repeated = other74.repeated;
+  driver_name = other74.driver_name;
+  driver_phone = other74.driver_phone;
+  driver_id = other74.driver_id;
+  transfor_company = other74.transfor_company;
+  __isset = other74.__isset;
 }
-vichele_stay_alone& vichele_stay_alone::operator=(const vichele_stay_alone& other65) {
-  id = other65.id;
-  stuff_name = other65.stuff_name;
-  company_name = other65.company_name;
-  main_vichele_number = other65.main_vichele_number;
-  behind_vichele_number = other65.behind_vichele_number;
-  count = other65.count;
-  comment = other65.comment;
-  date = other65.date;
-  destination = other65.destination;
-  status = other65.status;
-  creator_name = other65.creator_name;
-  creator_phone = other65.creator_phone;
-  repeated = other65.repeated;
-  __isset = other65.__isset;
+vichele_stay_alone& vichele_stay_alone::operator=(const vichele_stay_alone& other75) {
+  id = other75.id;
+  stuff_name = other75.stuff_name;
+  company_name = other75.company_name;
+  main_vichele_number = other75.main_vichele_number;
+  behind_vichele_number = other75.behind_vichele_number;
+  count = other75.count;
+  comment = other75.comment;
+  date = other75.date;
+  destination = other75.destination;
+  status = other75.status;
+  creator_name = other75.creator_name;
+  creator_phone = other75.creator_phone;
+  repeated = other75.repeated;
+  driver_name = other75.driver_name;
+  driver_phone = other75.driver_phone;
+  driver_id = other75.driver_id;
+  transfor_company = other75.transfor_company;
+  __isset = other75.__isset;
   return *this;
 }
 void vichele_stay_alone::printTo(std::ostream& out) const {
@@ -5341,6 +6061,10 @@ void vichele_stay_alone::printTo(std::ostream& out) const {
   out << ", " << "creator_name=" << to_string(creator_name);
   out << ", " << "creator_phone=" << to_string(creator_phone);
   out << ", " << "repeated=" << to_string(repeated);
+  out << ", " << "driver_name=" << to_string(driver_name);
+  out << ", " << "driver_phone=" << to_string(driver_phone);
+  out << ", " << "driver_id=" << to_string(driver_id);
+  out << ", " << "transfor_company=" << to_string(transfor_company);
   out << ")";
 }
 
@@ -5437,15 +6161,15 @@ void swap(silent_user_info &a, silent_user_info &b) {
   swap(a.__isset, b.__isset);
 }
 
-silent_user_info::silent_user_info(const silent_user_info& other66) {
-  name = other66.name;
-  phone = other66.phone;
-  __isset = other66.__isset;
+silent_user_info::silent_user_info(const silent_user_info& other76) {
+  name = other76.name;
+  phone = other76.phone;
+  __isset = other76.__isset;
 }
-silent_user_info& silent_user_info::operator=(const silent_user_info& other67) {
-  name = other67.name;
-  phone = other67.phone;
-  __isset = other67.__isset;
+silent_user_info& silent_user_info::operator=(const silent_user_info& other77) {
+  name = other77.name;
+  phone = other77.phone;
+  __isset = other77.__isset;
   return *this;
 }
 void silent_user_info::printTo(std::ostream& out) const {

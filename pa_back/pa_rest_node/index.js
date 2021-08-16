@@ -112,6 +112,25 @@ app.post('/pa_rest/call_vehicle', async (req, res)=>{
     res.send(ret);
 });
 
+app.post('/pa_rest/vehicle_info', async (req, res) => {
+    var token = req.query.token;
+    var ret = { err_msg: '无权限' };
+
+    var plateNo = req.body.plateNo;
+    var driverId = req.body.driverId?req.body.driverId:"";
+    try {
+        var resp = await request_rpc("open_api_management", 'proc_vehicle_info', [plateNo, driverId, token]);
+        if (resp) {
+            ret.err_msg = "";
+            ret.result = resp;
+        }
+    } catch (error) {
+        ret = { err_msg: error.msg };
+    }
+
+    res.send(ret);
+});
+
 app.listen(port, () => {
     console.log('rest is runing');
 });

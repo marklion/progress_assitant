@@ -2,6 +2,8 @@
 #include "../pa_util/pa_utils.h"
 #include "stuff_plan_management_imp.h"
 
+static std::map<std::string, pa_rpc_base_info> g_base_info;
+
 static std::list<pa_sql_plan> PA_RPC_get_all_plans_related_by_user_info(pa_sql_userinfo &_user, const char *_query, ...)
 {
     va_list vl;
@@ -104,6 +106,33 @@ std::list<pa_sql_plan> PA_RPC_get_all_plans_related_by_company(pa_sql_company &_
         {
             ret = sqlite_orm::search_record_all<pa_sql_plan>("(%s) AND %s", connect_param.c_str(), tmpbuff);
         }
+    }
+
+    return ret;
+}
+
+std::unique_ptr<pa_rpc_base_info> PA_RPC_search_base_info_by_name(const std::string &name, const std::string &type)
+{
+    auto itr = g_base_info.begin();
+    for (; itr != g_base_info.end();itr++)   
+    {
+        if (itr->second.name == name && itr->second.type == type)
+        {
+            return std::unique_ptr<pa_rpc_base_info>(new pa_rpc_base_info(itr->second));
+        }
+    }
+
+    return std::unique_ptr<pa_rpc_base_info>();
+}
+
+std::string PA_RPC_search_base_id_info_by_name(const std::string &name, const std::string &type)
+{
+    std::string ret;
+
+    auto base_info = PA_RPC_search_base_info_by_name(name, type);
+    if (base_info)
+    {
+        ret = base_info->id;
     }
 
     return ret;

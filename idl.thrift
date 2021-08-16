@@ -337,6 +337,36 @@ struct call_vehicle_req {
     4:string stationName,
 }
 
+struct meta_stuff_info {
+    1:string stuffId,
+    2:string stuffName,
+    3:double weight,
+}
+
+struct vehicle_info_resp {
+    1:string id,
+    2:string plateNo,
+    3:string backPlateNo,
+    4:string stuffName,
+    5:string stuffId,
+    6:double enterWeight,
+    7:string companyName,
+    8:string driverName,
+    9:bool isSale,
+    10:double price,
+    11:string customerId,
+    12:string orderNo,
+    13:list<meta_stuff_info> multiStuff,
+    14:bool isMulti,
+    15:string createTime,
+    16:string driverPhone,
+    17:string driverId,
+    18:string supplierName,
+    19:string supplierId,
+    20:string vehicleTeamName,
+    21:string vehicleTeamId
+}
+
 service open_api_management {
     bool register_api_user(1:string company_name, 2:string email, 3:string password) throws (1:gen_exp e),
     bool verify_email_code(1:string email, 2:string code) throws (1:gen_exp e),
@@ -346,6 +376,7 @@ service open_api_management {
     bool push_exit_count(1:i64 id, 2:double count, 3:bool is_sale, 4:string token) throws (1:gen_exp e),
     bool push_arrange(1:i64 id, 2:string order, 3:bool is_sale, 4:string location, 5:string token) throws (1:gen_exp e),
     bool proc_call_vehicle(1:call_vehicle_req _req, 2:string token) throws (1:gen_exp e),
+    vehicle_info_resp proc_vehicle_info(1:string plateNo, 2:string driverId, 3:string token) throws (1:gen_exp e),
 }
 
 struct vichele_stay_alone {
@@ -362,6 +393,10 @@ struct vichele_stay_alone {
     11:string creator_name,
     12:string creator_phone,
     13:bool repeated,
+    14:string driver_name,
+    15:string driver_phone,
+    16:string driver_id,
+    17:string transfor_company,
 }
 
 struct silent_user_info {
