@@ -43,6 +43,11 @@ public:
             tmp.set_parent(*opt_user, "created_by");
             tmp.set_parent(*dest_company, "destination");
             tmp.is_repeated = itr.repeated?1:0;
+            tmp.timestamp = PA_DATAOPT_current_time();
+            tmp.driver_name = itr.driver_name;
+            tmp.driver_phone = itr.driver_phone;
+            tmp.driver_id = itr.driver_id;
+            tmp.transfor_company = itr.transfor_company;
 
             ret = tmp.insert_record();
             if (ret)
@@ -116,6 +121,10 @@ public:
         extra_vichele->date = vichele_info.date;
         extra_vichele->main_vichele_number = vichele_info.main_vichele_number;
         extra_vichele->stuff_name = vichele_info.stuff_name;
+        extra_vichele->driver_name = vichele_info.driver_name;
+        extra_vichele->driver_phone = vichele_info.driver_phone;
+        extra_vichele->driver_id = vichele_info.driver_id;
+        extra_vichele->transfor_company = vichele_info.transfor_company;
 
         ret = extra_vichele->update_record();
         if (ret)
@@ -155,6 +164,10 @@ public:
             tmp.id = itr.get_pri_id();
             tmp.status = itr.status;
             tmp.repeated = itr.is_repeated != 0;
+            tmp.driver_id = itr.driver_id;
+            tmp.driver_name = itr.driver_name;
+            tmp.driver_phone = itr.driver_phone;
+            tmp.transfor_company = itr.transfor_company;
             _return.push_back(tmp);
         }
     }
@@ -207,6 +220,10 @@ public:
         SEARCH_RECORD_BY_FIELD(company_name);
         SEARCH_RECORD_BY_FIELD(main_vichele_number);
         SEARCH_RECORD_BY_FIELD(stuff_name);
+        SEARCH_RECORD_BY_FIELD(driver_id);
+        SEARCH_RECORD_BY_FIELD(driver_name);
+        SEARCH_RECORD_BY_FIELD(driver_phone);
+        SEARCH_RECORD_BY_FIELD(transfor_company);
         if (search_key.destination == "?")
         {
             auto ret = silent_user->get_all_children<pa_sql_vichele_stay_alone>("created_by", "PRI_ID != 0 GROUP BY destination_ext_key");
@@ -280,6 +297,10 @@ public:
             tmp.status = itr.status;
             tmp.stuff_name = itr.stuff_name;
             tmp.repeated = itr.is_repeated != 0;
+            tmp.driver_id = itr.driver_id;
+            tmp.driver_name = itr.driver_name;
+            tmp.driver_phone = itr.driver_phone;
+            tmp.transfor_company = itr.transfor_company;
             _return.push_back(tmp);
         }
     }

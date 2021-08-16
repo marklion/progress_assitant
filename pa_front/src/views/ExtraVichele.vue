@@ -8,6 +8,7 @@
                 <van-field v-model="user_phone" label="电话" type="tel" placeholder="您的手机号" :rules="[{ required: true, message: '请填写手机号' }]" />
                 <history-input search_key="company_name" v-model="new_form.company_name" :rules="[{ required: true, message: '请填写公司名' }]"></history-input>
                 <history-input search_key="destination" v-model="new_form.destination" :rules="[{ required: true, message: '请填写公司名' }]"></history-input>
+                <history-input search_key="transfor_company" v-model="new_form.transfor_company" :rules="[{ required: true, message: '请填写公司名' }]"></history-input>
                 <van-field center readonly clickable name="datetimePicker" :value="new_form.date" label="到厂日期" placeholder="点击选择日期" @click="show_time_picker = true">
                     <template #right-icon>
                         <van-tag type="primary">{{plan_time_easy}}</van-tag>
@@ -23,6 +24,9 @@
                     <history-input search_key="stuff_name" v-model="single_vichele.stuff_name" :rules="[{ required: true, message: '请填写货物名称' }]"></history-input>
                     <van-field v-model="single_vichele.count" type="number" name="重量" label="重量（吨）" placeholder="重量" :rules="[{ required: true, message: '请填写重量' }]" />
                     <history-input search_key="comment" v-model="single_vichele.comment"></history-input>
+                    <history-input search_key="driver_name" v-model="single_vichele.driver_name" :rules="[{ required: true, message: '请填写司机姓名' }]"></history-input>
+                    <history-input search_key="driver_id" v-model="single_vichele.driver_id" :rules="[{ required: true, message: '请填写司机身份证' }, {pattern:/^[1-9]\d{5}(18|19|20|(3\d))\d{2}((0[1-9])|(1[0-2]))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$/, message:'请输入正确的身份证'}]"></history-input>
+                    <history-input search_key="driver_phone" v-model="single_vichele.driver_phone" :rules="[{ required: true, message: '请填写司机电话' }, {pattern:/^(13[0-9]|14[01456879]|15[0-35-9]|16[2567]|17[0-8]|18[0-9]|19[0-35-9])\d{8}$/, message:'请输入正确手机号'}]"></history-input>
                     <van-field name="switch" label="多次进厂">
                         <template #input>
                             <van-switch v-model="single_vichele.repeated" size="20" />
@@ -208,6 +212,7 @@ export default {
                 company_name: '',
                 destination: '',
                 date: this.formatDateTime(new Date()),
+                transfor_company:'',
             },
             new_vichele: [{
                 main_vichele_number: '',
@@ -216,6 +221,9 @@ export default {
                 comment: '',
                 stuff_name: '',
                 repeated: false,
+                driver_phone: '',
+                driver_id: '',
+                driver_name: '',
             }],
             created_apply: [],
         };
@@ -312,12 +320,16 @@ export default {
                     company_name: vue_this.new_form.company_name,
                     destination: vue_this.new_form.destination,
                     date: vue_this.new_form.date,
+                    transfor_company:vue_this.new_form.transfor_company,
                     main_vichele_number: element.main_vichele_number,
                     behind_vichele_number: element.behind_vichele_number,
                     count: parseFloat(element.count),
                     comment: element.comment,
                     stuff_name: element.stuff_name,
                     repeated: element.repeated,
+                    driver_phone:element.driver_phone,
+                    driver_id: element.driver_id,
+                    driver_name: element.driver_name,
                 });
             });
             vue_this.$call_remote_process("vichele_management", 'create_vichele_info', [vue_this.$cookies.get('silent_id'), extra_vichele]).then(function (resp) {
@@ -344,6 +356,9 @@ export default {
                 comment: '',
                 stuff_name: '',
                 repeated: false,
+                driver_phone: '',
+                driver_id: '',
+                driver_name: '',
             });
         },
         fetch_user_info: function () {

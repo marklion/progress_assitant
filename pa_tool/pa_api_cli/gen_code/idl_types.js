@@ -3240,6 +3240,468 @@ call_vehicle_req.prototype.write = function(output) {
   return;
 };
 
+var meta_stuff_info = module.exports.meta_stuff_info = function(args) {
+  this.stuffId = null;
+  this.stuffName = null;
+  this.weight = null;
+  if (args) {
+    if (args.stuffId !== undefined && args.stuffId !== null) {
+      this.stuffId = args.stuffId;
+    }
+    if (args.stuffName !== undefined && args.stuffName !== null) {
+      this.stuffName = args.stuffName;
+    }
+    if (args.weight !== undefined && args.weight !== null) {
+      this.weight = args.weight;
+    }
+  }
+};
+meta_stuff_info.prototype = {};
+meta_stuff_info.prototype.read = function(input) {
+  input.readStructBegin();
+  while (true) {
+    var ret = input.readFieldBegin();
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    switch (fid) {
+      case 1:
+      if (ftype == Thrift.Type.STRING) {
+        this.stuffId = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 2:
+      if (ftype == Thrift.Type.STRING) {
+        this.stuffName = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 3:
+      if (ftype == Thrift.Type.DOUBLE) {
+        this.weight = input.readDouble();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      default:
+        input.skip(ftype);
+    }
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+meta_stuff_info.prototype.write = function(output) {
+  output.writeStructBegin('meta_stuff_info');
+  if (this.stuffId !== null && this.stuffId !== undefined) {
+    output.writeFieldBegin('stuffId', Thrift.Type.STRING, 1);
+    output.writeString(this.stuffId);
+    output.writeFieldEnd();
+  }
+  if (this.stuffName !== null && this.stuffName !== undefined) {
+    output.writeFieldBegin('stuffName', Thrift.Type.STRING, 2);
+    output.writeString(this.stuffName);
+    output.writeFieldEnd();
+  }
+  if (this.weight !== null && this.weight !== undefined) {
+    output.writeFieldBegin('weight', Thrift.Type.DOUBLE, 3);
+    output.writeDouble(this.weight);
+    output.writeFieldEnd();
+  }
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+
+var vehicle_info_resp = module.exports.vehicle_info_resp = function(args) {
+  this.id = null;
+  this.plateNo = null;
+  this.backPlateNo = null;
+  this.stuffName = null;
+  this.stuffId = null;
+  this.enterWeight = null;
+  this.companyName = null;
+  this.driverName = null;
+  this.isSale = null;
+  this.price = null;
+  this.customerId = null;
+  this.orderNo = null;
+  this.multiStuff = null;
+  this.isMulti = null;
+  this.createTime = null;
+  this.driverPhone = null;
+  this.driverId = null;
+  this.supplierName = null;
+  this.supplierId = null;
+  this.vehicleTeamName = null;
+  this.vehicleTeamId = null;
+  if (args) {
+    if (args.id !== undefined && args.id !== null) {
+      this.id = args.id;
+    }
+    if (args.plateNo !== undefined && args.plateNo !== null) {
+      this.plateNo = args.plateNo;
+    }
+    if (args.backPlateNo !== undefined && args.backPlateNo !== null) {
+      this.backPlateNo = args.backPlateNo;
+    }
+    if (args.stuffName !== undefined && args.stuffName !== null) {
+      this.stuffName = args.stuffName;
+    }
+    if (args.stuffId !== undefined && args.stuffId !== null) {
+      this.stuffId = args.stuffId;
+    }
+    if (args.enterWeight !== undefined && args.enterWeight !== null) {
+      this.enterWeight = args.enterWeight;
+    }
+    if (args.companyName !== undefined && args.companyName !== null) {
+      this.companyName = args.companyName;
+    }
+    if (args.driverName !== undefined && args.driverName !== null) {
+      this.driverName = args.driverName;
+    }
+    if (args.isSale !== undefined && args.isSale !== null) {
+      this.isSale = args.isSale;
+    }
+    if (args.price !== undefined && args.price !== null) {
+      this.price = args.price;
+    }
+    if (args.customerId !== undefined && args.customerId !== null) {
+      this.customerId = args.customerId;
+    }
+    if (args.orderNo !== undefined && args.orderNo !== null) {
+      this.orderNo = args.orderNo;
+    }
+    if (args.multiStuff !== undefined && args.multiStuff !== null) {
+      this.multiStuff = Thrift.copyList(args.multiStuff, [ttypes.meta_stuff_info]);
+    }
+    if (args.isMulti !== undefined && args.isMulti !== null) {
+      this.isMulti = args.isMulti;
+    }
+    if (args.createTime !== undefined && args.createTime !== null) {
+      this.createTime = args.createTime;
+    }
+    if (args.driverPhone !== undefined && args.driverPhone !== null) {
+      this.driverPhone = args.driverPhone;
+    }
+    if (args.driverId !== undefined && args.driverId !== null) {
+      this.driverId = args.driverId;
+    }
+    if (args.supplierName !== undefined && args.supplierName !== null) {
+      this.supplierName = args.supplierName;
+    }
+    if (args.supplierId !== undefined && args.supplierId !== null) {
+      this.supplierId = args.supplierId;
+    }
+    if (args.vehicleTeamName !== undefined && args.vehicleTeamName !== null) {
+      this.vehicleTeamName = args.vehicleTeamName;
+    }
+    if (args.vehicleTeamId !== undefined && args.vehicleTeamId !== null) {
+      this.vehicleTeamId = args.vehicleTeamId;
+    }
+  }
+};
+vehicle_info_resp.prototype = {};
+vehicle_info_resp.prototype.read = function(input) {
+  input.readStructBegin();
+  while (true) {
+    var ret = input.readFieldBegin();
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    switch (fid) {
+      case 1:
+      if (ftype == Thrift.Type.STRING) {
+        this.id = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 2:
+      if (ftype == Thrift.Type.STRING) {
+        this.plateNo = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 3:
+      if (ftype == Thrift.Type.STRING) {
+        this.backPlateNo = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 4:
+      if (ftype == Thrift.Type.STRING) {
+        this.stuffName = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 5:
+      if (ftype == Thrift.Type.STRING) {
+        this.stuffId = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 6:
+      if (ftype == Thrift.Type.DOUBLE) {
+        this.enterWeight = input.readDouble();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 7:
+      if (ftype == Thrift.Type.STRING) {
+        this.companyName = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 8:
+      if (ftype == Thrift.Type.STRING) {
+        this.driverName = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 9:
+      if (ftype == Thrift.Type.BOOL) {
+        this.isSale = input.readBool();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 10:
+      if (ftype == Thrift.Type.DOUBLE) {
+        this.price = input.readDouble();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 11:
+      if (ftype == Thrift.Type.STRING) {
+        this.customerId = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 12:
+      if (ftype == Thrift.Type.STRING) {
+        this.orderNo = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 13:
+      if (ftype == Thrift.Type.LIST) {
+        this.multiStuff = [];
+        var _rtmp36 = input.readListBegin();
+        var _size5 = _rtmp36.size || 0;
+        for (var _i7 = 0; _i7 < _size5; ++_i7) {
+          var elem8 = null;
+          elem8 = new ttypes.meta_stuff_info();
+          elem8.read(input);
+          this.multiStuff.push(elem8);
+        }
+        input.readListEnd();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 14:
+      if (ftype == Thrift.Type.BOOL) {
+        this.isMulti = input.readBool();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 15:
+      if (ftype == Thrift.Type.STRING) {
+        this.createTime = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 16:
+      if (ftype == Thrift.Type.STRING) {
+        this.driverPhone = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 17:
+      if (ftype == Thrift.Type.STRING) {
+        this.driverId = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 18:
+      if (ftype == Thrift.Type.STRING) {
+        this.supplierName = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 19:
+      if (ftype == Thrift.Type.STRING) {
+        this.supplierId = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 20:
+      if (ftype == Thrift.Type.STRING) {
+        this.vehicleTeamName = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 21:
+      if (ftype == Thrift.Type.STRING) {
+        this.vehicleTeamId = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      default:
+        input.skip(ftype);
+    }
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+vehicle_info_resp.prototype.write = function(output) {
+  output.writeStructBegin('vehicle_info_resp');
+  if (this.id !== null && this.id !== undefined) {
+    output.writeFieldBegin('id', Thrift.Type.STRING, 1);
+    output.writeString(this.id);
+    output.writeFieldEnd();
+  }
+  if (this.plateNo !== null && this.plateNo !== undefined) {
+    output.writeFieldBegin('plateNo', Thrift.Type.STRING, 2);
+    output.writeString(this.plateNo);
+    output.writeFieldEnd();
+  }
+  if (this.backPlateNo !== null && this.backPlateNo !== undefined) {
+    output.writeFieldBegin('backPlateNo', Thrift.Type.STRING, 3);
+    output.writeString(this.backPlateNo);
+    output.writeFieldEnd();
+  }
+  if (this.stuffName !== null && this.stuffName !== undefined) {
+    output.writeFieldBegin('stuffName', Thrift.Type.STRING, 4);
+    output.writeString(this.stuffName);
+    output.writeFieldEnd();
+  }
+  if (this.stuffId !== null && this.stuffId !== undefined) {
+    output.writeFieldBegin('stuffId', Thrift.Type.STRING, 5);
+    output.writeString(this.stuffId);
+    output.writeFieldEnd();
+  }
+  if (this.enterWeight !== null && this.enterWeight !== undefined) {
+    output.writeFieldBegin('enterWeight', Thrift.Type.DOUBLE, 6);
+    output.writeDouble(this.enterWeight);
+    output.writeFieldEnd();
+  }
+  if (this.companyName !== null && this.companyName !== undefined) {
+    output.writeFieldBegin('companyName', Thrift.Type.STRING, 7);
+    output.writeString(this.companyName);
+    output.writeFieldEnd();
+  }
+  if (this.driverName !== null && this.driverName !== undefined) {
+    output.writeFieldBegin('driverName', Thrift.Type.STRING, 8);
+    output.writeString(this.driverName);
+    output.writeFieldEnd();
+  }
+  if (this.isSale !== null && this.isSale !== undefined) {
+    output.writeFieldBegin('isSale', Thrift.Type.BOOL, 9);
+    output.writeBool(this.isSale);
+    output.writeFieldEnd();
+  }
+  if (this.price !== null && this.price !== undefined) {
+    output.writeFieldBegin('price', Thrift.Type.DOUBLE, 10);
+    output.writeDouble(this.price);
+    output.writeFieldEnd();
+  }
+  if (this.customerId !== null && this.customerId !== undefined) {
+    output.writeFieldBegin('customerId', Thrift.Type.STRING, 11);
+    output.writeString(this.customerId);
+    output.writeFieldEnd();
+  }
+  if (this.orderNo !== null && this.orderNo !== undefined) {
+    output.writeFieldBegin('orderNo', Thrift.Type.STRING, 12);
+    output.writeString(this.orderNo);
+    output.writeFieldEnd();
+  }
+  if (this.multiStuff !== null && this.multiStuff !== undefined) {
+    output.writeFieldBegin('multiStuff', Thrift.Type.LIST, 13);
+    output.writeListBegin(Thrift.Type.STRUCT, this.multiStuff.length);
+    for (var iter9 in this.multiStuff) {
+      if (this.multiStuff.hasOwnProperty(iter9)) {
+        iter9 = this.multiStuff[iter9];
+        iter9.write(output);
+      }
+    }
+    output.writeListEnd();
+    output.writeFieldEnd();
+  }
+  if (this.isMulti !== null && this.isMulti !== undefined) {
+    output.writeFieldBegin('isMulti', Thrift.Type.BOOL, 14);
+    output.writeBool(this.isMulti);
+    output.writeFieldEnd();
+  }
+  if (this.createTime !== null && this.createTime !== undefined) {
+    output.writeFieldBegin('createTime', Thrift.Type.STRING, 15);
+    output.writeString(this.createTime);
+    output.writeFieldEnd();
+  }
+  if (this.driverPhone !== null && this.driverPhone !== undefined) {
+    output.writeFieldBegin('driverPhone', Thrift.Type.STRING, 16);
+    output.writeString(this.driverPhone);
+    output.writeFieldEnd();
+  }
+  if (this.driverId !== null && this.driverId !== undefined) {
+    output.writeFieldBegin('driverId', Thrift.Type.STRING, 17);
+    output.writeString(this.driverId);
+    output.writeFieldEnd();
+  }
+  if (this.supplierName !== null && this.supplierName !== undefined) {
+    output.writeFieldBegin('supplierName', Thrift.Type.STRING, 18);
+    output.writeString(this.supplierName);
+    output.writeFieldEnd();
+  }
+  if (this.supplierId !== null && this.supplierId !== undefined) {
+    output.writeFieldBegin('supplierId', Thrift.Type.STRING, 19);
+    output.writeString(this.supplierId);
+    output.writeFieldEnd();
+  }
+  if (this.vehicleTeamName !== null && this.vehicleTeamName !== undefined) {
+    output.writeFieldBegin('vehicleTeamName', Thrift.Type.STRING, 20);
+    output.writeString(this.vehicleTeamName);
+    output.writeFieldEnd();
+  }
+  if (this.vehicleTeamId !== null && this.vehicleTeamId !== undefined) {
+    output.writeFieldBegin('vehicleTeamId', Thrift.Type.STRING, 21);
+    output.writeString(this.vehicleTeamId);
+    output.writeFieldEnd();
+  }
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+
 var vichele_stay_alone = module.exports.vichele_stay_alone = function(args) {
   this.id = null;
   this.stuff_name = null;
@@ -3254,6 +3716,10 @@ var vichele_stay_alone = module.exports.vichele_stay_alone = function(args) {
   this.creator_name = null;
   this.creator_phone = null;
   this.repeated = null;
+  this.driver_name = null;
+  this.driver_phone = null;
+  this.driver_id = null;
+  this.transfor_company = null;
   if (args) {
     if (args.id !== undefined && args.id !== null) {
       this.id = args.id;
@@ -3293,6 +3759,18 @@ var vichele_stay_alone = module.exports.vichele_stay_alone = function(args) {
     }
     if (args.repeated !== undefined && args.repeated !== null) {
       this.repeated = args.repeated;
+    }
+    if (args.driver_name !== undefined && args.driver_name !== null) {
+      this.driver_name = args.driver_name;
+    }
+    if (args.driver_phone !== undefined && args.driver_phone !== null) {
+      this.driver_phone = args.driver_phone;
+    }
+    if (args.driver_id !== undefined && args.driver_id !== null) {
+      this.driver_id = args.driver_id;
+    }
+    if (args.transfor_company !== undefined && args.transfor_company !== null) {
+      this.transfor_company = args.transfor_company;
     }
   }
 };
@@ -3398,6 +3876,34 @@ vichele_stay_alone.prototype.read = function(input) {
         input.skip(ftype);
       }
       break;
+      case 14:
+      if (ftype == Thrift.Type.STRING) {
+        this.driver_name = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 15:
+      if (ftype == Thrift.Type.STRING) {
+        this.driver_phone = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 16:
+      if (ftype == Thrift.Type.STRING) {
+        this.driver_id = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 17:
+      if (ftype == Thrift.Type.STRING) {
+        this.transfor_company = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
       default:
         input.skip(ftype);
     }
@@ -3472,6 +3978,26 @@ vichele_stay_alone.prototype.write = function(output) {
   if (this.repeated !== null && this.repeated !== undefined) {
     output.writeFieldBegin('repeated', Thrift.Type.BOOL, 13);
     output.writeBool(this.repeated);
+    output.writeFieldEnd();
+  }
+  if (this.driver_name !== null && this.driver_name !== undefined) {
+    output.writeFieldBegin('driver_name', Thrift.Type.STRING, 14);
+    output.writeString(this.driver_name);
+    output.writeFieldEnd();
+  }
+  if (this.driver_phone !== null && this.driver_phone !== undefined) {
+    output.writeFieldBegin('driver_phone', Thrift.Type.STRING, 15);
+    output.writeString(this.driver_phone);
+    output.writeFieldEnd();
+  }
+  if (this.driver_id !== null && this.driver_id !== undefined) {
+    output.writeFieldBegin('driver_id', Thrift.Type.STRING, 16);
+    output.writeString(this.driver_id);
+    output.writeFieldEnd();
+  }
+  if (this.transfor_company !== null && this.transfor_company !== undefined) {
+    output.writeFieldBegin('transfor_company', Thrift.Type.STRING, 17);
+    output.writeString(this.transfor_company);
     output.writeFieldEnd();
   }
   output.writeFieldStop();

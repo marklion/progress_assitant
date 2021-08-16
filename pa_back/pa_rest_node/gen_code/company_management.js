@@ -94,12 +94,12 @@ company_management_get_all_type_result.prototype.read = function(input) {
       case 0:
       if (ftype == Thrift.Type.LIST) {
         this.success = [];
-        var _rtmp316 = input.readListBegin();
-        var _size15 = _rtmp316.size || 0;
-        for (var _i17 = 0; _i17 < _size15; ++_i17) {
-          var elem18 = null;
-          elem18 = input.readI64();
-          this.success.push(elem18);
+        var _rtmp321 = input.readListBegin();
+        var _size20 = _rtmp321.size || 0;
+        for (var _i22 = 0; _i22 < _size20; ++_i22) {
+          var elem23 = null;
+          elem23 = input.readI64();
+          this.success.push(elem23);
         }
         input.readListEnd();
       } else {
@@ -128,10 +128,10 @@ company_management_get_all_type_result.prototype.write = function(output) {
   if (this.success !== null && this.success !== undefined) {
     output.writeFieldBegin('success', Thrift.Type.LIST, 0);
     output.writeListBegin(Thrift.Type.I64, this.success.length);
-    for (var iter19 in this.success) {
-      if (this.success.hasOwnProperty(iter19)) {
-        iter19 = this.success[iter19];
-        output.writeI64(iter19);
+    for (var iter24 in this.success) {
+      if (this.success.hasOwnProperty(iter24)) {
+        iter24 = this.success[iter24];
+        output.writeI64(iter24);
       }
     }
     output.writeListEnd();
@@ -773,13 +773,13 @@ company_management_get_all_apply_result.prototype.read = function(input) {
       case 0:
       if (ftype == Thrift.Type.LIST) {
         this.success = [];
-        var _rtmp321 = input.readListBegin();
-        var _size20 = _rtmp321.size || 0;
-        for (var _i22 = 0; _i22 < _size20; ++_i22) {
-          var elem23 = null;
-          elem23 = new ttypes.user_apply();
-          elem23.read(input);
-          this.success.push(elem23);
+        var _rtmp326 = input.readListBegin();
+        var _size25 = _rtmp326.size || 0;
+        for (var _i27 = 0; _i27 < _size25; ++_i27) {
+          var elem28 = null;
+          elem28 = new ttypes.user_apply();
+          elem28.read(input);
+          this.success.push(elem28);
         }
         input.readListEnd();
       } else {
@@ -808,10 +808,10 @@ company_management_get_all_apply_result.prototype.write = function(output) {
   if (this.success !== null && this.success !== undefined) {
     output.writeFieldBegin('success', Thrift.Type.LIST, 0);
     output.writeListBegin(Thrift.Type.STRUCT, this.success.length);
-    for (var iter24 in this.success) {
-      if (this.success.hasOwnProperty(iter24)) {
-        iter24 = this.success[iter24];
-        iter24.write(output);
+    for (var iter29 in this.success) {
+      if (this.success.hasOwnProperty(iter29)) {
+        iter29 = this.success[iter29];
+        iter29.write(output);
       }
     }
     output.writeListEnd();
@@ -1555,13 +1555,13 @@ company_management_get_all_compay_user_result.prototype.read = function(input) {
       case 0:
       if (ftype == Thrift.Type.LIST) {
         this.success = [];
-        var _rtmp326 = input.readListBegin();
-        var _size25 = _rtmp326.size || 0;
-        for (var _i27 = 0; _i27 < _size25; ++_i27) {
-          var elem28 = null;
-          elem28 = new ttypes.user_info();
-          elem28.read(input);
-          this.success.push(elem28);
+        var _rtmp331 = input.readListBegin();
+        var _size30 = _rtmp331.size || 0;
+        for (var _i32 = 0; _i32 < _size30; ++_i32) {
+          var elem33 = null;
+          elem33 = new ttypes.user_info();
+          elem33.read(input);
+          this.success.push(elem33);
         }
         input.readListEnd();
       } else {
@@ -1590,10 +1590,10 @@ company_management_get_all_compay_user_result.prototype.write = function(output)
   if (this.success !== null && this.success !== undefined) {
     output.writeFieldBegin('success', Thrift.Type.LIST, 0);
     output.writeListBegin(Thrift.Type.STRUCT, this.success.length);
-    for (var iter29 in this.success) {
-      if (this.success.hasOwnProperty(iter29)) {
-        iter29 = this.success[iter29];
-        iter29.write(output);
+    for (var iter34 in this.success) {
+      if (this.success.hasOwnProperty(iter34)) {
+        iter34 = this.success[iter34];
+        iter34.write(output);
       }
     }
     output.writeListEnd();
@@ -2820,13 +2820,13 @@ company_management_get_all_attachment_result.prototype.read = function(input) {
       case 0:
       if (ftype == Thrift.Type.LIST) {
         this.success = [];
-        var _rtmp331 = input.readListBegin();
-        var _size30 = _rtmp331.size || 0;
-        for (var _i32 = 0; _i32 < _size30; ++_i32) {
-          var elem33 = null;
-          elem33 = new ttypes.company_attachment();
-          elem33.read(input);
-          this.success.push(elem33);
+        var _rtmp336 = input.readListBegin();
+        var _size35 = _rtmp336.size || 0;
+        for (var _i37 = 0; _i37 < _size35; ++_i37) {
+          var elem38 = null;
+          elem38 = new ttypes.company_attachment();
+          elem38.read(input);
+          this.success.push(elem38);
         }
         input.readListEnd();
       } else {
@@ -2855,10 +2855,10 @@ company_management_get_all_attachment_result.prototype.write = function(output) 
   if (this.success !== null && this.success !== undefined) {
     output.writeFieldBegin('success', Thrift.Type.LIST, 0);
     output.writeListBegin(Thrift.Type.STRUCT, this.success.length);
-    for (var iter34 in this.success) {
-      if (this.success.hasOwnProperty(iter34)) {
-        iter34 = this.success[iter34];
-        iter34.write(output);
+    for (var iter39 in this.success) {
+      if (this.success.hasOwnProperty(iter39)) {
+        iter39 = this.success[iter39];
+        iter39.write(output);
       }
     }
     output.writeListEnd();
@@ -3072,13 +3072,13 @@ company_management_get_real_access_result.prototype.read = function(input) {
       case 0:
       if (ftype == Thrift.Type.LIST) {
         this.success = [];
-        var _rtmp336 = input.readListBegin();
-        var _size35 = _rtmp336.size || 0;
-        for (var _i37 = 0; _i37 < _size35; ++_i37) {
-          var elem38 = null;
-          elem38 = new ttypes.real_access_record();
-          elem38.read(input);
-          this.success.push(elem38);
+        var _rtmp341 = input.readListBegin();
+        var _size40 = _rtmp341.size || 0;
+        for (var _i42 = 0; _i42 < _size40; ++_i42) {
+          var elem43 = null;
+          elem43 = new ttypes.real_access_record();
+          elem43.read(input);
+          this.success.push(elem43);
         }
         input.readListEnd();
       } else {
@@ -3107,10 +3107,10 @@ company_management_get_real_access_result.prototype.write = function(output) {
   if (this.success !== null && this.success !== undefined) {
     output.writeFieldBegin('success', Thrift.Type.LIST, 0);
     output.writeListBegin(Thrift.Type.STRUCT, this.success.length);
-    for (var iter39 in this.success) {
-      if (this.success.hasOwnProperty(iter39)) {
-        iter39 = this.success[iter39];
-        iter39.write(output);
+    for (var iter44 in this.success) {
+      if (this.success.hasOwnProperty(iter44)) {
+        iter44 = this.success[iter44];
+        iter44.write(output);
       }
     }
     output.writeListEnd();
@@ -3206,13 +3206,13 @@ company_management_get_all_access_result.prototype.read = function(input) {
       case 0:
       if (ftype == Thrift.Type.LIST) {
         this.success = [];
-        var _rtmp341 = input.readListBegin();
-        var _size40 = _rtmp341.size || 0;
-        for (var _i42 = 0; _i42 < _size40; ++_i42) {
-          var elem43 = null;
-          elem43 = new ttypes.real_access_record();
-          elem43.read(input);
-          this.success.push(elem43);
+        var _rtmp346 = input.readListBegin();
+        var _size45 = _rtmp346.size || 0;
+        for (var _i47 = 0; _i47 < _size45; ++_i47) {
+          var elem48 = null;
+          elem48 = new ttypes.real_access_record();
+          elem48.read(input);
+          this.success.push(elem48);
         }
         input.readListEnd();
       } else {
@@ -3241,10 +3241,10 @@ company_management_get_all_access_result.prototype.write = function(output) {
   if (this.success !== null && this.success !== undefined) {
     output.writeFieldBegin('success', Thrift.Type.LIST, 0);
     output.writeListBegin(Thrift.Type.STRUCT, this.success.length);
-    for (var iter44 in this.success) {
-      if (this.success.hasOwnProperty(iter44)) {
-        iter44 = this.success[iter44];
-        iter44.write(output);
+    for (var iter49 in this.success) {
+      if (this.success.hasOwnProperty(iter49)) {
+        iter49 = this.success[iter49];
+        iter49.write(output);
       }
     }
     output.writeListEnd();
@@ -3722,13 +3722,13 @@ company_management_get_all_contract_result.prototype.read = function(input) {
       case 0:
       if (ftype == Thrift.Type.LIST) {
         this.success = [];
-        var _rtmp346 = input.readListBegin();
-        var _size45 = _rtmp346.size || 0;
-        for (var _i47 = 0; _i47 < _size45; ++_i47) {
-          var elem48 = null;
-          elem48 = new ttypes.common_contract();
-          elem48.read(input);
-          this.success.push(elem48);
+        var _rtmp351 = input.readListBegin();
+        var _size50 = _rtmp351.size || 0;
+        for (var _i52 = 0; _i52 < _size50; ++_i52) {
+          var elem53 = null;
+          elem53 = new ttypes.common_contract();
+          elem53.read(input);
+          this.success.push(elem53);
         }
         input.readListEnd();
       } else {
@@ -3757,10 +3757,10 @@ company_management_get_all_contract_result.prototype.write = function(output) {
   if (this.success !== null && this.success !== undefined) {
     output.writeFieldBegin('success', Thrift.Type.LIST, 0);
     output.writeListBegin(Thrift.Type.STRUCT, this.success.length);
-    for (var iter49 in this.success) {
-      if (this.success.hasOwnProperty(iter49)) {
-        iter49 = this.success[iter49];
-        iter49.write(output);
+    for (var iter54 in this.success) {
+      if (this.success.hasOwnProperty(iter54)) {
+        iter54 = this.success[iter54];
+        iter54.write(output);
       }
     }
     output.writeListEnd();

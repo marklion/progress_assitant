@@ -79,6 +79,10 @@ class api_transformation_info;
 
 class call_vehicle_req;
 
+class meta_stuff_info;
+
+class vehicle_info_resp;
+
 class vichele_stay_alone;
 
 class silent_user_info;
@@ -1993,8 +1997,224 @@ void swap(call_vehicle_req &a, call_vehicle_req &b);
 
 std::ostream& operator<<(std::ostream& out, const call_vehicle_req& obj);
 
+typedef struct _meta_stuff_info__isset {
+  _meta_stuff_info__isset() : stuffId(false), stuffName(false), weight(false) {}
+  bool stuffId :1;
+  bool stuffName :1;
+  bool weight :1;
+} _meta_stuff_info__isset;
+
+class meta_stuff_info : public virtual ::apache::thrift::TBase {
+ public:
+
+  meta_stuff_info(const meta_stuff_info&);
+  meta_stuff_info& operator=(const meta_stuff_info&);
+  meta_stuff_info() : stuffId(), stuffName(), weight(0) {
+  }
+
+  virtual ~meta_stuff_info() noexcept;
+  std::string stuffId;
+  std::string stuffName;
+  double weight;
+
+  _meta_stuff_info__isset __isset;
+
+  void __set_stuffId(const std::string& val);
+
+  void __set_stuffName(const std::string& val);
+
+  void __set_weight(const double val);
+
+  bool operator == (const meta_stuff_info & rhs) const
+  {
+    if (!(stuffId == rhs.stuffId))
+      return false;
+    if (!(stuffName == rhs.stuffName))
+      return false;
+    if (!(weight == rhs.weight))
+      return false;
+    return true;
+  }
+  bool operator != (const meta_stuff_info &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const meta_stuff_info & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+  virtual void printTo(std::ostream& out) const;
+};
+
+void swap(meta_stuff_info &a, meta_stuff_info &b);
+
+std::ostream& operator<<(std::ostream& out, const meta_stuff_info& obj);
+
+typedef struct _vehicle_info_resp__isset {
+  _vehicle_info_resp__isset() : id(false), plateNo(false), backPlateNo(false), stuffName(false), stuffId(false), enterWeight(false), companyName(false), driverName(false), isSale(false), price(false), customerId(false), orderNo(false), multiStuff(false), isMulti(false), createTime(false), driverPhone(false), driverId(false), supplierName(false), supplierId(false), vehicleTeamName(false), vehicleTeamId(false) {}
+  bool id :1;
+  bool plateNo :1;
+  bool backPlateNo :1;
+  bool stuffName :1;
+  bool stuffId :1;
+  bool enterWeight :1;
+  bool companyName :1;
+  bool driverName :1;
+  bool isSale :1;
+  bool price :1;
+  bool customerId :1;
+  bool orderNo :1;
+  bool multiStuff :1;
+  bool isMulti :1;
+  bool createTime :1;
+  bool driverPhone :1;
+  bool driverId :1;
+  bool supplierName :1;
+  bool supplierId :1;
+  bool vehicleTeamName :1;
+  bool vehicleTeamId :1;
+} _vehicle_info_resp__isset;
+
+class vehicle_info_resp : public virtual ::apache::thrift::TBase {
+ public:
+
+  vehicle_info_resp(const vehicle_info_resp&);
+  vehicle_info_resp& operator=(const vehicle_info_resp&);
+  vehicle_info_resp() : id(), plateNo(), backPlateNo(), stuffName(), stuffId(), enterWeight(0), companyName(), driverName(), isSale(0), price(0), customerId(), orderNo(), isMulti(0), createTime(), driverPhone(), driverId(), supplierName(), supplierId(), vehicleTeamName(), vehicleTeamId() {
+  }
+
+  virtual ~vehicle_info_resp() noexcept;
+  std::string id;
+  std::string plateNo;
+  std::string backPlateNo;
+  std::string stuffName;
+  std::string stuffId;
+  double enterWeight;
+  std::string companyName;
+  std::string driverName;
+  bool isSale;
+  double price;
+  std::string customerId;
+  std::string orderNo;
+  std::vector<meta_stuff_info>  multiStuff;
+  bool isMulti;
+  std::string createTime;
+  std::string driverPhone;
+  std::string driverId;
+  std::string supplierName;
+  std::string supplierId;
+  std::string vehicleTeamName;
+  std::string vehicleTeamId;
+
+  _vehicle_info_resp__isset __isset;
+
+  void __set_id(const std::string& val);
+
+  void __set_plateNo(const std::string& val);
+
+  void __set_backPlateNo(const std::string& val);
+
+  void __set_stuffName(const std::string& val);
+
+  void __set_stuffId(const std::string& val);
+
+  void __set_enterWeight(const double val);
+
+  void __set_companyName(const std::string& val);
+
+  void __set_driverName(const std::string& val);
+
+  void __set_isSale(const bool val);
+
+  void __set_price(const double val);
+
+  void __set_customerId(const std::string& val);
+
+  void __set_orderNo(const std::string& val);
+
+  void __set_multiStuff(const std::vector<meta_stuff_info> & val);
+
+  void __set_isMulti(const bool val);
+
+  void __set_createTime(const std::string& val);
+
+  void __set_driverPhone(const std::string& val);
+
+  void __set_driverId(const std::string& val);
+
+  void __set_supplierName(const std::string& val);
+
+  void __set_supplierId(const std::string& val);
+
+  void __set_vehicleTeamName(const std::string& val);
+
+  void __set_vehicleTeamId(const std::string& val);
+
+  bool operator == (const vehicle_info_resp & rhs) const
+  {
+    if (!(id == rhs.id))
+      return false;
+    if (!(plateNo == rhs.plateNo))
+      return false;
+    if (!(backPlateNo == rhs.backPlateNo))
+      return false;
+    if (!(stuffName == rhs.stuffName))
+      return false;
+    if (!(stuffId == rhs.stuffId))
+      return false;
+    if (!(enterWeight == rhs.enterWeight))
+      return false;
+    if (!(companyName == rhs.companyName))
+      return false;
+    if (!(driverName == rhs.driverName))
+      return false;
+    if (!(isSale == rhs.isSale))
+      return false;
+    if (!(price == rhs.price))
+      return false;
+    if (!(customerId == rhs.customerId))
+      return false;
+    if (!(orderNo == rhs.orderNo))
+      return false;
+    if (!(multiStuff == rhs.multiStuff))
+      return false;
+    if (!(isMulti == rhs.isMulti))
+      return false;
+    if (!(createTime == rhs.createTime))
+      return false;
+    if (!(driverPhone == rhs.driverPhone))
+      return false;
+    if (!(driverId == rhs.driverId))
+      return false;
+    if (!(supplierName == rhs.supplierName))
+      return false;
+    if (!(supplierId == rhs.supplierId))
+      return false;
+    if (!(vehicleTeamName == rhs.vehicleTeamName))
+      return false;
+    if (!(vehicleTeamId == rhs.vehicleTeamId))
+      return false;
+    return true;
+  }
+  bool operator != (const vehicle_info_resp &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const vehicle_info_resp & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+  virtual void printTo(std::ostream& out) const;
+};
+
+void swap(vehicle_info_resp &a, vehicle_info_resp &b);
+
+std::ostream& operator<<(std::ostream& out, const vehicle_info_resp& obj);
+
 typedef struct _vichele_stay_alone__isset {
-  _vichele_stay_alone__isset() : id(false), stuff_name(false), company_name(false), main_vichele_number(false), behind_vichele_number(false), count(false), comment(false), date(false), destination(false), status(false), creator_name(false), creator_phone(false), repeated(false) {}
+  _vichele_stay_alone__isset() : id(false), stuff_name(false), company_name(false), main_vichele_number(false), behind_vichele_number(false), count(false), comment(false), date(false), destination(false), status(false), creator_name(false), creator_phone(false), repeated(false), driver_name(false), driver_phone(false), driver_id(false), transfor_company(false) {}
   bool id :1;
   bool stuff_name :1;
   bool company_name :1;
@@ -2008,6 +2228,10 @@ typedef struct _vichele_stay_alone__isset {
   bool creator_name :1;
   bool creator_phone :1;
   bool repeated :1;
+  bool driver_name :1;
+  bool driver_phone :1;
+  bool driver_id :1;
+  bool transfor_company :1;
 } _vichele_stay_alone__isset;
 
 class vichele_stay_alone : public virtual ::apache::thrift::TBase {
@@ -2015,7 +2239,7 @@ class vichele_stay_alone : public virtual ::apache::thrift::TBase {
 
   vichele_stay_alone(const vichele_stay_alone&);
   vichele_stay_alone& operator=(const vichele_stay_alone&);
-  vichele_stay_alone() : id(0), stuff_name(), company_name(), main_vichele_number(), behind_vichele_number(), count(0), comment(), date(), destination(), status(0), creator_name(), creator_phone(), repeated(0) {
+  vichele_stay_alone() : id(0), stuff_name(), company_name(), main_vichele_number(), behind_vichele_number(), count(0), comment(), date(), destination(), status(0), creator_name(), creator_phone(), repeated(0), driver_name(), driver_phone(), driver_id(), transfor_company() {
   }
 
   virtual ~vichele_stay_alone() noexcept;
@@ -2032,6 +2256,10 @@ class vichele_stay_alone : public virtual ::apache::thrift::TBase {
   std::string creator_name;
   std::string creator_phone;
   bool repeated;
+  std::string driver_name;
+  std::string driver_phone;
+  std::string driver_id;
+  std::string transfor_company;
 
   _vichele_stay_alone__isset __isset;
 
@@ -2061,6 +2289,14 @@ class vichele_stay_alone : public virtual ::apache::thrift::TBase {
 
   void __set_repeated(const bool val);
 
+  void __set_driver_name(const std::string& val);
+
+  void __set_driver_phone(const std::string& val);
+
+  void __set_driver_id(const std::string& val);
+
+  void __set_transfor_company(const std::string& val);
+
   bool operator == (const vichele_stay_alone & rhs) const
   {
     if (!(id == rhs.id))
@@ -2088,6 +2324,14 @@ class vichele_stay_alone : public virtual ::apache::thrift::TBase {
     if (!(creator_phone == rhs.creator_phone))
       return false;
     if (!(repeated == rhs.repeated))
+      return false;
+    if (!(driver_name == rhs.driver_name))
+      return false;
+    if (!(driver_phone == rhs.driver_phone))
+      return false;
+    if (!(driver_id == rhs.driver_id))
+      return false;
+    if (!(transfor_company == rhs.transfor_company))
       return false;
     return true;
   }

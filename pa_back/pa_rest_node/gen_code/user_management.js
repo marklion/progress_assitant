@@ -597,13 +597,13 @@ user_management_get_bound_vichele_result.prototype.read = function(input) {
       case 0:
       if (ftype == Thrift.Type.LIST) {
         this.success = [];
-        var _rtmp36 = input.readListBegin();
-        var _size5 = _rtmp36.size || 0;
-        for (var _i7 = 0; _i7 < _size5; ++_i7) {
-          var elem8 = null;
-          elem8 = new ttypes.vichele_info_t();
-          elem8.read(input);
-          this.success.push(elem8);
+        var _rtmp311 = input.readListBegin();
+        var _size10 = _rtmp311.size || 0;
+        for (var _i12 = 0; _i12 < _size10; ++_i12) {
+          var elem13 = null;
+          elem13 = new ttypes.vichele_info_t();
+          elem13.read(input);
+          this.success.push(elem13);
         }
         input.readListEnd();
       } else {
@@ -632,10 +632,10 @@ user_management_get_bound_vichele_result.prototype.write = function(output) {
   if (this.success !== null && this.success !== undefined) {
     output.writeFieldBegin('success', Thrift.Type.LIST, 0);
     output.writeListBegin(Thrift.Type.STRUCT, this.success.length);
-    for (var iter9 in this.success) {
-      if (this.success.hasOwnProperty(iter9)) {
-        iter9 = this.success[iter9];
-        iter9.write(output);
+    for (var iter14 in this.success) {
+      if (this.success.hasOwnProperty(iter14)) {
+        iter14 = this.success[iter14];
+        iter14.write(output);
       }
     }
     output.writeListEnd();
@@ -1508,13 +1508,13 @@ user_management_get_bound_driver_info_result.prototype.read = function(input) {
       case 0:
       if (ftype == Thrift.Type.LIST) {
         this.success = [];
-        var _rtmp311 = input.readListBegin();
-        var _size10 = _rtmp311.size || 0;
-        for (var _i12 = 0; _i12 < _size10; ++_i12) {
-          var elem13 = null;
-          elem13 = new ttypes.driver_info();
-          elem13.read(input);
-          this.success.push(elem13);
+        var _rtmp316 = input.readListBegin();
+        var _size15 = _rtmp316.size || 0;
+        for (var _i17 = 0; _i17 < _size15; ++_i17) {
+          var elem18 = null;
+          elem18 = new ttypes.driver_info();
+          elem18.read(input);
+          this.success.push(elem18);
         }
         input.readListEnd();
       } else {
@@ -1543,10 +1543,10 @@ user_management_get_bound_driver_info_result.prototype.write = function(output) 
   if (this.success !== null && this.success !== undefined) {
     output.writeFieldBegin('success', Thrift.Type.LIST, 0);
     output.writeListBegin(Thrift.Type.STRUCT, this.success.length);
-    for (var iter14 in this.success) {
-      if (this.success.hasOwnProperty(iter14)) {
-        iter14 = this.success[iter14];
-        iter14.write(output);
+    for (var iter19 in this.success) {
+      if (this.success.hasOwnProperty(iter19)) {
+        iter19 = this.success[iter19];
+        iter19.write(output);
       }
     }
     output.writeListEnd();

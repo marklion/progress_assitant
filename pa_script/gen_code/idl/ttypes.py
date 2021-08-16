@@ -2962,6 +2962,371 @@ class call_vehicle_req(object):
         return not (self == other)
 
 
+class meta_stuff_info(object):
+    """
+    Attributes:
+     - stuffId
+     - stuffName
+     - weight
+
+    """
+
+
+    def __init__(self, stuffId=None, stuffName=None, weight=None,):
+        self.stuffId = stuffId
+        self.stuffName = stuffName
+        self.weight = weight
+
+    def read(self, iprot):
+        if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
+            iprot._fast_decode(self, iprot, [self.__class__, self.thrift_spec])
+            return
+        iprot.readStructBegin()
+        while True:
+            (fname, ftype, fid) = iprot.readFieldBegin()
+            if ftype == TType.STOP:
+                break
+            if fid == 1:
+                if ftype == TType.STRING:
+                    self.stuffId = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 2:
+                if ftype == TType.STRING:
+                    self.stuffName = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 3:
+                if ftype == TType.DOUBLE:
+                    self.weight = iprot.readDouble()
+                else:
+                    iprot.skip(ftype)
+            else:
+                iprot.skip(ftype)
+            iprot.readFieldEnd()
+        iprot.readStructEnd()
+
+    def write(self, oprot):
+        if oprot._fast_encode is not None and self.thrift_spec is not None:
+            oprot.trans.write(oprot._fast_encode(self, [self.__class__, self.thrift_spec]))
+            return
+        oprot.writeStructBegin('meta_stuff_info')
+        if self.stuffId is not None:
+            oprot.writeFieldBegin('stuffId', TType.STRING, 1)
+            oprot.writeString(self.stuffId.encode('utf-8') if sys.version_info[0] == 2 else self.stuffId)
+            oprot.writeFieldEnd()
+        if self.stuffName is not None:
+            oprot.writeFieldBegin('stuffName', TType.STRING, 2)
+            oprot.writeString(self.stuffName.encode('utf-8') if sys.version_info[0] == 2 else self.stuffName)
+            oprot.writeFieldEnd()
+        if self.weight is not None:
+            oprot.writeFieldBegin('weight', TType.DOUBLE, 3)
+            oprot.writeDouble(self.weight)
+            oprot.writeFieldEnd()
+        oprot.writeFieldStop()
+        oprot.writeStructEnd()
+
+    def validate(self):
+        return
+
+    def __repr__(self):
+        L = ['%s=%r' % (key, value)
+             for key, value in self.__dict__.items()]
+        return '%s(%s)' % (self.__class__.__name__, ', '.join(L))
+
+    def __eq__(self, other):
+        return isinstance(other, self.__class__) and self.__dict__ == other.__dict__
+
+    def __ne__(self, other):
+        return not (self == other)
+
+
+class vehicle_info_resp(object):
+    """
+    Attributes:
+     - id
+     - plateNo
+     - backPlateNo
+     - stuffName
+     - stuffId
+     - enterWeight
+     - companyName
+     - driverName
+     - isSale
+     - price
+     - customerId
+     - orderNo
+     - multiStuff
+     - isMulti
+     - createTime
+     - driverPhone
+     - driverId
+     - supplierName
+     - supplierId
+     - vehicleTeamName
+     - vehicleTeamId
+
+    """
+
+
+    def __init__(self, id=None, plateNo=None, backPlateNo=None, stuffName=None, stuffId=None, enterWeight=None, companyName=None, driverName=None, isSale=None, price=None, customerId=None, orderNo=None, multiStuff=None, isMulti=None, createTime=None, driverPhone=None, driverId=None, supplierName=None, supplierId=None, vehicleTeamName=None, vehicleTeamId=None,):
+        self.id = id
+        self.plateNo = plateNo
+        self.backPlateNo = backPlateNo
+        self.stuffName = stuffName
+        self.stuffId = stuffId
+        self.enterWeight = enterWeight
+        self.companyName = companyName
+        self.driverName = driverName
+        self.isSale = isSale
+        self.price = price
+        self.customerId = customerId
+        self.orderNo = orderNo
+        self.multiStuff = multiStuff
+        self.isMulti = isMulti
+        self.createTime = createTime
+        self.driverPhone = driverPhone
+        self.driverId = driverId
+        self.supplierName = supplierName
+        self.supplierId = supplierId
+        self.vehicleTeamName = vehicleTeamName
+        self.vehicleTeamId = vehicleTeamId
+
+    def read(self, iprot):
+        if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
+            iprot._fast_decode(self, iprot, [self.__class__, self.thrift_spec])
+            return
+        iprot.readStructBegin()
+        while True:
+            (fname, ftype, fid) = iprot.readFieldBegin()
+            if ftype == TType.STOP:
+                break
+            if fid == 1:
+                if ftype == TType.STRING:
+                    self.id = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 2:
+                if ftype == TType.STRING:
+                    self.plateNo = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 3:
+                if ftype == TType.STRING:
+                    self.backPlateNo = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 4:
+                if ftype == TType.STRING:
+                    self.stuffName = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 5:
+                if ftype == TType.STRING:
+                    self.stuffId = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 6:
+                if ftype == TType.DOUBLE:
+                    self.enterWeight = iprot.readDouble()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 7:
+                if ftype == TType.STRING:
+                    self.companyName = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 8:
+                if ftype == TType.STRING:
+                    self.driverName = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 9:
+                if ftype == TType.BOOL:
+                    self.isSale = iprot.readBool()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 10:
+                if ftype == TType.DOUBLE:
+                    self.price = iprot.readDouble()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 11:
+                if ftype == TType.STRING:
+                    self.customerId = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 12:
+                if ftype == TType.STRING:
+                    self.orderNo = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 13:
+                if ftype == TType.LIST:
+                    self.multiStuff = []
+                    (_etype10, _size7) = iprot.readListBegin()
+                    for _i11 in range(_size7):
+                        _elem12 = meta_stuff_info()
+                        _elem12.read(iprot)
+                        self.multiStuff.append(_elem12)
+                    iprot.readListEnd()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 14:
+                if ftype == TType.BOOL:
+                    self.isMulti = iprot.readBool()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 15:
+                if ftype == TType.STRING:
+                    self.createTime = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 16:
+                if ftype == TType.STRING:
+                    self.driverPhone = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 17:
+                if ftype == TType.STRING:
+                    self.driverId = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 18:
+                if ftype == TType.STRING:
+                    self.supplierName = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 19:
+                if ftype == TType.STRING:
+                    self.supplierId = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 20:
+                if ftype == TType.STRING:
+                    self.vehicleTeamName = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 21:
+                if ftype == TType.STRING:
+                    self.vehicleTeamId = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
+            else:
+                iprot.skip(ftype)
+            iprot.readFieldEnd()
+        iprot.readStructEnd()
+
+    def write(self, oprot):
+        if oprot._fast_encode is not None and self.thrift_spec is not None:
+            oprot.trans.write(oprot._fast_encode(self, [self.__class__, self.thrift_spec]))
+            return
+        oprot.writeStructBegin('vehicle_info_resp')
+        if self.id is not None:
+            oprot.writeFieldBegin('id', TType.STRING, 1)
+            oprot.writeString(self.id.encode('utf-8') if sys.version_info[0] == 2 else self.id)
+            oprot.writeFieldEnd()
+        if self.plateNo is not None:
+            oprot.writeFieldBegin('plateNo', TType.STRING, 2)
+            oprot.writeString(self.plateNo.encode('utf-8') if sys.version_info[0] == 2 else self.plateNo)
+            oprot.writeFieldEnd()
+        if self.backPlateNo is not None:
+            oprot.writeFieldBegin('backPlateNo', TType.STRING, 3)
+            oprot.writeString(self.backPlateNo.encode('utf-8') if sys.version_info[0] == 2 else self.backPlateNo)
+            oprot.writeFieldEnd()
+        if self.stuffName is not None:
+            oprot.writeFieldBegin('stuffName', TType.STRING, 4)
+            oprot.writeString(self.stuffName.encode('utf-8') if sys.version_info[0] == 2 else self.stuffName)
+            oprot.writeFieldEnd()
+        if self.stuffId is not None:
+            oprot.writeFieldBegin('stuffId', TType.STRING, 5)
+            oprot.writeString(self.stuffId.encode('utf-8') if sys.version_info[0] == 2 else self.stuffId)
+            oprot.writeFieldEnd()
+        if self.enterWeight is not None:
+            oprot.writeFieldBegin('enterWeight', TType.DOUBLE, 6)
+            oprot.writeDouble(self.enterWeight)
+            oprot.writeFieldEnd()
+        if self.companyName is not None:
+            oprot.writeFieldBegin('companyName', TType.STRING, 7)
+            oprot.writeString(self.companyName.encode('utf-8') if sys.version_info[0] == 2 else self.companyName)
+            oprot.writeFieldEnd()
+        if self.driverName is not None:
+            oprot.writeFieldBegin('driverName', TType.STRING, 8)
+            oprot.writeString(self.driverName.encode('utf-8') if sys.version_info[0] == 2 else self.driverName)
+            oprot.writeFieldEnd()
+        if self.isSale is not None:
+            oprot.writeFieldBegin('isSale', TType.BOOL, 9)
+            oprot.writeBool(self.isSale)
+            oprot.writeFieldEnd()
+        if self.price is not None:
+            oprot.writeFieldBegin('price', TType.DOUBLE, 10)
+            oprot.writeDouble(self.price)
+            oprot.writeFieldEnd()
+        if self.customerId is not None:
+            oprot.writeFieldBegin('customerId', TType.STRING, 11)
+            oprot.writeString(self.customerId.encode('utf-8') if sys.version_info[0] == 2 else self.customerId)
+            oprot.writeFieldEnd()
+        if self.orderNo is not None:
+            oprot.writeFieldBegin('orderNo', TType.STRING, 12)
+            oprot.writeString(self.orderNo.encode('utf-8') if sys.version_info[0] == 2 else self.orderNo)
+            oprot.writeFieldEnd()
+        if self.multiStuff is not None:
+            oprot.writeFieldBegin('multiStuff', TType.LIST, 13)
+            oprot.writeListBegin(TType.STRUCT, len(self.multiStuff))
+            for iter13 in self.multiStuff:
+                iter13.write(oprot)
+            oprot.writeListEnd()
+            oprot.writeFieldEnd()
+        if self.isMulti is not None:
+            oprot.writeFieldBegin('isMulti', TType.BOOL, 14)
+            oprot.writeBool(self.isMulti)
+            oprot.writeFieldEnd()
+        if self.createTime is not None:
+            oprot.writeFieldBegin('createTime', TType.STRING, 15)
+            oprot.writeString(self.createTime.encode('utf-8') if sys.version_info[0] == 2 else self.createTime)
+            oprot.writeFieldEnd()
+        if self.driverPhone is not None:
+            oprot.writeFieldBegin('driverPhone', TType.STRING, 16)
+            oprot.writeString(self.driverPhone.encode('utf-8') if sys.version_info[0] == 2 else self.driverPhone)
+            oprot.writeFieldEnd()
+        if self.driverId is not None:
+            oprot.writeFieldBegin('driverId', TType.STRING, 17)
+            oprot.writeString(self.driverId.encode('utf-8') if sys.version_info[0] == 2 else self.driverId)
+            oprot.writeFieldEnd()
+        if self.supplierName is not None:
+            oprot.writeFieldBegin('supplierName', TType.STRING, 18)
+            oprot.writeString(self.supplierName.encode('utf-8') if sys.version_info[0] == 2 else self.supplierName)
+            oprot.writeFieldEnd()
+        if self.supplierId is not None:
+            oprot.writeFieldBegin('supplierId', TType.STRING, 19)
+            oprot.writeString(self.supplierId.encode('utf-8') if sys.version_info[0] == 2 else self.supplierId)
+            oprot.writeFieldEnd()
+        if self.vehicleTeamName is not None:
+            oprot.writeFieldBegin('vehicleTeamName', TType.STRING, 20)
+            oprot.writeString(self.vehicleTeamName.encode('utf-8') if sys.version_info[0] == 2 else self.vehicleTeamName)
+            oprot.writeFieldEnd()
+        if self.vehicleTeamId is not None:
+            oprot.writeFieldBegin('vehicleTeamId', TType.STRING, 21)
+            oprot.writeString(self.vehicleTeamId.encode('utf-8') if sys.version_info[0] == 2 else self.vehicleTeamId)
+            oprot.writeFieldEnd()
+        oprot.writeFieldStop()
+        oprot.writeStructEnd()
+
+    def validate(self):
+        return
+
+    def __repr__(self):
+        L = ['%s=%r' % (key, value)
+             for key, value in self.__dict__.items()]
+        return '%s(%s)' % (self.__class__.__name__, ', '.join(L))
+
+    def __eq__(self, other):
+        return isinstance(other, self.__class__) and self.__dict__ == other.__dict__
+
+    def __ne__(self, other):
+        return not (self == other)
+
+
 class vichele_stay_alone(object):
     """
     Attributes:
@@ -2978,11 +3343,15 @@ class vichele_stay_alone(object):
      - creator_name
      - creator_phone
      - repeated
+     - driver_name
+     - driver_phone
+     - driver_id
+     - transfor_company
 
     """
 
 
-    def __init__(self, id=None, stuff_name=None, company_name=None, main_vichele_number=None, behind_vichele_number=None, count=None, comment=None, date=None, destination=None, status=None, creator_name=None, creator_phone=None, repeated=None,):
+    def __init__(self, id=None, stuff_name=None, company_name=None, main_vichele_number=None, behind_vichele_number=None, count=None, comment=None, date=None, destination=None, status=None, creator_name=None, creator_phone=None, repeated=None, driver_name=None, driver_phone=None, driver_id=None, transfor_company=None,):
         self.id = id
         self.stuff_name = stuff_name
         self.company_name = company_name
@@ -2996,6 +3365,10 @@ class vichele_stay_alone(object):
         self.creator_name = creator_name
         self.creator_phone = creator_phone
         self.repeated = repeated
+        self.driver_name = driver_name
+        self.driver_phone = driver_phone
+        self.driver_id = driver_id
+        self.transfor_company = transfor_company
 
     def read(self, iprot):
         if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
@@ -3071,6 +3444,26 @@ class vichele_stay_alone(object):
                     self.repeated = iprot.readBool()
                 else:
                     iprot.skip(ftype)
+            elif fid == 14:
+                if ftype == TType.STRING:
+                    self.driver_name = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 15:
+                if ftype == TType.STRING:
+                    self.driver_phone = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 16:
+                if ftype == TType.STRING:
+                    self.driver_id = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 17:
+                if ftype == TType.STRING:
+                    self.transfor_company = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
             else:
                 iprot.skip(ftype)
             iprot.readFieldEnd()
@@ -3132,6 +3525,22 @@ class vichele_stay_alone(object):
         if self.repeated is not None:
             oprot.writeFieldBegin('repeated', TType.BOOL, 13)
             oprot.writeBool(self.repeated)
+            oprot.writeFieldEnd()
+        if self.driver_name is not None:
+            oprot.writeFieldBegin('driver_name', TType.STRING, 14)
+            oprot.writeString(self.driver_name.encode('utf-8') if sys.version_info[0] == 2 else self.driver_name)
+            oprot.writeFieldEnd()
+        if self.driver_phone is not None:
+            oprot.writeFieldBegin('driver_phone', TType.STRING, 15)
+            oprot.writeString(self.driver_phone.encode('utf-8') if sys.version_info[0] == 2 else self.driver_phone)
+            oprot.writeFieldEnd()
+        if self.driver_id is not None:
+            oprot.writeFieldBegin('driver_id', TType.STRING, 16)
+            oprot.writeString(self.driver_id.encode('utf-8') if sys.version_info[0] == 2 else self.driver_id)
+            oprot.writeFieldEnd()
+        if self.transfor_company is not None:
+            oprot.writeFieldBegin('transfor_company', TType.STRING, 17)
+            oprot.writeString(self.transfor_company.encode('utf-8') if sys.version_info[0] == 2 else self.transfor_company)
             oprot.writeFieldEnd()
         oprot.writeFieldStop()
         oprot.writeStructEnd()
@@ -3477,6 +3886,38 @@ call_vehicle_req.thrift_spec = (
     (3, TType.I64, 'index', None, None, ),  # 3
     (4, TType.STRING, 'stationName', 'UTF8', None, ),  # 4
 )
+all_structs.append(meta_stuff_info)
+meta_stuff_info.thrift_spec = (
+    None,  # 0
+    (1, TType.STRING, 'stuffId', 'UTF8', None, ),  # 1
+    (2, TType.STRING, 'stuffName', 'UTF8', None, ),  # 2
+    (3, TType.DOUBLE, 'weight', None, None, ),  # 3
+)
+all_structs.append(vehicle_info_resp)
+vehicle_info_resp.thrift_spec = (
+    None,  # 0
+    (1, TType.STRING, 'id', 'UTF8', None, ),  # 1
+    (2, TType.STRING, 'plateNo', 'UTF8', None, ),  # 2
+    (3, TType.STRING, 'backPlateNo', 'UTF8', None, ),  # 3
+    (4, TType.STRING, 'stuffName', 'UTF8', None, ),  # 4
+    (5, TType.STRING, 'stuffId', 'UTF8', None, ),  # 5
+    (6, TType.DOUBLE, 'enterWeight', None, None, ),  # 6
+    (7, TType.STRING, 'companyName', 'UTF8', None, ),  # 7
+    (8, TType.STRING, 'driverName', 'UTF8', None, ),  # 8
+    (9, TType.BOOL, 'isSale', None, None, ),  # 9
+    (10, TType.DOUBLE, 'price', None, None, ),  # 10
+    (11, TType.STRING, 'customerId', 'UTF8', None, ),  # 11
+    (12, TType.STRING, 'orderNo', 'UTF8', None, ),  # 12
+    (13, TType.LIST, 'multiStuff', (TType.STRUCT, [meta_stuff_info, None], False), None, ),  # 13
+    (14, TType.BOOL, 'isMulti', None, None, ),  # 14
+    (15, TType.STRING, 'createTime', 'UTF8', None, ),  # 15
+    (16, TType.STRING, 'driverPhone', 'UTF8', None, ),  # 16
+    (17, TType.STRING, 'driverId', 'UTF8', None, ),  # 17
+    (18, TType.STRING, 'supplierName', 'UTF8', None, ),  # 18
+    (19, TType.STRING, 'supplierId', 'UTF8', None, ),  # 19
+    (20, TType.STRING, 'vehicleTeamName', 'UTF8', None, ),  # 20
+    (21, TType.STRING, 'vehicleTeamId', 'UTF8', None, ),  # 21
+)
 all_structs.append(vichele_stay_alone)
 vichele_stay_alone.thrift_spec = (
     None,  # 0
@@ -3493,6 +3934,10 @@ vichele_stay_alone.thrift_spec = (
     (11, TType.STRING, 'creator_name', 'UTF8', None, ),  # 11
     (12, TType.STRING, 'creator_phone', 'UTF8', None, ),  # 12
     (13, TType.BOOL, 'repeated', None, None, ),  # 13
+    (14, TType.STRING, 'driver_name', 'UTF8', None, ),  # 14
+    (15, TType.STRING, 'driver_phone', 'UTF8', None, ),  # 15
+    (16, TType.STRING, 'driver_id', 'UTF8', None, ),  # 16
+    (17, TType.STRING, 'transfor_company', 'UTF8', None, ),  # 17
 )
 all_structs.append(silent_user_info)
 silent_user_info.thrift_spec = (

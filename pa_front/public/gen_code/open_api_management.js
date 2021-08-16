@@ -649,13 +649,13 @@ open_api_management_get_today_transformation_result = class {
         case 0:
         if (ftype == Thrift.Type.LIST) {
           this.success = [];
-          const _rtmp3141 = input.readListBegin();
-          const _size140 = _rtmp3141.size || 0;
-          for (let _i142 = 0; _i142 < _size140; ++_i142) {
-            let elem143 = null;
-            elem143 = new api_transformation_info();
-            elem143.read(input);
-            this.success.push(elem143);
+          const _rtmp3146 = input.readListBegin();
+          const _size145 = _rtmp3146.size || 0;
+          for (let _i147 = 0; _i147 < _size145; ++_i147) {
+            let elem148 = null;
+            elem148 = new api_transformation_info();
+            elem148.read(input);
+            this.success.push(elem148);
           }
           input.readListEnd();
         } else {
@@ -684,10 +684,10 @@ open_api_management_get_today_transformation_result = class {
     if (this.success !== null && this.success !== undefined) {
       output.writeFieldBegin('success', Thrift.Type.LIST, 0);
       output.writeListBegin(Thrift.Type.STRUCT, this.success.length);
-      for (let iter144 in this.success) {
-        if (this.success.hasOwnProperty(iter144)) {
-          iter144 = this.success[iter144];
-          iter144.write(output);
+      for (let iter149 in this.success) {
+        if (this.success.hasOwnProperty(iter149)) {
+          iter149 = this.success[iter149];
+          iter149.write(output);
         }
       }
       output.writeListEnd();
@@ -1177,6 +1177,158 @@ open_api_management_proc_call_vehicle_result = class {
     if (this.success !== null && this.success !== undefined) {
       output.writeFieldBegin('success', Thrift.Type.BOOL, 0);
       output.writeBool(this.success);
+      output.writeFieldEnd();
+    }
+    if (this.e !== null && this.e !== undefined) {
+      output.writeFieldBegin('e', Thrift.Type.STRUCT, 1);
+      this.e.write(output);
+      output.writeFieldEnd();
+    }
+    output.writeFieldStop();
+    output.writeStructEnd();
+    return;
+  }
+
+};
+open_api_management_proc_vehicle_info_args = class {
+  constructor(args) {
+    this.plateNo = null;
+    this.driverId = null;
+    this.token = null;
+    if (args) {
+      if (args.plateNo !== undefined && args.plateNo !== null) {
+        this.plateNo = args.plateNo;
+      }
+      if (args.driverId !== undefined && args.driverId !== null) {
+        this.driverId = args.driverId;
+      }
+      if (args.token !== undefined && args.token !== null) {
+        this.token = args.token;
+      }
+    }
+  }
+
+  read (input) {
+    input.readStructBegin();
+    while (true) {
+      const ret = input.readFieldBegin();
+      const ftype = ret.ftype;
+      const fid = ret.fid;
+      if (ftype == Thrift.Type.STOP) {
+        break;
+      }
+      switch (fid) {
+        case 1:
+        if (ftype == Thrift.Type.STRING) {
+          this.plateNo = input.readString().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        case 2:
+        if (ftype == Thrift.Type.STRING) {
+          this.driverId = input.readString().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        case 3:
+        if (ftype == Thrift.Type.STRING) {
+          this.token = input.readString().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        default:
+          input.skip(ftype);
+      }
+      input.readFieldEnd();
+    }
+    input.readStructEnd();
+    return;
+  }
+
+  write (output) {
+    output.writeStructBegin('open_api_management_proc_vehicle_info_args');
+    if (this.plateNo !== null && this.plateNo !== undefined) {
+      output.writeFieldBegin('plateNo', Thrift.Type.STRING, 1);
+      output.writeString(this.plateNo);
+      output.writeFieldEnd();
+    }
+    if (this.driverId !== null && this.driverId !== undefined) {
+      output.writeFieldBegin('driverId', Thrift.Type.STRING, 2);
+      output.writeString(this.driverId);
+      output.writeFieldEnd();
+    }
+    if (this.token !== null && this.token !== undefined) {
+      output.writeFieldBegin('token', Thrift.Type.STRING, 3);
+      output.writeString(this.token);
+      output.writeFieldEnd();
+    }
+    output.writeFieldStop();
+    output.writeStructEnd();
+    return;
+  }
+
+};
+open_api_management_proc_vehicle_info_result = class {
+  constructor(args) {
+    this.success = null;
+    this.e = null;
+    if (args instanceof gen_exp) {
+        this.e = args;
+        return;
+    }
+    if (args) {
+      if (args.success !== undefined && args.success !== null) {
+        this.success = new vehicle_info_resp(args.success);
+      }
+      if (args.e !== undefined && args.e !== null) {
+        this.e = args.e;
+      }
+    }
+  }
+
+  read (input) {
+    input.readStructBegin();
+    while (true) {
+      const ret = input.readFieldBegin();
+      const ftype = ret.ftype;
+      const fid = ret.fid;
+      if (ftype == Thrift.Type.STOP) {
+        break;
+      }
+      switch (fid) {
+        case 0:
+        if (ftype == Thrift.Type.STRUCT) {
+          this.success = new vehicle_info_resp();
+          this.success.read(input);
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        case 1:
+        if (ftype == Thrift.Type.STRUCT) {
+          this.e = new gen_exp();
+          this.e.read(input);
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        default:
+          input.skip(ftype);
+      }
+      input.readFieldEnd();
+    }
+    input.readStructEnd();
+    return;
+  }
+
+  write (output) {
+    output.writeStructBegin('open_api_management_proc_vehicle_info_result');
+    if (this.success !== null && this.success !== undefined) {
+      output.writeFieldBegin('success', Thrift.Type.STRUCT, 0);
+      this.success.write(output);
       output.writeFieldEnd();
     }
     if (this.e !== null && this.e !== undefined) {
@@ -1680,5 +1832,66 @@ open_api_managementClient = class open_api_managementClient {
       return result.success;
     }
     throw 'proc_call_vehicle failed: unknown result';
+  }
+
+  proc_vehicle_info (plateNo, driverId, token) {
+    const self = this;
+    return new Promise((resolve, reject) => {
+      self.send_proc_vehicle_info(plateNo, driverId, token, (error, result) => {
+        return error ? reject(error) : resolve(result);
+      });
+    });
+  }
+
+  send_proc_vehicle_info (plateNo, driverId, token, callback) {
+    const params = {
+      plateNo: plateNo,
+      driverId: driverId,
+      token: token
+    };
+    const args = new open_api_management_proc_vehicle_info_args(params);
+    try {
+      this.output.writeMessageBegin('proc_vehicle_info', Thrift.MessageType.CALL, this.seqid);
+      args.write(this.output);
+      this.output.writeMessageEnd();
+      const self = this;
+      this.output.getTransport().flush(true, () => {
+        let error = null, result = null;
+        try {
+          result = self.recv_proc_vehicle_info();
+        } catch (e) {
+          error = e;
+        }
+        callback(error, result);
+      });
+    }
+    catch (e) {
+      if (typeof this.output.getTransport().reset === 'function') {
+        this.output.getTransport().reset();
+      }
+      throw e;
+    }
+  }
+
+  recv_proc_vehicle_info () {
+    const ret = this.input.readMessageBegin();
+    const mtype = ret.mtype;
+    if (mtype == Thrift.MessageType.EXCEPTION) {
+      const x = new Thrift.TApplicationException();
+      x.read(this.input);
+      this.input.readMessageEnd();
+      throw x;
+    }
+    const result = new open_api_management_proc_vehicle_info_result();
+    result.read(this.input);
+    this.input.readMessageEnd();
+
+    if (null !== result.e) {
+      throw result.e;
+    }
+    if (null !== result.success) {
+      return result.success;
+    }
+    throw 'proc_vehicle_info failed: unknown result';
   }
 };

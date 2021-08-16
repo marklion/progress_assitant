@@ -52,6 +52,18 @@ export default {
                     case 'comment':
                         ret.show_words = '备注';
                         break;
+                    case 'transfor_company':
+                        ret.show_words = '承运公司';
+                        break;
+                    case 'driver_id':
+                        ret.show_words = '司机身份证';
+                        break;
+                    case 'driver_name':
+                        ret.show_words = '司机姓名';
+                        break;
+                    case 'driver_phone':
+                        ret.show_words = '司机电话';
+                        break;
                     default:
                         break;
                 }
