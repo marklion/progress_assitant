@@ -31,6 +31,7 @@ class open_api_managementIf {
   virtual bool push_arrange(const int64_t id, const std::string& order, const bool is_sale, const std::string& location, const std::string& token) = 0;
   virtual bool proc_call_vehicle(const call_vehicle_req& _req, const std::string& token) = 0;
   virtual void proc_vehicle_info(vehicle_info_resp& _return, const std::string& plateNo, const std::string& driverId, const std::string& token) = 0;
+  virtual void proc_all_vehicle_info(std::vector<vehicle_info_resp> & _return, const std::string& token) = 0;
 };
 
 class open_api_managementIfFactory {
@@ -91,6 +92,9 @@ class open_api_managementNull : virtual public open_api_managementIf {
     return _return;
   }
   void proc_vehicle_info(vehicle_info_resp& /* _return */, const std::string& /* plateNo */, const std::string& /* driverId */, const std::string& /* token */) {
+    return;
+  }
+  void proc_all_vehicle_info(std::vector<vehicle_info_resp> & /* _return */, const std::string& /* token */) {
     return;
   }
 };
@@ -1208,6 +1212,118 @@ class open_api_management_proc_vehicle_info_presult {
 
 };
 
+typedef struct _open_api_management_proc_all_vehicle_info_args__isset {
+  _open_api_management_proc_all_vehicle_info_args__isset() : token(false) {}
+  bool token :1;
+} _open_api_management_proc_all_vehicle_info_args__isset;
+
+class open_api_management_proc_all_vehicle_info_args {
+ public:
+
+  open_api_management_proc_all_vehicle_info_args(const open_api_management_proc_all_vehicle_info_args&);
+  open_api_management_proc_all_vehicle_info_args& operator=(const open_api_management_proc_all_vehicle_info_args&);
+  open_api_management_proc_all_vehicle_info_args() : token() {
+  }
+
+  virtual ~open_api_management_proc_all_vehicle_info_args() noexcept;
+  std::string token;
+
+  _open_api_management_proc_all_vehicle_info_args__isset __isset;
+
+  void __set_token(const std::string& val);
+
+  bool operator == (const open_api_management_proc_all_vehicle_info_args & rhs) const
+  {
+    if (!(token == rhs.token))
+      return false;
+    return true;
+  }
+  bool operator != (const open_api_management_proc_all_vehicle_info_args &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const open_api_management_proc_all_vehicle_info_args & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+
+class open_api_management_proc_all_vehicle_info_pargs {
+ public:
+
+
+  virtual ~open_api_management_proc_all_vehicle_info_pargs() noexcept;
+  const std::string* token;
+
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _open_api_management_proc_all_vehicle_info_result__isset {
+  _open_api_management_proc_all_vehicle_info_result__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _open_api_management_proc_all_vehicle_info_result__isset;
+
+class open_api_management_proc_all_vehicle_info_result {
+ public:
+
+  open_api_management_proc_all_vehicle_info_result(const open_api_management_proc_all_vehicle_info_result&);
+  open_api_management_proc_all_vehicle_info_result& operator=(const open_api_management_proc_all_vehicle_info_result&);
+  open_api_management_proc_all_vehicle_info_result() {
+  }
+
+  virtual ~open_api_management_proc_all_vehicle_info_result() noexcept;
+  std::vector<vehicle_info_resp>  success;
+  gen_exp e;
+
+  _open_api_management_proc_all_vehicle_info_result__isset __isset;
+
+  void __set_success(const std::vector<vehicle_info_resp> & val);
+
+  void __set_e(const gen_exp& val);
+
+  bool operator == (const open_api_management_proc_all_vehicle_info_result & rhs) const
+  {
+    if (!(success == rhs.success))
+      return false;
+    if (!(e == rhs.e))
+      return false;
+    return true;
+  }
+  bool operator != (const open_api_management_proc_all_vehicle_info_result &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const open_api_management_proc_all_vehicle_info_result & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _open_api_management_proc_all_vehicle_info_presult__isset {
+  _open_api_management_proc_all_vehicle_info_presult__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _open_api_management_proc_all_vehicle_info_presult__isset;
+
+class open_api_management_proc_all_vehicle_info_presult {
+ public:
+
+
+  virtual ~open_api_management_proc_all_vehicle_info_presult() noexcept;
+  std::vector<vehicle_info_resp> * success;
+  gen_exp e;
+
+  _open_api_management_proc_all_vehicle_info_presult__isset __isset;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+
+};
+
 class open_api_managementClient : virtual public open_api_managementIf {
  public:
   open_api_managementClient(std::shared_ptr< ::apache::thrift::protocol::TProtocol> prot) {
@@ -1260,6 +1376,9 @@ class open_api_managementClient : virtual public open_api_managementIf {
   void proc_vehicle_info(vehicle_info_resp& _return, const std::string& plateNo, const std::string& driverId, const std::string& token);
   void send_proc_vehicle_info(const std::string& plateNo, const std::string& driverId, const std::string& token);
   void recv_proc_vehicle_info(vehicle_info_resp& _return);
+  void proc_all_vehicle_info(std::vector<vehicle_info_resp> & _return, const std::string& token);
+  void send_proc_all_vehicle_info(const std::string& token);
+  void recv_proc_all_vehicle_info(std::vector<vehicle_info_resp> & _return);
  protected:
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> piprot_;
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> poprot_;
@@ -1284,6 +1403,7 @@ class open_api_managementProcessor : public ::apache::thrift::TDispatchProcessor
   void process_push_arrange(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
   void process_proc_call_vehicle(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
   void process_proc_vehicle_info(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
+  void process_proc_all_vehicle_info(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
  public:
   open_api_managementProcessor(::std::shared_ptr<open_api_managementIf> iface) :
     iface_(iface) {
@@ -1296,6 +1416,7 @@ class open_api_managementProcessor : public ::apache::thrift::TDispatchProcessor
     processMap_["push_arrange"] = &open_api_managementProcessor::process_push_arrange;
     processMap_["proc_call_vehicle"] = &open_api_managementProcessor::process_proc_call_vehicle;
     processMap_["proc_vehicle_info"] = &open_api_managementProcessor::process_proc_vehicle_info;
+    processMap_["proc_all_vehicle_info"] = &open_api_managementProcessor::process_proc_all_vehicle_info;
   }
 
   virtual ~open_api_managementProcessor() {}
@@ -1408,6 +1529,16 @@ class open_api_managementMultiface : virtual public open_api_managementIf {
     return;
   }
 
+  void proc_all_vehicle_info(std::vector<vehicle_info_resp> & _return, const std::string& token) {
+    size_t sz = ifaces_.size();
+    size_t i = 0;
+    for (; i < (sz - 1); ++i) {
+      ifaces_[i]->proc_all_vehicle_info(_return, token);
+    }
+    ifaces_[i]->proc_all_vehicle_info(_return, token);
+    return;
+  }
+
 };
 
 // The 'concurrent' client is a thread safe client that correctly handles
@@ -1467,6 +1598,9 @@ class open_api_managementConcurrentClient : virtual public open_api_managementIf
   void proc_vehicle_info(vehicle_info_resp& _return, const std::string& plateNo, const std::string& driverId, const std::string& token);
   int32_t send_proc_vehicle_info(const std::string& plateNo, const std::string& driverId, const std::string& token);
   void recv_proc_vehicle_info(vehicle_info_resp& _return, const int32_t seqid);
+  void proc_all_vehicle_info(std::vector<vehicle_info_resp> & _return, const std::string& token);
+  int32_t send_proc_all_vehicle_info(const std::string& token);
+  void recv_proc_all_vehicle_info(std::vector<vehicle_info_resp> & _return, const int32_t seqid);
  protected:
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> piprot_;
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> poprot_;

@@ -33,6 +33,7 @@ if len(sys.argv) <= 1 or sys.argv[1] == '--help':
     print('  bool push_arrange(i64 id, string order, bool is_sale, string location, string token)')
     print('  bool proc_call_vehicle(call_vehicle_req _req, string token)')
     print('  vehicle_info_resp proc_vehicle_info(string plateNo, string driverId, string token)')
+    print('   proc_all_vehicle_info(string token)')
     print('')
     sys.exit(0)
 
@@ -165,6 +166,12 @@ elif cmd == 'proc_vehicle_info':
         print('proc_vehicle_info requires 3 args')
         sys.exit(1)
     pp.pprint(client.proc_vehicle_info(args[0], args[1], args[2],))
+
+elif cmd == 'proc_all_vehicle_info':
+    if len(args) != 1:
+        print('proc_all_vehicle_info requires 1 args')
+        sys.exit(1)
+    pp.pprint(client.proc_all_vehicle_info(args[0],))
 
 else:
     print('Unrecognized method %s' % cmd)
