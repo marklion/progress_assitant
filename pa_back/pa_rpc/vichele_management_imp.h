@@ -71,7 +71,7 @@ public:
         {
             PA_RETURN_OP_FAIL();
         }
-        auto extra_vichele = opt_user->get_children<pa_sql_vichele_stay_alone>("created_by", "PRI_ID == %ld", vichele_id);
+        auto extra_vichele = opt_user->get_children<pa_sql_vichele_stay_alone>("created_by", "PRI_ID == %ld AND status != 2", vichele_id);
         if (!extra_vichele)
         {
             PA_RETURN_OP_FAIL();
@@ -168,6 +168,11 @@ public:
             tmp.driver_name = itr.driver_name;
             tmp.driver_phone = itr.driver_phone;
             tmp.transfor_company = itr.transfor_company;
+            tmp.p_time = itr.p_time;
+            tmp.m_time = itr.m_time;
+            tmp.p_weight = itr.p_weight;
+            tmp.m_weight = itr.m_weight;
+            tmp.j_weight = itr.j_weight;
             _return.push_back(tmp);
         }
     }
@@ -301,6 +306,12 @@ public:
             tmp.driver_name = itr.driver_name;
             tmp.driver_phone = itr.driver_phone;
             tmp.transfor_company = itr.transfor_company;
+
+            tmp.p_time = itr.p_time;
+            tmp.m_time = itr.m_time;
+            tmp.p_weight = itr.p_weight;
+            tmp.m_weight = itr.m_weight;
+            tmp.j_weight = itr.j_weight;
             _return.push_back(tmp);
         }
     }
@@ -359,7 +370,7 @@ public:
             query_cmd += " OR PRI_ID == " + std::to_string(itr.id);
         }
 
-        auto extra_vichele = company->get_all_children<pa_sql_vichele_stay_alone>("destination", "(%s)  AND is_drop == 0", query_cmd.c_str());
+        auto extra_vichele = company->get_all_children<pa_sql_vichele_stay_alone>("destination", "(%s)  AND is_drop == 0 AND status != 2", query_cmd.c_str());
         for (auto &itr : extra_vichele)
         {
             itr.is_drop = 1;

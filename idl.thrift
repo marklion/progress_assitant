@@ -183,6 +183,9 @@ struct vichele_in_plan {
     11:string register_timestamp,
     12:string register_number,
     13:string enter_location,
+    14:string p_time,
+    15:double p_weight,
+    16:double m_weight,
 }
 
 struct stuff_plan {
@@ -221,6 +224,10 @@ struct plan_number_id{
 struct deliver_info {
     1:i64 id,
     2:double count,
+    3:double p_weight,
+    4:double m_weight,
+    5:string p_time,
+    6:string m_time,
 }
 
 struct vichele_statistics {
@@ -367,6 +374,19 @@ struct vehicle_info_resp {
     21:string vehicleTeamId
 }
 
+struct push_weight_req {
+    1:string id,
+    2:string plateNo,
+    3:string customerId,
+    4:string customerName,
+    5:string stuffName,
+    6:double pWeight,
+    7:double mWeight,
+    8:string pTime,
+    9:string mTime,
+    10:double jWeight,
+}
+
 service open_api_management {
     bool register_api_user(1:string company_name, 2:string email, 3:string password) throws (1:gen_exp e),
     bool verify_email_code(1:string email, 2:string code) throws (1:gen_exp e),
@@ -378,6 +398,7 @@ service open_api_management {
     bool proc_call_vehicle(1:call_vehicle_req _req, 2:string token) throws (1:gen_exp e),
     vehicle_info_resp proc_vehicle_info(1:string plateNo, 2:string driverId, 3:string token) throws (1:gen_exp e),
     list<vehicle_info_resp> proc_all_vehicle_info(1:string token) throws (1:gen_exp e),
+    bool proc_push_weight(1:push_weight_req _req, 2:string token) throws (1:gen_exp e),
 }
 
 struct vichele_stay_alone {
@@ -398,6 +419,11 @@ struct vichele_stay_alone {
     15:string driver_phone,
     16:string driver_id,
     17:string transfor_company,
+    18:string p_time,
+    19:string m_time,
+    20:double p_weight,
+    21:double m_weight,
+    22:double j_weight,
 }
 
 struct silent_user_info {

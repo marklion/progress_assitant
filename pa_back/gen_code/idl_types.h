@@ -83,6 +83,8 @@ class meta_stuff_info;
 
 class vehicle_info_resp;
 
+class push_weight_req;
+
 class vichele_stay_alone;
 
 class silent_user_info;
@@ -978,7 +980,7 @@ void swap(pay_confirm_info &a, pay_confirm_info &b);
 std::ostream& operator<<(std::ostream& out, const pay_confirm_info& obj);
 
 typedef struct _vichele_in_plan__isset {
-  _vichele_in_plan__isset() : main_vichele(false), behind_vichele(false), driver_name(false), driver_phone(false), count(false), drop_address(false), use_for(false), vichele_id(false), finish(false), deliver_timestamp(false), register_timestamp(false), register_number(false), enter_location(false) {}
+  _vichele_in_plan__isset() : main_vichele(false), behind_vichele(false), driver_name(false), driver_phone(false), count(false), drop_address(false), use_for(false), vichele_id(false), finish(false), deliver_timestamp(false), register_timestamp(false), register_number(false), enter_location(false), p_time(false), p_weight(false), m_weight(false) {}
   bool main_vichele :1;
   bool behind_vichele :1;
   bool driver_name :1;
@@ -992,6 +994,9 @@ typedef struct _vichele_in_plan__isset {
   bool register_timestamp :1;
   bool register_number :1;
   bool enter_location :1;
+  bool p_time :1;
+  bool p_weight :1;
+  bool m_weight :1;
 } _vichele_in_plan__isset;
 
 class vichele_in_plan : public virtual ::apache::thrift::TBase {
@@ -999,7 +1004,7 @@ class vichele_in_plan : public virtual ::apache::thrift::TBase {
 
   vichele_in_plan(const vichele_in_plan&);
   vichele_in_plan& operator=(const vichele_in_plan&);
-  vichele_in_plan() : main_vichele(), behind_vichele(), driver_name(), driver_phone(), count(0), drop_address(), use_for(), vichele_id(0), finish(0), deliver_timestamp(), register_timestamp(), register_number(), enter_location() {
+  vichele_in_plan() : main_vichele(), behind_vichele(), driver_name(), driver_phone(), count(0), drop_address(), use_for(), vichele_id(0), finish(0), deliver_timestamp(), register_timestamp(), register_number(), enter_location(), p_time(), p_weight(0), m_weight(0) {
   }
 
   virtual ~vichele_in_plan() noexcept;
@@ -1016,6 +1021,9 @@ class vichele_in_plan : public virtual ::apache::thrift::TBase {
   std::string register_timestamp;
   std::string register_number;
   std::string enter_location;
+  std::string p_time;
+  double p_weight;
+  double m_weight;
 
   _vichele_in_plan__isset __isset;
 
@@ -1045,6 +1053,12 @@ class vichele_in_plan : public virtual ::apache::thrift::TBase {
 
   void __set_enter_location(const std::string& val);
 
+  void __set_p_time(const std::string& val);
+
+  void __set_p_weight(const double val);
+
+  void __set_m_weight(const double val);
+
   bool operator == (const vichele_in_plan & rhs) const
   {
     if (!(main_vichele == rhs.main_vichele))
@@ -1072,6 +1086,12 @@ class vichele_in_plan : public virtual ::apache::thrift::TBase {
     if (!(register_number == rhs.register_number))
       return false;
     if (!(enter_location == rhs.enter_location))
+      return false;
+    if (!(p_time == rhs.p_time))
+      return false;
+    if (!(p_weight == rhs.p_weight))
+      return false;
+    if (!(m_weight == rhs.m_weight))
       return false;
     return true;
   }
@@ -1344,9 +1364,13 @@ void swap(plan_number_id &a, plan_number_id &b);
 std::ostream& operator<<(std::ostream& out, const plan_number_id& obj);
 
 typedef struct _deliver_info__isset {
-  _deliver_info__isset() : id(false), count(false) {}
+  _deliver_info__isset() : id(false), count(false), p_weight(false), m_weight(false), p_time(false), m_time(false) {}
   bool id :1;
   bool count :1;
+  bool p_weight :1;
+  bool m_weight :1;
+  bool p_time :1;
+  bool m_time :1;
 } _deliver_info__isset;
 
 class deliver_info : public virtual ::apache::thrift::TBase {
@@ -1354,12 +1378,16 @@ class deliver_info : public virtual ::apache::thrift::TBase {
 
   deliver_info(const deliver_info&);
   deliver_info& operator=(const deliver_info&);
-  deliver_info() : id(0), count(0) {
+  deliver_info() : id(0), count(0), p_weight(0), m_weight(0), p_time(), m_time() {
   }
 
   virtual ~deliver_info() noexcept;
   int64_t id;
   double count;
+  double p_weight;
+  double m_weight;
+  std::string p_time;
+  std::string m_time;
 
   _deliver_info__isset __isset;
 
@@ -1367,11 +1395,27 @@ class deliver_info : public virtual ::apache::thrift::TBase {
 
   void __set_count(const double val);
 
+  void __set_p_weight(const double val);
+
+  void __set_m_weight(const double val);
+
+  void __set_p_time(const std::string& val);
+
+  void __set_m_time(const std::string& val);
+
   bool operator == (const deliver_info & rhs) const
   {
     if (!(id == rhs.id))
       return false;
     if (!(count == rhs.count))
+      return false;
+    if (!(p_weight == rhs.p_weight))
+      return false;
+    if (!(m_weight == rhs.m_weight))
+      return false;
+    if (!(p_time == rhs.p_time))
+      return false;
+    if (!(m_time == rhs.m_time))
       return false;
     return true;
   }
@@ -2213,8 +2257,104 @@ void swap(vehicle_info_resp &a, vehicle_info_resp &b);
 
 std::ostream& operator<<(std::ostream& out, const vehicle_info_resp& obj);
 
+typedef struct _push_weight_req__isset {
+  _push_weight_req__isset() : id(false), plateNo(false), customerId(false), customerName(false), stuffName(false), pWeight(false), mWeight(false), pTime(false), mTime(false), jWeight(false) {}
+  bool id :1;
+  bool plateNo :1;
+  bool customerId :1;
+  bool customerName :1;
+  bool stuffName :1;
+  bool pWeight :1;
+  bool mWeight :1;
+  bool pTime :1;
+  bool mTime :1;
+  bool jWeight :1;
+} _push_weight_req__isset;
+
+class push_weight_req : public virtual ::apache::thrift::TBase {
+ public:
+
+  push_weight_req(const push_weight_req&);
+  push_weight_req& operator=(const push_weight_req&);
+  push_weight_req() : id(), plateNo(), customerId(), customerName(), stuffName(), pWeight(0), mWeight(0), pTime(), mTime(), jWeight(0) {
+  }
+
+  virtual ~push_weight_req() noexcept;
+  std::string id;
+  std::string plateNo;
+  std::string customerId;
+  std::string customerName;
+  std::string stuffName;
+  double pWeight;
+  double mWeight;
+  std::string pTime;
+  std::string mTime;
+  double jWeight;
+
+  _push_weight_req__isset __isset;
+
+  void __set_id(const std::string& val);
+
+  void __set_plateNo(const std::string& val);
+
+  void __set_customerId(const std::string& val);
+
+  void __set_customerName(const std::string& val);
+
+  void __set_stuffName(const std::string& val);
+
+  void __set_pWeight(const double val);
+
+  void __set_mWeight(const double val);
+
+  void __set_pTime(const std::string& val);
+
+  void __set_mTime(const std::string& val);
+
+  void __set_jWeight(const double val);
+
+  bool operator == (const push_weight_req & rhs) const
+  {
+    if (!(id == rhs.id))
+      return false;
+    if (!(plateNo == rhs.plateNo))
+      return false;
+    if (!(customerId == rhs.customerId))
+      return false;
+    if (!(customerName == rhs.customerName))
+      return false;
+    if (!(stuffName == rhs.stuffName))
+      return false;
+    if (!(pWeight == rhs.pWeight))
+      return false;
+    if (!(mWeight == rhs.mWeight))
+      return false;
+    if (!(pTime == rhs.pTime))
+      return false;
+    if (!(mTime == rhs.mTime))
+      return false;
+    if (!(jWeight == rhs.jWeight))
+      return false;
+    return true;
+  }
+  bool operator != (const push_weight_req &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const push_weight_req & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+  virtual void printTo(std::ostream& out) const;
+};
+
+void swap(push_weight_req &a, push_weight_req &b);
+
+std::ostream& operator<<(std::ostream& out, const push_weight_req& obj);
+
 typedef struct _vichele_stay_alone__isset {
-  _vichele_stay_alone__isset() : id(false), stuff_name(false), company_name(false), main_vichele_number(false), behind_vichele_number(false), count(false), comment(false), date(false), destination(false), status(false), creator_name(false), creator_phone(false), repeated(false), driver_name(false), driver_phone(false), driver_id(false), transfor_company(false) {}
+  _vichele_stay_alone__isset() : id(false), stuff_name(false), company_name(false), main_vichele_number(false), behind_vichele_number(false), count(false), comment(false), date(false), destination(false), status(false), creator_name(false), creator_phone(false), repeated(false), driver_name(false), driver_phone(false), driver_id(false), transfor_company(false), p_time(false), m_time(false), p_weight(false), m_weight(false), j_weight(false) {}
   bool id :1;
   bool stuff_name :1;
   bool company_name :1;
@@ -2232,6 +2372,11 @@ typedef struct _vichele_stay_alone__isset {
   bool driver_phone :1;
   bool driver_id :1;
   bool transfor_company :1;
+  bool p_time :1;
+  bool m_time :1;
+  bool p_weight :1;
+  bool m_weight :1;
+  bool j_weight :1;
 } _vichele_stay_alone__isset;
 
 class vichele_stay_alone : public virtual ::apache::thrift::TBase {
@@ -2239,7 +2384,7 @@ class vichele_stay_alone : public virtual ::apache::thrift::TBase {
 
   vichele_stay_alone(const vichele_stay_alone&);
   vichele_stay_alone& operator=(const vichele_stay_alone&);
-  vichele_stay_alone() : id(0), stuff_name(), company_name(), main_vichele_number(), behind_vichele_number(), count(0), comment(), date(), destination(), status(0), creator_name(), creator_phone(), repeated(0), driver_name(), driver_phone(), driver_id(), transfor_company() {
+  vichele_stay_alone() : id(0), stuff_name(), company_name(), main_vichele_number(), behind_vichele_number(), count(0), comment(), date(), destination(), status(0), creator_name(), creator_phone(), repeated(0), driver_name(), driver_phone(), driver_id(), transfor_company(), p_time(), m_time(), p_weight(0), m_weight(0), j_weight(0) {
   }
 
   virtual ~vichele_stay_alone() noexcept;
@@ -2260,6 +2405,11 @@ class vichele_stay_alone : public virtual ::apache::thrift::TBase {
   std::string driver_phone;
   std::string driver_id;
   std::string transfor_company;
+  std::string p_time;
+  std::string m_time;
+  double p_weight;
+  double m_weight;
+  double j_weight;
 
   _vichele_stay_alone__isset __isset;
 
@@ -2297,6 +2447,16 @@ class vichele_stay_alone : public virtual ::apache::thrift::TBase {
 
   void __set_transfor_company(const std::string& val);
 
+  void __set_p_time(const std::string& val);
+
+  void __set_m_time(const std::string& val);
+
+  void __set_p_weight(const double val);
+
+  void __set_m_weight(const double val);
+
+  void __set_j_weight(const double val);
+
   bool operator == (const vichele_stay_alone & rhs) const
   {
     if (!(id == rhs.id))
@@ -2332,6 +2492,16 @@ class vichele_stay_alone : public virtual ::apache::thrift::TBase {
     if (!(driver_id == rhs.driver_id))
       return false;
     if (!(transfor_company == rhs.transfor_company))
+      return false;
+    if (!(p_time == rhs.p_time))
+      return false;
+    if (!(m_time == rhs.m_time))
+      return false;
+    if (!(p_weight == rhs.p_weight))
+      return false;
+    if (!(m_weight == rhs.m_weight))
+      return false;
+    if (!(j_weight == rhs.j_weight))
       return false;
     return true;
   }

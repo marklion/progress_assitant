@@ -1376,11 +1376,14 @@ class vichele_in_plan(object):
      - register_timestamp
      - register_number
      - enter_location
+     - p_time
+     - p_weight
+     - m_weight
 
     """
 
 
-    def __init__(self, main_vichele=None, behind_vichele=None, driver_name=None, driver_phone=None, count=None, drop_address=None, use_for=None, vichele_id=None, finish=None, deliver_timestamp=None, register_timestamp=None, register_number=None, enter_location=None,):
+    def __init__(self, main_vichele=None, behind_vichele=None, driver_name=None, driver_phone=None, count=None, drop_address=None, use_for=None, vichele_id=None, finish=None, deliver_timestamp=None, register_timestamp=None, register_number=None, enter_location=None, p_time=None, p_weight=None, m_weight=None,):
         self.main_vichele = main_vichele
         self.behind_vichele = behind_vichele
         self.driver_name = driver_name
@@ -1394,6 +1397,9 @@ class vichele_in_plan(object):
         self.register_timestamp = register_timestamp
         self.register_number = register_number
         self.enter_location = enter_location
+        self.p_time = p_time
+        self.p_weight = p_weight
+        self.m_weight = m_weight
 
     def read(self, iprot):
         if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
@@ -1469,6 +1475,21 @@ class vichele_in_plan(object):
                     self.enter_location = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
                 else:
                     iprot.skip(ftype)
+            elif fid == 14:
+                if ftype == TType.STRING:
+                    self.p_time = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 15:
+                if ftype == TType.DOUBLE:
+                    self.p_weight = iprot.readDouble()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 16:
+                if ftype == TType.DOUBLE:
+                    self.m_weight = iprot.readDouble()
+                else:
+                    iprot.skip(ftype)
             else:
                 iprot.skip(ftype)
             iprot.readFieldEnd()
@@ -1530,6 +1551,18 @@ class vichele_in_plan(object):
         if self.enter_location is not None:
             oprot.writeFieldBegin('enter_location', TType.STRING, 13)
             oprot.writeString(self.enter_location.encode('utf-8') if sys.version_info[0] == 2 else self.enter_location)
+            oprot.writeFieldEnd()
+        if self.p_time is not None:
+            oprot.writeFieldBegin('p_time', TType.STRING, 14)
+            oprot.writeString(self.p_time.encode('utf-8') if sys.version_info[0] == 2 else self.p_time)
+            oprot.writeFieldEnd()
+        if self.p_weight is not None:
+            oprot.writeFieldBegin('p_weight', TType.DOUBLE, 15)
+            oprot.writeDouble(self.p_weight)
+            oprot.writeFieldEnd()
+        if self.m_weight is not None:
+            oprot.writeFieldBegin('m_weight', TType.DOUBLE, 16)
+            oprot.writeDouble(self.m_weight)
             oprot.writeFieldEnd()
         oprot.writeFieldStop()
         oprot.writeStructEnd()
@@ -1965,13 +1998,21 @@ class deliver_info(object):
     Attributes:
      - id
      - count
+     - p_weight
+     - m_weight
+     - p_time
+     - m_time
 
     """
 
 
-    def __init__(self, id=None, count=None,):
+    def __init__(self, id=None, count=None, p_weight=None, m_weight=None, p_time=None, m_time=None,):
         self.id = id
         self.count = count
+        self.p_weight = p_weight
+        self.m_weight = m_weight
+        self.p_time = p_time
+        self.m_time = m_time
 
     def read(self, iprot):
         if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
@@ -1992,6 +2033,26 @@ class deliver_info(object):
                     self.count = iprot.readDouble()
                 else:
                     iprot.skip(ftype)
+            elif fid == 3:
+                if ftype == TType.DOUBLE:
+                    self.p_weight = iprot.readDouble()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 4:
+                if ftype == TType.DOUBLE:
+                    self.m_weight = iprot.readDouble()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 5:
+                if ftype == TType.STRING:
+                    self.p_time = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 6:
+                if ftype == TType.STRING:
+                    self.m_time = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
             else:
                 iprot.skip(ftype)
             iprot.readFieldEnd()
@@ -2009,6 +2070,22 @@ class deliver_info(object):
         if self.count is not None:
             oprot.writeFieldBegin('count', TType.DOUBLE, 2)
             oprot.writeDouble(self.count)
+            oprot.writeFieldEnd()
+        if self.p_weight is not None:
+            oprot.writeFieldBegin('p_weight', TType.DOUBLE, 3)
+            oprot.writeDouble(self.p_weight)
+            oprot.writeFieldEnd()
+        if self.m_weight is not None:
+            oprot.writeFieldBegin('m_weight', TType.DOUBLE, 4)
+            oprot.writeDouble(self.m_weight)
+            oprot.writeFieldEnd()
+        if self.p_time is not None:
+            oprot.writeFieldBegin('p_time', TType.STRING, 5)
+            oprot.writeString(self.p_time.encode('utf-8') if sys.version_info[0] == 2 else self.p_time)
+            oprot.writeFieldEnd()
+        if self.m_time is not None:
+            oprot.writeFieldBegin('m_time', TType.STRING, 6)
+            oprot.writeString(self.m_time.encode('utf-8') if sys.version_info[0] == 2 else self.m_time)
             oprot.writeFieldEnd()
         oprot.writeFieldStop()
         oprot.writeStructEnd()
@@ -3327,6 +3404,162 @@ class vehicle_info_resp(object):
         return not (self == other)
 
 
+class push_weight_req(object):
+    """
+    Attributes:
+     - id
+     - plateNo
+     - customerId
+     - customerName
+     - stuffName
+     - pWeight
+     - mWeight
+     - pTime
+     - mTime
+     - jWeight
+
+    """
+
+
+    def __init__(self, id=None, plateNo=None, customerId=None, customerName=None, stuffName=None, pWeight=None, mWeight=None, pTime=None, mTime=None, jWeight=None,):
+        self.id = id
+        self.plateNo = plateNo
+        self.customerId = customerId
+        self.customerName = customerName
+        self.stuffName = stuffName
+        self.pWeight = pWeight
+        self.mWeight = mWeight
+        self.pTime = pTime
+        self.mTime = mTime
+        self.jWeight = jWeight
+
+    def read(self, iprot):
+        if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
+            iprot._fast_decode(self, iprot, [self.__class__, self.thrift_spec])
+            return
+        iprot.readStructBegin()
+        while True:
+            (fname, ftype, fid) = iprot.readFieldBegin()
+            if ftype == TType.STOP:
+                break
+            if fid == 1:
+                if ftype == TType.STRING:
+                    self.id = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 2:
+                if ftype == TType.STRING:
+                    self.plateNo = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 3:
+                if ftype == TType.STRING:
+                    self.customerId = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 4:
+                if ftype == TType.STRING:
+                    self.customerName = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 5:
+                if ftype == TType.STRING:
+                    self.stuffName = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 6:
+                if ftype == TType.DOUBLE:
+                    self.pWeight = iprot.readDouble()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 7:
+                if ftype == TType.DOUBLE:
+                    self.mWeight = iprot.readDouble()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 8:
+                if ftype == TType.STRING:
+                    self.pTime = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 9:
+                if ftype == TType.STRING:
+                    self.mTime = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 10:
+                if ftype == TType.DOUBLE:
+                    self.jWeight = iprot.readDouble()
+                else:
+                    iprot.skip(ftype)
+            else:
+                iprot.skip(ftype)
+            iprot.readFieldEnd()
+        iprot.readStructEnd()
+
+    def write(self, oprot):
+        if oprot._fast_encode is not None and self.thrift_spec is not None:
+            oprot.trans.write(oprot._fast_encode(self, [self.__class__, self.thrift_spec]))
+            return
+        oprot.writeStructBegin('push_weight_req')
+        if self.id is not None:
+            oprot.writeFieldBegin('id', TType.STRING, 1)
+            oprot.writeString(self.id.encode('utf-8') if sys.version_info[0] == 2 else self.id)
+            oprot.writeFieldEnd()
+        if self.plateNo is not None:
+            oprot.writeFieldBegin('plateNo', TType.STRING, 2)
+            oprot.writeString(self.plateNo.encode('utf-8') if sys.version_info[0] == 2 else self.plateNo)
+            oprot.writeFieldEnd()
+        if self.customerId is not None:
+            oprot.writeFieldBegin('customerId', TType.STRING, 3)
+            oprot.writeString(self.customerId.encode('utf-8') if sys.version_info[0] == 2 else self.customerId)
+            oprot.writeFieldEnd()
+        if self.customerName is not None:
+            oprot.writeFieldBegin('customerName', TType.STRING, 4)
+            oprot.writeString(self.customerName.encode('utf-8') if sys.version_info[0] == 2 else self.customerName)
+            oprot.writeFieldEnd()
+        if self.stuffName is not None:
+            oprot.writeFieldBegin('stuffName', TType.STRING, 5)
+            oprot.writeString(self.stuffName.encode('utf-8') if sys.version_info[0] == 2 else self.stuffName)
+            oprot.writeFieldEnd()
+        if self.pWeight is not None:
+            oprot.writeFieldBegin('pWeight', TType.DOUBLE, 6)
+            oprot.writeDouble(self.pWeight)
+            oprot.writeFieldEnd()
+        if self.mWeight is not None:
+            oprot.writeFieldBegin('mWeight', TType.DOUBLE, 7)
+            oprot.writeDouble(self.mWeight)
+            oprot.writeFieldEnd()
+        if self.pTime is not None:
+            oprot.writeFieldBegin('pTime', TType.STRING, 8)
+            oprot.writeString(self.pTime.encode('utf-8') if sys.version_info[0] == 2 else self.pTime)
+            oprot.writeFieldEnd()
+        if self.mTime is not None:
+            oprot.writeFieldBegin('mTime', TType.STRING, 9)
+            oprot.writeString(self.mTime.encode('utf-8') if sys.version_info[0] == 2 else self.mTime)
+            oprot.writeFieldEnd()
+        if self.jWeight is not None:
+            oprot.writeFieldBegin('jWeight', TType.DOUBLE, 10)
+            oprot.writeDouble(self.jWeight)
+            oprot.writeFieldEnd()
+        oprot.writeFieldStop()
+        oprot.writeStructEnd()
+
+    def validate(self):
+        return
+
+    def __repr__(self):
+        L = ['%s=%r' % (key, value)
+             for key, value in self.__dict__.items()]
+        return '%s(%s)' % (self.__class__.__name__, ', '.join(L))
+
+    def __eq__(self, other):
+        return isinstance(other, self.__class__) and self.__dict__ == other.__dict__
+
+    def __ne__(self, other):
+        return not (self == other)
+
+
 class vichele_stay_alone(object):
     """
     Attributes:
@@ -3347,11 +3580,16 @@ class vichele_stay_alone(object):
      - driver_phone
      - driver_id
      - transfor_company
+     - p_time
+     - m_time
+     - p_weight
+     - m_weight
+     - j_weight
 
     """
 
 
-    def __init__(self, id=None, stuff_name=None, company_name=None, main_vichele_number=None, behind_vichele_number=None, count=None, comment=None, date=None, destination=None, status=None, creator_name=None, creator_phone=None, repeated=None, driver_name=None, driver_phone=None, driver_id=None, transfor_company=None,):
+    def __init__(self, id=None, stuff_name=None, company_name=None, main_vichele_number=None, behind_vichele_number=None, count=None, comment=None, date=None, destination=None, status=None, creator_name=None, creator_phone=None, repeated=None, driver_name=None, driver_phone=None, driver_id=None, transfor_company=None, p_time=None, m_time=None, p_weight=None, m_weight=None, j_weight=None,):
         self.id = id
         self.stuff_name = stuff_name
         self.company_name = company_name
@@ -3369,6 +3607,11 @@ class vichele_stay_alone(object):
         self.driver_phone = driver_phone
         self.driver_id = driver_id
         self.transfor_company = transfor_company
+        self.p_time = p_time
+        self.m_time = m_time
+        self.p_weight = p_weight
+        self.m_weight = m_weight
+        self.j_weight = j_weight
 
     def read(self, iprot):
         if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
@@ -3464,6 +3707,31 @@ class vichele_stay_alone(object):
                     self.transfor_company = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
                 else:
                     iprot.skip(ftype)
+            elif fid == 18:
+                if ftype == TType.STRING:
+                    self.p_time = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 19:
+                if ftype == TType.STRING:
+                    self.m_time = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 20:
+                if ftype == TType.DOUBLE:
+                    self.p_weight = iprot.readDouble()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 21:
+                if ftype == TType.DOUBLE:
+                    self.m_weight = iprot.readDouble()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 22:
+                if ftype == TType.DOUBLE:
+                    self.j_weight = iprot.readDouble()
+                else:
+                    iprot.skip(ftype)
             else:
                 iprot.skip(ftype)
             iprot.readFieldEnd()
@@ -3541,6 +3809,26 @@ class vichele_stay_alone(object):
         if self.transfor_company is not None:
             oprot.writeFieldBegin('transfor_company', TType.STRING, 17)
             oprot.writeString(self.transfor_company.encode('utf-8') if sys.version_info[0] == 2 else self.transfor_company)
+            oprot.writeFieldEnd()
+        if self.p_time is not None:
+            oprot.writeFieldBegin('p_time', TType.STRING, 18)
+            oprot.writeString(self.p_time.encode('utf-8') if sys.version_info[0] == 2 else self.p_time)
+            oprot.writeFieldEnd()
+        if self.m_time is not None:
+            oprot.writeFieldBegin('m_time', TType.STRING, 19)
+            oprot.writeString(self.m_time.encode('utf-8') if sys.version_info[0] == 2 else self.m_time)
+            oprot.writeFieldEnd()
+        if self.p_weight is not None:
+            oprot.writeFieldBegin('p_weight', TType.DOUBLE, 20)
+            oprot.writeDouble(self.p_weight)
+            oprot.writeFieldEnd()
+        if self.m_weight is not None:
+            oprot.writeFieldBegin('m_weight', TType.DOUBLE, 21)
+            oprot.writeDouble(self.m_weight)
+            oprot.writeFieldEnd()
+        if self.j_weight is not None:
+            oprot.writeFieldBegin('j_weight', TType.DOUBLE, 22)
+            oprot.writeDouble(self.j_weight)
             oprot.writeFieldEnd()
         oprot.writeFieldStop()
         oprot.writeStructEnd()
@@ -3760,6 +4048,9 @@ vichele_in_plan.thrift_spec = (
     (11, TType.STRING, 'register_timestamp', 'UTF8', None, ),  # 11
     (12, TType.STRING, 'register_number', 'UTF8', None, ),  # 12
     (13, TType.STRING, 'enter_location', 'UTF8', None, ),  # 13
+    (14, TType.STRING, 'p_time', 'UTF8', None, ),  # 14
+    (15, TType.DOUBLE, 'p_weight', None, None, ),  # 15
+    (16, TType.DOUBLE, 'm_weight', None, None, ),  # 16
 )
 all_structs.append(stuff_plan)
 stuff_plan.thrift_spec = (
@@ -3802,6 +4093,10 @@ deliver_info.thrift_spec = (
     None,  # 0
     (1, TType.I64, 'id', None, None, ),  # 1
     (2, TType.DOUBLE, 'count', None, None, ),  # 2
+    (3, TType.DOUBLE, 'p_weight', None, None, ),  # 3
+    (4, TType.DOUBLE, 'm_weight', None, None, ),  # 4
+    (5, TType.STRING, 'p_time', 'UTF8', None, ),  # 5
+    (6, TType.STRING, 'm_time', 'UTF8', None, ),  # 6
 )
 all_structs.append(vichele_statistics)
 vichele_statistics.thrift_spec = (
@@ -3918,6 +4213,20 @@ vehicle_info_resp.thrift_spec = (
     (20, TType.STRING, 'vehicleTeamName', 'UTF8', None, ),  # 20
     (21, TType.STRING, 'vehicleTeamId', 'UTF8', None, ),  # 21
 )
+all_structs.append(push_weight_req)
+push_weight_req.thrift_spec = (
+    None,  # 0
+    (1, TType.STRING, 'id', 'UTF8', None, ),  # 1
+    (2, TType.STRING, 'plateNo', 'UTF8', None, ),  # 2
+    (3, TType.STRING, 'customerId', 'UTF8', None, ),  # 3
+    (4, TType.STRING, 'customerName', 'UTF8', None, ),  # 4
+    (5, TType.STRING, 'stuffName', 'UTF8', None, ),  # 5
+    (6, TType.DOUBLE, 'pWeight', None, None, ),  # 6
+    (7, TType.DOUBLE, 'mWeight', None, None, ),  # 7
+    (8, TType.STRING, 'pTime', 'UTF8', None, ),  # 8
+    (9, TType.STRING, 'mTime', 'UTF8', None, ),  # 9
+    (10, TType.DOUBLE, 'jWeight', None, None, ),  # 10
+)
 all_structs.append(vichele_stay_alone)
 vichele_stay_alone.thrift_spec = (
     None,  # 0
@@ -3938,6 +4247,11 @@ vichele_stay_alone.thrift_spec = (
     (15, TType.STRING, 'driver_phone', 'UTF8', None, ),  # 15
     (16, TType.STRING, 'driver_id', 'UTF8', None, ),  # 16
     (17, TType.STRING, 'transfor_company', 'UTF8', None, ),  # 17
+    (18, TType.STRING, 'p_time', 'UTF8', None, ),  # 18
+    (19, TType.STRING, 'm_time', 'UTF8', None, ),  # 19
+    (20, TType.DOUBLE, 'p_weight', None, None, ),  # 20
+    (21, TType.DOUBLE, 'm_weight', None, None, ),  # 21
+    (22, TType.DOUBLE, 'j_weight', None, None, ),  # 22
 )
 all_structs.append(silent_user_info)
 silent_user_info.thrift_spec = (

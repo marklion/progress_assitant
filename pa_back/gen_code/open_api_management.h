@@ -32,6 +32,7 @@ class open_api_managementIf {
   virtual bool proc_call_vehicle(const call_vehicle_req& _req, const std::string& token) = 0;
   virtual void proc_vehicle_info(vehicle_info_resp& _return, const std::string& plateNo, const std::string& driverId, const std::string& token) = 0;
   virtual void proc_all_vehicle_info(std::vector<vehicle_info_resp> & _return, const std::string& token) = 0;
+  virtual bool proc_push_weight(const push_weight_req& _req, const std::string& token) = 0;
 };
 
 class open_api_managementIfFactory {
@@ -96,6 +97,10 @@ class open_api_managementNull : virtual public open_api_managementIf {
   }
   void proc_all_vehicle_info(std::vector<vehicle_info_resp> & /* _return */, const std::string& /* token */) {
     return;
+  }
+  bool proc_push_weight(const push_weight_req& /* _req */, const std::string& /* token */) {
+    bool _return = false;
+    return _return;
   }
 };
 
@@ -1324,6 +1329,125 @@ class open_api_management_proc_all_vehicle_info_presult {
 
 };
 
+typedef struct _open_api_management_proc_push_weight_args__isset {
+  _open_api_management_proc_push_weight_args__isset() : _req(false), token(false) {}
+  bool _req :1;
+  bool token :1;
+} _open_api_management_proc_push_weight_args__isset;
+
+class open_api_management_proc_push_weight_args {
+ public:
+
+  open_api_management_proc_push_weight_args(const open_api_management_proc_push_weight_args&);
+  open_api_management_proc_push_weight_args& operator=(const open_api_management_proc_push_weight_args&);
+  open_api_management_proc_push_weight_args() : token() {
+  }
+
+  virtual ~open_api_management_proc_push_weight_args() noexcept;
+  push_weight_req _req;
+  std::string token;
+
+  _open_api_management_proc_push_weight_args__isset __isset;
+
+  void __set__req(const push_weight_req& val);
+
+  void __set_token(const std::string& val);
+
+  bool operator == (const open_api_management_proc_push_weight_args & rhs) const
+  {
+    if (!(_req == rhs._req))
+      return false;
+    if (!(token == rhs.token))
+      return false;
+    return true;
+  }
+  bool operator != (const open_api_management_proc_push_weight_args &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const open_api_management_proc_push_weight_args & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+
+class open_api_management_proc_push_weight_pargs {
+ public:
+
+
+  virtual ~open_api_management_proc_push_weight_pargs() noexcept;
+  const push_weight_req* _req;
+  const std::string* token;
+
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _open_api_management_proc_push_weight_result__isset {
+  _open_api_management_proc_push_weight_result__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _open_api_management_proc_push_weight_result__isset;
+
+class open_api_management_proc_push_weight_result {
+ public:
+
+  open_api_management_proc_push_weight_result(const open_api_management_proc_push_weight_result&);
+  open_api_management_proc_push_weight_result& operator=(const open_api_management_proc_push_weight_result&);
+  open_api_management_proc_push_weight_result() : success(0) {
+  }
+
+  virtual ~open_api_management_proc_push_weight_result() noexcept;
+  bool success;
+  gen_exp e;
+
+  _open_api_management_proc_push_weight_result__isset __isset;
+
+  void __set_success(const bool val);
+
+  void __set_e(const gen_exp& val);
+
+  bool operator == (const open_api_management_proc_push_weight_result & rhs) const
+  {
+    if (!(success == rhs.success))
+      return false;
+    if (!(e == rhs.e))
+      return false;
+    return true;
+  }
+  bool operator != (const open_api_management_proc_push_weight_result &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const open_api_management_proc_push_weight_result & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _open_api_management_proc_push_weight_presult__isset {
+  _open_api_management_proc_push_weight_presult__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _open_api_management_proc_push_weight_presult__isset;
+
+class open_api_management_proc_push_weight_presult {
+ public:
+
+
+  virtual ~open_api_management_proc_push_weight_presult() noexcept;
+  bool* success;
+  gen_exp e;
+
+  _open_api_management_proc_push_weight_presult__isset __isset;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+
+};
+
 class open_api_managementClient : virtual public open_api_managementIf {
  public:
   open_api_managementClient(std::shared_ptr< ::apache::thrift::protocol::TProtocol> prot) {
@@ -1379,6 +1503,9 @@ class open_api_managementClient : virtual public open_api_managementIf {
   void proc_all_vehicle_info(std::vector<vehicle_info_resp> & _return, const std::string& token);
   void send_proc_all_vehicle_info(const std::string& token);
   void recv_proc_all_vehicle_info(std::vector<vehicle_info_resp> & _return);
+  bool proc_push_weight(const push_weight_req& _req, const std::string& token);
+  void send_proc_push_weight(const push_weight_req& _req, const std::string& token);
+  bool recv_proc_push_weight();
  protected:
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> piprot_;
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> poprot_;
@@ -1404,6 +1531,7 @@ class open_api_managementProcessor : public ::apache::thrift::TDispatchProcessor
   void process_proc_call_vehicle(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
   void process_proc_vehicle_info(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
   void process_proc_all_vehicle_info(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
+  void process_proc_push_weight(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
  public:
   open_api_managementProcessor(::std::shared_ptr<open_api_managementIf> iface) :
     iface_(iface) {
@@ -1417,6 +1545,7 @@ class open_api_managementProcessor : public ::apache::thrift::TDispatchProcessor
     processMap_["proc_call_vehicle"] = &open_api_managementProcessor::process_proc_call_vehicle;
     processMap_["proc_vehicle_info"] = &open_api_managementProcessor::process_proc_vehicle_info;
     processMap_["proc_all_vehicle_info"] = &open_api_managementProcessor::process_proc_all_vehicle_info;
+    processMap_["proc_push_weight"] = &open_api_managementProcessor::process_proc_push_weight;
   }
 
   virtual ~open_api_managementProcessor() {}
@@ -1539,6 +1668,15 @@ class open_api_managementMultiface : virtual public open_api_managementIf {
     return;
   }
 
+  bool proc_push_weight(const push_weight_req& _req, const std::string& token) {
+    size_t sz = ifaces_.size();
+    size_t i = 0;
+    for (; i < (sz - 1); ++i) {
+      ifaces_[i]->proc_push_weight(_req, token);
+    }
+    return ifaces_[i]->proc_push_weight(_req, token);
+  }
+
 };
 
 // The 'concurrent' client is a thread safe client that correctly handles
@@ -1601,6 +1739,9 @@ class open_api_managementConcurrentClient : virtual public open_api_managementIf
   void proc_all_vehicle_info(std::vector<vehicle_info_resp> & _return, const std::string& token);
   int32_t send_proc_all_vehicle_info(const std::string& token);
   void recv_proc_all_vehicle_info(std::vector<vehicle_info_resp> & _return, const int32_t seqid);
+  bool proc_push_weight(const push_weight_req& _req, const std::string& token);
+  int32_t send_proc_push_weight(const push_weight_req& _req, const std::string& token);
+  bool recv_proc_push_weight(const int32_t seqid);
  protected:
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> piprot_;
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> poprot_;

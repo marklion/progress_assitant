@@ -2320,6 +2320,18 @@ void vichele_in_plan::__set_register_number(const std::string& val) {
 void vichele_in_plan::__set_enter_location(const std::string& val) {
   this->enter_location = val;
 }
+
+void vichele_in_plan::__set_p_time(const std::string& val) {
+  this->p_time = val;
+}
+
+void vichele_in_plan::__set_p_weight(const double val) {
+  this->p_weight = val;
+}
+
+void vichele_in_plan::__set_m_weight(const double val) {
+  this->m_weight = val;
+}
 std::ostream& operator<<(std::ostream& out, const vichele_in_plan& obj)
 {
   obj.printTo(out);
@@ -2452,6 +2464,30 @@ uint32_t vichele_in_plan::read(::apache::thrift::protocol::TProtocol* iprot) {
           xfer += iprot->skip(ftype);
         }
         break;
+      case 14:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->p_time);
+          this->__isset.p_time = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 15:
+        if (ftype == ::apache::thrift::protocol::T_DOUBLE) {
+          xfer += iprot->readDouble(this->p_weight);
+          this->__isset.p_weight = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 16:
+        if (ftype == ::apache::thrift::protocol::T_DOUBLE) {
+          xfer += iprot->readDouble(this->m_weight);
+          this->__isset.m_weight = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
       default:
         xfer += iprot->skip(ftype);
         break;
@@ -2521,6 +2557,18 @@ uint32_t vichele_in_plan::write(::apache::thrift::protocol::TProtocol* oprot) co
   xfer += oprot->writeString(this->enter_location);
   xfer += oprot->writeFieldEnd();
 
+  xfer += oprot->writeFieldBegin("p_time", ::apache::thrift::protocol::T_STRING, 14);
+  xfer += oprot->writeString(this->p_time);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("p_weight", ::apache::thrift::protocol::T_DOUBLE, 15);
+  xfer += oprot->writeDouble(this->p_weight);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("m_weight", ::apache::thrift::protocol::T_DOUBLE, 16);
+  xfer += oprot->writeDouble(this->m_weight);
+  xfer += oprot->writeFieldEnd();
+
   xfer += oprot->writeFieldStop();
   xfer += oprot->writeStructEnd();
   return xfer;
@@ -2541,6 +2589,9 @@ void swap(vichele_in_plan &a, vichele_in_plan &b) {
   swap(a.register_timestamp, b.register_timestamp);
   swap(a.register_number, b.register_number);
   swap(a.enter_location, b.enter_location);
+  swap(a.p_time, b.p_time);
+  swap(a.p_weight, b.p_weight);
+  swap(a.m_weight, b.m_weight);
   swap(a.__isset, b.__isset);
 }
 
@@ -2558,6 +2609,9 @@ vichele_in_plan::vichele_in_plan(const vichele_in_plan& other30) {
   register_timestamp = other30.register_timestamp;
   register_number = other30.register_number;
   enter_location = other30.enter_location;
+  p_time = other30.p_time;
+  p_weight = other30.p_weight;
+  m_weight = other30.m_weight;
   __isset = other30.__isset;
 }
 vichele_in_plan& vichele_in_plan::operator=(const vichele_in_plan& other31) {
@@ -2574,6 +2628,9 @@ vichele_in_plan& vichele_in_plan::operator=(const vichele_in_plan& other31) {
   register_timestamp = other31.register_timestamp;
   register_number = other31.register_number;
   enter_location = other31.enter_location;
+  p_time = other31.p_time;
+  p_weight = other31.p_weight;
+  m_weight = other31.m_weight;
   __isset = other31.__isset;
   return *this;
 }
@@ -2593,6 +2650,9 @@ void vichele_in_plan::printTo(std::ostream& out) const {
   out << ", " << "register_timestamp=" << to_string(register_timestamp);
   out << ", " << "register_number=" << to_string(register_number);
   out << ", " << "enter_location=" << to_string(enter_location);
+  out << ", " << "p_time=" << to_string(p_time);
+  out << ", " << "p_weight=" << to_string(p_weight);
+  out << ", " << "m_weight=" << to_string(m_weight);
   out << ")";
 }
 
@@ -3324,6 +3384,22 @@ void deliver_info::__set_id(const int64_t val) {
 void deliver_info::__set_count(const double val) {
   this->count = val;
 }
+
+void deliver_info::__set_p_weight(const double val) {
+  this->p_weight = val;
+}
+
+void deliver_info::__set_m_weight(const double val) {
+  this->m_weight = val;
+}
+
+void deliver_info::__set_p_time(const std::string& val) {
+  this->p_time = val;
+}
+
+void deliver_info::__set_m_time(const std::string& val) {
+  this->m_time = val;
+}
 std::ostream& operator<<(std::ostream& out, const deliver_info& obj)
 {
   obj.printTo(out);
@@ -3368,6 +3444,38 @@ uint32_t deliver_info::read(::apache::thrift::protocol::TProtocol* iprot) {
           xfer += iprot->skip(ftype);
         }
         break;
+      case 3:
+        if (ftype == ::apache::thrift::protocol::T_DOUBLE) {
+          xfer += iprot->readDouble(this->p_weight);
+          this->__isset.p_weight = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 4:
+        if (ftype == ::apache::thrift::protocol::T_DOUBLE) {
+          xfer += iprot->readDouble(this->m_weight);
+          this->__isset.m_weight = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 5:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->p_time);
+          this->__isset.p_time = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 6:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->m_time);
+          this->__isset.m_time = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
       default:
         xfer += iprot->skip(ftype);
         break;
@@ -3393,6 +3501,22 @@ uint32_t deliver_info::write(::apache::thrift::protocol::TProtocol* oprot) const
   xfer += oprot->writeDouble(this->count);
   xfer += oprot->writeFieldEnd();
 
+  xfer += oprot->writeFieldBegin("p_weight", ::apache::thrift::protocol::T_DOUBLE, 3);
+  xfer += oprot->writeDouble(this->p_weight);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("m_weight", ::apache::thrift::protocol::T_DOUBLE, 4);
+  xfer += oprot->writeDouble(this->m_weight);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("p_time", ::apache::thrift::protocol::T_STRING, 5);
+  xfer += oprot->writeString(this->p_time);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("m_time", ::apache::thrift::protocol::T_STRING, 6);
+  xfer += oprot->writeString(this->m_time);
+  xfer += oprot->writeFieldEnd();
+
   xfer += oprot->writeFieldStop();
   xfer += oprot->writeStructEnd();
   return xfer;
@@ -3402,17 +3526,29 @@ void swap(deliver_info &a, deliver_info &b) {
   using ::std::swap;
   swap(a.id, b.id);
   swap(a.count, b.count);
+  swap(a.p_weight, b.p_weight);
+  swap(a.m_weight, b.m_weight);
+  swap(a.p_time, b.p_time);
+  swap(a.m_time, b.m_time);
   swap(a.__isset, b.__isset);
 }
 
 deliver_info::deliver_info(const deliver_info& other44) {
   id = other44.id;
   count = other44.count;
+  p_weight = other44.p_weight;
+  m_weight = other44.m_weight;
+  p_time = other44.p_time;
+  m_time = other44.m_time;
   __isset = other44.__isset;
 }
 deliver_info& deliver_info::operator=(const deliver_info& other45) {
   id = other45.id;
   count = other45.count;
+  p_weight = other45.p_weight;
+  m_weight = other45.m_weight;
+  p_time = other45.p_time;
+  m_time = other45.m_time;
   __isset = other45.__isset;
   return *this;
 }
@@ -3421,6 +3557,10 @@ void deliver_info::printTo(std::ostream& out) const {
   out << "deliver_info(";
   out << "id=" << to_string(id);
   out << ", " << "count=" << to_string(count);
+  out << ", " << "p_weight=" << to_string(p_weight);
+  out << ", " << "m_weight=" << to_string(m_weight);
+  out << ", " << "p_time=" << to_string(p_time);
+  out << ", " << "m_time=" << to_string(m_time);
   out << ")";
 }
 
@@ -5657,6 +5797,278 @@ void vehicle_info_resp::printTo(std::ostream& out) const {
 }
 
 
+push_weight_req::~push_weight_req() noexcept {
+}
+
+
+void push_weight_req::__set_id(const std::string& val) {
+  this->id = val;
+}
+
+void push_weight_req::__set_plateNo(const std::string& val) {
+  this->plateNo = val;
+}
+
+void push_weight_req::__set_customerId(const std::string& val) {
+  this->customerId = val;
+}
+
+void push_weight_req::__set_customerName(const std::string& val) {
+  this->customerName = val;
+}
+
+void push_weight_req::__set_stuffName(const std::string& val) {
+  this->stuffName = val;
+}
+
+void push_weight_req::__set_pWeight(const double val) {
+  this->pWeight = val;
+}
+
+void push_weight_req::__set_mWeight(const double val) {
+  this->mWeight = val;
+}
+
+void push_weight_req::__set_pTime(const std::string& val) {
+  this->pTime = val;
+}
+
+void push_weight_req::__set_mTime(const std::string& val) {
+  this->mTime = val;
+}
+
+void push_weight_req::__set_jWeight(const double val) {
+  this->jWeight = val;
+}
+std::ostream& operator<<(std::ostream& out, const push_weight_req& obj)
+{
+  obj.printTo(out);
+  return out;
+}
+
+
+uint32_t push_weight_req::read(::apache::thrift::protocol::TProtocol* iprot) {
+
+  ::apache::thrift::protocol::TInputRecursionTracker tracker(*iprot);
+  uint32_t xfer = 0;
+  std::string fname;
+  ::apache::thrift::protocol::TType ftype;
+  int16_t fid;
+
+  xfer += iprot->readStructBegin(fname);
+
+  using ::apache::thrift::protocol::TProtocolException;
+
+
+  while (true)
+  {
+    xfer += iprot->readFieldBegin(fname, ftype, fid);
+    if (ftype == ::apache::thrift::protocol::T_STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 1:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->id);
+          this->__isset.id = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 2:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->plateNo);
+          this->__isset.plateNo = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 3:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->customerId);
+          this->__isset.customerId = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 4:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->customerName);
+          this->__isset.customerName = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 5:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->stuffName);
+          this->__isset.stuffName = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 6:
+        if (ftype == ::apache::thrift::protocol::T_DOUBLE) {
+          xfer += iprot->readDouble(this->pWeight);
+          this->__isset.pWeight = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 7:
+        if (ftype == ::apache::thrift::protocol::T_DOUBLE) {
+          xfer += iprot->readDouble(this->mWeight);
+          this->__isset.mWeight = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 8:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->pTime);
+          this->__isset.pTime = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 9:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->mTime);
+          this->__isset.mTime = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 10:
+        if (ftype == ::apache::thrift::protocol::T_DOUBLE) {
+          xfer += iprot->readDouble(this->jWeight);
+          this->__isset.jWeight = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      default:
+        xfer += iprot->skip(ftype);
+        break;
+    }
+    xfer += iprot->readFieldEnd();
+  }
+
+  xfer += iprot->readStructEnd();
+
+  return xfer;
+}
+
+uint32_t push_weight_req::write(::apache::thrift::protocol::TProtocol* oprot) const {
+  uint32_t xfer = 0;
+  ::apache::thrift::protocol::TOutputRecursionTracker tracker(*oprot);
+  xfer += oprot->writeStructBegin("push_weight_req");
+
+  xfer += oprot->writeFieldBegin("id", ::apache::thrift::protocol::T_STRING, 1);
+  xfer += oprot->writeString(this->id);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("plateNo", ::apache::thrift::protocol::T_STRING, 2);
+  xfer += oprot->writeString(this->plateNo);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("customerId", ::apache::thrift::protocol::T_STRING, 3);
+  xfer += oprot->writeString(this->customerId);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("customerName", ::apache::thrift::protocol::T_STRING, 4);
+  xfer += oprot->writeString(this->customerName);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("stuffName", ::apache::thrift::protocol::T_STRING, 5);
+  xfer += oprot->writeString(this->stuffName);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("pWeight", ::apache::thrift::protocol::T_DOUBLE, 6);
+  xfer += oprot->writeDouble(this->pWeight);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("mWeight", ::apache::thrift::protocol::T_DOUBLE, 7);
+  xfer += oprot->writeDouble(this->mWeight);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("pTime", ::apache::thrift::protocol::T_STRING, 8);
+  xfer += oprot->writeString(this->pTime);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("mTime", ::apache::thrift::protocol::T_STRING, 9);
+  xfer += oprot->writeString(this->mTime);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("jWeight", ::apache::thrift::protocol::T_DOUBLE, 10);
+  xfer += oprot->writeDouble(this->jWeight);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldStop();
+  xfer += oprot->writeStructEnd();
+  return xfer;
+}
+
+void swap(push_weight_req &a, push_weight_req &b) {
+  using ::std::swap;
+  swap(a.id, b.id);
+  swap(a.plateNo, b.plateNo);
+  swap(a.customerId, b.customerId);
+  swap(a.customerName, b.customerName);
+  swap(a.stuffName, b.stuffName);
+  swap(a.pWeight, b.pWeight);
+  swap(a.mWeight, b.mWeight);
+  swap(a.pTime, b.pTime);
+  swap(a.mTime, b.mTime);
+  swap(a.jWeight, b.jWeight);
+  swap(a.__isset, b.__isset);
+}
+
+push_weight_req::push_weight_req(const push_weight_req& other74) {
+  id = other74.id;
+  plateNo = other74.plateNo;
+  customerId = other74.customerId;
+  customerName = other74.customerName;
+  stuffName = other74.stuffName;
+  pWeight = other74.pWeight;
+  mWeight = other74.mWeight;
+  pTime = other74.pTime;
+  mTime = other74.mTime;
+  jWeight = other74.jWeight;
+  __isset = other74.__isset;
+}
+push_weight_req& push_weight_req::operator=(const push_weight_req& other75) {
+  id = other75.id;
+  plateNo = other75.plateNo;
+  customerId = other75.customerId;
+  customerName = other75.customerName;
+  stuffName = other75.stuffName;
+  pWeight = other75.pWeight;
+  mWeight = other75.mWeight;
+  pTime = other75.pTime;
+  mTime = other75.mTime;
+  jWeight = other75.jWeight;
+  __isset = other75.__isset;
+  return *this;
+}
+void push_weight_req::printTo(std::ostream& out) const {
+  using ::apache::thrift::to_string;
+  out << "push_weight_req(";
+  out << "id=" << to_string(id);
+  out << ", " << "plateNo=" << to_string(plateNo);
+  out << ", " << "customerId=" << to_string(customerId);
+  out << ", " << "customerName=" << to_string(customerName);
+  out << ", " << "stuffName=" << to_string(stuffName);
+  out << ", " << "pWeight=" << to_string(pWeight);
+  out << ", " << "mWeight=" << to_string(mWeight);
+  out << ", " << "pTime=" << to_string(pTime);
+  out << ", " << "mTime=" << to_string(mTime);
+  out << ", " << "jWeight=" << to_string(jWeight);
+  out << ")";
+}
+
+
 vichele_stay_alone::~vichele_stay_alone() noexcept {
 }
 
@@ -5727,6 +6139,26 @@ void vichele_stay_alone::__set_driver_id(const std::string& val) {
 
 void vichele_stay_alone::__set_transfor_company(const std::string& val) {
   this->transfor_company = val;
+}
+
+void vichele_stay_alone::__set_p_time(const std::string& val) {
+  this->p_time = val;
+}
+
+void vichele_stay_alone::__set_m_time(const std::string& val) {
+  this->m_time = val;
+}
+
+void vichele_stay_alone::__set_p_weight(const double val) {
+  this->p_weight = val;
+}
+
+void vichele_stay_alone::__set_m_weight(const double val) {
+  this->m_weight = val;
+}
+
+void vichele_stay_alone::__set_j_weight(const double val) {
+  this->j_weight = val;
 }
 std::ostream& operator<<(std::ostream& out, const vichele_stay_alone& obj)
 {
@@ -5892,6 +6324,46 @@ uint32_t vichele_stay_alone::read(::apache::thrift::protocol::TProtocol* iprot) 
           xfer += iprot->skip(ftype);
         }
         break;
+      case 18:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->p_time);
+          this->__isset.p_time = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 19:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->m_time);
+          this->__isset.m_time = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 20:
+        if (ftype == ::apache::thrift::protocol::T_DOUBLE) {
+          xfer += iprot->readDouble(this->p_weight);
+          this->__isset.p_weight = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 21:
+        if (ftype == ::apache::thrift::protocol::T_DOUBLE) {
+          xfer += iprot->readDouble(this->m_weight);
+          this->__isset.m_weight = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 22:
+        if (ftype == ::apache::thrift::protocol::T_DOUBLE) {
+          xfer += iprot->readDouble(this->j_weight);
+          this->__isset.j_weight = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
       default:
         xfer += iprot->skip(ftype);
         break;
@@ -5977,6 +6449,26 @@ uint32_t vichele_stay_alone::write(::apache::thrift::protocol::TProtocol* oprot)
   xfer += oprot->writeString(this->transfor_company);
   xfer += oprot->writeFieldEnd();
 
+  xfer += oprot->writeFieldBegin("p_time", ::apache::thrift::protocol::T_STRING, 18);
+  xfer += oprot->writeString(this->p_time);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("m_time", ::apache::thrift::protocol::T_STRING, 19);
+  xfer += oprot->writeString(this->m_time);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("p_weight", ::apache::thrift::protocol::T_DOUBLE, 20);
+  xfer += oprot->writeDouble(this->p_weight);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("m_weight", ::apache::thrift::protocol::T_DOUBLE, 21);
+  xfer += oprot->writeDouble(this->m_weight);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("j_weight", ::apache::thrift::protocol::T_DOUBLE, 22);
+  xfer += oprot->writeDouble(this->j_weight);
+  xfer += oprot->writeFieldEnd();
+
   xfer += oprot->writeFieldStop();
   xfer += oprot->writeStructEnd();
   return xfer;
@@ -6001,48 +6493,63 @@ void swap(vichele_stay_alone &a, vichele_stay_alone &b) {
   swap(a.driver_phone, b.driver_phone);
   swap(a.driver_id, b.driver_id);
   swap(a.transfor_company, b.transfor_company);
+  swap(a.p_time, b.p_time);
+  swap(a.m_time, b.m_time);
+  swap(a.p_weight, b.p_weight);
+  swap(a.m_weight, b.m_weight);
+  swap(a.j_weight, b.j_weight);
   swap(a.__isset, b.__isset);
 }
 
-vichele_stay_alone::vichele_stay_alone(const vichele_stay_alone& other74) {
-  id = other74.id;
-  stuff_name = other74.stuff_name;
-  company_name = other74.company_name;
-  main_vichele_number = other74.main_vichele_number;
-  behind_vichele_number = other74.behind_vichele_number;
-  count = other74.count;
-  comment = other74.comment;
-  date = other74.date;
-  destination = other74.destination;
-  status = other74.status;
-  creator_name = other74.creator_name;
-  creator_phone = other74.creator_phone;
-  repeated = other74.repeated;
-  driver_name = other74.driver_name;
-  driver_phone = other74.driver_phone;
-  driver_id = other74.driver_id;
-  transfor_company = other74.transfor_company;
-  __isset = other74.__isset;
+vichele_stay_alone::vichele_stay_alone(const vichele_stay_alone& other76) {
+  id = other76.id;
+  stuff_name = other76.stuff_name;
+  company_name = other76.company_name;
+  main_vichele_number = other76.main_vichele_number;
+  behind_vichele_number = other76.behind_vichele_number;
+  count = other76.count;
+  comment = other76.comment;
+  date = other76.date;
+  destination = other76.destination;
+  status = other76.status;
+  creator_name = other76.creator_name;
+  creator_phone = other76.creator_phone;
+  repeated = other76.repeated;
+  driver_name = other76.driver_name;
+  driver_phone = other76.driver_phone;
+  driver_id = other76.driver_id;
+  transfor_company = other76.transfor_company;
+  p_time = other76.p_time;
+  m_time = other76.m_time;
+  p_weight = other76.p_weight;
+  m_weight = other76.m_weight;
+  j_weight = other76.j_weight;
+  __isset = other76.__isset;
 }
-vichele_stay_alone& vichele_stay_alone::operator=(const vichele_stay_alone& other75) {
-  id = other75.id;
-  stuff_name = other75.stuff_name;
-  company_name = other75.company_name;
-  main_vichele_number = other75.main_vichele_number;
-  behind_vichele_number = other75.behind_vichele_number;
-  count = other75.count;
-  comment = other75.comment;
-  date = other75.date;
-  destination = other75.destination;
-  status = other75.status;
-  creator_name = other75.creator_name;
-  creator_phone = other75.creator_phone;
-  repeated = other75.repeated;
-  driver_name = other75.driver_name;
-  driver_phone = other75.driver_phone;
-  driver_id = other75.driver_id;
-  transfor_company = other75.transfor_company;
-  __isset = other75.__isset;
+vichele_stay_alone& vichele_stay_alone::operator=(const vichele_stay_alone& other77) {
+  id = other77.id;
+  stuff_name = other77.stuff_name;
+  company_name = other77.company_name;
+  main_vichele_number = other77.main_vichele_number;
+  behind_vichele_number = other77.behind_vichele_number;
+  count = other77.count;
+  comment = other77.comment;
+  date = other77.date;
+  destination = other77.destination;
+  status = other77.status;
+  creator_name = other77.creator_name;
+  creator_phone = other77.creator_phone;
+  repeated = other77.repeated;
+  driver_name = other77.driver_name;
+  driver_phone = other77.driver_phone;
+  driver_id = other77.driver_id;
+  transfor_company = other77.transfor_company;
+  p_time = other77.p_time;
+  m_time = other77.m_time;
+  p_weight = other77.p_weight;
+  m_weight = other77.m_weight;
+  j_weight = other77.j_weight;
+  __isset = other77.__isset;
   return *this;
 }
 void vichele_stay_alone::printTo(std::ostream& out) const {
@@ -6065,6 +6572,11 @@ void vichele_stay_alone::printTo(std::ostream& out) const {
   out << ", " << "driver_phone=" << to_string(driver_phone);
   out << ", " << "driver_id=" << to_string(driver_id);
   out << ", " << "transfor_company=" << to_string(transfor_company);
+  out << ", " << "p_time=" << to_string(p_time);
+  out << ", " << "m_time=" << to_string(m_time);
+  out << ", " << "p_weight=" << to_string(p_weight);
+  out << ", " << "m_weight=" << to_string(m_weight);
+  out << ", " << "j_weight=" << to_string(j_weight);
   out << ")";
 }
 
@@ -6161,15 +6673,15 @@ void swap(silent_user_info &a, silent_user_info &b) {
   swap(a.__isset, b.__isset);
 }
 
-silent_user_info::silent_user_info(const silent_user_info& other76) {
-  name = other76.name;
-  phone = other76.phone;
-  __isset = other76.__isset;
+silent_user_info::silent_user_info(const silent_user_info& other78) {
+  name = other78.name;
+  phone = other78.phone;
+  __isset = other78.__isset;
 }
-silent_user_info& silent_user_info::operator=(const silent_user_info& other77) {
-  name = other77.name;
-  phone = other77.phone;
-  __isset = other77.__isset;
+silent_user_info& silent_user_info::operator=(const silent_user_info& other79) {
+  name = other79.name;
+  phone = other79.phone;
+  __isset = other79.__isset;
   return *this;
 }
 void silent_user_info::printTo(std::ostream& out) const {

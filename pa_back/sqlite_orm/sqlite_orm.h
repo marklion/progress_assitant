@@ -319,7 +319,7 @@ public:
                         *(static_cast<std::string *>(single_column.m_data)) = itr[single_column.m_name].c_str();
                         break;
                         case sqlite_orm_column::REAL:
-                        *(static_cast<double *>(single_column.m_data)) = std::stod(itr[single_column.m_name]);
+                        *(static_cast<double *>(single_column.m_data)) = atof(itr[single_column.m_name].c_str());
                         break;
                     }
                 }

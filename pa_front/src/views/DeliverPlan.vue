@@ -49,8 +49,12 @@
     </van-row>
 
     <van-cell-group title="已出货车辆">
-        <van-cell v-for="(item, index) in delivered_vichele" center :value="item.count + '吨'" :key="index" :title="item.main_vichele + '-' + item.behind_vichele" :label="item.driver_name + '-' + item.driver_phone">
-        </van-cell>
+        <van-collapse v-model="expend_weight" >
+            <van-collapse-item  name="1" v-for="(item, index) in delivered_vichele" center :value="item.count + '吨'" :key="index" :title="item.main_vichele + '-' + item.behind_vichele" :label="item.driver_name + '-' + item.driver_phone">
+                <van-cell :title="'皮重：' + item.p_weight" :value="item.p_time"></van-cell>
+                <van-cell :title="'毛重：' + item.m_weight" :value="item.deliver_timestamp"></van-cell>
+            </van-collapse-item>
+        </van-collapse>
     </van-cell-group>
     <van-dialog v-model="fource_reason_diag" title="有未出货车辆" close-on-click-overlay :show-confirm-button="false">
         <van-form @submit="fource_close">
@@ -89,7 +93,10 @@ import {
 import {
     Stepper
 } from 'vant';
+import { Collapse, CollapseItem } from 'vant';
 
+Vue.use(Collapse);
+Vue.use(CollapseItem);
 Vue.use(Stepper);
 Vue.use(Form);
 
@@ -125,6 +132,7 @@ export default {
             },
             close_reason: '',
             fource_reason_diag: false,
+            expend_weight:['1'],
         };
     },
     computed: {
@@ -231,10 +239,11 @@ export default {
 </script>
 
 <style scoped>
-.single_vichele_show{
+.single_vichele_show {
     border: 1px solid gray;
     margin-bottom: 5px;
 }
+
 .register_info_show {
     font-size: 12px;
     padding-left: 5px;

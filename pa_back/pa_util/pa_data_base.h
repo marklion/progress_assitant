@@ -276,6 +276,9 @@ public:
     double count = 0;
     int finish = 0;
     std::string deliver_timestamp;
+    std::string deliver_p_timestamp;
+    double p_weight = 0;
+    double m_weight = 0;
     pa_sql_single_vichele()
     {
         add_parent_type<pa_sql_vichele>("main_vichele");
@@ -289,8 +292,11 @@ public:
         ret.push_back(sqlite_orm_column("drop_address", sqlite_orm_column::STRING, &drop_address));
         ret.push_back(sqlite_orm_column("use_for", sqlite_orm_column::STRING, &use_for));
         ret.push_back(sqlite_orm_column("count", sqlite_orm_column::REAL, &count));
+        ret.push_back(sqlite_orm_column("p_weight", sqlite_orm_column::REAL, &p_weight));
+        ret.push_back(sqlite_orm_column("m_weight", sqlite_orm_column::REAL, &m_weight));
         ret.push_back(sqlite_orm_column("finish", sqlite_orm_column::INTEGER, &finish));
         ret.push_back(sqlite_orm_column("deliver_timestamp", sqlite_orm_column::STRING, &deliver_timestamp));
+        ret.push_back(sqlite_orm_column("deliver_p_timestamp", sqlite_orm_column::STRING, &deliver_p_timestamp));
 
         return ret;
     }
@@ -429,6 +435,10 @@ public:
     std::string count;
     int finish = 0;
     std::string deliver_timestamp;
+
+    std::string deliver_p_timestamp;
+    double p_weight = 0;
+    double m_weight = 0;
     pa_sql_archive_vichele_plan()
     {
         add_parent_type<pa_sql_archive_plan>("belong_plan");
@@ -445,6 +455,9 @@ public:
         ret.push_back(sqlite_orm_column("count", sqlite_orm_column::STRING, &count));
         ret.push_back(sqlite_orm_column("finish", sqlite_orm_column::INTEGER, &finish));
         ret.push_back(sqlite_orm_column("deliver_timestamp", sqlite_orm_column::STRING, &deliver_timestamp));
+        ret.push_back(sqlite_orm_column("p_weight", sqlite_orm_column::REAL, &p_weight));
+        ret.push_back(sqlite_orm_column("m_weight", sqlite_orm_column::REAL, &m_weight));
+        ret.push_back(sqlite_orm_column("deliver_p_timestamp", sqlite_orm_column::STRING, &deliver_p_timestamp));
 
         return ret;
     }
@@ -578,6 +591,11 @@ public:
     std::string driver_phone;
     std::string driver_id;
     std::string transfor_company;
+    double p_weight = 0;
+    double m_weight = 0;
+    double j_weight = 0;
+    std::string p_time;
+    std::string m_time;
     pa_sql_vichele_stay_alone() {
         add_parent_type<pa_sql_silent_user>("created_by");
         add_parent_type<pa_sql_company>("destination");
@@ -600,6 +618,11 @@ public:
         ret.push_back(sqlite_orm_column("driver_phone", sqlite_orm_column::STRING, &driver_phone));
         ret.push_back(sqlite_orm_column("driver_id", sqlite_orm_column::STRING, &driver_id));
         ret.push_back(sqlite_orm_column("transfor_company", sqlite_orm_column::STRING, &transfor_company));
+        ret.push_back(sqlite_orm_column("p_weight", sqlite_orm_column::REAL, &p_weight));
+        ret.push_back(sqlite_orm_column("m_weight", sqlite_orm_column::REAL, &m_weight));
+        ret.push_back(sqlite_orm_column("j_weight", sqlite_orm_column::REAL, &j_weight));
+        ret.push_back(sqlite_orm_column("p_time", sqlite_orm_column::STRING, &p_time));
+        ret.push_back(sqlite_orm_column("m_time", sqlite_orm_column::STRING, &m_time));
 
         return ret;
     }

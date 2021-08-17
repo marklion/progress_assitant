@@ -521,7 +521,7 @@ public:
         auto all_active_plan = PA_RPC_get_all_plans_related_by_company(*company, "status == 3");
         for (auto &plan : all_active_plan)
         {
-            auto all_vichele_info = plan.get_all_children<pa_sql_single_vichele>("belong_plan");
+            auto all_vichele_info = plan.get_all_children<pa_sql_single_vichele>("belong_plan", "finish == 0");
             for (auto &itr : all_vichele_info)
             {
                 auto main_vichele = itr.get_parent<pa_sql_vichele>("main_vichele");
@@ -613,7 +613,7 @@ public:
         auto all_active_plan = PA_RPC_get_all_plans_related_by_company(*company, "status == 3");
         for (auto &plan : all_active_plan)
         {
-            auto all_vichele_info = plan.get_all_children<pa_sql_single_vichele>("belong_plan");
+            auto all_vichele_info = plan.get_all_children<pa_sql_single_vichele>("belong_plan", "finish == 0");
             for (auto &itr : all_vichele_info)
             {
                 vehicle_info_resp tmp;
@@ -663,6 +663,85 @@ public:
             }
             _return.push_back(tmp);
         }
+    }
+
+    virtual bool proc_push_weight(const push_weight_req &_req, const std::string &token)
+    {
+        bool ret = false;
+        log_audit_basedon_token(token, __FUNCTION__);
+
+        auto company = _get_token_company(token);
+        if (!company)
+        {
+            PA_RETURN_MSG(OPEN_API_MSG_NO_PERMISSION);
+        }
+        char last_tag = 'S';
+        last_tag = _req.id[_req.id.length() - 1];
+        std::string real_id = _req.id.substr(0, _req.id.length() - 1);
+        if ('S' == last_tag)
+        {
+            auto single_vichele = sqlite_orm::search_record<pa_sql_single_vichele>(atol(real_id.c_str()));
+            if (!single_vichele)
+            {
+                PA_RETURN_MSG(OPEN_API_MSG_VICHELE_NOT_EXIST);
+            }
+            bool has_permission = false;
+            auto plan = single_vichele->get_parent<pa_sql_plan>("belong_plan");
+            if (plan)
+            {
+                auto stuff_info = plan->get_parent<pa_sql_stuff_info>("belong_stuff");
+                if (stuff_info)
+                {
+                    auto req_company = stuff_info->get_parent<pa_sql_company>("belong_company");
+                    if (req_company && req_company->get_pri_id() == company->get_pri_id())
+                    {
+                        has_permission = true;
+                    }
+                }
+            }
+            if (has_permission)
+            {
+                deliver_info tmp;
+                tmp.id = single_vichele->get_pri_id();
+                tmp.m_time = _req.mTime;
+                tmp.m_weight = _req.mWeight;
+                tmp.p_time = _req.pTime;
+                tmp.p_weight = _req.pWeight;
+                tmp.count = _req.jWeight;
+
+                std::vector<deliver_info> tmp_list;
+                tmp_list.push_back(tmp);
+
+                stuff_plan_management_handler sp_handler;
+                ret = sp_handler.pri_confirm_deliver(plan->get_pri_id(), *get_sysadmin_user(), tmp_list, "");
+            }
+            else
+            {
+                PA_RETURN_MSG(OPEN_API_MSG_NO_PERMISSION);
+            }
+        }
+        else
+        {
+            auto req_vichele_stay_alone = sqlite_orm::search_record<pa_sql_vichele_stay_alone>(atol(real_id.c_str()));
+            auto vichele_stay_alone = sqlite_orm::search_record<pa_sql_vichele_stay_alone>("stuff_name == '%s' AND main_vichele_number == '%s' AND behind_vichele_number == '%s' AND destination_ext_key == %ld AND is_drop == 0 AND status == 1", _req.stuffName.c_str(), req_vichele_stay_alone->main_vichele_number.c_str(), req_vichele_stay_alone->behind_vichele_number.c_str(), company->get_pri_id());
+            if (!vichele_stay_alone)
+            {
+                PA_RETURN_MSG(OPEN_API_MSG_VICHELE_NOT_EXIST);
+            }
+            if (vichele_stay_alone->is_repeated != 0)
+            {
+                vichele_stay_alone->insert_record();
+            }
+            vichele_stay_alone->p_time = _req.pTime;
+            vichele_stay_alone->m_time = _req.mTime;
+            vichele_stay_alone->p_weight = _req.pWeight;
+            vichele_stay_alone->m_weight = _req.mWeight;
+            vichele_stay_alone->j_weight = _req.jWeight;
+            vichele_stay_alone->status = 2;
+            ret = vichele_stay_alone->update_record();
+        }
+
+        return ret;
     }
 };
 
