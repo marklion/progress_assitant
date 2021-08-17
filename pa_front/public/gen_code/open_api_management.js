@@ -1616,6 +1616,340 @@ open_api_management_proc_push_weight_result = class {
   }
 
 };
+open_api_management_proc_add_black_list_args = class {
+  constructor(args) {
+    this.type = null;
+    this.target = null;
+    this.reason = null;
+    this.expire_date = null;
+    this.token = null;
+    if (args) {
+      if (args.type !== undefined && args.type !== null) {
+        this.type = args.type;
+      }
+      if (args.target !== undefined && args.target !== null) {
+        this.target = args.target;
+      }
+      if (args.reason !== undefined && args.reason !== null) {
+        this.reason = args.reason;
+      }
+      if (args.expire_date !== undefined && args.expire_date !== null) {
+        this.expire_date = args.expire_date;
+      }
+      if (args.token !== undefined && args.token !== null) {
+        this.token = args.token;
+      }
+    }
+  }
+
+  read (input) {
+    input.readStructBegin();
+    while (true) {
+      const ret = input.readFieldBegin();
+      const ftype = ret.ftype;
+      const fid = ret.fid;
+      if (ftype == Thrift.Type.STOP) {
+        break;
+      }
+      switch (fid) {
+        case 1:
+        if (ftype == Thrift.Type.I64) {
+          this.type = input.readI64().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        case 2:
+        if (ftype == Thrift.Type.STRING) {
+          this.target = input.readString().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        case 3:
+        if (ftype == Thrift.Type.STRING) {
+          this.reason = input.readString().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        case 4:
+        if (ftype == Thrift.Type.STRING) {
+          this.expire_date = input.readString().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        case 5:
+        if (ftype == Thrift.Type.STRING) {
+          this.token = input.readString().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        default:
+          input.skip(ftype);
+      }
+      input.readFieldEnd();
+    }
+    input.readStructEnd();
+    return;
+  }
+
+  write (output) {
+    output.writeStructBegin('open_api_management_proc_add_black_list_args');
+    if (this.type !== null && this.type !== undefined) {
+      output.writeFieldBegin('type', Thrift.Type.I64, 1);
+      output.writeI64(this.type);
+      output.writeFieldEnd();
+    }
+    if (this.target !== null && this.target !== undefined) {
+      output.writeFieldBegin('target', Thrift.Type.STRING, 2);
+      output.writeString(this.target);
+      output.writeFieldEnd();
+    }
+    if (this.reason !== null && this.reason !== undefined) {
+      output.writeFieldBegin('reason', Thrift.Type.STRING, 3);
+      output.writeString(this.reason);
+      output.writeFieldEnd();
+    }
+    if (this.expire_date !== null && this.expire_date !== undefined) {
+      output.writeFieldBegin('expire_date', Thrift.Type.STRING, 4);
+      output.writeString(this.expire_date);
+      output.writeFieldEnd();
+    }
+    if (this.token !== null && this.token !== undefined) {
+      output.writeFieldBegin('token', Thrift.Type.STRING, 5);
+      output.writeString(this.token);
+      output.writeFieldEnd();
+    }
+    output.writeFieldStop();
+    output.writeStructEnd();
+    return;
+  }
+
+};
+open_api_management_proc_add_black_list_result = class {
+  constructor(args) {
+    this.success = null;
+    this.e = null;
+    if (args instanceof gen_exp) {
+        this.e = args;
+        return;
+    }
+    if (args) {
+      if (args.success !== undefined && args.success !== null) {
+        this.success = args.success;
+      }
+      if (args.e !== undefined && args.e !== null) {
+        this.e = args.e;
+      }
+    }
+  }
+
+  read (input) {
+    input.readStructBegin();
+    while (true) {
+      const ret = input.readFieldBegin();
+      const ftype = ret.ftype;
+      const fid = ret.fid;
+      if (ftype == Thrift.Type.STOP) {
+        break;
+      }
+      switch (fid) {
+        case 0:
+        if (ftype == Thrift.Type.BOOL) {
+          this.success = input.readBool().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        case 1:
+        if (ftype == Thrift.Type.STRUCT) {
+          this.e = new gen_exp();
+          this.e.read(input);
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        default:
+          input.skip(ftype);
+      }
+      input.readFieldEnd();
+    }
+    input.readStructEnd();
+    return;
+  }
+
+  write (output) {
+    output.writeStructBegin('open_api_management_proc_add_black_list_result');
+    if (this.success !== null && this.success !== undefined) {
+      output.writeFieldBegin('success', Thrift.Type.BOOL, 0);
+      output.writeBool(this.success);
+      output.writeFieldEnd();
+    }
+    if (this.e !== null && this.e !== undefined) {
+      output.writeFieldBegin('e', Thrift.Type.STRUCT, 1);
+      this.e.write(output);
+      output.writeFieldEnd();
+    }
+    output.writeFieldStop();
+    output.writeStructEnd();
+    return;
+  }
+
+};
+open_api_management_proc_del_black_list_args = class {
+  constructor(args) {
+    this.type = null;
+    this.target = null;
+    this.token = null;
+    if (args) {
+      if (args.type !== undefined && args.type !== null) {
+        this.type = args.type;
+      }
+      if (args.target !== undefined && args.target !== null) {
+        this.target = args.target;
+      }
+      if (args.token !== undefined && args.token !== null) {
+        this.token = args.token;
+      }
+    }
+  }
+
+  read (input) {
+    input.readStructBegin();
+    while (true) {
+      const ret = input.readFieldBegin();
+      const ftype = ret.ftype;
+      const fid = ret.fid;
+      if (ftype == Thrift.Type.STOP) {
+        break;
+      }
+      switch (fid) {
+        case 1:
+        if (ftype == Thrift.Type.I64) {
+          this.type = input.readI64().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        case 2:
+        if (ftype == Thrift.Type.STRING) {
+          this.target = input.readString().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        case 3:
+        if (ftype == Thrift.Type.STRING) {
+          this.token = input.readString().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        default:
+          input.skip(ftype);
+      }
+      input.readFieldEnd();
+    }
+    input.readStructEnd();
+    return;
+  }
+
+  write (output) {
+    output.writeStructBegin('open_api_management_proc_del_black_list_args');
+    if (this.type !== null && this.type !== undefined) {
+      output.writeFieldBegin('type', Thrift.Type.I64, 1);
+      output.writeI64(this.type);
+      output.writeFieldEnd();
+    }
+    if (this.target !== null && this.target !== undefined) {
+      output.writeFieldBegin('target', Thrift.Type.STRING, 2);
+      output.writeString(this.target);
+      output.writeFieldEnd();
+    }
+    if (this.token !== null && this.token !== undefined) {
+      output.writeFieldBegin('token', Thrift.Type.STRING, 3);
+      output.writeString(this.token);
+      output.writeFieldEnd();
+    }
+    output.writeFieldStop();
+    output.writeStructEnd();
+    return;
+  }
+
+};
+open_api_management_proc_del_black_list_result = class {
+  constructor(args) {
+    this.success = null;
+    this.e = null;
+    if (args instanceof gen_exp) {
+        this.e = args;
+        return;
+    }
+    if (args) {
+      if (args.success !== undefined && args.success !== null) {
+        this.success = args.success;
+      }
+      if (args.e !== undefined && args.e !== null) {
+        this.e = args.e;
+      }
+    }
+  }
+
+  read (input) {
+    input.readStructBegin();
+    while (true) {
+      const ret = input.readFieldBegin();
+      const ftype = ret.ftype;
+      const fid = ret.fid;
+      if (ftype == Thrift.Type.STOP) {
+        break;
+      }
+      switch (fid) {
+        case 0:
+        if (ftype == Thrift.Type.BOOL) {
+          this.success = input.readBool().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        case 1:
+        if (ftype == Thrift.Type.STRUCT) {
+          this.e = new gen_exp();
+          this.e.read(input);
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        default:
+          input.skip(ftype);
+      }
+      input.readFieldEnd();
+    }
+    input.readStructEnd();
+    return;
+  }
+
+  write (output) {
+    output.writeStructBegin('open_api_management_proc_del_black_list_result');
+    if (this.success !== null && this.success !== undefined) {
+      output.writeFieldBegin('success', Thrift.Type.BOOL, 0);
+      output.writeBool(this.success);
+      output.writeFieldEnd();
+    }
+    if (this.e !== null && this.e !== undefined) {
+      output.writeFieldBegin('e', Thrift.Type.STRUCT, 1);
+      this.e.write(output);
+      output.writeFieldEnd();
+    }
+    output.writeFieldStop();
+    output.writeStructEnd();
+    return;
+  }
+
+};
 open_api_managementClient = class open_api_managementClient {
   constructor(input, output) {
     this.input = input;
@@ -2286,5 +2620,129 @@ open_api_managementClient = class open_api_managementClient {
       return result.success;
     }
     throw 'proc_push_weight failed: unknown result';
+  }
+
+  proc_add_black_list (type, target, reason, expire_date, token) {
+    const self = this;
+    return new Promise((resolve, reject) => {
+      self.send_proc_add_black_list(type, target, reason, expire_date, token, (error, result) => {
+        return error ? reject(error) : resolve(result);
+      });
+    });
+  }
+
+  send_proc_add_black_list (type, target, reason, expire_date, token, callback) {
+    const params = {
+      type: type,
+      target: target,
+      reason: reason,
+      expire_date: expire_date,
+      token: token
+    };
+    const args = new open_api_management_proc_add_black_list_args(params);
+    try {
+      this.output.writeMessageBegin('proc_add_black_list', Thrift.MessageType.CALL, this.seqid);
+      args.write(this.output);
+      this.output.writeMessageEnd();
+      const self = this;
+      this.output.getTransport().flush(true, () => {
+        let error = null, result = null;
+        try {
+          result = self.recv_proc_add_black_list();
+        } catch (e) {
+          error = e;
+        }
+        callback(error, result);
+      });
+    }
+    catch (e) {
+      if (typeof this.output.getTransport().reset === 'function') {
+        this.output.getTransport().reset();
+      }
+      throw e;
+    }
+  }
+
+  recv_proc_add_black_list () {
+    const ret = this.input.readMessageBegin();
+    const mtype = ret.mtype;
+    if (mtype == Thrift.MessageType.EXCEPTION) {
+      const x = new Thrift.TApplicationException();
+      x.read(this.input);
+      this.input.readMessageEnd();
+      throw x;
+    }
+    const result = new open_api_management_proc_add_black_list_result();
+    result.read(this.input);
+    this.input.readMessageEnd();
+
+    if (null !== result.e) {
+      throw result.e;
+    }
+    if (null !== result.success) {
+      return result.success;
+    }
+    throw 'proc_add_black_list failed: unknown result';
+  }
+
+  proc_del_black_list (type, target, token) {
+    const self = this;
+    return new Promise((resolve, reject) => {
+      self.send_proc_del_black_list(type, target, token, (error, result) => {
+        return error ? reject(error) : resolve(result);
+      });
+    });
+  }
+
+  send_proc_del_black_list (type, target, token, callback) {
+    const params = {
+      type: type,
+      target: target,
+      token: token
+    };
+    const args = new open_api_management_proc_del_black_list_args(params);
+    try {
+      this.output.writeMessageBegin('proc_del_black_list', Thrift.MessageType.CALL, this.seqid);
+      args.write(this.output);
+      this.output.writeMessageEnd();
+      const self = this;
+      this.output.getTransport().flush(true, () => {
+        let error = null, result = null;
+        try {
+          result = self.recv_proc_del_black_list();
+        } catch (e) {
+          error = e;
+        }
+        callback(error, result);
+      });
+    }
+    catch (e) {
+      if (typeof this.output.getTransport().reset === 'function') {
+        this.output.getTransport().reset();
+      }
+      throw e;
+    }
+  }
+
+  recv_proc_del_black_list () {
+    const ret = this.input.readMessageBegin();
+    const mtype = ret.mtype;
+    if (mtype == Thrift.MessageType.EXCEPTION) {
+      const x = new Thrift.TApplicationException();
+      x.read(this.input);
+      this.input.readMessageEnd();
+      throw x;
+    }
+    const result = new open_api_management_proc_del_black_list_result();
+    result.read(this.input);
+    this.input.readMessageEnd();
+
+    if (null !== result.e) {
+      throw result.e;
+    }
+    if (null !== result.success) {
+      return result.success;
+    }
+    throw 'proc_del_black_list failed: unknown result';
   }
 };

@@ -249,3 +249,48 @@ bool PA_RPC_has_follow_stuff(const std::string &ssid, int64_t stuff_id)
 
     return ret;
 }
+std::string pa_sql_blacklist::target_was_blocked(const std::string &_target, black_type _type, pa_sql_company &_company)
+{
+    std::string ret;
+    std::unique_ptr<pa_sql_blacklist> black_record;
+
+    switch (_type)
+    {
+    case vehicle:
+    {
+        black_record.reset(_company.get_children<pa_sql_blacklist_vichele>("belong_company","target == '%s'", _target.c_str()).release());
+        break;
+    }
+    case driver:
+    {
+        black_record.reset(_company.get_children<pa_sql_blacklist_driver>("belong_company","target == '%s'", _target.c_str()).release());
+        break;
+    }
+
+    default:
+        break;
+    }
+
+    if (black_record)
+    {
+        if (black_record->expire_date.length() > 0)
+        {
+            auto expire_time = PA_DATAOPT_timestring_2_date(black_record->expire_date);
+            auto current_time = time(nullptr);
+            if (current_time <= expire_time)
+            {
+                ret = black_record->reason;
+            }
+            else
+            {
+                black_record->remove_record();
+            }
+        }
+        else
+        {
+            ret = black_record->reason;
+        }
+    }
+
+    return ret;
+}

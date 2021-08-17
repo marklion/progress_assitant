@@ -399,6 +399,8 @@ service open_api_management {
     vehicle_info_resp proc_vehicle_info(1:string plateNo, 2:string driverId, 3:string token) throws (1:gen_exp e),
     list<vehicle_info_resp> proc_all_vehicle_info(1:string token) throws (1:gen_exp e),
     bool proc_push_weight(1:push_weight_req _req, 2:string token) throws (1:gen_exp e),
+    bool proc_add_black_list(1:i64 type, 2:string target, 3:string reason, 4:string expire_date, 5:string token) throws (1:gen_exp e),
+    bool proc_del_black_list(1:i64 type, 2:string target, 3:string token) throws (1:gen_exp e),
 }
 
 struct vichele_stay_alone {

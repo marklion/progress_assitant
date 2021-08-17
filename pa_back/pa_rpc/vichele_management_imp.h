@@ -27,6 +27,25 @@ public:
 
         for (auto &itr:vichele_info)
         {
+            auto dest_company = sqlite_orm::search_record<pa_sql_company>("name = '%s'", itr.destination.c_str());
+            if (!dest_company)
+            {
+                PA_RETURN_MSG("目的地公司未接入平台");
+            }
+            auto black_list_ret = pa_sql_blacklist::target_was_blocked(itr.main_vichele_number, pa_sql_blacklist::vehicle, *dest_company);
+            if (black_list_ret.length() > 0)
+            {
+                PA_RETURN_MSG(itr.main_vichele_number + "在黑名单中");
+            }
+            black_list_ret = pa_sql_blacklist::target_was_blocked(itr.driver_id, pa_sql_blacklist::driver, *dest_company);
+            if (black_list_ret.length() > 0)
+            {
+                PA_RETURN_MSG(itr.driver_name + "在黑名单中");
+            }
+        }
+
+        for (auto &itr : vichele_info)
+        {
             pa_sql_vichele_stay_alone tmp;
             auto dest_company = sqlite_orm::search_record<pa_sql_company>("name = '%s'", itr.destination.c_str());
             if (!dest_company)
@@ -42,7 +61,7 @@ public:
             tmp.stuff_name = itr.stuff_name;
             tmp.set_parent(*opt_user, "created_by");
             tmp.set_parent(*dest_company, "destination");
-            tmp.is_repeated = itr.repeated?1:0;
+            tmp.is_repeated = itr.repeated ? 1 : 0;
             tmp.timestamp = PA_DATAOPT_current_time();
             tmp.driver_name = itr.driver_name;
             tmp.driver_phone = itr.driver_phone;
@@ -53,7 +72,7 @@ public:
             if (ret)
             {
                 auto company_user = dest_company->get_all_children<pa_sql_userinfo>("belong_company");
-                for (auto &itr:company_user)
+                for (auto &itr : company_user)
                 {
                     PA_WECHAT_send_extra_vichele_msg(tmp, itr.openid, opt_user->name + "创建了进厂申请");
                 }
@@ -126,6 +145,16 @@ public:
         extra_vichele->driver_id = vichele_info.driver_id;
         extra_vichele->transfor_company = vichele_info.transfor_company;
 
+        auto black_list_ret = pa_sql_blacklist::target_was_blocked(vichele_info.main_vichele_number, pa_sql_blacklist::vehicle, *dest_company);
+        if (black_list_ret.length() > 0)
+        {
+            PA_RETURN_MSG(vichele_info.main_vichele_number + "在黑名单中");
+        }
+        black_list_ret = pa_sql_blacklist::target_was_blocked(vichele_info.driver_id, pa_sql_blacklist::driver, *dest_company);
+        if (black_list_ret.length() > 0)
+        {
+            PA_RETURN_MSG(vichele_info.driver_name + "在黑名单中");
+        }
         ret = extra_vichele->update_record();
         if (ret)
         {

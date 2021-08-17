@@ -35,6 +35,8 @@ if len(sys.argv) <= 1 or sys.argv[1] == '--help':
     print('  vehicle_info_resp proc_vehicle_info(string plateNo, string driverId, string token)')
     print('   proc_all_vehicle_info(string token)')
     print('  bool proc_push_weight(push_weight_req _req, string token)')
+    print('  bool proc_add_black_list(i64 type, string target, string reason, string expire_date, string token)')
+    print('  bool proc_del_black_list(i64 type, string target, string token)')
     print('')
     sys.exit(0)
 
@@ -179,6 +181,18 @@ elif cmd == 'proc_push_weight':
         print('proc_push_weight requires 2 args')
         sys.exit(1)
     pp.pprint(client.proc_push_weight(eval(args[0]), args[1],))
+
+elif cmd == 'proc_add_black_list':
+    if len(args) != 5:
+        print('proc_add_black_list requires 5 args')
+        sys.exit(1)
+    pp.pprint(client.proc_add_black_list(eval(args[0]), args[1], args[2], args[3], args[4],))
+
+elif cmd == 'proc_del_black_list':
+    if len(args) != 3:
+        print('proc_del_black_list requires 3 args')
+        sys.exit(1)
+    pp.pprint(client.proc_del_black_list(eval(args[0]), args[1], args[2],))
 
 else:
     print('Unrecognized method %s' % cmd)
