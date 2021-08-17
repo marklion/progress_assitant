@@ -33,6 +33,8 @@ class open_api_managementIf {
   virtual void proc_vehicle_info(vehicle_info_resp& _return, const std::string& plateNo, const std::string& driverId, const std::string& token) = 0;
   virtual void proc_all_vehicle_info(std::vector<vehicle_info_resp> & _return, const std::string& token) = 0;
   virtual bool proc_push_weight(const push_weight_req& _req, const std::string& token) = 0;
+  virtual bool proc_add_black_list(const int64_t type, const std::string& target, const std::string& reason, const std::string& expire_date, const std::string& token) = 0;
+  virtual bool proc_del_black_list(const int64_t type, const std::string& target, const std::string& token) = 0;
 };
 
 class open_api_managementIfFactory {
@@ -99,6 +101,14 @@ class open_api_managementNull : virtual public open_api_managementIf {
     return;
   }
   bool proc_push_weight(const push_weight_req& /* _req */, const std::string& /* token */) {
+    bool _return = false;
+    return _return;
+  }
+  bool proc_add_black_list(const int64_t /* type */, const std::string& /* target */, const std::string& /* reason */, const std::string& /* expire_date */, const std::string& /* token */) {
+    bool _return = false;
+    return _return;
+  }
+  bool proc_del_black_list(const int64_t /* type */, const std::string& /* target */, const std::string& /* token */) {
     bool _return = false;
     return _return;
   }
@@ -1448,6 +1458,272 @@ class open_api_management_proc_push_weight_presult {
 
 };
 
+typedef struct _open_api_management_proc_add_black_list_args__isset {
+  _open_api_management_proc_add_black_list_args__isset() : type(false), target(false), reason(false), expire_date(false), token(false) {}
+  bool type :1;
+  bool target :1;
+  bool reason :1;
+  bool expire_date :1;
+  bool token :1;
+} _open_api_management_proc_add_black_list_args__isset;
+
+class open_api_management_proc_add_black_list_args {
+ public:
+
+  open_api_management_proc_add_black_list_args(const open_api_management_proc_add_black_list_args&);
+  open_api_management_proc_add_black_list_args& operator=(const open_api_management_proc_add_black_list_args&);
+  open_api_management_proc_add_black_list_args() : type(0), target(), reason(), expire_date(), token() {
+  }
+
+  virtual ~open_api_management_proc_add_black_list_args() noexcept;
+  int64_t type;
+  std::string target;
+  std::string reason;
+  std::string expire_date;
+  std::string token;
+
+  _open_api_management_proc_add_black_list_args__isset __isset;
+
+  void __set_type(const int64_t val);
+
+  void __set_target(const std::string& val);
+
+  void __set_reason(const std::string& val);
+
+  void __set_expire_date(const std::string& val);
+
+  void __set_token(const std::string& val);
+
+  bool operator == (const open_api_management_proc_add_black_list_args & rhs) const
+  {
+    if (!(type == rhs.type))
+      return false;
+    if (!(target == rhs.target))
+      return false;
+    if (!(reason == rhs.reason))
+      return false;
+    if (!(expire_date == rhs.expire_date))
+      return false;
+    if (!(token == rhs.token))
+      return false;
+    return true;
+  }
+  bool operator != (const open_api_management_proc_add_black_list_args &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const open_api_management_proc_add_black_list_args & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+
+class open_api_management_proc_add_black_list_pargs {
+ public:
+
+
+  virtual ~open_api_management_proc_add_black_list_pargs() noexcept;
+  const int64_t* type;
+  const std::string* target;
+  const std::string* reason;
+  const std::string* expire_date;
+  const std::string* token;
+
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _open_api_management_proc_add_black_list_result__isset {
+  _open_api_management_proc_add_black_list_result__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _open_api_management_proc_add_black_list_result__isset;
+
+class open_api_management_proc_add_black_list_result {
+ public:
+
+  open_api_management_proc_add_black_list_result(const open_api_management_proc_add_black_list_result&);
+  open_api_management_proc_add_black_list_result& operator=(const open_api_management_proc_add_black_list_result&);
+  open_api_management_proc_add_black_list_result() : success(0) {
+  }
+
+  virtual ~open_api_management_proc_add_black_list_result() noexcept;
+  bool success;
+  gen_exp e;
+
+  _open_api_management_proc_add_black_list_result__isset __isset;
+
+  void __set_success(const bool val);
+
+  void __set_e(const gen_exp& val);
+
+  bool operator == (const open_api_management_proc_add_black_list_result & rhs) const
+  {
+    if (!(success == rhs.success))
+      return false;
+    if (!(e == rhs.e))
+      return false;
+    return true;
+  }
+  bool operator != (const open_api_management_proc_add_black_list_result &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const open_api_management_proc_add_black_list_result & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _open_api_management_proc_add_black_list_presult__isset {
+  _open_api_management_proc_add_black_list_presult__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _open_api_management_proc_add_black_list_presult__isset;
+
+class open_api_management_proc_add_black_list_presult {
+ public:
+
+
+  virtual ~open_api_management_proc_add_black_list_presult() noexcept;
+  bool* success;
+  gen_exp e;
+
+  _open_api_management_proc_add_black_list_presult__isset __isset;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+
+};
+
+typedef struct _open_api_management_proc_del_black_list_args__isset {
+  _open_api_management_proc_del_black_list_args__isset() : type(false), target(false), token(false) {}
+  bool type :1;
+  bool target :1;
+  bool token :1;
+} _open_api_management_proc_del_black_list_args__isset;
+
+class open_api_management_proc_del_black_list_args {
+ public:
+
+  open_api_management_proc_del_black_list_args(const open_api_management_proc_del_black_list_args&);
+  open_api_management_proc_del_black_list_args& operator=(const open_api_management_proc_del_black_list_args&);
+  open_api_management_proc_del_black_list_args() : type(0), target(), token() {
+  }
+
+  virtual ~open_api_management_proc_del_black_list_args() noexcept;
+  int64_t type;
+  std::string target;
+  std::string token;
+
+  _open_api_management_proc_del_black_list_args__isset __isset;
+
+  void __set_type(const int64_t val);
+
+  void __set_target(const std::string& val);
+
+  void __set_token(const std::string& val);
+
+  bool operator == (const open_api_management_proc_del_black_list_args & rhs) const
+  {
+    if (!(type == rhs.type))
+      return false;
+    if (!(target == rhs.target))
+      return false;
+    if (!(token == rhs.token))
+      return false;
+    return true;
+  }
+  bool operator != (const open_api_management_proc_del_black_list_args &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const open_api_management_proc_del_black_list_args & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+
+class open_api_management_proc_del_black_list_pargs {
+ public:
+
+
+  virtual ~open_api_management_proc_del_black_list_pargs() noexcept;
+  const int64_t* type;
+  const std::string* target;
+  const std::string* token;
+
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _open_api_management_proc_del_black_list_result__isset {
+  _open_api_management_proc_del_black_list_result__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _open_api_management_proc_del_black_list_result__isset;
+
+class open_api_management_proc_del_black_list_result {
+ public:
+
+  open_api_management_proc_del_black_list_result(const open_api_management_proc_del_black_list_result&);
+  open_api_management_proc_del_black_list_result& operator=(const open_api_management_proc_del_black_list_result&);
+  open_api_management_proc_del_black_list_result() : success(0) {
+  }
+
+  virtual ~open_api_management_proc_del_black_list_result() noexcept;
+  bool success;
+  gen_exp e;
+
+  _open_api_management_proc_del_black_list_result__isset __isset;
+
+  void __set_success(const bool val);
+
+  void __set_e(const gen_exp& val);
+
+  bool operator == (const open_api_management_proc_del_black_list_result & rhs) const
+  {
+    if (!(success == rhs.success))
+      return false;
+    if (!(e == rhs.e))
+      return false;
+    return true;
+  }
+  bool operator != (const open_api_management_proc_del_black_list_result &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const open_api_management_proc_del_black_list_result & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _open_api_management_proc_del_black_list_presult__isset {
+  _open_api_management_proc_del_black_list_presult__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _open_api_management_proc_del_black_list_presult__isset;
+
+class open_api_management_proc_del_black_list_presult {
+ public:
+
+
+  virtual ~open_api_management_proc_del_black_list_presult() noexcept;
+  bool* success;
+  gen_exp e;
+
+  _open_api_management_proc_del_black_list_presult__isset __isset;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+
+};
+
 class open_api_managementClient : virtual public open_api_managementIf {
  public:
   open_api_managementClient(std::shared_ptr< ::apache::thrift::protocol::TProtocol> prot) {
@@ -1506,6 +1782,12 @@ class open_api_managementClient : virtual public open_api_managementIf {
   bool proc_push_weight(const push_weight_req& _req, const std::string& token);
   void send_proc_push_weight(const push_weight_req& _req, const std::string& token);
   bool recv_proc_push_weight();
+  bool proc_add_black_list(const int64_t type, const std::string& target, const std::string& reason, const std::string& expire_date, const std::string& token);
+  void send_proc_add_black_list(const int64_t type, const std::string& target, const std::string& reason, const std::string& expire_date, const std::string& token);
+  bool recv_proc_add_black_list();
+  bool proc_del_black_list(const int64_t type, const std::string& target, const std::string& token);
+  void send_proc_del_black_list(const int64_t type, const std::string& target, const std::string& token);
+  bool recv_proc_del_black_list();
  protected:
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> piprot_;
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> poprot_;
@@ -1532,6 +1814,8 @@ class open_api_managementProcessor : public ::apache::thrift::TDispatchProcessor
   void process_proc_vehicle_info(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
   void process_proc_all_vehicle_info(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
   void process_proc_push_weight(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
+  void process_proc_add_black_list(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
+  void process_proc_del_black_list(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
  public:
   open_api_managementProcessor(::std::shared_ptr<open_api_managementIf> iface) :
     iface_(iface) {
@@ -1546,6 +1830,8 @@ class open_api_managementProcessor : public ::apache::thrift::TDispatchProcessor
     processMap_["proc_vehicle_info"] = &open_api_managementProcessor::process_proc_vehicle_info;
     processMap_["proc_all_vehicle_info"] = &open_api_managementProcessor::process_proc_all_vehicle_info;
     processMap_["proc_push_weight"] = &open_api_managementProcessor::process_proc_push_weight;
+    processMap_["proc_add_black_list"] = &open_api_managementProcessor::process_proc_add_black_list;
+    processMap_["proc_del_black_list"] = &open_api_managementProcessor::process_proc_del_black_list;
   }
 
   virtual ~open_api_managementProcessor() {}
@@ -1677,6 +1963,24 @@ class open_api_managementMultiface : virtual public open_api_managementIf {
     return ifaces_[i]->proc_push_weight(_req, token);
   }
 
+  bool proc_add_black_list(const int64_t type, const std::string& target, const std::string& reason, const std::string& expire_date, const std::string& token) {
+    size_t sz = ifaces_.size();
+    size_t i = 0;
+    for (; i < (sz - 1); ++i) {
+      ifaces_[i]->proc_add_black_list(type, target, reason, expire_date, token);
+    }
+    return ifaces_[i]->proc_add_black_list(type, target, reason, expire_date, token);
+  }
+
+  bool proc_del_black_list(const int64_t type, const std::string& target, const std::string& token) {
+    size_t sz = ifaces_.size();
+    size_t i = 0;
+    for (; i < (sz - 1); ++i) {
+      ifaces_[i]->proc_del_black_list(type, target, token);
+    }
+    return ifaces_[i]->proc_del_black_list(type, target, token);
+  }
+
 };
 
 // The 'concurrent' client is a thread safe client that correctly handles
@@ -1742,6 +2046,12 @@ class open_api_managementConcurrentClient : virtual public open_api_managementIf
   bool proc_push_weight(const push_weight_req& _req, const std::string& token);
   int32_t send_proc_push_weight(const push_weight_req& _req, const std::string& token);
   bool recv_proc_push_weight(const int32_t seqid);
+  bool proc_add_black_list(const int64_t type, const std::string& target, const std::string& reason, const std::string& expire_date, const std::string& token);
+  int32_t send_proc_add_black_list(const int64_t type, const std::string& target, const std::string& reason, const std::string& expire_date, const std::string& token);
+  bool recv_proc_add_black_list(const int32_t seqid);
+  bool proc_del_black_list(const int64_t type, const std::string& target, const std::string& token);
+  int32_t send_proc_del_black_list(const int64_t type, const std::string& target, const std::string& token);
+  bool recv_proc_del_black_list(const int32_t seqid);
  protected:
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> piprot_;
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> poprot_;

@@ -674,5 +674,46 @@ public:
     }
 };
 
+class pa_sql_blacklist:public sql_tree_base {
+public:
+    std::string reason;
+    std::string expire_date;
+    std::string target;
+    pa_sql_blacklist() {
+        add_parent_type<pa_sql_company>("belong_company");
+    }
+    virtual std::vector<sqlite_orm_column> self_columns_defined() { 
+        std::vector<sqlite_orm_column> ret;
+        ret.push_back(sqlite_orm_column("reason", sqlite_orm_column::STRING, &reason));
+        ret.push_back(sqlite_orm_column("expire_date", sqlite_orm_column::STRING, &expire_date));
+        ret.push_back(sqlite_orm_column("target", sqlite_orm_column::STRING, &target));
+
+        return ret;
+    }
+    enum black_type
+    {
+        vehicle,
+        driver
+    };
+    static std::string target_was_blocked(const std::string &_target, black_type _type, pa_sql_company &_company);
+};
+
+class pa_sql_blacklist_vichele : public pa_sql_blacklist
+{
+public:
+    virtual std::string table_name()
+    {
+        return "blacklist_vichele_table";
+    }
+};
+
+class pa_sql_blacklist_driver : public pa_sql_blacklist
+{
+public:
+    virtual std::string table_name()
+    {
+        return "blacklist_driver_table";
+    }
+};
 
 #endif // _PA_DATABSE_H_

@@ -743,6 +743,87 @@ public:
 
         return ret;
     }
+
+    virtual bool proc_add_black_list(const int64_t type, const std::string &target, const std::string &reason, const std::string &expire_date, const std::string &token)
+    {
+        bool ret = false;
+        log_audit_basedon_token(token, __FUNCTION__);
+        auto company = _get_token_company(token);
+        if (!company)
+        {
+            PA_RETURN_MSG(OPEN_API_MSG_NO_PERMISSION);
+        }
+
+        if (1 == type)
+        {
+            auto exist_record = company->get_children<pa_sql_blacklist_vichele>("belong_company", "target == '%s'", target.c_str());
+            if (exist_record)
+            {
+                exist_record->reason = reason;
+                exist_record->expire_date = expire_date;
+                ret = exist_record->update_record();
+            }
+            else
+            {
+                pa_sql_blacklist_vichele tmp;
+                tmp.target = target;
+                tmp.reason = reason;
+                tmp.expire_date = expire_date;
+                tmp.set_parent(*company, "belong_company");
+                ret = tmp.insert_record();
+            }
+        }
+        else
+        {
+            auto exist_record = company->get_children<pa_sql_blacklist_driver>("belong_company","target == '%s'", target.c_str());
+            if (exist_record)
+            {
+                exist_record->reason = reason;
+                exist_record->expire_date = expire_date;
+                ret = exist_record->update_record();
+            }
+            else
+            {
+                pa_sql_blacklist_driver tmp;
+                tmp.target = target;
+                tmp.reason = reason;
+                tmp.expire_date = expire_date;
+                tmp.set_parent(*company, "belong_company");
+                ret = tmp.insert_record();
+            }
+        }
+
+        return ret;
+    }
+    virtual bool proc_del_black_list(const int64_t type, const std::string &target, const std::string &token)
+    {
+        bool ret = false;
+        log_audit_basedon_token(token, __FUNCTION__);
+        auto company = _get_token_company(token);
+        if (!company)
+        {
+            PA_RETURN_MSG(OPEN_API_MSG_NO_PERMISSION);
+        }
+        if (1 == type)
+        {
+            auto exist_record = company->get_children<pa_sql_blacklist_vichele>("belong_company","target == '%s'", target.c_str());
+            if (exist_record)
+            {
+                ret = true;
+                exist_record->remove_record();
+            }
+        }
+        else
+        {
+            auto exist_record = company->get_children<pa_sql_blacklist_driver>("belong_company","target == '%s'", target.c_str());
+            if (exist_record)
+            {
+                ret = true;
+                exist_record->remove_record();
+            }
+        }
+        return ret;
+    }
 };
 
 #endif // _OPEN_API_MANAGEMENT_H_

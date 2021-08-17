@@ -848,6 +848,35 @@ public:
         auto plan_time_day = plan.plan_time.substr(0, 10);
         for (auto &itr : plan.vichele_info)
         {
+            auto stuff_type = sqlite_orm::search_record<pa_sql_stuff_info>(plan.type_id);
+            if (!stuff_type)
+            {
+                PA_RETURN_NOSTUFF_MSG();
+            }
+            auto sale_company = stuff_type->get_parent<pa_sql_company>("belong_company");
+            if (!sale_company)
+            {
+                PA_RETURN_NOPRIVA_MSG();
+            }
+            auto current_driver = sqlite_orm::search_record<pa_sql_driver>("phone == '%s' AND is_drop == 0 AND driver_id IS NOT NULL AND driver_id != ''", itr.driver_phone.c_str());
+            if (current_driver)
+            {
+                auto reason = pa_sql_blacklist::target_was_blocked(current_driver->driver_id, pa_sql_blacklist::driver, *sale_company);
+                if (reason.length() > 0)
+                {
+                    _return.append("司机 " + current_driver->name + " 在黑名单中，原因是：" + reason);
+                }
+            }
+            auto reason = pa_sql_blacklist::target_was_blocked(itr.main_vichele, pa_sql_blacklist::vehicle, *sale_company);
+            if (reason.length() > 0)
+            {
+                _return.append("车辆 " + itr.main_vichele + " 在黑名单中，原因是：" + reason);
+            }
+            reason = pa_sql_blacklist::target_was_blocked(itr.behind_vichele, pa_sql_blacklist::vehicle, *sale_company);
+            if (reason.length() > 0)
+            {
+                _return.append("车辆 " + itr.main_vichele + " 在黑名单中，原因是：" + reason);
+            }
             auto main_vhicheles_in_sql = sqlite_orm::search_record_all<pa_sql_vichele>("number = '%s'", itr.main_vichele.c_str());
             for (auto &single_vichele : main_vhicheles_in_sql)
             {

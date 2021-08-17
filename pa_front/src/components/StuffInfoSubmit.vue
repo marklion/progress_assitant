@@ -124,9 +124,9 @@ export default {
         plan_time_easy: function () {
             var setted_time = new Date(/\d{4}-\d{1,2}-\d{1,2}/g.exec(this.plan_time)[0]);
             var current_time = new Date();
-            current_time.setHours(0,0,0,0);
+            current_time.setHours(0, 0, 0, 0);
             var ret = "";
-            var bigger_than = parseInt((setted_time.getTime() - current_time.getTime()) / (1000*60*60*24));
+            var bigger_than = parseInt((setted_time.getTime() - current_time.getTime()) / (1000 * 60 * 60 * 24));
             if (bigger_than == 0) {
                 ret = "今天";
             } else if (bigger_than == 1) {
@@ -288,6 +288,7 @@ export default {
                     plan_time: vue_this.plan_time,
                     vichele_info: vue_this.vichele_info,
                     plan_id: vue_this.plan_id,
+                    type_id: vue_this.type_id,
                 }, vue_this.$cookies.get('pa_ssid')]).then(function (resp) {
                     if (resp.length > 0) {
                         console.log(resp);
