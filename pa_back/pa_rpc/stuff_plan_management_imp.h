@@ -210,6 +210,9 @@ public:
                         tmp.use_for = itr.use_for;
                         tmp.finish = itr.finish == 0 ? false : true;
                         tmp.deliver_timestamp = itr.deliver_timestamp;
+                        tmp.p_time = itr.deliver_p_timestamp;
+                        tmp.m_weight = itr.m_weight;
+                        tmp.p_weight = itr.p_weight;
                         _return.vichele_info.push_back(tmp);
                     }
                 }
@@ -279,6 +282,9 @@ public:
                             tmp.register_timestamp = register_info->timestamp;
                             tmp.enter_location = register_info->enter_location;
                         }
+                        tmp.p_time = itr.deliver_p_timestamp;
+                        tmp.m_weight = itr.m_weight;
+                        tmp.p_weight = itr.p_weight;
                         _return.vichele_info.push_back(tmp);
                     }
                 }
@@ -521,8 +527,18 @@ public:
                     PA_RETURN_MSG("车辆信息错误");
                 }
                 found_vichele_info->finish = 1;
+                found_vichele_info->p_weight = itr.p_weight;
+                found_vichele_info->m_weight = itr.m_weight;
+                found_vichele_info->deliver_p_timestamp= itr.p_time;
                 found_vichele_info->count = itr.count;
-                found_vichele_info->deliver_timestamp = current_time;
+                if (itr.m_time.length() <= 0)
+                {
+                    found_vichele_info->deliver_timestamp = current_time;
+                }
+                else
+                {
+                    found_vichele_info->deliver_timestamp = itr.m_time;
+                }
                 found_vichele_info->update_record();
             }
             auto total_count = plan->get_all_children<pa_sql_single_vichele>("belong_plan").size();

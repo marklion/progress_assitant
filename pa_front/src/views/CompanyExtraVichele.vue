@@ -25,7 +25,8 @@
                         <div>{{single_vichele.main_vichele_number}}</div>
                         <div>{{single_vichele.behind_vichele_number}}</div>
                     </template>
-                    <div>{{single_vichele.count}}吨</div>
+                    <div>发货净重：{{single_vichele.count}}吨</div>
+                    <div v-if="single_vichele.status == 2">收货净重：{{single_vichele.j_weight}}吨</div>
                     <div v-if="single_vichele.comment">备注：{{single_vichele.comment}}</div>
                     <div v-if="single_vichele.repeated">
                         <van-tag plain type="warning">多次进厂</van-tag>
@@ -46,8 +47,15 @@
                         </van-col>
                         <van-col>
                             <van-tag v-if="single_vichele.status == 0" plain type="danger">未确认</van-tag>
-                            <van-tag v-else plain type="success">已确认</van-tag>
+                            <van-tag v-else-if="single_vichele.status == 1" plain type="success">已确认</van-tag>
+                            <van-tag v-else plain type="primary">已完成</van-tag>
                         </van-col>
+                    </van-row>
+                    <van-row v-if="single_vichele.status == 2" type="flex" align="center" :gutter="10">
+                        <van-col>皮重</van-col>
+                        <van-col>{{single_vichele.p_weight}}吨</van-col>
+                        <van-col>毛重</van-col>
+                        <van-col>{{single_vichele.m_weight}}吨</van-col>
                     </van-row>
                 </div>
             </div>

@@ -165,6 +165,9 @@ void pa_sql_archive_plan::translate_from_plan(pa_sql_plan &_plan)
         tmp.finish = itr.finish;
         tmp.deliver_timestamp = itr.deliver_timestamp;
         tmp.set_parent(*this, "belong_plan");
+        tmp.deliver_p_timestamp = itr.deliver_p_timestamp;
+        tmp.p_weight = itr.p_weight;
+        tmp.m_weight = itr.m_weight;
         tmp.insert_record();
     }
     this->update_record();

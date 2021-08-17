@@ -1425,6 +1425,9 @@ var vichele_in_plan = module.exports.vichele_in_plan = function(args) {
   this.register_timestamp = null;
   this.register_number = null;
   this.enter_location = null;
+  this.p_time = null;
+  this.p_weight = null;
+  this.m_weight = null;
   if (args) {
     if (args.main_vichele !== undefined && args.main_vichele !== null) {
       this.main_vichele = args.main_vichele;
@@ -1464,6 +1467,15 @@ var vichele_in_plan = module.exports.vichele_in_plan = function(args) {
     }
     if (args.enter_location !== undefined && args.enter_location !== null) {
       this.enter_location = args.enter_location;
+    }
+    if (args.p_time !== undefined && args.p_time !== null) {
+      this.p_time = args.p_time;
+    }
+    if (args.p_weight !== undefined && args.p_weight !== null) {
+      this.p_weight = args.p_weight;
+    }
+    if (args.m_weight !== undefined && args.m_weight !== null) {
+      this.m_weight = args.m_weight;
     }
   }
 };
@@ -1569,6 +1581,27 @@ vichele_in_plan.prototype.read = function(input) {
         input.skip(ftype);
       }
       break;
+      case 14:
+      if (ftype == Thrift.Type.STRING) {
+        this.p_time = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 15:
+      if (ftype == Thrift.Type.DOUBLE) {
+        this.p_weight = input.readDouble();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 16:
+      if (ftype == Thrift.Type.DOUBLE) {
+        this.m_weight = input.readDouble();
+      } else {
+        input.skip(ftype);
+      }
+      break;
       default:
         input.skip(ftype);
     }
@@ -1643,6 +1676,21 @@ vichele_in_plan.prototype.write = function(output) {
   if (this.enter_location !== null && this.enter_location !== undefined) {
     output.writeFieldBegin('enter_location', Thrift.Type.STRING, 13);
     output.writeString(this.enter_location);
+    output.writeFieldEnd();
+  }
+  if (this.p_time !== null && this.p_time !== undefined) {
+    output.writeFieldBegin('p_time', Thrift.Type.STRING, 14);
+    output.writeString(this.p_time);
+    output.writeFieldEnd();
+  }
+  if (this.p_weight !== null && this.p_weight !== undefined) {
+    output.writeFieldBegin('p_weight', Thrift.Type.DOUBLE, 15);
+    output.writeDouble(this.p_weight);
+    output.writeFieldEnd();
+  }
+  if (this.m_weight !== null && this.m_weight !== undefined) {
+    output.writeFieldBegin('m_weight', Thrift.Type.DOUBLE, 16);
+    output.writeDouble(this.m_weight);
     output.writeFieldEnd();
   }
   output.writeFieldStop();
@@ -2146,12 +2194,28 @@ plan_number_id.prototype.write = function(output) {
 var deliver_info = module.exports.deliver_info = function(args) {
   this.id = null;
   this.count = null;
+  this.p_weight = null;
+  this.m_weight = null;
+  this.p_time = null;
+  this.m_time = null;
   if (args) {
     if (args.id !== undefined && args.id !== null) {
       this.id = args.id;
     }
     if (args.count !== undefined && args.count !== null) {
       this.count = args.count;
+    }
+    if (args.p_weight !== undefined && args.p_weight !== null) {
+      this.p_weight = args.p_weight;
+    }
+    if (args.m_weight !== undefined && args.m_weight !== null) {
+      this.m_weight = args.m_weight;
+    }
+    if (args.p_time !== undefined && args.p_time !== null) {
+      this.p_time = args.p_time;
+    }
+    if (args.m_time !== undefined && args.m_time !== null) {
+      this.m_time = args.m_time;
     }
   }
 };
@@ -2180,6 +2244,34 @@ deliver_info.prototype.read = function(input) {
         input.skip(ftype);
       }
       break;
+      case 3:
+      if (ftype == Thrift.Type.DOUBLE) {
+        this.p_weight = input.readDouble();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 4:
+      if (ftype == Thrift.Type.DOUBLE) {
+        this.m_weight = input.readDouble();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 5:
+      if (ftype == Thrift.Type.STRING) {
+        this.p_time = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 6:
+      if (ftype == Thrift.Type.STRING) {
+        this.m_time = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
       default:
         input.skip(ftype);
     }
@@ -2199,6 +2291,26 @@ deliver_info.prototype.write = function(output) {
   if (this.count !== null && this.count !== undefined) {
     output.writeFieldBegin('count', Thrift.Type.DOUBLE, 2);
     output.writeDouble(this.count);
+    output.writeFieldEnd();
+  }
+  if (this.p_weight !== null && this.p_weight !== undefined) {
+    output.writeFieldBegin('p_weight', Thrift.Type.DOUBLE, 3);
+    output.writeDouble(this.p_weight);
+    output.writeFieldEnd();
+  }
+  if (this.m_weight !== null && this.m_weight !== undefined) {
+    output.writeFieldBegin('m_weight', Thrift.Type.DOUBLE, 4);
+    output.writeDouble(this.m_weight);
+    output.writeFieldEnd();
+  }
+  if (this.p_time !== null && this.p_time !== undefined) {
+    output.writeFieldBegin('p_time', Thrift.Type.STRING, 5);
+    output.writeString(this.p_time);
+    output.writeFieldEnd();
+  }
+  if (this.m_time !== null && this.m_time !== undefined) {
+    output.writeFieldBegin('m_time', Thrift.Type.STRING, 6);
+    output.writeString(this.m_time);
     output.writeFieldEnd();
   }
   output.writeFieldStop();
@@ -3702,6 +3814,197 @@ vehicle_info_resp.prototype.write = function(output) {
   return;
 };
 
+var push_weight_req = module.exports.push_weight_req = function(args) {
+  this.id = null;
+  this.plateNo = null;
+  this.customerId = null;
+  this.customerName = null;
+  this.stuffName = null;
+  this.pWeight = null;
+  this.mWeight = null;
+  this.pTime = null;
+  this.mTime = null;
+  this.jWeight = null;
+  if (args) {
+    if (args.id !== undefined && args.id !== null) {
+      this.id = args.id;
+    }
+    if (args.plateNo !== undefined && args.plateNo !== null) {
+      this.plateNo = args.plateNo;
+    }
+    if (args.customerId !== undefined && args.customerId !== null) {
+      this.customerId = args.customerId;
+    }
+    if (args.customerName !== undefined && args.customerName !== null) {
+      this.customerName = args.customerName;
+    }
+    if (args.stuffName !== undefined && args.stuffName !== null) {
+      this.stuffName = args.stuffName;
+    }
+    if (args.pWeight !== undefined && args.pWeight !== null) {
+      this.pWeight = args.pWeight;
+    }
+    if (args.mWeight !== undefined && args.mWeight !== null) {
+      this.mWeight = args.mWeight;
+    }
+    if (args.pTime !== undefined && args.pTime !== null) {
+      this.pTime = args.pTime;
+    }
+    if (args.mTime !== undefined && args.mTime !== null) {
+      this.mTime = args.mTime;
+    }
+    if (args.jWeight !== undefined && args.jWeight !== null) {
+      this.jWeight = args.jWeight;
+    }
+  }
+};
+push_weight_req.prototype = {};
+push_weight_req.prototype.read = function(input) {
+  input.readStructBegin();
+  while (true) {
+    var ret = input.readFieldBegin();
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    switch (fid) {
+      case 1:
+      if (ftype == Thrift.Type.STRING) {
+        this.id = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 2:
+      if (ftype == Thrift.Type.STRING) {
+        this.plateNo = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 3:
+      if (ftype == Thrift.Type.STRING) {
+        this.customerId = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 4:
+      if (ftype == Thrift.Type.STRING) {
+        this.customerName = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 5:
+      if (ftype == Thrift.Type.STRING) {
+        this.stuffName = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 6:
+      if (ftype == Thrift.Type.DOUBLE) {
+        this.pWeight = input.readDouble();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 7:
+      if (ftype == Thrift.Type.DOUBLE) {
+        this.mWeight = input.readDouble();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 8:
+      if (ftype == Thrift.Type.STRING) {
+        this.pTime = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 9:
+      if (ftype == Thrift.Type.STRING) {
+        this.mTime = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 10:
+      if (ftype == Thrift.Type.DOUBLE) {
+        this.jWeight = input.readDouble();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      default:
+        input.skip(ftype);
+    }
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+push_weight_req.prototype.write = function(output) {
+  output.writeStructBegin('push_weight_req');
+  if (this.id !== null && this.id !== undefined) {
+    output.writeFieldBegin('id', Thrift.Type.STRING, 1);
+    output.writeString(this.id);
+    output.writeFieldEnd();
+  }
+  if (this.plateNo !== null && this.plateNo !== undefined) {
+    output.writeFieldBegin('plateNo', Thrift.Type.STRING, 2);
+    output.writeString(this.plateNo);
+    output.writeFieldEnd();
+  }
+  if (this.customerId !== null && this.customerId !== undefined) {
+    output.writeFieldBegin('customerId', Thrift.Type.STRING, 3);
+    output.writeString(this.customerId);
+    output.writeFieldEnd();
+  }
+  if (this.customerName !== null && this.customerName !== undefined) {
+    output.writeFieldBegin('customerName', Thrift.Type.STRING, 4);
+    output.writeString(this.customerName);
+    output.writeFieldEnd();
+  }
+  if (this.stuffName !== null && this.stuffName !== undefined) {
+    output.writeFieldBegin('stuffName', Thrift.Type.STRING, 5);
+    output.writeString(this.stuffName);
+    output.writeFieldEnd();
+  }
+  if (this.pWeight !== null && this.pWeight !== undefined) {
+    output.writeFieldBegin('pWeight', Thrift.Type.DOUBLE, 6);
+    output.writeDouble(this.pWeight);
+    output.writeFieldEnd();
+  }
+  if (this.mWeight !== null && this.mWeight !== undefined) {
+    output.writeFieldBegin('mWeight', Thrift.Type.DOUBLE, 7);
+    output.writeDouble(this.mWeight);
+    output.writeFieldEnd();
+  }
+  if (this.pTime !== null && this.pTime !== undefined) {
+    output.writeFieldBegin('pTime', Thrift.Type.STRING, 8);
+    output.writeString(this.pTime);
+    output.writeFieldEnd();
+  }
+  if (this.mTime !== null && this.mTime !== undefined) {
+    output.writeFieldBegin('mTime', Thrift.Type.STRING, 9);
+    output.writeString(this.mTime);
+    output.writeFieldEnd();
+  }
+  if (this.jWeight !== null && this.jWeight !== undefined) {
+    output.writeFieldBegin('jWeight', Thrift.Type.DOUBLE, 10);
+    output.writeDouble(this.jWeight);
+    output.writeFieldEnd();
+  }
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+
 var vichele_stay_alone = module.exports.vichele_stay_alone = function(args) {
   this.id = null;
   this.stuff_name = null;
@@ -3720,6 +4023,11 @@ var vichele_stay_alone = module.exports.vichele_stay_alone = function(args) {
   this.driver_phone = null;
   this.driver_id = null;
   this.transfor_company = null;
+  this.p_time = null;
+  this.m_time = null;
+  this.p_weight = null;
+  this.m_weight = null;
+  this.j_weight = null;
   if (args) {
     if (args.id !== undefined && args.id !== null) {
       this.id = args.id;
@@ -3771,6 +4079,21 @@ var vichele_stay_alone = module.exports.vichele_stay_alone = function(args) {
     }
     if (args.transfor_company !== undefined && args.transfor_company !== null) {
       this.transfor_company = args.transfor_company;
+    }
+    if (args.p_time !== undefined && args.p_time !== null) {
+      this.p_time = args.p_time;
+    }
+    if (args.m_time !== undefined && args.m_time !== null) {
+      this.m_time = args.m_time;
+    }
+    if (args.p_weight !== undefined && args.p_weight !== null) {
+      this.p_weight = args.p_weight;
+    }
+    if (args.m_weight !== undefined && args.m_weight !== null) {
+      this.m_weight = args.m_weight;
+    }
+    if (args.j_weight !== undefined && args.j_weight !== null) {
+      this.j_weight = args.j_weight;
     }
   }
 };
@@ -3904,6 +4227,41 @@ vichele_stay_alone.prototype.read = function(input) {
         input.skip(ftype);
       }
       break;
+      case 18:
+      if (ftype == Thrift.Type.STRING) {
+        this.p_time = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 19:
+      if (ftype == Thrift.Type.STRING) {
+        this.m_time = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 20:
+      if (ftype == Thrift.Type.DOUBLE) {
+        this.p_weight = input.readDouble();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 21:
+      if (ftype == Thrift.Type.DOUBLE) {
+        this.m_weight = input.readDouble();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 22:
+      if (ftype == Thrift.Type.DOUBLE) {
+        this.j_weight = input.readDouble();
+      } else {
+        input.skip(ftype);
+      }
+      break;
       default:
         input.skip(ftype);
     }
@@ -3998,6 +4356,31 @@ vichele_stay_alone.prototype.write = function(output) {
   if (this.transfor_company !== null && this.transfor_company !== undefined) {
     output.writeFieldBegin('transfor_company', Thrift.Type.STRING, 17);
     output.writeString(this.transfor_company);
+    output.writeFieldEnd();
+  }
+  if (this.p_time !== null && this.p_time !== undefined) {
+    output.writeFieldBegin('p_time', Thrift.Type.STRING, 18);
+    output.writeString(this.p_time);
+    output.writeFieldEnd();
+  }
+  if (this.m_time !== null && this.m_time !== undefined) {
+    output.writeFieldBegin('m_time', Thrift.Type.STRING, 19);
+    output.writeString(this.m_time);
+    output.writeFieldEnd();
+  }
+  if (this.p_weight !== null && this.p_weight !== undefined) {
+    output.writeFieldBegin('p_weight', Thrift.Type.DOUBLE, 20);
+    output.writeDouble(this.p_weight);
+    output.writeFieldEnd();
+  }
+  if (this.m_weight !== null && this.m_weight !== undefined) {
+    output.writeFieldBegin('m_weight', Thrift.Type.DOUBLE, 21);
+    output.writeDouble(this.m_weight);
+    output.writeFieldEnd();
+  }
+  if (this.j_weight !== null && this.j_weight !== undefined) {
+    output.writeFieldBegin('j_weight', Thrift.Type.DOUBLE, 22);
+    output.writeDouble(this.j_weight);
     output.writeFieldEnd();
   }
   output.writeFieldStop();

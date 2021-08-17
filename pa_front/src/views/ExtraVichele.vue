@@ -51,12 +51,13 @@
                             <div>{{item.main_vichele_number}}</div>
                             <div v-if="item.behind_vichele_number">{{item.behind_vichele_number}}</div>
                         </template>
-                        <div>{{item.count}}吨</div>
+                        <div>发货净重{{item.count}}吨</div>
+                        <div v-if="item.status == 2">收货净重{{item.j_weight}}吨</div>
                         <div v-if="item.comment">备注：{{item.comment}}</div>
                         <template #right-icon>
                             <div class="opt_button_show">
                                 <van-button v-if="item.status == 0" type="info" block size="small" @click="update_vichele(item)">修改</van-button>
-                                <van-button type="danger" block size="small" @click="delete_vichele(item)">取消</van-button>
+                                <van-button v-if="item.status != 2" type="danger" block size="small" @click="delete_vichele(item)">取消</van-button>
                             </div>
                         </template>
                     </van-cell>
@@ -70,8 +71,15 @@
                             </van-col>
                             <van-col>
                                 <van-tag v-if="item.status == 1" plain type="success">已确认</van-tag>
+                                <van-tag v-else-if="item.status == 2" plain type="primary">已确认</van-tag>
                                 <van-tag v-else plain type="danger">未确认</van-tag>
                             </van-col>
+                        </van-row>
+                        <van-row v-if="item.status == 2" type="flex" align="center" :gutter="10">
+                            <van-col>皮重</van-col>
+                            <van-col>{{item.p_weight}}吨</van-col>
+                            <van-col>毛重</van-col>
+                            <van-col>{{item.m_weight}}吨</van-col>
                         </van-row>
                     </div>
                 </div>
@@ -212,7 +220,7 @@ export default {
                 company_name: '',
                 destination: '',
                 date: this.formatDateTime(new Date()),
-                transfor_company:'',
+                transfor_company: '',
             },
             new_vichele: [{
                 main_vichele_number: '',
@@ -320,14 +328,14 @@ export default {
                     company_name: vue_this.new_form.company_name,
                     destination: vue_this.new_form.destination,
                     date: vue_this.new_form.date,
-                    transfor_company:vue_this.new_form.transfor_company,
+                    transfor_company: vue_this.new_form.transfor_company,
                     main_vichele_number: element.main_vichele_number,
                     behind_vichele_number: element.behind_vichele_number,
                     count: parseFloat(element.count),
                     comment: element.comment,
                     stuff_name: element.stuff_name,
                     repeated: element.repeated,
-                    driver_phone:element.driver_phone,
+                    driver_phone: element.driver_phone,
                     driver_id: element.driver_id,
                     driver_name: element.driver_name,
                 });
