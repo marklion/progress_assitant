@@ -174,7 +174,16 @@ const routes = [
       has_go_back: false,
       extra_page:true,
     },
-  },
+  },{
+    path: '/third_dev',
+    name: 'ThirdDev',
+    component: () => import('../views/ThirdDev.vue'),
+    meta: {
+      private_title: '开发选项',
+      has_go_back: true,
+      extra_page:false,
+    },
+  }
 ]
 
 const router = new VueRouter({

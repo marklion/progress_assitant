@@ -1301,6 +1301,69 @@ company_positon_lat_lag.prototype.write = function(output) {
   return;
 };
 
+var third_dev_info = module.exports.third_dev_info = function(args) {
+  this.key = null;
+  this.url = null;
+  if (args) {
+    if (args.key !== undefined && args.key !== null) {
+      this.key = args.key;
+    }
+    if (args.url !== undefined && args.url !== null) {
+      this.url = args.url;
+    }
+  }
+};
+third_dev_info.prototype = {};
+third_dev_info.prototype.read = function(input) {
+  input.readStructBegin();
+  while (true) {
+    var ret = input.readFieldBegin();
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    switch (fid) {
+      case 1:
+      if (ftype == Thrift.Type.STRING) {
+        this.key = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 2:
+      if (ftype == Thrift.Type.STRING) {
+        this.url = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      default:
+        input.skip(ftype);
+    }
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+third_dev_info.prototype.write = function(output) {
+  output.writeStructBegin('third_dev_info');
+  if (this.key !== null && this.key !== undefined) {
+    output.writeFieldBegin('key', Thrift.Type.STRING, 1);
+    output.writeString(this.key);
+    output.writeFieldEnd();
+  }
+  if (this.url !== null && this.url !== undefined) {
+    output.writeFieldBegin('url', Thrift.Type.STRING, 2);
+    output.writeString(this.url);
+    output.writeFieldEnd();
+  }
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+
 var plan_confirm_info = module.exports.plan_confirm_info = function(args) {
   this.timestamp = null;
   this.name = null;
