@@ -882,6 +882,7 @@ var common_contract = module.exports.common_contract = function(args) {
   this.id = null;
   this.status = null;
   this.customer_code = null;
+  this.balance = null;
   if (args) {
     if (args.a_side_company !== undefined && args.a_side_company !== null) {
       this.a_side_company = args.a_side_company;
@@ -906,6 +907,9 @@ var common_contract = module.exports.common_contract = function(args) {
     }
     if (args.customer_code !== undefined && args.customer_code !== null) {
       this.customer_code = args.customer_code;
+    }
+    if (args.balance !== undefined && args.balance !== null) {
+      this.balance = args.balance;
     }
   }
 };
@@ -976,6 +980,13 @@ common_contract.prototype.read = function(input) {
         input.skip(ftype);
       }
       break;
+      case 9:
+      if (ftype == Thrift.Type.DOUBLE) {
+        this.balance = input.readDouble();
+      } else {
+        input.skip(ftype);
+      }
+      break;
       default:
         input.skip(ftype);
     }
@@ -1025,6 +1036,11 @@ common_contract.prototype.write = function(output) {
   if (this.customer_code !== null && this.customer_code !== undefined) {
     output.writeFieldBegin('customer_code', Thrift.Type.STRING, 8);
     output.writeString(this.customer_code);
+    output.writeFieldEnd();
+  }
+  if (this.balance !== null && this.balance !== undefined) {
+    output.writeFieldBegin('balance', Thrift.Type.DOUBLE, 9);
+    output.writeDouble(this.balance);
     output.writeFieldEnd();
   }
   output.writeFieldStop();
@@ -4125,6 +4141,85 @@ push_base_req.prototype.write = function(output) {
   if (this.code !== null && this.code !== undefined) {
     output.writeFieldBegin('code', Thrift.Type.STRING, 6);
     output.writeString(this.code);
+    output.writeFieldEnd();
+  }
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+
+var push_balance_req = module.exports.push_balance_req = function(args) {
+  this.customerId = null;
+  this.customerName = null;
+  this.balance = null;
+  if (args) {
+    if (args.customerId !== undefined && args.customerId !== null) {
+      this.customerId = args.customerId;
+    }
+    if (args.customerName !== undefined && args.customerName !== null) {
+      this.customerName = args.customerName;
+    }
+    if (args.balance !== undefined && args.balance !== null) {
+      this.balance = args.balance;
+    }
+  }
+};
+push_balance_req.prototype = {};
+push_balance_req.prototype.read = function(input) {
+  input.readStructBegin();
+  while (true) {
+    var ret = input.readFieldBegin();
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    switch (fid) {
+      case 1:
+      if (ftype == Thrift.Type.STRING) {
+        this.customerId = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 2:
+      if (ftype == Thrift.Type.STRING) {
+        this.customerName = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 3:
+      if (ftype == Thrift.Type.DOUBLE) {
+        this.balance = input.readDouble();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      default:
+        input.skip(ftype);
+    }
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+push_balance_req.prototype.write = function(output) {
+  output.writeStructBegin('push_balance_req');
+  if (this.customerId !== null && this.customerId !== undefined) {
+    output.writeFieldBegin('customerId', Thrift.Type.STRING, 1);
+    output.writeString(this.customerId);
+    output.writeFieldEnd();
+  }
+  if (this.customerName !== null && this.customerName !== undefined) {
+    output.writeFieldBegin('customerName', Thrift.Type.STRING, 2);
+    output.writeString(this.customerName);
+    output.writeFieldEnd();
+  }
+  if (this.balance !== null && this.balance !== undefined) {
+    output.writeFieldBegin('balance', Thrift.Type.DOUBLE, 3);
+    output.writeDouble(this.balance);
     output.writeFieldEnd();
   }
   output.writeFieldStop();

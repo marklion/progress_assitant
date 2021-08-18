@@ -853,11 +853,12 @@ class common_contract(object):
      - id
      - status
      - customer_code
+     - balance
 
     """
 
 
-    def __init__(self, a_side_company=None, b_side_company=None, start_time=None, end_time=None, number=None, id=None, status=None, customer_code=None,):
+    def __init__(self, a_side_company=None, b_side_company=None, start_time=None, end_time=None, number=None, id=None, status=None, customer_code=None, balance=None,):
         self.a_side_company = a_side_company
         self.b_side_company = b_side_company
         self.start_time = start_time
@@ -866,6 +867,7 @@ class common_contract(object):
         self.id = id
         self.status = status
         self.customer_code = customer_code
+        self.balance = balance
 
     def read(self, iprot):
         if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
@@ -916,6 +918,11 @@ class common_contract(object):
                     self.customer_code = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
                 else:
                     iprot.skip(ftype)
+            elif fid == 9:
+                if ftype == TType.DOUBLE:
+                    self.balance = iprot.readDouble()
+                else:
+                    iprot.skip(ftype)
             else:
                 iprot.skip(ftype)
             iprot.readFieldEnd()
@@ -957,6 +964,10 @@ class common_contract(object):
         if self.customer_code is not None:
             oprot.writeFieldBegin('customer_code', TType.STRING, 8)
             oprot.writeString(self.customer_code.encode('utf-8') if sys.version_info[0] == 2 else self.customer_code)
+            oprot.writeFieldEnd()
+        if self.balance is not None:
+            oprot.writeFieldBegin('balance', TType.DOUBLE, 9)
+            oprot.writeDouble(self.balance)
             oprot.writeFieldEnd()
         oprot.writeFieldStop()
         oprot.writeStructEnd()
@@ -3672,6 +3683,85 @@ class push_base_req(object):
         return not (self == other)
 
 
+class push_balance_req(object):
+    """
+    Attributes:
+     - customerId
+     - customerName
+     - balance
+
+    """
+
+
+    def __init__(self, customerId=None, customerName=None, balance=None,):
+        self.customerId = customerId
+        self.customerName = customerName
+        self.balance = balance
+
+    def read(self, iprot):
+        if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
+            iprot._fast_decode(self, iprot, [self.__class__, self.thrift_spec])
+            return
+        iprot.readStructBegin()
+        while True:
+            (fname, ftype, fid) = iprot.readFieldBegin()
+            if ftype == TType.STOP:
+                break
+            if fid == 1:
+                if ftype == TType.STRING:
+                    self.customerId = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 2:
+                if ftype == TType.STRING:
+                    self.customerName = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 3:
+                if ftype == TType.DOUBLE:
+                    self.balance = iprot.readDouble()
+                else:
+                    iprot.skip(ftype)
+            else:
+                iprot.skip(ftype)
+            iprot.readFieldEnd()
+        iprot.readStructEnd()
+
+    def write(self, oprot):
+        if oprot._fast_encode is not None and self.thrift_spec is not None:
+            oprot.trans.write(oprot._fast_encode(self, [self.__class__, self.thrift_spec]))
+            return
+        oprot.writeStructBegin('push_balance_req')
+        if self.customerId is not None:
+            oprot.writeFieldBegin('customerId', TType.STRING, 1)
+            oprot.writeString(self.customerId.encode('utf-8') if sys.version_info[0] == 2 else self.customerId)
+            oprot.writeFieldEnd()
+        if self.customerName is not None:
+            oprot.writeFieldBegin('customerName', TType.STRING, 2)
+            oprot.writeString(self.customerName.encode('utf-8') if sys.version_info[0] == 2 else self.customerName)
+            oprot.writeFieldEnd()
+        if self.balance is not None:
+            oprot.writeFieldBegin('balance', TType.DOUBLE, 3)
+            oprot.writeDouble(self.balance)
+            oprot.writeFieldEnd()
+        oprot.writeFieldStop()
+        oprot.writeStructEnd()
+
+    def validate(self):
+        return
+
+    def __repr__(self):
+        L = ['%s=%r' % (key, value)
+             for key, value in self.__dict__.items()]
+        return '%s(%s)' % (self.__class__.__name__, ', '.join(L))
+
+    def __eq__(self, other):
+        return isinstance(other, self.__class__) and self.__dict__ == other.__dict__
+
+    def __ne__(self, other):
+        return not (self == other)
+
+
 class vichele_stay_alone(object):
     """
     Attributes:
@@ -4109,6 +4199,7 @@ common_contract.thrift_spec = (
     (6, TType.I64, 'id', None, None, ),  # 6
     (7, TType.I64, 'status', None, None, ),  # 7
     (8, TType.STRING, 'customer_code', 'UTF8', None, ),  # 8
+    (9, TType.DOUBLE, 'balance', None, None, ),  # 9
 )
 all_structs.append(real_access_record)
 real_access_record.thrift_spec = (
@@ -4348,6 +4439,13 @@ push_base_req.thrift_spec = (
     (4, TType.STRING, 'unit', 'UTF8', None, ),  # 4
     (5, TType.STRING, 'type', 'UTF8', None, ),  # 5
     (6, TType.STRING, 'code', 'UTF8', None, ),  # 6
+)
+all_structs.append(push_balance_req)
+push_balance_req.thrift_spec = (
+    None,  # 0
+    (1, TType.STRING, 'customerId', 'UTF8', None, ),  # 1
+    (2, TType.STRING, 'customerName', 'UTF8', None, ),  # 2
+    (3, TType.DOUBLE, 'balance', None, None, ),  # 3
 )
 all_structs.append(vichele_stay_alone)
 vichele_stay_alone.thrift_spec = (

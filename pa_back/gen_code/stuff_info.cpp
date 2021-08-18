@@ -117,14 +117,14 @@ uint32_t stuff_info_get_today_result::read(::apache::thrift::protocol::TProtocol
         if (ftype == ::apache::thrift::protocol::T_LIST) {
           {
             this->success.clear();
-            uint32_t _size181;
-            ::apache::thrift::protocol::TType _etype184;
-            xfer += iprot->readListBegin(_etype184, _size181);
-            this->success.resize(_size181);
-            uint32_t _i185;
-            for (_i185 = 0; _i185 < _size181; ++_i185)
+            uint32_t _size183;
+            ::apache::thrift::protocol::TType _etype186;
+            xfer += iprot->readListBegin(_etype186, _size183);
+            this->success.resize(_size183);
+            uint32_t _i187;
+            for (_i187 = 0; _i187 < _size183; ++_i187)
             {
-              xfer += this->success[_i185].read(iprot);
+              xfer += this->success[_i187].read(iprot);
             }
             xfer += iprot->readListEnd();
           }
@@ -163,10 +163,10 @@ uint32_t stuff_info_get_today_result::write(::apache::thrift::protocol::TProtoco
     xfer += oprot->writeFieldBegin("success", ::apache::thrift::protocol::T_LIST, 0);
     {
       xfer += oprot->writeListBegin(::apache::thrift::protocol::T_STRUCT, static_cast<uint32_t>(this->success.size()));
-      std::vector<stuff_detail> ::const_iterator _iter186;
-      for (_iter186 = this->success.begin(); _iter186 != this->success.end(); ++_iter186)
+      std::vector<stuff_detail> ::const_iterator _iter188;
+      for (_iter188 = this->success.begin(); _iter188 != this->success.end(); ++_iter188)
       {
-        xfer += (*_iter186).write(oprot);
+        xfer += (*_iter188).write(oprot);
       }
       xfer += oprot->writeListEnd();
     }
@@ -211,14 +211,14 @@ uint32_t stuff_info_get_today_presult::read(::apache::thrift::protocol::TProtoco
         if (ftype == ::apache::thrift::protocol::T_LIST) {
           {
             (*(this->success)).clear();
-            uint32_t _size187;
-            ::apache::thrift::protocol::TType _etype190;
-            xfer += iprot->readListBegin(_etype190, _size187);
-            (*(this->success)).resize(_size187);
-            uint32_t _i191;
-            for (_i191 = 0; _i191 < _size187; ++_i191)
+            uint32_t _size189;
+            ::apache::thrift::protocol::TType _etype192;
+            xfer += iprot->readListBegin(_etype192, _size189);
+            (*(this->success)).resize(_size189);
+            uint32_t _i193;
+            for (_i193 = 0; _i193 < _size189; ++_i193)
             {
-              xfer += (*(this->success))[_i191].read(iprot);
+              xfer += (*(this->success))[_i193].read(iprot);
             }
             xfer += iprot->readListEnd();
           }
@@ -356,14 +356,14 @@ uint32_t stuff_info_get_today_unfollow_result::read(::apache::thrift::protocol::
         if (ftype == ::apache::thrift::protocol::T_LIST) {
           {
             this->success.clear();
-            uint32_t _size192;
-            ::apache::thrift::protocol::TType _etype195;
-            xfer += iprot->readListBegin(_etype195, _size192);
-            this->success.resize(_size192);
-            uint32_t _i196;
-            for (_i196 = 0; _i196 < _size192; ++_i196)
+            uint32_t _size194;
+            ::apache::thrift::protocol::TType _etype197;
+            xfer += iprot->readListBegin(_etype197, _size194);
+            this->success.resize(_size194);
+            uint32_t _i198;
+            for (_i198 = 0; _i198 < _size194; ++_i198)
             {
-              xfer += this->success[_i196].read(iprot);
+              xfer += this->success[_i198].read(iprot);
             }
             xfer += iprot->readListEnd();
           }
@@ -402,10 +402,10 @@ uint32_t stuff_info_get_today_unfollow_result::write(::apache::thrift::protocol:
     xfer += oprot->writeFieldBegin("success", ::apache::thrift::protocol::T_LIST, 0);
     {
       xfer += oprot->writeListBegin(::apache::thrift::protocol::T_STRUCT, static_cast<uint32_t>(this->success.size()));
-      std::vector<stuff_detail> ::const_iterator _iter197;
-      for (_iter197 = this->success.begin(); _iter197 != this->success.end(); ++_iter197)
+      std::vector<stuff_detail> ::const_iterator _iter199;
+      for (_iter199 = this->success.begin(); _iter199 != this->success.end(); ++_iter199)
       {
-        xfer += (*_iter197).write(oprot);
+        xfer += (*_iter199).write(oprot);
       }
       xfer += oprot->writeListEnd();
     }
@@ -450,14 +450,14 @@ uint32_t stuff_info_get_today_unfollow_presult::read(::apache::thrift::protocol:
         if (ftype == ::apache::thrift::protocol::T_LIST) {
           {
             (*(this->success)).clear();
-            uint32_t _size198;
-            ::apache::thrift::protocol::TType _etype201;
-            xfer += iprot->readListBegin(_etype201, _size198);
-            (*(this->success)).resize(_size198);
-            uint32_t _i202;
-            for (_i202 = 0; _i202 < _size198; ++_i202)
+            uint32_t _size200;
+            ::apache::thrift::protocol::TType _etype203;
+            xfer += iprot->readListBegin(_etype203, _size200);
+            (*(this->success)).resize(_size200);
+            uint32_t _i204;
+            for (_i204 = 0; _i204 < _size200; ++_i204)
             {
-              xfer += (*(this->success))[_i202].read(iprot);
+              xfer += (*(this->success))[_i204].read(iprot);
             }
             xfer += iprot->readListEnd();
           }
@@ -1296,14 +1296,14 @@ uint32_t stuff_info_get_follow_stuff_by_company_result::read(::apache::thrift::p
         if (ftype == ::apache::thrift::protocol::T_LIST) {
           {
             this->success.clear();
-            uint32_t _size203;
-            ::apache::thrift::protocol::TType _etype206;
-            xfer += iprot->readListBegin(_etype206, _size203);
-            this->success.resize(_size203);
-            uint32_t _i207;
-            for (_i207 = 0; _i207 < _size203; ++_i207)
+            uint32_t _size205;
+            ::apache::thrift::protocol::TType _etype208;
+            xfer += iprot->readListBegin(_etype208, _size205);
+            this->success.resize(_size205);
+            uint32_t _i209;
+            for (_i209 = 0; _i209 < _size205; ++_i209)
             {
-              xfer += this->success[_i207].read(iprot);
+              xfer += this->success[_i209].read(iprot);
             }
             xfer += iprot->readListEnd();
           }
@@ -1342,10 +1342,10 @@ uint32_t stuff_info_get_follow_stuff_by_company_result::write(::apache::thrift::
     xfer += oprot->writeFieldBegin("success", ::apache::thrift::protocol::T_LIST, 0);
     {
       xfer += oprot->writeListBegin(::apache::thrift::protocol::T_STRUCT, static_cast<uint32_t>(this->success.size()));
-      std::vector<stuff_detail> ::const_iterator _iter208;
-      for (_iter208 = this->success.begin(); _iter208 != this->success.end(); ++_iter208)
+      std::vector<stuff_detail> ::const_iterator _iter210;
+      for (_iter210 = this->success.begin(); _iter210 != this->success.end(); ++_iter210)
       {
-        xfer += (*_iter208).write(oprot);
+        xfer += (*_iter210).write(oprot);
       }
       xfer += oprot->writeListEnd();
     }
@@ -1390,14 +1390,14 @@ uint32_t stuff_info_get_follow_stuff_by_company_presult::read(::apache::thrift::
         if (ftype == ::apache::thrift::protocol::T_LIST) {
           {
             (*(this->success)).clear();
-            uint32_t _size209;
-            ::apache::thrift::protocol::TType _etype212;
-            xfer += iprot->readListBegin(_etype212, _size209);
-            (*(this->success)).resize(_size209);
-            uint32_t _i213;
-            for (_i213 = 0; _i213 < _size209; ++_i213)
+            uint32_t _size211;
+            ::apache::thrift::protocol::TType _etype214;
+            xfer += iprot->readListBegin(_etype214, _size211);
+            (*(this->success)).resize(_size211);
+            uint32_t _i215;
+            for (_i215 = 0; _i215 < _size211; ++_i215)
             {
-              xfer += (*(this->success))[_i213].read(iprot);
+              xfer += (*(this->success))[_i215].read(iprot);
             }
             xfer += iprot->readListEnd();
           }
@@ -1551,14 +1551,14 @@ uint32_t stuff_info_get_follow_company_by_stuff_result::read(::apache::thrift::p
         if (ftype == ::apache::thrift::protocol::T_LIST) {
           {
             this->success.clear();
-            uint32_t _size214;
-            ::apache::thrift::protocol::TType _etype217;
-            xfer += iprot->readListBegin(_etype217, _size214);
-            this->success.resize(_size214);
-            uint32_t _i218;
-            for (_i218 = 0; _i218 < _size214; ++_i218)
+            uint32_t _size216;
+            ::apache::thrift::protocol::TType _etype219;
+            xfer += iprot->readListBegin(_etype219, _size216);
+            this->success.resize(_size216);
+            uint32_t _i220;
+            for (_i220 = 0; _i220 < _size216; ++_i220)
             {
-              xfer += iprot->readString(this->success[_i218]);
+              xfer += iprot->readString(this->success[_i220]);
             }
             xfer += iprot->readListEnd();
           }
@@ -1597,10 +1597,10 @@ uint32_t stuff_info_get_follow_company_by_stuff_result::write(::apache::thrift::
     xfer += oprot->writeFieldBegin("success", ::apache::thrift::protocol::T_LIST, 0);
     {
       xfer += oprot->writeListBegin(::apache::thrift::protocol::T_STRING, static_cast<uint32_t>(this->success.size()));
-      std::vector<std::string> ::const_iterator _iter219;
-      for (_iter219 = this->success.begin(); _iter219 != this->success.end(); ++_iter219)
+      std::vector<std::string> ::const_iterator _iter221;
+      for (_iter221 = this->success.begin(); _iter221 != this->success.end(); ++_iter221)
       {
-        xfer += oprot->writeString((*_iter219));
+        xfer += oprot->writeString((*_iter221));
       }
       xfer += oprot->writeListEnd();
     }
@@ -1645,14 +1645,14 @@ uint32_t stuff_info_get_follow_company_by_stuff_presult::read(::apache::thrift::
         if (ftype == ::apache::thrift::protocol::T_LIST) {
           {
             (*(this->success)).clear();
-            uint32_t _size220;
-            ::apache::thrift::protocol::TType _etype223;
-            xfer += iprot->readListBegin(_etype223, _size220);
-            (*(this->success)).resize(_size220);
-            uint32_t _i224;
-            for (_i224 = 0; _i224 < _size220; ++_i224)
+            uint32_t _size222;
+            ::apache::thrift::protocol::TType _etype225;
+            xfer += iprot->readListBegin(_etype225, _size222);
+            (*(this->success)).resize(_size222);
+            uint32_t _i226;
+            for (_i226 = 0; _i226 < _size222; ++_i226)
             {
-              xfer += iprot->readString((*(this->success))[_i224]);
+              xfer += iprot->readString((*(this->success))[_i226]);
             }
             xfer += iprot->readListEnd();
           }
@@ -1790,14 +1790,14 @@ uint32_t stuff_info_get_related_stuff_result::read(::apache::thrift::protocol::T
         if (ftype == ::apache::thrift::protocol::T_LIST) {
           {
             this->success.clear();
-            uint32_t _size225;
-            ::apache::thrift::protocol::TType _etype228;
-            xfer += iprot->readListBegin(_etype228, _size225);
-            this->success.resize(_size225);
-            uint32_t _i229;
-            for (_i229 = 0; _i229 < _size225; ++_i229)
+            uint32_t _size227;
+            ::apache::thrift::protocol::TType _etype230;
+            xfer += iprot->readListBegin(_etype230, _size227);
+            this->success.resize(_size227);
+            uint32_t _i231;
+            for (_i231 = 0; _i231 < _size227; ++_i231)
             {
-              xfer += iprot->readString(this->success[_i229]);
+              xfer += iprot->readString(this->success[_i231]);
             }
             xfer += iprot->readListEnd();
           }
@@ -1836,10 +1836,10 @@ uint32_t stuff_info_get_related_stuff_result::write(::apache::thrift::protocol::
     xfer += oprot->writeFieldBegin("success", ::apache::thrift::protocol::T_LIST, 0);
     {
       xfer += oprot->writeListBegin(::apache::thrift::protocol::T_STRING, static_cast<uint32_t>(this->success.size()));
-      std::vector<std::string> ::const_iterator _iter230;
-      for (_iter230 = this->success.begin(); _iter230 != this->success.end(); ++_iter230)
+      std::vector<std::string> ::const_iterator _iter232;
+      for (_iter232 = this->success.begin(); _iter232 != this->success.end(); ++_iter232)
       {
-        xfer += oprot->writeString((*_iter230));
+        xfer += oprot->writeString((*_iter232));
       }
       xfer += oprot->writeListEnd();
     }
@@ -1884,14 +1884,14 @@ uint32_t stuff_info_get_related_stuff_presult::read(::apache::thrift::protocol::
         if (ftype == ::apache::thrift::protocol::T_LIST) {
           {
             (*(this->success)).clear();
-            uint32_t _size231;
-            ::apache::thrift::protocol::TType _etype234;
-            xfer += iprot->readListBegin(_etype234, _size231);
-            (*(this->success)).resize(_size231);
-            uint32_t _i235;
-            for (_i235 = 0; _i235 < _size231; ++_i235)
+            uint32_t _size233;
+            ::apache::thrift::protocol::TType _etype236;
+            xfer += iprot->readListBegin(_etype236, _size233);
+            (*(this->success)).resize(_size233);
+            uint32_t _i237;
+            for (_i237 = 0; _i237 < _size233; ++_i237)
             {
-              xfer += iprot->readString((*(this->success))[_i235]);
+              xfer += iprot->readString((*(this->success))[_i237]);
             }
             xfer += iprot->readListEnd();
           }

@@ -91,6 +91,7 @@ struct common_contract {
     6:i64 id,
     7:i64 status,
     8:string customer_code,
+    9:double balance,
 }
 
 struct real_access_record {
@@ -396,6 +397,12 @@ struct push_base_req {
     6:string code,
 }
 
+struct push_balance_req {
+    1:string customerId,
+    2:string customerName,
+    3:double balance,
+}
+
 service open_api_management {
     bool register_api_user(1:string company_name, 2:string email, 3:string password) throws (1:gen_exp e),
     bool verify_email_code(1:string email, 2:string code) throws (1:gen_exp e),
@@ -412,6 +419,7 @@ service open_api_management {
     bool proc_del_black_list(1:i64 type, 2:string target, 3:string token) throws (1:gen_exp e),
     bool proc_add_base_info(1:push_base_req _req, 2:string token) throws (1:gen_exp e),
     bool proc_del_base_info(1:push_base_req _req, 2:string token) throws (1:gen_exp e),
+    bool proc_push_balance(1:push_balance_req _req, 2:string token) throws (1:gen_exp e),
 }
 
 struct vichele_stay_alone {

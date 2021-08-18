@@ -229,6 +229,7 @@ export default {
                     name: this.orig_name,
                     price: this.orig_price,
                     comment: this.comment,
+                    proxy_company:vue_this.proxy_company,
                 }, this.$cookies.get("pa_ssid"), vue_this.proxy_company]).then(function (resp) {
                     if (resp > 0) {
                         vue_this.$router.push({
@@ -242,6 +243,8 @@ export default {
                     plan_time: this.plan_time,
                     vichele_info: this.vichele_info,
                     comment: this.comment,
+                    proxy_company:vue_this.proxy_company,
+                    type_id: vue_this.type_id,
                 }, this.$cookies.get('pa_ssid')]).then(function (resp) {
                     if (resp) {
                         vue_this.$router.back(-1);
@@ -289,6 +292,7 @@ export default {
                     vichele_info: vue_this.vichele_info,
                     plan_id: vue_this.plan_id,
                     type_id: vue_this.type_id,
+                    proxy_company: vue_this.proxy_company,
                 }, vue_this.$cookies.get('pa_ssid')]).then(function (resp) {
                     if (resp.length > 0) {
                         console.log(resp);

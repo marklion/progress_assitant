@@ -794,6 +794,7 @@ public:
                 tmp.start_time = itr.start_time;
                 tmp.status = itr.status;
                 tmp.customer_code = itr.customer_code;
+                tmp.balance = itr.balance;
                 _return.push_back(tmp);
             }
         }
@@ -822,6 +823,7 @@ public:
         _return.start_time = contract->start_time;
         _return.status = contract->status;
         _return.customer_code = contract->customer_code;
+        _return.balance = contract->balance;
     }
 
     virtual bool set_work_time(const std::string &ssid, const int64_t start_work_time, const int64_t end_work_time)
