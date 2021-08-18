@@ -1950,6 +1950,278 @@ open_api_management_proc_del_black_list_result = class {
   }
 
 };
+open_api_management_proc_add_base_info_args = class {
+  constructor(args) {
+    this._req = null;
+    this.token = null;
+    if (args) {
+      if (args._req !== undefined && args._req !== null) {
+        this._req = new push_base_req(args._req);
+      }
+      if (args.token !== undefined && args.token !== null) {
+        this.token = args.token;
+      }
+    }
+  }
+
+  read (input) {
+    input.readStructBegin();
+    while (true) {
+      const ret = input.readFieldBegin();
+      const ftype = ret.ftype;
+      const fid = ret.fid;
+      if (ftype == Thrift.Type.STOP) {
+        break;
+      }
+      switch (fid) {
+        case 1:
+        if (ftype == Thrift.Type.STRUCT) {
+          this._req = new push_base_req();
+          this._req.read(input);
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        case 2:
+        if (ftype == Thrift.Type.STRING) {
+          this.token = input.readString().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        default:
+          input.skip(ftype);
+      }
+      input.readFieldEnd();
+    }
+    input.readStructEnd();
+    return;
+  }
+
+  write (output) {
+    output.writeStructBegin('open_api_management_proc_add_base_info_args');
+    if (this._req !== null && this._req !== undefined) {
+      output.writeFieldBegin('_req', Thrift.Type.STRUCT, 1);
+      this._req.write(output);
+      output.writeFieldEnd();
+    }
+    if (this.token !== null && this.token !== undefined) {
+      output.writeFieldBegin('token', Thrift.Type.STRING, 2);
+      output.writeString(this.token);
+      output.writeFieldEnd();
+    }
+    output.writeFieldStop();
+    output.writeStructEnd();
+    return;
+  }
+
+};
+open_api_management_proc_add_base_info_result = class {
+  constructor(args) {
+    this.success = null;
+    this.e = null;
+    if (args instanceof gen_exp) {
+        this.e = args;
+        return;
+    }
+    if (args) {
+      if (args.success !== undefined && args.success !== null) {
+        this.success = args.success;
+      }
+      if (args.e !== undefined && args.e !== null) {
+        this.e = args.e;
+      }
+    }
+  }
+
+  read (input) {
+    input.readStructBegin();
+    while (true) {
+      const ret = input.readFieldBegin();
+      const ftype = ret.ftype;
+      const fid = ret.fid;
+      if (ftype == Thrift.Type.STOP) {
+        break;
+      }
+      switch (fid) {
+        case 0:
+        if (ftype == Thrift.Type.BOOL) {
+          this.success = input.readBool().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        case 1:
+        if (ftype == Thrift.Type.STRUCT) {
+          this.e = new gen_exp();
+          this.e.read(input);
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        default:
+          input.skip(ftype);
+      }
+      input.readFieldEnd();
+    }
+    input.readStructEnd();
+    return;
+  }
+
+  write (output) {
+    output.writeStructBegin('open_api_management_proc_add_base_info_result');
+    if (this.success !== null && this.success !== undefined) {
+      output.writeFieldBegin('success', Thrift.Type.BOOL, 0);
+      output.writeBool(this.success);
+      output.writeFieldEnd();
+    }
+    if (this.e !== null && this.e !== undefined) {
+      output.writeFieldBegin('e', Thrift.Type.STRUCT, 1);
+      this.e.write(output);
+      output.writeFieldEnd();
+    }
+    output.writeFieldStop();
+    output.writeStructEnd();
+    return;
+  }
+
+};
+open_api_management_proc_del_base_info_args = class {
+  constructor(args) {
+    this._req = null;
+    this.token = null;
+    if (args) {
+      if (args._req !== undefined && args._req !== null) {
+        this._req = new push_base_req(args._req);
+      }
+      if (args.token !== undefined && args.token !== null) {
+        this.token = args.token;
+      }
+    }
+  }
+
+  read (input) {
+    input.readStructBegin();
+    while (true) {
+      const ret = input.readFieldBegin();
+      const ftype = ret.ftype;
+      const fid = ret.fid;
+      if (ftype == Thrift.Type.STOP) {
+        break;
+      }
+      switch (fid) {
+        case 1:
+        if (ftype == Thrift.Type.STRUCT) {
+          this._req = new push_base_req();
+          this._req.read(input);
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        case 2:
+        if (ftype == Thrift.Type.STRING) {
+          this.token = input.readString().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        default:
+          input.skip(ftype);
+      }
+      input.readFieldEnd();
+    }
+    input.readStructEnd();
+    return;
+  }
+
+  write (output) {
+    output.writeStructBegin('open_api_management_proc_del_base_info_args');
+    if (this._req !== null && this._req !== undefined) {
+      output.writeFieldBegin('_req', Thrift.Type.STRUCT, 1);
+      this._req.write(output);
+      output.writeFieldEnd();
+    }
+    if (this.token !== null && this.token !== undefined) {
+      output.writeFieldBegin('token', Thrift.Type.STRING, 2);
+      output.writeString(this.token);
+      output.writeFieldEnd();
+    }
+    output.writeFieldStop();
+    output.writeStructEnd();
+    return;
+  }
+
+};
+open_api_management_proc_del_base_info_result = class {
+  constructor(args) {
+    this.success = null;
+    this.e = null;
+    if (args instanceof gen_exp) {
+        this.e = args;
+        return;
+    }
+    if (args) {
+      if (args.success !== undefined && args.success !== null) {
+        this.success = args.success;
+      }
+      if (args.e !== undefined && args.e !== null) {
+        this.e = args.e;
+      }
+    }
+  }
+
+  read (input) {
+    input.readStructBegin();
+    while (true) {
+      const ret = input.readFieldBegin();
+      const ftype = ret.ftype;
+      const fid = ret.fid;
+      if (ftype == Thrift.Type.STOP) {
+        break;
+      }
+      switch (fid) {
+        case 0:
+        if (ftype == Thrift.Type.BOOL) {
+          this.success = input.readBool().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        case 1:
+        if (ftype == Thrift.Type.STRUCT) {
+          this.e = new gen_exp();
+          this.e.read(input);
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        default:
+          input.skip(ftype);
+      }
+      input.readFieldEnd();
+    }
+    input.readStructEnd();
+    return;
+  }
+
+  write (output) {
+    output.writeStructBegin('open_api_management_proc_del_base_info_result');
+    if (this.success !== null && this.success !== undefined) {
+      output.writeFieldBegin('success', Thrift.Type.BOOL, 0);
+      output.writeBool(this.success);
+      output.writeFieldEnd();
+    }
+    if (this.e !== null && this.e !== undefined) {
+      output.writeFieldBegin('e', Thrift.Type.STRUCT, 1);
+      this.e.write(output);
+      output.writeFieldEnd();
+    }
+    output.writeFieldStop();
+    output.writeStructEnd();
+    return;
+  }
+
+};
 open_api_managementClient = class open_api_managementClient {
   constructor(input, output) {
     this.input = input;
@@ -2744,5 +3016,125 @@ open_api_managementClient = class open_api_managementClient {
       return result.success;
     }
     throw 'proc_del_black_list failed: unknown result';
+  }
+
+  proc_add_base_info (_req, token) {
+    const self = this;
+    return new Promise((resolve, reject) => {
+      self.send_proc_add_base_info(_req, token, (error, result) => {
+        return error ? reject(error) : resolve(result);
+      });
+    });
+  }
+
+  send_proc_add_base_info (_req, token, callback) {
+    const params = {
+      _req: _req,
+      token: token
+    };
+    const args = new open_api_management_proc_add_base_info_args(params);
+    try {
+      this.output.writeMessageBegin('proc_add_base_info', Thrift.MessageType.CALL, this.seqid);
+      args.write(this.output);
+      this.output.writeMessageEnd();
+      const self = this;
+      this.output.getTransport().flush(true, () => {
+        let error = null, result = null;
+        try {
+          result = self.recv_proc_add_base_info();
+        } catch (e) {
+          error = e;
+        }
+        callback(error, result);
+      });
+    }
+    catch (e) {
+      if (typeof this.output.getTransport().reset === 'function') {
+        this.output.getTransport().reset();
+      }
+      throw e;
+    }
+  }
+
+  recv_proc_add_base_info () {
+    const ret = this.input.readMessageBegin();
+    const mtype = ret.mtype;
+    if (mtype == Thrift.MessageType.EXCEPTION) {
+      const x = new Thrift.TApplicationException();
+      x.read(this.input);
+      this.input.readMessageEnd();
+      throw x;
+    }
+    const result = new open_api_management_proc_add_base_info_result();
+    result.read(this.input);
+    this.input.readMessageEnd();
+
+    if (null !== result.e) {
+      throw result.e;
+    }
+    if (null !== result.success) {
+      return result.success;
+    }
+    throw 'proc_add_base_info failed: unknown result';
+  }
+
+  proc_del_base_info (_req, token) {
+    const self = this;
+    return new Promise((resolve, reject) => {
+      self.send_proc_del_base_info(_req, token, (error, result) => {
+        return error ? reject(error) : resolve(result);
+      });
+    });
+  }
+
+  send_proc_del_base_info (_req, token, callback) {
+    const params = {
+      _req: _req,
+      token: token
+    };
+    const args = new open_api_management_proc_del_base_info_args(params);
+    try {
+      this.output.writeMessageBegin('proc_del_base_info', Thrift.MessageType.CALL, this.seqid);
+      args.write(this.output);
+      this.output.writeMessageEnd();
+      const self = this;
+      this.output.getTransport().flush(true, () => {
+        let error = null, result = null;
+        try {
+          result = self.recv_proc_del_base_info();
+        } catch (e) {
+          error = e;
+        }
+        callback(error, result);
+      });
+    }
+    catch (e) {
+      if (typeof this.output.getTransport().reset === 'function') {
+        this.output.getTransport().reset();
+      }
+      throw e;
+    }
+  }
+
+  recv_proc_del_base_info () {
+    const ret = this.input.readMessageBegin();
+    const mtype = ret.mtype;
+    if (mtype == Thrift.MessageType.EXCEPTION) {
+      const x = new Thrift.TApplicationException();
+      x.read(this.input);
+      this.input.readMessageEnd();
+      throw x;
+    }
+    const result = new open_api_management_proc_del_base_info_result();
+    result.read(this.input);
+    this.input.readMessageEnd();
+
+    if (null !== result.e) {
+      throw result.e;
+    }
+    if (null !== result.success) {
+      return result.success;
+    }
+    throw 'proc_del_base_info failed: unknown result';
   }
 };

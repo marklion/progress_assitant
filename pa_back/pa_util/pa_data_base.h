@@ -716,4 +716,33 @@ public:
     }
 };
 
+class pa_sql_base_info:public sql_tree_base {
+public:
+    std::string id;
+    std::string name;
+    std::string unit;
+    std::string type;
+    std::string code;
+    std::string pid;
+    pa_sql_base_info() {
+        add_parent_type<pa_sql_company>("belong_company");
+    }
+    virtual std::vector<sqlite_orm_column> self_columns_defined() { 
+        std::vector<sqlite_orm_column> ret;
+        ret.push_back(sqlite_orm_column("id", sqlite_orm_column::STRING, &id, SQLITE_ORM_COLUMN_LIMIT_UNIQ));
+        ret.push_back(sqlite_orm_column("name", sqlite_orm_column::STRING, &name));
+        ret.push_back(sqlite_orm_column("unit", sqlite_orm_column::STRING, &unit));
+        ret.push_back(sqlite_orm_column("type", sqlite_orm_column::STRING, &type));
+        ret.push_back(sqlite_orm_column("code", sqlite_orm_column::STRING, &code));
+        ret.push_back(sqlite_orm_column("pid", sqlite_orm_column::STRING, &pid));
+
+        return ret;
+    }
+
+    virtual std::string table_name()
+    {
+        return "base_info_table";
+    }
+};
+
 #endif // _PA_DATABSE_H_

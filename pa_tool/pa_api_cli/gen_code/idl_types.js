@@ -4005,6 +4005,133 @@ push_weight_req.prototype.write = function(output) {
   return;
 };
 
+var push_base_req = module.exports.push_base_req = function(args) {
+  this.id = null;
+  this.name = null;
+  this.pid = null;
+  this.unit = null;
+  this.type = null;
+  this.code = null;
+  if (args) {
+    if (args.id !== undefined && args.id !== null) {
+      this.id = args.id;
+    }
+    if (args.name !== undefined && args.name !== null) {
+      this.name = args.name;
+    }
+    if (args.pid !== undefined && args.pid !== null) {
+      this.pid = args.pid;
+    }
+    if (args.unit !== undefined && args.unit !== null) {
+      this.unit = args.unit;
+    }
+    if (args.type !== undefined && args.type !== null) {
+      this.type = args.type;
+    }
+    if (args.code !== undefined && args.code !== null) {
+      this.code = args.code;
+    }
+  }
+};
+push_base_req.prototype = {};
+push_base_req.prototype.read = function(input) {
+  input.readStructBegin();
+  while (true) {
+    var ret = input.readFieldBegin();
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    switch (fid) {
+      case 1:
+      if (ftype == Thrift.Type.STRING) {
+        this.id = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 2:
+      if (ftype == Thrift.Type.STRING) {
+        this.name = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 3:
+      if (ftype == Thrift.Type.STRING) {
+        this.pid = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 4:
+      if (ftype == Thrift.Type.STRING) {
+        this.unit = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 5:
+      if (ftype == Thrift.Type.STRING) {
+        this.type = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 6:
+      if (ftype == Thrift.Type.STRING) {
+        this.code = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      default:
+        input.skip(ftype);
+    }
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+push_base_req.prototype.write = function(output) {
+  output.writeStructBegin('push_base_req');
+  if (this.id !== null && this.id !== undefined) {
+    output.writeFieldBegin('id', Thrift.Type.STRING, 1);
+    output.writeString(this.id);
+    output.writeFieldEnd();
+  }
+  if (this.name !== null && this.name !== undefined) {
+    output.writeFieldBegin('name', Thrift.Type.STRING, 2);
+    output.writeString(this.name);
+    output.writeFieldEnd();
+  }
+  if (this.pid !== null && this.pid !== undefined) {
+    output.writeFieldBegin('pid', Thrift.Type.STRING, 3);
+    output.writeString(this.pid);
+    output.writeFieldEnd();
+  }
+  if (this.unit !== null && this.unit !== undefined) {
+    output.writeFieldBegin('unit', Thrift.Type.STRING, 4);
+    output.writeString(this.unit);
+    output.writeFieldEnd();
+  }
+  if (this.type !== null && this.type !== undefined) {
+    output.writeFieldBegin('type', Thrift.Type.STRING, 5);
+    output.writeString(this.type);
+    output.writeFieldEnd();
+  }
+  if (this.code !== null && this.code !== undefined) {
+    output.writeFieldBegin('code', Thrift.Type.STRING, 6);
+    output.writeString(this.code);
+    output.writeFieldEnd();
+  }
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+
 var vichele_stay_alone = module.exports.vichele_stay_alone = function(args) {
   this.id = null;
   this.stuff_name = null;

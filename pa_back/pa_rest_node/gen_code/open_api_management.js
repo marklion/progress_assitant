@@ -1902,6 +1902,270 @@ open_api_management_proc_del_black_list_result.prototype.write = function(output
   return;
 };
 
+var open_api_management_proc_add_base_info_args = function(args) {
+  this._req = null;
+  this.token = null;
+  if (args) {
+    if (args._req !== undefined && args._req !== null) {
+      this._req = new ttypes.push_base_req(args._req);
+    }
+    if (args.token !== undefined && args.token !== null) {
+      this.token = args.token;
+    }
+  }
+};
+open_api_management_proc_add_base_info_args.prototype = {};
+open_api_management_proc_add_base_info_args.prototype.read = function(input) {
+  input.readStructBegin();
+  while (true) {
+    var ret = input.readFieldBegin();
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    switch (fid) {
+      case 1:
+      if (ftype == Thrift.Type.STRUCT) {
+        this._req = new ttypes.push_base_req();
+        this._req.read(input);
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 2:
+      if (ftype == Thrift.Type.STRING) {
+        this.token = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      default:
+        input.skip(ftype);
+    }
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+open_api_management_proc_add_base_info_args.prototype.write = function(output) {
+  output.writeStructBegin('open_api_management_proc_add_base_info_args');
+  if (this._req !== null && this._req !== undefined) {
+    output.writeFieldBegin('_req', Thrift.Type.STRUCT, 1);
+    this._req.write(output);
+    output.writeFieldEnd();
+  }
+  if (this.token !== null && this.token !== undefined) {
+    output.writeFieldBegin('token', Thrift.Type.STRING, 2);
+    output.writeString(this.token);
+    output.writeFieldEnd();
+  }
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+
+var open_api_management_proc_add_base_info_result = function(args) {
+  this.success = null;
+  this.e = null;
+  if (args instanceof ttypes.gen_exp) {
+    this.e = args;
+    return;
+  }
+  if (args) {
+    if (args.success !== undefined && args.success !== null) {
+      this.success = args.success;
+    }
+    if (args.e !== undefined && args.e !== null) {
+      this.e = args.e;
+    }
+  }
+};
+open_api_management_proc_add_base_info_result.prototype = {};
+open_api_management_proc_add_base_info_result.prototype.read = function(input) {
+  input.readStructBegin();
+  while (true) {
+    var ret = input.readFieldBegin();
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    switch (fid) {
+      case 0:
+      if (ftype == Thrift.Type.BOOL) {
+        this.success = input.readBool();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 1:
+      if (ftype == Thrift.Type.STRUCT) {
+        this.e = new ttypes.gen_exp();
+        this.e.read(input);
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      default:
+        input.skip(ftype);
+    }
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+open_api_management_proc_add_base_info_result.prototype.write = function(output) {
+  output.writeStructBegin('open_api_management_proc_add_base_info_result');
+  if (this.success !== null && this.success !== undefined) {
+    output.writeFieldBegin('success', Thrift.Type.BOOL, 0);
+    output.writeBool(this.success);
+    output.writeFieldEnd();
+  }
+  if (this.e !== null && this.e !== undefined) {
+    output.writeFieldBegin('e', Thrift.Type.STRUCT, 1);
+    this.e.write(output);
+    output.writeFieldEnd();
+  }
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+
+var open_api_management_proc_del_base_info_args = function(args) {
+  this._req = null;
+  this.token = null;
+  if (args) {
+    if (args._req !== undefined && args._req !== null) {
+      this._req = new ttypes.push_base_req(args._req);
+    }
+    if (args.token !== undefined && args.token !== null) {
+      this.token = args.token;
+    }
+  }
+};
+open_api_management_proc_del_base_info_args.prototype = {};
+open_api_management_proc_del_base_info_args.prototype.read = function(input) {
+  input.readStructBegin();
+  while (true) {
+    var ret = input.readFieldBegin();
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    switch (fid) {
+      case 1:
+      if (ftype == Thrift.Type.STRUCT) {
+        this._req = new ttypes.push_base_req();
+        this._req.read(input);
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 2:
+      if (ftype == Thrift.Type.STRING) {
+        this.token = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      default:
+        input.skip(ftype);
+    }
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+open_api_management_proc_del_base_info_args.prototype.write = function(output) {
+  output.writeStructBegin('open_api_management_proc_del_base_info_args');
+  if (this._req !== null && this._req !== undefined) {
+    output.writeFieldBegin('_req', Thrift.Type.STRUCT, 1);
+    this._req.write(output);
+    output.writeFieldEnd();
+  }
+  if (this.token !== null && this.token !== undefined) {
+    output.writeFieldBegin('token', Thrift.Type.STRING, 2);
+    output.writeString(this.token);
+    output.writeFieldEnd();
+  }
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+
+var open_api_management_proc_del_base_info_result = function(args) {
+  this.success = null;
+  this.e = null;
+  if (args instanceof ttypes.gen_exp) {
+    this.e = args;
+    return;
+  }
+  if (args) {
+    if (args.success !== undefined && args.success !== null) {
+      this.success = args.success;
+    }
+    if (args.e !== undefined && args.e !== null) {
+      this.e = args.e;
+    }
+  }
+};
+open_api_management_proc_del_base_info_result.prototype = {};
+open_api_management_proc_del_base_info_result.prototype.read = function(input) {
+  input.readStructBegin();
+  while (true) {
+    var ret = input.readFieldBegin();
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    switch (fid) {
+      case 0:
+      if (ftype == Thrift.Type.BOOL) {
+        this.success = input.readBool();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 1:
+      if (ftype == Thrift.Type.STRUCT) {
+        this.e = new ttypes.gen_exp();
+        this.e.read(input);
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      default:
+        input.skip(ftype);
+    }
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+open_api_management_proc_del_base_info_result.prototype.write = function(output) {
+  output.writeStructBegin('open_api_management_proc_del_base_info_result');
+  if (this.success !== null && this.success !== undefined) {
+    output.writeFieldBegin('success', Thrift.Type.BOOL, 0);
+    output.writeBool(this.success);
+    output.writeFieldEnd();
+  }
+  if (this.e !== null && this.e !== undefined) {
+    output.writeFieldBegin('e', Thrift.Type.STRUCT, 1);
+    this.e.write(output);
+    output.writeFieldEnd();
+  }
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+
 var open_api_managementClient = exports.Client = function(output, pClass) {
   this.output = output;
   this.pClass = pClass;
@@ -2739,6 +3003,132 @@ open_api_managementClient.prototype.recv_proc_del_black_list = function(input,mt
   }
   return callback('proc_del_black_list failed: unknown result');
 };
+
+open_api_managementClient.prototype.proc_add_base_info = function(_req, token, callback) {
+  this._seqid = this.new_seqid();
+  if (callback === undefined) {
+    var _defer = Q.defer();
+    this._reqs[this.seqid()] = function(error, result) {
+      if (error) {
+        _defer.reject(error);
+      } else {
+        _defer.resolve(result);
+      }
+    };
+    this.send_proc_add_base_info(_req, token);
+    return _defer.promise;
+  } else {
+    this._reqs[this.seqid()] = callback;
+    this.send_proc_add_base_info(_req, token);
+  }
+};
+
+open_api_managementClient.prototype.send_proc_add_base_info = function(_req, token) {
+  var output = new this.pClass(this.output);
+  var params = {
+    _req: _req,
+    token: token
+  };
+  var args = new open_api_management_proc_add_base_info_args(params);
+  try {
+    output.writeMessageBegin('proc_add_base_info', Thrift.MessageType.CALL, this.seqid());
+    args.write(output);
+    output.writeMessageEnd();
+    return this.output.flush();
+  }
+  catch (e) {
+    delete this._reqs[this.seqid()];
+    if (typeof output.reset === 'function') {
+      output.reset();
+    }
+    throw e;
+  }
+};
+
+open_api_managementClient.prototype.recv_proc_add_base_info = function(input,mtype,rseqid) {
+  var callback = this._reqs[rseqid] || function() {};
+  delete this._reqs[rseqid];
+  if (mtype == Thrift.MessageType.EXCEPTION) {
+    var x = new Thrift.TApplicationException();
+    x.read(input);
+    input.readMessageEnd();
+    return callback(x);
+  }
+  var result = new open_api_management_proc_add_base_info_result();
+  result.read(input);
+  input.readMessageEnd();
+
+  if (null !== result.e) {
+    return callback(result.e);
+  }
+  if (null !== result.success) {
+    return callback(null, result.success);
+  }
+  return callback('proc_add_base_info failed: unknown result');
+};
+
+open_api_managementClient.prototype.proc_del_base_info = function(_req, token, callback) {
+  this._seqid = this.new_seqid();
+  if (callback === undefined) {
+    var _defer = Q.defer();
+    this._reqs[this.seqid()] = function(error, result) {
+      if (error) {
+        _defer.reject(error);
+      } else {
+        _defer.resolve(result);
+      }
+    };
+    this.send_proc_del_base_info(_req, token);
+    return _defer.promise;
+  } else {
+    this._reqs[this.seqid()] = callback;
+    this.send_proc_del_base_info(_req, token);
+  }
+};
+
+open_api_managementClient.prototype.send_proc_del_base_info = function(_req, token) {
+  var output = new this.pClass(this.output);
+  var params = {
+    _req: _req,
+    token: token
+  };
+  var args = new open_api_management_proc_del_base_info_args(params);
+  try {
+    output.writeMessageBegin('proc_del_base_info', Thrift.MessageType.CALL, this.seqid());
+    args.write(output);
+    output.writeMessageEnd();
+    return this.output.flush();
+  }
+  catch (e) {
+    delete this._reqs[this.seqid()];
+    if (typeof output.reset === 'function') {
+      output.reset();
+    }
+    throw e;
+  }
+};
+
+open_api_managementClient.prototype.recv_proc_del_base_info = function(input,mtype,rseqid) {
+  var callback = this._reqs[rseqid] || function() {};
+  delete this._reqs[rseqid];
+  if (mtype == Thrift.MessageType.EXCEPTION) {
+    var x = new Thrift.TApplicationException();
+    x.read(input);
+    input.readMessageEnd();
+    return callback(x);
+  }
+  var result = new open_api_management_proc_del_base_info_result();
+  result.read(input);
+  input.readMessageEnd();
+
+  if (null !== result.e) {
+    return callback(result.e);
+  }
+  if (null !== result.success) {
+    return callback(null, result.success);
+  }
+  return callback('proc_del_base_info failed: unknown result');
+};
 var open_api_managementProcessor = exports.Processor = function(handler) {
   this._handler = handler;
 };
@@ -3317,6 +3707,92 @@ open_api_managementProcessor.prototype.process_proc_del_black_list = function(se
       } else {
         result_obj = new Thrift.TApplicationException(Thrift.TApplicationExceptionType.UNKNOWN, err.message);
         output.writeMessageBegin("proc_del_black_list", Thrift.MessageType.EXCEPTION, seqid);
+      }
+      result_obj.write(output);
+      output.writeMessageEnd();
+      output.flush();
+    });
+  }
+};
+open_api_managementProcessor.prototype.process_proc_add_base_info = function(seqid, input, output) {
+  var args = new open_api_management_proc_add_base_info_args();
+  args.read(input);
+  input.readMessageEnd();
+  if (this._handler.proc_add_base_info.length === 2) {
+    Q.fcall(this._handler.proc_add_base_info.bind(this._handler),
+      args._req,
+      args.token
+    ).then(function(result) {
+      var result_obj = new open_api_management_proc_add_base_info_result({success: result});
+      output.writeMessageBegin("proc_add_base_info", Thrift.MessageType.REPLY, seqid);
+      result_obj.write(output);
+      output.writeMessageEnd();
+      output.flush();
+    }).catch(function (err) {
+      var result;
+      if (err instanceof ttypes.gen_exp) {
+        result = new open_api_management_proc_add_base_info_result(err);
+        output.writeMessageBegin("proc_add_base_info", Thrift.MessageType.REPLY, seqid);
+      } else {
+        result = new Thrift.TApplicationException(Thrift.TApplicationExceptionType.UNKNOWN, err.message);
+        output.writeMessageBegin("proc_add_base_info", Thrift.MessageType.EXCEPTION, seqid);
+      }
+      result.write(output);
+      output.writeMessageEnd();
+      output.flush();
+    });
+  } else {
+    this._handler.proc_add_base_info(args._req, args.token, function (err, result) {
+      var result_obj;
+      if ((err === null || typeof err === 'undefined') || err instanceof ttypes.gen_exp) {
+        result_obj = new open_api_management_proc_add_base_info_result((err !== null || typeof err === 'undefined') ? err : {success: result});
+        output.writeMessageBegin("proc_add_base_info", Thrift.MessageType.REPLY, seqid);
+      } else {
+        result_obj = new Thrift.TApplicationException(Thrift.TApplicationExceptionType.UNKNOWN, err.message);
+        output.writeMessageBegin("proc_add_base_info", Thrift.MessageType.EXCEPTION, seqid);
+      }
+      result_obj.write(output);
+      output.writeMessageEnd();
+      output.flush();
+    });
+  }
+};
+open_api_managementProcessor.prototype.process_proc_del_base_info = function(seqid, input, output) {
+  var args = new open_api_management_proc_del_base_info_args();
+  args.read(input);
+  input.readMessageEnd();
+  if (this._handler.proc_del_base_info.length === 2) {
+    Q.fcall(this._handler.proc_del_base_info.bind(this._handler),
+      args._req,
+      args.token
+    ).then(function(result) {
+      var result_obj = new open_api_management_proc_del_base_info_result({success: result});
+      output.writeMessageBegin("proc_del_base_info", Thrift.MessageType.REPLY, seqid);
+      result_obj.write(output);
+      output.writeMessageEnd();
+      output.flush();
+    }).catch(function (err) {
+      var result;
+      if (err instanceof ttypes.gen_exp) {
+        result = new open_api_management_proc_del_base_info_result(err);
+        output.writeMessageBegin("proc_del_base_info", Thrift.MessageType.REPLY, seqid);
+      } else {
+        result = new Thrift.TApplicationException(Thrift.TApplicationExceptionType.UNKNOWN, err.message);
+        output.writeMessageBegin("proc_del_base_info", Thrift.MessageType.EXCEPTION, seqid);
+      }
+      result.write(output);
+      output.writeMessageEnd();
+      output.flush();
+    });
+  } else {
+    this._handler.proc_del_base_info(args._req, args.token, function (err, result) {
+      var result_obj;
+      if ((err === null || typeof err === 'undefined') || err instanceof ttypes.gen_exp) {
+        result_obj = new open_api_management_proc_del_base_info_result((err !== null || typeof err === 'undefined') ? err : {success: result});
+        output.writeMessageBegin("proc_del_base_info", Thrift.MessageType.REPLY, seqid);
+      } else {
+        result_obj = new Thrift.TApplicationException(Thrift.TApplicationExceptionType.UNKNOWN, err.message);
+        output.writeMessageBegin("proc_del_base_info", Thrift.MessageType.EXCEPTION, seqid);
       }
       result_obj.write(output);
       output.writeMessageEnd();

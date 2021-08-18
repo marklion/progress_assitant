@@ -427,6 +427,11 @@ public:
     vehicle_info_resp make_resp_from_single_vichele(pa_sql_single_vichele &_vichele)
     {
         vehicle_info_resp ret;
+        auto sale_company = PA_RPC_get_sale_company(_vichele);
+        if (!sale_company)
+        {
+            return ret;
+        }
         ret.id = std::to_string(_vichele.get_pri_id()) + "S";
         auto main_vichele = _vichele.get_parent<pa_sql_vichele>("main_vichele");
         auto this_driver = _vichele.get_parent<pa_sql_driver>("driver");
@@ -447,11 +452,7 @@ public:
         if (plan)
         {
             ret.stuffName = plan->name;
-            auto stuff_base_info = PA_RPC_search_base_info_by_name(plan->name, "stuff");
-            if (stuff_base_info)
-            {
-                ret.stuffId = stuff_base_info->id;
-            }
+            ret.stuffId = PA_RPC_search_base_id_info_by_name(plan->name, "stuff", *sale_company);
             auto creator = plan->get_parent<pa_sql_userinfo>("created_by");
             if (creator)
             {
@@ -477,11 +478,7 @@ public:
         }
 
         ret.isSale = true;
-        auto customer_base_info = PA_RPC_search_base_info_by_name(ret.companyName, "customer");
-        if (customer_base_info)
-        {
-            ret.customerId = customer_base_info->id;
-        }
+        ret.customerId = PA_RPC_search_base_id_info_by_name(ret.companyName, "customer", *sale_company);
         ret.isMulti = false;
         ret.vehicleTeamName = ret.companyName;
         ret.vehicleTeamId = ret.customerId;
@@ -500,7 +497,7 @@ public:
                 meta_stuff_info tmp;
                 tmp.stuffName = itr.stuff_name;
                 tmp.weight = itr.count;
-                tmp.stuffId = PA_RPC_search_base_id_info_by_name(tmp.stuffName, "stuff");
+                tmp.stuffId = PA_RPC_search_base_id_info_by_name(tmp.stuffName, "stuff", *destination);
                 ret.push_back(tmp);
             }
         }
@@ -565,15 +562,11 @@ public:
                 _return.isSale = false;
                 _return.plateNo = itr.main_vichele_number;
                 _return.stuffName = itr.stuff_name;
-                auto stuff_base_info = PA_RPC_search_base_info_by_name(_return.stuffName, "stuff");
-                if (stuff_base_info)
-                {
-                    _return.stuffId = stuff_base_info->id;
-                }
+                _return.stuffId = PA_RPC_search_base_id_info_by_name(_return.stuffName, "stuff", *company);
                 _return.supplierName = itr.company_name;
-                _return.supplierId = PA_RPC_search_base_id_info_by_name(_return.supplierName, "supplier");
+                _return.supplierId = PA_RPC_search_base_id_info_by_name(_return.supplierName, "supplier", *company);
                 _return.vehicleTeamName = itr.transfor_company;
-                _return.vehicleTeamId = PA_RPC_search_base_id_info_by_name(_return.vehicleTeamName, "vehicleTeam");
+                _return.vehicleTeamId = PA_RPC_search_base_id_info_by_name(_return.vehicleTeamName, "vehicleTeam", *company);
                 auto multi_stuff = search_multi_stuff(itr);
                 if (multi_stuff.size() > 1)
                 {
@@ -637,12 +630,12 @@ public:
             tmp.isSale = false;
             tmp.plateNo = itr.main_vichele_number;
             tmp.stuffName = itr.stuff_name;
-            tmp.stuffId = PA_RPC_search_base_id_info_by_name(tmp.stuffName, "stuff");
+            tmp.stuffId = PA_RPC_search_base_id_info_by_name(tmp.stuffName, "stuff", *company);
 
             tmp.supplierName = itr.company_name;
-            tmp.supplierId = PA_RPC_search_base_id_info_by_name(tmp.supplierName, "supplier");
+            tmp.supplierId = PA_RPC_search_base_id_info_by_name(tmp.supplierName, "supplier", *company);
             tmp.vehicleTeamName = itr.transfor_company;
-            tmp.vehicleTeamId = PA_RPC_search_base_id_info_by_name(tmp.vehicleTeamName, "vehicleTeam");
+            tmp.vehicleTeamId = PA_RPC_search_base_id_info_by_name(tmp.vehicleTeamName, "vehicleTeam", *company);
             auto multi_stuff = search_multi_stuff(itr);
             if (multi_stuff.size() > 1)
             {
@@ -822,6 +815,62 @@ public:
                 exist_record->remove_record();
             }
         }
+        return ret;
+    }
+
+    virtual bool proc_add_base_info(const push_base_req &_req, const std::string &token)
+    {
+        bool ret = false;
+        log_audit_basedon_token(token, __FUNCTION__);
+        auto company = _get_token_company(token);
+        if (!company)
+        {
+            PA_RETURN_MSG(OPEN_API_MSG_NO_PERMISSION);
+        }
+
+        auto exist_record = company->get_children<pa_sql_base_info>("belong_company", "id == '%s'", _req.id.c_str());
+        if (exist_record)
+        {
+            exist_record->code = _req.code;
+            exist_record->name = _req.name;
+            exist_record->unit = _req.unit;
+            exist_record->type = _req.type;
+            exist_record->pid = _req.pid;
+            
+            ret = exist_record->update_record();
+        }
+        else
+        {
+            pa_sql_base_info tmp;
+            tmp.id = _req.id;
+            tmp.name = _req.name;
+            tmp.unit = _req.unit;
+            tmp.type = _req.type;
+            tmp.pid = _req.pid;
+            tmp.code = _req.code;
+            tmp.set_parent(*company, "belong_company");
+            
+            ret = tmp.insert_record();
+        }
+
+        return ret;
+    }
+    virtual bool proc_del_base_info(const push_base_req &_req, const std::string &token)
+    {
+        bool ret = false;
+        log_audit_basedon_token(token, __FUNCTION__);
+        auto company = _get_token_company(token);
+        if (!company)
+        {
+            PA_RETURN_MSG(OPEN_API_MSG_NO_PERMISSION);
+        }
+        auto exist_record = company->get_children<pa_sql_base_info>("belong_company", "id == '%s'", _req.id.c_str());
+        if (!exist_record)
+        {
+            PA_RETURN_MSG(OPEN_API_MSG_NO_DATA_FOUND);
+        }
+        exist_record->remove_record();
+        ret = true;
         return ret;
     }
 };

@@ -85,6 +85,8 @@ class vehicle_info_resp;
 
 class push_weight_req;
 
+class push_base_req;
+
 class vichele_stay_alone;
 
 class silent_user_info;
@@ -2352,6 +2354,78 @@ class push_weight_req : public virtual ::apache::thrift::TBase {
 void swap(push_weight_req &a, push_weight_req &b);
 
 std::ostream& operator<<(std::ostream& out, const push_weight_req& obj);
+
+typedef struct _push_base_req__isset {
+  _push_base_req__isset() : id(false), name(false), pid(false), unit(false), type(false), code(false) {}
+  bool id :1;
+  bool name :1;
+  bool pid :1;
+  bool unit :1;
+  bool type :1;
+  bool code :1;
+} _push_base_req__isset;
+
+class push_base_req : public virtual ::apache::thrift::TBase {
+ public:
+
+  push_base_req(const push_base_req&);
+  push_base_req& operator=(const push_base_req&);
+  push_base_req() : id(), name(), pid(), unit(), type(), code() {
+  }
+
+  virtual ~push_base_req() noexcept;
+  std::string id;
+  std::string name;
+  std::string pid;
+  std::string unit;
+  std::string type;
+  std::string code;
+
+  _push_base_req__isset __isset;
+
+  void __set_id(const std::string& val);
+
+  void __set_name(const std::string& val);
+
+  void __set_pid(const std::string& val);
+
+  void __set_unit(const std::string& val);
+
+  void __set_type(const std::string& val);
+
+  void __set_code(const std::string& val);
+
+  bool operator == (const push_base_req & rhs) const
+  {
+    if (!(id == rhs.id))
+      return false;
+    if (!(name == rhs.name))
+      return false;
+    if (!(pid == rhs.pid))
+      return false;
+    if (!(unit == rhs.unit))
+      return false;
+    if (!(type == rhs.type))
+      return false;
+    if (!(code == rhs.code))
+      return false;
+    return true;
+  }
+  bool operator != (const push_base_req &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const push_base_req & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+  virtual void printTo(std::ostream& out) const;
+};
+
+void swap(push_base_req &a, push_base_req &b);
+
+std::ostream& operator<<(std::ostream& out, const push_base_req& obj);
 
 typedef struct _vichele_stay_alone__isset {
   _vichele_stay_alone__isset() : id(false), stuff_name(false), company_name(false), main_vichele_number(false), behind_vichele_number(false), count(false), comment(false), date(false), destination(false), status(false), creator_name(false), creator_phone(false), repeated(false), driver_name(false), driver_phone(false), driver_id(false), transfor_company(false), p_time(false), m_time(false), p_weight(false), m_weight(false), j_weight(false) {}

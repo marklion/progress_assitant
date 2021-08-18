@@ -188,6 +188,38 @@ app.post('/pa_rest/push_blacklist', async (req, res)=>{
     res.send(ret);
 });
 
+app.post('/pa_rest/push_base', async (req, res)=>{
+    var token = req.query.token;
+    var ret = { err_msg: '无权限' };
+    try {
+        var add_flag = true;
+        if (req.body.state == 1)
+        {
+            add_flag = false;
+        }
+        delete req.body.state;
+        if (add_flag)
+        {
+            var resp = await request_rpc("open_api_management", 'proc_add_base_info', [req.body, token]);
+            if (resp) {
+                ret.err_msg = "";
+            }
+        }
+        else
+        {
+            var resp = await request_rpc("open_api_management", 'proc_del_base_info', [req.body, token]);
+            if (resp) {
+                ret.err_msg = "";
+            }
+        }
+
+    } catch (error) {
+        ret = { err_msg: error.msg };
+    }
+
+    res.send(ret);
+});
+
 app.listen(port, () => {
     console.log('rest is runing');
 });
