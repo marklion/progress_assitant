@@ -387,6 +387,15 @@ struct push_weight_req {
     10:double jWeight,
 }
 
+struct push_base_req {
+    1:string id,
+    2:string name,
+    3:string pid,
+    4:string unit,
+    5:string type,
+    6:string code,
+}
+
 service open_api_management {
     bool register_api_user(1:string company_name, 2:string email, 3:string password) throws (1:gen_exp e),
     bool verify_email_code(1:string email, 2:string code) throws (1:gen_exp e),
@@ -401,6 +410,8 @@ service open_api_management {
     bool proc_push_weight(1:push_weight_req _req, 2:string token) throws (1:gen_exp e),
     bool proc_add_black_list(1:i64 type, 2:string target, 3:string reason, 4:string expire_date, 5:string token) throws (1:gen_exp e),
     bool proc_del_black_list(1:i64 type, 2:string target, 3:string token) throws (1:gen_exp e),
+    bool proc_add_base_info(1:push_base_req _req, 2:string token) throws (1:gen_exp e),
+    bool proc_del_base_info(1:push_base_req _req, 2:string token) throws (1:gen_exp e),
 }
 
 struct vichele_stay_alone {
