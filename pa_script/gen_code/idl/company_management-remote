@@ -57,6 +57,8 @@ if len(sys.argv) <= 1 or sys.argv[1] == '--help':
     print('  bool set_work_time(string ssid, i64 start_work_time, i64 end_work_time)')
     print('  company_work_time get_work_time(string company_name)')
     print('  company_positon_lat_lag get_company_position_config(string company_name)')
+    print('  bool set_third_info(string key, string url, string ssid)')
+    print('  third_dev_info get_third_info(string ssid)')
     print('')
     sys.exit(0)
 
@@ -333,6 +335,18 @@ elif cmd == 'get_company_position_config':
         print('get_company_position_config requires 1 args')
         sys.exit(1)
     pp.pprint(client.get_company_position_config(args[0],))
+
+elif cmd == 'set_third_info':
+    if len(args) != 3:
+        print('set_third_info requires 3 args')
+        sys.exit(1)
+    pp.pprint(client.set_third_info(args[0], args[1], args[2],))
+
+elif cmd == 'get_third_info':
+    if len(args) != 1:
+        print('get_third_info requires 1 args')
+        sys.exit(1)
+    pp.pprint(client.get_third_info(args[0],))
 
 else:
     print('Unrecognized method %s' % cmd)

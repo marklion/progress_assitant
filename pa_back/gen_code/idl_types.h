@@ -47,6 +47,8 @@ class company_work_time;
 
 class company_positon_lat_lag;
 
+class third_dev_info;
+
 class plan_confirm_info;
 
 class pay_confirm_info;
@@ -892,6 +894,54 @@ class company_positon_lat_lag : public virtual ::apache::thrift::TBase {
 void swap(company_positon_lat_lag &a, company_positon_lat_lag &b);
 
 std::ostream& operator<<(std::ostream& out, const company_positon_lat_lag& obj);
+
+typedef struct _third_dev_info__isset {
+  _third_dev_info__isset() : key(false), url(false) {}
+  bool key :1;
+  bool url :1;
+} _third_dev_info__isset;
+
+class third_dev_info : public virtual ::apache::thrift::TBase {
+ public:
+
+  third_dev_info(const third_dev_info&);
+  third_dev_info& operator=(const third_dev_info&);
+  third_dev_info() : key(), url() {
+  }
+
+  virtual ~third_dev_info() noexcept;
+  std::string key;
+  std::string url;
+
+  _third_dev_info__isset __isset;
+
+  void __set_key(const std::string& val);
+
+  void __set_url(const std::string& val);
+
+  bool operator == (const third_dev_info & rhs) const
+  {
+    if (!(key == rhs.key))
+      return false;
+    if (!(url == rhs.url))
+      return false;
+    return true;
+  }
+  bool operator != (const third_dev_info &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const third_dev_info & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+  virtual void printTo(std::ostream& out) const;
+};
+
+void swap(third_dev_info &a, third_dev_info &b);
+
+std::ostream& operator<<(std::ostream& out, const third_dev_info& obj);
 
 typedef struct _plan_confirm_info__isset {
   _plan_confirm_info__isset() : timestamp(false), name(false) {}

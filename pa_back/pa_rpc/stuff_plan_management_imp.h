@@ -500,7 +500,8 @@ public:
         if (ret)
         {
             plan->send_wechat_msg(*opt_user, "确认了该计划, 附言：" + status_comment);
-            if (plan_cash_enough(*plan))
+            auto company = opt_user->get_parent<pa_sql_company>("belong_company");
+            if (company && company->third_url.length() > 0 && plan_cash_enough(*plan))
             {
                 ret = confirm_pay(plan->get_pri_id(), ssid, "余额充足，自动确认收款");
             }
@@ -901,35 +902,42 @@ public:
         {
             has_balance = contract->balance;
         }
-        if (requie_cash > has_balance)
+        if (sale_company->third_url.length() > 0)
         {
-            auto req_cash = std::to_string(requie_cash);
-            req_cash = req_cash.substr(0, req_cash.size() - 4);
-            auto has_cash = std::to_string(has_balance);
-            has_cash = has_cash.substr(0, has_cash.size() - 4);
-            _return.append("计划金额（" + req_cash + "）可能超过公司余额(" + has_cash + ")");
+            if (requie_cash > has_balance)
+            {
+                auto req_cash = std::to_string(requie_cash);
+                req_cash = req_cash.substr(0, req_cash.size() - 4);
+                auto has_cash = std::to_string(has_balance);
+                has_cash = has_cash.substr(0, has_cash.size() - 4);
+                _return.append("计划金额（" + req_cash + "）可能超过公司余额(" + has_cash + ")");
+            }
         }
+
         auto plan_time_day = plan.plan_time.substr(0, 10);
         for (auto &itr : plan.vichele_info)
         {
-            auto current_driver = sqlite_orm::search_record<pa_sql_driver>("phone == '%s' AND is_drop == 0 AND driver_id IS NOT NULL AND driver_id != ''", itr.driver_phone.c_str());
-            if (current_driver)
+            if (sale_company->third_url.length() > 0)
             {
-                auto reason = pa_sql_blacklist::target_was_blocked(current_driver->driver_id, pa_sql_blacklist::driver, *sale_company);
+                auto current_driver = sqlite_orm::search_record<pa_sql_driver>("phone == '%s' AND is_drop == 0 AND driver_id IS NOT NULL AND driver_id != ''", itr.driver_phone.c_str());
+                if (current_driver)
+                {
+                    auto reason = pa_sql_blacklist::target_was_blocked(current_driver->driver_id, pa_sql_blacklist::driver, *sale_company);
+                    if (reason.length() > 0)
+                    {
+                        _return.append("司机 " + current_driver->name + " 在黑名单中，原因是：" + reason);
+                    }
+                }
+                auto reason = pa_sql_blacklist::target_was_blocked(itr.main_vichele, pa_sql_blacklist::vehicle, *sale_company);
                 if (reason.length() > 0)
                 {
-                    _return.append("司机 " + current_driver->name + " 在黑名单中，原因是：" + reason);
+                    _return.append("车辆 " + itr.main_vichele + " 在黑名单中，原因是：" + reason);
                 }
-            }
-            auto reason = pa_sql_blacklist::target_was_blocked(itr.main_vichele, pa_sql_blacklist::vehicle, *sale_company);
-            if (reason.length() > 0)
-            {
-                _return.append("车辆 " + itr.main_vichele + " 在黑名单中，原因是：" + reason);
-            }
-            reason = pa_sql_blacklist::target_was_blocked(itr.behind_vichele, pa_sql_blacklist::vehicle, *sale_company);
-            if (reason.length() > 0)
-            {
-                _return.append("车辆 " + itr.main_vichele + " 在黑名单中，原因是：" + reason);
+                reason = pa_sql_blacklist::target_was_blocked(itr.behind_vichele, pa_sql_blacklist::vehicle, *sale_company);
+                if (reason.length() > 0)
+                {
+                    _return.append("车辆 " + itr.main_vichele + " 在黑名单中，原因是：" + reason);
+                }
             }
             auto main_vhicheles_in_sql = sqlite_orm::search_record_all<pa_sql_vichele>("number = '%s'", itr.main_vichele.c_str());
             for (auto &single_vichele : main_vhicheles_in_sql)

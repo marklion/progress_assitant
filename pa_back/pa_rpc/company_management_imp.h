@@ -889,5 +889,42 @@ public:
         _return.lag = positon.lag;
         _return.lat = positon.lat;
     }
+
+    virtual bool set_third_info(const std::string &key, const std::string &url, const std::string &ssid)
+    {
+        bool ret = false;
+        auto opt_user = PA_DATAOPT_get_online_user(ssid);
+        if (!opt_user)
+        {
+            PA_RETURN_UNLOGIN_MSG();
+        }
+        auto company = opt_user->get_parent<pa_sql_company>("belong_company");
+        if (!company)
+        {
+            PA_RETURN_NOCOMPANY_MSG();
+        }
+        company->third_key = key;
+        company->third_url = url;
+
+        ret = company->update_record();
+
+        return ret;
+    }
+
+    virtual void get_third_info(third_dev_info &_return, const std::string &ssid)
+    {
+        auto opt_user = PA_DATAOPT_get_online_user(ssid);
+        if (!opt_user)
+        {
+            PA_RETURN_UNLOGIN_MSG();
+        }
+        auto company = opt_user->get_parent<pa_sql_company>("belong_company");
+        if (!company)
+        {
+            PA_RETURN_NOCOMPANY_MSG();
+        }
+        _return.key = company->third_key;
+        _return.url = company->third_url;
+    }
 };
 #endif // _COMPANY_MANAGEMENT_IMP_H_

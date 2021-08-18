@@ -113,6 +113,11 @@ struct company_positon_lat_lag {
     3:double distance,
 }
 
+struct third_dev_info {
+    1:string key, 
+    2:string url,
+}
+
 service company_management {
     list<i64> get_all_type(1:string ssid) throws (1:gen_exp e),
     i64 add_type(1:string name, 2:i64 price, 3:string last,  4:string ssid) throws (1:gen_exp e),
@@ -147,6 +152,8 @@ service company_management {
     bool set_work_time(1:string ssid, 2:i64 start_work_time, 3:i64 end_work_time) throws (1:gen_exp e),
     company_work_time get_work_time(1:string company_name) throws (1:gen_exp e),
     company_positon_lat_lag get_company_position_config(1:string company_name) throws (1:gen_exp e),
+    bool set_third_info(1:string key, 2:string url, 3:string ssid) throws (1:gen_exp e),
+    third_dev_info get_third_info(1:string ssid) throws (1:gen_exp e),
 }
 
 service stuff_info {

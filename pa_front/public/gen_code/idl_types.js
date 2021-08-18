@@ -1320,6 +1320,71 @@ company_positon_lat_lag = class {
   }
 
 };
+third_dev_info = class {
+  constructor(args) {
+    this.key = null;
+    this.url = null;
+    if (args) {
+      if (args.key !== undefined && args.key !== null) {
+        this.key = args.key;
+      }
+      if (args.url !== undefined && args.url !== null) {
+        this.url = args.url;
+      }
+    }
+  }
+
+  read (input) {
+    input.readStructBegin();
+    while (true) {
+      const ret = input.readFieldBegin();
+      const ftype = ret.ftype;
+      const fid = ret.fid;
+      if (ftype == Thrift.Type.STOP) {
+        break;
+      }
+      switch (fid) {
+        case 1:
+        if (ftype == Thrift.Type.STRING) {
+          this.key = input.readString().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        case 2:
+        if (ftype == Thrift.Type.STRING) {
+          this.url = input.readString().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        default:
+          input.skip(ftype);
+      }
+      input.readFieldEnd();
+    }
+    input.readStructEnd();
+    return;
+  }
+
+  write (output) {
+    output.writeStructBegin('third_dev_info');
+    if (this.key !== null && this.key !== undefined) {
+      output.writeFieldBegin('key', Thrift.Type.STRING, 1);
+      output.writeString(this.key);
+      output.writeFieldEnd();
+    }
+    if (this.url !== null && this.url !== undefined) {
+      output.writeFieldBegin('url', Thrift.Type.STRING, 2);
+      output.writeString(this.url);
+      output.writeFieldEnd();
+    }
+    output.writeFieldStop();
+    output.writeStructEnd();
+    return;
+  }
+
+};
 plan_confirm_info = class {
   constructor(args) {
     this.timestamp = null;

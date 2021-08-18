@@ -55,6 +55,8 @@ class company_managementIf {
   virtual bool set_work_time(const std::string& ssid, const int64_t start_work_time, const int64_t end_work_time) = 0;
   virtual void get_work_time(company_work_time& _return, const std::string& company_name) = 0;
   virtual void get_company_position_config(company_positon_lat_lag& _return, const std::string& company_name) = 0;
+  virtual bool set_third_info(const std::string& key, const std::string& url, const std::string& ssid) = 0;
+  virtual void get_third_info(third_dev_info& _return, const std::string& ssid) = 0;
 };
 
 class company_managementIfFactory {
@@ -193,6 +195,13 @@ class company_managementNull : virtual public company_managementIf {
     return;
   }
   void get_company_position_config(company_positon_lat_lag& /* _return */, const std::string& /* company_name */) {
+    return;
+  }
+  bool set_third_info(const std::string& /* key */, const std::string& /* url */, const std::string& /* ssid */) {
+    bool _return = false;
+    return _return;
+  }
+  void get_third_info(third_dev_info& /* _return */, const std::string& /* ssid */) {
     return;
   }
 };
@@ -4022,6 +4031,244 @@ class company_management_get_company_position_config_presult {
 
 };
 
+typedef struct _company_management_set_third_info_args__isset {
+  _company_management_set_third_info_args__isset() : key(false), url(false), ssid(false) {}
+  bool key :1;
+  bool url :1;
+  bool ssid :1;
+} _company_management_set_third_info_args__isset;
+
+class company_management_set_third_info_args {
+ public:
+
+  company_management_set_third_info_args(const company_management_set_third_info_args&);
+  company_management_set_third_info_args& operator=(const company_management_set_third_info_args&);
+  company_management_set_third_info_args() : key(), url(), ssid() {
+  }
+
+  virtual ~company_management_set_third_info_args() noexcept;
+  std::string key;
+  std::string url;
+  std::string ssid;
+
+  _company_management_set_third_info_args__isset __isset;
+
+  void __set_key(const std::string& val);
+
+  void __set_url(const std::string& val);
+
+  void __set_ssid(const std::string& val);
+
+  bool operator == (const company_management_set_third_info_args & rhs) const
+  {
+    if (!(key == rhs.key))
+      return false;
+    if (!(url == rhs.url))
+      return false;
+    if (!(ssid == rhs.ssid))
+      return false;
+    return true;
+  }
+  bool operator != (const company_management_set_third_info_args &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const company_management_set_third_info_args & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+
+class company_management_set_third_info_pargs {
+ public:
+
+
+  virtual ~company_management_set_third_info_pargs() noexcept;
+  const std::string* key;
+  const std::string* url;
+  const std::string* ssid;
+
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _company_management_set_third_info_result__isset {
+  _company_management_set_third_info_result__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _company_management_set_third_info_result__isset;
+
+class company_management_set_third_info_result {
+ public:
+
+  company_management_set_third_info_result(const company_management_set_third_info_result&);
+  company_management_set_third_info_result& operator=(const company_management_set_third_info_result&);
+  company_management_set_third_info_result() : success(0) {
+  }
+
+  virtual ~company_management_set_third_info_result() noexcept;
+  bool success;
+  gen_exp e;
+
+  _company_management_set_third_info_result__isset __isset;
+
+  void __set_success(const bool val);
+
+  void __set_e(const gen_exp& val);
+
+  bool operator == (const company_management_set_third_info_result & rhs) const
+  {
+    if (!(success == rhs.success))
+      return false;
+    if (!(e == rhs.e))
+      return false;
+    return true;
+  }
+  bool operator != (const company_management_set_third_info_result &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const company_management_set_third_info_result & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _company_management_set_third_info_presult__isset {
+  _company_management_set_third_info_presult__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _company_management_set_third_info_presult__isset;
+
+class company_management_set_third_info_presult {
+ public:
+
+
+  virtual ~company_management_set_third_info_presult() noexcept;
+  bool* success;
+  gen_exp e;
+
+  _company_management_set_third_info_presult__isset __isset;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+
+};
+
+typedef struct _company_management_get_third_info_args__isset {
+  _company_management_get_third_info_args__isset() : ssid(false) {}
+  bool ssid :1;
+} _company_management_get_third_info_args__isset;
+
+class company_management_get_third_info_args {
+ public:
+
+  company_management_get_third_info_args(const company_management_get_third_info_args&);
+  company_management_get_third_info_args& operator=(const company_management_get_third_info_args&);
+  company_management_get_third_info_args() : ssid() {
+  }
+
+  virtual ~company_management_get_third_info_args() noexcept;
+  std::string ssid;
+
+  _company_management_get_third_info_args__isset __isset;
+
+  void __set_ssid(const std::string& val);
+
+  bool operator == (const company_management_get_third_info_args & rhs) const
+  {
+    if (!(ssid == rhs.ssid))
+      return false;
+    return true;
+  }
+  bool operator != (const company_management_get_third_info_args &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const company_management_get_third_info_args & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+
+class company_management_get_third_info_pargs {
+ public:
+
+
+  virtual ~company_management_get_third_info_pargs() noexcept;
+  const std::string* ssid;
+
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _company_management_get_third_info_result__isset {
+  _company_management_get_third_info_result__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _company_management_get_third_info_result__isset;
+
+class company_management_get_third_info_result {
+ public:
+
+  company_management_get_third_info_result(const company_management_get_third_info_result&);
+  company_management_get_third_info_result& operator=(const company_management_get_third_info_result&);
+  company_management_get_third_info_result() {
+  }
+
+  virtual ~company_management_get_third_info_result() noexcept;
+  third_dev_info success;
+  gen_exp e;
+
+  _company_management_get_third_info_result__isset __isset;
+
+  void __set_success(const third_dev_info& val);
+
+  void __set_e(const gen_exp& val);
+
+  bool operator == (const company_management_get_third_info_result & rhs) const
+  {
+    if (!(success == rhs.success))
+      return false;
+    if (!(e == rhs.e))
+      return false;
+    return true;
+  }
+  bool operator != (const company_management_get_third_info_result &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const company_management_get_third_info_result & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _company_management_get_third_info_presult__isset {
+  _company_management_get_third_info_presult__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _company_management_get_third_info_presult__isset;
+
+class company_management_get_third_info_presult {
+ public:
+
+
+  virtual ~company_management_get_third_info_presult() noexcept;
+  third_dev_info* success;
+  gen_exp e;
+
+  _company_management_get_third_info_presult__isset __isset;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+
+};
+
 class company_managementClient : virtual public company_managementIf {
  public:
   company_managementClient(std::shared_ptr< ::apache::thrift::protocol::TProtocol> prot) {
@@ -4146,6 +4393,12 @@ class company_managementClient : virtual public company_managementIf {
   void get_company_position_config(company_positon_lat_lag& _return, const std::string& company_name);
   void send_get_company_position_config(const std::string& company_name);
   void recv_get_company_position_config(company_positon_lat_lag& _return);
+  bool set_third_info(const std::string& key, const std::string& url, const std::string& ssid);
+  void send_set_third_info(const std::string& key, const std::string& url, const std::string& ssid);
+  bool recv_set_third_info();
+  void get_third_info(third_dev_info& _return, const std::string& ssid);
+  void send_get_third_info(const std::string& ssid);
+  void recv_get_third_info(third_dev_info& _return);
  protected:
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> piprot_;
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> poprot_;
@@ -4194,6 +4447,8 @@ class company_managementProcessor : public ::apache::thrift::TDispatchProcessor 
   void process_set_work_time(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
   void process_get_work_time(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
   void process_get_company_position_config(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
+  void process_set_third_info(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
+  void process_get_third_info(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
  public:
   company_managementProcessor(::std::shared_ptr<company_managementIf> iface) :
     iface_(iface) {
@@ -4230,6 +4485,8 @@ class company_managementProcessor : public ::apache::thrift::TDispatchProcessor 
     processMap_["set_work_time"] = &company_managementProcessor::process_set_work_time;
     processMap_["get_work_time"] = &company_managementProcessor::process_get_work_time;
     processMap_["get_company_position_config"] = &company_managementProcessor::process_get_company_position_config;
+    processMap_["set_third_info"] = &company_managementProcessor::process_set_third_info;
+    processMap_["get_third_info"] = &company_managementProcessor::process_get_third_info;
   }
 
   virtual ~company_managementProcessor() {}
@@ -4572,6 +4829,25 @@ class company_managementMultiface : virtual public company_managementIf {
     return;
   }
 
+  bool set_third_info(const std::string& key, const std::string& url, const std::string& ssid) {
+    size_t sz = ifaces_.size();
+    size_t i = 0;
+    for (; i < (sz - 1); ++i) {
+      ifaces_[i]->set_third_info(key, url, ssid);
+    }
+    return ifaces_[i]->set_third_info(key, url, ssid);
+  }
+
+  void get_third_info(third_dev_info& _return, const std::string& ssid) {
+    size_t sz = ifaces_.size();
+    size_t i = 0;
+    for (; i < (sz - 1); ++i) {
+      ifaces_[i]->get_third_info(_return, ssid);
+    }
+    ifaces_[i]->get_third_info(_return, ssid);
+    return;
+  }
+
 };
 
 // The 'concurrent' client is a thread safe client that correctly handles
@@ -4703,6 +4979,12 @@ class company_managementConcurrentClient : virtual public company_managementIf {
   void get_company_position_config(company_positon_lat_lag& _return, const std::string& company_name);
   int32_t send_get_company_position_config(const std::string& company_name);
   void recv_get_company_position_config(company_positon_lat_lag& _return, const int32_t seqid);
+  bool set_third_info(const std::string& key, const std::string& url, const std::string& ssid);
+  int32_t send_set_third_info(const std::string& key, const std::string& url, const std::string& ssid);
+  bool recv_set_third_info(const int32_t seqid);
+  void get_third_info(third_dev_info& _return, const std::string& ssid);
+  int32_t send_get_third_info(const std::string& ssid);
+  void recv_get_third_info(third_dev_info& _return, const int32_t seqid);
  protected:
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> piprot_;
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> poprot_;

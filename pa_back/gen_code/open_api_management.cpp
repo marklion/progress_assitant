@@ -1025,14 +1025,14 @@ uint32_t open_api_management_get_today_transformation_result::read(::apache::thr
         if (ftype == ::apache::thrift::protocol::T_LIST) {
           {
             this->success.clear();
-            uint32_t _size365;
-            ::apache::thrift::protocol::TType _etype368;
-            xfer += iprot->readListBegin(_etype368, _size365);
-            this->success.resize(_size365);
-            uint32_t _i369;
-            for (_i369 = 0; _i369 < _size365; ++_i369)
+            uint32_t _size367;
+            ::apache::thrift::protocol::TType _etype370;
+            xfer += iprot->readListBegin(_etype370, _size367);
+            this->success.resize(_size367);
+            uint32_t _i371;
+            for (_i371 = 0; _i371 < _size367; ++_i371)
             {
-              xfer += this->success[_i369].read(iprot);
+              xfer += this->success[_i371].read(iprot);
             }
             xfer += iprot->readListEnd();
           }
@@ -1071,10 +1071,10 @@ uint32_t open_api_management_get_today_transformation_result::write(::apache::th
     xfer += oprot->writeFieldBegin("success", ::apache::thrift::protocol::T_LIST, 0);
     {
       xfer += oprot->writeListBegin(::apache::thrift::protocol::T_STRUCT, static_cast<uint32_t>(this->success.size()));
-      std::vector<api_transformation_info> ::const_iterator _iter370;
-      for (_iter370 = this->success.begin(); _iter370 != this->success.end(); ++_iter370)
+      std::vector<api_transformation_info> ::const_iterator _iter372;
+      for (_iter372 = this->success.begin(); _iter372 != this->success.end(); ++_iter372)
       {
-        xfer += (*_iter370).write(oprot);
+        xfer += (*_iter372).write(oprot);
       }
       xfer += oprot->writeListEnd();
     }
@@ -1119,14 +1119,14 @@ uint32_t open_api_management_get_today_transformation_presult::read(::apache::th
         if (ftype == ::apache::thrift::protocol::T_LIST) {
           {
             (*(this->success)).clear();
-            uint32_t _size371;
-            ::apache::thrift::protocol::TType _etype374;
-            xfer += iprot->readListBegin(_etype374, _size371);
-            (*(this->success)).resize(_size371);
-            uint32_t _i375;
-            for (_i375 = 0; _i375 < _size371; ++_i375)
+            uint32_t _size373;
+            ::apache::thrift::protocol::TType _etype376;
+            xfer += iprot->readListBegin(_etype376, _size373);
+            (*(this->success)).resize(_size373);
+            uint32_t _i377;
+            for (_i377 = 0; _i377 < _size373; ++_i377)
             {
-              xfer += (*(this->success))[_i375].read(iprot);
+              xfer += (*(this->success))[_i377].read(iprot);
             }
             xfer += iprot->readListEnd();
           }
@@ -2252,14 +2252,14 @@ uint32_t open_api_management_proc_all_vehicle_info_result::read(::apache::thrift
         if (ftype == ::apache::thrift::protocol::T_LIST) {
           {
             this->success.clear();
-            uint32_t _size376;
-            ::apache::thrift::protocol::TType _etype379;
-            xfer += iprot->readListBegin(_etype379, _size376);
-            this->success.resize(_size376);
-            uint32_t _i380;
-            for (_i380 = 0; _i380 < _size376; ++_i380)
+            uint32_t _size378;
+            ::apache::thrift::protocol::TType _etype381;
+            xfer += iprot->readListBegin(_etype381, _size378);
+            this->success.resize(_size378);
+            uint32_t _i382;
+            for (_i382 = 0; _i382 < _size378; ++_i382)
             {
-              xfer += this->success[_i380].read(iprot);
+              xfer += this->success[_i382].read(iprot);
             }
             xfer += iprot->readListEnd();
           }
@@ -2298,10 +2298,10 @@ uint32_t open_api_management_proc_all_vehicle_info_result::write(::apache::thrif
     xfer += oprot->writeFieldBegin("success", ::apache::thrift::protocol::T_LIST, 0);
     {
       xfer += oprot->writeListBegin(::apache::thrift::protocol::T_STRUCT, static_cast<uint32_t>(this->success.size()));
-      std::vector<vehicle_info_resp> ::const_iterator _iter381;
-      for (_iter381 = this->success.begin(); _iter381 != this->success.end(); ++_iter381)
+      std::vector<vehicle_info_resp> ::const_iterator _iter383;
+      for (_iter383 = this->success.begin(); _iter383 != this->success.end(); ++_iter383)
       {
-        xfer += (*_iter381).write(oprot);
+        xfer += (*_iter383).write(oprot);
       }
       xfer += oprot->writeListEnd();
     }
@@ -2346,14 +2346,14 @@ uint32_t open_api_management_proc_all_vehicle_info_presult::read(::apache::thrif
         if (ftype == ::apache::thrift::protocol::T_LIST) {
           {
             (*(this->success)).clear();
-            uint32_t _size382;
-            ::apache::thrift::protocol::TType _etype385;
-            xfer += iprot->readListBegin(_etype385, _size382);
-            (*(this->success)).resize(_size382);
-            uint32_t _i386;
-            for (_i386 = 0; _i386 < _size382; ++_i386)
+            uint32_t _size384;
+            ::apache::thrift::protocol::TType _etype387;
+            xfer += iprot->readListBegin(_etype387, _size384);
+            (*(this->success)).resize(_size384);
+            uint32_t _i388;
+            for (_i388 = 0; _i388 < _size384; ++_i388)
             {
-              xfer += (*(this->success))[_i386].read(iprot);
+              xfer += (*(this->success))[_i388].read(iprot);
             }
             xfer += iprot->readListEnd();
           }
