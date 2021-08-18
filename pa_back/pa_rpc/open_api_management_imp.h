@@ -5,6 +5,7 @@
 #include "../pa_util/pa_data_base.h"
 #include "../pa_util/pa_utils.h"
 #include "stuff_plan_management_imp.h"
+#include "company_management_imp.h"
 
 #define OPEN_API_MSG_NOCOMPANY "company does not exist"
 #define OPEN_API_MSG_USER_ALREADY_EXIST "user already exists"
@@ -17,6 +18,7 @@
 #define OPEN_API_MSG_VICHELE_NOT_EXIST "vehicle specificed was not exist"
 #define OPEN_API_MSG_NO_PERMISSION "no permission to do this operation"
 #define OPEN_API_MSG_NO_DATA_FOUND "no data was found"
+#define OPEN_API_MSG_NO_CONTRACT "no contract was found, please add a contract first"
 
 class open_api_management_handler : public open_api_managementIf
 {
@@ -871,6 +873,39 @@ public:
         }
         exist_record->remove_record();
         ret = true;
+        return ret;
+    }
+
+    virtual bool proc_push_balance(const push_balance_req &_req, const std::string &token)
+    {
+        bool ret = false;
+        log_audit_basedon_token(token, __FUNCTION__);
+        auto company = _get_token_company(token);
+        if (!company)
+        {
+            PA_RETURN_MSG(OPEN_API_MSG_NO_PERMISSION);
+        }
+
+        auto id_ins_sql = PA_RPC_search_base_id_info_by_name(_req.customerName, "customer", *company);
+        if (id_ins_sql == _req.customerId)
+        {
+            auto customer_company = PA_DATAOPT_fetch_company(_req.customerName);
+            if (customer_company)
+            {
+                auto contract = customer_company->get_children<pa_sql_contract>("a_side", "b_side_ext_key == %ld", company->get_pri_id());
+                if (!contract)
+                {
+                    PA_RETURN_MSG(OPEN_API_MSG_NO_CONTRACT);
+                }
+                contract->balance = _req.balance;
+                return contract->update_record();
+            }
+        }
+        else
+        {
+            PA_RETURN_MSG(OPEN_API_MSG_NO_DATA_FOUND);
+        }
+
         return ret;
     }
 };

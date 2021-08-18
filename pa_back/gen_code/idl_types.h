@@ -87,6 +87,8 @@ class push_weight_req;
 
 class push_base_req;
 
+class push_balance_req;
+
 class vichele_stay_alone;
 
 class silent_user_info;
@@ -634,7 +636,7 @@ void swap(plan_status_rule &a, plan_status_rule &b);
 std::ostream& operator<<(std::ostream& out, const plan_status_rule& obj);
 
 typedef struct _common_contract__isset {
-  _common_contract__isset() : a_side_company(false), b_side_company(false), start_time(false), end_time(false), number(false), id(false), status(false), customer_code(false) {}
+  _common_contract__isset() : a_side_company(false), b_side_company(false), start_time(false), end_time(false), number(false), id(false), status(false), customer_code(false), balance(false) {}
   bool a_side_company :1;
   bool b_side_company :1;
   bool start_time :1;
@@ -643,6 +645,7 @@ typedef struct _common_contract__isset {
   bool id :1;
   bool status :1;
   bool customer_code :1;
+  bool balance :1;
 } _common_contract__isset;
 
 class common_contract : public virtual ::apache::thrift::TBase {
@@ -650,7 +653,7 @@ class common_contract : public virtual ::apache::thrift::TBase {
 
   common_contract(const common_contract&);
   common_contract& operator=(const common_contract&);
-  common_contract() : a_side_company(), b_side_company(), start_time(), end_time(), number(), id(0), status(0), customer_code() {
+  common_contract() : a_side_company(), b_side_company(), start_time(), end_time(), number(), id(0), status(0), customer_code(), balance(0) {
   }
 
   virtual ~common_contract() noexcept;
@@ -662,6 +665,7 @@ class common_contract : public virtual ::apache::thrift::TBase {
   int64_t id;
   int64_t status;
   std::string customer_code;
+  double balance;
 
   _common_contract__isset __isset;
 
@@ -681,6 +685,8 @@ class common_contract : public virtual ::apache::thrift::TBase {
 
   void __set_customer_code(const std::string& val);
 
+  void __set_balance(const double val);
+
   bool operator == (const common_contract & rhs) const
   {
     if (!(a_side_company == rhs.a_side_company))
@@ -698,6 +704,8 @@ class common_contract : public virtual ::apache::thrift::TBase {
     if (!(status == rhs.status))
       return false;
     if (!(customer_code == rhs.customer_code))
+      return false;
+    if (!(balance == rhs.balance))
       return false;
     return true;
   }
@@ -2426,6 +2434,60 @@ class push_base_req : public virtual ::apache::thrift::TBase {
 void swap(push_base_req &a, push_base_req &b);
 
 std::ostream& operator<<(std::ostream& out, const push_base_req& obj);
+
+typedef struct _push_balance_req__isset {
+  _push_balance_req__isset() : customerId(false), customerName(false), balance(false) {}
+  bool customerId :1;
+  bool customerName :1;
+  bool balance :1;
+} _push_balance_req__isset;
+
+class push_balance_req : public virtual ::apache::thrift::TBase {
+ public:
+
+  push_balance_req(const push_balance_req&);
+  push_balance_req& operator=(const push_balance_req&);
+  push_balance_req() : customerId(), customerName(), balance(0) {
+  }
+
+  virtual ~push_balance_req() noexcept;
+  std::string customerId;
+  std::string customerName;
+  double balance;
+
+  _push_balance_req__isset __isset;
+
+  void __set_customerId(const std::string& val);
+
+  void __set_customerName(const std::string& val);
+
+  void __set_balance(const double val);
+
+  bool operator == (const push_balance_req & rhs) const
+  {
+    if (!(customerId == rhs.customerId))
+      return false;
+    if (!(customerName == rhs.customerName))
+      return false;
+    if (!(balance == rhs.balance))
+      return false;
+    return true;
+  }
+  bool operator != (const push_balance_req &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const push_balance_req & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+  virtual void printTo(std::ostream& out) const;
+};
+
+void swap(push_balance_req &a, push_balance_req &b);
+
+std::ostream& operator<<(std::ostream& out, const push_balance_req& obj);
 
 typedef struct _vichele_stay_alone__isset {
   _vichele_stay_alone__isset() : id(false), stuff_name(false), company_name(false), main_vichele_number(false), behind_vichele_number(false), count(false), comment(false), date(false), destination(false), status(false), creator_name(false), creator_phone(false), repeated(false), driver_name(false), driver_phone(false), driver_id(false), transfor_company(false), p_time(false), m_time(false), p_weight(false), m_weight(false), j_weight(false) {}

@@ -1,6 +1,6 @@
 <template>
 <div class="plan_detail show">
-    <stuff-info-submit :orig_comment="comment" :orig_name="name" :orig_price="price" :is_create="false"  :orig_plan_time="plan_time" :plan_id="parseInt($route.params.plan_id)" :orig_vichele_info="vichele_info" :min_time="new Date(created_time)"></stuff-info-submit>
+    <stuff-info-submit :proxy_company="proxy_company" :type_id="type_id" :orig_comment="comment" :orig_name="name" :orig_price="price" :is_create="false"  :orig_plan_time="plan_time" :plan_id="parseInt($route.params.plan_id)" :orig_vichele_info="vichele_info" :min_time="new Date(created_time)"></stuff-info-submit>
 </div>
 </template>
 
@@ -20,6 +20,8 @@ export default {
             vichele_info: [],
             created_time: 10,
             comment:'',
+            type_id:0,
+            proxy_company:'',
         };
     },
     beforeMount: function () {
@@ -33,6 +35,8 @@ export default {
             vue_this.name = resp.name;
             vue_this.company = resp.sale_company;
             vue_this.price = resp.price;
+            vue_this.type_id = resp.type_id;
+            vue_this.proxy_company = resp.proxy_company;
         });
         vue_this.$call_remote_process("stuff_plan_management","get_status_rule", [parseInt(vue_this.$route.params.plan_id)]).then(function (resp) {
             vue_this.comment = resp[0].comment;

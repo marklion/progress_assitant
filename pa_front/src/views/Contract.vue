@@ -30,6 +30,7 @@
                 </template>
                 <div>开始日期：{{single_contract.start_time}}</div>
                 <div>到期日期：{{single_contract.end_time}}</div>
+                <div v-if="!$store.state.userinfo.buyer">余额：{{single_contract.balance}}</div>
             </van-cell>
             <div class="follow_status_show">
                 <van-row type="flex" :gutter="5" align="center">

@@ -15,6 +15,7 @@
         <div v-if="contract.number">
             <div>开始日期：{{contract.start_time}}</div>
             <div>到期日期：{{contract.end_time}}</div>
+            <div v-if="!$store.state.userinfo.buyer">余额：{{contract.balance}}</div>
         </div>
     </van-cell>
     <van-row type="flex" align="center" justify="center" v-if="!$store.state.userinfo.buyer">

@@ -9,6 +9,7 @@
 #include "../pa_util/pa_status_rule.h"
 #include "../external_src/writer.hpp"
 #include "pa_rpc_util.h"
+#include "company_management_imp.h"
 
 static std::vector<std::string> prepare_vichels(const std::string &_vicheles)
 {
@@ -439,6 +440,36 @@ public:
             PA_RETURN_MSG("用户未注册为卖家");
         }
     }
+
+    bool plan_cash_enough(pa_sql_plan &_plan)
+    {
+        bool ret = false;
+
+        try
+        {
+            stuff_plan tmp;
+            get_plan(tmp, _plan.get_pri_id());
+            common_contract contract;
+
+            company_management_handler ch;
+            ch.get_contract(contract, tmp.buy_company, tmp.sale_company);
+
+            auto has_cash = contract.balance;
+            auto req_cash = tmp.vichele_info.size() * 20 * tmp.price;
+
+            if (has_cash > req_cash)
+            {
+                ret = true;
+            }
+        }
+        catch (gen_exp e)
+        {
+            ret = false;
+        }
+
+        return ret;
+    }
+
     virtual bool confirm_plan(const int64_t plan_id, const std::string &ssid, const std::string &comment)
     {
         bool ret = false;
@@ -469,6 +500,10 @@ public:
         if (ret)
         {
             plan->send_wechat_msg(*opt_user, "确认了该计划, 附言：" + status_comment);
+            if (plan_cash_enough(*plan))
+            {
+                ret = confirm_pay(plan->get_pri_id(), ssid, "余额充足，自动确认收款");
+            }
         }
 
         return ret;
@@ -529,7 +564,7 @@ public:
                 found_vichele_info->finish = 1;
                 found_vichele_info->p_weight = itr.p_weight;
                 found_vichele_info->m_weight = itr.m_weight;
-                found_vichele_info->deliver_p_timestamp= itr.p_time;
+                found_vichele_info->deliver_p_timestamp = itr.p_time;
                 found_vichele_info->count = itr.count;
                 if (itr.m_time.length() <= 0)
                 {
@@ -841,23 +876,42 @@ public:
             PA_RETURN_UNLOGIN_MSG();
         }
         auto company = user->get_parent<pa_sql_company>("belong_company");
+        if (plan.proxy_company.length() > 0)
+        {
+            company.reset(PA_DATAOPT_fetch_company(plan.proxy_company).release());
+        }
         if (!company)
         {
             PA_RETURN_NOCOMPANY_MSG();
         }
+        auto stuff_type = sqlite_orm::search_record<pa_sql_stuff_info>(plan.type_id);
+        if (!stuff_type)
+        {
+            PA_RETURN_NOSTUFF_MSG();
+        }
+        auto sale_company = stuff_type->get_parent<pa_sql_company>("belong_company");
+        if (!sale_company)
+        {
+            PA_RETURN_NOPRIVA_MSG();
+        }
+        double requie_cash = stuff_type->price * plan.vichele_info.size() * 20;
+        auto contract = company->get_children<pa_sql_contract>("a_side", "b_side_ext_key == %ld", sale_company->get_pri_id());
+        double has_balance = 0;
+        if (contract)
+        {
+            has_balance = contract->balance;
+        }
+        if (requie_cash > has_balance)
+        {
+            auto req_cash = std::to_string(requie_cash);
+            req_cash = req_cash.substr(0, req_cash.size() - 4);
+            auto has_cash = std::to_string(has_balance);
+            has_cash = has_cash.substr(0, has_cash.size() - 4);
+            _return.append("计划金额（" + req_cash + "）可能超过公司余额(" + has_cash + ")");
+        }
         auto plan_time_day = plan.plan_time.substr(0, 10);
         for (auto &itr : plan.vichele_info)
         {
-            auto stuff_type = sqlite_orm::search_record<pa_sql_stuff_info>(plan.type_id);
-            if (!stuff_type)
-            {
-                PA_RETURN_NOSTUFF_MSG();
-            }
-            auto sale_company = stuff_type->get_parent<pa_sql_company>("belong_company");
-            if (!sale_company)
-            {
-                PA_RETURN_NOPRIVA_MSG();
-            }
             auto current_driver = sqlite_orm::search_record<pa_sql_driver>("phone == '%s' AND is_drop == 0 AND driver_id IS NOT NULL AND driver_id != ''", itr.driver_phone.c_str());
             if (current_driver)
             {
