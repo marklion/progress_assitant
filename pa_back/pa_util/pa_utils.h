@@ -49,5 +49,7 @@ void PA_DATAOPT_post_save_register(std::list<pa_sql_vichele_stay_alone> &_vichel
 std::unique_ptr<pa_sql_company> PA_DATAOPT_get_sale_company(pa_sql_single_vichele &_vichele);
 std::string PA_DATAOPT_search_base_id_info_by_name(const std::string &name, const std::string &type, pa_sql_company &_company);
 std::vector<meta_stuff_info> PA_DATAOPT_search_multi_stuff(pa_sql_vichele_stay_alone &_vichele);
+void PA_DATAOPT_post_change_register(pa_sql_single_vichele &_vichele);
+void PA_DATAOPT_post_change_register(pa_sql_vichele_stay_alone &_vicheles);
 
 #endif // _PA_UTILS_H_

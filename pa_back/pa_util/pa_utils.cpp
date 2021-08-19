@@ -528,6 +528,13 @@ void PA_DATAOPT_post_save_register(pa_sql_plan &_plan)
     {
         return;
     }
+
+    auto current_time = PA_DATAOPT_current_time();
+    auto date_only = current_time.substr(0, 10);
+    if (_plan.plan_time.substr(0, 10) != date_only)
+    {
+        return;
+    }
     auto company = stuff_info->get_parent<pa_sql_company>("belong_company");
     if (!company)
     {
@@ -535,7 +542,7 @@ void PA_DATAOPT_post_save_register(pa_sql_plan &_plan)
     }
     key = company->third_key;
     token = company->third_token;
-    ctrl_url += company->third_url + "/thirdParty/zyzl/saveRegister";
+    ctrl_url += company->third_url + "";
 
     if (key.length() > 0)
     {
@@ -543,7 +550,7 @@ void PA_DATAOPT_post_save_register(pa_sql_plan &_plan)
         stuff_plan_management_handler sp;
         stuff_plan tmp;
         sp.get_plan(tmp, _plan.get_pri_id());
-        for (auto &itr:tmp.vichele_info)
+        for (auto &itr : tmp.vichele_info)
         {
             neb::CJsonObject sub_req;
             sub_req.Add("id", std::to_string(itr.vichele_id) + "S");
@@ -601,14 +608,20 @@ void PA_DATAOPT_post_save_register(std::list<pa_sql_vichele_stay_alone> &_vichel
     {
         return;
     }
+    auto current_time = PA_DATAOPT_current_time();
+    auto date_only = current_time.substr(0, 10);
     key = company->third_key;
     token = company->third_token;
-    ctrl_url += company->third_url + "/thirdParty/zyzl/saveRegister";
+    ctrl_url += company->third_url + "";
     if (key.length() > 0)
     {
         neb::CJsonObject req;
         for (auto &itr : _vicheles)
         {
+            if (itr.date.substr(0, 10) != date_only)
+            {
+                continue;
+            }
             neb::CJsonObject sub_req;
             sub_req.Add("id", std::to_string(itr.get_pri_id()) + "B");
             sub_req.Add("plateNo", itr.main_vichele_number);
@@ -630,28 +643,29 @@ void PA_DATAOPT_post_save_register(std::list<pa_sql_vichele_stay_alone> &_vichel
             if (multi_stuff.size() > 1)
             {
                 sub_req.Add("isMulti", true, true);
-                sub_req.Add("multiStuff", [=]()->neb::CJsonObject{
-                    neb::CJsonObject ret;
-                    for (auto &single_stuff:multi_stuff)
-                    {
-                        neb::CJsonObject s_ret;
-                        s_ret.Add("stuffId", single_stuff.stuffId);
-                        s_ret.Add("stuffName", single_stuff.stuffName);
-                        s_ret.Add("weight", single_stuff.weight);
-                        ret.Add(s_ret);
-                    }
-                    return ret;
-                }());
+                sub_req.Add("multiStuff", [=]() -> neb::CJsonObject
+                            {
+                                neb::CJsonObject ret;
+                                for (auto &single_stuff : multi_stuff)
+                                {
+                                    neb::CJsonObject s_ret;
+                                    s_ret.Add("stuffId", single_stuff.stuffId);
+                                    s_ret.Add("stuffName", single_stuff.stuffName);
+                                    s_ret.Add("weight", single_stuff.weight);
+                                    ret.Add(s_ret);
+                                }
+                                return ret;
+                            }());
                 sub_req.Add("enterWeight", [=]() -> double
-                {
-                    double ret = 0;
-                    for (auto &itr : multi_stuff)
-                    {
-                        ret += itr.weight;
-                    }
+                            {
+                                double ret = 0;
+                                for (auto &itr : multi_stuff)
+                                {
+                                    ret += itr.weight;
+                                }
 
-                    return ret;
-                }());
+                                return ret;
+                            }());
 
                 sub_req.Add("stuffName", "");
                 sub_req.Add("stuffId", "");
@@ -678,7 +692,9 @@ std::vector<meta_stuff_info> PA_DATAOPT_search_multi_stuff(pa_sql_vichele_stay_a
     auto destination = _vichele.get_parent<pa_sql_company>("destination");
     if (destination)
     {
-        auto same_vicheles = sqlite_orm::search_record_all<pa_sql_vichele_stay_alone>("main_vichele_number == '%s' AND behind_vichele_number == '%s' AND destination_ext_key == %ld AND is_drop == 0 AND status == 1", _vichele.main_vichele_number.c_str(), _vichele.behind_vichele_number.c_str(), destination->get_pri_id());
+        auto current_time = PA_DATAOPT_current_time();
+        auto date_only = current_time.substr(0, 10);
+        auto same_vicheles = sqlite_orm::search_record_all<pa_sql_vichele_stay_alone>("main_vichele_number == '%s' AND behind_vichele_number == '%s' AND destination_ext_key == %ld AND is_drop == 0 AND status == 1 AND date LIKE '%s%%'", _vichele.main_vichele_number.c_str(), _vichele.behind_vichele_number.c_str(), destination->get_pri_id(), date_only.c_str());
         for (auto &itr : same_vicheles)
         {
             meta_stuff_info tmp;
@@ -690,4 +706,148 @@ std::vector<meta_stuff_info> PA_DATAOPT_search_multi_stuff(pa_sql_vichele_stay_a
     }
 
     return ret;
+}
+
+void PA_DATAOPT_post_change_register(pa_sql_single_vichele &_vichele)
+{
+    std::string ctrl_url = "";
+    std::string key;
+    std::string token;
+
+    auto company = PA_DATAOPT_get_sale_company(_vichele);
+    if (!company)
+    {
+        return;
+    }
+
+    auto _plan = _vichele.get_parent<pa_sql_plan>("belong_plan");
+    if (!_plan)
+    {
+        return;
+    }
+
+    key = company->third_key;
+    token = company->third_token;
+    ctrl_url += company->third_url + "";
+
+    if (key.length() > 0)
+    {
+        neb::CJsonObject fin_req;
+        stuff_plan_management_handler sp;
+        stuff_plan tmp;
+        sp.get_plan(tmp, _plan->get_pri_id());
+        for (auto &itr : tmp.vichele_info)
+        {
+            if (itr.vichele_id == _vichele.get_pri_id())
+            {
+                neb::CJsonObject sub_req;
+                sub_req.Add("id", std::to_string(itr.vichele_id) + "S");
+                sub_req.Add("plateNo", itr.main_vichele);
+                sub_req.Add("backPlateNo", itr.behind_vichele);
+                sub_req.Add("stuffName", tmp.name);
+                sub_req.Add("stuffId", PA_DATAOPT_search_base_id_info_by_name(tmp.name, "stuff", *company));
+                sub_req.Add("supplierName", "");
+                sub_req.Add("supplierId", "");
+                sub_req.Add("vehicleTeamName", tmp.buy_company);
+                sub_req.Add("vehicleTeamId", PA_DATAOPT_search_base_id_info_by_name(tmp.buy_company, "customer", *company));
+                sub_req.Add("enterWeight", 0);
+                sub_req.Add("companyName", tmp.buy_company);
+                sub_req.Add("customerId", PA_DATAOPT_search_base_id_info_by_name(tmp.buy_company, "customer", *company));
+                sub_req.Add("driverName", itr.driver_name);
+                sub_req.Add("driverPhone", itr.driver_phone);
+                sub_req.Add("driverId", itr.driver_id);
+                sub_req.Add("isSale", true, true);
+                sub_req.Add("price", tmp.price);
+                sub_req.Add("createTime", PA_DATAOPT_date_2_timestring(tmp.created_time));
+                sub_req.Add("orderNo", std::to_string(tmp.created_time) + std::to_string(tmp.plan_id));
+                sub_req.AddEmptySubArray("multiStuff");
+                sub_req.Add("isMulti", false, false);
+                sub_req.Add("changeType", 1);
+                fin_req.Add("data", sub_req);
+                break;
+            }
+        }
+
+        post_json_to_third(ctrl_url, fin_req.ToString(), key, token);
+    }
+}
+void PA_DATAOPT_post_change_register(pa_sql_vichele_stay_alone &_vichele)
+{
+    std::string ctrl_url = "";
+    std::string key;
+    std::string token;
+
+    auto company = _vichele.get_parent<pa_sql_company>("destination");
+    if (!company)
+    {
+        return;
+    }
+    key = company->third_key;
+    token = company->third_token;
+    ctrl_url += company->third_url + "";
+    if (key.length() > 0)
+    {
+        auto &real_vichele = _vichele;
+        neb::CJsonObject sub_req;
+        sub_req.Add("id", std::to_string(real_vichele.get_pri_id()) + "B");
+        sub_req.Add("plateNo", real_vichele.main_vichele_number);
+        sub_req.Add("backPlateNo", real_vichele.behind_vichele_number);
+        sub_req.Add("supplierName", real_vichele.company_name);
+        sub_req.Add("supplierId", PA_DATAOPT_search_base_id_info_by_name(real_vichele.company_name, "suppier", *company));
+        sub_req.Add("vehicleTeamName", real_vichele.transfor_company);
+        sub_req.Add("vehicleTeamId", PA_DATAOPT_search_base_id_info_by_name(real_vichele.transfor_company, "vehicleTeam", *company));
+        sub_req.Add("companyName", "");
+        sub_req.Add("customerId", "");
+        sub_req.Add("driverName", real_vichele.driver_name);
+        sub_req.Add("driverPhone", real_vichele.driver_phone);
+        sub_req.Add("driverId", real_vichele.driver_id);
+        sub_req.Add("isSale", false, false);
+        sub_req.Add("price", 0);
+        sub_req.Add("createTime", real_vichele.timestamp);
+        sub_req.Add("orderNo", "");
+        auto multi_stuff = PA_DATAOPT_search_multi_stuff(real_vichele);
+        if (multi_stuff.size() > 1)
+        {
+            sub_req.Add("isMulti", true, true);
+            sub_req.Add("multiStuff", [=]() -> neb::CJsonObject
+                        {
+                            neb::CJsonObject ret;
+                            for (auto &single_stuff : multi_stuff)
+                            {
+                                neb::CJsonObject s_ret;
+                                s_ret.Add("stuffId", single_stuff.stuffId);
+                                s_ret.Add("stuffName", single_stuff.stuffName);
+                                s_ret.Add("weight", single_stuff.weight);
+                                ret.Add(s_ret);
+                            }
+                            return ret;
+                        }());
+            sub_req.Add("enterWeight", [=]() -> double
+                        {
+                            double ret = 0;
+                            for (auto &itr : multi_stuff)
+                            {
+                                ret += itr.weight;
+                            }
+
+                            return ret;
+                        }());
+
+            sub_req.Add("stuffName", "");
+            sub_req.Add("stuffId", "");
+        }
+        else
+        {
+            sub_req.AddEmptySubArray("multiStuff");
+            sub_req.Add("isMulti", false, false);
+            sub_req.Add("enterWeight", real_vichele.count);
+            sub_req.Add("stuffName", real_vichele.stuff_name);
+            sub_req.Add("stuffId", PA_DATAOPT_search_base_id_info_by_name(real_vichele.stuff_name, "stuff", *company));
+        }
+        sub_req.Add("changeType", 1);
+        neb::CJsonObject fin_req;
+        fin_req.Add("data", sub_req);
+
+        post_json_to_third(ctrl_url, fin_req.ToString(), key, token);
+    }
 }
