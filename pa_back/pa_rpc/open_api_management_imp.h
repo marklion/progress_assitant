@@ -429,7 +429,7 @@ public:
     vehicle_info_resp make_resp_from_single_vichele(pa_sql_single_vichele &_vichele)
     {
         vehicle_info_resp ret;
-        auto sale_company = PA_RPC_get_sale_company(_vichele);
+        auto sale_company = PA_DATAOPT_get_sale_company(_vichele);
         if (!sale_company)
         {
             return ret;
@@ -454,7 +454,7 @@ public:
         if (plan)
         {
             ret.stuffName = plan->name;
-            ret.stuffId = PA_RPC_search_base_id_info_by_name(plan->name, "stuff", *sale_company);
+            ret.stuffId = PA_DATAOPT_search_base_id_info_by_name(plan->name, "stuff", *sale_company);
             auto creator = plan->get_parent<pa_sql_userinfo>("created_by");
             if (creator)
             {
@@ -480,7 +480,7 @@ public:
         }
 
         ret.isSale = true;
-        ret.customerId = PA_RPC_search_base_id_info_by_name(ret.companyName, "customer", *sale_company);
+        ret.customerId = PA_DATAOPT_search_base_id_info_by_name(ret.companyName, "customer", *sale_company);
         ret.isMulti = false;
         ret.vehicleTeamName = ret.companyName;
         ret.vehicleTeamId = ret.customerId;
@@ -499,7 +499,7 @@ public:
                 meta_stuff_info tmp;
                 tmp.stuffName = itr.stuff_name;
                 tmp.weight = itr.count;
-                tmp.stuffId = PA_RPC_search_base_id_info_by_name(tmp.stuffName, "stuff", *destination);
+                tmp.stuffId = PA_DATAOPT_search_base_id_info_by_name(tmp.stuffName, "stuff", *destination);
                 ret.push_back(tmp);
             }
         }
@@ -564,11 +564,11 @@ public:
                 _return.isSale = false;
                 _return.plateNo = itr.main_vichele_number;
                 _return.stuffName = itr.stuff_name;
-                _return.stuffId = PA_RPC_search_base_id_info_by_name(_return.stuffName, "stuff", *company);
+                _return.stuffId = PA_DATAOPT_search_base_id_info_by_name(_return.stuffName, "stuff", *company);
                 _return.supplierName = itr.company_name;
-                _return.supplierId = PA_RPC_search_base_id_info_by_name(_return.supplierName, "supplier", *company);
+                _return.supplierId = PA_DATAOPT_search_base_id_info_by_name(_return.supplierName, "supplier", *company);
                 _return.vehicleTeamName = itr.transfor_company;
-                _return.vehicleTeamId = PA_RPC_search_base_id_info_by_name(_return.vehicleTeamName, "vehicleTeam", *company);
+                _return.vehicleTeamId = PA_DATAOPT_search_base_id_info_by_name(_return.vehicleTeamName, "vehicleTeam", *company);
                 auto multi_stuff = search_multi_stuff(itr);
                 if (multi_stuff.size() > 1)
                 {
@@ -632,12 +632,12 @@ public:
             tmp.isSale = false;
             tmp.plateNo = itr.main_vichele_number;
             tmp.stuffName = itr.stuff_name;
-            tmp.stuffId = PA_RPC_search_base_id_info_by_name(tmp.stuffName, "stuff", *company);
+            tmp.stuffId = PA_DATAOPT_search_base_id_info_by_name(tmp.stuffName, "stuff", *company);
 
             tmp.supplierName = itr.company_name;
-            tmp.supplierId = PA_RPC_search_base_id_info_by_name(tmp.supplierName, "supplier", *company);
+            tmp.supplierId = PA_DATAOPT_search_base_id_info_by_name(tmp.supplierName, "supplier", *company);
             tmp.vehicleTeamName = itr.transfor_company;
-            tmp.vehicleTeamId = PA_RPC_search_base_id_info_by_name(tmp.vehicleTeamName, "vehicleTeam", *company);
+            tmp.vehicleTeamId = PA_DATAOPT_search_base_id_info_by_name(tmp.vehicleTeamName, "vehicleTeam", *company);
             auto multi_stuff = search_multi_stuff(itr);
             if (multi_stuff.size() > 1)
             {
@@ -886,7 +886,7 @@ public:
             PA_RETURN_MSG(OPEN_API_MSG_NO_PERMISSION);
         }
 
-        auto id_ins_sql = PA_RPC_search_base_id_info_by_name(_req.customerName, "customer", *company);
+        auto id_ins_sql = PA_DATAOPT_search_base_id_info_by_name(_req.customerName, "customer", *company);
         if (id_ins_sql == _req.customerId)
         {
             auto customer_company = PA_DATAOPT_fetch_company(_req.customerName);

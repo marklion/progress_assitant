@@ -7378,22 +7378,14 @@ uint32_t company_management_set_third_info_args::read(::apache::thrift::protocol
     switch (fid)
     {
       case 1:
-        if (ftype == ::apache::thrift::protocol::T_STRING) {
-          xfer += iprot->readString(this->key);
-          this->__isset.key = true;
+        if (ftype == ::apache::thrift::protocol::T_STRUCT) {
+          xfer += this->_info.read(iprot);
+          this->__isset._info = true;
         } else {
           xfer += iprot->skip(ftype);
         }
         break;
       case 2:
-        if (ftype == ::apache::thrift::protocol::T_STRING) {
-          xfer += iprot->readString(this->url);
-          this->__isset.url = true;
-        } else {
-          xfer += iprot->skip(ftype);
-        }
-        break;
-      case 3:
         if (ftype == ::apache::thrift::protocol::T_STRING) {
           xfer += iprot->readString(this->ssid);
           this->__isset.ssid = true;
@@ -7418,15 +7410,11 @@ uint32_t company_management_set_third_info_args::write(::apache::thrift::protoco
   ::apache::thrift::protocol::TOutputRecursionTracker tracker(*oprot);
   xfer += oprot->writeStructBegin("company_management_set_third_info_args");
 
-  xfer += oprot->writeFieldBegin("key", ::apache::thrift::protocol::T_STRING, 1);
-  xfer += oprot->writeString(this->key);
+  xfer += oprot->writeFieldBegin("_info", ::apache::thrift::protocol::T_STRUCT, 1);
+  xfer += this->_info.write(oprot);
   xfer += oprot->writeFieldEnd();
 
-  xfer += oprot->writeFieldBegin("url", ::apache::thrift::protocol::T_STRING, 2);
-  xfer += oprot->writeString(this->url);
-  xfer += oprot->writeFieldEnd();
-
-  xfer += oprot->writeFieldBegin("ssid", ::apache::thrift::protocol::T_STRING, 3);
+  xfer += oprot->writeFieldBegin("ssid", ::apache::thrift::protocol::T_STRING, 2);
   xfer += oprot->writeString(this->ssid);
   xfer += oprot->writeFieldEnd();
 
@@ -7445,15 +7433,11 @@ uint32_t company_management_set_third_info_pargs::write(::apache::thrift::protoc
   ::apache::thrift::protocol::TOutputRecursionTracker tracker(*oprot);
   xfer += oprot->writeStructBegin("company_management_set_third_info_pargs");
 
-  xfer += oprot->writeFieldBegin("key", ::apache::thrift::protocol::T_STRING, 1);
-  xfer += oprot->writeString((*(this->key)));
+  xfer += oprot->writeFieldBegin("_info", ::apache::thrift::protocol::T_STRUCT, 1);
+  xfer += (*(this->_info)).write(oprot);
   xfer += oprot->writeFieldEnd();
 
-  xfer += oprot->writeFieldBegin("url", ::apache::thrift::protocol::T_STRING, 2);
-  xfer += oprot->writeString((*(this->url)));
-  xfer += oprot->writeFieldEnd();
-
-  xfer += oprot->writeFieldBegin("ssid", ::apache::thrift::protocol::T_STRING, 3);
+  xfer += oprot->writeFieldBegin("ssid", ::apache::thrift::protocol::T_STRING, 2);
   xfer += oprot->writeString((*(this->ssid)));
   xfer += oprot->writeFieldEnd();
 
@@ -9813,20 +9797,19 @@ void company_managementClient::recv_get_company_position_config(company_positon_
   throw ::apache::thrift::TApplicationException(::apache::thrift::TApplicationException::MISSING_RESULT, "get_company_position_config failed: unknown result");
 }
 
-bool company_managementClient::set_third_info(const std::string& key, const std::string& url, const std::string& ssid)
+bool company_managementClient::set_third_info(const third_dev_info& _info, const std::string& ssid)
 {
-  send_set_third_info(key, url, ssid);
+  send_set_third_info(_info, ssid);
   return recv_set_third_info();
 }
 
-void company_managementClient::send_set_third_info(const std::string& key, const std::string& url, const std::string& ssid)
+void company_managementClient::send_set_third_info(const third_dev_info& _info, const std::string& ssid)
 {
   int32_t cseqid = 0;
   oprot_->writeMessageBegin("set_third_info", ::apache::thrift::protocol::T_CALL, cseqid);
 
   company_management_set_third_info_pargs args;
-  args.key = &key;
-  args.url = &url;
+  args._info = &_info;
   args.ssid = &ssid;
   args.write(oprot_);
 
@@ -11856,7 +11839,7 @@ void company_managementProcessor::process_set_third_info(int32_t seqid, ::apache
 
   company_management_set_third_info_result result;
   try {
-    result.success = iface_->set_third_info(args.key, args.url, args.ssid);
+    result.success = iface_->set_third_info(args._info, args.ssid);
     result.__isset.success = true;
   } catch (gen_exp &e) {
     result.e = e;
@@ -14857,21 +14840,20 @@ void company_managementConcurrentClient::recv_get_company_position_config(compan
   } // end while(true)
 }
 
-bool company_managementConcurrentClient::set_third_info(const std::string& key, const std::string& url, const std::string& ssid)
+bool company_managementConcurrentClient::set_third_info(const third_dev_info& _info, const std::string& ssid)
 {
-  int32_t seqid = send_set_third_info(key, url, ssid);
+  int32_t seqid = send_set_third_info(_info, ssid);
   return recv_set_third_info(seqid);
 }
 
-int32_t company_managementConcurrentClient::send_set_third_info(const std::string& key, const std::string& url, const std::string& ssid)
+int32_t company_managementConcurrentClient::send_set_third_info(const third_dev_info& _info, const std::string& ssid)
 {
   int32_t cseqid = this->sync_->generateSeqId();
   ::apache::thrift::async::TConcurrentSendSentry sentry(this->sync_.get());
   oprot_->writeMessageBegin("set_third_info", ::apache::thrift::protocol::T_CALL, cseqid);
 
   company_management_set_third_info_pargs args;
-  args.key = &key;
-  args.url = &url;
+  args._info = &_info;
   args.ssid = &ssid;
   args.write(oprot_);
 

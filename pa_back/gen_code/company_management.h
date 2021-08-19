@@ -55,7 +55,7 @@ class company_managementIf {
   virtual bool set_work_time(const std::string& ssid, const int64_t start_work_time, const int64_t end_work_time) = 0;
   virtual void get_work_time(company_work_time& _return, const std::string& company_name) = 0;
   virtual void get_company_position_config(company_positon_lat_lag& _return, const std::string& company_name) = 0;
-  virtual bool set_third_info(const std::string& key, const std::string& url, const std::string& ssid) = 0;
+  virtual bool set_third_info(const third_dev_info& _info, const std::string& ssid) = 0;
   virtual void get_third_info(third_dev_info& _return, const std::string& ssid) = 0;
 };
 
@@ -197,7 +197,7 @@ class company_managementNull : virtual public company_managementIf {
   void get_company_position_config(company_positon_lat_lag& /* _return */, const std::string& /* company_name */) {
     return;
   }
-  bool set_third_info(const std::string& /* key */, const std::string& /* url */, const std::string& /* ssid */) {
+  bool set_third_info(const third_dev_info& /* _info */, const std::string& /* ssid */) {
     bool _return = false;
     return _return;
   }
@@ -4032,9 +4032,8 @@ class company_management_get_company_position_config_presult {
 };
 
 typedef struct _company_management_set_third_info_args__isset {
-  _company_management_set_third_info_args__isset() : key(false), url(false), ssid(false) {}
-  bool key :1;
-  bool url :1;
+  _company_management_set_third_info_args__isset() : _info(false), ssid(false) {}
+  bool _info :1;
   bool ssid :1;
 } _company_management_set_third_info_args__isset;
 
@@ -4043,27 +4042,22 @@ class company_management_set_third_info_args {
 
   company_management_set_third_info_args(const company_management_set_third_info_args&);
   company_management_set_third_info_args& operator=(const company_management_set_third_info_args&);
-  company_management_set_third_info_args() : key(), url(), ssid() {
+  company_management_set_third_info_args() : ssid() {
   }
 
   virtual ~company_management_set_third_info_args() noexcept;
-  std::string key;
-  std::string url;
+  third_dev_info _info;
   std::string ssid;
 
   _company_management_set_third_info_args__isset __isset;
 
-  void __set_key(const std::string& val);
-
-  void __set_url(const std::string& val);
+  void __set__info(const third_dev_info& val);
 
   void __set_ssid(const std::string& val);
 
   bool operator == (const company_management_set_third_info_args & rhs) const
   {
-    if (!(key == rhs.key))
-      return false;
-    if (!(url == rhs.url))
+    if (!(_info == rhs._info))
       return false;
     if (!(ssid == rhs.ssid))
       return false;
@@ -4086,8 +4080,7 @@ class company_management_set_third_info_pargs {
 
 
   virtual ~company_management_set_third_info_pargs() noexcept;
-  const std::string* key;
-  const std::string* url;
+  const third_dev_info* _info;
   const std::string* ssid;
 
   uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
@@ -4393,8 +4386,8 @@ class company_managementClient : virtual public company_managementIf {
   void get_company_position_config(company_positon_lat_lag& _return, const std::string& company_name);
   void send_get_company_position_config(const std::string& company_name);
   void recv_get_company_position_config(company_positon_lat_lag& _return);
-  bool set_third_info(const std::string& key, const std::string& url, const std::string& ssid);
-  void send_set_third_info(const std::string& key, const std::string& url, const std::string& ssid);
+  bool set_third_info(const third_dev_info& _info, const std::string& ssid);
+  void send_set_third_info(const third_dev_info& _info, const std::string& ssid);
   bool recv_set_third_info();
   void get_third_info(third_dev_info& _return, const std::string& ssid);
   void send_get_third_info(const std::string& ssid);
@@ -4829,13 +4822,13 @@ class company_managementMultiface : virtual public company_managementIf {
     return;
   }
 
-  bool set_third_info(const std::string& key, const std::string& url, const std::string& ssid) {
+  bool set_third_info(const third_dev_info& _info, const std::string& ssid) {
     size_t sz = ifaces_.size();
     size_t i = 0;
     for (; i < (sz - 1); ++i) {
-      ifaces_[i]->set_third_info(key, url, ssid);
+      ifaces_[i]->set_third_info(_info, ssid);
     }
-    return ifaces_[i]->set_third_info(key, url, ssid);
+    return ifaces_[i]->set_third_info(_info, ssid);
   }
 
   void get_third_info(third_dev_info& _return, const std::string& ssid) {
@@ -4979,8 +4972,8 @@ class company_managementConcurrentClient : virtual public company_managementIf {
   void get_company_position_config(company_positon_lat_lag& _return, const std::string& company_name);
   int32_t send_get_company_position_config(const std::string& company_name);
   void recv_get_company_position_config(company_positon_lat_lag& _return, const int32_t seqid);
-  bool set_third_info(const std::string& key, const std::string& url, const std::string& ssid);
-  int32_t send_set_third_info(const std::string& key, const std::string& url, const std::string& ssid);
+  bool set_third_info(const third_dev_info& _info, const std::string& ssid);
+  int32_t send_set_third_info(const third_dev_info& _info, const std::string& ssid);
   bool recv_set_third_info(const int32_t seqid);
   void get_third_info(third_dev_info& _return, const std::string& ssid);
   int32_t send_get_third_info(const std::string& ssid);

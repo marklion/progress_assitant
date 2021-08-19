@@ -2069,8 +2069,16 @@ void third_dev_info::__set_key(const std::string& val) {
   this->key = val;
 }
 
-void third_dev_info::__set_url(const std::string& val) {
-  this->url = val;
+void third_dev_info::__set_ctrl_url(const std::string& val) {
+  this->ctrl_url = val;
+}
+
+void third_dev_info::__set_dms_url(const std::string& val) {
+  this->dms_url = val;
+}
+
+void third_dev_info::__set_token(const std::string& val) {
+  this->token = val;
 }
 std::ostream& operator<<(std::ostream& out, const third_dev_info& obj)
 {
@@ -2110,8 +2118,24 @@ uint32_t third_dev_info::read(::apache::thrift::protocol::TProtocol* iprot) {
         break;
       case 2:
         if (ftype == ::apache::thrift::protocol::T_STRING) {
-          xfer += iprot->readString(this->url);
-          this->__isset.url = true;
+          xfer += iprot->readString(this->ctrl_url);
+          this->__isset.ctrl_url = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 3:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->dms_url);
+          this->__isset.dms_url = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 4:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->token);
+          this->__isset.token = true;
         } else {
           xfer += iprot->skip(ftype);
         }
@@ -2137,8 +2161,16 @@ uint32_t third_dev_info::write(::apache::thrift::protocol::TProtocol* oprot) con
   xfer += oprot->writeString(this->key);
   xfer += oprot->writeFieldEnd();
 
-  xfer += oprot->writeFieldBegin("url", ::apache::thrift::protocol::T_STRING, 2);
-  xfer += oprot->writeString(this->url);
+  xfer += oprot->writeFieldBegin("ctrl_url", ::apache::thrift::protocol::T_STRING, 2);
+  xfer += oprot->writeString(this->ctrl_url);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("dms_url", ::apache::thrift::protocol::T_STRING, 3);
+  xfer += oprot->writeString(this->dms_url);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("token", ::apache::thrift::protocol::T_STRING, 4);
+  xfer += oprot->writeString(this->token);
   xfer += oprot->writeFieldEnd();
 
   xfer += oprot->writeFieldStop();
@@ -2149,18 +2181,24 @@ uint32_t third_dev_info::write(::apache::thrift::protocol::TProtocol* oprot) con
 void swap(third_dev_info &a, third_dev_info &b) {
   using ::std::swap;
   swap(a.key, b.key);
-  swap(a.url, b.url);
+  swap(a.ctrl_url, b.ctrl_url);
+  swap(a.dms_url, b.dms_url);
+  swap(a.token, b.token);
   swap(a.__isset, b.__isset);
 }
 
 third_dev_info::third_dev_info(const third_dev_info& other26) {
   key = other26.key;
-  url = other26.url;
+  ctrl_url = other26.ctrl_url;
+  dms_url = other26.dms_url;
+  token = other26.token;
   __isset = other26.__isset;
 }
 third_dev_info& third_dev_info::operator=(const third_dev_info& other27) {
   key = other27.key;
-  url = other27.url;
+  ctrl_url = other27.ctrl_url;
+  dms_url = other27.dms_url;
+  token = other27.token;
   __isset = other27.__isset;
   return *this;
 }
@@ -2168,7 +2206,9 @@ void third_dev_info::printTo(std::ostream& out) const {
   using ::apache::thrift::to_string;
   out << "third_dev_info(";
   out << "key=" << to_string(key);
-  out << ", " << "url=" << to_string(url);
+  out << ", " << "ctrl_url=" << to_string(ctrl_url);
+  out << ", " << "dms_url=" << to_string(dms_url);
+  out << ", " << "token=" << to_string(token);
   out << ")";
 }
 
@@ -2464,6 +2504,10 @@ void vichele_in_plan::__set_p_weight(const double val) {
 void vichele_in_plan::__set_m_weight(const double val) {
   this->m_weight = val;
 }
+
+void vichele_in_plan::__set_driver_id(const std::string& val) {
+  this->driver_id = val;
+}
 std::ostream& operator<<(std::ostream& out, const vichele_in_plan& obj)
 {
   obj.printTo(out);
@@ -2620,6 +2664,14 @@ uint32_t vichele_in_plan::read(::apache::thrift::protocol::TProtocol* iprot) {
           xfer += iprot->skip(ftype);
         }
         break;
+      case 17:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->driver_id);
+          this->__isset.driver_id = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
       default:
         xfer += iprot->skip(ftype);
         break;
@@ -2701,6 +2753,10 @@ uint32_t vichele_in_plan::write(::apache::thrift::protocol::TProtocol* oprot) co
   xfer += oprot->writeDouble(this->m_weight);
   xfer += oprot->writeFieldEnd();
 
+  xfer += oprot->writeFieldBegin("driver_id", ::apache::thrift::protocol::T_STRING, 17);
+  xfer += oprot->writeString(this->driver_id);
+  xfer += oprot->writeFieldEnd();
+
   xfer += oprot->writeFieldStop();
   xfer += oprot->writeStructEnd();
   return xfer;
@@ -2724,6 +2780,7 @@ void swap(vichele_in_plan &a, vichele_in_plan &b) {
   swap(a.p_time, b.p_time);
   swap(a.p_weight, b.p_weight);
   swap(a.m_weight, b.m_weight);
+  swap(a.driver_id, b.driver_id);
   swap(a.__isset, b.__isset);
 }
 
@@ -2744,6 +2801,7 @@ vichele_in_plan::vichele_in_plan(const vichele_in_plan& other32) {
   p_time = other32.p_time;
   p_weight = other32.p_weight;
   m_weight = other32.m_weight;
+  driver_id = other32.driver_id;
   __isset = other32.__isset;
 }
 vichele_in_plan& vichele_in_plan::operator=(const vichele_in_plan& other33) {
@@ -2763,6 +2821,7 @@ vichele_in_plan& vichele_in_plan::operator=(const vichele_in_plan& other33) {
   p_time = other33.p_time;
   p_weight = other33.p_weight;
   m_weight = other33.m_weight;
+  driver_id = other33.driver_id;
   __isset = other33.__isset;
   return *this;
 }
@@ -2785,6 +2844,7 @@ void vichele_in_plan::printTo(std::ostream& out) const {
   out << ", " << "p_time=" << to_string(p_time);
   out << ", " << "p_weight=" << to_string(p_weight);
   out << ", " << "m_weight=" << to_string(m_weight);
+  out << ", " << "driver_id=" << to_string(driver_id);
   out << ")";
 }
 

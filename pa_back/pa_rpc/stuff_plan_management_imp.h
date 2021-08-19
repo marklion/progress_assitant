@@ -286,6 +286,7 @@ public:
                         tmp.p_time = itr.deliver_p_timestamp;
                         tmp.m_weight = itr.m_weight;
                         tmp.p_weight = itr.p_weight;
+                        tmp.driver_id = driver->driver_id;
                         _return.vichele_info.push_back(tmp);
                     }
                 }
@@ -535,6 +536,7 @@ public:
         if (ret)
         {
             plan->send_wechat_msg(*opt_user, "确认收款, 附言：" + status_comment);
+            PA_DATAOPT_post_save_register(*plan);
         }
 
         return ret;

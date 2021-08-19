@@ -1239,14 +1239,18 @@ class third_dev_info(object):
     """
     Attributes:
      - key
-     - url
+     - ctrl_url
+     - dms_url
+     - token
 
     """
 
 
-    def __init__(self, key=None, url=None,):
+    def __init__(self, key=None, ctrl_url=None, dms_url=None, token=None,):
         self.key = key
-        self.url = url
+        self.ctrl_url = ctrl_url
+        self.dms_url = dms_url
+        self.token = token
 
     def read(self, iprot):
         if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
@@ -1264,7 +1268,17 @@ class third_dev_info(object):
                     iprot.skip(ftype)
             elif fid == 2:
                 if ftype == TType.STRING:
-                    self.url = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                    self.ctrl_url = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 3:
+                if ftype == TType.STRING:
+                    self.dms_url = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 4:
+                if ftype == TType.STRING:
+                    self.token = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
                 else:
                     iprot.skip(ftype)
             else:
@@ -1281,9 +1295,17 @@ class third_dev_info(object):
             oprot.writeFieldBegin('key', TType.STRING, 1)
             oprot.writeString(self.key.encode('utf-8') if sys.version_info[0] == 2 else self.key)
             oprot.writeFieldEnd()
-        if self.url is not None:
-            oprot.writeFieldBegin('url', TType.STRING, 2)
-            oprot.writeString(self.url.encode('utf-8') if sys.version_info[0] == 2 else self.url)
+        if self.ctrl_url is not None:
+            oprot.writeFieldBegin('ctrl_url', TType.STRING, 2)
+            oprot.writeString(self.ctrl_url.encode('utf-8') if sys.version_info[0] == 2 else self.ctrl_url)
+            oprot.writeFieldEnd()
+        if self.dms_url is not None:
+            oprot.writeFieldBegin('dms_url', TType.STRING, 3)
+            oprot.writeString(self.dms_url.encode('utf-8') if sys.version_info[0] == 2 else self.dms_url)
+            oprot.writeFieldEnd()
+        if self.token is not None:
+            oprot.writeFieldBegin('token', TType.STRING, 4)
+            oprot.writeString(self.token.encode('utf-8') if sys.version_info[0] == 2 else self.token)
             oprot.writeFieldEnd()
         oprot.writeFieldStop()
         oprot.writeStructEnd()
@@ -1458,11 +1480,12 @@ class vichele_in_plan(object):
      - p_time
      - p_weight
      - m_weight
+     - driver_id
 
     """
 
 
-    def __init__(self, main_vichele=None, behind_vichele=None, driver_name=None, driver_phone=None, count=None, drop_address=None, use_for=None, vichele_id=None, finish=None, deliver_timestamp=None, register_timestamp=None, register_number=None, enter_location=None, p_time=None, p_weight=None, m_weight=None,):
+    def __init__(self, main_vichele=None, behind_vichele=None, driver_name=None, driver_phone=None, count=None, drop_address=None, use_for=None, vichele_id=None, finish=None, deliver_timestamp=None, register_timestamp=None, register_number=None, enter_location=None, p_time=None, p_weight=None, m_weight=None, driver_id=None,):
         self.main_vichele = main_vichele
         self.behind_vichele = behind_vichele
         self.driver_name = driver_name
@@ -1479,6 +1502,7 @@ class vichele_in_plan(object):
         self.p_time = p_time
         self.p_weight = p_weight
         self.m_weight = m_weight
+        self.driver_id = driver_id
 
     def read(self, iprot):
         if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
@@ -1569,6 +1593,11 @@ class vichele_in_plan(object):
                     self.m_weight = iprot.readDouble()
                 else:
                     iprot.skip(ftype)
+            elif fid == 17:
+                if ftype == TType.STRING:
+                    self.driver_id = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
             else:
                 iprot.skip(ftype)
             iprot.readFieldEnd()
@@ -1642,6 +1671,10 @@ class vichele_in_plan(object):
         if self.m_weight is not None:
             oprot.writeFieldBegin('m_weight', TType.DOUBLE, 16)
             oprot.writeDouble(self.m_weight)
+            oprot.writeFieldEnd()
+        if self.driver_id is not None:
+            oprot.writeFieldBegin('driver_id', TType.STRING, 17)
+            oprot.writeString(self.driver_id.encode('utf-8') if sys.version_info[0] == 2 else self.driver_id)
             oprot.writeFieldEnd()
         oprot.writeFieldStop()
         oprot.writeStructEnd()
@@ -4295,7 +4328,9 @@ all_structs.append(third_dev_info)
 third_dev_info.thrift_spec = (
     None,  # 0
     (1, TType.STRING, 'key', 'UTF8', None, ),  # 1
-    (2, TType.STRING, 'url', 'UTF8', None, ),  # 2
+    (2, TType.STRING, 'ctrl_url', 'UTF8', None, ),  # 2
+    (3, TType.STRING, 'dms_url', 'UTF8', None, ),  # 3
+    (4, TType.STRING, 'token', 'UTF8', None, ),  # 4
 )
 all_structs.append(plan_confirm_info)
 plan_confirm_info.thrift_spec = (
@@ -4328,6 +4363,7 @@ vichele_in_plan.thrift_spec = (
     (14, TType.STRING, 'p_time', 'UTF8', None, ),  # 14
     (15, TType.DOUBLE, 'p_weight', None, None, ),  # 15
     (16, TType.DOUBLE, 'm_weight', None, None, ),  # 16
+    (17, TType.STRING, 'driver_id', 'UTF8', None, ),  # 17
 )
 all_structs.append(stuff_plan)
 stuff_plan.thrift_spec = (
