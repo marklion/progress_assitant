@@ -487,25 +487,7 @@ public:
         return ret;
     }
 
-    std::vector<meta_stuff_info> search_multi_stuff(pa_sql_vichele_stay_alone _vichele)
-    {
-        std::vector<meta_stuff_info> ret;
-        auto destination = _vichele.get_parent<pa_sql_company>("destination");
-        if (destination)
-        {
-            auto same_vicheles = sqlite_orm::search_record_all<pa_sql_vichele_stay_alone>("main_vichele_number == '%s' AND behind_vichele_number == '%s' AND destination_ext_key == %ld AND is_drop == 0 AND status == 1", _vichele.main_vichele_number.c_str(), _vichele.behind_vichele_number.c_str(), destination->get_pri_id());
-            for (auto &itr : same_vicheles)
-            {
-                meta_stuff_info tmp;
-                tmp.stuffName = itr.stuff_name;
-                tmp.weight = itr.count;
-                tmp.stuffId = PA_DATAOPT_search_base_id_info_by_name(tmp.stuffName, "stuff", *destination);
-                ret.push_back(tmp);
-            }
-        }
-
-        return ret;
-    }
+    
 
     virtual void proc_vehicle_info(vehicle_info_resp &_return, const std::string &plateNo, const std::string &driverId, const std::string &token)
     {
@@ -569,7 +551,7 @@ public:
                 _return.supplierId = PA_DATAOPT_search_base_id_info_by_name(_return.supplierName, "supplier", *company);
                 _return.vehicleTeamName = itr.transfor_company;
                 _return.vehicleTeamId = PA_DATAOPT_search_base_id_info_by_name(_return.vehicleTeamName, "vehicleTeam", *company);
-                auto multi_stuff = search_multi_stuff(itr);
+                auto multi_stuff = PA_DATAOPT_search_multi_stuff(itr);
                 if (multi_stuff.size() > 1)
                 {
                     _return.isMulti = true;
@@ -638,7 +620,7 @@ public:
             tmp.supplierId = PA_DATAOPT_search_base_id_info_by_name(tmp.supplierName, "supplier", *company);
             tmp.vehicleTeamName = itr.transfor_company;
             tmp.vehicleTeamId = PA_DATAOPT_search_base_id_info_by_name(tmp.vehicleTeamName, "vehicleTeam", *company);
-            auto multi_stuff = search_multi_stuff(itr);
+            auto multi_stuff = PA_DATAOPT_search_multi_stuff(itr);
             if (multi_stuff.size() > 1)
             {
                 tmp.isMulti = true;

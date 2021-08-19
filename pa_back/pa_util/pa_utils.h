@@ -5,6 +5,7 @@
 #include <uuid/uuid.h>
 #include <curl/curl.h>
 #include "../external_src/CJsonObject.hpp"
+#include "../gen_code/idl_types.h"
 #include <fstream>
 
 #define PA_RETURN_MSG(_msg)  do {gen_exp e;e.msg = _msg; throw e;} while (0)
@@ -44,7 +45,9 @@ std::string PA_DATAOPT_date_2_timestring(int64_t _date);
 void PA_DATAOPT_notify_pay(pa_sql_company &_company);
 bool PA_DATAOPT_valid_email(const std::string &_email, pa_sql_company &_company);
 void PA_DATAOPT_post_save_register(pa_sql_plan &_plan);
+void PA_DATAOPT_post_save_register(std::list<pa_sql_vichele_stay_alone> &_vicheles);
 std::unique_ptr<pa_sql_company> PA_DATAOPT_get_sale_company(pa_sql_single_vichele &_vichele);
 std::string PA_DATAOPT_search_base_id_info_by_name(const std::string &name, const std::string &type, pa_sql_company &_company);
+std::vector<meta_stuff_info> PA_DATAOPT_search_multi_stuff(pa_sql_vichele_stay_alone &_vichele);
 
 #endif // _PA_UTILS_H_

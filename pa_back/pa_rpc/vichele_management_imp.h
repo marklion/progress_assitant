@@ -367,6 +367,7 @@ public:
         auto extra_vichele = company->get_all_children<pa_sql_vichele_stay_alone>("destination", "(%s) AND status == 0 AND is_drop == 0", query_cmd.c_str());
         for (auto &itr : extra_vichele)
         {
+            std::list<pa_sql_vichele_stay_alone> tmp;
             itr.status = 1;
             if (itr.update_record())
             {
@@ -374,6 +375,15 @@ public:
                 if (silent_user)
                 {
                     PA_WECHAT_send_extra_vichele_msg(itr, silent_user->open_id, user->name + "确认了进厂申请");
+                }
+                if (PA_DATAOPT_search_multi_stuff(itr).size() > 1)
+                {
+                    //need update register
+                }
+                else
+                {
+                    tmp.push_back(itr);
+                    PA_DATAOPT_post_save_register(tmp);
                 }
             }
         }

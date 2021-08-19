@@ -546,7 +546,7 @@ void PA_DATAOPT_post_save_register(pa_sql_plan &_plan)
         for (auto &itr:tmp.vichele_info)
         {
             neb::CJsonObject sub_req;
-            sub_req.Add("id", std::to_string(tmp.plan_id) + "S");
+            sub_req.Add("id", std::to_string(itr.vichele_id) + "S");
             sub_req.Add("plateNo", itr.main_vichele);
             sub_req.Add("backPlateNo", itr.behind_vichele);
             sub_req.Add("stuffName", tmp.name);
@@ -585,6 +585,108 @@ std::string PA_DATAOPT_search_base_id_info_by_name(const std::string &name, cons
     if (base_info)
     {
         ret = base_info->id;
+    }
+
+    return ret;
+}
+
+void PA_DATAOPT_post_save_register(std::list<pa_sql_vichele_stay_alone> &_vicheles)
+{
+    std::string ctrl_url = "";
+    std::string key;
+    std::string token;
+
+    auto company = (*_vicheles.begin()).get_parent<pa_sql_company>("destination");
+    if (!company)
+    {
+        return;
+    }
+    key = company->third_key;
+    token = company->third_token;
+    ctrl_url += company->third_url + "/thirdParty/zyzl/saveRegister";
+    if (key.length() > 0)
+    {
+        neb::CJsonObject req;
+        for (auto &itr : _vicheles)
+        {
+            neb::CJsonObject sub_req;
+            sub_req.Add("id", std::to_string(itr.get_pri_id()) + "B");
+            sub_req.Add("plateNo", itr.main_vichele_number);
+            sub_req.Add("backPlateNo", itr.behind_vichele_number);
+            sub_req.Add("supplierName", itr.company_name);
+            sub_req.Add("supplierId", PA_DATAOPT_search_base_id_info_by_name(itr.company_name, "suppier", *company));
+            sub_req.Add("vehicleTeamName", itr.transfor_company);
+            sub_req.Add("vehicleTeamId", PA_DATAOPT_search_base_id_info_by_name(itr.transfor_company, "vehicleTeam", *company));
+            sub_req.Add("companyName", "");
+            sub_req.Add("customerId", "");
+            sub_req.Add("driverName", itr.driver_name);
+            sub_req.Add("driverPhone", itr.driver_phone);
+            sub_req.Add("driverId", itr.driver_id);
+            sub_req.Add("isSale", false, false);
+            sub_req.Add("price", 0);
+            sub_req.Add("createTime", itr.timestamp);
+            sub_req.Add("orderNo", "");
+            auto multi_stuff = PA_DATAOPT_search_multi_stuff(itr);
+            if (multi_stuff.size() > 1)
+            {
+                sub_req.Add("isMulti", true, true);
+                sub_req.Add("multiStuff", [=]()->neb::CJsonObject{
+                    neb::CJsonObject ret;
+                    for (auto &single_stuff:multi_stuff)
+                    {
+                        neb::CJsonObject s_ret;
+                        s_ret.Add("stuffId", single_stuff.stuffId);
+                        s_ret.Add("stuffName", single_stuff.stuffName);
+                        s_ret.Add("weight", single_stuff.weight);
+                        ret.Add(s_ret);
+                    }
+                    return ret;
+                }());
+                sub_req.Add("enterWeight", [=]() -> double
+                {
+                    double ret = 0;
+                    for (auto &itr : multi_stuff)
+                    {
+                        ret += itr.weight;
+                    }
+
+                    return ret;
+                }());
+
+                sub_req.Add("stuffName", "");
+                sub_req.Add("stuffId", "");
+            }
+            else
+            {
+                sub_req.AddEmptySubArray("multiStuff");
+                sub_req.Add("isMulti", false, false);
+                sub_req.Add("enterWeight", itr.count);
+                sub_req.Add("stuffName", itr.stuff_name);
+                sub_req.Add("stuffId", PA_DATAOPT_search_base_id_info_by_name(itr.stuff_name, "stuff", *company));
+            }
+            req.Add(sub_req);
+        }
+        neb::CJsonObject fin_req;
+        fin_req.Add("data", req);
+
+        post_json_to_third(ctrl_url, fin_req.ToString(), key, token);
+    }
+}
+std::vector<meta_stuff_info> PA_DATAOPT_search_multi_stuff(pa_sql_vichele_stay_alone &_vichele)
+{
+    std::vector<meta_stuff_info> ret;
+    auto destination = _vichele.get_parent<pa_sql_company>("destination");
+    if (destination)
+    {
+        auto same_vicheles = sqlite_orm::search_record_all<pa_sql_vichele_stay_alone>("main_vichele_number == '%s' AND behind_vichele_number == '%s' AND destination_ext_key == %ld AND is_drop == 0 AND status == 1", _vichele.main_vichele_number.c_str(), _vichele.behind_vichele_number.c_str(), destination->get_pri_id());
+        for (auto &itr : same_vicheles)
+        {
+            meta_stuff_info tmp;
+            tmp.stuffName = itr.stuff_name;
+            tmp.weight = itr.count;
+            tmp.stuffId = PA_DATAOPT_search_base_id_info_by_name(tmp.stuffName, "stuff", *destination);
+            ret.push_back(tmp);
+        }
     }
 
     return ret;
