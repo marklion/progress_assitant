@@ -4294,15 +4294,11 @@ company_management_get_company_position_config_result.prototype.write = function
 };
 
 var company_management_set_third_info_args = function(args) {
-  this.key = null;
-  this.url = null;
+  this._info = null;
   this.ssid = null;
   if (args) {
-    if (args.key !== undefined && args.key !== null) {
-      this.key = args.key;
-    }
-    if (args.url !== undefined && args.url !== null) {
-      this.url = args.url;
+    if (args._info !== undefined && args._info !== null) {
+      this._info = new ttypes.third_dev_info(args._info);
     }
     if (args.ssid !== undefined && args.ssid !== null) {
       this.ssid = args.ssid;
@@ -4321,20 +4317,14 @@ company_management_set_third_info_args.prototype.read = function(input) {
     }
     switch (fid) {
       case 1:
-      if (ftype == Thrift.Type.STRING) {
-        this.key = input.readString();
+      if (ftype == Thrift.Type.STRUCT) {
+        this._info = new ttypes.third_dev_info();
+        this._info.read(input);
       } else {
         input.skip(ftype);
       }
       break;
       case 2:
-      if (ftype == Thrift.Type.STRING) {
-        this.url = input.readString();
-      } else {
-        input.skip(ftype);
-      }
-      break;
-      case 3:
       if (ftype == Thrift.Type.STRING) {
         this.ssid = input.readString();
       } else {
@@ -4352,18 +4342,13 @@ company_management_set_third_info_args.prototype.read = function(input) {
 
 company_management_set_third_info_args.prototype.write = function(output) {
   output.writeStructBegin('company_management_set_third_info_args');
-  if (this.key !== null && this.key !== undefined) {
-    output.writeFieldBegin('key', Thrift.Type.STRING, 1);
-    output.writeString(this.key);
-    output.writeFieldEnd();
-  }
-  if (this.url !== null && this.url !== undefined) {
-    output.writeFieldBegin('url', Thrift.Type.STRING, 2);
-    output.writeString(this.url);
+  if (this._info !== null && this._info !== undefined) {
+    output.writeFieldBegin('_info', Thrift.Type.STRUCT, 1);
+    this._info.write(output);
     output.writeFieldEnd();
   }
   if (this.ssid !== null && this.ssid !== undefined) {
-    output.writeFieldBegin('ssid', Thrift.Type.STRING, 3);
+    output.writeFieldBegin('ssid', Thrift.Type.STRING, 2);
     output.writeString(this.ssid);
     output.writeFieldEnd();
   }
@@ -6626,7 +6611,7 @@ company_managementClient.prototype.recv_get_company_position_config = function(i
   return callback('get_company_position_config failed: unknown result');
 };
 
-company_managementClient.prototype.set_third_info = function(key, url, ssid, callback) {
+company_managementClient.prototype.set_third_info = function(_info, ssid, callback) {
   this._seqid = this.new_seqid();
   if (callback === undefined) {
     var _defer = Q.defer();
@@ -6637,19 +6622,18 @@ company_managementClient.prototype.set_third_info = function(key, url, ssid, cal
         _defer.resolve(result);
       }
     };
-    this.send_set_third_info(key, url, ssid);
+    this.send_set_third_info(_info, ssid);
     return _defer.promise;
   } else {
     this._reqs[this.seqid()] = callback;
-    this.send_set_third_info(key, url, ssid);
+    this.send_set_third_info(_info, ssid);
   }
 };
 
-company_managementClient.prototype.send_set_third_info = function(key, url, ssid) {
+company_managementClient.prototype.send_set_third_info = function(_info, ssid) {
   var output = new this.pClass(this.output);
   var params = {
-    key: key,
-    url: url,
+    _info: _info,
     ssid: ssid
   };
   var args = new company_management_set_third_info_args(params);
@@ -8181,10 +8165,9 @@ company_managementProcessor.prototype.process_set_third_info = function(seqid, i
   var args = new company_management_set_third_info_args();
   args.read(input);
   input.readMessageEnd();
-  if (this._handler.set_third_info.length === 3) {
+  if (this._handler.set_third_info.length === 2) {
     Q.fcall(this._handler.set_third_info.bind(this._handler),
-      args.key,
-      args.url,
+      args._info,
       args.ssid
     ).then(function(result) {
       var result_obj = new company_management_set_third_info_result({success: result});
@@ -8206,7 +8189,7 @@ company_managementProcessor.prototype.process_set_third_info = function(seqid, i
       output.flush();
     });
   } else {
-    this._handler.set_third_info(args.key, args.url, args.ssid, function (err, result) {
+    this._handler.set_third_info(args._info, args.ssid, function (err, result) {
       var result_obj;
       if ((err === null || typeof err === 'undefined') || err instanceof ttypes.gen_exp) {
         result_obj = new company_management_set_third_info_result((err !== null || typeof err === 'undefined') ? err : {success: result});

@@ -896,9 +896,11 @@ void swap(company_positon_lat_lag &a, company_positon_lat_lag &b);
 std::ostream& operator<<(std::ostream& out, const company_positon_lat_lag& obj);
 
 typedef struct _third_dev_info__isset {
-  _third_dev_info__isset() : key(false), url(false) {}
+  _third_dev_info__isset() : key(false), ctrl_url(false), dms_url(false), token(false) {}
   bool key :1;
-  bool url :1;
+  bool ctrl_url :1;
+  bool dms_url :1;
+  bool token :1;
 } _third_dev_info__isset;
 
 class third_dev_info : public virtual ::apache::thrift::TBase {
@@ -906,24 +908,34 @@ class third_dev_info : public virtual ::apache::thrift::TBase {
 
   third_dev_info(const third_dev_info&);
   third_dev_info& operator=(const third_dev_info&);
-  third_dev_info() : key(), url() {
+  third_dev_info() : key(), ctrl_url(), dms_url(), token() {
   }
 
   virtual ~third_dev_info() noexcept;
   std::string key;
-  std::string url;
+  std::string ctrl_url;
+  std::string dms_url;
+  std::string token;
 
   _third_dev_info__isset __isset;
 
   void __set_key(const std::string& val);
 
-  void __set_url(const std::string& val);
+  void __set_ctrl_url(const std::string& val);
+
+  void __set_dms_url(const std::string& val);
+
+  void __set_token(const std::string& val);
 
   bool operator == (const third_dev_info & rhs) const
   {
     if (!(key == rhs.key))
       return false;
-    if (!(url == rhs.url))
+    if (!(ctrl_url == rhs.ctrl_url))
+      return false;
+    if (!(dms_url == rhs.dms_url))
+      return false;
+    if (!(token == rhs.token))
       return false;
     return true;
   }
@@ -1040,7 +1052,7 @@ void swap(pay_confirm_info &a, pay_confirm_info &b);
 std::ostream& operator<<(std::ostream& out, const pay_confirm_info& obj);
 
 typedef struct _vichele_in_plan__isset {
-  _vichele_in_plan__isset() : main_vichele(false), behind_vichele(false), driver_name(false), driver_phone(false), count(false), drop_address(false), use_for(false), vichele_id(false), finish(false), deliver_timestamp(false), register_timestamp(false), register_number(false), enter_location(false), p_time(false), p_weight(false), m_weight(false) {}
+  _vichele_in_plan__isset() : main_vichele(false), behind_vichele(false), driver_name(false), driver_phone(false), count(false), drop_address(false), use_for(false), vichele_id(false), finish(false), deliver_timestamp(false), register_timestamp(false), register_number(false), enter_location(false), p_time(false), p_weight(false), m_weight(false), driver_id(false) {}
   bool main_vichele :1;
   bool behind_vichele :1;
   bool driver_name :1;
@@ -1057,6 +1069,7 @@ typedef struct _vichele_in_plan__isset {
   bool p_time :1;
   bool p_weight :1;
   bool m_weight :1;
+  bool driver_id :1;
 } _vichele_in_plan__isset;
 
 class vichele_in_plan : public virtual ::apache::thrift::TBase {
@@ -1064,7 +1077,7 @@ class vichele_in_plan : public virtual ::apache::thrift::TBase {
 
   vichele_in_plan(const vichele_in_plan&);
   vichele_in_plan& operator=(const vichele_in_plan&);
-  vichele_in_plan() : main_vichele(), behind_vichele(), driver_name(), driver_phone(), count(0), drop_address(), use_for(), vichele_id(0), finish(0), deliver_timestamp(), register_timestamp(), register_number(), enter_location(), p_time(), p_weight(0), m_weight(0) {
+  vichele_in_plan() : main_vichele(), behind_vichele(), driver_name(), driver_phone(), count(0), drop_address(), use_for(), vichele_id(0), finish(0), deliver_timestamp(), register_timestamp(), register_number(), enter_location(), p_time(), p_weight(0), m_weight(0), driver_id() {
   }
 
   virtual ~vichele_in_plan() noexcept;
@@ -1084,6 +1097,7 @@ class vichele_in_plan : public virtual ::apache::thrift::TBase {
   std::string p_time;
   double p_weight;
   double m_weight;
+  std::string driver_id;
 
   _vichele_in_plan__isset __isset;
 
@@ -1119,6 +1133,8 @@ class vichele_in_plan : public virtual ::apache::thrift::TBase {
 
   void __set_m_weight(const double val);
 
+  void __set_driver_id(const std::string& val);
+
   bool operator == (const vichele_in_plan & rhs) const
   {
     if (!(main_vichele == rhs.main_vichele))
@@ -1152,6 +1168,8 @@ class vichele_in_plan : public virtual ::apache::thrift::TBase {
     if (!(p_weight == rhs.p_weight))
       return false;
     if (!(m_weight == rhs.m_weight))
+      return false;
+    if (!(driver_id == rhs.driver_id))
       return false;
     return true;
   }

@@ -890,7 +890,7 @@ public:
         _return.lat = positon.lat;
     }
 
-    virtual bool set_third_info(const std::string &key, const std::string &url, const std::string &ssid)
+    virtual bool set_third_info(const third_dev_info &_info, const std::string &ssid)
     {
         bool ret = false;
         auto opt_user = PA_DATAOPT_get_online_user(ssid);
@@ -903,8 +903,10 @@ public:
         {
             PA_RETURN_NOCOMPANY_MSG();
         }
-        company->third_key = key;
-        company->third_url = url;
+        company->third_key = _info.key;
+        company->third_url = _info.ctrl_url;
+        company->third_dms_url = _info.dms_url;
+        company->third_token = _info.token;
 
         ret = company->update_record();
 
@@ -924,7 +926,9 @@ public:
             PA_RETURN_NOCOMPANY_MSG();
         }
         _return.key = company->third_key;
-        _return.url = company->third_url;
+        _return.ctrl_url = company->third_url;
+        _return.dms_url = company->third_dms_url;
+        _return.token = company->third_token;
     }
 };
 #endif // _COMPANY_MANAGEMENT_IMP_H_

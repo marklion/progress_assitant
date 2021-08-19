@@ -18,6 +18,8 @@ public:
     int work_end_time = 0;
     std::string third_key;
     std::string third_url;
+    std::string third_dms_url;
+    std::string third_token;
 
     virtual std::vector<sqlite_orm_column> self_columns_defined()
     {
@@ -33,6 +35,8 @@ public:
         ret.push_back(sqlite_orm_column("work_end_time", sqlite_orm_column::INTEGER, &work_end_time));
         ret.push_back(sqlite_orm_column("third_key", sqlite_orm_column::STRING, &third_key));
         ret.push_back(sqlite_orm_column("third_url", sqlite_orm_column::STRING, &third_url));
+        ret.push_back(sqlite_orm_column("third_dms_url", sqlite_orm_column::STRING, &third_dms_url));
+        ret.push_back(sqlite_orm_column("third_token", sqlite_orm_column::STRING, &third_token));
 
         return ret;
     }

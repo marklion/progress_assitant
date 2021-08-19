@@ -109,30 +109,5 @@ std::list<pa_sql_plan> PA_RPC_get_all_plans_related_by_company(pa_sql_company &_
     return ret;
 }
 
-std::string PA_RPC_search_base_id_info_by_name(const std::string &name, const std::string &type, pa_sql_company &_company)
-{
-    std::string ret;
 
-    auto base_info = _company.get_children<pa_sql_base_info>("belong_company", "name == '%s' AND type == '%s'", name.c_str(), type.c_str());
-    if (base_info)
-    {
-        ret = base_info->id;
-    }
 
-    return ret;
-}
-
-std::unique_ptr<pa_sql_company> PA_RPC_get_sale_company(pa_sql_single_vichele &_vichele)
-{
-    auto plan = _vichele.get_parent<pa_sql_plan>("belong_plan");
-    if (plan)
-    {
-        auto stuff_info = plan->get_parent<pa_sql_stuff_info>("belong_stuff");
-        if (stuff_info)
-        {
-            return stuff_info->get_parent<pa_sql_company>("belong_company");
-        }
-    }
-
-    return std::unique_ptr<pa_sql_company>();
-}

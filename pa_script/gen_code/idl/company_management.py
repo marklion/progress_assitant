@@ -306,11 +306,10 @@ class Iface(object):
         """
         pass
 
-    def set_third_info(self, key, url, ssid):
+    def set_third_info(self, _info, ssid):
         """
         Parameters:
-         - key
-         - url
+         - _info
          - ssid
 
         """
@@ -1492,22 +1491,20 @@ class Client(Iface):
             raise result.e
         raise TApplicationException(TApplicationException.MISSING_RESULT, "get_company_position_config failed: unknown result")
 
-    def set_third_info(self, key, url, ssid):
+    def set_third_info(self, _info, ssid):
         """
         Parameters:
-         - key
-         - url
+         - _info
          - ssid
 
         """
-        self.send_set_third_info(key, url, ssid)
+        self.send_set_third_info(_info, ssid)
         return self.recv_set_third_info()
 
-    def send_set_third_info(self, key, url, ssid):
+    def send_set_third_info(self, _info, ssid):
         self._oprot.writeMessageBegin('set_third_info', TMessageType.CALL, self._seqid)
         args = set_third_info_args()
-        args.key = key
-        args.url = url
+        args._info = _info
         args.ssid = ssid
         args.write(self._oprot)
         self._oprot.writeMessageEnd()
@@ -2490,7 +2487,7 @@ class Processor(Iface, TProcessor):
         iprot.readMessageEnd()
         result = set_third_info_result()
         try:
-            result.success = self._handler.set_third_info(args.key, args.url, args.ssid)
+            result.success = self._handler.set_third_info(args._info, args.ssid)
             msg_type = TMessageType.REPLY
         except TTransport.TTransportException:
             raise
@@ -7300,16 +7297,14 @@ get_company_position_config_result.thrift_spec = (
 class set_third_info_args(object):
     """
     Attributes:
-     - key
-     - url
+     - _info
      - ssid
 
     """
 
 
-    def __init__(self, key=None, url=None, ssid=None,):
-        self.key = key
-        self.url = url
+    def __init__(self, _info=None, ssid=None,):
+        self._info = _info
         self.ssid = ssid
 
     def read(self, iprot):
@@ -7322,16 +7317,12 @@ class set_third_info_args(object):
             if ftype == TType.STOP:
                 break
             if fid == 1:
-                if ftype == TType.STRING:
-                    self.key = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                if ftype == TType.STRUCT:
+                    self._info = third_dev_info()
+                    self._info.read(iprot)
                 else:
                     iprot.skip(ftype)
             elif fid == 2:
-                if ftype == TType.STRING:
-                    self.url = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
-                else:
-                    iprot.skip(ftype)
-            elif fid == 3:
                 if ftype == TType.STRING:
                     self.ssid = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
                 else:
@@ -7346,16 +7337,12 @@ class set_third_info_args(object):
             oprot.trans.write(oprot._fast_encode(self, [self.__class__, self.thrift_spec]))
             return
         oprot.writeStructBegin('set_third_info_args')
-        if self.key is not None:
-            oprot.writeFieldBegin('key', TType.STRING, 1)
-            oprot.writeString(self.key.encode('utf-8') if sys.version_info[0] == 2 else self.key)
-            oprot.writeFieldEnd()
-        if self.url is not None:
-            oprot.writeFieldBegin('url', TType.STRING, 2)
-            oprot.writeString(self.url.encode('utf-8') if sys.version_info[0] == 2 else self.url)
+        if self._info is not None:
+            oprot.writeFieldBegin('_info', TType.STRUCT, 1)
+            self._info.write(oprot)
             oprot.writeFieldEnd()
         if self.ssid is not None:
-            oprot.writeFieldBegin('ssid', TType.STRING, 3)
+            oprot.writeFieldBegin('ssid', TType.STRING, 2)
             oprot.writeString(self.ssid.encode('utf-8') if sys.version_info[0] == 2 else self.ssid)
             oprot.writeFieldEnd()
         oprot.writeFieldStop()
@@ -7377,9 +7364,8 @@ class set_third_info_args(object):
 all_structs.append(set_third_info_args)
 set_third_info_args.thrift_spec = (
     None,  # 0
-    (1, TType.STRING, 'key', 'UTF8', None, ),  # 1
-    (2, TType.STRING, 'url', 'UTF8', None, ),  # 2
-    (3, TType.STRING, 'ssid', 'UTF8', None, ),  # 3
+    (1, TType.STRUCT, '_info', [third_dev_info, None], None, ),  # 1
+    (2, TType.STRING, 'ssid', 'UTF8', None, ),  # 2
 )
 
 

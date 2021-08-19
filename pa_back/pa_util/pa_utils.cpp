@@ -1,5 +1,6 @@
 #include "pa_utils.h"
 #include "wechat_msg.h"
+#include "../pa_rpc/stuff_plan_management_imp.h"
 
 #define SALE_CONFIG_FILE "/conf/data_config.json"
 
@@ -26,6 +27,33 @@ std::string PA_DATAOPT_rest_post(const std::string &_url, const std::string &_js
         curl_easy_setopt(curlhandle, CURLOPT_POSTFIELDS, _json.c_str());
         curl_easy_perform(curlhandle);
         curl_easy_cleanup(curlhandle);
+    }
+
+    return in_buff;
+}
+std::string PA_DATAOPT_rest_post(const std::string &_url, const std::string &_json, const std::string &_key, const std::string &_token)
+{
+    std::string in_buff;
+    auto curlhandle = curl_easy_init();
+    auto key_header = "key:" + _key;
+    auto token = "token:" + _token;
+    if (nullptr != curlhandle)
+    {
+        struct curl_slist *header = nullptr;
+        header = curl_slist_append(header, key_header.c_str());
+        header = curl_slist_append(header, token.c_str());
+        header = curl_slist_append(header, "Content-Type: Application/json");
+        curl_easy_setopt(curlhandle, CURLOPT_HTTPHEADER, header);
+        curl_easy_setopt(curlhandle, CURLOPT_URL, _url.c_str());
+        curl_easy_setopt(curlhandle, CURLOPT_WRITEDATA, &in_buff);
+        curl_easy_setopt(curlhandle, CURLOPT_WRITEFUNCTION, pa_proc_curl);
+        // 设置post提交方式
+        curl_easy_setopt(curlhandle, CURLOPT_POST, 1);
+        // 设置post的数据
+        curl_easy_setopt(curlhandle, CURLOPT_POSTFIELDS, _json.c_str());
+        curl_easy_perform(curlhandle);
+        curl_easy_cleanup(curlhandle);
+        curl_slist_free_all(header);
     }
 
     return in_buff;
@@ -441,6 +469,122 @@ pa_util_company_position_config PA_DATAOPT_get_position_config(const std::string
             position_config.Get("lag", ret.lag);
             position_config.Get("distance", ret.distance);
         }
+    }
+
+    return ret;
+}
+std::unique_ptr<pa_sql_company> PA_DATAOPT_get_sale_company(pa_sql_single_vichele &_vichele)
+{
+    auto plan = _vichele.get_parent<pa_sql_plan>("belong_plan");
+    if (plan)
+    {
+        auto stuff_info = plan->get_parent<pa_sql_stuff_info>("belong_stuff");
+        if (stuff_info)
+        {
+            return stuff_info->get_parent<pa_sql_company>("belong_company");
+        }
+    }
+
+    return std::unique_ptr<pa_sql_company>();
+}
+static tdf_log g_audit_log("api_audit", "/log/audit.log", "/log/audit.log");
+struct third_dev_req_param{
+    std::string url;
+    std::string key;
+    std::string token;
+};
+static void post_json_to_third(const std::string &url, const std::string &json, const std::string &key, const std::string &token)
+{
+    auto p_req = new third_dev_req_param();
+    p_req->url = url;
+    p_req->key = key;
+    p_req->token = token;
+
+    tdf_main::get_inst().Async_to_workthread([](void *_private, const std::string &chrct) -> void {
+        auto req = (third_dev_req_param *)(_private);
+        g_audit_log.log("calling %s, content:%s", req->url.c_str(), chrct.c_str());
+        auto ret = PA_DATAOPT_rest_post(req->url, chrct, req->key, req->token);
+        neb::CJsonObject j_ret(ret);
+        if (j_ret("code") == "0")
+        {
+            g_audit_log.log("calling %s success, result:%s", req->url.c_str(), j_ret["data"].ToString().c_str());
+        }
+        else
+        {
+            g_audit_log.err("calling %s failed, code:%s, message:%s", req->url.c_str(), j_ret("code").c_str(), j_ret("message").c_str());
+        }
+        delete req;
+    },
+    p_req, json);
+}
+
+void PA_DATAOPT_post_save_register(pa_sql_plan &_plan)
+{
+    std::string ctrl_url = "";
+    std::string key;
+    std::string token;
+    auto stuff_info = _plan.get_parent<pa_sql_stuff_info>("belong_stuff");
+    if (!stuff_info)
+    {
+        return;
+    }
+    auto company = stuff_info->get_parent<pa_sql_company>("belong_company");
+    if (!company)
+    {
+        return;
+    }
+    key = company->third_key;
+    token = company->third_token;
+    ctrl_url += company->third_url + "/thirdParty/zyzl/saveRegister";
+
+    if (key.length() > 0)
+    {
+        neb::CJsonObject req;
+        stuff_plan_management_handler sp;
+        stuff_plan tmp;
+        sp.get_plan(tmp, _plan.get_pri_id());
+        for (auto &itr:tmp.vichele_info)
+        {
+            neb::CJsonObject sub_req;
+            sub_req.Add("id", std::to_string(tmp.plan_id) + "S");
+            sub_req.Add("plateNo", itr.main_vichele);
+            sub_req.Add("backPlateNo", itr.behind_vichele);
+            sub_req.Add("stuffName", tmp.name);
+            sub_req.Add("stuffId", PA_DATAOPT_search_base_id_info_by_name(tmp.name, "stuff", *company));
+            sub_req.Add("supplierName", "");
+            sub_req.Add("supplierId", "");
+            sub_req.Add("vehicleTeamName", tmp.buy_company);
+            sub_req.Add("vehicleTeamId", PA_DATAOPT_search_base_id_info_by_name(tmp.buy_company, "customer", *company));
+            sub_req.Add("enterWeight", 0);
+            sub_req.Add("companyName", tmp.buy_company);
+            sub_req.Add("customerId", PA_DATAOPT_search_base_id_info_by_name(tmp.buy_company, "customer", *company));
+            sub_req.Add("driverName", itr.driver_name);
+            sub_req.Add("driverPhone", itr.driver_phone);
+            sub_req.Add("driverId", itr.driver_id);
+            sub_req.Add("isSale", true, true);
+            sub_req.Add("price", tmp.price);
+            sub_req.Add("createTime", PA_DATAOPT_date_2_timestring(tmp.created_time));
+            sub_req.Add("orderNo", std::to_string(tmp.created_time) + std::to_string(tmp.plan_id));
+            sub_req.AddEmptySubArray("multiStuff");
+            sub_req.Add("isMulti", false, false);
+
+            req.Add(sub_req);
+        }
+        neb::CJsonObject fin_req;
+        fin_req.Add("data", req);
+
+        post_json_to_third(ctrl_url, fin_req.ToString(), key, token);
+    }
+}
+
+std::string PA_DATAOPT_search_base_id_info_by_name(const std::string &name, const std::string &type, pa_sql_company &_company)
+{
+    std::string ret;
+
+    auto base_info = _company.get_children<pa_sql_base_info>("belong_company", "name == '%s' AND type == '%s'", name.c_str(), type.c_str());
+    if (base_info)
+    {
+        ret = base_info->id;
     }
 
     return ret;

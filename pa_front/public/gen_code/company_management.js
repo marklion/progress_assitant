@@ -4423,15 +4423,11 @@ company_management_get_company_position_config_result = class {
 };
 company_management_set_third_info_args = class {
   constructor(args) {
-    this.key = null;
-    this.url = null;
+    this._info = null;
     this.ssid = null;
     if (args) {
-      if (args.key !== undefined && args.key !== null) {
-        this.key = args.key;
-      }
-      if (args.url !== undefined && args.url !== null) {
-        this.url = args.url;
+      if (args._info !== undefined && args._info !== null) {
+        this._info = new third_dev_info(args._info);
       }
       if (args.ssid !== undefined && args.ssid !== null) {
         this.ssid = args.ssid;
@@ -4450,20 +4446,14 @@ company_management_set_third_info_args = class {
       }
       switch (fid) {
         case 1:
-        if (ftype == Thrift.Type.STRING) {
-          this.key = input.readString().value;
+        if (ftype == Thrift.Type.STRUCT) {
+          this._info = new third_dev_info();
+          this._info.read(input);
         } else {
           input.skip(ftype);
         }
         break;
         case 2:
-        if (ftype == Thrift.Type.STRING) {
-          this.url = input.readString().value;
-        } else {
-          input.skip(ftype);
-        }
-        break;
-        case 3:
         if (ftype == Thrift.Type.STRING) {
           this.ssid = input.readString().value;
         } else {
@@ -4481,18 +4471,13 @@ company_management_set_third_info_args = class {
 
   write (output) {
     output.writeStructBegin('company_management_set_third_info_args');
-    if (this.key !== null && this.key !== undefined) {
-      output.writeFieldBegin('key', Thrift.Type.STRING, 1);
-      output.writeString(this.key);
-      output.writeFieldEnd();
-    }
-    if (this.url !== null && this.url !== undefined) {
-      output.writeFieldBegin('url', Thrift.Type.STRING, 2);
-      output.writeString(this.url);
+    if (this._info !== null && this._info !== undefined) {
+      output.writeFieldBegin('_info', Thrift.Type.STRUCT, 1);
+      this._info.write(output);
       output.writeFieldEnd();
     }
     if (this.ssid !== null && this.ssid !== undefined) {
-      output.writeFieldBegin('ssid', Thrift.Type.STRING, 3);
+      output.writeFieldBegin('ssid', Thrift.Type.STRING, 2);
       output.writeString(this.ssid);
       output.writeFieldEnd();
     }
@@ -6660,19 +6645,18 @@ company_managementClient = class company_managementClient {
     throw 'get_company_position_config failed: unknown result';
   }
 
-  set_third_info (key, url, ssid) {
+  set_third_info (_info, ssid) {
     const self = this;
     return new Promise((resolve, reject) => {
-      self.send_set_third_info(key, url, ssid, (error, result) => {
+      self.send_set_third_info(_info, ssid, (error, result) => {
         return error ? reject(error) : resolve(result);
       });
     });
   }
 
-  send_set_third_info (key, url, ssid, callback) {
+  send_set_third_info (_info, ssid, callback) {
     const params = {
-      key: key,
-      url: url,
+      _info: _info,
       ssid: ssid
     };
     const args = new company_management_set_third_info_args(params);

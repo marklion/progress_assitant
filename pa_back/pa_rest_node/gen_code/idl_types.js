@@ -1303,13 +1303,21 @@ company_positon_lat_lag.prototype.write = function(output) {
 
 var third_dev_info = module.exports.third_dev_info = function(args) {
   this.key = null;
-  this.url = null;
+  this.ctrl_url = null;
+  this.dms_url = null;
+  this.token = null;
   if (args) {
     if (args.key !== undefined && args.key !== null) {
       this.key = args.key;
     }
-    if (args.url !== undefined && args.url !== null) {
-      this.url = args.url;
+    if (args.ctrl_url !== undefined && args.ctrl_url !== null) {
+      this.ctrl_url = args.ctrl_url;
+    }
+    if (args.dms_url !== undefined && args.dms_url !== null) {
+      this.dms_url = args.dms_url;
+    }
+    if (args.token !== undefined && args.token !== null) {
+      this.token = args.token;
     }
   }
 };
@@ -1333,7 +1341,21 @@ third_dev_info.prototype.read = function(input) {
       break;
       case 2:
       if (ftype == Thrift.Type.STRING) {
-        this.url = input.readString();
+        this.ctrl_url = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 3:
+      if (ftype == Thrift.Type.STRING) {
+        this.dms_url = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 4:
+      if (ftype == Thrift.Type.STRING) {
+        this.token = input.readString();
       } else {
         input.skip(ftype);
       }
@@ -1354,9 +1376,19 @@ third_dev_info.prototype.write = function(output) {
     output.writeString(this.key);
     output.writeFieldEnd();
   }
-  if (this.url !== null && this.url !== undefined) {
-    output.writeFieldBegin('url', Thrift.Type.STRING, 2);
-    output.writeString(this.url);
+  if (this.ctrl_url !== null && this.ctrl_url !== undefined) {
+    output.writeFieldBegin('ctrl_url', Thrift.Type.STRING, 2);
+    output.writeString(this.ctrl_url);
+    output.writeFieldEnd();
+  }
+  if (this.dms_url !== null && this.dms_url !== undefined) {
+    output.writeFieldBegin('dms_url', Thrift.Type.STRING, 3);
+    output.writeString(this.dms_url);
+    output.writeFieldEnd();
+  }
+  if (this.token !== null && this.token !== undefined) {
+    output.writeFieldBegin('token', Thrift.Type.STRING, 4);
+    output.writeString(this.token);
     output.writeFieldEnd();
   }
   output.writeFieldStop();
@@ -1507,6 +1539,7 @@ var vichele_in_plan = module.exports.vichele_in_plan = function(args) {
   this.p_time = null;
   this.p_weight = null;
   this.m_weight = null;
+  this.driver_id = null;
   if (args) {
     if (args.main_vichele !== undefined && args.main_vichele !== null) {
       this.main_vichele = args.main_vichele;
@@ -1555,6 +1588,9 @@ var vichele_in_plan = module.exports.vichele_in_plan = function(args) {
     }
     if (args.m_weight !== undefined && args.m_weight !== null) {
       this.m_weight = args.m_weight;
+    }
+    if (args.driver_id !== undefined && args.driver_id !== null) {
+      this.driver_id = args.driver_id;
     }
   }
 };
@@ -1681,6 +1717,13 @@ vichele_in_plan.prototype.read = function(input) {
         input.skip(ftype);
       }
       break;
+      case 17:
+      if (ftype == Thrift.Type.STRING) {
+        this.driver_id = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
       default:
         input.skip(ftype);
     }
@@ -1770,6 +1813,11 @@ vichele_in_plan.prototype.write = function(output) {
   if (this.m_weight !== null && this.m_weight !== undefined) {
     output.writeFieldBegin('m_weight', Thrift.Type.DOUBLE, 16);
     output.writeDouble(this.m_weight);
+    output.writeFieldEnd();
+  }
+  if (this.driver_id !== null && this.driver_id !== undefined) {
+    output.writeFieldBegin('driver_id', Thrift.Type.STRING, 17);
+    output.writeString(this.driver_id);
     output.writeFieldEnd();
   }
   output.writeFieldStop();

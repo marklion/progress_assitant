@@ -115,7 +115,9 @@ struct company_positon_lat_lag {
 
 struct third_dev_info {
     1:string key, 
-    2:string url,
+    2:string ctrl_url,
+    3:string dms_url,
+    4:string token,
 }
 
 service company_management {
@@ -152,7 +154,7 @@ service company_management {
     bool set_work_time(1:string ssid, 2:i64 start_work_time, 3:i64 end_work_time) throws (1:gen_exp e),
     company_work_time get_work_time(1:string company_name) throws (1:gen_exp e),
     company_positon_lat_lag get_company_position_config(1:string company_name) throws (1:gen_exp e),
-    bool set_third_info(1:string key, 2:string url, 3:string ssid) throws (1:gen_exp e),
+    bool set_third_info(1:third_dev_info _info, 2:string ssid) throws (1:gen_exp e),
     third_dev_info get_third_info(1:string ssid) throws (1:gen_exp e),
 }
 
@@ -194,6 +196,7 @@ struct vichele_in_plan {
     14:string p_time,
     15:double p_weight,
     16:double m_weight,
+    17:string driver_id,
 }
 
 struct stuff_plan {
