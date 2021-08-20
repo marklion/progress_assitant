@@ -70,6 +70,18 @@ int main(int argc, char **argv)
                                     itr.update_status();
                                 }
                             }
+                            if (st_time->tm_min == 2 && st_time->tm_hour == 3)
+                            {
+                                auto current_time = PA_DATAOPT_current_time();
+                                auto date_only = current_time.substr(0, 10);
+                                auto all_plan = sqlite_orm::search_record_all<pa_sql_plan>("status == 3 AND plan_time LIKE '%s%%'", date_only.c_str());
+                                for (auto &itr : all_plan)
+                                {
+                                    PA_DATAOPT_post_save_register(itr);
+                                }
+                                auto all_stay_alone_vichele = sqlite_orm::search_record_all<pa_sql_vichele_stay_alone>("date LIKE '%s%%' AND status == 1", date_only.c_str());
+                                PA_DATAOPT_post_save_register(all_stay_alone_vichele);
+                            }
                             auto sale_companys = sqlite_orm::search_record_all<pa_sql_company>("is_sale == 1");
                             auto current_min = st_time->tm_min + st_time->tm_hour * 60;
                             for (auto &itr : sale_companys)

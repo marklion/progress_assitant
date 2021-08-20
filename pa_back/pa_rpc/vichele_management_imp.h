@@ -42,6 +42,11 @@ public:
             {
                 PA_RETURN_MSG(itr.driver_name + "在黑名单中");
             }
+            auto conflict_one = dest_company->get_children<pa_sql_vichele_stay_alone>("destination", "main_vichele_number == '%s' AND date == '%s' AND is_drop == 0", itr.main_vichele_number.c_str(), itr.date.c_str());
+            if (conflict_one)
+            {
+                PA_RETURN_MSG(itr.main_vichele_number + "重复派出");
+            }
         }
 
         for (auto &itr : vichele_info)
@@ -52,6 +57,7 @@ public:
             {
                 PA_RETURN_MSG("目的地公司未接入平台");
             }
+
             tmp.behind_vichele_number = itr.behind_vichele_number;
             tmp.comment = itr.comment;
             tmp.company_name = itr.company_name;
@@ -101,6 +107,7 @@ public:
         {
             PA_RETURN_OP_FAIL();
         }
+        PA_DATAOPT_post_change_register(*extra_vichele);
         extra_vichele->is_drop = 1;
         ret = extra_vichele->update_record();
         if (ret)
@@ -154,6 +161,11 @@ public:
         if (black_list_ret.length() > 0)
         {
             PA_RETURN_MSG(vichele_info.driver_name + "在黑名单中");
+        }
+        auto conflict_one = dest_company->get_children<pa_sql_vichele_stay_alone>("destination", "main_vichele_number == '%s' AND date == '%s' AND is_drop == 0", vichele_info.main_vichele_number.c_str(), vichele_info.date.c_str());
+        if (conflict_one)
+        {
+            PA_RETURN_MSG(vichele_info.main_vichele_number + "重复派出");
         }
         ret = extra_vichele->update_record();
         if (ret)
@@ -412,6 +424,7 @@ public:
         auto extra_vichele = company->get_all_children<pa_sql_vichele_stay_alone>("destination", "(%s)  AND is_drop == 0 AND status != 2", query_cmd.c_str());
         for (auto &itr : extra_vichele)
         {
+            PA_DATAOPT_post_change_register(itr);
             itr.is_drop = 1;
             if (itr.update_record())
             {

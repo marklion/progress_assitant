@@ -498,8 +498,9 @@ public:
         {
             PA_RETURN_MSG(OPEN_API_MSG_NO_PERMISSION);
         }
-
-        auto all_active_plan = PA_RPC_get_all_plans_related_by_company(*company, "status == 3");
+        auto current_time = PA_DATAOPT_current_time();
+        auto date_only = current_time.substr(0, 10);
+        auto all_active_plan = PA_RPC_get_all_plans_related_by_company(*company, "status == 3 AND plan_time LIKE '%s%%'", date_only.c_str());
         for (auto &plan : all_active_plan)
         {
             auto all_vichele_info = plan.get_all_children<pa_sql_single_vichele>("belong_plan", "finish == 0");
@@ -530,7 +531,7 @@ public:
             }
         }
 
-        auto buyer_vehicles = company->get_all_children<pa_sql_vichele_stay_alone>("destination", "status == 1 AND is_drop == 0 GROUP BY main_vichele_number");
+        auto buyer_vehicles = company->get_all_children<pa_sql_vichele_stay_alone>("destination", "status == 1 AND is_drop == 0 AND date LIKE '%s%%' GROUP BY main_vichele_number", date_only.c_str());
         for (auto &itr : buyer_vehicles)
         {
             if (itr.main_vichele_number == plateNo || (itr.driver_id == driverId && itr.driver_id.length() > 0))
@@ -587,7 +588,9 @@ public:
         {
             PA_RETURN_MSG(OPEN_API_MSG_NO_PERMISSION);
         }
-        auto all_active_plan = PA_RPC_get_all_plans_related_by_company(*company, "status == 3");
+        auto current_time = PA_DATAOPT_current_time();
+        auto date_only = current_time.substr(0, 10);
+        auto all_active_plan = PA_RPC_get_all_plans_related_by_company(*company, "status == 3 AND plan_time LIKE '%s%%'", date_only.c_str());
         for (auto &plan : all_active_plan)
         {
             auto all_vichele_info = plan.get_all_children<pa_sql_single_vichele>("belong_plan", "finish == 0");
@@ -599,7 +602,7 @@ public:
             }
         }
 
-        auto buyer_vehicles = company->get_all_children<pa_sql_vichele_stay_alone>("destination", "status == 1 AND is_drop == 0 GROUP BY main_vichele_number");
+        auto buyer_vehicles = company->get_all_children<pa_sql_vichele_stay_alone>("destination", "status == 1 AND is_drop == 0 AND date LIKE '%s%%' GROUP BY main_vichele_number", date_only.c_str());
         for (auto &itr : buyer_vehicles)
         {
             vehicle_info_resp tmp;
@@ -709,6 +712,10 @@ public:
             {
                 vichele_stay_alone->insert_record();
             }
+            else
+            {
+                PA_DATAOPT_post_change_register(*vichele_stay_alone);
+            }
             vichele_stay_alone->p_time = _req.pTime;
             vichele_stay_alone->m_time = _req.mTime;
             vichele_stay_alone->p_weight = _req.pWeight;
@@ -752,7 +759,7 @@ public:
         }
         else
         {
-            auto exist_record = company->get_children<pa_sql_blacklist_driver>("belong_company","target == '%s'", target.c_str());
+            auto exist_record = company->get_children<pa_sql_blacklist_driver>("belong_company", "target == '%s'", target.c_str());
             if (exist_record)
             {
                 exist_record->reason = reason;
@@ -783,7 +790,7 @@ public:
         }
         if (1 == type)
         {
-            auto exist_record = company->get_children<pa_sql_blacklist_vichele>("belong_company","target == '%s'", target.c_str());
+            auto exist_record = company->get_children<pa_sql_blacklist_vichele>("belong_company", "target == '%s'", target.c_str());
             if (exist_record)
             {
                 ret = true;
@@ -792,7 +799,7 @@ public:
         }
         else
         {
-            auto exist_record = company->get_children<pa_sql_blacklist_driver>("belong_company","target == '%s'", target.c_str());
+            auto exist_record = company->get_children<pa_sql_blacklist_driver>("belong_company", "target == '%s'", target.c_str());
             if (exist_record)
             {
                 ret = true;
@@ -820,7 +827,7 @@ public:
             exist_record->unit = _req.unit;
             exist_record->type = _req.type;
             exist_record->pid = _req.pid;
-            
+
             ret = exist_record->update_record();
         }
         else
@@ -833,7 +840,7 @@ public:
             tmp.pid = _req.pid;
             tmp.code = _req.code;
             tmp.set_parent(*company, "belong_company");
-            
+
             ret = tmp.insert_record();
         }
 

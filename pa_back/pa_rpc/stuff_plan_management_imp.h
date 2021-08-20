@@ -346,6 +346,7 @@ public:
             auto orig_vichele_info = plan_in_sql->get_all_children<pa_sql_single_vichele>("belong_plan");
             for (auto &itr : orig_vichele_info)
             {
+                PA_DATAOPT_post_change_register(itr);
                 itr.remove_record();
             }
             for (auto &itr : plan.vichele_info)
@@ -578,6 +579,7 @@ public:
                     found_vichele_info->deliver_timestamp = itr.m_time;
                 }
                 found_vichele_info->update_record();
+                PA_DATAOPT_post_change_register(*found_vichele_info);
             }
             auto total_count = plan->get_all_children<pa_sql_single_vichele>("belong_plan").size();
             auto deliver_count = plan->get_all_children<pa_sql_single_vichele>("belong_plan", "finish = 1").size();
@@ -780,6 +782,12 @@ public:
         if (PA_STATUS_RULE_can_be_change(plan, opt_user, 4))
         {
             plan.conflict_reason = "";
+
+            auto all_vichele = plan.get_all_children<pa_sql_single_vichele>("belong_plan");
+            for (auto &itr : all_vichele)
+            {
+                PA_DATAOPT_post_change_register(itr);
+            }
             if (PA_STATUS_RULE_change_status(plan, 4, opt_user))
             {
                 ret = PA_STATUS_RULE_action(plan, opt_user, PA_DATAOPT_current_time(), reason);
@@ -1439,6 +1447,7 @@ public:
                         auto main_vichele = single_vichele->get_parent<pa_sql_vichele>("main_vichele");
                         auto behind_vichele = single_vichele->get_parent<pa_sql_vichele_behind>("behind_vichele");
                         auto opt_user = PA_DATAOPT_get_online_user(ssid);
+                        PA_DATAOPT_post_change_register(*single_vichele);
                         single_vichele->remove_record();
                         if (main_vichele && behind_vichele && opt_user)
                         {
