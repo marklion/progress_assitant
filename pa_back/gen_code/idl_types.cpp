@@ -4452,6 +4452,10 @@ void today_driver_info::__set_enter_location(const std::string& val) {
 void today_driver_info::__set_is_registered(const bool val) {
   this->is_registered = val;
 }
+
+void today_driver_info::__set_register_order(const std::string& val) {
+  this->register_order = val;
+}
 std::ostream& operator<<(std::ostream& out, const today_driver_info& obj)
 {
   obj.printTo(out);
@@ -4568,6 +4572,14 @@ uint32_t today_driver_info::read(::apache::thrift::protocol::TProtocol* iprot) {
           xfer += iprot->skip(ftype);
         }
         break;
+      case 12:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->register_order);
+          this->__isset.register_order = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
       default:
         xfer += iprot->skip(ftype);
         break;
@@ -4629,6 +4641,10 @@ uint32_t today_driver_info::write(::apache::thrift::protocol::TProtocol* oprot) 
   xfer += oprot->writeBool(this->is_registered);
   xfer += oprot->writeFieldEnd();
 
+  xfer += oprot->writeFieldBegin("register_order", ::apache::thrift::protocol::T_STRING, 12);
+  xfer += oprot->writeString(this->register_order);
+  xfer += oprot->writeFieldEnd();
+
   xfer += oprot->writeFieldStop();
   xfer += oprot->writeStructEnd();
   return xfer;
@@ -4647,6 +4663,7 @@ void swap(today_driver_info &a, today_driver_info &b) {
   swap(a.register_number, b.register_number);
   swap(a.enter_location, b.enter_location);
   swap(a.is_registered, b.is_registered);
+  swap(a.register_order, b.register_order);
   swap(a.__isset, b.__isset);
 }
 
@@ -4662,6 +4679,7 @@ today_driver_info::today_driver_info(const today_driver_info& other56) {
   register_number = other56.register_number;
   enter_location = other56.enter_location;
   is_registered = other56.is_registered;
+  register_order = other56.register_order;
   __isset = other56.__isset;
 }
 today_driver_info& today_driver_info::operator=(const today_driver_info& other57) {
@@ -4676,6 +4694,7 @@ today_driver_info& today_driver_info::operator=(const today_driver_info& other57
   register_number = other57.register_number;
   enter_location = other57.enter_location;
   is_registered = other57.is_registered;
+  register_order = other57.register_order;
   __isset = other57.__isset;
   return *this;
 }
@@ -4693,6 +4712,7 @@ void today_driver_info::printTo(std::ostream& out) const {
   out << ", " << "register_number=" << to_string(register_number);
   out << ", " << "enter_location=" << to_string(enter_location);
   out << ", " << "is_registered=" << to_string(is_registered);
+  out << ", " << "register_order=" << to_string(register_order);
   out << ")";
 }
 

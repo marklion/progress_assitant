@@ -24,6 +24,9 @@
                 <div v-if="single_trans.is_registered">
                     进厂序号：{{single_trans.register_number}}
                 </div>
+                <div v-if="single_trans.is_registered">
+                    还需等待：{{single_trans.register_order}}个
+                </div>
             </van-cell>
             <van-cell title="详细地址：" :value="single_trans.destination_address"></van-cell>
             <van-cell v-if="single_trans.is_registered" title="进厂位置：" :value="single_trans.enter_location" :label="'签到时间:' + single_trans.register_timestamp"></van-cell>

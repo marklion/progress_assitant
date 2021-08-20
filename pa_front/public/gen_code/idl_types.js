@@ -2915,6 +2915,7 @@ today_driver_info = class {
     this.register_number = null;
     this.enter_location = null;
     this.is_registered = null;
+    this.register_order = null;
     if (args) {
       if (args.id !== undefined && args.id !== null) {
         this.id = args.id;
@@ -2948,6 +2949,9 @@ today_driver_info = class {
       }
       if (args.is_registered !== undefined && args.is_registered !== null) {
         this.is_registered = args.is_registered;
+      }
+      if (args.register_order !== undefined && args.register_order !== null) {
+        this.register_order = args.register_order;
       }
     }
   }
@@ -3039,6 +3043,13 @@ today_driver_info = class {
           input.skip(ftype);
         }
         break;
+        case 12:
+        if (ftype == Thrift.Type.STRING) {
+          this.register_order = input.readString().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
         default:
           input.skip(ftype);
       }
@@ -3103,6 +3114,11 @@ today_driver_info = class {
     if (this.is_registered !== null && this.is_registered !== undefined) {
       output.writeFieldBegin('is_registered', Thrift.Type.BOOL, 11);
       output.writeBool(this.is_registered);
+      output.writeFieldEnd();
+    }
+    if (this.register_order !== null && this.register_order !== undefined) {
+      output.writeFieldBegin('register_order', Thrift.Type.STRING, 12);
+      output.writeString(this.register_order);
       output.writeFieldEnd();
     }
     output.writeFieldStop();

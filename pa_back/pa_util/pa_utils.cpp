@@ -492,13 +492,17 @@ struct third_dev_req_param{
     std::string url;
     std::string key;
     std::string token;
+    proc_third_ret callback = nullptr;
 };
-static void post_json_to_third(const std::string &url, const std::string &json, const std::string &key, const std::string &token)
+
+
+static void post_json_to_third(const std::string &url, const std::string &json, const std::string &key, const std::string &token, proc_third_ret callback = nullptr)
 {
     auto p_req = new third_dev_req_param();
     p_req->url = url;
     p_req->key = key;
     p_req->token = token;
+    p_req->callback = callback;
 
     tdf_main::get_inst().Async_to_workthread([](void *_private, const std::string &chrct) -> void {
         auto req = (third_dev_req_param *)(_private);
@@ -508,6 +512,10 @@ static void post_json_to_third(const std::string &url, const std::string &json, 
         if (j_ret("code") == "0")
         {
             g_audit_log.log("calling %s success, result:%s", req->url.c_str(), j_ret["data"].ToString().c_str());
+            if (req->callback)
+            {
+                req->callback(j_ret);
+            }
         }
         else
         {
@@ -542,7 +550,7 @@ void PA_DATAOPT_post_save_register(pa_sql_plan &_plan)
     }
     key = company->third_key;
     token = company->third_token;
-    ctrl_url += company->third_url + "";
+    ctrl_url += company->third_url + "/thirdParty/zyzl/saveRegister";
 
     if (key.length() > 0)
     {
@@ -612,7 +620,7 @@ void PA_DATAOPT_post_save_register(std::list<pa_sql_vichele_stay_alone> &_vichel
     auto date_only = current_time.substr(0, 10);
     key = company->third_key;
     token = company->third_token;
-    ctrl_url += company->third_url + "";
+    ctrl_url += company->third_url + "/thirdParty/zyzl/saveRegister";
     if (key.length() > 0)
     {
         neb::CJsonObject req;
@@ -728,7 +736,7 @@ void PA_DATAOPT_post_change_register(pa_sql_single_vichele &_vichele)
 
     key = company->third_key;
     token = company->third_token;
-    ctrl_url += company->third_url + "";
+    ctrl_url += company->third_url + "/thirdParty/zyzl/changeRegister";
 
     if (key.length() > 0)
     {
@@ -784,7 +792,7 @@ void PA_DATAOPT_post_change_register(pa_sql_vichele_stay_alone &_vichele)
     }
     key = company->third_key;
     token = company->third_token;
-    ctrl_url += company->third_url + "";
+    ctrl_url += company->third_url + "/thirdParty/zyzl/changeRegister";
     if (key.length() > 0)
     {
         auto &real_vichele = _vichele;
@@ -849,5 +857,102 @@ void PA_DATAOPT_post_change_register(pa_sql_vichele_stay_alone &_vichele)
         fin_req.Add("data", sub_req);
 
         post_json_to_third(ctrl_url, fin_req.ToString(), key, token);
+    }
+}
+
+static void proc_que_info_back(neb::CJsonObject &ret) 
+{
+    auto current_time = PA_DATAOPT_current_time();
+    auto date_only = current_time.substr(0, 10);
+    auto plate_no = ret["data"]("plateNo");
+    auto driver_name = ret["data"]("driverName");
+    auto today_plan = sqlite_orm::search_record_all<pa_sql_plan>("status == 3 AND plan_time LIKE '%s%%'", date_only.c_str());
+    for (auto &itr : today_plan)
+    {
+        auto vichele_in_plan = itr.get_all_children<pa_sql_single_vichele>("belong_plan");
+        for (auto &single_vichele : vichele_in_plan)
+        {
+            auto main_vichele = single_vichele.get_parent<pa_sql_vichele>("main_vichele");
+            auto driver = single_vichele.get_parent<pa_sql_driver>("driver");
+            if (main_vichele && driver && main_vichele->number == plate_no && driver->name == driver_name)
+            {
+                auto exist_register_info = single_vichele.get_children<pa_sql_driver_register>("belong_vichele");
+                if (exist_register_info)
+                {
+                    exist_register_info->enter_location = ret["data"]("stationName");
+                    exist_register_info->number = ret["data"]("index");
+                    exist_register_info->timestamp = PA_DATAOPT_current_time();
+                    exist_register_info->order_number = ret["data"]("order");
+                    exist_register_info->update_record();
+                }
+                else
+                {
+                    pa_sql_driver_register tmp;
+                    tmp.enter_location = ret["data"]("stationName");
+                    tmp.number = ret["data"]("index");
+                    tmp.timestamp = PA_DATAOPT_current_time();
+                    tmp.order_number = ret["data"]("order");
+                    tmp.set_parent(single_vichele, "belong_vichele");
+                    tmp.insert_record();
+                }
+                return;
+            }
+        }
+    }
+}
+
+void PA_DATAOPT_post_checkin(pa_sql_single_vichele &_vichele)
+{
+    auto p_company = PA_DATAOPT_get_sale_company(_vichele);
+    if (p_company)
+    {
+        auto &company = *p_company;
+        neb::CJsonObject req;
+        neb::CJsonObject sub_req;
+        std::string plate_no;
+        auto main_vichele = _vichele.get_parent<pa_sql_vichele>("main_vichele");
+        if (main_vichele)
+        {
+            plate_no = main_vichele->number;
+        }
+        sub_req.Add("plateNo", plate_no);
+        req.Add("data", sub_req);
+        std::string ctrl_url = "";
+        std::string key;
+        std::string token;
+
+        key = company.third_key;
+        token = company.third_token;
+        ctrl_url += company.third_url + "/thirdParty/zyzl/checkIn";
+
+        post_json_to_third(ctrl_url, req.ToString(), key, token, proc_que_info_back);
+    }
+}
+
+void PA_DATAOPT_post_get_queue(pa_sql_single_vichele &_vichele)
+{
+    auto p_company = PA_DATAOPT_get_sale_company(_vichele);
+    if (p_company)
+    {
+        auto &company = *p_company;
+        neb::CJsonObject req;
+        neb::CJsonObject sub_req;
+        std::string plate_no;
+        auto main_vichele = _vichele.get_parent<pa_sql_vichele>("main_vichele");
+        if (main_vichele)
+        {
+            plate_no = main_vichele->number;
+        }
+        sub_req.Add("plateNo", plate_no);
+        req.Add("data", sub_req);
+        std::string ctrl_url = "";
+        std::string key;
+        std::string token;
+
+        key = company.third_key;
+        token = company.third_token;
+        ctrl_url += company.third_url + "/thirdParty/zyzl/getQueuingInfo";
+
+        post_json_to_third(ctrl_url, req.ToString(), key, token, proc_que_info_back);
     }
 }

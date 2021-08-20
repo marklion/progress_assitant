@@ -2615,11 +2615,12 @@ class today_driver_info(object):
      - register_number
      - enter_location
      - is_registered
+     - register_order
 
     """
 
 
-    def __init__(self, id=None, destination_company=None, destination_address=None, order_company=None, main_vichele=None, behind_vichele=None, stuff_name=None, register_timestamp=None, register_number=None, enter_location=None, is_registered=None,):
+    def __init__(self, id=None, destination_company=None, destination_address=None, order_company=None, main_vichele=None, behind_vichele=None, stuff_name=None, register_timestamp=None, register_number=None, enter_location=None, is_registered=None, register_order=None,):
         self.id = id
         self.destination_company = destination_company
         self.destination_address = destination_address
@@ -2631,6 +2632,7 @@ class today_driver_info(object):
         self.register_number = register_number
         self.enter_location = enter_location
         self.is_registered = is_registered
+        self.register_order = register_order
 
     def read(self, iprot):
         if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
@@ -2696,6 +2698,11 @@ class today_driver_info(object):
                     self.is_registered = iprot.readBool()
                 else:
                     iprot.skip(ftype)
+            elif fid == 12:
+                if ftype == TType.STRING:
+                    self.register_order = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
             else:
                 iprot.skip(ftype)
             iprot.readFieldEnd()
@@ -2749,6 +2756,10 @@ class today_driver_info(object):
         if self.is_registered is not None:
             oprot.writeFieldBegin('is_registered', TType.BOOL, 11)
             oprot.writeBool(self.is_registered)
+            oprot.writeFieldEnd()
+        if self.register_order is not None:
+            oprot.writeFieldBegin('register_order', TType.STRING, 12)
+            oprot.writeString(self.register_order.encode('utf-8') if sys.version_info[0] == 2 else self.register_order)
             oprot.writeFieldEnd()
         oprot.writeFieldStop()
         oprot.writeStructEnd()
@@ -4459,6 +4470,7 @@ today_driver_info.thrift_spec = (
     (9, TType.STRING, 'register_number', 'UTF8', None, ),  # 9
     (10, TType.STRING, 'enter_location', 'UTF8', None, ),  # 10
     (11, TType.BOOL, 'is_registered', None, None, ),  # 11
+    (12, TType.STRING, 'register_order', 'UTF8', None, ),  # 12
 )
 all_structs.append(driver_detail_info)
 driver_detail_info.thrift_spec = (

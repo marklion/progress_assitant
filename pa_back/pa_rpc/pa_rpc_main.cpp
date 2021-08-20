@@ -56,11 +56,34 @@ int main(int argc, char **argv)
                             time_t cur_time;
                             time(&cur_time);
                             auto st_time = localtime(&cur_time);
+                            if (st_time->tm_min % 5 == 0)
+                            {
+                                auto current_time = PA_DATAOPT_current_time();
+                                auto date_only = current_time.substr(0, 10);
+                                auto all_driver_register = sqlite_orm::search_record_all<pa_sql_driver_register>("timestamp Like '%s%%'", date_only.c_str());
+                                for (auto &itr:all_driver_register)
+                                {
+                                    auto related_vichele = itr.get_parent<pa_sql_single_vichele>("belong_vichele");
+                                    if (related_vichele)
+                                    {
+                                        PA_DATAOPT_post_get_queue(*related_vichele);
+                                    }
+                                }
+                            }
                             if (st_time->tm_min == 58 && st_time->tm_hour == 23)
                             {
                                 std::cout << "pass one day" << std::endl;
                                 stuff_plan_management_handler hd;
                                 hd.clean_unclose_plan();
+                                auto current_time = PA_DATAOPT_current_time();
+                                auto date_only = current_time.substr(0, 10);
+                                auto all_stay_alone_vichele = sqlite_orm::search_record_all<pa_sql_vichele_stay_alone>("date LIKE '%s%%' AND status == 1 AND is_drop == 0", date_only.c_str());
+                                for (auto &itr:all_stay_alone_vichele)
+                                {
+                                    PA_DATAOPT_post_change_register(itr);
+                                    itr.is_drop = 1;
+                                    itr.update_record();
+                                }
                             }
                             if (st_time->tm_min == 57 && st_time->tm_hour == 22)
                             {
@@ -79,7 +102,7 @@ int main(int argc, char **argv)
                                 {
                                     PA_DATAOPT_post_save_register(itr);
                                 }
-                                auto all_stay_alone_vichele = sqlite_orm::search_record_all<pa_sql_vichele_stay_alone>("date LIKE '%s%%' AND status == 1", date_only.c_str());
+                                auto all_stay_alone_vichele = sqlite_orm::search_record_all<pa_sql_vichele_stay_alone>("date LIKE '%s%%' AND status == 1 AND is_drop == 0", date_only.c_str());
                                 PA_DATAOPT_post_save_register(all_stay_alone_vichele);
                             }
                             auto sale_companys = sqlite_orm::search_record_all<pa_sql_company>("is_sale == 1");
