@@ -440,11 +440,11 @@ public:
         auto behind_vichele = _vichele.get_parent<pa_sql_vichele_behind>("behind_vichele");
         if (main_vichele && this_driver && behind_vichele)
         {
+            ret.driverName = this_driver->name;
+            ret.driverPhone = this_driver->phone;
             auto driver = sqlite_orm::search_record<pa_sql_driver>("silent_id IS NOT NULL AND silent_id != '' AND phone == '%s'", this_driver->phone.c_str());
             if (driver)
             {
-                ret.driverName = driver->name;
-                ret.driverPhone = driver->phone;
                 ret.driverId = driver->driver_id;
             }
             ret.plateNo = main_vichele->number;
@@ -486,8 +486,6 @@ public:
         ret.vehicleTeamId = ret.customerId;
         return ret;
     }
-
-    
 
     virtual void proc_vehicle_info(vehicle_info_resp &_return, const std::string &plateNo, const std::string &driverId, const std::string &token)
     {

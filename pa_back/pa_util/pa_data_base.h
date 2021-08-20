@@ -665,6 +665,7 @@ public:
     std::string timestamp;
     std::string enter_location;
     std::string number;
+    std::string order_number;
     pa_sql_driver_register() { 
         add_parent_type<pa_sql_single_vichele>("belong_vichele");
     }
@@ -674,6 +675,7 @@ public:
         ret.push_back(sqlite_orm_column("timestamp", sqlite_orm_column::STRING, &timestamp));
         ret.push_back(sqlite_orm_column("enter_location", sqlite_orm_column::STRING, &enter_location));
         ret.push_back(sqlite_orm_column("number", sqlite_orm_column::STRING, &number));
+        ret.push_back(sqlite_orm_column("order_number", sqlite_orm_column::STRING, &order_number));
 
         return ret;
     }

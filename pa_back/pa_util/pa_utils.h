@@ -24,6 +24,8 @@ struct pa_util_company_position_config {
     double distance = 0;
 };
 
+typedef void (*proc_third_ret)(neb::CJsonObject &ret);
+
 std::unique_ptr<pa_sql_userinfo> PA_DATAOPT_get_online_user(const std::string &_ssid);
 std::string PA_DATAOPT_store_logo_to_file(const std::string &_logo, const std::string &_upid);
 std::string PA_DATAOPT_store_attach_file(const std::string &_content, bool _is_pdf, const std::string &_name);
@@ -51,5 +53,8 @@ std::string PA_DATAOPT_search_base_id_info_by_name(const std::string &name, cons
 std::vector<meta_stuff_info> PA_DATAOPT_search_multi_stuff(pa_sql_vichele_stay_alone &_vichele);
 void PA_DATAOPT_post_change_register(pa_sql_single_vichele &_vichele);
 void PA_DATAOPT_post_change_register(pa_sql_vichele_stay_alone &_vicheles);
+void PA_DATAOPT_post_checkin(pa_sql_single_vichele &_vichele);
+void PA_DATAOPT_post_get_queue(pa_sql_single_vichele &_vichele);
+
 
 #endif // _PA_UTILS_H_

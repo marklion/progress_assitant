@@ -265,6 +265,7 @@ public:
                     auto driver = itr.get_parent<pa_sql_driver>("driver");
                     if (main_vichele && behind_vichele && driver)
                     {
+                        auto id_driver = sqlite_orm::search_record<pa_sql_driver>("phone == '%s' AND driver_id != ''", driver->phone.c_str());
                         vichele_in_plan tmp;
                         tmp.behind_vichele = behind_vichele->number;
                         tmp.count = itr.count;
@@ -286,7 +287,10 @@ public:
                         tmp.p_time = itr.deliver_p_timestamp;
                         tmp.m_weight = itr.m_weight;
                         tmp.p_weight = itr.p_weight;
-                        tmp.driver_id = driver->driver_id;
+                        if (id_driver)
+                        {
+                            tmp.driver_id = id_driver->driver_id;
+                        }
                         _return.vichele_info.push_back(tmp);
                     }
                 }
@@ -580,6 +584,11 @@ public:
                 }
                 found_vichele_info->update_record();
                 PA_DATAOPT_post_change_register(*found_vichele_info);
+                auto driver_register = found_vichele_info->get_children<pa_sql_driver_register>("belong_vichele");
+                if (driver_register)
+                {
+                    driver_register->remove_record();
+                }
             }
             auto total_count = plan->get_all_children<pa_sql_single_vichele>("belong_plan").size();
             auto deliver_count = plan->get_all_children<pa_sql_single_vichele>("belong_plan", "finish = 1").size();
@@ -1637,6 +1646,7 @@ public:
                                 tmp.register_number = register_info->number;
                                 tmp.enter_location = register_info->enter_location;
                                 tmp.is_registered = true;
+                                tmp.register_order = register_info->order_number;
                             }
                             _return.push_back(tmp);
                         }
@@ -1672,15 +1682,6 @@ public:
         cmem = NULL;
         return sencoded;
     }
-    void stub_huoda_server_proc_register(const std::string &id)
-    {
-        auto location_after_encode = pri_urlencode("北门");
-        PA_DATAOPT_rest_req("localhost/pa_rest/push_arrange/" + id + "S?token=CD15F88C5B264BBEA1B9F0008597640D&order=1&location=" + location_after_encode);
-    }
-    void stub_huoda_server_proc_unregister(const std::string &id)
-    {
-        PA_DATAOPT_rest_req("localhost/pa_rest/push_arrange/" + id + "S?token=CD15F88C5B264BBEA1B9F0008597640D&order=0");
-    }
 
     virtual bool register_vichele(const std::string &silent_id, const int64_t vichele_id)
     {
@@ -1694,7 +1695,7 @@ public:
                 auto real_driver = vichele_info->get_parent<pa_sql_driver>("driver");
                 if (real_driver && real_driver->phone == driver->phone)
                 {
-                    stub_huoda_server_proc_register(std::to_string(vichele_info->get_pri_id()));
+                    PA_DATAOPT_post_checkin(*vichele_info);
                     ret = true;
                 }
             }
@@ -1714,7 +1715,11 @@ public:
                 auto real_driver = vichele_info->get_parent<pa_sql_driver>("driver");
                 if (real_driver && real_driver->phone == driver->phone)
                 {
-                    stub_huoda_server_proc_unregister(std::to_string(vichele_info->get_pri_id()));
+                    auto driver_register = vichele_info->get_children<pa_sql_driver_register>("belong_vichele");
+                    if (driver_register)
+                    {
+                        driver_register->remove_record();
+                    }
                     ret = true;
                 }
             }

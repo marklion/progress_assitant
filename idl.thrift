@@ -283,6 +283,7 @@ struct today_driver_info {
     9:string register_number,
     10:string enter_location,
     11:bool is_registered,
+    12:string register_order,
 }
 
 struct driver_detail_info {

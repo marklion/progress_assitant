@@ -1766,7 +1766,7 @@ void swap(company_plan_brief &a, company_plan_brief &b);
 std::ostream& operator<<(std::ostream& out, const company_plan_brief& obj);
 
 typedef struct _today_driver_info__isset {
-  _today_driver_info__isset() : id(false), destination_company(false), destination_address(false), order_company(false), main_vichele(false), behind_vichele(false), stuff_name(false), register_timestamp(false), register_number(false), enter_location(false), is_registered(false) {}
+  _today_driver_info__isset() : id(false), destination_company(false), destination_address(false), order_company(false), main_vichele(false), behind_vichele(false), stuff_name(false), register_timestamp(false), register_number(false), enter_location(false), is_registered(false), register_order(false) {}
   bool id :1;
   bool destination_company :1;
   bool destination_address :1;
@@ -1778,6 +1778,7 @@ typedef struct _today_driver_info__isset {
   bool register_number :1;
   bool enter_location :1;
   bool is_registered :1;
+  bool register_order :1;
 } _today_driver_info__isset;
 
 class today_driver_info : public virtual ::apache::thrift::TBase {
@@ -1785,7 +1786,7 @@ class today_driver_info : public virtual ::apache::thrift::TBase {
 
   today_driver_info(const today_driver_info&);
   today_driver_info& operator=(const today_driver_info&);
-  today_driver_info() : id(0), destination_company(), destination_address(), order_company(), main_vichele(), behind_vichele(), stuff_name(), register_timestamp(), register_number(), enter_location(), is_registered(0) {
+  today_driver_info() : id(0), destination_company(), destination_address(), order_company(), main_vichele(), behind_vichele(), stuff_name(), register_timestamp(), register_number(), enter_location(), is_registered(0), register_order() {
   }
 
   virtual ~today_driver_info() noexcept;
@@ -1800,6 +1801,7 @@ class today_driver_info : public virtual ::apache::thrift::TBase {
   std::string register_number;
   std::string enter_location;
   bool is_registered;
+  std::string register_order;
 
   _today_driver_info__isset __isset;
 
@@ -1825,6 +1827,8 @@ class today_driver_info : public virtual ::apache::thrift::TBase {
 
   void __set_is_registered(const bool val);
 
+  void __set_register_order(const std::string& val);
+
   bool operator == (const today_driver_info & rhs) const
   {
     if (!(id == rhs.id))
@@ -1848,6 +1852,8 @@ class today_driver_info : public virtual ::apache::thrift::TBase {
     if (!(enter_location == rhs.enter_location))
       return false;
     if (!(is_registered == rhs.is_registered))
+      return false;
+    if (!(register_order == rhs.register_order))
       return false;
     return true;
   }

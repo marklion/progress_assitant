@@ -109,5 +109,3 @@ std::list<pa_sql_plan> PA_RPC_get_all_plans_related_by_company(pa_sql_company &_
     return ret;
 }
 
-
-
