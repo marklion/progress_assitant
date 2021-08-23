@@ -701,6 +701,10 @@ public:
         else
         {
             auto req_vichele_stay_alone = sqlite_orm::search_record<pa_sql_vichele_stay_alone>(atol(real_id.c_str()));
+            if (!req_vichele_stay_alone)
+            {
+                PA_RETURN_MSG(OPEN_API_MSG_VICHELE_NOT_EXIST);
+            }
             auto vichele_stay_alone = sqlite_orm::search_record<pa_sql_vichele_stay_alone>("stuff_name == '%s' AND main_vichele_number == '%s' AND behind_vichele_number == '%s' AND destination_ext_key == %ld AND is_drop == 0 AND status == 1", _req.stuffName.c_str(), req_vichele_stay_alone->main_vichele_number.c_str(), req_vichele_stay_alone->behind_vichele_number.c_str(), company->get_pri_id());
             if (!vichele_stay_alone)
             {
