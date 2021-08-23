@@ -1695,6 +1695,7 @@ public:
                 auto real_driver = vichele_info->get_parent<pa_sql_driver>("driver");
                 if (real_driver && real_driver->phone == driver->phone)
                 {
+                    PA_DATAOPT_post_change_register(*vichele_info, true);
                     PA_DATAOPT_post_checkin(*vichele_info);
                     ret = true;
                 }

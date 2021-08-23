@@ -24,7 +24,14 @@ struct pa_util_company_position_config {
     double distance = 0;
 };
 
-typedef void (*proc_third_ret)(neb::CJsonObject &ret);
+struct third_dev_req_param;
+typedef void (*proc_third_ret)(neb::CJsonObject &ret, third_dev_req_param &_req, const std::string &_json);
+struct third_dev_req_param{
+    std::string url;
+    std::string key;
+    std::string token;
+    proc_third_ret callback = nullptr;
+};
 
 std::unique_ptr<pa_sql_userinfo> PA_DATAOPT_get_online_user(const std::string &_ssid);
 std::string PA_DATAOPT_store_logo_to_file(const std::string &_logo, const std::string &_upid);
@@ -51,7 +58,7 @@ void PA_DATAOPT_post_save_register(std::list<pa_sql_vichele_stay_alone> &_vichel
 std::unique_ptr<pa_sql_company> PA_DATAOPT_get_sale_company(pa_sql_single_vichele &_vichele);
 std::string PA_DATAOPT_search_base_id_info_by_name(const std::string &name, const std::string &type, pa_sql_company &_company);
 std::vector<meta_stuff_info> PA_DATAOPT_search_multi_stuff(pa_sql_vichele_stay_alone &_vichele);
-void PA_DATAOPT_post_change_register(pa_sql_single_vichele &_vichele);
+void PA_DATAOPT_post_change_register(pa_sql_single_vichele &_vichele, bool is_update = false);
 void PA_DATAOPT_post_change_register(pa_sql_vichele_stay_alone &_vicheles);
 void PA_DATAOPT_post_checkin(pa_sql_single_vichele &_vichele);
 void PA_DATAOPT_post_get_queue(pa_sql_single_vichele &_vichele);

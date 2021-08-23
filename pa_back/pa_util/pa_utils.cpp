@@ -488,12 +488,7 @@ std::unique_ptr<pa_sql_company> PA_DATAOPT_get_sale_company(pa_sql_single_vichel
     return std::unique_ptr<pa_sql_company>();
 }
 static tdf_log g_audit_log("api_audit", "/log/audit.log", "/log/audit.log");
-struct third_dev_req_param{
-    std::string url;
-    std::string key;
-    std::string token;
-    proc_third_ret callback = nullptr;
-};
+
 
 
 static void post_json_to_third(const std::string &url, const std::string &json, const std::string &key, const std::string &token, proc_third_ret callback = nullptr)
@@ -504,26 +499,27 @@ static void post_json_to_third(const std::string &url, const std::string &json, 
     p_req->token = token;
     p_req->callback = callback;
 
-    tdf_main::get_inst().Async_to_workthread([](void *_private, const std::string &chrct) -> void {
-        auto req = (third_dev_req_param *)(_private);
-        g_audit_log.log("calling %s, content:%s", req->url.c_str(), chrct.c_str());
-        auto ret = PA_DATAOPT_rest_post(req->url, chrct, req->key, req->token);
-        neb::CJsonObject j_ret(ret);
-        if (j_ret("code") == "0")
-        {
-            g_audit_log.log("calling %s success, result:%s", req->url.c_str(), j_ret["data"].ToString().c_str());
-            if (req->callback)
-            {
-                req->callback(j_ret);
-            }
-        }
-        else
-        {
-            g_audit_log.err("calling %s failed, code:%s, message:%s", req->url.c_str(), j_ret("code").c_str(), j_ret("message").c_str());
-        }
-        delete req;
-    },
-    p_req, json);
+    tdf_main::get_inst().Async_to_workthread([](void *_private, const std::string &chrct) -> void
+                                             {
+                                                 auto req = (third_dev_req_param *)(_private);
+                                                 g_audit_log.log("calling %s, content:%s", req->url.c_str(), chrct.c_str());
+                                                 auto ret = PA_DATAOPT_rest_post(req->url, chrct, req->key, req->token);
+                                                 neb::CJsonObject j_ret(ret);
+                                                 if (j_ret("code") == "0")
+                                                 {
+                                                     g_audit_log.log("calling %s success, result:%s", req->url.c_str(), j_ret["data"].ToString().c_str());
+                                                 }
+                                                 else
+                                                 {
+                                                     g_audit_log.err("calling %s failed, code:%s, message:%s", req->url.c_str(), j_ret("code").c_str(), j_ret("message").c_str());
+                                                 }
+                                                 if (req->callback)
+                                                 {
+                                                     req->callback(j_ret, *req, chrct);
+                                                 }
+                                                 delete req;
+                                             },
+                                             p_req, json);
 }
 
 void PA_DATAOPT_post_save_register(pa_sql_plan &_plan)
@@ -716,7 +712,7 @@ std::vector<meta_stuff_info> PA_DATAOPT_search_multi_stuff(pa_sql_vichele_stay_a
     return ret;
 }
 
-void PA_DATAOPT_post_change_register(pa_sql_single_vichele &_vichele)
+void PA_DATAOPT_post_change_register(pa_sql_single_vichele &_vichele, bool is_update)
 {
     std::string ctrl_url = "";
     std::string key;
@@ -770,7 +766,14 @@ void PA_DATAOPT_post_change_register(pa_sql_single_vichele &_vichele)
                 sub_req.Add("orderNo", std::to_string(tmp.created_time) + std::to_string(tmp.plan_id));
                 sub_req.AddEmptySubArray("multiStuff");
                 sub_req.Add("isMulti", false, false);
-                sub_req.Add("changeType", 1);
+                if (is_update)
+                {
+                    sub_req.Add("changeType", 0);
+                }
+                else
+                {
+                    sub_req.Add("changeType", 1);
+                }
                 fin_req.Add("data", sub_req);
                 break;
             }
@@ -860,7 +863,7 @@ void PA_DATAOPT_post_change_register(pa_sql_vichele_stay_alone &_vichele)
     }
 }
 
-static void proc_que_info_back(neb::CJsonObject &ret) 
+static void proc_que_info_back(neb::CJsonObject &ret)
 {
     auto current_time = PA_DATAOPT_current_time();
     auto date_only = current_time.substr(0, 10);
@@ -901,6 +904,28 @@ static void proc_que_info_back(neb::CJsonObject &ret)
     }
 }
 
+static void proc_que_get_ret(neb::CJsonObject &_ret, third_dev_req_param &req, const std::string &json)
+{
+    if (_ret("code") == "0")
+    {
+        proc_que_info_back(_ret);
+    }
+}
+
+static void proc_check_in_ret(neb::CJsonObject &_ret, third_dev_req_param &req, const std::string &json)
+{
+    if (_ret("code") == "0")
+    {
+        proc_que_info_back(_ret);
+    }
+    else
+    {
+        std::string que_url = req.url;
+        que_url = que_url.substr(0, que_url.find("checkIn")) + "getQueuingInfo";
+        post_json_to_third(que_url, json, req.key, req.token, proc_que_get_ret);
+    }
+}
+
 void PA_DATAOPT_post_checkin(pa_sql_single_vichele &_vichele)
 {
     auto p_company = PA_DATAOPT_get_sale_company(_vichele);
@@ -925,7 +950,7 @@ void PA_DATAOPT_post_checkin(pa_sql_single_vichele &_vichele)
         token = company.third_token;
         ctrl_url += company.third_url + "/thirdParty/zyzl/checkIn";
 
-        post_json_to_third(ctrl_url, req.ToString(), key, token, proc_que_info_back);
+        post_json_to_third(ctrl_url, req.ToString(), key, token, proc_check_in_ret);
     }
 }
 
@@ -953,6 +978,6 @@ void PA_DATAOPT_post_get_queue(pa_sql_single_vichele &_vichele)
         token = company.third_token;
         ctrl_url += company.third_url + "/thirdParty/zyzl/getQueuingInfo";
 
-        post_json_to_third(ctrl_url, req.ToString(), key, token, proc_que_info_back);
+        post_json_to_third(ctrl_url, req.ToString(), key, token, proc_que_get_ret);
     }
 }
