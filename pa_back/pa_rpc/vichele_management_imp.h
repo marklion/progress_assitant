@@ -107,7 +107,12 @@ public:
         {
             PA_RETURN_OP_FAIL();
         }
-        PA_DATAOPT_post_change_register(*extra_vichele);
+
+        auto update_ret = PA_DATAOPT_post_sync_change_register(*extra_vichele);
+        if (update_ret.length() > 0)
+        {
+            PA_RETURN_CANNOT_CANCLE(update_ret);
+        }
         extra_vichele->is_drop = 1;
         ret = extra_vichele->update_record();
         if (ret)
@@ -424,7 +429,11 @@ public:
         auto extra_vichele = company->get_all_children<pa_sql_vichele_stay_alone>("destination", "(%s)  AND is_drop == 0 AND status != 2", query_cmd.c_str());
         for (auto &itr : extra_vichele)
         {
-            PA_DATAOPT_post_change_register(itr);
+            auto update_ret = PA_DATAOPT_post_sync_change_register(itr);
+            if (update_ret.length() > 0)
+            {
+                PA_RETURN_CANNOT_CANCLE(update_ret);
+            }
             itr.is_drop = 1;
             if (itr.update_record())
             {

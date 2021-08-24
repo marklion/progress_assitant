@@ -17,6 +17,7 @@
 #define PA_RETURN_RELATED_PLAN_OPEN() PA_RETURN_MSG("计划未关闭无法操作")
 #define PA_RETURN_SALE_CLOSE() PA_RETURN_MSG("卖家已休息，请在上班时间段内操作")
 #define PA_RETURN_OP_FAIL() PA_RETURN_MSG("操作失败")
+#define PA_RETURN_CANNOT_CANCLE(x) PA_RETURN_MSG(("操作失败,原因:" + x))
 
 struct pa_util_company_position_config {
     double lat = 0;
@@ -59,7 +60,8 @@ std::unique_ptr<pa_sql_company> PA_DATAOPT_get_sale_company(pa_sql_single_vichel
 std::string PA_DATAOPT_search_base_id_info_by_name(const std::string &name, const std::string &type, pa_sql_company &_company);
 std::vector<meta_stuff_info> PA_DATAOPT_search_multi_stuff(pa_sql_vichele_stay_alone &_vichele);
 void PA_DATAOPT_post_change_register(pa_sql_single_vichele &_vichele, bool is_update = false);
-void PA_DATAOPT_post_change_register(pa_sql_vichele_stay_alone &_vicheles);
+std::string PA_DATAOPT_post_sync_change_register(pa_sql_single_vichele &_vichele, bool is_update = false);
+std::string PA_DATAOPT_post_sync_change_register(pa_sql_vichele_stay_alone &_vicheles);
 void PA_DATAOPT_post_checkin(pa_sql_single_vichele &_vichele);
 void PA_DATAOPT_post_get_queue(pa_sql_single_vichele &_vichele);
 
