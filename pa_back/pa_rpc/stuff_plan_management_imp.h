@@ -344,15 +344,20 @@ public:
             PA_RETURN_NOCOMPANY_MSG();
         }
         auto created_user = plan_in_sql->get_parent<pa_sql_userinfo>("created_by");
-        if (created_user && created_user->get_pri_id() == opt_user->get_pri_id() && PA_STATUS_RULE_change_status(*plan_in_sql, 0, *opt_user))
+        if (created_user && created_user->get_pri_id() == opt_user->get_pri_id() && PA_STATUS_RULE_can_be_change(*plan_in_sql, *opt_user, 0) )
         {
             plan_in_sql->plan_time = plan.plan_time;
             auto orig_vichele_info = plan_in_sql->get_all_children<pa_sql_single_vichele>("belong_plan");
             for (auto &itr : orig_vichele_info)
             {
-                PA_DATAOPT_post_change_register(itr);
+                auto update_ret = PA_DATAOPT_post_sync_change_register(itr);
+                if (update_ret.length() > 0)
+                {
+                    PA_RETURN_CANNOT_CANCLE(update_ret);
+                }
                 itr.remove_record();
             }
+            PA_STATUS_RULE_change_status(*plan_in_sql, 0, *opt_user);
             for (auto &itr : plan.vichele_info)
             {
                 auto main_vhichele = company->get_children<pa_sql_vichele>("belong_company", "number = '%s'", itr.main_vichele.c_str());
@@ -582,8 +587,12 @@ public:
                 {
                     found_vichele_info->deliver_timestamp = itr.m_time;
                 }
+                auto update_ret = PA_DATAOPT_post_sync_change_register(*found_vichele_info);
+                if (update_ret.length() > 0)
+                {
+                    PA_RETURN_CANNOT_CANCLE(update_ret);
+                }
                 found_vichele_info->update_record();
-                PA_DATAOPT_post_change_register(*found_vichele_info);
                 auto driver_register = found_vichele_info->get_children<pa_sql_driver_register>("belong_vichele");
                 if (driver_register)
                 {
@@ -795,7 +804,11 @@ public:
             auto all_vichele = plan.get_all_children<pa_sql_single_vichele>("belong_plan");
             for (auto &itr : all_vichele)
             {
-                PA_DATAOPT_post_change_register(itr);
+                auto update_ret = PA_DATAOPT_post_sync_change_register(itr);
+                if (update_ret.length() > 0)
+                {
+                    PA_RETURN_CANNOT_CANCLE(update_ret);
+                }
             }
             if (PA_STATUS_RULE_change_status(plan, 4, opt_user))
             {
@@ -1456,7 +1469,11 @@ public:
                         auto main_vichele = single_vichele->get_parent<pa_sql_vichele>("main_vichele");
                         auto behind_vichele = single_vichele->get_parent<pa_sql_vichele_behind>("behind_vichele");
                         auto opt_user = PA_DATAOPT_get_online_user(ssid);
-                        PA_DATAOPT_post_change_register(*single_vichele);
+                        auto update_ret = PA_DATAOPT_post_sync_change_register(*single_vichele);
+                        if (update_ret.length() > 0)
+                        {
+                            PA_RETURN_CANNOT_CANCLE(update_ret);
+                        }
                         single_vichele->remove_record();
                         if (main_vichele && behind_vichele && opt_user)
                         {

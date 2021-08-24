@@ -51,6 +51,8 @@ std::string PA_DATAOPT_rest_post(const std::string &_url, const std::string &_js
         curl_easy_setopt(curlhandle, CURLOPT_POST, 1);
         // 设置post的数据
         curl_easy_setopt(curlhandle, CURLOPT_POSTFIELDS, _json.c_str());
+        curl_easy_setopt(curlhandle, CURLOPT_TIMEOUT, 5UL);
+        curl_easy_setopt(curlhandle, CURLOPT_NOSIGNAL, 1);
         curl_easy_perform(curlhandle);
         curl_easy_cleanup(curlhandle);
         curl_slist_free_all(header);
@@ -489,7 +491,22 @@ std::unique_ptr<pa_sql_company> PA_DATAOPT_get_sale_company(pa_sql_single_vichel
 }
 static tdf_log g_audit_log("api_audit", "/log/audit.log", "/log/audit.log");
 
+static neb::CJsonObject call_third_though_rest(const std::string &url, const std::string &key, const std::string &token, const std::string &json)
+{
+    g_audit_log.log("calling %s, content:%s", url.c_str(), json.c_str());
+    auto ret = PA_DATAOPT_rest_post(url, json, key, token);
+    neb::CJsonObject j_ret(ret);
+    if (j_ret("code") == "0")
+    {
+        g_audit_log.log("calling %s success, result:%s", url.c_str(), j_ret["data"].ToString().c_str());
+    }
+    else
+    {
+        g_audit_log.err("calling %s failed, code:%s, message:%s", url.c_str(), j_ret("code").c_str(), j_ret("message").c_str());
+    }
 
+    return j_ret;
+}
 
 static void post_json_to_third(const std::string &url, const std::string &json, const std::string &key, const std::string &token, proc_third_ret callback = nullptr)
 {
@@ -499,27 +516,18 @@ static void post_json_to_third(const std::string &url, const std::string &json, 
     p_req->token = token;
     p_req->callback = callback;
 
-    tdf_main::get_inst().Async_to_workthread([](void *_private, const std::string &chrct) -> void
-                                             {
-                                                 auto req = (third_dev_req_param *)(_private);
-                                                 g_audit_log.log("calling %s, content:%s", req->url.c_str(), chrct.c_str());
-                                                 auto ret = PA_DATAOPT_rest_post(req->url, chrct, req->key, req->token);
-                                                 neb::CJsonObject j_ret(ret);
-                                                 if (j_ret("code") == "0")
-                                                 {
-                                                     g_audit_log.log("calling %s success, result:%s", req->url.c_str(), j_ret["data"].ToString().c_str());
-                                                 }
-                                                 else
-                                                 {
-                                                     g_audit_log.err("calling %s failed, code:%s, message:%s", req->url.c_str(), j_ret("code").c_str(), j_ret("message").c_str());
-                                                 }
-                                                 if (req->callback)
-                                                 {
-                                                     req->callback(j_ret, *req, chrct);
-                                                 }
-                                                 delete req;
-                                             },
-                                             p_req, json);
+    tdf_main::get_inst().Async_to_workthread(
+        [](void *_private, const std::string &chrct) -> void
+        {
+            auto req = (third_dev_req_param *)(_private);
+            auto j_ret = call_third_though_rest(req->url, req->key, req->token, chrct);
+            if (req->callback)
+            {
+                req->callback(j_ret, *req, chrct);
+            }
+            delete req;
+        },
+        p_req, json);
 }
 
 void PA_DATAOPT_post_save_register(pa_sql_plan &_plan)
@@ -712,6 +720,88 @@ std::vector<meta_stuff_info> PA_DATAOPT_search_multi_stuff(pa_sql_vichele_stay_a
     return ret;
 }
 
+std::string PA_DATAOPT_post_sync_change_register(pa_sql_single_vichele &_vichele, bool is_update)
+{
+    std::string ret;
+    std::string ctrl_url = "";
+    std::string key;
+    std::string token;
+
+    auto company = PA_DATAOPT_get_sale_company(_vichele);
+    if (!company)
+    {
+        return ret;
+    }
+
+    auto _plan = _vichele.get_parent<pa_sql_plan>("belong_plan");
+    if (!_plan)
+    {
+        return ret;
+    }
+    if (_plan->status != 3)
+    {
+        return ret;
+    }
+
+    key = company->third_key;
+    token = company->third_token;
+    ctrl_url += company->third_url + "/thirdParty/zyzl/changeRegister";
+
+    if (key.length() > 0)
+    {
+        neb::CJsonObject fin_req;
+        stuff_plan_management_handler sp;
+        stuff_plan tmp;
+        sp.get_plan(tmp, _plan->get_pri_id());
+        for (auto &itr : tmp.vichele_info)
+        {
+            if (itr.vichele_id == _vichele.get_pri_id())
+            {
+                neb::CJsonObject sub_req;
+                sub_req.Add("id", std::to_string(itr.vichele_id) + "S");
+                sub_req.Add("plateNo", itr.main_vichele);
+                sub_req.Add("backPlateNo", itr.behind_vichele);
+                sub_req.Add("stuffName", tmp.name);
+                sub_req.Add("stuffId", PA_DATAOPT_search_base_id_info_by_name(tmp.name, "stuff", *company));
+                sub_req.Add("supplierName", "");
+                sub_req.Add("supplierId", "");
+                sub_req.Add("vehicleTeamName", tmp.buy_company);
+                sub_req.Add("vehicleTeamId", PA_DATAOPT_search_base_id_info_by_name(tmp.buy_company, "customer", *company));
+                sub_req.Add("enterWeight", 0);
+                sub_req.Add("companyName", tmp.buy_company);
+                sub_req.Add("customerId", PA_DATAOPT_search_base_id_info_by_name(tmp.buy_company, "customer", *company));
+                sub_req.Add("driverName", itr.driver_name);
+                sub_req.Add("driverPhone", itr.driver_phone);
+                sub_req.Add("driverId", itr.driver_id);
+                sub_req.Add("isSale", true, true);
+                sub_req.Add("price", tmp.price);
+                sub_req.Add("createTime", PA_DATAOPT_date_2_timestring(tmp.created_time));
+                sub_req.Add("orderNo", std::to_string(tmp.created_time) + std::to_string(tmp.plan_id));
+                sub_req.AddEmptySubArray("multiStuff");
+                sub_req.Add("isMulti", false, false);
+                if (is_update)
+                {
+                    sub_req.Add("changeType", 0);
+                }
+                else
+                {
+                    sub_req.Add("changeType", 1);
+                }
+                fin_req.Add("data", sub_req);
+                break;
+            }
+        }
+
+        auto j_ret = call_third_though_rest(ctrl_url, key, token, fin_req.ToString());
+        if (j_ret("code") == "-1")
+        {
+            ret = j_ret("message");
+        }
+    }
+
+    return ret;
+}
+
 void PA_DATAOPT_post_change_register(pa_sql_single_vichele &_vichele, bool is_update)
 {
     std::string ctrl_url = "";
@@ -782,16 +872,21 @@ void PA_DATAOPT_post_change_register(pa_sql_single_vichele &_vichele, bool is_up
         post_json_to_third(ctrl_url, fin_req.ToString(), key, token);
     }
 }
-void PA_DATAOPT_post_change_register(pa_sql_vichele_stay_alone &_vichele)
+std::string PA_DATAOPT_post_sync_change_register(pa_sql_vichele_stay_alone &_vichele)
 {
     std::string ctrl_url = "";
     std::string key;
     std::string token;
+    std::string ret;
 
     auto company = _vichele.get_parent<pa_sql_company>("destination");
     if (!company)
     {
-        return;
+        return ret;
+    }
+    if (_vichele.status != 1)
+    {
+        return ret;
     }
     key = company->third_key;
     token = company->third_token;
@@ -859,8 +954,13 @@ void PA_DATAOPT_post_change_register(pa_sql_vichele_stay_alone &_vichele)
         neb::CJsonObject fin_req;
         fin_req.Add("data", sub_req);
 
-        post_json_to_third(ctrl_url, fin_req.ToString(), key, token);
+        auto j_ret = call_third_though_rest(ctrl_url, key, token, fin_req.ToString());
+        if (j_ret("code") == "-1")
+        {
+            ret = j_ret("message");
+        }
     }
+    return ret;
 }
 
 static void proc_que_info_back(neb::CJsonObject &ret)

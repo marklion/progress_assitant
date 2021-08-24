@@ -716,7 +716,7 @@ public:
             }
             else
             {
-                PA_DATAOPT_post_change_register(*vichele_stay_alone);
+                PA_DATAOPT_post_sync_change_register(*vichele_stay_alone);
             }
             vichele_stay_alone->p_time = _req.pTime;
             vichele_stay_alone->m_time = _req.mTime;
