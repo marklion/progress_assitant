@@ -550,6 +550,7 @@ public:
                 _return.supplierId = PA_DATAOPT_search_base_id_info_by_name(_return.supplierName, "supplier", *company);
                 _return.vehicleTeamName = itr.transfor_company;
                 _return.vehicleTeamId = PA_DATAOPT_search_base_id_info_by_name(_return.vehicleTeamName, "vehicleTeam", *company);
+                _return.price = itr.price;
                 auto multi_stuff = PA_DATAOPT_search_multi_stuff(itr);
                 if (multi_stuff.size() > 1)
                 {
@@ -621,6 +622,7 @@ public:
             tmp.supplierId = PA_DATAOPT_search_base_id_info_by_name(tmp.supplierName, "supplier", *company);
             tmp.vehicleTeamName = itr.transfor_company;
             tmp.vehicleTeamId = PA_DATAOPT_search_base_id_info_by_name(tmp.vehicleTeamName, "vehicleTeam", *company);
+            tmp.price = itr.price;
             auto multi_stuff = PA_DATAOPT_search_multi_stuff(itr);
             if (multi_stuff.size() > 1)
             {

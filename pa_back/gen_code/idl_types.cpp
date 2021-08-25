@@ -6696,6 +6696,10 @@ void vichele_stay_alone::__set_m_weight(const double val) {
 void vichele_stay_alone::__set_j_weight(const double val) {
   this->j_weight = val;
 }
+
+void vichele_stay_alone::__set_price(const double val) {
+  this->price = val;
+}
 std::ostream& operator<<(std::ostream& out, const vichele_stay_alone& obj)
 {
   obj.printTo(out);
@@ -6900,6 +6904,14 @@ uint32_t vichele_stay_alone::read(::apache::thrift::protocol::TProtocol* iprot) 
           xfer += iprot->skip(ftype);
         }
         break;
+      case 23:
+        if (ftype == ::apache::thrift::protocol::T_DOUBLE) {
+          xfer += iprot->readDouble(this->price);
+          this->__isset.price = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
       default:
         xfer += iprot->skip(ftype);
         break;
@@ -7005,6 +7017,10 @@ uint32_t vichele_stay_alone::write(::apache::thrift::protocol::TProtocol* oprot)
   xfer += oprot->writeDouble(this->j_weight);
   xfer += oprot->writeFieldEnd();
 
+  xfer += oprot->writeFieldBegin("price", ::apache::thrift::protocol::T_DOUBLE, 23);
+  xfer += oprot->writeDouble(this->price);
+  xfer += oprot->writeFieldEnd();
+
   xfer += oprot->writeFieldStop();
   xfer += oprot->writeStructEnd();
   return xfer;
@@ -7034,6 +7050,7 @@ void swap(vichele_stay_alone &a, vichele_stay_alone &b) {
   swap(a.p_weight, b.p_weight);
   swap(a.m_weight, b.m_weight);
   swap(a.j_weight, b.j_weight);
+  swap(a.price, b.price);
   swap(a.__isset, b.__isset);
 }
 
@@ -7060,6 +7077,7 @@ vichele_stay_alone::vichele_stay_alone(const vichele_stay_alone& other82) {
   p_weight = other82.p_weight;
   m_weight = other82.m_weight;
   j_weight = other82.j_weight;
+  price = other82.price;
   __isset = other82.__isset;
 }
 vichele_stay_alone& vichele_stay_alone::operator=(const vichele_stay_alone& other83) {
@@ -7085,6 +7103,7 @@ vichele_stay_alone& vichele_stay_alone::operator=(const vichele_stay_alone& othe
   p_weight = other83.p_weight;
   m_weight = other83.m_weight;
   j_weight = other83.j_weight;
+  price = other83.price;
   __isset = other83.__isset;
   return *this;
 }
@@ -7113,6 +7132,7 @@ void vichele_stay_alone::printTo(std::ostream& out) const {
   out << ", " << "p_weight=" << to_string(p_weight);
   out << ", " << "m_weight=" << to_string(m_weight);
   out << ", " << "j_weight=" << to_string(j_weight);
+  out << ", " << "price=" << to_string(price);
   out << ")";
 }
 

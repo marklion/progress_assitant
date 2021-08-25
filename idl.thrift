@@ -456,6 +456,7 @@ struct vichele_stay_alone {
     20:double p_weight,
     21:double m_weight,
     22:double j_weight,
+    23:double price,
 }
 
 struct silent_user_info {

@@ -4441,6 +4441,7 @@ vichele_stay_alone = class {
     this.p_weight = null;
     this.m_weight = null;
     this.j_weight = null;
+    this.price = null;
     if (args) {
       if (args.id !== undefined && args.id !== null) {
         this.id = args.id;
@@ -4507,6 +4508,9 @@ vichele_stay_alone = class {
       }
       if (args.j_weight !== undefined && args.j_weight !== null) {
         this.j_weight = args.j_weight;
+      }
+      if (args.price !== undefined && args.price !== null) {
+        this.price = args.price;
       }
     }
   }
@@ -4675,6 +4679,13 @@ vichele_stay_alone = class {
           input.skip(ftype);
         }
         break;
+        case 23:
+        if (ftype == Thrift.Type.DOUBLE) {
+          this.price = input.readDouble().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
         default:
           input.skip(ftype);
       }
@@ -4794,6 +4805,11 @@ vichele_stay_alone = class {
     if (this.j_weight !== null && this.j_weight !== undefined) {
       output.writeFieldBegin('j_weight', Thrift.Type.DOUBLE, 22);
       output.writeDouble(this.j_weight);
+      output.writeFieldEnd();
+    }
+    if (this.price !== null && this.price !== undefined) {
+      output.writeFieldBegin('price', Thrift.Type.DOUBLE, 23);
+      output.writeDouble(this.price);
       output.writeFieldEnd();
     }
     output.writeFieldStop();

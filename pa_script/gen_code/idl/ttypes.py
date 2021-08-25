@@ -3899,11 +3899,12 @@ class vichele_stay_alone(object):
      - p_weight
      - m_weight
      - j_weight
+     - price
 
     """
 
 
-    def __init__(self, id=None, stuff_name=None, company_name=None, main_vichele_number=None, behind_vichele_number=None, count=None, comment=None, date=None, destination=None, status=None, creator_name=None, creator_phone=None, repeated=None, driver_name=None, driver_phone=None, driver_id=None, transfor_company=None, p_time=None, m_time=None, p_weight=None, m_weight=None, j_weight=None,):
+    def __init__(self, id=None, stuff_name=None, company_name=None, main_vichele_number=None, behind_vichele_number=None, count=None, comment=None, date=None, destination=None, status=None, creator_name=None, creator_phone=None, repeated=None, driver_name=None, driver_phone=None, driver_id=None, transfor_company=None, p_time=None, m_time=None, p_weight=None, m_weight=None, j_weight=None, price=None,):
         self.id = id
         self.stuff_name = stuff_name
         self.company_name = company_name
@@ -3926,6 +3927,7 @@ class vichele_stay_alone(object):
         self.p_weight = p_weight
         self.m_weight = m_weight
         self.j_weight = j_weight
+        self.price = price
 
     def read(self, iprot):
         if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
@@ -4046,6 +4048,11 @@ class vichele_stay_alone(object):
                     self.j_weight = iprot.readDouble()
                 else:
                     iprot.skip(ftype)
+            elif fid == 23:
+                if ftype == TType.DOUBLE:
+                    self.price = iprot.readDouble()
+                else:
+                    iprot.skip(ftype)
             else:
                 iprot.skip(ftype)
             iprot.readFieldEnd()
@@ -4143,6 +4150,10 @@ class vichele_stay_alone(object):
         if self.j_weight is not None:
             oprot.writeFieldBegin('j_weight', TType.DOUBLE, 22)
             oprot.writeDouble(self.j_weight)
+            oprot.writeFieldEnd()
+        if self.price is not None:
+            oprot.writeFieldBegin('price', TType.DOUBLE, 23)
+            oprot.writeDouble(self.price)
             oprot.writeFieldEnd()
         oprot.writeFieldStop()
         oprot.writeStructEnd()
@@ -4594,6 +4605,7 @@ vichele_stay_alone.thrift_spec = (
     (20, TType.DOUBLE, 'p_weight', None, None, ),  # 20
     (21, TType.DOUBLE, 'm_weight', None, None, ),  # 21
     (22, TType.DOUBLE, 'j_weight', None, None, ),  # 22
+    (23, TType.DOUBLE, 'price', None, None, ),  # 23
 )
 all_structs.append(silent_user_info)
 silent_user_info.thrift_spec = (

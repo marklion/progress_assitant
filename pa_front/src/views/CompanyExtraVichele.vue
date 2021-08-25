@@ -11,7 +11,7 @@
             <van-button v-else block type="info" @click="select_pool = []">取消全选</van-button>
         </van-col>
         <van-col :span="8">
-            <van-button block type="primary" @click="confirm_vichele">确认车辆</van-button>
+            <van-button block type="primary" @click="show_confirm_diag = true">确认车辆</van-button>
         </van-col>
         <van-col :span="8">
             <van-button block type="danger" @click="cancel_vichele">取消车辆</van-button>
@@ -25,6 +25,7 @@
                         <div>{{single_vichele.main_vichele_number}}</div>
                         <div>{{single_vichele.behind_vichele_number}}</div>
                     </template>
+                    <div>单价：{{single_vichele.price}}</div>
                     <div>发货净重：{{single_vichele.count}}吨</div>
                     <div v-if="single_vichele.status == 2">收货净重：{{single_vichele.j_weight}}吨</div>
                     <div v-if="single_vichele.comment">备注：{{single_vichele.comment}}</div>
@@ -61,6 +62,12 @@
             </div>
         </van-list>
     </van-checkbox-group>
+    <van-dialog v-model="show_confirm_diag" close-on-click-overlay title="确认单价" :show-confirm-button="false">
+        <van-form @submit="confirm_vichele">
+            <van-field v-model="price" type="number" label="单价" placeholder="请填入与供货方协商后的单价" :rules="[{ required: true, message: '请输入单价' }]" />
+            <van-button round block >确认</van-button>
+        </van-form>
+    </van-dialog>
 </div>
 </template>
 
@@ -98,7 +105,15 @@ import {
     Search
 } from 'vant';
 import PinyinMatch from 'pinyin-match';
+import {
+    Form
+} from 'vant';
+import {
+    Field
+} from 'vant';
 
+Vue.use(Form);
+Vue.use(Field);
 Vue.use(Search);
 Vue.use(DropdownMenu);
 Vue.use(DropdownItem);
@@ -111,10 +126,13 @@ Vue.use(Tag);
 Vue.use(Cell);
 Vue.use(CellGroup);
 Vue.use(List);
+Vue.use(Dialog);
 export default {
     name: 'CompanyExtraVichele',
     data: function () {
         return {
+            show_confirm_diag: false,
+            price: '',
             vichele_search_filter: '',
             items: [],
             loading: false,
@@ -191,7 +209,7 @@ export default {
         },
     },
     methods: {
-        refresh_all_records: function() {
+        refresh_all_records: function () {
             this.$refs.all_record.check();
         },
         formatDateTime: function (date) {
@@ -223,8 +241,13 @@ export default {
         },
         confirm_vichele: function () {
             var vue_this = this;
+            vue_this.select_pool.forEach(element => {
+                element.price = parseFloat(vue_this.price);
+            });
+            vue_this.price = '';
             vue_this.$call_remote_process("vichele_management", 'confirm_vichele', [vue_this.$cookies.get('pa_ssid'), vue_this.select_pool]).then(function (resp) {
                 if (resp) {
+                    vue_this.show_confirm_diag = false;
                     vue_this.finished = false;
                     vue_this.items = [];
                     vue_this.select_pool = [];

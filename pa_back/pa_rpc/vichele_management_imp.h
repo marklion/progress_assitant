@@ -219,6 +219,7 @@ public:
             tmp.p_weight = itr.p_weight;
             tmp.m_weight = itr.m_weight;
             tmp.j_weight = itr.j_weight;
+            tmp.price = itr.price;
             _return.push_back(tmp);
         }
     }
@@ -358,6 +359,7 @@ public:
             tmp.p_weight = itr.p_weight;
             tmp.m_weight = itr.m_weight;
             tmp.j_weight = itr.j_weight;
+            tmp.price = itr.price;
             _return.push_back(tmp);
         }
     }
@@ -376,16 +378,19 @@ public:
         }
 
         std::string query_cmd = "PRI_ID == 0";
+        double price = 0;
         for (auto &itr : info)
         {
             query_cmd += " OR PRI_ID == " + std::to_string(itr.id);
+            price = itr.price;
         }
 
+        std::list<pa_sql_vichele_stay_alone> tmp;
         auto extra_vichele = company->get_all_children<pa_sql_vichele_stay_alone>("destination", "(%s) AND status == 0 AND is_drop == 0", query_cmd.c_str());
         for (auto &itr : extra_vichele)
         {
-            std::list<pa_sql_vichele_stay_alone> tmp;
             itr.status = 1;
+            itr.price = price;
             if (itr.update_record())
             {
                 auto silent_user = itr.get_parent<pa_sql_silent_user>("created_by");
@@ -393,17 +398,10 @@ public:
                 {
                     PA_WECHAT_send_extra_vichele_msg(itr, silent_user->open_id, user->name + "确认了进厂申请");
                 }
-                if (PA_DATAOPT_search_multi_stuff(itr).size() > 1)
-                {
-                    //need update register
-                }
-                else
-                {
-                    tmp.push_back(itr);
-                    PA_DATAOPT_post_save_register(tmp);
-                }
+                tmp.push_back(itr);
             }
         }
+        PA_DATAOPT_post_save_register(tmp);
 
         return true;
     }
