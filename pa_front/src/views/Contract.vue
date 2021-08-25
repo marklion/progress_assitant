@@ -8,8 +8,10 @@
                     <van-button size="small" type="primary" @click="add_contract_show = true">增加</van-button>
                 </van-col>
             </van-row>
+
+            <van-search v-model="access_search_key" placeholder="公司名\拼音首字母" />
         </template>
-        <div class="single_contract_show" v-for="(single_contract, index) in contract" :key="index">
+        <div class="single_contract_show" v-for="(single_contract, index) in contract_after_filter" :key="index">
             <van-cell center :label="'合同编号：' + single_contract.number">
                 <template #title>
                     <span>{{my_side(single_contract)}}</span>
@@ -112,7 +114,12 @@ import {
 import {
     ActionSheet
 } from 'vant';
+import {
+    Search
+} from 'vant';
 
+Vue.use(Search);
+import PinyinMatch from 'pinyin-match';
 Vue.use(ActionSheet);
 Vue.use(Popover);
 Vue.use(Tag);
@@ -127,8 +134,26 @@ Vue.use(Cell);
 Vue.use(CellGroup);
 export default {
     name: 'Contract',
+    computed: {
+        contract_after_filter: function () {
+            var ret = [];
+            var vue_this = this;
+            if (vue_this.access_search_key.length <= 0) {
+                ret = vue_this.contract;
+            } else {
+                vue_this.contract.forEach(element => {
+                    if (PinyinMatch.match(element.a_side_company, vue_this.access_search_key) || PinyinMatch.match(element.b_side_company, vue_this.access_search_key)) {
+                        ret.push(element);
+                    }
+                });
+            }
+
+            return ret;
+        },
+    },
     data: function () {
         return {
+            access_search_key: '',
             actions: [],
             popover_switch: false,
             popover_switch_off: false,
