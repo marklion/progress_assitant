@@ -42,7 +42,7 @@ public:
             {
                 PA_RETURN_MSG(itr.driver_name + "在黑名单中");
             }
-            auto conflict_one = dest_company->get_children<pa_sql_vichele_stay_alone>("destination", "main_vichele_number == '%s' AND date == '%s' AND is_drop == 0", itr.main_vichele_number.c_str(), itr.date.c_str());
+            auto conflict_one = dest_company->get_children<pa_sql_vichele_stay_alone>("destination", "main_vichele_number == '%s' AND date == '%s' AND is_drop == 0 AND status < 2", itr.main_vichele_number.c_str(), itr.date.c_str());
             if (conflict_one)
             {
                 PA_RETURN_MSG(itr.main_vichele_number + "重复派出");

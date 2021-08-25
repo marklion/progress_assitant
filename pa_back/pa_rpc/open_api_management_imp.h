@@ -705,18 +705,18 @@ public:
             {
                 PA_RETURN_MSG(OPEN_API_MSG_VICHELE_NOT_EXIST);
             }
-            auto vichele_stay_alone = sqlite_orm::search_record<pa_sql_vichele_stay_alone>("stuff_name == '%s' AND main_vichele_number == '%s' AND behind_vichele_number == '%s' AND destination_ext_key == %ld AND is_drop == 0 AND status == 1", _req.stuffName.c_str(), req_vichele_stay_alone->main_vichele_number.c_str(), req_vichele_stay_alone->behind_vichele_number.c_str(), company->get_pri_id());
+            auto vichele_stay_alone = sqlite_orm::search_record<pa_sql_vichele_stay_alone>("stuff_name == '%s' AND main_vichele_number == '%s' AND behind_vichele_number == '%s' AND destination_ext_key == %ld AND is_drop == 0 AND status >= 1 AND PRI_ID == %ld", _req.stuffName.c_str(), req_vichele_stay_alone->main_vichele_number.c_str(), req_vichele_stay_alone->behind_vichele_number.c_str(), company->get_pri_id(), req_vichele_stay_alone->get_pri_id());
             if (!vichele_stay_alone)
             {
                 PA_RETURN_MSG(OPEN_API_MSG_VICHELE_NOT_EXIST);
             }
-            if (vichele_stay_alone->is_repeated != 0)
+            if (vichele_stay_alone->is_repeated != 0 && vichele_stay_alone->status == 1)
             {
-                vichele_stay_alone->insert_record();
-            }
-            else
-            {
-                PA_DATAOPT_post_sync_change_register(*vichele_stay_alone);
+                pa_sql_vichele_stay_alone new_one(*vichele_stay_alone);
+                new_one.insert_record();
+                std::list<pa_sql_vichele_stay_alone> tmp;
+                tmp.push_back(new_one);
+                PA_DATAOPT_post_save_register(tmp);
             }
             vichele_stay_alone->p_time = _req.pTime;
             vichele_stay_alone->m_time = _req.mTime;

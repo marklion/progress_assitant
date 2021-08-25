@@ -587,11 +587,6 @@ public:
                 {
                     found_vichele_info->deliver_timestamp = itr.m_time;
                 }
-                auto update_ret = PA_DATAOPT_post_sync_change_register(*found_vichele_info);
-                if (update_ret.length() > 0)
-                {
-                    PA_RETURN_CANNOT_CANCLE(update_ret);
-                }
                 found_vichele_info->update_record();
                 auto driver_register = found_vichele_info->get_children<pa_sql_driver_register>("belong_vichele");
                 if (driver_register)
