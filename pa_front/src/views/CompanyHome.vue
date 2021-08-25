@@ -98,7 +98,7 @@
                     <vxe-table-column field="delivered" title="状态" width="18%" sortable :formatter="formater_status_vichele"></vxe-table-column>
                 </vxe-table>
             </van-collapse-item>
-            <van-collapse-item title="明日计划装车" :value="'共' + tomorrow_vichele.length + '车'"   name="1">
+            <van-collapse-item title="明日计划装车" :value="'共' + tomorrow_vichele.length + '车'" name="1">
                 <vxe-table size="small" stripe align="center" :data="tomorrow_vichele">
                     <vxe-table-column field="company" title="公司" width="34%" sortable></vxe-table-column>
                     <vxe-table-column field="main_vichele" title="主车" width="24%"></vxe-table-column>
@@ -111,9 +111,10 @@
     </div>
     <div v-else-if="active_index == 3">
         <van-divider>访客记录</van-divider>
+        <van-search v-model="access_search_key" placeholder="公司名\拼音首字母" />
         <van-cell-group :title="'谁报过计划 共' + real_access_users.length + '人'">
             <van-collapse v-model="real_access_users_show">
-                <van-collapse-item v-for="(single_record, index) in real_access_users" :key="index" :title="single_record.company_name" :label="single_record.name" :name="index">
+                <van-collapse-item v-for="(single_record, index) in access_company_after_filter" :key="index" :title="single_record.company_name" :label="single_record.name" :name="index">
                     <template #icon>
                         <van-image round width="40px" height="40px" fit="cover" :src="$remote_url +  single_record.logo" />
                     </template>
@@ -126,7 +127,7 @@
         <van-cell-group title="谁感兴趣">
             <van-collapse v-model="all_access_users_show">
                 <div v-if="all_access_users.length > 0">
-                    <van-collapse-item v-for="(single_record, index) in all_access_users" :key="index" :title="single_record.company_name" :label="single_record.name" :name="index">
+                    <van-collapse-item v-for="(single_record, index) in maybe_access_company_after_filter" :key="index" :title="single_record.company_name" :label="single_record.name" :name="index">
                         <template #icon>
                             <van-image round width="40px" height="40px" fit="cover" :src="$remote_url +  single_record.logo" />
                         </template>
@@ -198,7 +199,12 @@ import {
     ImagePreview
 } from 'vant';
 import ContractCell from '../components/ContractCell.vue';
+import {
+    Search
+} from 'vant';
 
+Vue.use(Search);
+import PinyinMatch from 'pinyin-match';
 Vue.use(Grid);
 Vue.use(GridItem);
 Vue.use(Collapse);
@@ -222,6 +228,7 @@ export default {
     name: 'CompanyHome',
     data: function () {
         return {
+            access_search_key: '',
             real_access_users_show: [],
             all_access_users_show: [],
             real_access_users: [],
@@ -276,6 +283,36 @@ export default {
         "contract-cell": ContractCell,
     },
     computed: {
+        access_company_after_filter: function () {
+            var ret = [];
+            var vue_this = this;
+            if (vue_this.access_search_key.length <= 0) {
+                ret = vue_this.real_access_users;
+            } else {
+                vue_this.real_access_users.forEach(element => {
+                    if (PinyinMatch.match(element.company_name, vue_this.access_search_key)) {
+                        ret.push(element);
+                    }
+                });
+            }
+
+            return ret;
+        },
+        maybe_access_company_after_filter: function () {
+            var ret = [];
+            var vue_this = this;
+            if (vue_this.access_search_key.length <= 0) {
+                ret = vue_this.all_access_users;
+            } else {
+                vue_this.all_access_users.forEach(element => {
+                    if (PinyinMatch.match(element.company_name, vue_this.access_search_key)) {
+                        ret.push(element);
+                    }
+                });
+            }
+
+            return ret;
+        },
         undelivered_vichele: function () {
             var ret = [];
             this.vichele_statistics.forEach(element => {
