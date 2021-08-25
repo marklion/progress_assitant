@@ -79,10 +79,9 @@ public:
     {
         va_list vl;
         va_start(vl, _query);
-        char tmpbuff[2048];
-        vsnprintf(tmpbuff, sizeof(tmpbuff), _query, vl);
+        auto tmpbuff = get_string_from_format(_query, vl);
         va_end(vl);
-        return sqlite_orm::search_record_all<T>("%s_ext_key = %d AND %s", _parent_tag.c_str(), get_pri_id(), tmpbuff);
+        return sqlite_orm::search_record_all<T>("%s_ext_key = %d AND %s", _parent_tag.c_str(), get_pri_id(), tmpbuff.c_str());
     }
     template <typename T>
     std::unique_ptr<T> get_children(const std::string &_parent_tag)
@@ -100,11 +99,10 @@ public:
     {
         va_list vl;
         va_start(vl, _query);
-        char tmpbuff[2048];
-        vsnprintf(tmpbuff, sizeof(tmpbuff), _query, vl);
+        auto tmpbuff = get_string_from_format(_query, vl);
         va_end(vl);
 
-        return sqlite_orm::search_record<T>("%s_ext_key = %d AND %s",  _parent_tag.c_str(), get_pri_id(), tmpbuff);
+        return sqlite_orm::search_record<T>("%s_ext_key = %d AND %s",  _parent_tag.c_str(), get_pri_id(), tmpbuff.c_str());
     }
 };
 

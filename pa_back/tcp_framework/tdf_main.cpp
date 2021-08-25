@@ -491,3 +491,22 @@ void tdf_main::Async_to_mainthread(tdf_async_proc _func, void *_private, const s
     pout->m_chrct = _chrct;
     write(g_work2main[1], &pout, sizeof(pout));
 }
+std::string get_string_from_format(const char *format, va_list vl_orig)
+{
+    std::string ret;
+    va_list vl;
+    va_copy(vl, vl_orig);
+
+    auto vl_len = vsnprintf(nullptr, 0, format, vl) + 1;
+    va_end(vl);
+    char *tmpbuff = (char *)calloc(1UL, vl_len);
+    if (tmpbuff)
+    {
+        vsnprintf(tmpbuff, vl_len, format, vl_orig);
+        ret.assign(tmpbuff);
+        free(tmpbuff);
+    }
+
+
+    return ret;
+}

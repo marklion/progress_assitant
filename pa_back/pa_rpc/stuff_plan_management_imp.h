@@ -1316,9 +1316,7 @@ public:
         {
             filter_condition.append(" OR behind_vichele_ext_key = " + std::to_string(itr.get_pri_id()));
         }
-        std::string today_date = PA_DATAOPT_current_time();
-        today_date = today_date.substr(0, 10);
-        auto plan_scope = PA_RPC_get_all_plans_related_by_user(ssid, "plan_time LIKE '%s%%'", today_date.c_str());
+        auto plan_scope = PA_RPC_get_all_plans_related_by_user(ssid, "status < 4");
         std::string plan_filter = "belong_plan_ext_key = 0";
         for (auto &itr : plan_scope)
         {
