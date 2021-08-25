@@ -338,10 +338,9 @@ public:
     {
         va_list vl;
         va_start(vl, _query);
-        char tmpbuff[2048];
-        vsnprintf(tmpbuff, sizeof(tmpbuff), _query, vl);
+        auto tmpbuff = get_string_from_format(_query, vl);
         va_end(vl);
-        return search_record_all<sql_record>(std::string(tmpbuff));
+        return search_record_all<sql_record>(tmpbuff);
     }
     template <typename sql_record>
     static std::unique_ptr<sql_record> search_record(const std::string &_qurey)
@@ -361,10 +360,9 @@ public:
     {
         va_list vl;
         va_start(vl, _query);
-        char tmpbuff[2048];
-        vsnprintf(tmpbuff, sizeof(tmpbuff), _query, vl);
+        auto tmpbuff = get_string_from_format(_query, vl);
         va_end(vl);
-        return search_record<sql_record>(std::string(tmpbuff));
+        return search_record<sql_record>(tmpbuff);
     }
     template <typename sql_record>
     static std::unique_ptr<sql_record> search_record(int _pri_id)

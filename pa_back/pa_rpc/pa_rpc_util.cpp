@@ -6,13 +6,12 @@ static std::list<pa_sql_plan> PA_RPC_get_all_plans_related_by_user_info(pa_sql_u
 {
     va_list vl;
     va_start(vl, _query);
-    char tmpbuff[2048];
-    vsnprintf(tmpbuff, sizeof(tmpbuff), _query, vl);
+    auto tmpbuff = get_string_from_format(_query, vl);
     va_end(vl);
     
     if (_user.buyer)
     {
-        return _user.get_all_children<pa_sql_plan>("created_by", "%s", tmpbuff);
+        return _user.get_all_children<pa_sql_plan>("created_by", "%s", tmpbuff.c_str());
     }
     else
     {
@@ -33,7 +32,7 @@ static std::list<pa_sql_plan> PA_RPC_get_all_plans_related_by_user_info(pa_sql_u
         }
         else
         {
-            return sqlite_orm::search_record_all<pa_sql_plan>("(%s) AND %s", connect_param.c_str(), tmpbuff);
+            return sqlite_orm::search_record_all<pa_sql_plan>("(%s) AND %s", connect_param.c_str(), tmpbuff.c_str());
         }
     }
 }
@@ -43,8 +42,7 @@ std::list<pa_sql_plan> PA_RPC_get_all_plans_related_by_user(const std::string &_
     auto opt_user = PA_DATAOPT_get_online_user(_ssid);
     va_list vl;
     va_start(vl, _query);
-    char tmpbuff[2048];
-    vsnprintf(tmpbuff, sizeof(tmpbuff), _query, vl);
+    auto tmpbuff = get_string_from_format(_query, vl);
     va_end(vl);
 
     if (!opt_user)
@@ -52,17 +50,16 @@ std::list<pa_sql_plan> PA_RPC_get_all_plans_related_by_user(const std::string &_
         PA_RETURN_UNLOGIN_MSG();
     }
 
-    return PA_RPC_get_all_plans_related_by_user_info(*opt_user, "%s", tmpbuff);
+    return PA_RPC_get_all_plans_related_by_user_info(*opt_user, "%s", tmpbuff.c_str());
 }
 
 std::unique_ptr<pa_sql_plan> PA_RPC_get_plan_related_by_user(const std::string &ssid, const char *_query, ...)
 {
     va_list vl;
     va_start(vl, _query);
-    char tmpbuff[2048];
-    vsnprintf(tmpbuff, sizeof(tmpbuff), _query, vl);
+    auto tmpbuff = get_string_from_format(_query, vl);
     va_end(vl);
-    auto all = PA_RPC_get_all_plans_related_by_user(ssid, "%s", tmpbuff);
+    auto all = PA_RPC_get_all_plans_related_by_user(ssid, "%s", tmpbuff.c_str());
     if (all.size() > 0)
     {
         return std::unique_ptr<pa_sql_plan>(new pa_sql_plan(all.front()));
@@ -75,8 +72,7 @@ std::list<pa_sql_plan> PA_RPC_get_all_plans_related_by_company(pa_sql_company &_
     std::list<pa_sql_plan> ret;
     va_list vl;
     va_start(vl, _query);
-    char tmpbuff[2048];
-    vsnprintf(tmpbuff, sizeof(tmpbuff), _query, vl);
+    auto tmpbuff = get_string_from_format(_query, vl);
     va_end(vl);
 
     if (_company.is_sale == 0)
@@ -84,7 +80,7 @@ std::list<pa_sql_plan> PA_RPC_get_all_plans_related_by_company(pa_sql_company &_
         auto all_buyer = _company.get_all_children<pa_sql_userinfo>("belong_company");
         for (auto &itr : all_buyer)
         {
-            auto user_related_plans = PA_RPC_get_all_plans_related_by_user_info(itr, "%s", tmpbuff);
+            auto user_related_plans = PA_RPC_get_all_plans_related_by_user_info(itr, "%s", tmpbuff.c_str());
             ret.insert(ret.end(), user_related_plans.begin(), user_related_plans.end());
         }
     }
@@ -102,7 +98,7 @@ std::list<pa_sql_plan> PA_RPC_get_all_plans_related_by_company(pa_sql_company &_
         }
         else
         {
-            ret = sqlite_orm::search_record_all<pa_sql_plan>("(%s) AND %s", connect_param.c_str(), tmpbuff);
+            ret = sqlite_orm::search_record_all<pa_sql_plan>("(%s) AND %s", connect_param.c_str(), tmpbuff.c_str());
         }
     }
 

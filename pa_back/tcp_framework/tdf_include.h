@@ -29,6 +29,7 @@
 #include <iostream>
 #include <algorithm>
 
+std::string get_string_from_format(const char *format, va_list vl);
 class tdf_log
 {
     int m_log_stdout = 1;
@@ -112,8 +113,7 @@ public:
     {
         va_list vl;
         va_start(vl, _log);
-        char tmpbuff[2048];
-        vsnprintf(tmpbuff, sizeof(tmpbuff), _log, vl);
+        auto tmpbuff = get_string_from_format(_log, vl);
         va_end(vl);
         output_2_fd(tmpbuff, m_log_stdout);
     }
@@ -135,8 +135,7 @@ public:
     {
         va_list vl;
         va_start(vl, _log);
-        char tmpbuff[2048];
-        vsnprintf(tmpbuff, sizeof(tmpbuff), _log, vl);
+        auto tmpbuff = get_string_from_format(_log, vl);
         va_end(vl);
         output_2_fd(tmpbuff, m_log_stderr);
     }

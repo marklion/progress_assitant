@@ -125,3 +125,4 @@ sqlite_orm_lock::~sqlite_orm_lock()
     pthread_mutex_unlock(&sqlite_orm_lock::lock);
     g_log.log("unlock sql");
 }
+
