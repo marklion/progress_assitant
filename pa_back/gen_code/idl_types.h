@@ -2564,7 +2564,7 @@ void swap(push_balance_req &a, push_balance_req &b);
 std::ostream& operator<<(std::ostream& out, const push_balance_req& obj);
 
 typedef struct _vichele_stay_alone__isset {
-  _vichele_stay_alone__isset() : id(false), stuff_name(false), company_name(false), main_vichele_number(false), behind_vichele_number(false), count(false), comment(false), date(false), destination(false), status(false), creator_name(false), creator_phone(false), repeated(false), driver_name(false), driver_phone(false), driver_id(false), transfor_company(false), p_time(false), m_time(false), p_weight(false), m_weight(false), j_weight(false) {}
+  _vichele_stay_alone__isset() : id(false), stuff_name(false), company_name(false), main_vichele_number(false), behind_vichele_number(false), count(false), comment(false), date(false), destination(false), status(false), creator_name(false), creator_phone(false), repeated(false), driver_name(false), driver_phone(false), driver_id(false), transfor_company(false), p_time(false), m_time(false), p_weight(false), m_weight(false), j_weight(false), price(false) {}
   bool id :1;
   bool stuff_name :1;
   bool company_name :1;
@@ -2587,6 +2587,7 @@ typedef struct _vichele_stay_alone__isset {
   bool p_weight :1;
   bool m_weight :1;
   bool j_weight :1;
+  bool price :1;
 } _vichele_stay_alone__isset;
 
 class vichele_stay_alone : public virtual ::apache::thrift::TBase {
@@ -2594,7 +2595,7 @@ class vichele_stay_alone : public virtual ::apache::thrift::TBase {
 
   vichele_stay_alone(const vichele_stay_alone&);
   vichele_stay_alone& operator=(const vichele_stay_alone&);
-  vichele_stay_alone() : id(0), stuff_name(), company_name(), main_vichele_number(), behind_vichele_number(), count(0), comment(), date(), destination(), status(0), creator_name(), creator_phone(), repeated(0), driver_name(), driver_phone(), driver_id(), transfor_company(), p_time(), m_time(), p_weight(0), m_weight(0), j_weight(0) {
+  vichele_stay_alone() : id(0), stuff_name(), company_name(), main_vichele_number(), behind_vichele_number(), count(0), comment(), date(), destination(), status(0), creator_name(), creator_phone(), repeated(0), driver_name(), driver_phone(), driver_id(), transfor_company(), p_time(), m_time(), p_weight(0), m_weight(0), j_weight(0), price(0) {
   }
 
   virtual ~vichele_stay_alone() noexcept;
@@ -2620,6 +2621,7 @@ class vichele_stay_alone : public virtual ::apache::thrift::TBase {
   double p_weight;
   double m_weight;
   double j_weight;
+  double price;
 
   _vichele_stay_alone__isset __isset;
 
@@ -2667,6 +2669,8 @@ class vichele_stay_alone : public virtual ::apache::thrift::TBase {
 
   void __set_j_weight(const double val);
 
+  void __set_price(const double val);
+
   bool operator == (const vichele_stay_alone & rhs) const
   {
     if (!(id == rhs.id))
@@ -2712,6 +2716,8 @@ class vichele_stay_alone : public virtual ::apache::thrift::TBase {
     if (!(m_weight == rhs.m_weight))
       return false;
     if (!(j_weight == rhs.j_weight))
+      return false;
+    if (!(price == rhs.price))
       return false;
     return true;
   }

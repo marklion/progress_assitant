@@ -51,11 +51,12 @@
                             <div>{{item.main_vichele_number}}</div>
                             <div v-if="item.behind_vichele_number">{{item.behind_vichele_number}}</div>
                         </template>
+                        <div>单价:{{item.price}}</div>
                         <div>发货净重{{item.count}}吨</div>
                         <div v-if="item.status == 2">收货净重{{item.j_weight}}吨</div>
                         <div v-if="item.comment">备注：{{item.comment}}</div>
                         <template #right-icon>
-                            <div class="opt_button_show">
+                            <div class="opt_button_show" v-if="item.status == 0 || item.status != 2">
                                 <van-button v-if="item.status == 0" type="info" block size="small" @click="update_vichele(item)">修改</van-button>
                                 <van-button v-if="item.status != 2" type="danger" block size="small" @click="delete_vichele(item)">取消</van-button>
                             </div>

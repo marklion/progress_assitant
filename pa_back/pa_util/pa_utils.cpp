@@ -639,7 +639,7 @@ void PA_DATAOPT_post_save_register(std::list<pa_sql_vichele_stay_alone> &_vichel
             sub_req.Add("plateNo", itr.main_vichele_number);
             sub_req.Add("backPlateNo", itr.behind_vichele_number);
             sub_req.Add("supplierName", itr.company_name);
-            sub_req.Add("supplierId", PA_DATAOPT_search_base_id_info_by_name(itr.company_name, "suppier", *company));
+            sub_req.Add("supplierId", PA_DATAOPT_search_base_id_info_by_name(itr.company_name, "supplier", *company));
             sub_req.Add("vehicleTeamName", itr.transfor_company);
             sub_req.Add("vehicleTeamId", PA_DATAOPT_search_base_id_info_by_name(itr.transfor_company, "vehicleTeam", *company));
             sub_req.Add("companyName", "");
@@ -648,7 +648,7 @@ void PA_DATAOPT_post_save_register(std::list<pa_sql_vichele_stay_alone> &_vichel
             sub_req.Add("driverPhone", itr.driver_phone);
             sub_req.Add("driverId", itr.driver_id);
             sub_req.Add("isSale", false, false);
-            sub_req.Add("price", 0);
+            sub_req.Add("price", itr.price);
             sub_req.Add("createTime", itr.timestamp);
             sub_req.Add("orderNo", "");
             auto multi_stuff = PA_DATAOPT_search_multi_stuff(itr);
