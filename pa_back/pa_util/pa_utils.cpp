@@ -51,7 +51,7 @@ std::string PA_DATAOPT_rest_post(const std::string &_url, const std::string &_js
         curl_easy_setopt(curlhandle, CURLOPT_POST, 1);
         // 设置post的数据
         curl_easy_setopt(curlhandle, CURLOPT_POSTFIELDS, _json.c_str());
-        curl_easy_setopt(curlhandle, CURLOPT_TIMEOUT, 5UL);
+        curl_easy_setopt(curlhandle, CURLOPT_TIMEOUT, 300UL);
         curl_easy_setopt(curlhandle, CURLOPT_NOSIGNAL, 1);
         curl_easy_perform(curlhandle);
         curl_easy_cleanup(curlhandle);
@@ -797,6 +797,10 @@ std::string PA_DATAOPT_post_sync_change_register(pa_sql_single_vichele &_vichele
         {
             ret = j_ret("message");
         }
+        else if (j_ret("code") == "")
+        {
+            ret = "场内系统无响应";
+        }
     }
 
     return ret;
@@ -958,6 +962,10 @@ std::string PA_DATAOPT_post_sync_change_register(pa_sql_vichele_stay_alone &_vic
         if (j_ret("code") == "-1")
         {
             ret = j_ret("message");
+        }
+        else if (j_ret("code") == "")
+        {
+            ret = "场内系统无响应";
         }
     }
     return ret;
