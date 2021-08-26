@@ -83,11 +83,17 @@ int main(int argc, char **argv)
                             auto all_stay_alone_vichele = sqlite_orm::search_record_all<pa_sql_vichele_stay_alone>("date LIKE '%s%%' AND status <= 1 AND is_drop == 0", date_only.c_str());
                             for (auto &itr : all_stay_alone_vichele)
                             {
-                                auto update_ret = PA_DATAOPT_post_sync_change_register(itr);
-                                if (update_ret.length() <= 0)
+                                try
                                 {
-                                    itr.is_drop = 1;
-                                    itr.update_record();
+                                    auto update_ret = PA_DATAOPT_post_sync_change_register(itr);
+                                    if (update_ret.length() <= 0)
+                                    {
+                                        itr.is_drop = 1;
+                                        itr.update_record();
+                                    }
+                                }
+                                catch (gen_exp &e)
+                                {
                                 }
                             }
                         }
