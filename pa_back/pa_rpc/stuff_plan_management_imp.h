@@ -355,6 +355,11 @@ public:
                 {
                     PA_RETURN_CANNOT_CANCLE(update_ret);
                 }
+                auto related_register_info = itr.get_children<pa_sql_driver_register>("belong_vichele");
+                if (related_register_info)
+                {
+                    related_register_info->remove_record();
+                }
                 itr.remove_record();
             }
             PA_STATUS_RULE_change_status(*plan_in_sql, 0, *opt_user);
@@ -804,6 +809,11 @@ public:
                 {
                     PA_RETURN_CANNOT_CANCLE(update_ret);
                 }
+                auto related_register_info = itr.get_children<pa_sql_driver_register>("belong_vichele");
+                if (related_register_info)
+                {
+                    related_register_info->remove_record();
+                }
             }
             if (PA_STATUS_RULE_change_status(plan, 4, opt_user))
             {
@@ -1147,7 +1157,13 @@ public:
             {
                 itr.is_cancel = 1;
             }
-            my_except_close(itr, *get_sysadmin_user(), "超过计划日期，自动关闭");
+            try
+            {
+                my_except_close(itr, *get_sysadmin_user(), "超过计划日期，自动关闭");
+            }
+            catch (gen_exp &e)
+            {
+            }
         }
     }
 
@@ -1467,10 +1483,28 @@ public:
                         {
                             PA_RETURN_CANNOT_CANCLE(update_ret);
                         }
+                        auto related_register_info = single_vichele->get_children<pa_sql_driver_register>("belong_vichele");
+                        if (related_register_info)
+                        {
+                            related_register_info->remove_record();
+                        }
                         single_vichele->remove_record();
                         if (main_vichele && behind_vichele && opt_user)
                         {
                             related_plan->send_wechat_msg(*opt_user, "取消了该计划中的车辆：" + main_vichele->number + "-" + behind_vichele->number);
+                        }
+
+                        auto total_count = related_plan->get_all_children<pa_sql_single_vichele>("belong_plan").size();
+                        auto deliver_count = related_plan->get_all_children<pa_sql_single_vichele>("belong_plan", "finish = 1").size();
+                        PA_STATUS_RULE_action(*related_plan, *get_sysadmin_user(), PA_DATAOPT_current_time(), "已出货" + std::to_string(deliver_count) + "车/共" + std::to_string(total_count) + "车");
+                        if (deliver_count == total_count)
+                        {
+                            PA_STATUS_RULE_change_status(*related_plan, *get_sysadmin_user());
+                            PA_STATUS_RULE_action(*related_plan, *get_sysadmin_user(), PA_DATAOPT_current_time(), "全部出货，自动归档");
+                            pa_sql_archive_plan archive_plan;
+                            archive_plan.translate_from_plan(*related_plan);
+                            related_plan->set_parent(archive_plan, "archived");
+                            related_plan->update_record();
                         }
                     }
                 }
