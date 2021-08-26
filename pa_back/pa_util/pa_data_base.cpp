@@ -294,3 +294,16 @@ std::string pa_sql_blacklist::target_was_blocked(const std::string &_target, bla
 
     return ret;
 }
+
+bool pa_sql_single_vichele::has_been_register()
+{
+    bool ret = false;
+
+    auto regis_info = get_children<pa_sql_driver_register>("belong_vichele");
+    if (regis_info)
+    {
+        ret = true;
+    }
+
+    return ret;
+}
