@@ -1036,20 +1036,11 @@ static void proc_check_in_ret(neb::CJsonObject &_ret, third_dev_req_param &req, 
 
 void PA_DATAOPT_post_checkin(pa_sql_single_vichele &_vichele)
 {
+    auto related_plan = _vichele.get_parent<pa_sql_plan>("belong_plan");
     auto p_company = PA_DATAOPT_get_sale_company(_vichele);
-    if (p_company)
+    if (p_company && related_plan)
     {
         auto &company = *p_company;
-        neb::CJsonObject req;
-        neb::CJsonObject sub_req;
-        std::string plate_no;
-        auto main_vichele = _vichele.get_parent<pa_sql_vichele>("main_vichele");
-        if (main_vichele)
-        {
-            plate_no = main_vichele->number;
-        }
-        sub_req.Add("plateNo", plate_no);
-        req.Add("data", sub_req);
         std::string ctrl_url = "";
         std::string key;
         std::string token;
@@ -1058,7 +1049,43 @@ void PA_DATAOPT_post_checkin(pa_sql_single_vichele &_vichele)
         token = company.third_token;
         ctrl_url += company.third_url + "/thirdParty/zyzl/checkIn";
 
-        post_json_to_third(ctrl_url, req.ToString(), key, token, proc_check_in_ret);
+        neb::CJsonObject req;
+        stuff_plan_management_handler sp;
+        stuff_plan tmp;
+        sp.get_plan(tmp, related_plan->get_pri_id());
+        for (auto &itr : tmp.vichele_info)
+        {
+            if (_vichele.get_pri_id() == itr.vichele_id)
+            {
+                req.Add("id", std::to_string(itr.vichele_id) + "S");
+                req.Add("plateNo", itr.main_vichele);
+                req.Add("backPlateNo", itr.behind_vichele);
+                req.Add("stuffName", tmp.name);
+                req.Add("stuffId", PA_DATAOPT_search_base_id_info_by_name(tmp.name, "stuff", company));
+                req.Add("supplierName", "");
+                req.Add("supplierId", "");
+                req.Add("vehicleTeamName", tmp.buy_company);
+                req.Add("vehicleTeamId", PA_DATAOPT_search_base_id_info_by_name(tmp.buy_company, "customer", company));
+                req.Add("enterWeight", 0);
+                req.Add("companyName", tmp.buy_company);
+                req.Add("customerId", PA_DATAOPT_search_base_id_info_by_name(tmp.buy_company, "customer", company));
+                req.Add("driverName", itr.driver_name);
+                req.Add("driverPhone", itr.driver_phone);
+                req.Add("driverId", itr.driver_id);
+                req.Add("isSale", true, true);
+                req.Add("price", tmp.price);
+                req.Add("createTime", PA_DATAOPT_date_2_timestring(tmp.created_time));
+                req.Add("orderNo", std::to_string(tmp.created_time) + std::to_string(tmp.plan_id));
+                req.AddEmptySubArray("multiStuff");
+                req.Add("isMulti", false, false);
+
+                break;
+            }
+        }
+        neb::CJsonObject fin_req;
+        fin_req.Add("data", req);
+
+        post_json_to_third(ctrl_url, fin_req.ToString(), key, token, proc_check_in_ret);
     }
 }
 
