@@ -18,7 +18,6 @@
                 <template #right-icon>
                     <div style="margin-left:8px;">
                         <van-button v-if="!single_trans.is_registered" type="info" size="small" @click="register_vichele(single_trans.destination_company, single_trans.id)">排号</van-button>
-                        <van-button v-else type="danger" size="small" @click="unregister_vichele(single_trans.id)">取消排号</van-button>
                     </div>
                 </template>
                 <div v-if="single_trans.is_registered">
