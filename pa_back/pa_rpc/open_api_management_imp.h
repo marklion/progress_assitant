@@ -823,11 +823,11 @@ public:
             PA_RETURN_MSG(OPEN_API_MSG_NO_PERMISSION);
         }
 
-        auto exist_record = company->get_children<pa_sql_base_info>("belong_company", "id == '%s'", _req.id.c_str());
+        auto exist_record = company->get_children<pa_sql_base_info>("belong_company", "name == '%s'", _req.name.c_str());
         if (exist_record)
         {
             exist_record->code = _req.code;
-            exist_record->name = _req.name;
+            exist_record->id = _req.id;
             exist_record->unit = _req.unit;
             exist_record->type = _req.type;
             exist_record->pid = _req.pid;
@@ -859,7 +859,7 @@ public:
         {
             PA_RETURN_MSG(OPEN_API_MSG_NO_PERMISSION);
         }
-        auto exist_record = company->get_children<pa_sql_base_info>("belong_company", "id == '%s'", _req.id.c_str());
+        auto exist_record = company->get_children<pa_sql_base_info>("belong_company", "id == '%s' AND name == '%s'", _req.id.c_str(), _req.name.c_str());
         if (!exist_record)
         {
             PA_RETURN_MSG(OPEN_API_MSG_NO_DATA_FOUND);
