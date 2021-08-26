@@ -189,9 +189,11 @@ export default {
 
         register_vichele: async function (_dest, _id) {
             var vue_this = this;
+            var position_err = true;
 
             try {
                 var current_position = await vue_this.getLocation();
+                position_err = false;
                 var config_position = await vue_this.$call_remote_process("company_management", "get_company_position_config", [_dest]);
                 var real_distance = vue_this.getDistance(current_position.coords.latitude, current_position.coords.longitude, config_position.lat, config_position.lag);
                 if (config_position.distance > real_distance) {
@@ -205,7 +207,10 @@ export default {
                     vue_this.$toast("当前距离厂区" + (real_distance / 1000).toFixed(1) + "公里, 请在" + config_position.distance / 1000 + "公里范围内签到");
                 }
             } catch (error) {
-                vue_this.$toast("获取定位失败。");
+                if (position_err) {
+                    vue_this.$toast("获取定位失败。");
+
+                }
             }
 
         },

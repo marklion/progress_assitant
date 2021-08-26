@@ -512,6 +512,10 @@ public:
                     {
                         if (main_vichele->number == plateNo)
                         {
+                            if (!itr.has_been_register())
+                            {
+                                PA_RETURN_MSG("driver has not registered");
+                            }
                             _return = make_resp_from_single_vichele(itr);
                             return;
                         }
@@ -596,8 +600,11 @@ public:
             for (auto &itr : all_vichele_info)
             {
                 vehicle_info_resp tmp;
-                tmp = make_resp_from_single_vichele(itr);
-                _return.push_back(tmp);
+                if (itr.has_been_register())
+                {
+                    tmp = make_resp_from_single_vichele(itr);
+                    _return.push_back(tmp);
+                }
             }
         }
 

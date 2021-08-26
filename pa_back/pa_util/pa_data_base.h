@@ -308,6 +308,7 @@ public:
 
         return ret;
     }
+    bool has_been_register();
 
     virtual std::string table_name()
     {

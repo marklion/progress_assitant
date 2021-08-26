@@ -1737,8 +1737,18 @@ public:
             if (driver && vichele_info)
             {
                 auto real_driver = vichele_info->get_parent<pa_sql_driver>("driver");
-                if (real_driver && real_driver->phone == driver->phone)
+                auto belong_company = PA_DATAOPT_get_sale_company(*vichele_info);
+                if (real_driver && real_driver->phone == driver->phone && belong_company)
                 {
+                    std::vector<today_driver_info> already_checkin;
+                    get_today_driver_info(already_checkin, silent_id);
+                    for (auto &itr:already_checkin)
+                    {
+                        if (itr.is_registered && itr.destination_company == belong_company->name)
+                        {
+                            PA_RETURN_MSG("今日已排号, 请" + itr.main_vichele + "出厂后再排号");
+                        }
+                    }
                     PA_DATAOPT_post_change_register(*vichele_info, true);
                     PA_DATAOPT_post_checkin(*vichele_info);
                     ret = true;
