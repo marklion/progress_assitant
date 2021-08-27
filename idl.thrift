@@ -156,6 +156,7 @@ service company_management {
     company_positon_lat_lag get_company_position_config(1:string company_name) throws (1:gen_exp e),
     bool set_third_info(1:third_dev_info _info, 2:string ssid) throws (1:gen_exp e),
     third_dev_info get_third_info(1:string ssid) throws (1:gen_exp e),
+    list<string> get_related_company(1:string ssid) throws (1:gen_exp e),
 }
 
 service stuff_info {
@@ -225,6 +226,7 @@ struct plan_status {
     5:string status_prompt,
     6:bool is_cancel,
     7:string stuff_type,
+    8:string company,
 }
 
 struct plan_number_id{
@@ -293,8 +295,8 @@ struct driver_detail_info {
 
 service stuff_plan_management {
     i64 create_plan(1:stuff_plan plan, 2:string ssid, 3:string proxy_company) throws (1:gen_exp e),
-    list<plan_status> get_created_plan(1:string ssid, 2:i64 anchor, 3:i64 status, 4:string stuff_name) throws (1:gen_exp e),
-    list<plan_status> get_company_plan(1:string ssid, 2:i64 anchor, 3:i64 status, 4:string stuff_name) throws (1:gen_exp e),
+    list<plan_status> get_created_plan(1:string ssid, 2:i64 anchor, 3:i64 status, 4:string stuff_name, 5:string company_name) throws (1:gen_exp e),
+    list<plan_status> get_company_plan(1:string ssid, 2:i64 anchor, 3:i64 status, 4:string stuff_name, 5:string company_name) throws (1:gen_exp e),
     stuff_plan get_plan(1:i64 plan_id) throws (1:gen_exp e),
     bool update_plan(1:stuff_plan plan, 2:string ssid) throws (1:gen_exp e),
     bool confirm_plan(1:i64 plan_id, 2:string ssid, 3:string comment) throws (1:gen_exp e),

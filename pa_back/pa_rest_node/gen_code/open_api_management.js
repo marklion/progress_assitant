@@ -634,13 +634,13 @@ open_api_management_get_today_transformation_result.prototype.read = function(in
       case 0:
       if (ftype == Thrift.Type.LIST) {
         this.success = [];
-        var _rtmp3146 = input.readListBegin();
-        var _size145 = _rtmp3146.size || 0;
-        for (var _i147 = 0; _i147 < _size145; ++_i147) {
-          var elem148 = null;
-          elem148 = new ttypes.api_transformation_info();
-          elem148.read(input);
-          this.success.push(elem148);
+        var _rtmp3151 = input.readListBegin();
+        var _size150 = _rtmp3151.size || 0;
+        for (var _i152 = 0; _i152 < _size150; ++_i152) {
+          var elem153 = null;
+          elem153 = new ttypes.api_transformation_info();
+          elem153.read(input);
+          this.success.push(elem153);
         }
         input.readListEnd();
       } else {
@@ -669,10 +669,10 @@ open_api_management_get_today_transformation_result.prototype.write = function(o
   if (this.success !== null && this.success !== undefined) {
     output.writeFieldBegin('success', Thrift.Type.LIST, 0);
     output.writeListBegin(Thrift.Type.STRUCT, this.success.length);
-    for (var iter149 in this.success) {
-      if (this.success.hasOwnProperty(iter149)) {
-        iter149 = this.success[iter149];
-        iter149.write(output);
+    for (var iter154 in this.success) {
+      if (this.success.hasOwnProperty(iter154)) {
+        iter154 = this.success[iter154];
+        iter154.write(output);
       }
     }
     output.writeListEnd();
@@ -1390,13 +1390,13 @@ open_api_management_proc_all_vehicle_info_result.prototype.read = function(input
       case 0:
       if (ftype == Thrift.Type.LIST) {
         this.success = [];
-        var _rtmp3151 = input.readListBegin();
-        var _size150 = _rtmp3151.size || 0;
-        for (var _i152 = 0; _i152 < _size150; ++_i152) {
-          var elem153 = null;
-          elem153 = new ttypes.vehicle_info_resp();
-          elem153.read(input);
-          this.success.push(elem153);
+        var _rtmp3156 = input.readListBegin();
+        var _size155 = _rtmp3156.size || 0;
+        for (var _i157 = 0; _i157 < _size155; ++_i157) {
+          var elem158 = null;
+          elem158 = new ttypes.vehicle_info_resp();
+          elem158.read(input);
+          this.success.push(elem158);
         }
         input.readListEnd();
       } else {
@@ -1425,10 +1425,10 @@ open_api_management_proc_all_vehicle_info_result.prototype.write = function(outp
   if (this.success !== null && this.success !== undefined) {
     output.writeFieldBegin('success', Thrift.Type.LIST, 0);
     output.writeListBegin(Thrift.Type.STRUCT, this.success.length);
-    for (var iter154 in this.success) {
-      if (this.success.hasOwnProperty(iter154)) {
-        iter154 = this.success[iter154];
-        iter154.write(output);
+    for (var iter159 in this.success) {
+      if (this.success.hasOwnProperty(iter159)) {
+        iter159 = this.success[iter159];
+        iter159.write(output);
       }
     }
     output.writeListEnd();

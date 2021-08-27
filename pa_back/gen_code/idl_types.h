@@ -1316,7 +1316,7 @@ void swap(stuff_plan &a, stuff_plan &b);
 std::ostream& operator<<(std::ostream& out, const stuff_plan& obj);
 
 typedef struct _plan_status__isset {
-  _plan_status__isset() : plan_id(false), status(false), plan_time(false), conflict_reason(false), status_prompt(false), is_cancel(false), stuff_type(false) {}
+  _plan_status__isset() : plan_id(false), status(false), plan_time(false), conflict_reason(false), status_prompt(false), is_cancel(false), stuff_type(false), company(false) {}
   bool plan_id :1;
   bool status :1;
   bool plan_time :1;
@@ -1324,6 +1324,7 @@ typedef struct _plan_status__isset {
   bool status_prompt :1;
   bool is_cancel :1;
   bool stuff_type :1;
+  bool company :1;
 } _plan_status__isset;
 
 class plan_status : public virtual ::apache::thrift::TBase {
@@ -1331,7 +1332,7 @@ class plan_status : public virtual ::apache::thrift::TBase {
 
   plan_status(const plan_status&);
   plan_status& operator=(const plan_status&);
-  plan_status() : plan_id(0), status(0), plan_time(0), conflict_reason(), status_prompt(), is_cancel(0), stuff_type() {
+  plan_status() : plan_id(0), status(0), plan_time(0), conflict_reason(), status_prompt(), is_cancel(0), stuff_type(), company() {
   }
 
   virtual ~plan_status() noexcept;
@@ -1342,6 +1343,7 @@ class plan_status : public virtual ::apache::thrift::TBase {
   std::string status_prompt;
   bool is_cancel;
   std::string stuff_type;
+  std::string company;
 
   _plan_status__isset __isset;
 
@@ -1359,6 +1361,8 @@ class plan_status : public virtual ::apache::thrift::TBase {
 
   void __set_stuff_type(const std::string& val);
 
+  void __set_company(const std::string& val);
+
   bool operator == (const plan_status & rhs) const
   {
     if (!(plan_id == rhs.plan_id))
@@ -1374,6 +1378,8 @@ class plan_status : public virtual ::apache::thrift::TBase {
     if (!(is_cancel == rhs.is_cancel))
       return false;
     if (!(stuff_type == rhs.stuff_type))
+      return false;
+    if (!(company == rhs.company))
       return false;
     return true;
   }

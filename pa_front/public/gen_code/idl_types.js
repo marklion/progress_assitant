@@ -2150,6 +2150,7 @@ plan_status = class {
     this.status_prompt = null;
     this.is_cancel = null;
     this.stuff_type = null;
+    this.company = null;
     if (args) {
       if (args.plan_id !== undefined && args.plan_id !== null) {
         this.plan_id = args.plan_id;
@@ -2171,6 +2172,9 @@ plan_status = class {
       }
       if (args.stuff_type !== undefined && args.stuff_type !== null) {
         this.stuff_type = args.stuff_type;
+      }
+      if (args.company !== undefined && args.company !== null) {
+        this.company = args.company;
       }
     }
   }
@@ -2234,6 +2238,13 @@ plan_status = class {
           input.skip(ftype);
         }
         break;
+        case 8:
+        if (ftype == Thrift.Type.STRING) {
+          this.company = input.readString().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
         default:
           input.skip(ftype);
       }
@@ -2278,6 +2289,11 @@ plan_status = class {
     if (this.stuff_type !== null && this.stuff_type !== undefined) {
       output.writeFieldBegin('stuff_type', Thrift.Type.STRING, 7);
       output.writeString(this.stuff_type);
+      output.writeFieldEnd();
+    }
+    if (this.company !== null && this.company !== undefined) {
+      output.writeFieldBegin('company', Thrift.Type.STRING, 8);
+      output.writeString(this.company);
       output.writeFieldEnd();
     }
     output.writeFieldStop();

@@ -3272,6 +3272,10 @@ void plan_status::__set_is_cancel(const bool val) {
 void plan_status::__set_stuff_type(const std::string& val) {
   this->stuff_type = val;
 }
+
+void plan_status::__set_company(const std::string& val) {
+  this->company = val;
+}
 std::ostream& operator<<(std::ostream& out, const plan_status& obj)
 {
   obj.printTo(out);
@@ -3356,6 +3360,14 @@ uint32_t plan_status::read(::apache::thrift::protocol::TProtocol* iprot) {
           xfer += iprot->skip(ftype);
         }
         break;
+      case 8:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->company);
+          this->__isset.company = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
       default:
         xfer += iprot->skip(ftype);
         break;
@@ -3401,6 +3413,10 @@ uint32_t plan_status::write(::apache::thrift::protocol::TProtocol* oprot) const 
   xfer += oprot->writeString(this->stuff_type);
   xfer += oprot->writeFieldEnd();
 
+  xfer += oprot->writeFieldBegin("company", ::apache::thrift::protocol::T_STRING, 8);
+  xfer += oprot->writeString(this->company);
+  xfer += oprot->writeFieldEnd();
+
   xfer += oprot->writeFieldStop();
   xfer += oprot->writeStructEnd();
   return xfer;
@@ -3415,6 +3431,7 @@ void swap(plan_status &a, plan_status &b) {
   swap(a.status_prompt, b.status_prompt);
   swap(a.is_cancel, b.is_cancel);
   swap(a.stuff_type, b.stuff_type);
+  swap(a.company, b.company);
   swap(a.__isset, b.__isset);
 }
 
@@ -3426,6 +3443,7 @@ plan_status::plan_status(const plan_status& other42) {
   status_prompt = other42.status_prompt;
   is_cancel = other42.is_cancel;
   stuff_type = other42.stuff_type;
+  company = other42.company;
   __isset = other42.__isset;
 }
 plan_status& plan_status::operator=(const plan_status& other43) {
@@ -3436,6 +3454,7 @@ plan_status& plan_status::operator=(const plan_status& other43) {
   status_prompt = other43.status_prompt;
   is_cancel = other43.is_cancel;
   stuff_type = other43.stuff_type;
+  company = other43.company;
   __isset = other43.__isset;
   return *this;
 }
@@ -3449,6 +3468,7 @@ void plan_status::printTo(std::ostream& out) const {
   out << ", " << "status_prompt=" << to_string(status_prompt);
   out << ", " << "is_cancel=" << to_string(is_cancel);
   out << ", " << "stuff_type=" << to_string(stuff_type);
+  out << ", " << "company=" << to_string(company);
   out << ")";
 }
 

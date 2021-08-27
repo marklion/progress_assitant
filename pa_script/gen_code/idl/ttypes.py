@@ -1924,11 +1924,12 @@ class plan_status(object):
      - status_prompt
      - is_cancel
      - stuff_type
+     - company
 
     """
 
 
-    def __init__(self, plan_id=None, status=None, plan_time=None, conflict_reason=None, status_prompt=None, is_cancel=None, stuff_type=None,):
+    def __init__(self, plan_id=None, status=None, plan_time=None, conflict_reason=None, status_prompt=None, is_cancel=None, stuff_type=None, company=None,):
         self.plan_id = plan_id
         self.status = status
         self.plan_time = plan_time
@@ -1936,6 +1937,7 @@ class plan_status(object):
         self.status_prompt = status_prompt
         self.is_cancel = is_cancel
         self.stuff_type = stuff_type
+        self.company = company
 
     def read(self, iprot):
         if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
@@ -1981,6 +1983,11 @@ class plan_status(object):
                     self.stuff_type = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
                 else:
                     iprot.skip(ftype)
+            elif fid == 8:
+                if ftype == TType.STRING:
+                    self.company = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
             else:
                 iprot.skip(ftype)
             iprot.readFieldEnd()
@@ -2018,6 +2025,10 @@ class plan_status(object):
         if self.stuff_type is not None:
             oprot.writeFieldBegin('stuff_type', TType.STRING, 7)
             oprot.writeString(self.stuff_type.encode('utf-8') if sys.version_info[0] == 2 else self.stuff_type)
+            oprot.writeFieldEnd()
+        if self.company is not None:
+            oprot.writeFieldBegin('company', TType.STRING, 8)
+            oprot.writeString(self.company.encode('utf-8') if sys.version_info[0] == 2 else self.company)
             oprot.writeFieldEnd()
         oprot.writeFieldStop()
         oprot.writeStructEnd()
@@ -4416,6 +4427,7 @@ plan_status.thrift_spec = (
     (5, TType.STRING, 'status_prompt', 'UTF8', None, ),  # 5
     (6, TType.BOOL, 'is_cancel', None, None, ),  # 6
     (7, TType.STRING, 'stuff_type', 'UTF8', None, ),  # 7
+    (8, TType.STRING, 'company', 'UTF8', None, ),  # 8
 )
 all_structs.append(plan_number_id)
 plan_number_id.thrift_spec = (

@@ -59,6 +59,7 @@ if len(sys.argv) <= 1 or sys.argv[1] == '--help':
     print('  company_positon_lat_lag get_company_position_config(string company_name)')
     print('  bool set_third_info(third_dev_info _info, string ssid)')
     print('  third_dev_info get_third_info(string ssid)')
+    print('   get_related_company(string ssid)')
     print('')
     sys.exit(0)
 
@@ -347,6 +348,12 @@ elif cmd == 'get_third_info':
         print('get_third_info requires 1 args')
         sys.exit(1)
     pp.pprint(client.get_third_info(args[0],))
+
+elif cmd == 'get_related_company':
+    if len(args) != 1:
+        print('get_related_company requires 1 args')
+        sys.exit(1)
+    pp.pprint(client.get_related_company(args[0],))
 
 else:
     print('Unrecognized method %s' % cmd)

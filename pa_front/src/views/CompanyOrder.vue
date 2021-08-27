@@ -7,6 +7,9 @@
                     <van-dropdown-menu>
                         <van-dropdown-item v-model="date_filter" :options="date_option" @close="recheck_list" />
                         <van-dropdown-item v-model="cancel_filter" :options="cancel_option" @change="recheck_list" />
+                    </van-dropdown-menu>
+                    <van-dropdown-menu>
+                        <van-dropdown-item v-model="company_filter" :options="company_option" @change="recheck_list" />
                         <van-dropdown-item v-model="stuff_type_filter" :options="stuff_type_option" @change="recheck_list" />
                     </van-dropdown-menu>
                 </van-col>
@@ -170,6 +173,10 @@ export default {
                 text: '所有货品',
                 value: 0,
             }],
+            company_option: [{
+                text: '所有公司',
+                value: 0,
+            }],
             cancel_option: [{
                 text: '只看有效计划',
                 value: 0,
@@ -179,6 +186,7 @@ export default {
             }],
             date_filter: 0,
             stuff_type_filter: 0,
+            company_filter: 0,
             show_export_email: false,
             export_file_path: '',
             cancel_filter: 0,
@@ -275,6 +283,19 @@ export default {
                     }
                 }
             });
+            var company_fitler_ret = filter_ret;
+            filter_ret = [];
+            company_fitler_ret.forEach(element => {
+                if (vue_this.company_filter == 0) {
+                    filter_ret.push(element);
+                } else {
+                    if (vue_this.company_option.find(itr => {
+                            return itr.value == vue_this.company_filter
+                        }).text == element.company) {
+                        filter_ret.push(element);
+                    }
+                }
+            });
             return filter_ret;
         },
     },
@@ -342,11 +363,14 @@ export default {
                 func = "get_created_plan";
             }
             var stuff_name = vue_this.stuff_type_option[vue_this.stuff_type_filter].text;
-            if (vue_this.stuff_type_filter == 0)
-            {
+            if (vue_this.stuff_type_filter == 0) {
                 stuff_name = "";
             }
-            vue_this.$call_remote_process("stuff_plan_management", func, [vue_this.$cookies.get('pa_ssid'), vue_this.orders.length, vue_this.status_name_map[vue_this.active].status, stuff_name]).then(function (resp) {
+            var company_search = vue_this.company_option[vue_this.company_filter].text;
+            if (vue_this.company_filter == 0) {
+                company_search = "";
+            }
+            vue_this.$call_remote_process("stuff_plan_management", func, [vue_this.$cookies.get('pa_ssid'), vue_this.orders.length, vue_this.status_name_map[vue_this.active].status, stuff_name, company_search]).then(function (resp) {
                 if (_init && _init == true) {
                     vue_this.orders = [];
                     vue_this.lazy_finished = false;
@@ -410,6 +434,14 @@ export default {
             });
         });
 
+        vue_this.$call_remote_process("company_management", 'get_related_company', [vue_this.$cookies.get('pa_ssid')]).then(function (resp) {
+            resp.forEach(element => {
+                vue_this.company_option.push({
+                    text: element,
+                    value: vue_this.company_option.length
+                });
+            });
+        });
     },
     activated() {
         const scrollTop = this.$route.meta.scrollTop;
