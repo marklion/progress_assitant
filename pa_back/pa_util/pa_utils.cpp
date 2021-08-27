@@ -877,7 +877,6 @@ void PA_DATAOPT_post_change_register(pa_sql_single_vichele &_vichele, bool is_up
                 break;
             }
         }
-
         post_json_to_third(ctrl_url, fin_req.ToString(), key, token);
     }
 }
@@ -985,7 +984,7 @@ static void proc_que_info_back(neb::CJsonObject &ret)
     auto today_plan = sqlite_orm::search_record_all<pa_sql_plan>("status == 3 AND plan_time LIKE '%s%%'", date_only.c_str());
     for (auto &itr : today_plan)
     {
-        auto vichele_in_plan = itr.get_all_children<pa_sql_single_vichele>("belong_plan");
+        auto vichele_in_plan = itr.get_all_children<pa_sql_single_vichele>("belong_plan", "req_register == 1");
         for (auto &single_vichele : vichele_in_plan)
         {
             auto main_vichele = single_vichele.get_parent<pa_sql_vichele>("main_vichele");
@@ -1011,6 +1010,8 @@ static void proc_que_info_back(neb::CJsonObject &ret)
                     tmp.set_parent(single_vichele, "belong_vichele");
                     tmp.insert_record();
                 }
+                single_vichele.req_register = 0;
+                single_vichele.update_record();
                 return;
             }
         }
@@ -1089,6 +1090,8 @@ void PA_DATAOPT_post_checkin(pa_sql_single_vichele &_vichele)
         }
         neb::CJsonObject fin_req;
         fin_req.Add("data", req);
+        _vichele.req_register = 1;
+        _vichele.update_record();
 
         post_json_to_third(ctrl_url, fin_req.ToString(), key, token, proc_check_in_ret);
     }
