@@ -984,7 +984,7 @@ static void proc_que_info_back(neb::CJsonObject &ret)
     auto today_plan = sqlite_orm::search_record_all<pa_sql_plan>("status == 3 AND plan_time LIKE '%s%%'", date_only.c_str());
     for (auto &itr : today_plan)
     {
-        auto vichele_in_plan = itr.get_all_children<pa_sql_single_vichele>("belong_plan", "req_register == 1");
+        auto vichele_in_plan = itr.get_all_children<pa_sql_single_vichele>("belong_plan");
         for (auto &single_vichele : vichele_in_plan)
         {
             auto main_vichele = single_vichele.get_parent<pa_sql_vichele>("main_vichele");
@@ -999,8 +999,9 @@ static void proc_que_info_back(neb::CJsonObject &ret)
                     exist_register_info->timestamp = PA_DATAOPT_current_time();
                     exist_register_info->order_number = ret["data"]("order");
                     exist_register_info->update_record();
+                    return;
                 }
-                else
+                else if (single_vichele.req_register != 0)
                 {
                     pa_sql_driver_register tmp;
                     tmp.enter_location = ret["data"]("stationName");
@@ -1009,10 +1010,10 @@ static void proc_que_info_back(neb::CJsonObject &ret)
                     tmp.order_number = ret["data"]("order");
                     tmp.set_parent(single_vichele, "belong_vichele");
                     tmp.insert_record();
+                    single_vichele.req_register = 0;
+                    single_vichele.update_record();
+                    return;
                 }
-                single_vichele.req_register = 0;
-                single_vichele.update_record();
-                return;
             }
         }
     }
