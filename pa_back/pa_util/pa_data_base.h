@@ -287,6 +287,7 @@ public:
     std::string deliver_p_timestamp;
     double p_weight = 0;
     double m_weight = 0;
+    int req_register = 0;
     pa_sql_single_vichele()
     {
         add_parent_type<pa_sql_vichele>("main_vichele");
@@ -305,6 +306,7 @@ public:
         ret.push_back(sqlite_orm_column("finish", sqlite_orm_column::INTEGER, &finish));
         ret.push_back(sqlite_orm_column("deliver_timestamp", sqlite_orm_column::STRING, &deliver_timestamp));
         ret.push_back(sqlite_orm_column("deliver_p_timestamp", sqlite_orm_column::STRING, &deliver_p_timestamp));
+        ret.push_back(sqlite_orm_column("req_register", sqlite_orm_column::INTEGER, &req_register));
 
         return ret;
     }
