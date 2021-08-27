@@ -94,13 +94,13 @@ stuff_info_get_today_result.prototype.read = function(input) {
       case 0:
       if (ftype == Thrift.Type.LIST) {
         this.success = [];
-        var _rtmp356 = input.readListBegin();
-        var _size55 = _rtmp356.size || 0;
-        for (var _i57 = 0; _i57 < _size55; ++_i57) {
-          var elem58 = null;
-          elem58 = new ttypes.stuff_detail();
-          elem58.read(input);
-          this.success.push(elem58);
+        var _rtmp361 = input.readListBegin();
+        var _size60 = _rtmp361.size || 0;
+        for (var _i62 = 0; _i62 < _size60; ++_i62) {
+          var elem63 = null;
+          elem63 = new ttypes.stuff_detail();
+          elem63.read(input);
+          this.success.push(elem63);
         }
         input.readListEnd();
       } else {
@@ -129,10 +129,10 @@ stuff_info_get_today_result.prototype.write = function(output) {
   if (this.success !== null && this.success !== undefined) {
     output.writeFieldBegin('success', Thrift.Type.LIST, 0);
     output.writeListBegin(Thrift.Type.STRUCT, this.success.length);
-    for (var iter59 in this.success) {
-      if (this.success.hasOwnProperty(iter59)) {
-        iter59 = this.success[iter59];
-        iter59.write(output);
+    for (var iter64 in this.success) {
+      if (this.success.hasOwnProperty(iter64)) {
+        iter64 = this.success[iter64];
+        iter64.write(output);
       }
     }
     output.writeListEnd();
@@ -228,13 +228,13 @@ stuff_info_get_today_unfollow_result.prototype.read = function(input) {
       case 0:
       if (ftype == Thrift.Type.LIST) {
         this.success = [];
-        var _rtmp361 = input.readListBegin();
-        var _size60 = _rtmp361.size || 0;
-        for (var _i62 = 0; _i62 < _size60; ++_i62) {
-          var elem63 = null;
-          elem63 = new ttypes.stuff_detail();
-          elem63.read(input);
-          this.success.push(elem63);
+        var _rtmp366 = input.readListBegin();
+        var _size65 = _rtmp366.size || 0;
+        for (var _i67 = 0; _i67 < _size65; ++_i67) {
+          var elem68 = null;
+          elem68 = new ttypes.stuff_detail();
+          elem68.read(input);
+          this.success.push(elem68);
         }
         input.readListEnd();
       } else {
@@ -263,10 +263,10 @@ stuff_info_get_today_unfollow_result.prototype.write = function(output) {
   if (this.success !== null && this.success !== undefined) {
     output.writeFieldBegin('success', Thrift.Type.LIST, 0);
     output.writeListBegin(Thrift.Type.STRUCT, this.success.length);
-    for (var iter64 in this.success) {
-      if (this.success.hasOwnProperty(iter64)) {
-        iter64 = this.success[iter64];
-        iter64.write(output);
+    for (var iter69 in this.success) {
+      if (this.success.hasOwnProperty(iter69)) {
+        iter69 = this.success[iter69];
+        iter69.write(output);
       }
     }
     output.writeListEnd();
@@ -788,13 +788,13 @@ stuff_info_get_follow_stuff_by_company_result.prototype.read = function(input) {
       case 0:
       if (ftype == Thrift.Type.LIST) {
         this.success = [];
-        var _rtmp366 = input.readListBegin();
-        var _size65 = _rtmp366.size || 0;
-        for (var _i67 = 0; _i67 < _size65; ++_i67) {
-          var elem68 = null;
-          elem68 = new ttypes.stuff_detail();
-          elem68.read(input);
-          this.success.push(elem68);
+        var _rtmp371 = input.readListBegin();
+        var _size70 = _rtmp371.size || 0;
+        for (var _i72 = 0; _i72 < _size70; ++_i72) {
+          var elem73 = null;
+          elem73 = new ttypes.stuff_detail();
+          elem73.read(input);
+          this.success.push(elem73);
         }
         input.readListEnd();
       } else {
@@ -823,10 +823,10 @@ stuff_info_get_follow_stuff_by_company_result.prototype.write = function(output)
   if (this.success !== null && this.success !== undefined) {
     output.writeFieldBegin('success', Thrift.Type.LIST, 0);
     output.writeListBegin(Thrift.Type.STRUCT, this.success.length);
-    for (var iter69 in this.success) {
-      if (this.success.hasOwnProperty(iter69)) {
-        iter69 = this.success[iter69];
-        iter69.write(output);
+    for (var iter74 in this.success) {
+      if (this.success.hasOwnProperty(iter74)) {
+        iter74 = this.success[iter74];
+        iter74.write(output);
       }
     }
     output.writeListEnd();
@@ -935,12 +935,12 @@ stuff_info_get_follow_company_by_stuff_result.prototype.read = function(input) {
       case 0:
       if (ftype == Thrift.Type.LIST) {
         this.success = [];
-        var _rtmp371 = input.readListBegin();
-        var _size70 = _rtmp371.size || 0;
-        for (var _i72 = 0; _i72 < _size70; ++_i72) {
-          var elem73 = null;
-          elem73 = input.readString();
-          this.success.push(elem73);
+        var _rtmp376 = input.readListBegin();
+        var _size75 = _rtmp376.size || 0;
+        for (var _i77 = 0; _i77 < _size75; ++_i77) {
+          var elem78 = null;
+          elem78 = input.readString();
+          this.success.push(elem78);
         }
         input.readListEnd();
       } else {
@@ -969,10 +969,10 @@ stuff_info_get_follow_company_by_stuff_result.prototype.write = function(output)
   if (this.success !== null && this.success !== undefined) {
     output.writeFieldBegin('success', Thrift.Type.LIST, 0);
     output.writeListBegin(Thrift.Type.STRING, this.success.length);
-    for (var iter74 in this.success) {
-      if (this.success.hasOwnProperty(iter74)) {
-        iter74 = this.success[iter74];
-        output.writeString(iter74);
+    for (var iter79 in this.success) {
+      if (this.success.hasOwnProperty(iter79)) {
+        iter79 = this.success[iter79];
+        output.writeString(iter79);
       }
     }
     output.writeListEnd();
@@ -1068,12 +1068,12 @@ stuff_info_get_related_stuff_result.prototype.read = function(input) {
       case 0:
       if (ftype == Thrift.Type.LIST) {
         this.success = [];
-        var _rtmp376 = input.readListBegin();
-        var _size75 = _rtmp376.size || 0;
-        for (var _i77 = 0; _i77 < _size75; ++_i77) {
-          var elem78 = null;
-          elem78 = input.readString();
-          this.success.push(elem78);
+        var _rtmp381 = input.readListBegin();
+        var _size80 = _rtmp381.size || 0;
+        for (var _i82 = 0; _i82 < _size80; ++_i82) {
+          var elem83 = null;
+          elem83 = input.readString();
+          this.success.push(elem83);
         }
         input.readListEnd();
       } else {
@@ -1102,10 +1102,10 @@ stuff_info_get_related_stuff_result.prototype.write = function(output) {
   if (this.success !== null && this.success !== undefined) {
     output.writeFieldBegin('success', Thrift.Type.LIST, 0);
     output.writeListBegin(Thrift.Type.STRING, this.success.length);
-    for (var iter79 in this.success) {
-      if (this.success.hasOwnProperty(iter79)) {
-        iter79 = this.success[iter79];
-        output.writeString(iter79);
+    for (var iter84 in this.success) {
+      if (this.success.hasOwnProperty(iter84)) {
+        iter84 = this.success[iter84];
+        output.writeString(iter84);
       }
     }
     output.writeListEnd();

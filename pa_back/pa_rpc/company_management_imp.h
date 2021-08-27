@@ -930,5 +930,57 @@ public:
         _return.dms_url = company->third_dms_url;
         _return.token = company->third_token;
     }
+
+    virtual void get_related_company(std::vector<std::string> &_return, const std::string &ssid)
+    {
+        auto opt_user = PA_DATAOPT_get_online_user(ssid);
+        if (!opt_user)
+        {
+            PA_RETURN_UNLOGIN_MSG();
+        }
+        if (opt_user->buyer == 0)
+        {
+            auto related_plan = PA_RPC_get_all_plans_related_by_user(ssid, "proxy_company == '' AND status < 4 GROUP BY created_by_ext_key");
+            for (auto &itr:related_plan)
+            {
+                auto created_user = itr.get_parent<pa_sql_userinfo>("created_by");
+                if (created_user)
+                {
+                    auto belong_company = created_user->get_parent<pa_sql_company>("belong_company");
+                    if (belong_company)
+                    {
+                        _return.push_back(belong_company->name);
+                    }
+                }
+            }
+            related_plan = PA_RPC_get_all_plans_related_by_user(ssid, "proxy_company != '' AND status < 4 GROUP BY proxy_company");
+            for (auto &itr:related_plan)
+            {
+                _return.push_back(itr.proxy_company);
+            }
+
+            std::sort(_return.begin(), _return.end());
+            _return.erase(std::unique(_return.begin(), _return.end()), _return.end());
+            return;
+        }
+        else
+        {
+            auto related_plan = PA_RPC_get_all_plans_related_by_user(ssid, "status < 4 GROUP BY belong_stuff_ext_key");
+            for (auto &itr:related_plan)
+            {
+                auto belong_stuff = itr.get_parent<pa_sql_stuff_info>("belong_stuff");
+                if (belong_stuff)
+                {
+                    auto belong_company = belong_stuff->get_parent<pa_sql_company>("belong_company");
+                    if (belong_company)
+                    {
+                        _return.push_back(belong_company->name);
+                    }
+                }
+            }
+            std::sort(_return.begin(), _return.end());
+            _return.erase(std::unique(_return.begin(), _return.end()), _return.end());
+        }
+    }
 };
 #endif // _COMPANY_MANAGEMENT_IMP_H_

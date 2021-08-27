@@ -126,7 +126,7 @@ public:
         }
         return ret;
     }
-    virtual void get_created_plan(std::vector<plan_status> &_return, const std::string &ssid, const int64_t anchor, const int64_t status, const std::string &stuff_name)
+    virtual void get_created_plan(std::vector<plan_status> &_return, const std::string &ssid, const int64_t anchor, const int64_t status, const std::string &stuff_name, const std::string &company_name)
     {
         auto opt_user = PA_DATAOPT_get_online_user(ssid);
         if (opt_user)
@@ -140,6 +140,22 @@ public:
             {
                 qurey_cmd += " AND name == '" + stuff_name + "'";
             }
+            if (company_name.length() > 0)
+            {
+                auto search_company = sqlite_orm::search_record<pa_sql_company>("name == '%s'", company_name.c_str());
+                if (search_company)
+                {
+                    std::string company_cmd = " AND (belong_stuff_ext_key == 0";
+                    auto all_stuff = search_company->get_all_children<pa_sql_stuff_info>("belong_company");
+                    for (auto &itr:all_stuff)
+                    {
+                        company_cmd += " OR belong_stuff_ext_key == " + std::to_string(itr.get_pri_id());
+                    }
+                    company_cmd += ")";
+                    qurey_cmd += company_cmd;
+                }
+            }
+
             auto plans = opt_user->get_all_children<pa_sql_plan>("created_by", "%s ORDER BY create_time DESC LIMIT 15 OFFSET %ld", qurey_cmd.c_str(), anchor);
             for (auto &itr : plans)
             {
@@ -160,6 +176,15 @@ public:
                 if (stuff_info)
                 {
                     tmp.stuff_type = stuff_info->name;
+                }
+                auto one_vichele = itr.get_children<pa_sql_single_vichele>("belong_plan");
+                if (one_vichele)
+                {
+                    auto sale_company = PA_DATAOPT_get_sale_company(*one_vichele);
+                    if (sale_company)
+                    {
+                        tmp.company = sale_company->name;
+                    }
                 }
 
                 _return.push_back(tmp);
@@ -344,7 +369,7 @@ public:
             PA_RETURN_NOCOMPANY_MSG();
         }
         auto created_user = plan_in_sql->get_parent<pa_sql_userinfo>("created_by");
-        if (created_user && created_user->get_pri_id() == opt_user->get_pri_id() && PA_STATUS_RULE_can_be_change(*plan_in_sql, *opt_user, 0) )
+        if (created_user && created_user->get_pri_id() == opt_user->get_pri_id() && PA_STATUS_RULE_can_be_change(*plan_in_sql, *opt_user, 0))
         {
             plan_in_sql->plan_time = plan.plan_time;
             auto orig_vichele_info = plan_in_sql->get_all_children<pa_sql_single_vichele>("belong_plan");
@@ -399,7 +424,7 @@ public:
 
         return ret;
     }
-    virtual void get_company_plan(std::vector<plan_status> &_return, const std::string &ssid, const int64_t anchor, const int64_t status, const std::string &stuff_name)
+    virtual void get_company_plan(std::vector<plan_status> &_return, const std::string &ssid, const int64_t anchor, const int64_t status, const std::string &stuff_name, const std::string &company_name)
     {
         auto opt_user = PA_DATAOPT_get_online_user(ssid);
         if (opt_user && opt_user->buyer == false)
@@ -422,6 +447,20 @@ public:
                 {
                     connect_param += " AND name == '" + stuff_name + "'";
                 }
+                if (company_name.length() > 0)
+                {
+                    std::string company_cmd = "proxy_company == '" + company_name + "'";
+                    auto search_company = sqlite_orm::search_record<pa_sql_company>("name == '%s'", company_name.c_str());
+                    if (search_company)
+                    {
+                        auto all_users = search_company->get_all_children<pa_sql_userinfo>("belong_company");
+                        for (auto &itr : all_users)
+                        {
+                            company_cmd += " OR created_by_ext_key == " + std::to_string(itr.get_pri_id());
+                        }
+                    }
+                    connect_param += " AND (" + company_cmd + ")";
+                }
                 auto plans = sqlite_orm::search_record_all<pa_sql_plan>("%s ORDER BY create_time DESC LIMIT 15 OFFSET %ld", connect_param.c_str(), anchor);
                 for (auto &single_plan : plans)
                 {
@@ -442,6 +481,22 @@ public:
                     if (stuff_info)
                     {
                         tmp.stuff_type = stuff_info->name;
+                    }
+                    if (single_plan.proxy_company.length() > 0)
+                    {
+                        tmp.company = single_plan.proxy_company;
+                    }
+                    else
+                    {
+                        auto created_user = single_plan.get_parent<pa_sql_userinfo>("created_by");
+                        if (created_user)
+                        {
+                            auto created_company = created_user->get_parent<pa_sql_company>("belong_company");
+                            if (created_company)
+                            {
+                                tmp.company = created_company->name;
+                            }
+                        }
                     }
                     _return.push_back(tmp);
                 }
@@ -1742,7 +1797,7 @@ public:
                 {
                     std::vector<today_driver_info> already_checkin;
                     get_today_driver_info(already_checkin, silent_id);
-                    for (auto &itr:already_checkin)
+                    for (auto &itr : already_checkin)
                     {
                         if (itr.is_registered && itr.destination_company == belong_company->name)
                         {
