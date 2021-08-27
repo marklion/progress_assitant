@@ -615,6 +615,11 @@ void PA_DATAOPT_post_save_register(std::list<pa_sql_vichele_stay_alone> &_vichel
     std::string key;
     std::string token;
 
+    if (_vicheles.size() <= 0)
+    {
+        return;
+    }
+
     auto company = (*_vicheles.begin()).get_parent<pa_sql_company>("destination");
     if (!company)
     {
