@@ -1804,7 +1804,6 @@ public:
                             PA_RETURN_MSG("今日已排号, 请" + itr.main_vichele + "出厂后再排号");
                         }
                     }
-                    PA_DATAOPT_post_change_register(*vichele_info, true);
                     PA_DATAOPT_post_checkin(*vichele_info);
                     ret = true;
                 }
