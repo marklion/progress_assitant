@@ -412,7 +412,7 @@ public:
                     auto has_id_driver = sqlite_orm::search_record<pa_sql_driver>("silent_id IS NOT NULL AND silent_id != '' AND phone == '%s'", driver->phone.c_str());
                     if (has_id_driver)
                     {
-                        if (main_vichele->number == _req.plateNo && has_id_driver->name == _req.driverName)
+                        if (main_vichele->number == _req.plateNo && driver->name == _req.driverName)
                         {
                             ret = true;
                             PA_WECHAT_send_call_vichele_msg(has_id_driver->silent_id, main_vichele->number, _req.stationName, std::to_string(_req.index));
