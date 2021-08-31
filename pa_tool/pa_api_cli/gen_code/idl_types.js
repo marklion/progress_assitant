@@ -2470,6 +2470,7 @@ var vichele_statistics = module.exports.vichele_statistics = function(args) {
   this.delivered = null;
   this.plan_id = null;
   this.plan_order = null;
+  this.vichele_id = null;
   if (args) {
     if (args.company !== undefined && args.company !== null) {
       this.company = args.company;
@@ -2494,6 +2495,9 @@ var vichele_statistics = module.exports.vichele_statistics = function(args) {
     }
     if (args.plan_order !== undefined && args.plan_order !== null) {
       this.plan_order = args.plan_order;
+    }
+    if (args.vichele_id !== undefined && args.vichele_id !== null) {
+      this.vichele_id = args.vichele_id;
     }
   }
 };
@@ -2564,6 +2568,13 @@ vichele_statistics.prototype.read = function(input) {
         input.skip(ftype);
       }
       break;
+      case 9:
+      if (ftype == Thrift.Type.I64) {
+        this.vichele_id = input.readI64();
+      } else {
+        input.skip(ftype);
+      }
+      break;
       default:
         input.skip(ftype);
     }
@@ -2613,6 +2624,11 @@ vichele_statistics.prototype.write = function(output) {
   if (this.plan_order !== null && this.plan_order !== undefined) {
     output.writeFieldBegin('plan_order', Thrift.Type.STRING, 8);
     output.writeString(this.plan_order);
+    output.writeFieldEnd();
+  }
+  if (this.vichele_id !== null && this.vichele_id !== undefined) {
+    output.writeFieldBegin('vichele_id', Thrift.Type.I64, 9);
+    output.writeI64(this.vichele_id);
     output.writeFieldEnd();
   }
   output.writeFieldStop();

@@ -94,16 +94,24 @@
                 <vxe-table size="small" stripe align="center" :data="vichele_statistics">
                     <vxe-table-column field="company" title="公司" width="34%" sortable></vxe-table-column>
                     <vxe-table-column field="main_vichele" title="主车" width="24%"></vxe-table-column>
-                    <vxe-table-column field="behind_vichele" title="挂车" width="24%"></vxe-table-column>
                     <vxe-table-column field="delivered" title="状态" width="18%" sortable :formatter="formater_status_vichele"></vxe-table-column>
+                    <vxe-table-column title="操作">
+                    <template #default="{ row }">
+                        <van-button plain size="small" type="info" @click="cancel_vichele_from_plan(row)">取消</van-button>
+                    </template>
+                    </vxe-table-column>
                 </vxe-table>
             </van-collapse-item>
             <van-collapse-item title="明日计划装车" :value="'共' + tomorrow_vichele.length + '车'" name="1">
                 <vxe-table size="small" stripe align="center" :data="tomorrow_vichele">
                     <vxe-table-column field="company" title="公司" width="34%" sortable></vxe-table-column>
                     <vxe-table-column field="main_vichele" title="主车" width="24%"></vxe-table-column>
-                    <vxe-table-column field="behind_vichele" title="挂车" width="24%"></vxe-table-column>
                     <vxe-table-column field="delivered" title="状态" width="18%" sortable :formatter="formater_status_vichele"></vxe-table-column>
+                    <vxe-table-column title="操作">
+                    <template #default="{ row }">
+                        <van-button plain size="small" type="info" @click="cancel_vichele_from_plan(row)">取消</van-button>
+                    </template>
+                    </vxe-table-column>
                 </vxe-table>
             </van-collapse-item>
 
@@ -366,6 +374,20 @@ export default {
         }
     },
     methods: {
+        cancel_vichele_from_plan: function (vichele_info) {
+            var vue_this = this;
+            Dialog.confirm({
+                title: '取消车辆',
+                message: '确定要取消 ' + vichele_info.main_vichele + '-' + vichele_info.behind_vichele + ' 吗？'
+            }).then(function () {
+                vue_this.$call_remote_process("stuff_plan_management", 'cancel_vichele_from_plan', [vue_this.$cookies.get('pa_ssid'), [vichele_info.vichele_id]]).then(function (resp) {
+                    if (resp) {
+                        vue_this.init_vichele_statistices();
+                        vue_this.init_tomorrow_vichele();
+                    }
+                });
+            });
+        },
         show_attachment: function (_value) {
             if (_value.search(".jpg") != -1) {
                 ImagePreview({
@@ -388,6 +410,7 @@ export default {
         init_vichele_statistices: function () {
             var vue_this = this;
             vue_this.$call_remote_process("stuff_plan_management", "get_today_statistics", [vue_this.$cookies.get('pa_ssid')]).then(function (resp) {
+                vue_this.vichele_statistics = [];
                 resp.forEach((element, index) => {
                     vue_this.$set(vue_this.vichele_statistics, index, element);
                 });
@@ -397,6 +420,7 @@ export default {
         init_tomorrow_vichele: function () {
             var vue_this = this;
             vue_this.$call_remote_process("stuff_plan_management", "get_tomorrow_statistics", [vue_this.$cookies.get('pa_ssid')]).then(function (resp) {
+                vue_this.tomorrow_vichele = [];
                 resp.forEach((element, index) => {
                     vue_this.$set(vue_this.tomorrow_vichele, index, element);
                 });

@@ -3812,6 +3812,10 @@ void vichele_statistics::__set_plan_id(const int64_t val) {
 void vichele_statistics::__set_plan_order(const std::string& val) {
   this->plan_order = val;
 }
+
+void vichele_statistics::__set_vichele_id(const int64_t val) {
+  this->vichele_id = val;
+}
 std::ostream& operator<<(std::ostream& out, const vichele_statistics& obj)
 {
   obj.printTo(out);
@@ -3904,6 +3908,14 @@ uint32_t vichele_statistics::read(::apache::thrift::protocol::TProtocol* iprot) 
           xfer += iprot->skip(ftype);
         }
         break;
+      case 9:
+        if (ftype == ::apache::thrift::protocol::T_I64) {
+          xfer += iprot->readI64(this->vichele_id);
+          this->__isset.vichele_id = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
       default:
         xfer += iprot->skip(ftype);
         break;
@@ -3953,6 +3965,10 @@ uint32_t vichele_statistics::write(::apache::thrift::protocol::TProtocol* oprot)
   xfer += oprot->writeString(this->plan_order);
   xfer += oprot->writeFieldEnd();
 
+  xfer += oprot->writeFieldBegin("vichele_id", ::apache::thrift::protocol::T_I64, 9);
+  xfer += oprot->writeI64(this->vichele_id);
+  xfer += oprot->writeFieldEnd();
+
   xfer += oprot->writeFieldStop();
   xfer += oprot->writeStructEnd();
   return xfer;
@@ -3968,6 +3984,7 @@ void swap(vichele_statistics &a, vichele_statistics &b) {
   swap(a.delivered, b.delivered);
   swap(a.plan_id, b.plan_id);
   swap(a.plan_order, b.plan_order);
+  swap(a.vichele_id, b.vichele_id);
   swap(a.__isset, b.__isset);
 }
 
@@ -3980,6 +3997,7 @@ vichele_statistics::vichele_statistics(const vichele_statistics& other48) {
   delivered = other48.delivered;
   plan_id = other48.plan_id;
   plan_order = other48.plan_order;
+  vichele_id = other48.vichele_id;
   __isset = other48.__isset;
 }
 vichele_statistics& vichele_statistics::operator=(const vichele_statistics& other49) {
@@ -3991,6 +4009,7 @@ vichele_statistics& vichele_statistics::operator=(const vichele_statistics& othe
   delivered = other49.delivered;
   plan_id = other49.plan_id;
   plan_order = other49.plan_order;
+  vichele_id = other49.vichele_id;
   __isset = other49.__isset;
   return *this;
 }
@@ -4005,6 +4024,7 @@ void vichele_statistics::printTo(std::ostream& out) const {
   out << ", " << "delivered=" << to_string(delivered);
   out << ", " << "plan_id=" << to_string(plan_id);
   out << ", " << "plan_order=" << to_string(plan_order);
+  out << ", " << "vichele_id=" << to_string(vichele_id);
   out << ")";
 }
 
