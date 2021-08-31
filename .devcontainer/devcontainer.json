@@ -19,8 +19,7 @@
 		"twxs.cmake",
 		"eamodio.gitlens",
 		"tabnine.tabnine-vscode",
-		"octref.vetur",
-		"peakchen90.vue-beautify"
+		"octref.vetur"
 	],
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.

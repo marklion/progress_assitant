@@ -96,9 +96,9 @@
                     <vxe-table-column field="main_vichele" title="主车" width="24%"></vxe-table-column>
                     <vxe-table-column field="delivered" title="状态" width="18%" sortable :formatter="formater_status_vichele"></vxe-table-column>
                     <vxe-table-column title="操作">
-                    <template #default="{ row }">
-                        <van-button plain size="small" type="info" @click="cancel_vichele_from_plan(row)">取消</van-button>
-                    </template>
+                        <template #default="{ row }">
+                            <van-button plain size="small" type="info" @click="cancel_vichele_from_plan(row)">取消</van-button>
+                        </template>
                     </vxe-table-column>
                 </vxe-table>
             </van-collapse-item>
@@ -108,9 +108,9 @@
                     <vxe-table-column field="main_vichele" title="主车" width="24%"></vxe-table-column>
                     <vxe-table-column field="delivered" title="状态" width="18%" sortable :formatter="formater_status_vichele"></vxe-table-column>
                     <vxe-table-column title="操作">
-                    <template #default="{ row }">
-                        <van-button plain size="small" type="info" @click="cancel_vichele_from_plan(row)">取消</van-button>
-                    </template>
+                        <template #default="{ row }">
+                            <van-button plain size="small" type="info" @click="cancel_vichele_from_plan(row)">取消</van-button>
+                        </template>
                     </vxe-table-column>
                 </vxe-table>
             </van-collapse-item>
