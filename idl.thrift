@@ -252,6 +252,7 @@ struct vichele_statistics {
     6:bool delivered,
     7:i64 plan_id,
     8:string plan_order,
+    9:i64 vichele_id,
 }
 
 struct vichele_stuff_statistics {

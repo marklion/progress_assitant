@@ -1278,6 +1278,7 @@ public:
                         tmp.main_vichele = main_vichele->number;
                         tmp.plan_id = single_plan.get_pri_id();
                         tmp.plan_order = std::to_string(single_plan.create_time) + std::to_string(single_plan.get_pri_id());
+                        tmp.vichele_id = vichele.get_pri_id();
                         _return.push_back(tmp);
                     }
                 }
@@ -1463,6 +1464,7 @@ public:
                     tmp.main_vichele = main_vichele->number;
                     tmp.plan_id = single_plan.get_pri_id();
                     tmp.plan_order = std::to_string(single_plan.create_time) + std::to_string(single_plan.get_pri_id());
+                    tmp.vichele_id = vichele.get_pri_id();
                     _return.push_back(tmp);
                 }
             }

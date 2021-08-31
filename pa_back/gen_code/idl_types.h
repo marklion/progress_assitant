@@ -1520,7 +1520,7 @@ void swap(deliver_info &a, deliver_info &b);
 std::ostream& operator<<(std::ostream& out, const deliver_info& obj);
 
 typedef struct _vichele_statistics__isset {
-  _vichele_statistics__isset() : company(false), main_vichele(false), behind_vichele(false), driver_name(false), driver_phone(false), delivered(false), plan_id(false), plan_order(false) {}
+  _vichele_statistics__isset() : company(false), main_vichele(false), behind_vichele(false), driver_name(false), driver_phone(false), delivered(false), plan_id(false), plan_order(false), vichele_id(false) {}
   bool company :1;
   bool main_vichele :1;
   bool behind_vichele :1;
@@ -1529,6 +1529,7 @@ typedef struct _vichele_statistics__isset {
   bool delivered :1;
   bool plan_id :1;
   bool plan_order :1;
+  bool vichele_id :1;
 } _vichele_statistics__isset;
 
 class vichele_statistics : public virtual ::apache::thrift::TBase {
@@ -1536,7 +1537,7 @@ class vichele_statistics : public virtual ::apache::thrift::TBase {
 
   vichele_statistics(const vichele_statistics&);
   vichele_statistics& operator=(const vichele_statistics&);
-  vichele_statistics() : company(), main_vichele(), behind_vichele(), driver_name(), driver_phone(), delivered(0), plan_id(0), plan_order() {
+  vichele_statistics() : company(), main_vichele(), behind_vichele(), driver_name(), driver_phone(), delivered(0), plan_id(0), plan_order(), vichele_id(0) {
   }
 
   virtual ~vichele_statistics() noexcept;
@@ -1548,6 +1549,7 @@ class vichele_statistics : public virtual ::apache::thrift::TBase {
   bool delivered;
   int64_t plan_id;
   std::string plan_order;
+  int64_t vichele_id;
 
   _vichele_statistics__isset __isset;
 
@@ -1567,6 +1569,8 @@ class vichele_statistics : public virtual ::apache::thrift::TBase {
 
   void __set_plan_order(const std::string& val);
 
+  void __set_vichele_id(const int64_t val);
+
   bool operator == (const vichele_statistics & rhs) const
   {
     if (!(company == rhs.company))
@@ -1584,6 +1588,8 @@ class vichele_statistics : public virtual ::apache::thrift::TBase {
     if (!(plan_id == rhs.plan_id))
       return false;
     if (!(plan_order == rhs.plan_order))
+      return false;
+    if (!(vichele_id == rhs.vichele_id))
       return false;
     return true;
   }

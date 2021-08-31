@@ -2239,11 +2239,12 @@ class vichele_statistics(object):
      - delivered
      - plan_id
      - plan_order
+     - vichele_id
 
     """
 
 
-    def __init__(self, company=None, main_vichele=None, behind_vichele=None, driver_name=None, driver_phone=None, delivered=None, plan_id=None, plan_order=None,):
+    def __init__(self, company=None, main_vichele=None, behind_vichele=None, driver_name=None, driver_phone=None, delivered=None, plan_id=None, plan_order=None, vichele_id=None,):
         self.company = company
         self.main_vichele = main_vichele
         self.behind_vichele = behind_vichele
@@ -2252,6 +2253,7 @@ class vichele_statistics(object):
         self.delivered = delivered
         self.plan_id = plan_id
         self.plan_order = plan_order
+        self.vichele_id = vichele_id
 
     def read(self, iprot):
         if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
@@ -2302,6 +2304,11 @@ class vichele_statistics(object):
                     self.plan_order = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
                 else:
                     iprot.skip(ftype)
+            elif fid == 9:
+                if ftype == TType.I64:
+                    self.vichele_id = iprot.readI64()
+                else:
+                    iprot.skip(ftype)
             else:
                 iprot.skip(ftype)
             iprot.readFieldEnd()
@@ -2343,6 +2350,10 @@ class vichele_statistics(object):
         if self.plan_order is not None:
             oprot.writeFieldBegin('plan_order', TType.STRING, 8)
             oprot.writeString(self.plan_order.encode('utf-8') if sys.version_info[0] == 2 else self.plan_order)
+            oprot.writeFieldEnd()
+        if self.vichele_id is not None:
+            oprot.writeFieldBegin('vichele_id', TType.I64, 9)
+            oprot.writeI64(self.vichele_id)
             oprot.writeFieldEnd()
         oprot.writeFieldStop()
         oprot.writeStructEnd()
@@ -4456,6 +4467,7 @@ vichele_statistics.thrift_spec = (
     (6, TType.BOOL, 'delivered', None, None, ),  # 6
     (7, TType.I64, 'plan_id', None, None, ),  # 7
     (8, TType.STRING, 'plan_order', 'UTF8', None, ),  # 8
+    (9, TType.I64, 'vichele_id', None, None, ),  # 9
 )
 all_structs.append(vichele_stuff_statistics)
 vichele_stuff_statistics.thrift_spec = (
