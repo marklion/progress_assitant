@@ -19,7 +19,9 @@
 		"twxs.cmake",
 		"eamodio.gitlens",
 		"tabnine.tabnine-vscode",
-		"octref.vetur"
+		"octref.vetur",
+		"febean.vue-format",
+		"oderwat.indent-rainbow"
 	],
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
