@@ -18,6 +18,17 @@
                     <van-datetime-picker type="date" title="请选择日期" :min-date="new Date()" @cancel="show_time_picker = false" @confirm="confirm_time" />
                 </van-popup>
                 <van-divider>车辆信息</van-divider>
+                <van-dialog v-model="team_brief_show" title="车队信息" :showConfirmButton="false" closeOnClickOverlay>
+                    <van-form @submit="finish_team_brief">
+                        <van-field v-model="team_brief_stuff_name" name="货品" label="货品" placeholder="请输入货品" :rules="[{ required: true, message: '请填写货品' }]" />
+                        <van-field v-model="team_brief_count" type="number" name="重量" label="重量" placeholder="请输入重量" :rules="[{ required: true, message: '请填写重量' }]" />
+                        <div style="margin: 16px;">
+                            <van-button round block type="info" native-type="submit">提交</van-button>
+                        </div>
+                    </van-form>
+                </van-dialog>
+                <van-button type="primary" size="small" native-type="button" block @click="team_brief_show= true">选择车队</van-button>
+                <van-action-sheet v-model="show_select_vichele_team" :actions="all_vichele_team" @select="select_team" />
                 <div class="vichele_show" v-for="(single_vichele, index) in new_vichele" :key="index">
                     <history-input search_key="main_vichele_number" v-model="single_vichele.main_vichele_number" :formatter="convert_bigger" :rules="[{ required: true, message: '请填写车牌号' }, {pattern: vichele_number_patten, message: '请填写正确的车牌号'}]"></history-input>
                     <history-input search_key="behind_vichele_number" v-model="single_vichele.behind_vichele_number" :formatter="convert_bigger" :rules="[{ required: true, message: '请填写车牌号' }, {pattern: vichele_number_patten, message: '请填写正确的车牌号'}, {validator:have_to_have_gua, message: '挂车要以挂结尾'}]"></history-input>
@@ -32,6 +43,7 @@
                             <van-switch v-model="single_vichele.repeated" size="20" />
                         </template>
                     </van-field>
+                    <van-button type="danger" block size="small" native-type="button" plain round @click="remove_vichele(index)">移除</van-button>
                 </div>
                 <van-row type="flex" align="center" justify="right">
                     <van-col :offset="20">
@@ -103,6 +115,57 @@
                 </van-form>
             </van-dialog>
         </van-tab>
+        <van-tab title="车队维护">
+            <van-grid>
+                <van-grid-item v-for="(single_vichele_team, index) in all_vichele_team" :key="index" icon="logistics" :text="single_vichele_team.name" @click="current_vichele_team = single_vichele_team" />
+                <van-grid-item v-if="all_vichele_team.length < 8" @click="add_vichele_team_show = true" icon="plus" />
+            </van-grid>
+            <div v-if="current_vichele_team.id != 0">
+                <van-field v-model="current_vichele_team.name" label="车队名">
+                    <template #button>
+                        <van-button size="small" type="info" @click="update_vichele_team">改名</van-button>
+                        <van-button size="small" type="danger" @click="remove_vichele_team">删除</van-button>
+                    </template>
+                </van-field>
+                <van-divider>车队成员</van-divider>
+                <van-button type="primary" block round icon="plus" @click="add_team_member_show = true">新增车辆</van-button>
+                <div class="team_member_show" v-for="(single_member, index) in current_vichele_team.members" :key="index">
+                    <van-field v-model="single_member.main_vichele_number" name="主车牌" label="主车牌" :formatter="convert_bigger" placeholder="请输入主车牌" :rules="[{ required: true, message: '请填写车牌号' }, {pattern: vichele_number_patten, message: '请填写正确的车牌号'}]" />
+                    <van-field v-model="single_member.behind_vichele_number" name="挂车牌" label="挂车牌" :formatter="convert_bigger" placeholder="请输入挂车牌" :rules="[{ required: true, message: '请填写车牌号' }, {pattern: vichele_number_patten, message: '请填写正确的车牌号'}]" />
+                    <van-field v-model="single_member.driver_name" name="司机姓名" label="司机姓名" placeholder="请输入司机姓名" :rules="[{ required: true, message: '请填写司机姓名' }]" />
+                    <van-field v-model="single_member.driver_phone" name="司机电话" label="司机电话" placeholder="请输入司机电话" :rules="[{ required: true, message: '请填写司机电话'}, {pattern:/^(13[0-9]|14[01456879]|15[0-35-9]|16[2567]|17[0-8]|18[0-9]|19[0-35-9])\d{8}$/, message:'请输入正确手机号'}]" />
+                    <van-field v-model="single_member.driver_id" name="司机身份证" label="司机身份证" placeholder="请输入司机身份证" :rules="[{ required: true, message: '请填写司机身份证'}, {pattern:/^[1-9]\d{5}(18|19|20|(3\d))\d{2}((0[1-9])|(1[0-2]))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$/, message:'请输入正确的身份证'}]" />
+                    <van-row type="flex" align="center" justify="space-between">
+                        <van-col :span="12">
+                            <van-button size="small" round block type="warning" @click="update_vichele_team">更新</van-button>
+                        </van-col>
+                        <van-col :span="12">
+                            <van-button size="small" round block type="danger" @click="remove_team_member(index)">删除</van-button>
+                        </van-col>
+                    </van-row>
+                </div>
+            </div>
+            <van-dialog v-model="add_vichele_team_show" title="新增车队" :showConfirmButton="false" closeOnClickOverlay>
+                <van-form @submit="add_vichele_team">
+                    <van-field v-model="new_vichele_team_name" name="车队名" label="车队名" placeholder="请输入车队名" :rules="[{ required: true, message: '请填写车队名' }]" />
+                    <div style="margin: 16px;">
+                        <van-button round block type="info" native-type="submit">提交</van-button>
+                    </div>
+                </van-form>
+            </van-dialog>
+            <van-dialog v-model="add_team_member_show" title="新增车辆" :showConfirmButton="false" closeOnClickOverlay>
+                <van-form @submit="add_team_member">
+                    <van-field v-model="new_team_member.main_vichele_number" name="主车牌" label="主车牌" :formatter="convert_bigger" placeholder="请输入主车牌" :rules="[{ required: true, message: '请填写车牌号' }, {pattern: vichele_number_patten, message: '请填写正确的车牌号'}]" />
+                    <van-field v-model="new_team_member.behind_vichele_number" name="挂车牌" label="挂车牌" :formatter="convert_bigger" placeholder="请输入挂车牌" :rules="[{ required: true, message: '请填写车牌号' }, {pattern: vichele_number_patten, message: '请填写正确的车牌号'}]" />
+                    <van-field v-model="new_team_member.driver_name" name="司机姓名" label="司机姓名" placeholder="请输入司机姓名" :rules="[{ required: true, message: '请填写司机姓名' }]" />
+                    <van-field v-model="new_team_member.driver_phone" name="司机电话" label="司机电话" placeholder="请输入司机电话" :rules="[{ required: true, message: '请填写司机电话'}, {pattern:/^(13[0-9]|14[01456879]|15[0-35-9]|16[2567]|17[0-8]|18[0-9]|19[0-35-9])\d{8}$/, message:'请输入正确手机号'}]" />
+                    <van-field v-model="new_team_member.driver_id" name="司机身份证" label="司机身份证" placeholder="请输入司机身份证" :rules="[{ required: true, message: '请填写司机身份证'}, {pattern:/^[1-9]\d{5}(18|19|20|(3\d))\d{2}((0[1-9])|(1[0-2]))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$/, message:'请输入正确的身份证'}]" />
+                    <div style="margin: 16px;">
+                        <van-button round block type="info" native-type="submit">提交</van-button>
+                    </div>
+                </van-form>
+            </van-dialog>
+        </van-tab>
     </van-tabs>
 </div>
 </template>
@@ -154,7 +217,17 @@ import {
 import {
     Switch
 } from 'vant';
+import {
+    Grid,
+    GridItem
+} from 'vant';
+import {
+    ActionSheet
+} from 'vant';
 
+Vue.use(ActionSheet);
+Vue.use(Grid);
+Vue.use(GridItem);
 Vue.use(Switch);
 
 Vue.use(Checkbox);
@@ -199,6 +272,26 @@ export default {
     },
     data: function () {
         return {
+            team_brief_show: false,
+            team_brief_stuff_name: '',
+            team_brief_count: 0,
+            show_select_vichele_team: false,
+            add_team_member_show: false,
+            new_team_member: {
+                main_vichele_number: '',
+                behind_vichele_number: '',
+                driver_name: '',
+                driver_id: '',
+                driver_phone: '',
+            },
+            current_vichele_team: {
+                id: 0,
+                name: '',
+                members: [],
+            },
+            new_vichele_team_name: "",
+            add_vichele_team_show: false,
+            all_vichele_team: [],
             user_name: '',
             user_phone: '',
             active: 0,
@@ -249,6 +342,90 @@ export default {
         },
     },
     methods: {
+        remove_vichele_team: function () {
+            var vue_this = this;
+            vue_this.$call_remote_process("vichele_management", "del_vichele_team", [vue_this.$cookies.get('silent_id'), vue_this.current_vichele_team.id]).then(function (resp) {
+                if (resp) {
+                    vue_this.init_self_vichele_team();
+                    vue_this.current_vichele_team.id = 0;
+                }
+            });
+        },
+        finish_team_brief: function () {
+            this.show_select_vichele_team = true;
+            this.team_brief_show = false;
+        },
+        remove_vichele: function (_index) {
+            var vue_this = this;
+            vue_this.new_vichele.splice(_index, 1);
+        },
+        select_team: function (_team) {
+            var vue_this = this;
+            vue_this.new_vichele = [];
+            _team.members.forEach((element) => {
+                vue_this.new_vichele.push({
+                    main_vichele_number: element.main_vichele_number,
+                    behind_vichele_number: element.behind_vichele_number,
+                    count: parseFloat(vue_this.team_brief_count),
+                    comment: '',
+                    stuff_name: vue_this.team_brief_stuff_name,
+                    repeated: false,
+                    driver_phone: element.driver_phone,
+                    driver_id: element.driver_id,
+                    driver_name: element.driver_name,
+                });
+            });
+            vue_this.show_select_vichele_team = false;
+        },
+        remove_team_member: function (_index) {
+            var vue_this = this;
+            vue_this.current_vichele_team.members.splice(_index, 1);
+            vue_this.update_vichele_team();
+        },
+        add_team_member: function () {
+            var vue_this = this;
+            vue_this.current_vichele_team.members.push(vue_this.new_team_member);
+            vue_this.update_vichele_team();
+            vue_this.add_team_member_show = false;
+        },
+        update_vichele_team: function () {
+            var vue_this = this;
+            vue_this.$call_remote_process("vichele_management", "update_vichele_team", [vue_this.$cookies.get('silent_id'), vue_this.current_vichele_team]).finally(function () {
+                var old_index = vue_this.current_vichele_team.id;
+                vue_this.init_self_vichele_team(() => {
+                    vue_this.all_vichele_team.forEach(element => {
+                        if (element.id == old_index) {
+                            vue_this.current_vichele_team = element;
+                        }
+                    });
+                });
+            });
+        },
+        add_vichele_team: function () {
+            var vue_this = this;
+            vue_this.$call_remote_process("vichele_management", "create_vichele_team", [vue_this.$cookies.get('silent_id'), {
+                name: vue_this.new_vichele_team_name
+            }]).then(function (resp) {
+                if (resp) {
+                    vue_this.init_self_vichele_team(() => {
+                        vue_this.current_vichele_team = vue_this.all_vichele_team[vue_this.all_vichele_team.length - 1];
+                    });
+                    vue_this.add_vichele_team_show = false;
+                }
+            });
+        },
+        init_self_vichele_team: function (_after_hook) {
+            var vue_this = this;
+            vue_this.$call_remote_process("vichele_management", "get_all_vichele_team", [vue_this.$cookies.get('silent_id')]).then(function (resp) {
+                vue_this.all_vichele_team = [];
+                resp.forEach((element, index) => {
+                    vue_this.$set(vue_this.all_vichele_team, index, element);
+                });
+                if (_after_hook) {
+                    _after_hook();
+                }
+            });
+        },
         delete_vichele: function (_item) {
             var vue_this = this;
             Dialog({
@@ -405,6 +582,7 @@ export default {
                 }
             });
         }
+        vue_this.init_self_vichele_team();
     },
 
 }
@@ -413,12 +591,10 @@ export default {
 <style scoped>
 .vichele_show {
     border: 2px solid blue;
-    border-radius: 25px;
+    border-radius: 15px;
     margin-left: 10px;
     margin-right: 10px;
     margin-bottom: 10px;
-    padding-bottom: 8px;
-    padding-left: 10px;
     padding-top: 8px;
 }
 
@@ -437,5 +613,11 @@ export default {
 
 .highlight_record {
     border: 1px solid red;
+}
+
+.team_member_show {
+    border: 1px solid rgb(0, 255, 128);
+    margin-top: 10px;
+    padding-left: 3px;
 }
 </style>

@@ -445,6 +445,175 @@ public:
 
         return true;
     }
+
+    bool verify_unique_from_team(const vichele_team& team_info)
+    {
+        bool ret = false;
+
+        std::vector<vichele_team_member> tmp(team_info.members);
+        std::sort(tmp.begin(), tmp.end(),
+                  [](vichele_team_member &_first, vichele_team_member &_second)
+                  { return _first.main_vichele_number < _second.main_vichele_number; });
+        auto unique_index = std::unique(tmp.begin(), tmp.end());
+        if (unique_index == tmp.end())
+        {
+            ret = true;
+        }
+
+        return ret;
+    }
+
+    virtual bool create_vichele_team(const std::string &open_id, const vichele_team &team_info)
+    {
+        bool ret = false;
+
+        auto opt_user = sqlite_orm::search_record<pa_sql_silent_user>("open_id = '%s'", open_id.c_str());
+        if (!opt_user)
+        {
+            PA_RETURN_OP_FAIL();
+        }
+
+        auto exist_record = opt_user->get_children<pa_sql_vichele_team>("created_by", "name == '%s'", team_info.name.c_str());
+        if (exist_record)
+        {
+            PA_RETURN_MSG("车队已存在");
+        }
+
+        if (false == verify_unique_from_team(team_info))
+        {
+            PA_RETURN_MSG("车辆信息重复");
+        }
+
+        pa_sql_vichele_team tmp;
+        tmp.name = team_info.name;
+        tmp.set_parent(*opt_user, "created_by");
+        neb::CJsonObject members;
+        for (auto &itr : team_info.members)
+        {
+            neb::CJsonObject one_member;
+            one_member.Add("driver_name", itr.driver_name);
+            one_member.Add("driver_phone", itr.driver_phone);
+            one_member.Add("driver_id", itr.driver_id);
+            one_member.Add("main_vichele_number", itr.main_vichele_number);
+            one_member.Add("behind_vichele_number", itr.behind_vichele_number);
+            members.Add(one_member);
+        }
+        tmp.team_member = members.ToString();
+        ret = tmp.insert_record();
+
+        return ret;
+    }
+    virtual bool update_vichele_team(const std::string &open_id, const vichele_team &team_info)
+    {
+        auto opt_user = sqlite_orm::search_record<pa_sql_silent_user>("open_id = '%s'", open_id.c_str());
+        if (!opt_user)
+        {
+            PA_RETURN_OP_FAIL();
+        }
+
+        auto exist_record = opt_user->get_children<pa_sql_vichele_team>("created_by", "PRI_ID == %ld", team_info.id);
+        if (!exist_record)
+        {
+            PA_RETURN_MSG("车队不存在");
+        }
+
+        if (false == verify_unique_from_team(team_info))
+        {
+            PA_RETURN_MSG("车辆信息重复");
+        }
+
+        neb::CJsonObject members;
+        for (auto &itr : team_info.members)
+        {
+            neb::CJsonObject one_member;
+            one_member.Add("driver_name", itr.driver_name);
+            one_member.Add("driver_phone", itr.driver_phone);
+            one_member.Add("driver_id", itr.driver_id);
+            one_member.Add("main_vichele_number", itr.main_vichele_number);
+            one_member.Add("behind_vichele_number", itr.behind_vichele_number);
+            members.Add(one_member);
+        }
+
+        exist_record->team_member = members.ToString();
+        auto dup_name_record = opt_user->get_children<pa_sql_vichele_team>("created_by", "name == '%s' AND PRI_ID != %ld", team_info.name.c_str(), exist_record->get_pri_id());
+        if (dup_name_record)
+        {
+            PA_RETURN_MSG("车队已存在");
+        }
+        exist_record->name = team_info.name;
+        return exist_record->update_record();
+    }
+    virtual bool del_vichele_team(const std::string &open_id, const int64_t team_id)
+    {
+        auto opt_user = sqlite_orm::search_record<pa_sql_silent_user>("open_id = '%s'", open_id.c_str());
+        if (!opt_user)
+        {
+            PA_RETURN_OP_FAIL();
+        }
+
+        auto exist_record = opt_user->get_children<pa_sql_vichele_team>("created_by", "PRI_ID == %ld", team_id);
+        if (!exist_record)
+        {
+            PA_RETURN_MSG("车队不存在");
+        }
+        exist_record->remove_record();
+        return true;
+    }
+
+    virtual void get_all_vichele_team(std::vector<vichele_team> &_return, const std::string &open_id)
+    {
+        auto opt_user = sqlite_orm::search_record<pa_sql_silent_user>("open_id = '%s'", open_id.c_str());
+        if (!opt_user)
+        {
+            PA_RETURN_OP_FAIL();
+        }
+        auto all_vichele_team = opt_user->get_all_children<pa_sql_vichele_team>("created_by");
+        for (auto &itr : all_vichele_team)
+        {
+            vichele_team tmp;
+            tmp.id = itr.get_pri_id();
+            tmp.name = itr.name;
+            neb::CJsonObject member_from_sql(itr.team_member);
+            for (auto i = 0; i < member_from_sql.GetArraySize(); i++)
+            {
+                vichele_team_member members;
+                members.behind_vichele_number = member_from_sql[i]("behind_vichele_number");
+                members.driver_id = member_from_sql[i]("driver_id");
+                members.driver_name = member_from_sql[i]("driver_name");
+                members.driver_phone = member_from_sql[i]("driver_phone");
+                members.main_vichele_number = member_from_sql[i]("main_vichele_number");
+                tmp.members.push_back(members);
+            }
+            _return.push_back(tmp);
+        }
+    }
+    virtual void get_vichele_team(vichele_team &_return, const std::string &open_id, const int64_t team_id)
+    {
+        auto opt_user = sqlite_orm::search_record<pa_sql_silent_user>("open_id = '%s'", open_id.c_str());
+        if (!opt_user)
+        {
+            PA_RETURN_OP_FAIL();
+        }
+
+        auto exist_record = opt_user->get_children<pa_sql_vichele_team>("created_by", "PRI_ID == %ld", team_id);
+        if (!exist_record)
+        {
+            PA_RETURN_MSG("车队不存在");
+        }
+        _return.id = exist_record->get_pri_id();
+        _return.name = exist_record->name;
+        neb::CJsonObject member_from_sql(exist_record->team_member);
+        for (auto i = 0; i < member_from_sql.GetArraySize(); i++)
+        {
+            vichele_team_member members;
+            members.behind_vichele_number = member_from_sql[i]("behind_vichele_number");
+            members.driver_id = member_from_sql[i]("driver_id");
+            members.driver_name = member_from_sql[i]("driver_name");
+            members.driver_phone = member_from_sql[i]("driver_phone");
+            members.main_vichele_number = member_from_sql[i]("main_vichele_number");
+            _return.members.push_back(members);
+        }
+    }
 };
 
 #endif // _VICHELE_MANAGEMENT_H_

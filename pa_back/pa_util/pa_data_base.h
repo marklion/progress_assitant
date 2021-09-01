@@ -762,4 +762,25 @@ public:
     }
 };
 
+class pa_sql_vichele_team:public sql_tree_base {
+public:
+    std::string name;
+    std::string team_member;
+    pa_sql_vichele_team() {
+        add_parent_type<pa_sql_silent_user>("created_by");
+    }
+    virtual std::vector<sqlite_orm_column> self_columns_defined() { 
+        std::vector<sqlite_orm_column> ret;
+        ret.push_back(sqlite_orm_column("name", sqlite_orm_column::STRING, &name));
+        ret.push_back(sqlite_orm_column("team_member", sqlite_orm_column::STRING, &team_member));
+
+        return ret;
+    }
+
+    virtual std::string table_name()
+    {
+        return "vichele_team_table";
+    }
+};
+
 #endif // _PA_DATABSE_H_

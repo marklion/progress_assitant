@@ -4261,6 +4261,195 @@ class silent_user_info(object):
 
     def __ne__(self, other):
         return not (self == other)
+
+
+class vichele_team_member(object):
+    """
+    Attributes:
+     - main_vichele_number
+     - behind_vichele_number
+     - driver_name
+     - driver_phone
+     - driver_id
+
+    """
+
+
+    def __init__(self, main_vichele_number=None, behind_vichele_number=None, driver_name=None, driver_phone=None, driver_id=None,):
+        self.main_vichele_number = main_vichele_number
+        self.behind_vichele_number = behind_vichele_number
+        self.driver_name = driver_name
+        self.driver_phone = driver_phone
+        self.driver_id = driver_id
+
+    def read(self, iprot):
+        if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
+            iprot._fast_decode(self, iprot, [self.__class__, self.thrift_spec])
+            return
+        iprot.readStructBegin()
+        while True:
+            (fname, ftype, fid) = iprot.readFieldBegin()
+            if ftype == TType.STOP:
+                break
+            if fid == 1:
+                if ftype == TType.STRING:
+                    self.main_vichele_number = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 2:
+                if ftype == TType.STRING:
+                    self.behind_vichele_number = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 3:
+                if ftype == TType.STRING:
+                    self.driver_name = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 4:
+                if ftype == TType.STRING:
+                    self.driver_phone = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 5:
+                if ftype == TType.STRING:
+                    self.driver_id = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
+            else:
+                iprot.skip(ftype)
+            iprot.readFieldEnd()
+        iprot.readStructEnd()
+
+    def write(self, oprot):
+        if oprot._fast_encode is not None and self.thrift_spec is not None:
+            oprot.trans.write(oprot._fast_encode(self, [self.__class__, self.thrift_spec]))
+            return
+        oprot.writeStructBegin('vichele_team_member')
+        if self.main_vichele_number is not None:
+            oprot.writeFieldBegin('main_vichele_number', TType.STRING, 1)
+            oprot.writeString(self.main_vichele_number.encode('utf-8') if sys.version_info[0] == 2 else self.main_vichele_number)
+            oprot.writeFieldEnd()
+        if self.behind_vichele_number is not None:
+            oprot.writeFieldBegin('behind_vichele_number', TType.STRING, 2)
+            oprot.writeString(self.behind_vichele_number.encode('utf-8') if sys.version_info[0] == 2 else self.behind_vichele_number)
+            oprot.writeFieldEnd()
+        if self.driver_name is not None:
+            oprot.writeFieldBegin('driver_name', TType.STRING, 3)
+            oprot.writeString(self.driver_name.encode('utf-8') if sys.version_info[0] == 2 else self.driver_name)
+            oprot.writeFieldEnd()
+        if self.driver_phone is not None:
+            oprot.writeFieldBegin('driver_phone', TType.STRING, 4)
+            oprot.writeString(self.driver_phone.encode('utf-8') if sys.version_info[0] == 2 else self.driver_phone)
+            oprot.writeFieldEnd()
+        if self.driver_id is not None:
+            oprot.writeFieldBegin('driver_id', TType.STRING, 5)
+            oprot.writeString(self.driver_id.encode('utf-8') if sys.version_info[0] == 2 else self.driver_id)
+            oprot.writeFieldEnd()
+        oprot.writeFieldStop()
+        oprot.writeStructEnd()
+
+    def validate(self):
+        return
+
+    def __repr__(self):
+        L = ['%s=%r' % (key, value)
+             for key, value in self.__dict__.items()]
+        return '%s(%s)' % (self.__class__.__name__, ', '.join(L))
+
+    def __eq__(self, other):
+        return isinstance(other, self.__class__) and self.__dict__ == other.__dict__
+
+    def __ne__(self, other):
+        return not (self == other)
+
+
+class vichele_team(object):
+    """
+    Attributes:
+     - members
+     - name
+     - id
+
+    """
+
+
+    def __init__(self, members=None, name=None, id=None,):
+        self.members = members
+        self.name = name
+        self.id = id
+
+    def read(self, iprot):
+        if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
+            iprot._fast_decode(self, iprot, [self.__class__, self.thrift_spec])
+            return
+        iprot.readStructBegin()
+        while True:
+            (fname, ftype, fid) = iprot.readFieldBegin()
+            if ftype == TType.STOP:
+                break
+            if fid == 1:
+                if ftype == TType.LIST:
+                    self.members = []
+                    (_etype17, _size14) = iprot.readListBegin()
+                    for _i18 in range(_size14):
+                        _elem19 = vichele_team_member()
+                        _elem19.read(iprot)
+                        self.members.append(_elem19)
+                    iprot.readListEnd()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 2:
+                if ftype == TType.STRING:
+                    self.name = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 3:
+                if ftype == TType.I64:
+                    self.id = iprot.readI64()
+                else:
+                    iprot.skip(ftype)
+            else:
+                iprot.skip(ftype)
+            iprot.readFieldEnd()
+        iprot.readStructEnd()
+
+    def write(self, oprot):
+        if oprot._fast_encode is not None and self.thrift_spec is not None:
+            oprot.trans.write(oprot._fast_encode(self, [self.__class__, self.thrift_spec]))
+            return
+        oprot.writeStructBegin('vichele_team')
+        if self.members is not None:
+            oprot.writeFieldBegin('members', TType.LIST, 1)
+            oprot.writeListBegin(TType.STRUCT, len(self.members))
+            for iter20 in self.members:
+                iter20.write(oprot)
+            oprot.writeListEnd()
+            oprot.writeFieldEnd()
+        if self.name is not None:
+            oprot.writeFieldBegin('name', TType.STRING, 2)
+            oprot.writeString(self.name.encode('utf-8') if sys.version_info[0] == 2 else self.name)
+            oprot.writeFieldEnd()
+        if self.id is not None:
+            oprot.writeFieldBegin('id', TType.I64, 3)
+            oprot.writeI64(self.id)
+            oprot.writeFieldEnd()
+        oprot.writeFieldStop()
+        oprot.writeStructEnd()
+
+    def validate(self):
+        return
+
+    def __repr__(self):
+        L = ['%s=%r' % (key, value)
+             for key, value in self.__dict__.items()]
+        return '%s(%s)' % (self.__class__.__name__, ', '.join(L))
+
+    def __eq__(self, other):
+        return isinstance(other, self.__class__) and self.__dict__ == other.__dict__
+
+    def __ne__(self, other):
+        return not (self == other)
 all_structs.append(gen_exp)
 gen_exp.thrift_spec = (
     None,  # 0
@@ -4636,6 +4825,22 @@ silent_user_info.thrift_spec = (
     None,  # 0
     (1, TType.STRING, 'name', 'UTF8', None, ),  # 1
     (2, TType.STRING, 'phone', 'UTF8', None, ),  # 2
+)
+all_structs.append(vichele_team_member)
+vichele_team_member.thrift_spec = (
+    None,  # 0
+    (1, TType.STRING, 'main_vichele_number', 'UTF8', None, ),  # 1
+    (2, TType.STRING, 'behind_vichele_number', 'UTF8', None, ),  # 2
+    (3, TType.STRING, 'driver_name', 'UTF8', None, ),  # 3
+    (4, TType.STRING, 'driver_phone', 'UTF8', None, ),  # 4
+    (5, TType.STRING, 'driver_id', 'UTF8', None, ),  # 5
+)
+all_structs.append(vichele_team)
+vichele_team.thrift_spec = (
+    None,  # 0
+    (1, TType.LIST, 'members', (TType.STRUCT, [vichele_team_member, None], False), None, ),  # 1
+    (2, TType.STRING, 'name', 'UTF8', None, ),  # 2
+    (3, TType.I64, 'id', None, None, ),  # 3
 )
 fix_spec(all_structs)
 del all_structs
