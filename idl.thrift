@@ -467,6 +467,20 @@ struct silent_user_info {
     2:string phone,
 }
 
+struct vichele_team_member {
+    1:string main_vichele_number,
+    2:string behind_vichele_number,
+    3:string driver_name,
+    4:string driver_phone,
+    5:string driver_id,
+}
+
+struct vichele_team {
+    1:list<vichele_team_member> members,
+    2:string name,
+    3:i64 id,
+}
+
 service vichele_management {
     bool create_vichele_info(1:string open_id, 2:list<vichele_stay_alone> vichele_info) throws (1:gen_exp e),
     bool delete_vichele_info(1:string open_id, 2:i64 vichele_id) throws (1:gen_exp e),
@@ -480,4 +494,9 @@ service vichele_management {
     list<vichele_stay_alone> get_company_vichele_info(1:string ssid, 2:i64 anchor) throws (1:gen_exp e),
     bool confirm_vichele(1:string ssid, 2:list<vichele_stay_alone> info) throws (1:gen_exp e),
     bool cancel_vichele(1:string ssid, 2:list<vichele_stay_alone> info) throws (1:gen_exp e),
+    bool create_vichele_team(1:string open_id, 2:vichele_team team_info) throws (1:gen_exp e),
+    bool update_vichele_team(1:string open_id, 2:vichele_team team_info) throws (1:gen_exp e),
+    bool del_vichele_team(1:string open_id, 2:i64 team_id) throws (1:gen_exp e),
+    list<vichele_team> get_all_vichele_team(1:string open_id) throws (1:gen_exp e),
+    vichele_team get_vichele_team(1:string open_id, 2:i64 team_id) throws (1:gen_exp e),
 }

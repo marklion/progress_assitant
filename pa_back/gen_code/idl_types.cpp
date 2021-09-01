@@ -7289,3 +7289,327 @@ void silent_user_info::printTo(std::ostream& out) const {
 }
 
 
+vichele_team_member::~vichele_team_member() noexcept {
+}
+
+
+void vichele_team_member::__set_main_vichele_number(const std::string& val) {
+  this->main_vichele_number = val;
+}
+
+void vichele_team_member::__set_behind_vichele_number(const std::string& val) {
+  this->behind_vichele_number = val;
+}
+
+void vichele_team_member::__set_driver_name(const std::string& val) {
+  this->driver_name = val;
+}
+
+void vichele_team_member::__set_driver_phone(const std::string& val) {
+  this->driver_phone = val;
+}
+
+void vichele_team_member::__set_driver_id(const std::string& val) {
+  this->driver_id = val;
+}
+std::ostream& operator<<(std::ostream& out, const vichele_team_member& obj)
+{
+  obj.printTo(out);
+  return out;
+}
+
+
+uint32_t vichele_team_member::read(::apache::thrift::protocol::TProtocol* iprot) {
+
+  ::apache::thrift::protocol::TInputRecursionTracker tracker(*iprot);
+  uint32_t xfer = 0;
+  std::string fname;
+  ::apache::thrift::protocol::TType ftype;
+  int16_t fid;
+
+  xfer += iprot->readStructBegin(fname);
+
+  using ::apache::thrift::protocol::TProtocolException;
+
+
+  while (true)
+  {
+    xfer += iprot->readFieldBegin(fname, ftype, fid);
+    if (ftype == ::apache::thrift::protocol::T_STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 1:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->main_vichele_number);
+          this->__isset.main_vichele_number = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 2:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->behind_vichele_number);
+          this->__isset.behind_vichele_number = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 3:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->driver_name);
+          this->__isset.driver_name = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 4:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->driver_phone);
+          this->__isset.driver_phone = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 5:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->driver_id);
+          this->__isset.driver_id = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      default:
+        xfer += iprot->skip(ftype);
+        break;
+    }
+    xfer += iprot->readFieldEnd();
+  }
+
+  xfer += iprot->readStructEnd();
+
+  return xfer;
+}
+
+uint32_t vichele_team_member::write(::apache::thrift::protocol::TProtocol* oprot) const {
+  uint32_t xfer = 0;
+  ::apache::thrift::protocol::TOutputRecursionTracker tracker(*oprot);
+  xfer += oprot->writeStructBegin("vichele_team_member");
+
+  xfer += oprot->writeFieldBegin("main_vichele_number", ::apache::thrift::protocol::T_STRING, 1);
+  xfer += oprot->writeString(this->main_vichele_number);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("behind_vichele_number", ::apache::thrift::protocol::T_STRING, 2);
+  xfer += oprot->writeString(this->behind_vichele_number);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("driver_name", ::apache::thrift::protocol::T_STRING, 3);
+  xfer += oprot->writeString(this->driver_name);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("driver_phone", ::apache::thrift::protocol::T_STRING, 4);
+  xfer += oprot->writeString(this->driver_phone);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("driver_id", ::apache::thrift::protocol::T_STRING, 5);
+  xfer += oprot->writeString(this->driver_id);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldStop();
+  xfer += oprot->writeStructEnd();
+  return xfer;
+}
+
+void swap(vichele_team_member &a, vichele_team_member &b) {
+  using ::std::swap;
+  swap(a.main_vichele_number, b.main_vichele_number);
+  swap(a.behind_vichele_number, b.behind_vichele_number);
+  swap(a.driver_name, b.driver_name);
+  swap(a.driver_phone, b.driver_phone);
+  swap(a.driver_id, b.driver_id);
+  swap(a.__isset, b.__isset);
+}
+
+vichele_team_member::vichele_team_member(const vichele_team_member& other86) {
+  main_vichele_number = other86.main_vichele_number;
+  behind_vichele_number = other86.behind_vichele_number;
+  driver_name = other86.driver_name;
+  driver_phone = other86.driver_phone;
+  driver_id = other86.driver_id;
+  __isset = other86.__isset;
+}
+vichele_team_member& vichele_team_member::operator=(const vichele_team_member& other87) {
+  main_vichele_number = other87.main_vichele_number;
+  behind_vichele_number = other87.behind_vichele_number;
+  driver_name = other87.driver_name;
+  driver_phone = other87.driver_phone;
+  driver_id = other87.driver_id;
+  __isset = other87.__isset;
+  return *this;
+}
+void vichele_team_member::printTo(std::ostream& out) const {
+  using ::apache::thrift::to_string;
+  out << "vichele_team_member(";
+  out << "main_vichele_number=" << to_string(main_vichele_number);
+  out << ", " << "behind_vichele_number=" << to_string(behind_vichele_number);
+  out << ", " << "driver_name=" << to_string(driver_name);
+  out << ", " << "driver_phone=" << to_string(driver_phone);
+  out << ", " << "driver_id=" << to_string(driver_id);
+  out << ")";
+}
+
+
+vichele_team::~vichele_team() noexcept {
+}
+
+
+void vichele_team::__set_members(const std::vector<vichele_team_member> & val) {
+  this->members = val;
+}
+
+void vichele_team::__set_name(const std::string& val) {
+  this->name = val;
+}
+
+void vichele_team::__set_id(const int64_t val) {
+  this->id = val;
+}
+std::ostream& operator<<(std::ostream& out, const vichele_team& obj)
+{
+  obj.printTo(out);
+  return out;
+}
+
+
+uint32_t vichele_team::read(::apache::thrift::protocol::TProtocol* iprot) {
+
+  ::apache::thrift::protocol::TInputRecursionTracker tracker(*iprot);
+  uint32_t xfer = 0;
+  std::string fname;
+  ::apache::thrift::protocol::TType ftype;
+  int16_t fid;
+
+  xfer += iprot->readStructBegin(fname);
+
+  using ::apache::thrift::protocol::TProtocolException;
+
+
+  while (true)
+  {
+    xfer += iprot->readFieldBegin(fname, ftype, fid);
+    if (ftype == ::apache::thrift::protocol::T_STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 1:
+        if (ftype == ::apache::thrift::protocol::T_LIST) {
+          {
+            this->members.clear();
+            uint32_t _size88;
+            ::apache::thrift::protocol::TType _etype91;
+            xfer += iprot->readListBegin(_etype91, _size88);
+            this->members.resize(_size88);
+            uint32_t _i92;
+            for (_i92 = 0; _i92 < _size88; ++_i92)
+            {
+              xfer += this->members[_i92].read(iprot);
+            }
+            xfer += iprot->readListEnd();
+          }
+          this->__isset.members = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 2:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->name);
+          this->__isset.name = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 3:
+        if (ftype == ::apache::thrift::protocol::T_I64) {
+          xfer += iprot->readI64(this->id);
+          this->__isset.id = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      default:
+        xfer += iprot->skip(ftype);
+        break;
+    }
+    xfer += iprot->readFieldEnd();
+  }
+
+  xfer += iprot->readStructEnd();
+
+  return xfer;
+}
+
+uint32_t vichele_team::write(::apache::thrift::protocol::TProtocol* oprot) const {
+  uint32_t xfer = 0;
+  ::apache::thrift::protocol::TOutputRecursionTracker tracker(*oprot);
+  xfer += oprot->writeStructBegin("vichele_team");
+
+  xfer += oprot->writeFieldBegin("members", ::apache::thrift::protocol::T_LIST, 1);
+  {
+    xfer += oprot->writeListBegin(::apache::thrift::protocol::T_STRUCT, static_cast<uint32_t>(this->members.size()));
+    std::vector<vichele_team_member> ::const_iterator _iter93;
+    for (_iter93 = this->members.begin(); _iter93 != this->members.end(); ++_iter93)
+    {
+      xfer += (*_iter93).write(oprot);
+    }
+    xfer += oprot->writeListEnd();
+  }
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("name", ::apache::thrift::protocol::T_STRING, 2);
+  xfer += oprot->writeString(this->name);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("id", ::apache::thrift::protocol::T_I64, 3);
+  xfer += oprot->writeI64(this->id);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldStop();
+  xfer += oprot->writeStructEnd();
+  return xfer;
+}
+
+void swap(vichele_team &a, vichele_team &b) {
+  using ::std::swap;
+  swap(a.members, b.members);
+  swap(a.name, b.name);
+  swap(a.id, b.id);
+  swap(a.__isset, b.__isset);
+}
+
+vichele_team::vichele_team(const vichele_team& other94) {
+  members = other94.members;
+  name = other94.name;
+  id = other94.id;
+  __isset = other94.__isset;
+}
+vichele_team& vichele_team::operator=(const vichele_team& other95) {
+  members = other95.members;
+  name = other95.name;
+  id = other95.id;
+  __isset = other95.__isset;
+  return *this;
+}
+void vichele_team::printTo(std::ostream& out) const {
+  using ::apache::thrift::to_string;
+  out << "vichele_team(";
+  out << "members=" << to_string(members);
+  out << ", " << "name=" << to_string(name);
+  out << ", " << "id=" << to_string(id);
+  out << ")";
+}
+
+

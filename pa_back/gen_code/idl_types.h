@@ -95,6 +95,10 @@ class vichele_stay_alone;
 
 class silent_user_info;
 
+class vichele_team_member;
+
+class vichele_team;
+
 typedef struct _gen_exp__isset {
   _gen_exp__isset() : msg(false) {}
   bool msg :1;
@@ -2796,6 +2800,126 @@ class silent_user_info : public virtual ::apache::thrift::TBase {
 void swap(silent_user_info &a, silent_user_info &b);
 
 std::ostream& operator<<(std::ostream& out, const silent_user_info& obj);
+
+typedef struct _vichele_team_member__isset {
+  _vichele_team_member__isset() : main_vichele_number(false), behind_vichele_number(false), driver_name(false), driver_phone(false), driver_id(false) {}
+  bool main_vichele_number :1;
+  bool behind_vichele_number :1;
+  bool driver_name :1;
+  bool driver_phone :1;
+  bool driver_id :1;
+} _vichele_team_member__isset;
+
+class vichele_team_member : public virtual ::apache::thrift::TBase {
+ public:
+
+  vichele_team_member(const vichele_team_member&);
+  vichele_team_member& operator=(const vichele_team_member&);
+  vichele_team_member() : main_vichele_number(), behind_vichele_number(), driver_name(), driver_phone(), driver_id() {
+  }
+
+  virtual ~vichele_team_member() noexcept;
+  std::string main_vichele_number;
+  std::string behind_vichele_number;
+  std::string driver_name;
+  std::string driver_phone;
+  std::string driver_id;
+
+  _vichele_team_member__isset __isset;
+
+  void __set_main_vichele_number(const std::string& val);
+
+  void __set_behind_vichele_number(const std::string& val);
+
+  void __set_driver_name(const std::string& val);
+
+  void __set_driver_phone(const std::string& val);
+
+  void __set_driver_id(const std::string& val);
+
+  bool operator == (const vichele_team_member & rhs) const
+  {
+    if (!(main_vichele_number == rhs.main_vichele_number))
+      return false;
+    if (!(behind_vichele_number == rhs.behind_vichele_number))
+      return false;
+    if (!(driver_name == rhs.driver_name))
+      return false;
+    if (!(driver_phone == rhs.driver_phone))
+      return false;
+    if (!(driver_id == rhs.driver_id))
+      return false;
+    return true;
+  }
+  bool operator != (const vichele_team_member &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const vichele_team_member & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+  virtual void printTo(std::ostream& out) const;
+};
+
+void swap(vichele_team_member &a, vichele_team_member &b);
+
+std::ostream& operator<<(std::ostream& out, const vichele_team_member& obj);
+
+typedef struct _vichele_team__isset {
+  _vichele_team__isset() : members(false), name(false), id(false) {}
+  bool members :1;
+  bool name :1;
+  bool id :1;
+} _vichele_team__isset;
+
+class vichele_team : public virtual ::apache::thrift::TBase {
+ public:
+
+  vichele_team(const vichele_team&);
+  vichele_team& operator=(const vichele_team&);
+  vichele_team() : name(), id(0) {
+  }
+
+  virtual ~vichele_team() noexcept;
+  std::vector<vichele_team_member>  members;
+  std::string name;
+  int64_t id;
+
+  _vichele_team__isset __isset;
+
+  void __set_members(const std::vector<vichele_team_member> & val);
+
+  void __set_name(const std::string& val);
+
+  void __set_id(const int64_t val);
+
+  bool operator == (const vichele_team & rhs) const
+  {
+    if (!(members == rhs.members))
+      return false;
+    if (!(name == rhs.name))
+      return false;
+    if (!(id == rhs.id))
+      return false;
+    return true;
+  }
+  bool operator != (const vichele_team &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const vichele_team & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+  virtual void printTo(std::ostream& out) const;
+};
+
+void swap(vichele_team &a, vichele_team &b);
+
+std::ostream& operator<<(std::ostream& out, const vichele_team& obj);
 
 
 

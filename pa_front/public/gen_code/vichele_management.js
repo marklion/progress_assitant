@@ -44,13 +44,13 @@ vichele_management_create_vichele_info_args = class {
         case 2:
         if (ftype == Thrift.Type.LIST) {
           this.vichele_info = [];
-          const _rtmp3161 = input.readListBegin();
-          const _size160 = _rtmp3161.size || 0;
-          for (let _i162 = 0; _i162 < _size160; ++_i162) {
-            let elem163 = null;
-            elem163 = new vichele_stay_alone();
-            elem163.read(input);
-            this.vichele_info.push(elem163);
+          const _rtmp3166 = input.readListBegin();
+          const _size165 = _rtmp3166.size || 0;
+          for (let _i167 = 0; _i167 < _size165; ++_i167) {
+            let elem168 = null;
+            elem168 = new vichele_stay_alone();
+            elem168.read(input);
+            this.vichele_info.push(elem168);
           }
           input.readListEnd();
         } else {
@@ -76,10 +76,10 @@ vichele_management_create_vichele_info_args = class {
     if (this.vichele_info !== null && this.vichele_info !== undefined) {
       output.writeFieldBegin('vichele_info', Thrift.Type.LIST, 2);
       output.writeListBegin(Thrift.Type.STRUCT, this.vichele_info.length);
-      for (let iter164 in this.vichele_info) {
-        if (this.vichele_info.hasOwnProperty(iter164)) {
-          iter164 = this.vichele_info[iter164];
-          iter164.write(output);
+      for (let iter169 in this.vichele_info) {
+        if (this.vichele_info.hasOwnProperty(iter169)) {
+          iter169 = this.vichele_info[iter169];
+          iter169.write(output);
         }
       }
       output.writeListEnd();
@@ -528,13 +528,13 @@ vichele_management_get_created_vichele_info_result = class {
         case 0:
         if (ftype == Thrift.Type.LIST) {
           this.success = [];
-          const _rtmp3166 = input.readListBegin();
-          const _size165 = _rtmp3166.size || 0;
-          for (let _i167 = 0; _i167 < _size165; ++_i167) {
-            let elem168 = null;
-            elem168 = new vichele_stay_alone();
-            elem168.read(input);
-            this.success.push(elem168);
+          const _rtmp3171 = input.readListBegin();
+          const _size170 = _rtmp3171.size || 0;
+          for (let _i172 = 0; _i172 < _size170; ++_i172) {
+            let elem173 = null;
+            elem173 = new vichele_stay_alone();
+            elem173.read(input);
+            this.success.push(elem173);
           }
           input.readListEnd();
         } else {
@@ -563,10 +563,10 @@ vichele_management_get_created_vichele_info_result = class {
     if (this.success !== null && this.success !== undefined) {
       output.writeFieldBegin('success', Thrift.Type.LIST, 0);
       output.writeListBegin(Thrift.Type.STRUCT, this.success.length);
-      for (let iter169 in this.success) {
-        if (this.success.hasOwnProperty(iter169)) {
-          iter169 = this.success[iter169];
-          iter169.write(output);
+      for (let iter174 in this.success) {
+        if (this.success.hasOwnProperty(iter174)) {
+          iter174 = this.success[iter174];
+          iter174.write(output);
         }
       }
       output.writeListEnd();
@@ -1170,12 +1170,12 @@ vichele_management_get_input_history_result = class {
         case 0:
         if (ftype == Thrift.Type.LIST) {
           this.success = [];
-          const _rtmp3171 = input.readListBegin();
-          const _size170 = _rtmp3171.size || 0;
-          for (let _i172 = 0; _i172 < _size170; ++_i172) {
-            let elem173 = null;
-            elem173 = input.readString().value;
-            this.success.push(elem173);
+          const _rtmp3176 = input.readListBegin();
+          const _size175 = _rtmp3176.size || 0;
+          for (let _i177 = 0; _i177 < _size175; ++_i177) {
+            let elem178 = null;
+            elem178 = input.readString().value;
+            this.success.push(elem178);
           }
           input.readListEnd();
         } else {
@@ -1204,10 +1204,10 @@ vichele_management_get_input_history_result = class {
     if (this.success !== null && this.success !== undefined) {
       output.writeFieldBegin('success', Thrift.Type.LIST, 0);
       output.writeListBegin(Thrift.Type.STRING, this.success.length);
-      for (let iter174 in this.success) {
-        if (this.success.hasOwnProperty(iter174)) {
-          iter174 = this.success[iter174];
-          output.writeString(iter174);
+      for (let iter179 in this.success) {
+        if (this.success.hasOwnProperty(iter179)) {
+          iter179 = this.success[iter179];
+          output.writeString(iter179);
         }
       }
       output.writeListEnd();
@@ -1320,13 +1320,13 @@ vichele_management_get_company_vichele_info_result = class {
         case 0:
         if (ftype == Thrift.Type.LIST) {
           this.success = [];
-          const _rtmp3176 = input.readListBegin();
-          const _size175 = _rtmp3176.size || 0;
-          for (let _i177 = 0; _i177 < _size175; ++_i177) {
-            let elem178 = null;
-            elem178 = new vichele_stay_alone();
-            elem178.read(input);
-            this.success.push(elem178);
+          const _rtmp3181 = input.readListBegin();
+          const _size180 = _rtmp3181.size || 0;
+          for (let _i182 = 0; _i182 < _size180; ++_i182) {
+            let elem183 = null;
+            elem183 = new vichele_stay_alone();
+            elem183.read(input);
+            this.success.push(elem183);
           }
           input.readListEnd();
         } else {
@@ -1355,10 +1355,10 @@ vichele_management_get_company_vichele_info_result = class {
     if (this.success !== null && this.success !== undefined) {
       output.writeFieldBegin('success', Thrift.Type.LIST, 0);
       output.writeListBegin(Thrift.Type.STRUCT, this.success.length);
-      for (let iter179 in this.success) {
-        if (this.success.hasOwnProperty(iter179)) {
-          iter179 = this.success[iter179];
-          iter179.write(output);
+      for (let iter184 in this.success) {
+        if (this.success.hasOwnProperty(iter184)) {
+          iter184 = this.success[iter184];
+          iter184.write(output);
         }
       }
       output.writeListEnd();
@@ -1409,13 +1409,13 @@ vichele_management_confirm_vichele_args = class {
         case 2:
         if (ftype == Thrift.Type.LIST) {
           this.info = [];
-          const _rtmp3181 = input.readListBegin();
-          const _size180 = _rtmp3181.size || 0;
-          for (let _i182 = 0; _i182 < _size180; ++_i182) {
-            let elem183 = null;
-            elem183 = new vichele_stay_alone();
-            elem183.read(input);
-            this.info.push(elem183);
+          const _rtmp3186 = input.readListBegin();
+          const _size185 = _rtmp3186.size || 0;
+          for (let _i187 = 0; _i187 < _size185; ++_i187) {
+            let elem188 = null;
+            elem188 = new vichele_stay_alone();
+            elem188.read(input);
+            this.info.push(elem188);
           }
           input.readListEnd();
         } else {
@@ -1441,10 +1441,10 @@ vichele_management_confirm_vichele_args = class {
     if (this.info !== null && this.info !== undefined) {
       output.writeFieldBegin('info', Thrift.Type.LIST, 2);
       output.writeListBegin(Thrift.Type.STRUCT, this.info.length);
-      for (let iter184 in this.info) {
-        if (this.info.hasOwnProperty(iter184)) {
-          iter184 = this.info[iter184];
-          iter184.write(output);
+      for (let iter189 in this.info) {
+        if (this.info.hasOwnProperty(iter189)) {
+          iter189 = this.info[iter189];
+          iter189.write(output);
         }
       }
       output.writeListEnd();
@@ -1560,13 +1560,13 @@ vichele_management_cancel_vichele_args = class {
         case 2:
         if (ftype == Thrift.Type.LIST) {
           this.info = [];
-          const _rtmp3186 = input.readListBegin();
-          const _size185 = _rtmp3186.size || 0;
-          for (let _i187 = 0; _i187 < _size185; ++_i187) {
-            let elem188 = null;
-            elem188 = new vichele_stay_alone();
-            elem188.read(input);
-            this.info.push(elem188);
+          const _rtmp3191 = input.readListBegin();
+          const _size190 = _rtmp3191.size || 0;
+          for (let _i192 = 0; _i192 < _size190; ++_i192) {
+            let elem193 = null;
+            elem193 = new vichele_stay_alone();
+            elem193.read(input);
+            this.info.push(elem193);
           }
           input.readListEnd();
         } else {
@@ -1592,10 +1592,10 @@ vichele_management_cancel_vichele_args = class {
     if (this.info !== null && this.info !== undefined) {
       output.writeFieldBegin('info', Thrift.Type.LIST, 2);
       output.writeListBegin(Thrift.Type.STRUCT, this.info.length);
-      for (let iter189 in this.info) {
-        if (this.info.hasOwnProperty(iter189)) {
-          iter189 = this.info[iter189];
-          iter189.write(output);
+      for (let iter194 in this.info) {
+        if (this.info.hasOwnProperty(iter194)) {
+          iter194 = this.info[iter194];
+          iter194.write(output);
         }
       }
       output.writeListEnd();
@@ -1664,6 +1664,687 @@ vichele_management_cancel_vichele_result = class {
     if (this.success !== null && this.success !== undefined) {
       output.writeFieldBegin('success', Thrift.Type.BOOL, 0);
       output.writeBool(this.success);
+      output.writeFieldEnd();
+    }
+    if (this.e !== null && this.e !== undefined) {
+      output.writeFieldBegin('e', Thrift.Type.STRUCT, 1);
+      this.e.write(output);
+      output.writeFieldEnd();
+    }
+    output.writeFieldStop();
+    output.writeStructEnd();
+    return;
+  }
+
+};
+vichele_management_create_vichele_team_args = class {
+  constructor(args) {
+    this.open_id = null;
+    this.team_info = null;
+    if (args) {
+      if (args.open_id !== undefined && args.open_id !== null) {
+        this.open_id = args.open_id;
+      }
+      if (args.team_info !== undefined && args.team_info !== null) {
+        this.team_info = new vichele_team(args.team_info);
+      }
+    }
+  }
+
+  read (input) {
+    input.readStructBegin();
+    while (true) {
+      const ret = input.readFieldBegin();
+      const ftype = ret.ftype;
+      const fid = ret.fid;
+      if (ftype == Thrift.Type.STOP) {
+        break;
+      }
+      switch (fid) {
+        case 1:
+        if (ftype == Thrift.Type.STRING) {
+          this.open_id = input.readString().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        case 2:
+        if (ftype == Thrift.Type.STRUCT) {
+          this.team_info = new vichele_team();
+          this.team_info.read(input);
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        default:
+          input.skip(ftype);
+      }
+      input.readFieldEnd();
+    }
+    input.readStructEnd();
+    return;
+  }
+
+  write (output) {
+    output.writeStructBegin('vichele_management_create_vichele_team_args');
+    if (this.open_id !== null && this.open_id !== undefined) {
+      output.writeFieldBegin('open_id', Thrift.Type.STRING, 1);
+      output.writeString(this.open_id);
+      output.writeFieldEnd();
+    }
+    if (this.team_info !== null && this.team_info !== undefined) {
+      output.writeFieldBegin('team_info', Thrift.Type.STRUCT, 2);
+      this.team_info.write(output);
+      output.writeFieldEnd();
+    }
+    output.writeFieldStop();
+    output.writeStructEnd();
+    return;
+  }
+
+};
+vichele_management_create_vichele_team_result = class {
+  constructor(args) {
+    this.success = null;
+    this.e = null;
+    if (args instanceof gen_exp) {
+        this.e = args;
+        return;
+    }
+    if (args) {
+      if (args.success !== undefined && args.success !== null) {
+        this.success = args.success;
+      }
+      if (args.e !== undefined && args.e !== null) {
+        this.e = args.e;
+      }
+    }
+  }
+
+  read (input) {
+    input.readStructBegin();
+    while (true) {
+      const ret = input.readFieldBegin();
+      const ftype = ret.ftype;
+      const fid = ret.fid;
+      if (ftype == Thrift.Type.STOP) {
+        break;
+      }
+      switch (fid) {
+        case 0:
+        if (ftype == Thrift.Type.BOOL) {
+          this.success = input.readBool().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        case 1:
+        if (ftype == Thrift.Type.STRUCT) {
+          this.e = new gen_exp();
+          this.e.read(input);
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        default:
+          input.skip(ftype);
+      }
+      input.readFieldEnd();
+    }
+    input.readStructEnd();
+    return;
+  }
+
+  write (output) {
+    output.writeStructBegin('vichele_management_create_vichele_team_result');
+    if (this.success !== null && this.success !== undefined) {
+      output.writeFieldBegin('success', Thrift.Type.BOOL, 0);
+      output.writeBool(this.success);
+      output.writeFieldEnd();
+    }
+    if (this.e !== null && this.e !== undefined) {
+      output.writeFieldBegin('e', Thrift.Type.STRUCT, 1);
+      this.e.write(output);
+      output.writeFieldEnd();
+    }
+    output.writeFieldStop();
+    output.writeStructEnd();
+    return;
+  }
+
+};
+vichele_management_update_vichele_team_args = class {
+  constructor(args) {
+    this.open_id = null;
+    this.team_info = null;
+    if (args) {
+      if (args.open_id !== undefined && args.open_id !== null) {
+        this.open_id = args.open_id;
+      }
+      if (args.team_info !== undefined && args.team_info !== null) {
+        this.team_info = new vichele_team(args.team_info);
+      }
+    }
+  }
+
+  read (input) {
+    input.readStructBegin();
+    while (true) {
+      const ret = input.readFieldBegin();
+      const ftype = ret.ftype;
+      const fid = ret.fid;
+      if (ftype == Thrift.Type.STOP) {
+        break;
+      }
+      switch (fid) {
+        case 1:
+        if (ftype == Thrift.Type.STRING) {
+          this.open_id = input.readString().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        case 2:
+        if (ftype == Thrift.Type.STRUCT) {
+          this.team_info = new vichele_team();
+          this.team_info.read(input);
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        default:
+          input.skip(ftype);
+      }
+      input.readFieldEnd();
+    }
+    input.readStructEnd();
+    return;
+  }
+
+  write (output) {
+    output.writeStructBegin('vichele_management_update_vichele_team_args');
+    if (this.open_id !== null && this.open_id !== undefined) {
+      output.writeFieldBegin('open_id', Thrift.Type.STRING, 1);
+      output.writeString(this.open_id);
+      output.writeFieldEnd();
+    }
+    if (this.team_info !== null && this.team_info !== undefined) {
+      output.writeFieldBegin('team_info', Thrift.Type.STRUCT, 2);
+      this.team_info.write(output);
+      output.writeFieldEnd();
+    }
+    output.writeFieldStop();
+    output.writeStructEnd();
+    return;
+  }
+
+};
+vichele_management_update_vichele_team_result = class {
+  constructor(args) {
+    this.success = null;
+    this.e = null;
+    if (args instanceof gen_exp) {
+        this.e = args;
+        return;
+    }
+    if (args) {
+      if (args.success !== undefined && args.success !== null) {
+        this.success = args.success;
+      }
+      if (args.e !== undefined && args.e !== null) {
+        this.e = args.e;
+      }
+    }
+  }
+
+  read (input) {
+    input.readStructBegin();
+    while (true) {
+      const ret = input.readFieldBegin();
+      const ftype = ret.ftype;
+      const fid = ret.fid;
+      if (ftype == Thrift.Type.STOP) {
+        break;
+      }
+      switch (fid) {
+        case 0:
+        if (ftype == Thrift.Type.BOOL) {
+          this.success = input.readBool().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        case 1:
+        if (ftype == Thrift.Type.STRUCT) {
+          this.e = new gen_exp();
+          this.e.read(input);
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        default:
+          input.skip(ftype);
+      }
+      input.readFieldEnd();
+    }
+    input.readStructEnd();
+    return;
+  }
+
+  write (output) {
+    output.writeStructBegin('vichele_management_update_vichele_team_result');
+    if (this.success !== null && this.success !== undefined) {
+      output.writeFieldBegin('success', Thrift.Type.BOOL, 0);
+      output.writeBool(this.success);
+      output.writeFieldEnd();
+    }
+    if (this.e !== null && this.e !== undefined) {
+      output.writeFieldBegin('e', Thrift.Type.STRUCT, 1);
+      this.e.write(output);
+      output.writeFieldEnd();
+    }
+    output.writeFieldStop();
+    output.writeStructEnd();
+    return;
+  }
+
+};
+vichele_management_del_vichele_team_args = class {
+  constructor(args) {
+    this.open_id = null;
+    this.team_id = null;
+    if (args) {
+      if (args.open_id !== undefined && args.open_id !== null) {
+        this.open_id = args.open_id;
+      }
+      if (args.team_id !== undefined && args.team_id !== null) {
+        this.team_id = args.team_id;
+      }
+    }
+  }
+
+  read (input) {
+    input.readStructBegin();
+    while (true) {
+      const ret = input.readFieldBegin();
+      const ftype = ret.ftype;
+      const fid = ret.fid;
+      if (ftype == Thrift.Type.STOP) {
+        break;
+      }
+      switch (fid) {
+        case 1:
+        if (ftype == Thrift.Type.STRING) {
+          this.open_id = input.readString().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        case 2:
+        if (ftype == Thrift.Type.I64) {
+          this.team_id = input.readI64().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        default:
+          input.skip(ftype);
+      }
+      input.readFieldEnd();
+    }
+    input.readStructEnd();
+    return;
+  }
+
+  write (output) {
+    output.writeStructBegin('vichele_management_del_vichele_team_args');
+    if (this.open_id !== null && this.open_id !== undefined) {
+      output.writeFieldBegin('open_id', Thrift.Type.STRING, 1);
+      output.writeString(this.open_id);
+      output.writeFieldEnd();
+    }
+    if (this.team_id !== null && this.team_id !== undefined) {
+      output.writeFieldBegin('team_id', Thrift.Type.I64, 2);
+      output.writeI64(this.team_id);
+      output.writeFieldEnd();
+    }
+    output.writeFieldStop();
+    output.writeStructEnd();
+    return;
+  }
+
+};
+vichele_management_del_vichele_team_result = class {
+  constructor(args) {
+    this.success = null;
+    this.e = null;
+    if (args instanceof gen_exp) {
+        this.e = args;
+        return;
+    }
+    if (args) {
+      if (args.success !== undefined && args.success !== null) {
+        this.success = args.success;
+      }
+      if (args.e !== undefined && args.e !== null) {
+        this.e = args.e;
+      }
+    }
+  }
+
+  read (input) {
+    input.readStructBegin();
+    while (true) {
+      const ret = input.readFieldBegin();
+      const ftype = ret.ftype;
+      const fid = ret.fid;
+      if (ftype == Thrift.Type.STOP) {
+        break;
+      }
+      switch (fid) {
+        case 0:
+        if (ftype == Thrift.Type.BOOL) {
+          this.success = input.readBool().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        case 1:
+        if (ftype == Thrift.Type.STRUCT) {
+          this.e = new gen_exp();
+          this.e.read(input);
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        default:
+          input.skip(ftype);
+      }
+      input.readFieldEnd();
+    }
+    input.readStructEnd();
+    return;
+  }
+
+  write (output) {
+    output.writeStructBegin('vichele_management_del_vichele_team_result');
+    if (this.success !== null && this.success !== undefined) {
+      output.writeFieldBegin('success', Thrift.Type.BOOL, 0);
+      output.writeBool(this.success);
+      output.writeFieldEnd();
+    }
+    if (this.e !== null && this.e !== undefined) {
+      output.writeFieldBegin('e', Thrift.Type.STRUCT, 1);
+      this.e.write(output);
+      output.writeFieldEnd();
+    }
+    output.writeFieldStop();
+    output.writeStructEnd();
+    return;
+  }
+
+};
+vichele_management_get_all_vichele_team_args = class {
+  constructor(args) {
+    this.open_id = null;
+    if (args) {
+      if (args.open_id !== undefined && args.open_id !== null) {
+        this.open_id = args.open_id;
+      }
+    }
+  }
+
+  read (input) {
+    input.readStructBegin();
+    while (true) {
+      const ret = input.readFieldBegin();
+      const ftype = ret.ftype;
+      const fid = ret.fid;
+      if (ftype == Thrift.Type.STOP) {
+        break;
+      }
+      switch (fid) {
+        case 1:
+        if (ftype == Thrift.Type.STRING) {
+          this.open_id = input.readString().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        case 0:
+          input.skip(ftype);
+          break;
+        default:
+          input.skip(ftype);
+      }
+      input.readFieldEnd();
+    }
+    input.readStructEnd();
+    return;
+  }
+
+  write (output) {
+    output.writeStructBegin('vichele_management_get_all_vichele_team_args');
+    if (this.open_id !== null && this.open_id !== undefined) {
+      output.writeFieldBegin('open_id', Thrift.Type.STRING, 1);
+      output.writeString(this.open_id);
+      output.writeFieldEnd();
+    }
+    output.writeFieldStop();
+    output.writeStructEnd();
+    return;
+  }
+
+};
+vichele_management_get_all_vichele_team_result = class {
+  constructor(args) {
+    this.success = null;
+    this.e = null;
+    if (args instanceof gen_exp) {
+        this.e = args;
+        return;
+    }
+    if (args) {
+      if (args.success !== undefined && args.success !== null) {
+        this.success = Thrift.copyList(args.success, [vichele_team]);
+      }
+      if (args.e !== undefined && args.e !== null) {
+        this.e = args.e;
+      }
+    }
+  }
+
+  read (input) {
+    input.readStructBegin();
+    while (true) {
+      const ret = input.readFieldBegin();
+      const ftype = ret.ftype;
+      const fid = ret.fid;
+      if (ftype == Thrift.Type.STOP) {
+        break;
+      }
+      switch (fid) {
+        case 0:
+        if (ftype == Thrift.Type.LIST) {
+          this.success = [];
+          const _rtmp3196 = input.readListBegin();
+          const _size195 = _rtmp3196.size || 0;
+          for (let _i197 = 0; _i197 < _size195; ++_i197) {
+            let elem198 = null;
+            elem198 = new vichele_team();
+            elem198.read(input);
+            this.success.push(elem198);
+          }
+          input.readListEnd();
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        case 1:
+        if (ftype == Thrift.Type.STRUCT) {
+          this.e = new gen_exp();
+          this.e.read(input);
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        default:
+          input.skip(ftype);
+      }
+      input.readFieldEnd();
+    }
+    input.readStructEnd();
+    return;
+  }
+
+  write (output) {
+    output.writeStructBegin('vichele_management_get_all_vichele_team_result');
+    if (this.success !== null && this.success !== undefined) {
+      output.writeFieldBegin('success', Thrift.Type.LIST, 0);
+      output.writeListBegin(Thrift.Type.STRUCT, this.success.length);
+      for (let iter199 in this.success) {
+        if (this.success.hasOwnProperty(iter199)) {
+          iter199 = this.success[iter199];
+          iter199.write(output);
+        }
+      }
+      output.writeListEnd();
+      output.writeFieldEnd();
+    }
+    if (this.e !== null && this.e !== undefined) {
+      output.writeFieldBegin('e', Thrift.Type.STRUCT, 1);
+      this.e.write(output);
+      output.writeFieldEnd();
+    }
+    output.writeFieldStop();
+    output.writeStructEnd();
+    return;
+  }
+
+};
+vichele_management_get_vichele_team_args = class {
+  constructor(args) {
+    this.open_id = null;
+    this.team_id = null;
+    if (args) {
+      if (args.open_id !== undefined && args.open_id !== null) {
+        this.open_id = args.open_id;
+      }
+      if (args.team_id !== undefined && args.team_id !== null) {
+        this.team_id = args.team_id;
+      }
+    }
+  }
+
+  read (input) {
+    input.readStructBegin();
+    while (true) {
+      const ret = input.readFieldBegin();
+      const ftype = ret.ftype;
+      const fid = ret.fid;
+      if (ftype == Thrift.Type.STOP) {
+        break;
+      }
+      switch (fid) {
+        case 1:
+        if (ftype == Thrift.Type.STRING) {
+          this.open_id = input.readString().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        case 2:
+        if (ftype == Thrift.Type.I64) {
+          this.team_id = input.readI64().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        default:
+          input.skip(ftype);
+      }
+      input.readFieldEnd();
+    }
+    input.readStructEnd();
+    return;
+  }
+
+  write (output) {
+    output.writeStructBegin('vichele_management_get_vichele_team_args');
+    if (this.open_id !== null && this.open_id !== undefined) {
+      output.writeFieldBegin('open_id', Thrift.Type.STRING, 1);
+      output.writeString(this.open_id);
+      output.writeFieldEnd();
+    }
+    if (this.team_id !== null && this.team_id !== undefined) {
+      output.writeFieldBegin('team_id', Thrift.Type.I64, 2);
+      output.writeI64(this.team_id);
+      output.writeFieldEnd();
+    }
+    output.writeFieldStop();
+    output.writeStructEnd();
+    return;
+  }
+
+};
+vichele_management_get_vichele_team_result = class {
+  constructor(args) {
+    this.success = null;
+    this.e = null;
+    if (args instanceof gen_exp) {
+        this.e = args;
+        return;
+    }
+    if (args) {
+      if (args.success !== undefined && args.success !== null) {
+        this.success = new vichele_team(args.success);
+      }
+      if (args.e !== undefined && args.e !== null) {
+        this.e = args.e;
+      }
+    }
+  }
+
+  read (input) {
+    input.readStructBegin();
+    while (true) {
+      const ret = input.readFieldBegin();
+      const ftype = ret.ftype;
+      const fid = ret.fid;
+      if (ftype == Thrift.Type.STOP) {
+        break;
+      }
+      switch (fid) {
+        case 0:
+        if (ftype == Thrift.Type.STRUCT) {
+          this.success = new vichele_team();
+          this.success.read(input);
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        case 1:
+        if (ftype == Thrift.Type.STRUCT) {
+          this.e = new gen_exp();
+          this.e.read(input);
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        default:
+          input.skip(ftype);
+      }
+      input.readFieldEnd();
+    }
+    input.readStructEnd();
+    return;
+  }
+
+  write (output) {
+    output.writeStructBegin('vichele_management_get_vichele_team_result');
+    if (this.success !== null && this.success !== undefined) {
+      output.writeFieldBegin('success', Thrift.Type.STRUCT, 0);
+      this.success.write(output);
       output.writeFieldEnd();
     }
     if (this.e !== null && this.e !== undefined) {
@@ -2396,5 +3077,304 @@ vichele_managementClient = class vichele_managementClient {
       return result.success;
     }
     throw 'cancel_vichele failed: unknown result';
+  }
+
+  create_vichele_team (open_id, team_info) {
+    const self = this;
+    return new Promise((resolve, reject) => {
+      self.send_create_vichele_team(open_id, team_info, (error, result) => {
+        return error ? reject(error) : resolve(result);
+      });
+    });
+  }
+
+  send_create_vichele_team (open_id, team_info, callback) {
+    const params = {
+      open_id: open_id,
+      team_info: team_info
+    };
+    const args = new vichele_management_create_vichele_team_args(params);
+    try {
+      this.output.writeMessageBegin('create_vichele_team', Thrift.MessageType.CALL, this.seqid);
+      args.write(this.output);
+      this.output.writeMessageEnd();
+      const self = this;
+      this.output.getTransport().flush(true, () => {
+        let error = null, result = null;
+        try {
+          result = self.recv_create_vichele_team();
+        } catch (e) {
+          error = e;
+        }
+        callback(error, result);
+      });
+    }
+    catch (e) {
+      if (typeof this.output.getTransport().reset === 'function') {
+        this.output.getTransport().reset();
+      }
+      throw e;
+    }
+  }
+
+  recv_create_vichele_team () {
+    const ret = this.input.readMessageBegin();
+    const mtype = ret.mtype;
+    if (mtype == Thrift.MessageType.EXCEPTION) {
+      const x = new Thrift.TApplicationException();
+      x.read(this.input);
+      this.input.readMessageEnd();
+      throw x;
+    }
+    const result = new vichele_management_create_vichele_team_result();
+    result.read(this.input);
+    this.input.readMessageEnd();
+
+    if (null !== result.e) {
+      throw result.e;
+    }
+    if (null !== result.success) {
+      return result.success;
+    }
+    throw 'create_vichele_team failed: unknown result';
+  }
+
+  update_vichele_team (open_id, team_info) {
+    const self = this;
+    return new Promise((resolve, reject) => {
+      self.send_update_vichele_team(open_id, team_info, (error, result) => {
+        return error ? reject(error) : resolve(result);
+      });
+    });
+  }
+
+  send_update_vichele_team (open_id, team_info, callback) {
+    const params = {
+      open_id: open_id,
+      team_info: team_info
+    };
+    const args = new vichele_management_update_vichele_team_args(params);
+    try {
+      this.output.writeMessageBegin('update_vichele_team', Thrift.MessageType.CALL, this.seqid);
+      args.write(this.output);
+      this.output.writeMessageEnd();
+      const self = this;
+      this.output.getTransport().flush(true, () => {
+        let error = null, result = null;
+        try {
+          result = self.recv_update_vichele_team();
+        } catch (e) {
+          error = e;
+        }
+        callback(error, result);
+      });
+    }
+    catch (e) {
+      if (typeof this.output.getTransport().reset === 'function') {
+        this.output.getTransport().reset();
+      }
+      throw e;
+    }
+  }
+
+  recv_update_vichele_team () {
+    const ret = this.input.readMessageBegin();
+    const mtype = ret.mtype;
+    if (mtype == Thrift.MessageType.EXCEPTION) {
+      const x = new Thrift.TApplicationException();
+      x.read(this.input);
+      this.input.readMessageEnd();
+      throw x;
+    }
+    const result = new vichele_management_update_vichele_team_result();
+    result.read(this.input);
+    this.input.readMessageEnd();
+
+    if (null !== result.e) {
+      throw result.e;
+    }
+    if (null !== result.success) {
+      return result.success;
+    }
+    throw 'update_vichele_team failed: unknown result';
+  }
+
+  del_vichele_team (open_id, team_id) {
+    const self = this;
+    return new Promise((resolve, reject) => {
+      self.send_del_vichele_team(open_id, team_id, (error, result) => {
+        return error ? reject(error) : resolve(result);
+      });
+    });
+  }
+
+  send_del_vichele_team (open_id, team_id, callback) {
+    const params = {
+      open_id: open_id,
+      team_id: team_id
+    };
+    const args = new vichele_management_del_vichele_team_args(params);
+    try {
+      this.output.writeMessageBegin('del_vichele_team', Thrift.MessageType.CALL, this.seqid);
+      args.write(this.output);
+      this.output.writeMessageEnd();
+      const self = this;
+      this.output.getTransport().flush(true, () => {
+        let error = null, result = null;
+        try {
+          result = self.recv_del_vichele_team();
+        } catch (e) {
+          error = e;
+        }
+        callback(error, result);
+      });
+    }
+    catch (e) {
+      if (typeof this.output.getTransport().reset === 'function') {
+        this.output.getTransport().reset();
+      }
+      throw e;
+    }
+  }
+
+  recv_del_vichele_team () {
+    const ret = this.input.readMessageBegin();
+    const mtype = ret.mtype;
+    if (mtype == Thrift.MessageType.EXCEPTION) {
+      const x = new Thrift.TApplicationException();
+      x.read(this.input);
+      this.input.readMessageEnd();
+      throw x;
+    }
+    const result = new vichele_management_del_vichele_team_result();
+    result.read(this.input);
+    this.input.readMessageEnd();
+
+    if (null !== result.e) {
+      throw result.e;
+    }
+    if (null !== result.success) {
+      return result.success;
+    }
+    throw 'del_vichele_team failed: unknown result';
+  }
+
+  get_all_vichele_team (open_id) {
+    const self = this;
+    return new Promise((resolve, reject) => {
+      self.send_get_all_vichele_team(open_id, (error, result) => {
+        return error ? reject(error) : resolve(result);
+      });
+    });
+  }
+
+  send_get_all_vichele_team (open_id, callback) {
+    const params = {
+      open_id: open_id
+    };
+    const args = new vichele_management_get_all_vichele_team_args(params);
+    try {
+      this.output.writeMessageBegin('get_all_vichele_team', Thrift.MessageType.CALL, this.seqid);
+      args.write(this.output);
+      this.output.writeMessageEnd();
+      const self = this;
+      this.output.getTransport().flush(true, () => {
+        let error = null, result = null;
+        try {
+          result = self.recv_get_all_vichele_team();
+        } catch (e) {
+          error = e;
+        }
+        callback(error, result);
+      });
+    }
+    catch (e) {
+      if (typeof this.output.getTransport().reset === 'function') {
+        this.output.getTransport().reset();
+      }
+      throw e;
+    }
+  }
+
+  recv_get_all_vichele_team () {
+    const ret = this.input.readMessageBegin();
+    const mtype = ret.mtype;
+    if (mtype == Thrift.MessageType.EXCEPTION) {
+      const x = new Thrift.TApplicationException();
+      x.read(this.input);
+      this.input.readMessageEnd();
+      throw x;
+    }
+    const result = new vichele_management_get_all_vichele_team_result();
+    result.read(this.input);
+    this.input.readMessageEnd();
+
+    if (null !== result.e) {
+      throw result.e;
+    }
+    if (null !== result.success) {
+      return result.success;
+    }
+    throw 'get_all_vichele_team failed: unknown result';
+  }
+
+  get_vichele_team (open_id, team_id) {
+    const self = this;
+    return new Promise((resolve, reject) => {
+      self.send_get_vichele_team(open_id, team_id, (error, result) => {
+        return error ? reject(error) : resolve(result);
+      });
+    });
+  }
+
+  send_get_vichele_team (open_id, team_id, callback) {
+    const params = {
+      open_id: open_id,
+      team_id: team_id
+    };
+    const args = new vichele_management_get_vichele_team_args(params);
+    try {
+      this.output.writeMessageBegin('get_vichele_team', Thrift.MessageType.CALL, this.seqid);
+      args.write(this.output);
+      this.output.writeMessageEnd();
+      const self = this;
+      this.output.getTransport().flush(true, () => {
+        let error = null, result = null;
+        try {
+          result = self.recv_get_vichele_team();
+        } catch (e) {
+          error = e;
+        }
+        callback(error, result);
+      });
+    }
+    catch (e) {
+      if (typeof this.output.getTransport().reset === 'function') {
+        this.output.getTransport().reset();
+      }
+      throw e;
+    }
+  }
+
+  recv_get_vichele_team () {
+    const ret = this.input.readMessageBegin();
+    const mtype = ret.mtype;
+    if (mtype == Thrift.MessageType.EXCEPTION) {
+      const x = new Thrift.TApplicationException();
+      x.read(this.input);
+      this.input.readMessageEnd();
+      throw x;
+    }
+    const result = new vichele_management_get_vichele_team_result();
+    result.read(this.input);
+    this.input.readMessageEnd();
+
+    if (null !== result.e) {
+      throw result.e;
+    }
+    if (null !== result.success) {
+      return result.success;
+    }
+    throw 'get_vichele_team failed: unknown result';
   }
 };

@@ -4848,3 +4848,209 @@ silent_user_info.prototype.write = function(output) {
   return;
 };
 
+var vichele_team_member = module.exports.vichele_team_member = function(args) {
+  this.main_vichele_number = null;
+  this.behind_vichele_number = null;
+  this.driver_name = null;
+  this.driver_phone = null;
+  this.driver_id = null;
+  if (args) {
+    if (args.main_vichele_number !== undefined && args.main_vichele_number !== null) {
+      this.main_vichele_number = args.main_vichele_number;
+    }
+    if (args.behind_vichele_number !== undefined && args.behind_vichele_number !== null) {
+      this.behind_vichele_number = args.behind_vichele_number;
+    }
+    if (args.driver_name !== undefined && args.driver_name !== null) {
+      this.driver_name = args.driver_name;
+    }
+    if (args.driver_phone !== undefined && args.driver_phone !== null) {
+      this.driver_phone = args.driver_phone;
+    }
+    if (args.driver_id !== undefined && args.driver_id !== null) {
+      this.driver_id = args.driver_id;
+    }
+  }
+};
+vichele_team_member.prototype = {};
+vichele_team_member.prototype.read = function(input) {
+  input.readStructBegin();
+  while (true) {
+    var ret = input.readFieldBegin();
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    switch (fid) {
+      case 1:
+      if (ftype == Thrift.Type.STRING) {
+        this.main_vichele_number = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 2:
+      if (ftype == Thrift.Type.STRING) {
+        this.behind_vichele_number = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 3:
+      if (ftype == Thrift.Type.STRING) {
+        this.driver_name = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 4:
+      if (ftype == Thrift.Type.STRING) {
+        this.driver_phone = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 5:
+      if (ftype == Thrift.Type.STRING) {
+        this.driver_id = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      default:
+        input.skip(ftype);
+    }
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+vichele_team_member.prototype.write = function(output) {
+  output.writeStructBegin('vichele_team_member');
+  if (this.main_vichele_number !== null && this.main_vichele_number !== undefined) {
+    output.writeFieldBegin('main_vichele_number', Thrift.Type.STRING, 1);
+    output.writeString(this.main_vichele_number);
+    output.writeFieldEnd();
+  }
+  if (this.behind_vichele_number !== null && this.behind_vichele_number !== undefined) {
+    output.writeFieldBegin('behind_vichele_number', Thrift.Type.STRING, 2);
+    output.writeString(this.behind_vichele_number);
+    output.writeFieldEnd();
+  }
+  if (this.driver_name !== null && this.driver_name !== undefined) {
+    output.writeFieldBegin('driver_name', Thrift.Type.STRING, 3);
+    output.writeString(this.driver_name);
+    output.writeFieldEnd();
+  }
+  if (this.driver_phone !== null && this.driver_phone !== undefined) {
+    output.writeFieldBegin('driver_phone', Thrift.Type.STRING, 4);
+    output.writeString(this.driver_phone);
+    output.writeFieldEnd();
+  }
+  if (this.driver_id !== null && this.driver_id !== undefined) {
+    output.writeFieldBegin('driver_id', Thrift.Type.STRING, 5);
+    output.writeString(this.driver_id);
+    output.writeFieldEnd();
+  }
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+
+var vichele_team = module.exports.vichele_team = function(args) {
+  this.members = null;
+  this.name = null;
+  this.id = null;
+  if (args) {
+    if (args.members !== undefined && args.members !== null) {
+      this.members = Thrift.copyList(args.members, [ttypes.vichele_team_member]);
+    }
+    if (args.name !== undefined && args.name !== null) {
+      this.name = args.name;
+    }
+    if (args.id !== undefined && args.id !== null) {
+      this.id = args.id;
+    }
+  }
+};
+vichele_team.prototype = {};
+vichele_team.prototype.read = function(input) {
+  input.readStructBegin();
+  while (true) {
+    var ret = input.readFieldBegin();
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    switch (fid) {
+      case 1:
+      if (ftype == Thrift.Type.LIST) {
+        this.members = [];
+        var _rtmp311 = input.readListBegin();
+        var _size10 = _rtmp311.size || 0;
+        for (var _i12 = 0; _i12 < _size10; ++_i12) {
+          var elem13 = null;
+          elem13 = new ttypes.vichele_team_member();
+          elem13.read(input);
+          this.members.push(elem13);
+        }
+        input.readListEnd();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 2:
+      if (ftype == Thrift.Type.STRING) {
+        this.name = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 3:
+      if (ftype == Thrift.Type.I64) {
+        this.id = input.readI64();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      default:
+        input.skip(ftype);
+    }
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+vichele_team.prototype.write = function(output) {
+  output.writeStructBegin('vichele_team');
+  if (this.members !== null && this.members !== undefined) {
+    output.writeFieldBegin('members', Thrift.Type.LIST, 1);
+    output.writeListBegin(Thrift.Type.STRUCT, this.members.length);
+    for (var iter14 in this.members) {
+      if (this.members.hasOwnProperty(iter14)) {
+        iter14 = this.members[iter14];
+        iter14.write(output);
+      }
+    }
+    output.writeListEnd();
+    output.writeFieldEnd();
+  }
+  if (this.name !== null && this.name !== undefined) {
+    output.writeFieldBegin('name', Thrift.Type.STRING, 2);
+    output.writeString(this.name);
+    output.writeFieldEnd();
+  }
+  if (this.id !== null && this.id !== undefined) {
+    output.writeFieldBegin('id', Thrift.Type.I64, 3);
+    output.writeI64(this.id);
+    output.writeFieldEnd();
+  }
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+
