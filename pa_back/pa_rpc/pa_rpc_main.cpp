@@ -85,7 +85,7 @@ int main(int argc, char **argv)
                             {
                                 try
                                 {
-                                    auto update_ret = PA_DATAOPT_post_sync_change_register(itr);
+                                    auto update_ret = PA_DATAOPT_post_sync_change_register(itr, true);
                                     if (update_ret.length() <= 0)
                                     {
                                         itr.is_drop = 1;

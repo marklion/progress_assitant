@@ -475,7 +475,7 @@ public:
                 ret.price = stuff_info->price;
             }
 
-            ret.createTime = PA_DATAOPT_date_2_timestring(plan->create_time);
+            ret.createTime = plan->plan_time.substr(0, 13) + ":00:00";
             ret.orderNo = std::to_string(plan->create_time) + std::to_string(plan->get_pri_id());
         }
 
@@ -540,7 +540,7 @@ public:
             {
                 _return.id = std::to_string(itr.get_pri_id()) + "B";
                 _return.backPlateNo = itr.behind_vichele_number;
-                _return.createTime = itr.timestamp;
+                _return.createTime = itr.date + " 08:00:00";
                 _return.driverId = itr.driver_id;
                 _return.driverName = itr.driver_name;
                 _return.driverPhone = itr.driver_phone;
@@ -614,7 +614,7 @@ public:
             vehicle_info_resp tmp;
             tmp.id = std::to_string(itr.get_pri_id()) + "B";
             tmp.backPlateNo = itr.behind_vichele_number;
-            tmp.createTime = itr.timestamp;
+            tmp.createTime = itr.date + " 08:00:00";
             tmp.driverId = itr.driver_id;
             tmp.driverName = itr.driver_name;
             tmp.driverPhone = itr.driver_phone;
