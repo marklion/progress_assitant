@@ -852,6 +852,11 @@ public:
     bool my_except_close(pa_sql_plan &plan, pa_sql_userinfo &opt_user, const std::string &reason)
     {
         bool ret = false;
+        bool is_auto = false;
+        if (opt_user.is_sys_admin)
+        {
+            is_auto = true;
+        }
         if (PA_STATUS_RULE_can_be_change(plan, opt_user, 4))
         {
             plan.conflict_reason = "";
@@ -859,7 +864,7 @@ public:
             auto all_vichele = plan.get_all_children<pa_sql_single_vichele>("belong_plan");
             for (auto &itr : all_vichele)
             {
-                auto update_ret = PA_DATAOPT_post_sync_change_register(itr);
+                auto update_ret = PA_DATAOPT_post_sync_change_register(itr, is_auto);
                 if (update_ret.length() > 0)
                 {
                     PA_RETURN_CANNOT_CANCLE(update_ret);

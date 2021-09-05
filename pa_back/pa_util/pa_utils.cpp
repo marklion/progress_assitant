@@ -582,7 +582,7 @@ void PA_DATAOPT_post_save_register(pa_sql_plan &_plan)
             sub_req.Add("driverId", itr.driver_id);
             sub_req.Add("isSale", true, true);
             sub_req.Add("price", tmp.price);
-            sub_req.Add("createTime", PA_DATAOPT_date_2_timestring(tmp.created_time));
+            sub_req.Add("createTime", tmp.plan_time.substr(0,13) + ":00:00");
             sub_req.Add("orderNo", std::to_string(tmp.created_time) + std::to_string(tmp.plan_id));
             sub_req.AddEmptySubArray("multiStuff");
             sub_req.Add("isMulti", false, false);
@@ -654,7 +654,7 @@ void PA_DATAOPT_post_save_register(std::list<pa_sql_vichele_stay_alone> &_vichel
             sub_req.Add("driverId", itr.driver_id);
             sub_req.Add("isSale", false, false);
             sub_req.Add("price", itr.price);
-            sub_req.Add("createTime", itr.timestamp);
+            sub_req.Add("createTime", itr.date + " 08:00:00");
             sub_req.Add("orderNo", "");
             auto multi_stuff = PA_DATAOPT_search_multi_stuff(itr);
             if (multi_stuff.size() > 1)
@@ -725,7 +725,7 @@ std::vector<meta_stuff_info> PA_DATAOPT_search_multi_stuff(pa_sql_vichele_stay_a
     return ret;
 }
 
-std::string PA_DATAOPT_post_sync_change_register(pa_sql_single_vichele &_vichele, bool is_update)
+std::string PA_DATAOPT_post_sync_change_register(pa_sql_single_vichele &_vichele, bool is_auto)
 {
     std::string ret;
     std::string ctrl_url = "";
@@ -780,13 +780,13 @@ std::string PA_DATAOPT_post_sync_change_register(pa_sql_single_vichele &_vichele
                 sub_req.Add("driverId", itr.driver_id);
                 sub_req.Add("isSale", true, true);
                 sub_req.Add("price", tmp.price);
-                sub_req.Add("createTime", PA_DATAOPT_date_2_timestring(tmp.created_time));
+                sub_req.Add("createTime", tmp.plan_time.substr(0, 13) + ":00:00");
                 sub_req.Add("orderNo", std::to_string(tmp.created_time) + std::to_string(tmp.plan_id));
                 sub_req.AddEmptySubArray("multiStuff");
                 sub_req.Add("isMulti", false, false);
-                if (is_update)
+                if (is_auto)
                 {
-                    sub_req.Add("changeType", 0);
+                    sub_req.Add("changeType", 2);
                 }
                 else
                 {
@@ -861,7 +861,7 @@ void PA_DATAOPT_post_change_register(pa_sql_single_vichele &_vichele, bool is_up
                 sub_req.Add("driverId", itr.driver_id);
                 sub_req.Add("isSale", true, true);
                 sub_req.Add("price", tmp.price);
-                sub_req.Add("createTime", PA_DATAOPT_date_2_timestring(tmp.created_time));
+                sub_req.Add("createTime", tmp.plan_time.substr(0, 13) + ":00:00");
                 sub_req.Add("orderNo", std::to_string(tmp.created_time) + std::to_string(tmp.plan_id));
                 sub_req.AddEmptySubArray("multiStuff");
                 sub_req.Add("isMulti", false, false);
@@ -880,7 +880,7 @@ void PA_DATAOPT_post_change_register(pa_sql_single_vichele &_vichele, bool is_up
         post_json_to_third(ctrl_url, fin_req.ToString(), key, token);
     }
 }
-std::string PA_DATAOPT_post_sync_change_register(pa_sql_vichele_stay_alone &_vichele)
+std::string PA_DATAOPT_post_sync_change_register(pa_sql_vichele_stay_alone &_vichele, bool is_auto)
 {
     std::string ctrl_url = "";
     std::string key;
@@ -917,7 +917,7 @@ std::string PA_DATAOPT_post_sync_change_register(pa_sql_vichele_stay_alone &_vic
         sub_req.Add("driverId", real_vichele.driver_id);
         sub_req.Add("isSale", false, false);
         sub_req.Add("price", 0);
-        sub_req.Add("createTime", real_vichele.timestamp);
+        sub_req.Add("createTime", real_vichele.date + " 08:00:00");
         sub_req.Add("orderNo", "");
         auto multi_stuff = PA_DATAOPT_search_multi_stuff(real_vichele);
         if (multi_stuff.size() > 1)
@@ -958,7 +958,14 @@ std::string PA_DATAOPT_post_sync_change_register(pa_sql_vichele_stay_alone &_vic
             sub_req.Add("stuffName", real_vichele.stuff_name);
             sub_req.Add("stuffId", PA_DATAOPT_search_base_id_info_by_name(real_vichele.stuff_name, "stuff", *company));
         }
-        sub_req.Add("changeType", 1);
+        if (is_auto)
+        {
+            sub_req.Add("changeType", 2);
+        }
+        else
+        {
+            sub_req.Add("changeType", 1);
+        }
         neb::CJsonObject fin_req;
         fin_req.Add("data", sub_req);
 
@@ -1081,7 +1088,7 @@ void PA_DATAOPT_post_checkin(pa_sql_single_vichele &_vichele)
                 req.Add("driverId", itr.driver_id);
                 req.Add("isSale", true, true);
                 req.Add("price", tmp.price);
-                req.Add("createTime", PA_DATAOPT_date_2_timestring(tmp.created_time));
+                req.Add("createTime", tmp.plan_time.substr(0, 13) + ":00:00");
                 req.Add("orderNo", std::to_string(tmp.created_time) + std::to_string(tmp.plan_id));
                 req.AddEmptySubArray("multiStuff");
                 req.Add("isMulti", false, false);
