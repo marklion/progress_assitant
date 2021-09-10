@@ -170,7 +170,7 @@ const routes = [
     name: 'DriverRegister',
     component: () => import('../views/DriverRegister.vue'),
     meta: {
-      private_title: '进厂排号',
+      private_title: '承运信息',
       has_go_back: false,
       extra_page:true,
     },

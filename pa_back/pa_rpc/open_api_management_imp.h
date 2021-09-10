@@ -533,7 +533,7 @@ public:
             }
         }
 
-        auto buyer_vehicles = company->get_all_children<pa_sql_vichele_stay_alone>("destination", "status == 1 AND is_drop == 0 AND date LIKE '%s%%' GROUP BY main_vichele_number", date_only.c_str());
+        auto buyer_vehicles = company->get_all_children<pa_sql_vichele_stay_alone>("destination", "status == 1 AND is_drop == 0 AND company_name != '' AND date LIKE '%s%%' GROUP BY main_vichele_number", date_only.c_str());
         for (auto &itr : buyer_vehicles)
         {
             if (itr.main_vichele_number == plateNo || (itr.driver_id == driverId && itr.driver_id.length() > 0))
@@ -555,24 +555,6 @@ public:
                 _return.vehicleTeamName = itr.transfor_company;
                 _return.vehicleTeamId = PA_DATAOPT_search_base_id_info_by_name(_return.vehicleTeamName, "vehicleTeam", *company);
                 _return.price = itr.price;
-                auto multi_stuff = PA_DATAOPT_search_multi_stuff(itr);
-                if (multi_stuff.size() > 1)
-                {
-                    _return.isMulti = true;
-                    _return.multiStuff = multi_stuff;
-                    _return.stuffName = "";
-                    _return.stuffId = "";
-                    _return.enterWeight = [=]() -> double
-                    {
-                        double ret = 0;
-                        for (auto &itr : multi_stuff)
-                        {
-                            ret += itr.weight;
-                        }
-
-                        return ret;
-                    }();
-                }
                 return;
             }
         }
@@ -608,7 +590,7 @@ public:
             }
         }
 
-        auto buyer_vehicles = company->get_all_children<pa_sql_vichele_stay_alone>("destination", "status == 1 AND is_drop == 0 AND date LIKE '%s%%' GROUP BY main_vichele_number", date_only.c_str());
+        auto buyer_vehicles = company->get_all_children<pa_sql_vichele_stay_alone>("destination", "status == 1 AND is_drop == 0 AND company_name != '' AND date LIKE '%s%%' GROUP BY main_vichele_number", date_only.c_str());
         for (auto &itr : buyer_vehicles)
         {
             vehicle_info_resp tmp;
@@ -630,24 +612,7 @@ public:
             tmp.vehicleTeamName = itr.transfor_company;
             tmp.vehicleTeamId = PA_DATAOPT_search_base_id_info_by_name(tmp.vehicleTeamName, "vehicleTeam", *company);
             tmp.price = itr.price;
-            auto multi_stuff = PA_DATAOPT_search_multi_stuff(itr);
-            if (multi_stuff.size() > 1)
-            {
-                tmp.isMulti = true;
-                tmp.multiStuff = multi_stuff;
-                tmp.stuffName = "";
-                tmp.stuffId = "";
-                tmp.enterWeight = [=]() -> double
-                {
-                    double ret = 0;
-                    for (auto &itr : multi_stuff)
-                    {
-                        ret += itr.weight;
-                    }
 
-                    return ret;
-                }();
-            }
             _return.push_back(tmp);
         }
     }
@@ -714,26 +679,48 @@ public:
             {
                 PA_RETURN_MSG(OPEN_API_MSG_VICHELE_NOT_EXIST);
             }
-            auto vichele_stay_alone = sqlite_orm::search_record<pa_sql_vichele_stay_alone>("stuff_name == '%s' AND main_vichele_number == '%s' AND behind_vichele_number == '%s' AND destination_ext_key == %ld AND is_drop == 0 AND status >= 1 AND PRI_ID == %ld", _req.stuffName.c_str(), req_vichele_stay_alone->main_vichele_number.c_str(), req_vichele_stay_alone->behind_vichele_number.c_str(), company->get_pri_id(), req_vichele_stay_alone->get_pri_id());
-            if (!vichele_stay_alone)
+            auto real_vichele_stay_alone = sqlite_orm::search_record<pa_sql_vichele_stay_alone>("stuff_name == '%s' AND main_vichele_number == '%s' AND behind_vichele_number == '%s' AND destination_ext_key == %ld AND is_drop == 0 AND status >= 1 AND PRI_ID == %ld", _req.stuffName.c_str(), req_vichele_stay_alone->main_vichele_number.c_str(), req_vichele_stay_alone->behind_vichele_number.c_str(), company->get_pri_id(), req_vichele_stay_alone->get_pri_id());
+            if (!real_vichele_stay_alone)
             {
                 PA_RETURN_MSG(OPEN_API_MSG_VICHELE_NOT_EXIST);
             }
-            if (vichele_stay_alone->is_repeated != 0 && vichele_stay_alone->status == 1)
+            if (real_vichele_stay_alone->is_repeated != 0 && real_vichele_stay_alone->status == 1)
             {
-                pa_sql_vichele_stay_alone new_one(*vichele_stay_alone);
+                pa_sql_vichele_stay_alone new_one(*real_vichele_stay_alone);
                 new_one.insert_record();
-                std::list<pa_sql_vichele_stay_alone> tmp;
-                tmp.push_back(new_one);
-                PA_DATAOPT_post_save_register(tmp);
+                if (new_one.company_for_select.length() > 0)
+                {
+                    new_one.company_name = "";
+                    new_one.update_record();
+                }
+                else
+                {
+                    std::list<pa_sql_vichele_stay_alone> tmp;
+                    tmp.push_back(new_one);
+                    PA_DATAOPT_post_save_register(tmp);
+                }
             }
-            vichele_stay_alone->p_time = _req.pTime;
-            vichele_stay_alone->m_time = _req.mTime;
-            vichele_stay_alone->p_weight = _req.pWeight;
-            vichele_stay_alone->m_weight = _req.mWeight;
-            vichele_stay_alone->j_weight = _req.jWeight;
-            vichele_stay_alone->status = 2;
-            ret = vichele_stay_alone->update_record();
+            real_vichele_stay_alone->p_time = _req.pTime;
+            real_vichele_stay_alone->m_time = _req.mTime;
+            real_vichele_stay_alone->p_weight = _req.pWeight;
+            real_vichele_stay_alone->m_weight = _req.mWeight;
+            real_vichele_stay_alone->j_weight = _req.jWeight;
+            real_vichele_stay_alone->status = 2;
+            ret = real_vichele_stay_alone->update_record();
+            auto created_user = real_vichele_stay_alone->get_parent<pa_sql_silent_user>("created_by");
+            if (created_user)
+            {
+                PA_WECHAT_send_extra_vichele_msg(*real_vichele_stay_alone, created_user->open_id, "称重完成\n皮重:" + std::to_string(_req.pWeight) + "\n毛重:" + std::to_string(_req.mWeight) + "\n净重:" + std::to_string(_req.jWeight));
+            }
+            auto dest_company = real_vichele_stay_alone->get_parent<pa_sql_company>("destination");
+            if (dest_company)
+            {
+                auto company_staff = dest_company->get_all_children<pa_sql_userinfo>("belong_company");
+                for (auto &itr:company_staff)
+                {
+                    PA_WECHAT_send_extra_vichele_msg(*real_vichele_stay_alone, itr.openid, "称重完成\n皮重:" + std::to_string(_req.pWeight) + "\n毛重:" + std::to_string(_req.mWeight) + "\n净重:" + std::to_string(_req.jWeight));
+                }
+            }
         }
 
         return ret;

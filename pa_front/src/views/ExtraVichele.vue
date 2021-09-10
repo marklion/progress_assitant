@@ -27,7 +27,7 @@
                         </div>
                     </van-form>
                 </van-dialog>
-                <van-button type="primary" size="small" native-type="button" block @click="team_brief_show= true">选择车队</van-button>
+                <van-button type="info" size="small" round native-type="button" block @click="team_brief_show= true">选择车队</van-button>
                 <van-action-sheet v-model="show_select_vichele_team" :actions="all_vichele_team" @select="select_team" />
                 <div class="vichele_show" v-for="(single_vichele, index) in new_vichele" :key="index">
                     <history-input search_key="main_vichele_number" v-model="single_vichele.main_vichele_number" :formatter="convert_bigger" :rules="[{ required: true, message: '请填写车牌号' }, {pattern: vichele_number_patten, message: '请填写正确的车牌号'}]"></history-input>
@@ -595,6 +595,7 @@ export default {
     margin-left: 10px;
     margin-right: 10px;
     margin-bottom: 10px;
+    margin-top:10px;
     padding-top: 8px;
 }
 

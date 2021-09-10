@@ -639,6 +639,10 @@ void PA_DATAOPT_post_save_register(std::list<pa_sql_vichele_stay_alone> &_vichel
             {
                 continue;
             }
+            if (itr.company_name.length() <= 0)
+            {
+                continue;
+            }
             neb::CJsonObject sub_req;
             sub_req.Add("id", std::to_string(itr.get_pri_id()) + "B");
             sub_req.Add("plateNo", itr.main_vichele_number);
@@ -656,51 +660,21 @@ void PA_DATAOPT_post_save_register(std::list<pa_sql_vichele_stay_alone> &_vichel
             sub_req.Add("price", itr.price);
             sub_req.Add("createTime", itr.date + " 08:00:00");
             sub_req.Add("orderNo", "");
-            auto multi_stuff = PA_DATAOPT_search_multi_stuff(itr);
-            if (multi_stuff.size() > 1)
-            {
-                sub_req.Add("isMulti", true, true);
-                sub_req.Add("multiStuff", [=]() -> neb::CJsonObject
-                            {
-                                neb::CJsonObject ret;
-                                for (auto &single_stuff : multi_stuff)
-                                {
-                                    neb::CJsonObject s_ret;
-                                    s_ret.Add("stuffId", single_stuff.stuffId);
-                                    s_ret.Add("stuffName", single_stuff.stuffName);
-                                    s_ret.Add("weight", single_stuff.weight);
-                                    ret.Add(s_ret);
-                                }
-                                return ret;
-                            }());
-                sub_req.Add("enterWeight", [=]() -> double
-                            {
-                                double ret = 0;
-                                for (auto &itr : multi_stuff)
-                                {
-                                    ret += itr.weight;
-                                }
 
-                                return ret;
-                            }());
-
-                sub_req.Add("stuffName", "");
-                sub_req.Add("stuffId", "");
-            }
-            else
-            {
-                sub_req.AddEmptySubArray("multiStuff");
-                sub_req.Add("isMulti", false, false);
-                sub_req.Add("enterWeight", itr.count);
-                sub_req.Add("stuffName", itr.stuff_name);
-                sub_req.Add("stuffId", PA_DATAOPT_search_base_id_info_by_name(itr.stuff_name, "stuff", *company));
-            }
+            sub_req.AddEmptySubArray("multiStuff");
+            sub_req.Add("isMulti", false, false);
+            sub_req.Add("enterWeight", itr.count);
+            sub_req.Add("stuffName", itr.stuff_name);
+            sub_req.Add("stuffId", PA_DATAOPT_search_base_id_info_by_name(itr.stuff_name, "stuff", *company));
             req.Add(sub_req);
         }
         neb::CJsonObject fin_req;
         fin_req.Add("data", req);
 
-        post_json_to_third(ctrl_url, fin_req.ToString(), key, token);
+        if (!req.IsEmpty())
+        {
+            post_json_to_third(ctrl_url, fin_req.ToString(), key, token);
+        }
     }
 }
 std::vector<meta_stuff_info> PA_DATAOPT_search_multi_stuff(pa_sql_vichele_stay_alone &_vichele)
@@ -919,45 +893,11 @@ std::string PA_DATAOPT_post_sync_change_register(pa_sql_vichele_stay_alone &_vic
         sub_req.Add("price", 0);
         sub_req.Add("createTime", real_vichele.date + " 08:00:00");
         sub_req.Add("orderNo", "");
-        auto multi_stuff = PA_DATAOPT_search_multi_stuff(real_vichele);
-        if (multi_stuff.size() > 1)
-        {
-            sub_req.Add("isMulti", true, true);
-            sub_req.Add("multiStuff", [=]() -> neb::CJsonObject
-                        {
-                            neb::CJsonObject ret;
-                            for (auto &single_stuff : multi_stuff)
-                            {
-                                neb::CJsonObject s_ret;
-                                s_ret.Add("stuffId", single_stuff.stuffId);
-                                s_ret.Add("stuffName", single_stuff.stuffName);
-                                s_ret.Add("weight", single_stuff.weight);
-                                ret.Add(s_ret);
-                            }
-                            return ret;
-                        }());
-            sub_req.Add("enterWeight", [=]() -> double
-                        {
-                            double ret = 0;
-                            for (auto &itr : multi_stuff)
-                            {
-                                ret += itr.weight;
-                            }
-
-                            return ret;
-                        }());
-
-            sub_req.Add("stuffName", "");
-            sub_req.Add("stuffId", "");
-        }
-        else
-        {
-            sub_req.AddEmptySubArray("multiStuff");
-            sub_req.Add("isMulti", false, false);
-            sub_req.Add("enterWeight", real_vichele.count);
-            sub_req.Add("stuffName", real_vichele.stuff_name);
-            sub_req.Add("stuffId", PA_DATAOPT_search_base_id_info_by_name(real_vichele.stuff_name, "stuff", *company));
-        }
+        sub_req.AddEmptySubArray("multiStuff");
+        sub_req.Add("isMulti", false, false);
+        sub_req.Add("enterWeight", real_vichele.count);
+        sub_req.Add("stuffName", real_vichele.stuff_name);
+        sub_req.Add("stuffId", PA_DATAOPT_search_base_id_info_by_name(real_vichele.stuff_name, "stuff", *company));
         if (is_auto)
         {
             sub_req.Add("changeType", 2);

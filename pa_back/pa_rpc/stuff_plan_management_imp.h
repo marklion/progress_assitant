@@ -1713,10 +1713,10 @@ public:
             sample_phone = sample_driver->phone;
         }
         auto drivers = sqlite_orm::search_record_all<pa_sql_driver>("phone == '%s'", sample_phone.c_str());
+        auto current_time = PA_DATAOPT_current_time();
+        auto date_only = current_time.substr(0, 10);
         for (auto &itr : drivers)
         {
-            auto current_time = PA_DATAOPT_current_time();
-            auto date_only = current_time.substr(0, 10);
             auto related_plans = sqlite_orm::search_record_all<pa_sql_plan>("plan_time LIKE '%s%%' AND status == 3 AND is_cancel == 0", date_only.c_str());
             for (auto &single_plan : related_plans)
             {
@@ -1759,6 +1759,27 @@ public:
                     }
                 }
             }
+        }
+        auto related_stay_alone_vichele = sqlite_orm::search_record_all<pa_sql_vichele_stay_alone>("status == 1 AND is_drop == 0 AND date == '%s' AND driver_phone == '%s'", date_only.c_str(), sample_phone.c_str());
+        for (auto &itr:related_stay_alone_vichele)
+        {
+            today_driver_info tmp;
+            tmp.behind_vichele = itr.behind_vichele_number;
+            tmp.destination_address = "";
+            tmp.destination_company = "";
+            tmp.id = itr.get_pri_id();
+            tmp.order_company = itr.company_name;
+            tmp.stuff_name = itr.stuff_name;
+            tmp.is_registered = false;
+            tmp.is_buy = true;
+            tmp.main_vichele = itr.main_vichele_number;
+            int pos = 0;
+            int found_pos = 0;
+            while ((found_pos = itr.company_for_select.find(';', pos)) != std::string::npos) {
+                tmp.company_for_select.push_back(itr.company_for_select.substr(pos, found_pos - pos));
+                pos = found_pos + 1;
+            }
+            _return.push_back(tmp);
         }
     }
 

@@ -610,6 +610,7 @@ public:
     std::string p_time;
     std::string m_time;
     double price = 0;
+    std::string company_for_select;
     pa_sql_vichele_stay_alone() {
         add_parent_type<pa_sql_silent_user>("created_by");
         add_parent_type<pa_sql_company>("destination");
@@ -638,6 +639,7 @@ public:
         ret.push_back(sqlite_orm_column("p_time", sqlite_orm_column::STRING, &p_time));
         ret.push_back(sqlite_orm_column("m_time", sqlite_orm_column::STRING, &m_time));
         ret.push_back(sqlite_orm_column("price", sqlite_orm_column::REAL, &price));
+        ret.push_back(sqlite_orm_column("company_for_select", sqlite_orm_column::STRING, &company_for_select));
 
         return ret;
     }
