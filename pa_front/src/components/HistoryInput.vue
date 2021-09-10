@@ -1,7 +1,7 @@
 <template>
 <div class="history_input_show">
     <van-field readonly clickable :name="search_key" v-model="input_value"  :label="search_key_convert(search_key).show_words" placeholder="点击输入或选择内容" @click="showPicker = true" :rules="rules" :formatter="formatter" />
-    <van-popup v-model="showPicker" position="bottom">
+    <van-popup v-model="showPicker" position="bottom" get-container="body">
         <van-field v-model="key_word" :placeholder="'请输入' + search_key_convert(search_key).show_words" />
         <van-picker show-toolbar :columns="item_need_select" @confirm="onConfirm" @cancel="showPicker = false" />
     </van-popup>

@@ -1923,11 +1923,11 @@ class get_today_transformation_result(object):
             if fid == 0:
                 if ftype == TType.LIST:
                     self.success = []
-                    (_etype220, _size217) = iprot.readListBegin()
-                    for _i221 in range(_size217):
-                        _elem222 = api_transformation_info()
-                        _elem222.read(iprot)
-                        self.success.append(_elem222)
+                    (_etype227, _size224) = iprot.readListBegin()
+                    for _i228 in range(_size224):
+                        _elem229 = api_transformation_info()
+                        _elem229.read(iprot)
+                        self.success.append(_elem229)
                     iprot.readListEnd()
                 else:
                     iprot.skip(ftype)
@@ -1949,8 +1949,8 @@ class get_today_transformation_result(object):
         if self.success is not None:
             oprot.writeFieldBegin('success', TType.LIST, 0)
             oprot.writeListBegin(TType.STRUCT, len(self.success))
-            for iter223 in self.success:
-                iter223.write(oprot)
+            for iter230 in self.success:
+                iter230.write(oprot)
             oprot.writeListEnd()
             oprot.writeFieldEnd()
         if self.e is not None:
@@ -2729,11 +2729,11 @@ class proc_all_vehicle_info_result(object):
             if fid == 0:
                 if ftype == TType.LIST:
                     self.success = []
-                    (_etype227, _size224) = iprot.readListBegin()
-                    for _i228 in range(_size224):
-                        _elem229 = vehicle_info_resp()
-                        _elem229.read(iprot)
-                        self.success.append(_elem229)
+                    (_etype234, _size231) = iprot.readListBegin()
+                    for _i235 in range(_size231):
+                        _elem236 = vehicle_info_resp()
+                        _elem236.read(iprot)
+                        self.success.append(_elem236)
                     iprot.readListEnd()
                 else:
                     iprot.skip(ftype)
@@ -2755,8 +2755,8 @@ class proc_all_vehicle_info_result(object):
         if self.success is not None:
             oprot.writeFieldBegin('success', TType.LIST, 0)
             oprot.writeListBegin(TType.STRUCT, len(self.success))
-            for iter230 in self.success:
-                iter230.write(oprot)
+            for iter237 in self.success:
+                iter237.write(oprot)
             oprot.writeListEnd()
             oprot.writeFieldEnd()
         if self.e is not None:

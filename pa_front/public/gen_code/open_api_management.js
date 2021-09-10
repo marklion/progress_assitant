@@ -649,13 +649,13 @@ open_api_management_get_today_transformation_result = class {
         case 0:
         if (ftype == Thrift.Type.LIST) {
           this.success = [];
-          const _rtmp3156 = input.readListBegin();
-          const _size155 = _rtmp3156.size || 0;
-          for (let _i157 = 0; _i157 < _size155; ++_i157) {
-            let elem158 = null;
-            elem158 = new api_transformation_info();
-            elem158.read(input);
-            this.success.push(elem158);
+          const _rtmp3161 = input.readListBegin();
+          const _size160 = _rtmp3161.size || 0;
+          for (let _i162 = 0; _i162 < _size160; ++_i162) {
+            let elem163 = null;
+            elem163 = new api_transformation_info();
+            elem163.read(input);
+            this.success.push(elem163);
           }
           input.readListEnd();
         } else {
@@ -684,10 +684,10 @@ open_api_management_get_today_transformation_result = class {
     if (this.success !== null && this.success !== undefined) {
       output.writeFieldBegin('success', Thrift.Type.LIST, 0);
       output.writeListBegin(Thrift.Type.STRUCT, this.success.length);
-      for (let iter159 in this.success) {
-        if (this.success.hasOwnProperty(iter159)) {
-          iter159 = this.success[iter159];
-          iter159.write(output);
+      for (let iter164 in this.success) {
+        if (this.success.hasOwnProperty(iter164)) {
+          iter164 = this.success[iter164];
+          iter164.write(output);
         }
       }
       output.writeListEnd();
@@ -1425,13 +1425,13 @@ open_api_management_proc_all_vehicle_info_result = class {
         case 0:
         if (ftype == Thrift.Type.LIST) {
           this.success = [];
-          const _rtmp3161 = input.readListBegin();
-          const _size160 = _rtmp3161.size || 0;
-          for (let _i162 = 0; _i162 < _size160; ++_i162) {
-            let elem163 = null;
-            elem163 = new vehicle_info_resp();
-            elem163.read(input);
-            this.success.push(elem163);
+          const _rtmp3166 = input.readListBegin();
+          const _size165 = _rtmp3166.size || 0;
+          for (let _i167 = 0; _i167 < _size165; ++_i167) {
+            let elem168 = null;
+            elem168 = new vehicle_info_resp();
+            elem168.read(input);
+            this.success.push(elem168);
           }
           input.readListEnd();
         } else {
@@ -1460,10 +1460,10 @@ open_api_management_proc_all_vehicle_info_result = class {
     if (this.success !== null && this.success !== undefined) {
       output.writeFieldBegin('success', Thrift.Type.LIST, 0);
       output.writeListBegin(Thrift.Type.STRUCT, this.success.length);
-      for (let iter164 in this.success) {
-        if (this.success.hasOwnProperty(iter164)) {
-          iter164 = this.success[iter164];
-          iter164.write(output);
+      for (let iter169 in this.success) {
+        if (this.success.hasOwnProperty(iter169)) {
+          iter169 = this.success[iter169];
+          iter169.write(output);
         }
       }
       output.writeListEnd();

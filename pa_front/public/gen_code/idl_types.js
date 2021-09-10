@@ -2948,6 +2948,8 @@ today_driver_info = class {
     this.enter_location = null;
     this.is_registered = null;
     this.register_order = null;
+    this.is_buy = null;
+    this.company_for_select = null;
     if (args) {
       if (args.id !== undefined && args.id !== null) {
         this.id = args.id;
@@ -2984,6 +2986,12 @@ today_driver_info = class {
       }
       if (args.register_order !== undefined && args.register_order !== null) {
         this.register_order = args.register_order;
+      }
+      if (args.is_buy !== undefined && args.is_buy !== null) {
+        this.is_buy = args.is_buy;
+      }
+      if (args.company_for_select !== undefined && args.company_for_select !== null) {
+        this.company_for_select = Thrift.copyList(args.company_for_select, [null]);
       }
     }
   }
@@ -3082,6 +3090,28 @@ today_driver_info = class {
           input.skip(ftype);
         }
         break;
+        case 13:
+        if (ftype == Thrift.Type.BOOL) {
+          this.is_buy = input.readBool().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        case 14:
+        if (ftype == Thrift.Type.LIST) {
+          this.company_for_select = [];
+          const _rtmp36 = input.readListBegin();
+          const _size5 = _rtmp36.size || 0;
+          for (let _i7 = 0; _i7 < _size5; ++_i7) {
+            let elem8 = null;
+            elem8 = input.readString().value;
+            this.company_for_select.push(elem8);
+          }
+          input.readListEnd();
+        } else {
+          input.skip(ftype);
+        }
+        break;
         default:
           input.skip(ftype);
       }
@@ -3151,6 +3181,23 @@ today_driver_info = class {
     if (this.register_order !== null && this.register_order !== undefined) {
       output.writeFieldBegin('register_order', Thrift.Type.STRING, 12);
       output.writeString(this.register_order);
+      output.writeFieldEnd();
+    }
+    if (this.is_buy !== null && this.is_buy !== undefined) {
+      output.writeFieldBegin('is_buy', Thrift.Type.BOOL, 13);
+      output.writeBool(this.is_buy);
+      output.writeFieldEnd();
+    }
+    if (this.company_for_select !== null && this.company_for_select !== undefined) {
+      output.writeFieldBegin('company_for_select', Thrift.Type.LIST, 14);
+      output.writeListBegin(Thrift.Type.STRING, this.company_for_select.length);
+      for (let iter9 in this.company_for_select) {
+        if (this.company_for_select.hasOwnProperty(iter9)) {
+          iter9 = this.company_for_select[iter9];
+          output.writeString(iter9);
+        }
+      }
+      output.writeListEnd();
       output.writeFieldEnd();
     }
     output.writeFieldStop();
@@ -3848,13 +3895,13 @@ vehicle_info_resp = class {
         case 13:
         if (ftype == Thrift.Type.LIST) {
           this.multiStuff = [];
-          const _rtmp36 = input.readListBegin();
-          const _size5 = _rtmp36.size || 0;
-          for (let _i7 = 0; _i7 < _size5; ++_i7) {
-            let elem8 = null;
-            elem8 = new meta_stuff_info();
-            elem8.read(input);
-            this.multiStuff.push(elem8);
+          const _rtmp311 = input.readListBegin();
+          const _size10 = _rtmp311.size || 0;
+          for (let _i12 = 0; _i12 < _size10; ++_i12) {
+            let elem13 = null;
+            elem13 = new meta_stuff_info();
+            elem13.read(input);
+            this.multiStuff.push(elem13);
           }
           input.readListEnd();
         } else {
@@ -3991,10 +4038,10 @@ vehicle_info_resp = class {
     if (this.multiStuff !== null && this.multiStuff !== undefined) {
       output.writeFieldBegin('multiStuff', Thrift.Type.LIST, 13);
       output.writeListBegin(Thrift.Type.STRUCT, this.multiStuff.length);
-      for (let iter9 in this.multiStuff) {
-        if (this.multiStuff.hasOwnProperty(iter9)) {
-          iter9 = this.multiStuff[iter9];
-          iter9.write(output);
+      for (let iter14 in this.multiStuff) {
+        if (this.multiStuff.hasOwnProperty(iter14)) {
+          iter14 = this.multiStuff[iter14];
+          iter14.write(output);
         }
       }
       output.writeListEnd();
@@ -5059,13 +5106,13 @@ vichele_team = class {
         case 1:
         if (ftype == Thrift.Type.LIST) {
           this.members = [];
-          const _rtmp311 = input.readListBegin();
-          const _size10 = _rtmp311.size || 0;
-          for (let _i12 = 0; _i12 < _size10; ++_i12) {
-            let elem13 = null;
-            elem13 = new vichele_team_member();
-            elem13.read(input);
-            this.members.push(elem13);
+          const _rtmp316 = input.readListBegin();
+          const _size15 = _rtmp316.size || 0;
+          for (let _i17 = 0; _i17 < _size15; ++_i17) {
+            let elem18 = null;
+            elem18 = new vichele_team_member();
+            elem18.read(input);
+            this.members.push(elem18);
           }
           input.readListEnd();
         } else {
@@ -5100,10 +5147,10 @@ vichele_team = class {
     if (this.members !== null && this.members !== undefined) {
       output.writeFieldBegin('members', Thrift.Type.LIST, 1);
       output.writeListBegin(Thrift.Type.STRUCT, this.members.length);
-      for (let iter14 in this.members) {
-        if (this.members.hasOwnProperty(iter14)) {
-          iter14 = this.members[iter14];
-          iter14.write(output);
+      for (let iter19 in this.members) {
+        if (this.members.hasOwnProperty(iter19)) {
+          iter19 = this.members[iter19];
+          iter19.write(output);
         }
       }
       output.writeListEnd();

@@ -163,14 +163,15 @@ static void send_msg_to_wechat(const std::string &_touser, const std::string &_t
     std::string uni_msg_url = "https://api.weixin.qq.com/cgi-bin/message/wxopen/template/uniform_send?access_token=" + acc_tok;
     g_log.log("msg ready to send is :%s", to_wechat.ToFormattedString().c_str());
 
-    tdf_main::get_inst().Async_to_workthread([](void *_private, const std::string &chact) -> void
-                                             {
-                                                 std::string *to_wechat = (std::string *)_private;
-                                                 auto ret = PA_DATAOPT_rest_post(chact, *to_wechat);
-                                                 g_log.log("recv from wechat:%s", ret.c_str());
-                                                 delete to_wechat;
-                                             },
-                                             new std::string(to_wechat.ToString()), uni_msg_url);
+    tdf_main::get_inst().Async_to_workthread(
+        [](void *_private, const std::string &chact) -> void
+        {
+            std::string *to_wechat = (std::string *)_private;
+            auto ret = PA_DATAOPT_rest_post(chact, *to_wechat);
+            g_log.log("recv from wechat:%s", ret.c_str());
+            delete to_wechat;
+        },
+        new std::string(to_wechat.ToString()), uni_msg_url);
 }
 static void send_pub_msg_to_wechat(const std::string &_touser, const std::string &_tmp_id, const std::string &_first, const std::vector<std::string> &_keywords, const std::string &_remark, const std::string &_url = "/")
 {
@@ -207,9 +208,15 @@ static void send_pub_msg_to_wechat(const std::string &_touser, const std::string
 
     std::string uni_msg_url = "https://api.weixin.qq.com/cgi-bin/message/wxopen/template/uniform_send?access_token=" + acc_tok;
     g_log.log("msg ready to send is :%s", to_wechat.ToFormattedString().c_str());
-
-    auto ret = PA_DATAOPT_rest_post(uni_msg_url, to_wechat.ToString());
-    g_log.log("recv from wechat:%s", ret.c_str());
+    tdf_main::get_inst().Async_to_workthread(
+        [](void *_private, const std::string &chact) -> void
+        {
+            std::string *to_wechat = (std::string *)_private;
+            auto ret = PA_DATAOPT_rest_post(chact, *to_wechat);
+            g_log.log("recv from wechat:%s", ret.c_str());
+            delete to_wechat;
+        },
+        new std::string(to_wechat.ToString()), uni_msg_url);
 }
 void PA_WECHAT_send_plan_msg(pa_sql_userinfo &_touser, pa_sql_plan &_plan, const std::string &_remark)
 {
@@ -314,7 +321,12 @@ void PA_WECHAT_send_extra_vichele_msg(pa_sql_vichele_stay_alone &_vichele_info, 
             url = "/company_extra_vichele";
         }
     }
-    if (silent_user && silent_user->open_id == _open_id)
+    auto driver = sqlite_orm::search_record<pa_sql_driver>("phone == '%s' AND silent_id == '%s'", _vichele_info.driver_phone.c_str(), _open_id.c_str());
+    if (driver)
+    {
+        url = "/driver_register";
+    }
+    if ((silent_user && silent_user->open_id == _open_id) || driver)
     {
         send_pub_msg_to_wechat(_open_id, "sakeNcUuIkHlvhCyatN6Y_i6Ogaf82SrbZVqczw-FEE", "进厂车辆信息", keywords, _remark, url);
     }

@@ -2638,11 +2638,13 @@ class today_driver_info(object):
      - enter_location
      - is_registered
      - register_order
+     - is_buy
+     - company_for_select
 
     """
 
 
-    def __init__(self, id=None, destination_company=None, destination_address=None, order_company=None, main_vichele=None, behind_vichele=None, stuff_name=None, register_timestamp=None, register_number=None, enter_location=None, is_registered=None, register_order=None,):
+    def __init__(self, id=None, destination_company=None, destination_address=None, order_company=None, main_vichele=None, behind_vichele=None, stuff_name=None, register_timestamp=None, register_number=None, enter_location=None, is_registered=None, register_order=None, is_buy=None, company_for_select=None,):
         self.id = id
         self.destination_company = destination_company
         self.destination_address = destination_address
@@ -2655,6 +2657,8 @@ class today_driver_info(object):
         self.enter_location = enter_location
         self.is_registered = is_registered
         self.register_order = register_order
+        self.is_buy = is_buy
+        self.company_for_select = company_for_select
 
     def read(self, iprot):
         if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
@@ -2725,6 +2729,21 @@ class today_driver_info(object):
                     self.register_order = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
                 else:
                     iprot.skip(ftype)
+            elif fid == 13:
+                if ftype == TType.BOOL:
+                    self.is_buy = iprot.readBool()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 14:
+                if ftype == TType.LIST:
+                    self.company_for_select = []
+                    (_etype10, _size7) = iprot.readListBegin()
+                    for _i11 in range(_size7):
+                        _elem12 = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                        self.company_for_select.append(_elem12)
+                    iprot.readListEnd()
+                else:
+                    iprot.skip(ftype)
             else:
                 iprot.skip(ftype)
             iprot.readFieldEnd()
@@ -2782,6 +2801,17 @@ class today_driver_info(object):
         if self.register_order is not None:
             oprot.writeFieldBegin('register_order', TType.STRING, 12)
             oprot.writeString(self.register_order.encode('utf-8') if sys.version_info[0] == 2 else self.register_order)
+            oprot.writeFieldEnd()
+        if self.is_buy is not None:
+            oprot.writeFieldBegin('is_buy', TType.BOOL, 13)
+            oprot.writeBool(self.is_buy)
+            oprot.writeFieldEnd()
+        if self.company_for_select is not None:
+            oprot.writeFieldBegin('company_for_select', TType.LIST, 14)
+            oprot.writeListBegin(TType.STRING, len(self.company_for_select))
+            for iter13 in self.company_for_select:
+                oprot.writeString(iter13.encode('utf-8') if sys.version_info[0] == 2 else iter13)
+            oprot.writeListEnd()
             oprot.writeFieldEnd()
         oprot.writeFieldStop()
         oprot.writeStructEnd()
@@ -3386,11 +3416,11 @@ class vehicle_info_resp(object):
             elif fid == 13:
                 if ftype == TType.LIST:
                     self.multiStuff = []
-                    (_etype10, _size7) = iprot.readListBegin()
-                    for _i11 in range(_size7):
-                        _elem12 = meta_stuff_info()
-                        _elem12.read(iprot)
-                        self.multiStuff.append(_elem12)
+                    (_etype17, _size14) = iprot.readListBegin()
+                    for _i18 in range(_size14):
+                        _elem19 = meta_stuff_info()
+                        _elem19.read(iprot)
+                        self.multiStuff.append(_elem19)
                     iprot.readListEnd()
                 else:
                     iprot.skip(ftype)
@@ -3495,8 +3525,8 @@ class vehicle_info_resp(object):
         if self.multiStuff is not None:
             oprot.writeFieldBegin('multiStuff', TType.LIST, 13)
             oprot.writeListBegin(TType.STRUCT, len(self.multiStuff))
-            for iter13 in self.multiStuff:
-                iter13.write(oprot)
+            for iter20 in self.multiStuff:
+                iter20.write(oprot)
             oprot.writeListEnd()
             oprot.writeFieldEnd()
         if self.isMulti is not None:
@@ -4391,11 +4421,11 @@ class vichele_team(object):
             if fid == 1:
                 if ftype == TType.LIST:
                     self.members = []
-                    (_etype17, _size14) = iprot.readListBegin()
-                    for _i18 in range(_size14):
-                        _elem19 = vichele_team_member()
-                        _elem19.read(iprot)
-                        self.members.append(_elem19)
+                    (_etype24, _size21) = iprot.readListBegin()
+                    for _i25 in range(_size21):
+                        _elem26 = vichele_team_member()
+                        _elem26.read(iprot)
+                        self.members.append(_elem26)
                     iprot.readListEnd()
                 else:
                     iprot.skip(ftype)
@@ -4422,8 +4452,8 @@ class vichele_team(object):
         if self.members is not None:
             oprot.writeFieldBegin('members', TType.LIST, 1)
             oprot.writeListBegin(TType.STRUCT, len(self.members))
-            for iter20 in self.members:
-                iter20.write(oprot)
+            for iter27 in self.members:
+                iter27.write(oprot)
             oprot.writeListEnd()
             oprot.writeFieldEnd()
         if self.name is not None:
@@ -4695,6 +4725,8 @@ today_driver_info.thrift_spec = (
     (10, TType.STRING, 'enter_location', 'UTF8', None, ),  # 10
     (11, TType.BOOL, 'is_registered', None, None, ),  # 11
     (12, TType.STRING, 'register_order', 'UTF8', None, ),  # 12
+    (13, TType.BOOL, 'is_buy', None, None, ),  # 13
+    (14, TType.LIST, 'company_for_select', (TType.STRING, 'UTF8', False), None, ),  # 14
 )
 all_structs.append(driver_detail_info)
 driver_detail_info.thrift_spec = (

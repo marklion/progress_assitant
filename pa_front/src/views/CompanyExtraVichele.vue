@@ -20,7 +20,7 @@
     <van-checkbox-group v-model="select_pool">
         <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="onLoad" ref="all_record">
             <div v-for="(single_vichele, index) in items_need_show" :key="index" class="one_record_show">
-                <van-cell center :label="single_vichele.stuff_name + '(' + single_vichele.company_name + ')'">
+                <van-cell center :label="single_vichele.stuff_name + '(' + (single_vichele.company_name?single_vichele.company_name:'未指定') + ')'">
                     <template #title>
                         <div>{{single_vichele.main_vichele_number}}</div>
                         <div>{{single_vichele.behind_vichele_number}}</div>
@@ -51,6 +51,9 @@
                             <van-tag v-else-if="single_vichele.status == 1" plain type="success">已确认</van-tag>
                             <van-tag v-else plain type="primary">已完成</van-tag>
                         </van-col>
+                        <van-col v-if="single_vichele.status == 1">
+                            <van-button type="primary" size="mini" @click="change_company_name(single_vichele.id)">改派</van-button>
+                        </van-col>
                     </van-row>
                     <van-row v-if="single_vichele.status == 2" type="flex" align="center" :gutter="10">
                         <van-col>皮重</van-col>
@@ -65,7 +68,25 @@
     <van-dialog v-model="show_confirm_diag" close-on-click-overlay title="确认单价" :show-confirm-button="false">
         <van-form @submit="confirm_vichele">
             <van-field v-model="price" type="number" label="单价" placeholder="请填入与供货方协商后的单价" :rules="[{ required: true, message: '请输入单价' }]" />
-            <van-button round block >确认</van-button>
+            <van-field name="switch" label="自由拉货">
+                <template #input>
+                    <van-switch v-model="catch_free" size="20" />
+                </template>
+            </van-field>
+            <van-field name="checkboxGroup" label="提货公司池" v-if="catch_free">
+                <template #input>
+                    <van-checkbox-group v-model="company_selected">
+                        <van-checkbox v-for="(single_company_name, index) in company_for_select" :key="index" :name="single_company_name">{{single_company_name}}</van-checkbox>
+                    </van-checkbox-group>
+                </template>
+            </van-field>
+            <van-button round block>确认</van-button>
+        </van-form>
+    </van-dialog>
+    <van-dialog v-model="change_diag_show" close-on-click-overlay title="改派" :show-confirm-button="false">
+        <van-form @submit="change_company_name_2_server">
+            <history-input search_key="company_name" v-model="new_company_name" :rules="[{ required: true, message: '请填写公司名' }]"></history-input>
+            <van-button round block>确认</van-button>
         </van-form>
     </van-dialog>
 </div>
@@ -111,7 +132,11 @@ import {
 import {
     Field
 } from 'vant';
-
+import {
+    Switch
+} from 'vant';
+import HistoryInput from '../components/HistoryInput.vue'
+Vue.use(Switch);
 Vue.use(Form);
 Vue.use(Field);
 Vue.use(Search);
@@ -129,8 +154,17 @@ Vue.use(List);
 Vue.use(Dialog);
 export default {
     name: 'CompanyExtraVichele',
+    components: {
+        "history-input": HistoryInput,
+    },
     data: function () {
         return {
+            new_company_name: '',
+            change_diag_show: false,
+            change_id: 0,
+            company_for_select: [],
+            company_selected: [],
+            catch_free: false,
             show_confirm_diag: false,
             price: '',
             vichele_search_filter: '',
@@ -209,6 +243,24 @@ export default {
         },
     },
     methods: {
+        change_company_name_2_server: function () {
+            var vue_this = this;
+            vue_this.$call_remote_process("vichele_management", "change_company_name", [vue_this.$cookies.get('pa_ssid'), vue_this.change_id, vue_this.new_company_name]).then(function (resp) {
+                if (resp) {
+                    vue_this.change_diag_show = false;
+                    vue_this.change_id = 0;
+                    vue_this.new_company_name = "";
+                    vue_this.finished = false;
+                    vue_this.items = [];
+                    vue_this.select_pool = [];
+                    vue_this.$refs.all_record.check();
+                }
+            });
+        },
+        change_company_name: function (_id) {
+            this.change_id = _id;
+            this.change_diag_show = true;
+        },
         refresh_all_records: function () {
             this.$refs.all_record.check();
         },
@@ -243,14 +295,19 @@ export default {
             var vue_this = this;
             vue_this.select_pool.forEach(element => {
                 element.price = parseFloat(vue_this.price);
+                if (vue_this.catch_free) {
+                    element.company_name = "";
+                }
             });
             vue_this.price = '';
-            vue_this.$call_remote_process("vichele_management", 'confirm_vichele', [vue_this.$cookies.get('pa_ssid'), vue_this.select_pool]).then(function (resp) {
+            vue_this.$call_remote_process("vichele_management", 'confirm_vichele', [vue_this.$cookies.get('pa_ssid'), vue_this.select_pool, vue_this.company_selected]).then(function (resp) {
                 if (resp) {
                     vue_this.show_confirm_diag = false;
                     vue_this.finished = false;
                     vue_this.items = [];
                     vue_this.select_pool = [];
+                    vue_this.catch_free = false;
+                    vue_this.company_selected = [];
                     vue_this.$refs.all_record.check();
                 }
             });
@@ -267,6 +324,20 @@ export default {
                 vue_this.loading = false;
             });
         },
+        init_company_for_select: function () {
+            var vue_this = this;
+            vue_this.$call_remote_process("vichele_management", "company_history", [vue_this.$cookies.get('pa_ssid')]).then(function (resp) {
+                vue_this.company_for_select = [];
+                resp.forEach(element => {
+                    if (element) {
+                        vue_this.company_for_select.push(element);
+                    }
+                });
+            });
+        },
+    },
+    beforeMount: function () {
+        this.init_company_for_select();
     },
 }
 </script>

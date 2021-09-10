@@ -364,7 +364,7 @@ public:
         }
     }
 
-    virtual bool confirm_vichele(const std::string &ssid, const std::vector<vichele_stay_alone> &info)
+    virtual bool confirm_vichele(const std::string &ssid, const std::vector<vichele_stay_alone> &info, const std::vector<std::string> &company_for_select)
     {
         auto user = PA_DATAOPT_get_online_user(ssid);
         if (!user)
@@ -379,10 +379,18 @@ public:
 
         std::string query_cmd = "PRI_ID == 0";
         double price = 0;
+        std::string company_name;
         for (auto &itr : info)
         {
             query_cmd += " OR PRI_ID == " + std::to_string(itr.id);
             price = itr.price;
+            company_name = itr.company_name;
+        }
+
+        std::string company_for_select_string;
+        for (auto &itr:company_for_select)
+        {
+            company_for_select_string += itr + ";";
         }
 
         std::list<pa_sql_vichele_stay_alone> tmp;
@@ -391,6 +399,8 @@ public:
         {
             itr.status = 1;
             itr.price = price;
+            itr.company_name = company_name;
+            itr.company_for_select = company_for_select_string;
             if (itr.update_record())
             {
                 auto silent_user = itr.get_parent<pa_sql_silent_user>("created_by");
@@ -446,7 +456,7 @@ public:
         return true;
     }
 
-    bool verify_unique_from_team(const vichele_team& team_info)
+    bool verify_unique_from_team(const vichele_team &team_info)
     {
         bool ret = false;
 
@@ -612,6 +622,100 @@ public:
             members.driver_phone = member_from_sql[i]("driver_phone");
             members.main_vichele_number = member_from_sql[i]("main_vichele_number");
             _return.members.push_back(members);
+        }
+    }
+
+    virtual bool change_company_name(const std::string &ssid, const int64_t vichele_id, const std::string &company_name)
+    {
+        auto opt_user = PA_DATAOPT_get_online_user(ssid);
+        if (!opt_user)
+        {
+            PA_RETURN_UNLOGIN_MSG();
+        }
+
+        auto company = opt_user->get_parent<pa_sql_company>("belong_company");
+        if (!company)
+        {
+            PA_RETURN_NOPRIVA_MSG();
+        }
+
+        auto vichele_info = company->get_children<pa_sql_vichele_stay_alone>("destination", "PRI_ID == %ld", vichele_id);
+        if (!vichele_info)
+        {
+            PA_RETURN_NOPRIVA_MSG();
+        }
+        std::string sync_del_ret;
+        if (vichele_info->company_name.length() > 0)
+        {
+            sync_del_ret = PA_DATAOPT_post_sync_change_register(*vichele_info);
+            if (sync_del_ret.length() > 0)
+            {
+                PA_RETURN_MSG("修改失败：" + sync_del_ret);
+            }
+        }
+        vichele_info->company_name = company_name;
+        vichele_info->update_record();
+        std::list<pa_sql_vichele_stay_alone> tmp;
+        tmp.push_back(*vichele_info);
+        PA_DATAOPT_post_save_register(tmp);
+
+        auto driver = sqlite_orm::search_record<pa_sql_driver>("phone = '%s' AND silent_id != ''", vichele_info->driver_phone.c_str());
+        if (driver)
+        {
+            PA_WECHAT_send_extra_vichele_msg(*vichele_info, driver->silent_id, "公司改派了拉货公司:" + company_name);
+        }
+
+        return true;
+    }
+    virtual bool fill_company_name(const std::string &open_id, const int64_t vichele_id, const std::string &company_name)
+    {
+        auto driver = sqlite_orm::search_record<pa_sql_driver>("silent_id = '%s'", open_id.c_str());
+        if (!driver)
+        {
+            PA_RETURN_NOPRIVA_MSG();
+        }
+        auto vichele_info = sqlite_orm::search_record<pa_sql_vichele_stay_alone>("PRI_ID == %ld AND driver_phone == '%s' AND company_name == ''", vichele_id, driver->phone.c_str());
+        if (!vichele_info)
+        {
+            PA_RETURN_NOPRIVA_MSG();
+        }
+
+        vichele_info->company_name = company_name;
+        vichele_info->update_record();
+        std::list<pa_sql_vichele_stay_alone> tmp;
+        tmp.push_back(*vichele_info);
+        PA_DATAOPT_post_save_register(tmp);
+        auto dest_company = vichele_info->get_parent<pa_sql_company>("destination");
+        if (dest_company)
+        {
+            auto company_staff = dest_company->get_all_children<pa_sql_userinfo>("belong_company");
+            for (auto &itr : company_staff)
+            {
+                PA_WECHAT_send_extra_vichele_msg(*vichele_info, itr.openid, "司机指定了拉货公司:" + company_name);
+            }
+        }
+
+        return true;
+    }
+
+    virtual void company_history(std::vector<std::string> &_return, const std::string &ssid)
+    {
+        auto opt_user = PA_DATAOPT_get_online_user(ssid);
+        if (!opt_user)
+        {
+            PA_RETURN_UNLOGIN_MSG();
+        }
+
+        auto company = opt_user->get_parent<pa_sql_company>("belong_company");
+        if (!company)
+        {
+            PA_RETURN_NOCOMPANY_MSG();
+        }
+
+        auto stay_alone_vichele = company->get_all_children<pa_sql_vichele_stay_alone>("destination", "PRI_ID != 0 GROUP BY company_name");
+        for (auto &itr : stay_alone_vichele)
+        {
+            _return.push_back(itr.company_name);
         }
     }
 };

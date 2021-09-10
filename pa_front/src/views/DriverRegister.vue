@@ -13,11 +13,12 @@
         <van-cell title="身份证号" :value="driver_id"></van-cell>
         <van-divider>今日承运信息</van-divider>
         <div class="single_record_show" v-for="(single_trans, index) in trans_info" :key="index">
-            <van-cell :title="single_trans.main_vichele + '-' + single_trans.behind_vichele" :value="single_trans.stuff_name" :label="single_trans.order_company" />
+            <van-cell :title="single_trans.main_vichele + '-' + single_trans.behind_vichele" :value="single_trans.stuff_name" :label="single_trans.order_company?single_trans.order_company:'(未指定拉货公司)'" />
             <van-cell :title="single_trans.destination_company" center>
                 <template #right-icon>
                     <div style="margin-left:8px;">
-                        <van-button v-if="!single_trans.is_registered" type="info" size="small" @click="register_vichele(single_trans.destination_company, single_trans.id)">排号</van-button>
+                        <van-button v-if="!single_trans.is_registered && single_trans.destination_company" type="info" size="small" @click="register_vichele(single_trans.destination_company, single_trans.id)">排号</van-button>
+                        <van-button v-if="!single_trans.order_company && single_trans.is_buy" type="info" size="small" @click="act_select_company = true;focus_vichele_index = index">指定拉货公司</van-button>
                     </div>
                 </template>
                 <div v-if="single_trans.is_registered">
@@ -30,6 +31,7 @@
             <van-cell title="详细地址：" :value="single_trans.destination_address"></van-cell>
             <van-cell v-if="single_trans.is_registered" title="进厂位置：" :value="single_trans.enter_location" :label="'签到时间:' + single_trans.register_timestamp"></van-cell>
         </div>
+        <van-action-sheet v-model="act_select_company" :actions="company_for_select" @select="fill_company" />
     </div>
     <div v-if="need_bind_info">
         <van-form @submit="register_driver">
@@ -77,7 +79,11 @@ import {
 import {
     CountDown
 } from 'vant';
+import {
+    ActionSheet
+} from 'vant';
 
+Vue.use(ActionSheet);
 Vue.use(CountDown);
 Vue.use(Cell);
 Vue.use(CellGroup);
@@ -103,9 +109,34 @@ export default {
             driver_id: '',
             driver_phone: '',
             current_count_down: 0,
+            act_select_company: false,
+            focus_vichele_index: 0,
         };
     },
+    computed: {
+        company_for_select: function () {
+            var ret = [];
+            if (this.trans_info.length > 0) {
+                this.trans_info[this.focus_vichele_index].company_for_select.forEach(element => {
+                    ret.push({
+                        name: element
+                    });
+                });
+            }
+
+            return ret;
+        },
+    },
     methods: {
+        fill_company: function (item) {
+            var vue_this = this;
+            vue_this.$call_remote_process("vichele_management", "fill_company_name", [vue_this.$cookies.get('driver_silent_id'), vue_this.trans_info[vue_this.focus_vichele_index].id, item.name]).then(function (resp) {
+                if (resp) {
+                    vue_this.act_select_company = false;
+                    vue_this.$router.go(0);
+                }
+            });
+        },
         reset_user: function () {
             var vue_this = this;
             vue_this.$call_remote_process("stuff_plan_management", 'driver_silent_unregister', [vue_this.$cookies.get('driver_silent_id')]).then(function () {

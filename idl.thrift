@@ -287,6 +287,8 @@ struct today_driver_info {
     10:string enter_location,
     11:bool is_registered,
     12:string register_order,
+    13:bool is_buy,
+    14:list<string> company_for_select,
 }
 
 struct driver_detail_info {
@@ -492,11 +494,14 @@ service vichele_management {
     void set_silent_user_info(1:string open_id, 2:silent_user_info info) throws (1:gen_exp e),
     list<string> get_input_history(1:string open_id, 2:vichele_stay_alone search_key) throws (1:gen_exp e),
     list<vichele_stay_alone> get_company_vichele_info(1:string ssid, 2:i64 anchor) throws (1:gen_exp e),
-    bool confirm_vichele(1:string ssid, 2:list<vichele_stay_alone> info) throws (1:gen_exp e),
+    bool confirm_vichele(1:string ssid, 2:list<vichele_stay_alone> info, 3:list<string> company_for_select) throws (1:gen_exp e),
     bool cancel_vichele(1:string ssid, 2:list<vichele_stay_alone> info) throws (1:gen_exp e),
     bool create_vichele_team(1:string open_id, 2:vichele_team team_info) throws (1:gen_exp e),
     bool update_vichele_team(1:string open_id, 2:vichele_team team_info) throws (1:gen_exp e),
     bool del_vichele_team(1:string open_id, 2:i64 team_id) throws (1:gen_exp e),
     list<vichele_team> get_all_vichele_team(1:string open_id) throws (1:gen_exp e),
     vichele_team get_vichele_team(1:string open_id, 2:i64 team_id) throws (1:gen_exp e),
+    bool change_company_name(1:string ssid, 2:i64 vichele_id, 3:string company_name) throws (1:gen_exp e),
+    bool fill_company_name(1:string open_id, 2:i64 vichele_id, 3:string company_name) throws (1:gen_exp e),
+    list<string> company_history(1:string ssid) throws (1:gen_exp e),
 }
