@@ -5172,3 +5172,100 @@ vichele_team = class {
   }
 
 };
+supplier_basic_info = class {
+  constructor(args) {
+    this.name = null;
+    this.reserves = null;
+    this.max_vichele = null;
+    this.id = null;
+    if (args) {
+      if (args.name !== undefined && args.name !== null) {
+        this.name = args.name;
+      }
+      if (args.reserves !== undefined && args.reserves !== null) {
+        this.reserves = args.reserves;
+      }
+      if (args.max_vichele !== undefined && args.max_vichele !== null) {
+        this.max_vichele = args.max_vichele;
+      }
+      if (args.id !== undefined && args.id !== null) {
+        this.id = args.id;
+      }
+    }
+  }
+
+  read (input) {
+    input.readStructBegin();
+    while (true) {
+      const ret = input.readFieldBegin();
+      const ftype = ret.ftype;
+      const fid = ret.fid;
+      if (ftype == Thrift.Type.STOP) {
+        break;
+      }
+      switch (fid) {
+        case 1:
+        if (ftype == Thrift.Type.STRING) {
+          this.name = input.readString().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        case 2:
+        if (ftype == Thrift.Type.DOUBLE) {
+          this.reserves = input.readDouble().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        case 3:
+        if (ftype == Thrift.Type.I64) {
+          this.max_vichele = input.readI64().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        case 4:
+        if (ftype == Thrift.Type.I64) {
+          this.id = input.readI64().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        default:
+          input.skip(ftype);
+      }
+      input.readFieldEnd();
+    }
+    input.readStructEnd();
+    return;
+  }
+
+  write (output) {
+    output.writeStructBegin('supplier_basic_info');
+    if (this.name !== null && this.name !== undefined) {
+      output.writeFieldBegin('name', Thrift.Type.STRING, 1);
+      output.writeString(this.name);
+      output.writeFieldEnd();
+    }
+    if (this.reserves !== null && this.reserves !== undefined) {
+      output.writeFieldBegin('reserves', Thrift.Type.DOUBLE, 2);
+      output.writeDouble(this.reserves);
+      output.writeFieldEnd();
+    }
+    if (this.max_vichele !== null && this.max_vichele !== undefined) {
+      output.writeFieldBegin('max_vichele', Thrift.Type.I64, 3);
+      output.writeI64(this.max_vichele);
+      output.writeFieldEnd();
+    }
+    if (this.id !== null && this.id !== undefined) {
+      output.writeFieldBegin('id', Thrift.Type.I64, 4);
+      output.writeI64(this.id);
+      output.writeFieldEnd();
+    }
+    output.writeFieldStop();
+    output.writeStructEnd();
+    return;
+  }
+
+};

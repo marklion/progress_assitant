@@ -1072,3 +1072,14 @@ void PA_DATAOPT_post_get_queue(pa_sql_single_vichele &_vichele)
         post_json_to_third(ctrl_url, req.ToString(), key, token, proc_que_get_ret);
     }
 }
+
+std::unique_ptr<pa_sql_company> PA_DATAOPT_get_company_by_ssid(const std::string &ssid)
+{
+    auto user = PA_DATAOPT_get_online_user(ssid);
+    if (user)
+    {
+        return user->get_parent<pa_sql_company>("belong_company");
+    }
+
+    return std::unique_ptr<pa_sql_company>();
+}

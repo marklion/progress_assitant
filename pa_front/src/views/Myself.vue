@@ -24,6 +24,7 @@
             <van-cell icon="info-o" is-link :to="{name:'BoundInfo'}" title="公司数据"></van-cell>
             <van-cell icon="sign" is-link :to="{name:'Contract'}" title="合同管理"></van-cell>
             <van-cell v-if="!$store.state.userinfo.buyer" icon="notes-o" is-link :to="{name:'CompanyExtraVichele'}" title="采购进厂"></van-cell>
+            <van-cell v-if="!$store.state.userinfo.buyer" icon="hotel-o" is-link :to="{name:'SupplierInfo'}" title="供应商"></van-cell>
             <van-cell v-if="!$store.state.userinfo.buyer" icon="apps-o" is-link :to="{name:'ThirdDev'}" title="开发选项"></van-cell>
         </van-cell-group>
         <van-divider />

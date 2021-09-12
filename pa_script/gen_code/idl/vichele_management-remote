@@ -44,6 +44,10 @@ if len(sys.argv) <= 1 or sys.argv[1] == '--help':
     print('  bool change_company_name(string ssid, i64 vichele_id, string company_name)')
     print('  bool fill_company_name(string open_id, i64 vichele_id, string company_name)')
     print('   company_history(string ssid)')
+    print('  bool add_supplier(string ssid, supplier_basic_info supplier_info)')
+    print('  bool update_supplier(string ssid, supplier_basic_info supplier_info)')
+    print('  bool del_supplier(string ssid, i64 supplier_id)')
+    print('   get_all_supplier(string ssid)')
     print('')
     sys.exit(0)
 
@@ -242,6 +246,30 @@ elif cmd == 'company_history':
         print('company_history requires 1 args')
         sys.exit(1)
     pp.pprint(client.company_history(args[0],))
+
+elif cmd == 'add_supplier':
+    if len(args) != 2:
+        print('add_supplier requires 2 args')
+        sys.exit(1)
+    pp.pprint(client.add_supplier(args[0], eval(args[1]),))
+
+elif cmd == 'update_supplier':
+    if len(args) != 2:
+        print('update_supplier requires 2 args')
+        sys.exit(1)
+    pp.pprint(client.update_supplier(args[0], eval(args[1]),))
+
+elif cmd == 'del_supplier':
+    if len(args) != 2:
+        print('del_supplier requires 2 args')
+        sys.exit(1)
+    pp.pprint(client.del_supplier(args[0], eval(args[1]),))
+
+elif cmd == 'get_all_supplier':
+    if len(args) != 1:
+        print('get_all_supplier requires 1 args')
+        sys.exit(1)
+    pp.pprint(client.get_all_supplier(args[0],))
 
 else:
     print('Unrecognized method %s' % cmd)

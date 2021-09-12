@@ -483,6 +483,13 @@ struct vichele_team {
     3:i64 id,
 }
 
+struct supplier_basic_info {
+    1:string name,
+    2:double reserves,
+    3:i64 max_vichele,
+    4:i64 id,
+}
+
 service vichele_management {
     bool create_vichele_info(1:string open_id, 2:list<vichele_stay_alone> vichele_info) throws (1:gen_exp e),
     bool delete_vichele_info(1:string open_id, 2:i64 vichele_id) throws (1:gen_exp e),
@@ -504,4 +511,8 @@ service vichele_management {
     bool change_company_name(1:string ssid, 2:i64 vichele_id, 3:string company_name) throws (1:gen_exp e),
     bool fill_company_name(1:string open_id, 2:i64 vichele_id, 3:string company_name) throws (1:gen_exp e),
     list<string> company_history(1:string ssid) throws (1:gen_exp e),
+    bool add_supplier(1:string ssid, 2:supplier_basic_info supplier_info) throws (1:gen_exp e),
+    bool update_supplier(1:string ssid, 2:supplier_basic_info supplier_info) throws (1:gen_exp e),
+    bool del_supplier(1:string ssid, 2:i64 supplier_id) throws (1:gen_exp e),
+    list<supplier_basic_info> get_all_supplier(1:string ssid) throws (1:gen_exp e),
 }

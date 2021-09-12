@@ -785,4 +785,27 @@ public:
     }
 };
 
+class pa_sql_supplier_basic_info:public sql_tree_base {
+public:
+    std::string name;
+    double reserves = 0;
+    long max_vichele = 0;
+    pa_sql_supplier_basic_info() {
+        add_parent_type<pa_sql_company>("belong_company");
+    }
+    virtual std::vector<sqlite_orm_column> self_columns_defined() { 
+        std::vector<sqlite_orm_column> ret;
+        ret.push_back(sqlite_orm_column("name", sqlite_orm_column::STRING, &name, SQLITE_ORM_COLUMN_LIMIT_UNIQ));
+        ret.push_back(sqlite_orm_column("reserves", sqlite_orm_column::REAL, &reserves));
+        ret.push_back(sqlite_orm_column("max_vichele", sqlite_orm_column::INTEGER, &max_vichele));
+
+        return ret;
+    }
+
+    virtual std::string table_name()
+    {
+        return "supplier_basic_info_table";
+    }
+};
+
 #endif // _PA_DATABSE_H_

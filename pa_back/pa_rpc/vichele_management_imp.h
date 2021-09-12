@@ -718,6 +718,92 @@ public:
             _return.push_back(itr.company_name);
         }
     }
+
+    virtual bool add_supplier(const std::string &ssid, const supplier_basic_info &supplier_info)
+    {
+        bool ret = false;
+
+        auto company = PA_DATAOPT_get_company_by_ssid(ssid);
+        if (!company)
+        {
+            PA_RETURN_NOPRIVA_MSG();
+        }
+
+        auto exist_record = company->get_children<pa_sql_supplier_basic_info>("belong_company", "name == '%s'", supplier_info.name.c_str());
+        if (exist_record)
+        {
+            PA_RETURN_MSG("供应商已存在");
+        }
+
+        pa_sql_supplier_basic_info tmp;
+        tmp.name = supplier_info.name;
+        tmp.max_vichele = supplier_info.max_vichele;
+        tmp.reserves = supplier_info.reserves;
+        tmp.set_parent(*company, "belong_company");
+
+        ret = tmp.insert_record();
+
+        return ret;
+    }
+    virtual bool update_supplier(const std::string &ssid, const supplier_basic_info &supplier_info)
+    {
+        bool ret = false;
+        auto company = PA_DATAOPT_get_company_by_ssid(ssid);
+        if (!company)
+        {
+            PA_RETURN_NOPRIVA_MSG();
+        }
+
+        auto exist_record = company->get_children<pa_sql_supplier_basic_info>("belong_company", "name == '%s'", supplier_info.name.c_str());
+        if (!exist_record)
+        {
+            PA_RETURN_MSG("供应商不已存在");
+        }
+
+        exist_record->max_vichele = supplier_info.max_vichele;
+        exist_record->name = supplier_info.name;
+        exist_record->reserves = supplier_info.reserves;
+
+        ret = exist_record->update_record();
+
+        return ret;
+    }
+    virtual bool del_supplier(const std::string &ssid, const int64_t supplier_id)
+    {
+        bool ret = false;
+        auto company = PA_DATAOPT_get_company_by_ssid(ssid);
+        if (!company)
+        {
+            PA_RETURN_NOPRIVA_MSG();
+        }
+
+        auto exist_record = company->get_children<pa_sql_supplier_basic_info>("belong_company", "PRI_ID == %ld", supplier_id);
+        if (!exist_record)
+        {
+            PA_RETURN_MSG("供应商不已存在");
+        }
+        exist_record->remove_record();
+        ret = true;
+        return ret;
+    }
+    virtual void get_all_supplier(std::vector<supplier_basic_info> &_return, const std::string &ssid)
+    {
+        auto company = PA_DATAOPT_get_company_by_ssid(ssid);
+        if (!company)
+        {
+            PA_RETURN_NOPRIVA_MSG();
+        }
+        auto all_supplies = company->get_all_children<pa_sql_supplier_basic_info>("belong_company");
+        for (auto &itr:all_supplies)
+        {
+            supplier_basic_info tmp;
+            tmp.id = itr.get_pri_id();
+            tmp.max_vichele = itr.max_vichele;
+            tmp.name = itr.name;
+            tmp.reserves = itr.reserves;
+            _return.push_back(tmp);
+        }
+    }
 };
 
 #endif // _VICHELE_MANAGEMENT_H_

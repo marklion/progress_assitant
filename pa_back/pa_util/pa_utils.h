@@ -65,5 +65,7 @@ std::string PA_DATAOPT_post_sync_change_register(pa_sql_vichele_stay_alone &_vic
 void PA_DATAOPT_post_checkin(pa_sql_single_vichele &_vichele);
 void PA_DATAOPT_post_get_queue(pa_sql_single_vichele &_vichele);
 
+std::unique_ptr<pa_sql_company> PA_DATAOPT_get_company_by_ssid(const std::string &ssid);
+
 
 #endif // _PA_UTILS_H_

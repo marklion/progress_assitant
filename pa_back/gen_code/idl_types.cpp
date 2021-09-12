@@ -7673,3 +7673,155 @@ void vichele_team::printTo(std::ostream& out) const {
 }
 
 
+supplier_basic_info::~supplier_basic_info() noexcept {
+}
+
+
+void supplier_basic_info::__set_name(const std::string& val) {
+  this->name = val;
+}
+
+void supplier_basic_info::__set_reserves(const double val) {
+  this->reserves = val;
+}
+
+void supplier_basic_info::__set_max_vichele(const int64_t val) {
+  this->max_vichele = val;
+}
+
+void supplier_basic_info::__set_id(const int64_t val) {
+  this->id = val;
+}
+std::ostream& operator<<(std::ostream& out, const supplier_basic_info& obj)
+{
+  obj.printTo(out);
+  return out;
+}
+
+
+uint32_t supplier_basic_info::read(::apache::thrift::protocol::TProtocol* iprot) {
+
+  ::apache::thrift::protocol::TInputRecursionTracker tracker(*iprot);
+  uint32_t xfer = 0;
+  std::string fname;
+  ::apache::thrift::protocol::TType ftype;
+  int16_t fid;
+
+  xfer += iprot->readStructBegin(fname);
+
+  using ::apache::thrift::protocol::TProtocolException;
+
+
+  while (true)
+  {
+    xfer += iprot->readFieldBegin(fname, ftype, fid);
+    if (ftype == ::apache::thrift::protocol::T_STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 1:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->name);
+          this->__isset.name = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 2:
+        if (ftype == ::apache::thrift::protocol::T_DOUBLE) {
+          xfer += iprot->readDouble(this->reserves);
+          this->__isset.reserves = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 3:
+        if (ftype == ::apache::thrift::protocol::T_I64) {
+          xfer += iprot->readI64(this->max_vichele);
+          this->__isset.max_vichele = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 4:
+        if (ftype == ::apache::thrift::protocol::T_I64) {
+          xfer += iprot->readI64(this->id);
+          this->__isset.id = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      default:
+        xfer += iprot->skip(ftype);
+        break;
+    }
+    xfer += iprot->readFieldEnd();
+  }
+
+  xfer += iprot->readStructEnd();
+
+  return xfer;
+}
+
+uint32_t supplier_basic_info::write(::apache::thrift::protocol::TProtocol* oprot) const {
+  uint32_t xfer = 0;
+  ::apache::thrift::protocol::TOutputRecursionTracker tracker(*oprot);
+  xfer += oprot->writeStructBegin("supplier_basic_info");
+
+  xfer += oprot->writeFieldBegin("name", ::apache::thrift::protocol::T_STRING, 1);
+  xfer += oprot->writeString(this->name);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("reserves", ::apache::thrift::protocol::T_DOUBLE, 2);
+  xfer += oprot->writeDouble(this->reserves);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("max_vichele", ::apache::thrift::protocol::T_I64, 3);
+  xfer += oprot->writeI64(this->max_vichele);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("id", ::apache::thrift::protocol::T_I64, 4);
+  xfer += oprot->writeI64(this->id);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldStop();
+  xfer += oprot->writeStructEnd();
+  return xfer;
+}
+
+void swap(supplier_basic_info &a, supplier_basic_info &b) {
+  using ::std::swap;
+  swap(a.name, b.name);
+  swap(a.reserves, b.reserves);
+  swap(a.max_vichele, b.max_vichele);
+  swap(a.id, b.id);
+  swap(a.__isset, b.__isset);
+}
+
+supplier_basic_info::supplier_basic_info(const supplier_basic_info& other102) {
+  name = other102.name;
+  reserves = other102.reserves;
+  max_vichele = other102.max_vichele;
+  id = other102.id;
+  __isset = other102.__isset;
+}
+supplier_basic_info& supplier_basic_info::operator=(const supplier_basic_info& other103) {
+  name = other103.name;
+  reserves = other103.reserves;
+  max_vichele = other103.max_vichele;
+  id = other103.id;
+  __isset = other103.__isset;
+  return *this;
+}
+void supplier_basic_info::printTo(std::ostream& out) const {
+  using ::apache::thrift::to_string;
+  out << "supplier_basic_info(";
+  out << "name=" << to_string(name);
+  out << ", " << "reserves=" << to_string(reserves);
+  out << ", " << "max_vichele=" << to_string(max_vichele);
+  out << ", " << "id=" << to_string(id);
+  out << ")";
+}
+
+
