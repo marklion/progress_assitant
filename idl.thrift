@@ -515,4 +515,6 @@ service vichele_management {
     bool update_supplier(1:string ssid, 2:supplier_basic_info supplier_info) throws (1:gen_exp e),
     bool del_supplier(1:string ssid, 2:i64 supplier_id) throws (1:gen_exp e),
     list<supplier_basic_info> get_all_supplier(1:string ssid) throws (1:gen_exp e),
+    string smart_assign(1:string ssid, 2:list<vichele_stay_alone> vichele_info) throws (1:gen_exp e),
+    i64 get_max_vichele_by_supplier(1:string supplier, 2:string company) throws (1:gen_exp e),
 }

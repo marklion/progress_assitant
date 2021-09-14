@@ -10,6 +10,7 @@
 #include "../external_src/writer.hpp"
 #include "pa_rpc_util.h"
 #include "company_management_imp.h"
+#include "vichele_management_imp.h"
 
 static std::vector<std::string> prepare_vichels(const std::string &_vicheles)
 {
@@ -1773,10 +1774,22 @@ public:
             tmp.is_registered = false;
             tmp.is_buy = true;
             tmp.main_vichele = itr.main_vichele_number;
+            std::string dest_company;
+            auto dest_company_p = itr.get_parent<pa_sql_company>("destination");
+            if (dest_company_p)
+            {
+                dest_company = dest_company_p->name;
+            }
             int pos = 0;
             int found_pos = 0;
             while ((found_pos = itr.company_for_select.find(';', pos)) != std::string::npos) {
-                tmp.company_for_select.push_back(itr.company_for_select.substr(pos, found_pos - pos));
+                auto company_name = itr.company_for_select.substr(pos, found_pos - pos);
+                auto today_company_info = sqlite_orm::search_record_all<pa_sql_vichele_stay_alone>("company_name == '%s' AND status > 0 AND is_drop == 0 AND date == '%s'", company_name.c_str(), PA_DATAOPT_current_time().substr(0, 10).c_str());
+                vichele_management_handler vmh;
+                if (today_company_info.size() < vmh.get_max_vichele_by_supplier(company_name, dest_company))
+                {
+                    tmp.company_for_select.push_back(itr.company_for_select.substr(pos, found_pos - pos));
+                }
                 pos = found_pos + 1;
             }
             _return.push_back(tmp);

@@ -35,22 +35,32 @@ struct tdf_async_data {
     std::string m_chrct;
 };
 
+static int cur_thread_count = 0;
 static void work_thread_main_loop()
 {
     std::cout << "sssss" << std::endl;
-
+    static int max_thread_count = 16;
     while (true)
     {
         tdf_async_data *pcoming = nullptr;
         read(g_main2work[0], &pcoming, sizeof(pcoming));
-        if (pcoming->m_proc)
+        while (cur_thread_count >= max_thread_count)
         {
-            pcoming->m_proc(pcoming->m_private, pcoming->m_chrct);
+            sleep(1);
         }
-        delete pcoming;
+        cur_thread_count++;
+        std::thread wt(
+            [=]()
+            {
+                if (pcoming->m_proc)
+                {
+                    pcoming->m_proc(pcoming->m_private, pcoming->m_chrct);
+                }
+                delete pcoming;
+                cur_thread_count--;
+            });
+        wt.detach();
     }
-
-
 }
 
 static std::thread g_work_thread(work_thread_main_loop);
@@ -59,7 +69,7 @@ class tdf_data;
 class tdf_listen;
 struct tdf_timer_node;
 
-static std::map<std::string,tdf_data *> g_data_map;
+static std::map<std::string, tdf_data *> g_data_map;
 static std::map<unsigned short, tdf_listen *> g_listen_map;
 static std::map<int, tdf_timer_node *> g_timer_map;
 
@@ -68,20 +78,22 @@ static int g_epoll_fd;
 static bool g_exit_flag = false;
 static bool g_pause_epoll = false;
 
-
-tdf_main &tdf_main::get_inst() 
+tdf_main &tdf_main::get_inst()
 {
     return m_inst;
 }
 
-class Itdf_io_channel {
+class Itdf_io_channel
+{
 public:
     virtual void proc_in() = 0;
     virtual void proc_out() = 0;
 };
 
-struct tdf_work_pipe_channel:public Itdf_io_channel {
-    virtual void proc_in() {
+struct tdf_work_pipe_channel : public Itdf_io_channel
+{
+    virtual void proc_in()
+    {
         tdf_async_data *pcoming = nullptr;
         read(g_work2main[0], &pcoming, sizeof(pcoming));
         if (pcoming->m_proc)
@@ -90,35 +102,38 @@ struct tdf_work_pipe_channel:public Itdf_io_channel {
         }
         delete pcoming;
     }
-    virtual void proc_out() {
-
+    virtual void proc_out()
+    {
     }
 } g_proc_work_coming_data;
 
-tdf_main::tdf_main() {
+tdf_main::tdf_main()
+{
     g_epoll_fd = epoll_create(1);
     pipe(g_main2work);
     pipe(g_work2main);
 
     struct epoll_event ev = {
         .events = EPOLLIN,
-        .data = {.ptr = &g_proc_work_coming_data}
-    };
+        .data = {.ptr = &g_proc_work_coming_data}};
 
     epoll_ctl(g_epoll_fd, EPOLL_CTL_ADD, g_work2main[0], &ev);
 }
 
-struct tdf_timer_node : public Itdf_io_channel{
+struct tdf_timer_node : public Itdf_io_channel
+{
     int m_sec = -1;
     tdf_timer_proc m_proc = nullptr;
     void *m_private = nullptr;
     int m_handle = -1;
-    void proc_in() {
+    void proc_in()
+    {
         uint64_t times = 0;
-        if (sizeof(uint64_t) == read(m_handle, &times, sizeof(times)))   
+        if (sizeof(uint64_t) == read(m_handle, &times, sizeof(times)))
         {
             int cur_handle = m_handle;
-            while (times--) {
+            while (times--)
+            {
                 if (nullptr == g_timer_map[cur_handle])
                 {
                     break;
@@ -127,12 +142,13 @@ struct tdf_timer_node : public Itdf_io_channel{
             }
         }
     }
-    void proc_out () {
-
+    void proc_out()
+    {
     }
 };
 
-class tdf_data:public Itdf_io_channel {
+class tdf_data : public Itdf_io_channel
+{
 public:
     int m_fd = -1;
     std::string m_chrct;
@@ -140,15 +156,16 @@ public:
     tdf_before_hup_hook m_hup_hook;
     std::string out_buff;
 
-    tdf_data(int _fd, const std::string &_chrct, tdf_data_proc _data_proc, tdf_before_hup_hook _hup_hook):
-             m_fd(_fd),m_chrct(_chrct),m_data_proc(_data_proc), m_hup_hook(_hup_hook) {}
-    ~tdf_data() {
+    tdf_data(int _fd, const std::string &_chrct, tdf_data_proc _data_proc, tdf_before_hup_hook _hup_hook) : m_fd(_fd), m_chrct(_chrct), m_data_proc(_data_proc), m_hup_hook(_hup_hook) {}
+    ~tdf_data()
+    {
         if (m_fd >= 0)
         {
             close(m_fd);
         }
     }
-    void proc_in() {
+    void proc_in()
+    {
         std::string recv_buff;
         char tmp_buff[256];
         int tmp_len = 0;
@@ -171,7 +188,8 @@ public:
             }
         }
     }
-    void proc_out() {
+    void proc_out()
+    {
         int orig_len = out_buff.size();
         auto send_len = send(m_fd, out_buff.data(), orig_len, MSG_DONTWAIT);
         if (send_len < 0)
@@ -183,40 +201,41 @@ public:
         {
             struct epoll_event ev = {
                 .events = EPOLLIN,
-                .data = {.ptr = this}
-            };
+                .data = {.ptr = this}};
             epoll_ctl(g_epoll_fd, EPOLL_CTL_MOD, m_fd, &ev);
         }
         out_buff.erase(0, send_len);
     }
 };
 
-class tdf_listen :public Itdf_io_channel{
+class tdf_listen : public Itdf_io_channel
+{
 public:
     unsigned short m_port;
     tdf_after_con_hook m_con_hook;
     tdf_before_hup_hook m_hup_hook;
     tdf_data_proc m_data_proc;
     int m_fd = -1;
-    tdf_listen(unsigned short _port, 
-               tdf_after_con_hook _con_hook, 
-               tdf_before_hup_hook _hup_hook, 
-               tdf_data_proc _data_proc) :
-               m_port(_port),
-               m_con_hook(_con_hook),
-               m_hup_hook(_hup_hook),
-               m_data_proc(_data_proc) {
+    tdf_listen(unsigned short _port,
+               tdf_after_con_hook _con_hook,
+               tdf_before_hup_hook _hup_hook,
+               tdf_data_proc _data_proc) : m_port(_port),
+                                           m_con_hook(_con_hook),
+                                           m_hup_hook(_hup_hook),
+                                           m_data_proc(_data_proc)
+    {
     }
-    bool set_listen() {
+    bool set_listen()
+    {
         bool ret = false;
         int fd = socket(AF_INET, SOCK_STREAM, 0);
 
-        if (fd >= 0) {
+        if (fd >= 0)
+        {
             struct sockaddr_in server_addr = {
                 .sin_family = AF_INET,
                 .sin_port = ntohs(m_port),
-                .sin_addr = {.s_addr = INADDR_ANY} 
-            };
+                .sin_addr = {.s_addr = INADDR_ANY}};
             int opt = 1;
             setsockopt(fd, SOL_SOCKET, SO_REUSEADDR, (void *)&opt, sizeof(opt));
             if (0 == bind(fd, (struct sockaddr *)&server_addr, sizeof(server_addr)))
@@ -235,14 +254,17 @@ public:
 
         return ret;
     }
-    void clear_listen() {
+    void clear_listen()
+    {
         close(m_fd);
     }
-    void proc_in() {
+    void proc_in()
+    {
         struct sockaddr_in client_addr;
         unsigned int addr_len = sizeof(client_addr);
         int data_fd = accept(m_fd, (sockaddr *)&client_addr, &addr_len);
-        if (0 <= data_fd) {
+        if (0 <= data_fd)
+        {
             std::string chcrt;
             chcrt.append(inet_ntoa(client_addr.sin_addr));
             chcrt.append(std::to_string(ntohs(client_addr.sin_port)));
@@ -251,8 +273,7 @@ public:
 
             struct epoll_event ev = {
                 .events = EPOLLIN,
-                .data = {.ptr = data_channel}
-            };
+                .data = {.ptr = data_channel}};
 
             if (0 == epoll_ctl(g_epoll_fd, EPOLL_CTL_ADD, data_fd, &ev))
             {
@@ -268,8 +289,8 @@ public:
             }
         }
     }
-    void proc_out() {
-
+    void proc_out()
+    {
     }
 };
 
@@ -279,8 +300,7 @@ bool tdf_main::open_listen(unsigned short _port, tdf_after_con_hook _con_hook, t
     auto listen_channel = new tdf_listen(_port, _con_hook, _hup_hook, _data_proc);
     struct epoll_event ev = {
         .events = EPOLLIN,
-        .data = {.ptr = listen_channel}
-    };
+        .data = {.ptr = listen_channel}};
 
     if (listen_channel->set_listen())
     {
@@ -298,7 +318,7 @@ bool tdf_main::open_listen(unsigned short _port, tdf_after_con_hook _con_hook, t
     {
         delete listen_channel;
     }
-    
+
     return ret;
 }
 void tdf_main::close_listen(unsigned short _port)
@@ -339,14 +359,16 @@ bool tdf_main::run()
         for (int i = 0; i < ev_num; i++)
         {
             auto channel = (Itdf_io_channel *)(evs[i].data.ptr);
-            if (evs[i].events & EPOLLIN) {
+            if (evs[i].events & EPOLLIN)
+            {
                 channel->proc_in();
             }
             if (g_pause_epoll)
             {
                 break;
             }
-            if (evs[i].events & EPOLLOUT) {
+            if (evs[i].events & EPOLLOUT)
+            {
                 channel->proc_out();
             }
         }
@@ -354,7 +376,6 @@ bool tdf_main::run()
 
     return ret;
 }
-
 
 void tdf_main::send_data(const std::string &_conn_chrct, const std::string &_data)
 {
@@ -370,9 +391,8 @@ void tdf_main::send_data(const std::string &_conn_chrct, const std::string &_dat
         {
             channel->out_buff.append(_data.begin() + send_len, _data.end());
             struct epoll_event ev = {
-                .events = EPOLLIN|EPOLLOUT,
-                .data = {.ptr = channel}
-            };
+                .events = EPOLLIN | EPOLLOUT,
+                .data = {.ptr = channel}};
             epoll_ctl(g_epoll_fd, EPOLL_CTL_MOD, channel->m_fd, &ev);
         }
     }
@@ -398,20 +418,20 @@ void tdf_main::stop()
 {
     std::list<unsigned short> ports;
     std::list<std::string> chrcts;
-    
-    for (auto itr:g_listen_map)
+
+    for (auto itr : g_listen_map)
     {
         ports.push_back(itr.first);
     }
-    for (auto itr:g_data_map)
+    for (auto itr : g_data_map)
     {
         chrcts.push_back(itr.first);
     }
-    for (auto itr:ports)
+    for (auto itr : ports)
     {
         close_listen(itr);
     }
-    for (auto itr:chrcts)
+    for (auto itr : chrcts)
     {
         close_data(itr);
     }
@@ -427,12 +447,10 @@ int tdf_main::start_timer(int _sec, tdf_timer_proc _proc, void *_private)
     {
         timespec tv = {
             .tv_sec = _sec,
-            .tv_nsec = 0
-        };
+            .tv_nsec = 0};
         itimerspec itv = {
             .it_interval = tv,
-            .it_value = tv
-        };
+            .it_value = tv};
         ret = timerfd_settime(timer_fd, 0, &itv, nullptr);
 
         auto pnode = new tdf_timer_node();
@@ -443,15 +461,15 @@ int tdf_main::start_timer(int _sec, tdf_timer_proc _proc, void *_private)
 
         struct epoll_event ev = {
             .events = EPOLLIN,
-            .data = {.ptr = pnode}
-        };
+            .data = {.ptr = pnode}};
 
         if (0 == epoll_ctl(g_epoll_fd, EPOLL_CTL_ADD, timer_fd, &ev))
         {
             g_timer_map[timer_fd] = pnode;
             ret = timer_fd;
         }
-        else {
+        else
+        {
             close(timer_fd);
             delete pnode;
         }
@@ -463,7 +481,8 @@ int tdf_main::start_timer(int _sec, tdf_timer_proc _proc, void *_private)
 void tdf_main::stop_timer(int _timer_handle)
 {
     auto pnode = g_timer_map[_timer_handle];
-    if (nullptr != pnode) {
+    if (nullptr != pnode)
+    {
         close(_timer_handle);
         g_timer_map.erase(_timer_handle);
         delete pnode;
@@ -473,7 +492,6 @@ void tdf_main::stop_timer(int _timer_handle)
 
 tdf_main::~tdf_main()
 {
-    
 }
 void tdf_main::Async_to_workthread(tdf_async_proc _func, void *_private, const std::string &_chrct)
 {
@@ -506,7 +524,6 @@ std::string get_string_from_format(const char *format, va_list vl_orig)
         ret.assign(tmpbuff);
         free(tmpbuff);
     }
-
 
     return ret;
 }

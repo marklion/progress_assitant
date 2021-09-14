@@ -73,6 +73,7 @@ public:
             tmp.driver_phone = itr.driver_phone;
             tmp.driver_id = itr.driver_id;
             tmp.transfor_company = itr.transfor_company;
+            tmp.price = itr.price;
 
             ret = tmp.insert_record();
             if (ret)
@@ -156,6 +157,7 @@ public:
         extra_vichele->driver_phone = vichele_info.driver_phone;
         extra_vichele->driver_id = vichele_info.driver_id;
         extra_vichele->transfor_company = vichele_info.transfor_company;
+        extra_vichele->price = vichele_info.price;
 
         auto black_list_ret = pa_sql_blacklist::target_was_blocked(vichele_info.main_vichele_number, pa_sql_blacklist::vehicle, *dest_company);
         if (black_list_ret.length() > 0)
@@ -167,7 +169,7 @@ public:
         {
             PA_RETURN_MSG(vichele_info.driver_name + "在黑名单中");
         }
-        auto conflict_one = dest_company->get_children<pa_sql_vichele_stay_alone>("destination", "main_vichele_number == '%s' AND date == '%s' AND is_drop == 0", vichele_info.main_vichele_number.c_str(), vichele_info.date.c_str());
+        auto conflict_one = dest_company->get_children<pa_sql_vichele_stay_alone>("destination", "main_vichele_number == '%s' AND date == '%s' AND is_drop == 0 AND PRI_ID != %ld", vichele_info.main_vichele_number.c_str(), vichele_info.date.c_str(), vichele_info.id);
         if (conflict_one)
         {
             PA_RETURN_MSG(vichele_info.main_vichele_number + "重复派出");
@@ -400,7 +402,14 @@ public:
             itr.status = 1;
             itr.price = price;
             itr.company_name = company_name;
-            itr.company_for_select = company_for_select_string;
+            auto created_user = itr.get_parent<pa_sql_silent_user>("created_by");
+            if (created_user)
+            {
+                if (company->get_children<pa_sql_userinfo>("belong_company", "openid == '%s'", created_user->open_id.c_str()))
+                {
+                    itr.company_for_select = company_for_select_string;
+                }
+            }
             if (itr.update_record())
             {
                 auto silent_user = itr.get_parent<pa_sql_silent_user>("created_by");
@@ -700,22 +709,11 @@ public:
 
     virtual void company_history(std::vector<std::string> &_return, const std::string &ssid)
     {
-        auto opt_user = PA_DATAOPT_get_online_user(ssid);
-        if (!opt_user)
+        std::vector<supplier_basic_info> ret;
+        get_all_supplier(ret, ssid);
+        for (auto &itr:ret)
         {
-            PA_RETURN_UNLOGIN_MSG();
-        }
-
-        auto company = opt_user->get_parent<pa_sql_company>("belong_company");
-        if (!company)
-        {
-            PA_RETURN_NOCOMPANY_MSG();
-        }
-
-        auto stay_alone_vichele = company->get_all_children<pa_sql_vichele_stay_alone>("destination", "PRI_ID != 0 GROUP BY company_name");
-        for (auto &itr : stay_alone_vichele)
-        {
-            _return.push_back(itr.company_name);
+            _return.push_back(itr.name);
         }
     }
 
@@ -794,7 +792,7 @@ public:
             PA_RETURN_NOPRIVA_MSG();
         }
         auto all_supplies = company->get_all_children<pa_sql_supplier_basic_info>("belong_company");
-        for (auto &itr:all_supplies)
+        for (auto &itr : all_supplies)
         {
             supplier_basic_info tmp;
             tmp.id = itr.get_pri_id();
@@ -803,6 +801,124 @@ public:
             tmp.reserves = itr.reserves;
             _return.push_back(tmp);
         }
+    }
+
+    std::string get_best_company_by_vichele(pa_sql_vichele_stay_alone &_vichele, pa_sql_company &company)
+    {
+        std::string ret;
+        struct supplier_grade
+        {
+            double cur_reserves = 0;
+            long vichele_number = 0;
+            std::string name;
+        };
+        auto last_15 = sqlite_orm::search_record_all<pa_sql_vichele_stay_alone>("main_vichele_number == '%s' AND status == 2 ORDER BY date DESC LIMIT 15", _vichele.main_vichele_number.c_str());
+        auto all_supplier = company.get_all_children<pa_sql_supplier_basic_info>("belong_company");
+        std::vector<supplier_grade> suppliers;
+        for (auto &itr : all_supplier)
+        {
+            auto related_vichele = company.get_all_children<pa_sql_vichele_stay_alone>("destination", "company_name == '%s' AND status > 0 AND is_drop == 0 AND date == '%s'", itr.name.c_str(), PA_DATAOPT_current_time().substr(0, 10).c_str());
+            supplier_grade tmp;
+            tmp.name = itr.name;
+            tmp.cur_reserves = itr.reserves - related_vichele.size() * 20;
+            tmp.vichele_number = [&]() -> long
+            {
+                long ret = 0;
+                for (auto &single_vichele : last_15)
+                {
+                    if (single_vichele.company_name == itr.name)
+                    {
+                        ret++;
+                    }
+                }
+
+                return ret;
+            }();
+            suppliers.push_back(tmp);
+        }
+
+        std::sort(suppliers.begin(), suppliers.end(), [](supplier_grade &a, supplier_grade &b)
+                  { return (a.cur_reserves / 1000 + 15 - a.vichele_number) > (b.cur_reserves / 1000 + 15 - b.vichele_number); });
+
+        if (suppliers.size() > 0)
+        {
+            ret = suppliers[0].name;
+        }
+
+        return ret;
+    }
+
+    virtual void smart_assign(std::string &_return, const std::string &ssid, const std::vector<vichele_stay_alone> &vichele_info)
+    {
+        auto company = PA_DATAOPT_get_company_by_ssid(ssid);
+        if (!company)
+        {
+            PA_RETURN_NOPRIVA_MSG();
+        }
+
+        for (auto &itr : vichele_info)
+        {
+            auto vichele_record = sqlite_orm::search_record<pa_sql_vichele_stay_alone>(itr.id);
+            if (!vichele_record)
+            {
+                PA_RETURN_NOPRIVA_MSG();
+            }
+            auto creater = vichele_record->get_parent<pa_sql_silent_user>("created_by");
+            if (!creater)
+            {
+                PA_RETURN_NOPRIVA_MSG();
+            }
+            auto creater_in_company = company->get_children<pa_sql_userinfo>("belong_company", "openid == '%s'", creater->open_id.c_str());
+            if (!creater_in_company)
+            {
+                PA_RETURN_MSG("只有自提的申请才能智能派车");
+            }
+        }
+
+        std::vector<std::string> prob_return;
+        for (auto &itr : vichele_info)
+        {
+            auto vichele_record = sqlite_orm::search_record<pa_sql_vichele_stay_alone>(itr.id);
+            if (!vichele_record)
+            {
+                PA_RETURN_NOPRIVA_MSG();
+            }
+            prob_return.push_back(get_best_company_by_vichele(*vichele_record, *company));
+        }
+        std::map<std::string, long> supplier_prob;
+        for (auto &itr : prob_return)
+        {
+            if (supplier_prob.find(itr) == supplier_prob.end())
+            {
+                supplier_prob[itr] = 0;
+            }
+            supplier_prob[itr]++;
+        }
+        long max = 0;
+        for (auto itr = supplier_prob.begin(); itr != supplier_prob.end(); itr++)
+        {
+            if (itr->second > max)
+            {
+                max = itr->second;
+                _return = itr->first;
+            }
+        }
+    }
+
+    virtual int64_t get_max_vichele_by_supplier(const std::string &supplier, const std::string &company)
+    {
+        int64_t ret = 0;
+        auto company_from_sql = sqlite_orm::search_record<pa_sql_company>("name == '%s'", company.c_str());
+        if (company_from_sql)
+        {
+            auto supplier_from_sql = company_from_sql->get_children<pa_sql_supplier_basic_info>("belong_company", "name == '%s'", supplier.c_str());
+            if (supplier_from_sql)
+            {
+                ret = supplier_from_sql->max_vichele;
+            }
+        }
+
+        return ret;
     }
 };
 

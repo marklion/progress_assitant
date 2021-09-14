@@ -1,6 +1,6 @@
 <template>
 <div class="history_input_show">
-    <van-field readonly clickable :name="search_key" v-model="input_value"  :label="search_key_convert(search_key).show_words" placeholder="点击输入或选择内容" @click="showPicker = true" :rules="rules" :formatter="formatter" />
+    <van-field readonly clickable :name="search_key" v-model="input_value" :label="search_key_convert(search_key).show_words" placeholder="点击输入或选择内容" @click="showPicker = true" :rules="rules" :formatter="formatter" />
     <van-popup v-model="showPicker" position="bottom" get-container="body">
         <van-field v-model="key_word" :placeholder="'请输入' + search_key_convert(search_key).show_words" />
         <van-picker show-toolbar :columns="item_need_select" @confirm="onConfirm" @cancel="showPicker = false" />
@@ -78,7 +78,7 @@ export default {
         value: String,
         search_key: String,
         rules: Array,
-        formatter:Function,
+        formatter: Function,
     },
     model: {
         prop: 'value',
@@ -119,7 +119,14 @@ export default {
         var vue_this = this;
         vue_this.$call_remote_process_no_toast("vichele_management", 'get_input_history', [vue_this.$cookies.get('silent_id'), vue_this.search_key_convert(vue_this.search_key).search_key]).then(function (resp) {
             vue_this.items = [];
-            resp.forEach((element, index) => {
+            var not_empty = [];
+            resp.forEach(element => {
+                if (element) {
+                    not_empty.push(element);
+                }
+            });
+
+            not_empty.forEach((element, index) => {
                 vue_this.$set(vue_this.items, index, element);
             });
         });
