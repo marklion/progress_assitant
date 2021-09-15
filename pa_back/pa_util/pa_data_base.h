@@ -611,6 +611,7 @@ public:
     std::string m_time;
     double price = 0;
     std::string company_for_select;
+    std::string tmd_no;
     pa_sql_vichele_stay_alone() {
         add_parent_type<pa_sql_silent_user>("created_by");
         add_parent_type<pa_sql_company>("destination");
@@ -640,6 +641,7 @@ public:
         ret.push_back(sqlite_orm_column("m_time", sqlite_orm_column::STRING, &m_time));
         ret.push_back(sqlite_orm_column("price", sqlite_orm_column::REAL, &price));
         ret.push_back(sqlite_orm_column("company_for_select", sqlite_orm_column::STRING, &company_for_select));
+        ret.push_back(sqlite_orm_column("tmd_no", sqlite_orm_column::STRING, &tmd_no));
 
         return ret;
     }
@@ -782,6 +784,29 @@ public:
     virtual std::string table_name()
     {
         return "vichele_team_table";
+    }
+};
+
+class pa_sql_supplier_basic_info:public sql_tree_base {
+public:
+    std::string name;
+    double reserves = 0;
+    long max_vichele = 0;
+    pa_sql_supplier_basic_info() {
+        add_parent_type<pa_sql_company>("belong_company");
+    }
+    virtual std::vector<sqlite_orm_column> self_columns_defined() { 
+        std::vector<sqlite_orm_column> ret;
+        ret.push_back(sqlite_orm_column("name", sqlite_orm_column::STRING, &name, SQLITE_ORM_COLUMN_LIMIT_UNIQ));
+        ret.push_back(sqlite_orm_column("reserves", sqlite_orm_column::REAL, &reserves));
+        ret.push_back(sqlite_orm_column("max_vichele", sqlite_orm_column::INTEGER, &max_vichele));
+
+        return ret;
+    }
+
+    virtual std::string table_name()
+    {
+        return "supplier_basic_info_table";
     }
 };
 

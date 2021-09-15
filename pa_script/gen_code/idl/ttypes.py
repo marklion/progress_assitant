@@ -2640,11 +2640,13 @@ class today_driver_info(object):
      - register_order
      - is_buy
      - company_for_select
+     - need_tmd
+     - tmd_no
 
     """
 
 
-    def __init__(self, id=None, destination_company=None, destination_address=None, order_company=None, main_vichele=None, behind_vichele=None, stuff_name=None, register_timestamp=None, register_number=None, enter_location=None, is_registered=None, register_order=None, is_buy=None, company_for_select=None,):
+    def __init__(self, id=None, destination_company=None, destination_address=None, order_company=None, main_vichele=None, behind_vichele=None, stuff_name=None, register_timestamp=None, register_number=None, enter_location=None, is_registered=None, register_order=None, is_buy=None, company_for_select=None, need_tmd=None, tmd_no=None,):
         self.id = id
         self.destination_company = destination_company
         self.destination_address = destination_address
@@ -2659,6 +2661,8 @@ class today_driver_info(object):
         self.register_order = register_order
         self.is_buy = is_buy
         self.company_for_select = company_for_select
+        self.need_tmd = need_tmd
+        self.tmd_no = tmd_no
 
     def read(self, iprot):
         if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
@@ -2744,6 +2748,16 @@ class today_driver_info(object):
                     iprot.readListEnd()
                 else:
                     iprot.skip(ftype)
+            elif fid == 15:
+                if ftype == TType.BOOL:
+                    self.need_tmd = iprot.readBool()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 16:
+                if ftype == TType.STRING:
+                    self.tmd_no = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
             else:
                 iprot.skip(ftype)
             iprot.readFieldEnd()
@@ -2812,6 +2826,14 @@ class today_driver_info(object):
             for iter13 in self.company_for_select:
                 oprot.writeString(iter13.encode('utf-8') if sys.version_info[0] == 2 else iter13)
             oprot.writeListEnd()
+            oprot.writeFieldEnd()
+        if self.need_tmd is not None:
+            oprot.writeFieldBegin('need_tmd', TType.BOOL, 15)
+            oprot.writeBool(self.need_tmd)
+            oprot.writeFieldEnd()
+        if self.tmd_no is not None:
+            oprot.writeFieldBegin('tmd_no', TType.STRING, 16)
+            oprot.writeString(self.tmd_no.encode('utf-8') if sys.version_info[0] == 2 else self.tmd_no)
             oprot.writeFieldEnd()
         oprot.writeFieldStop()
         oprot.writeStructEnd()
@@ -3317,11 +3339,12 @@ class vehicle_info_resp(object):
      - supplierId
      - vehicleTeamName
      - vehicleTeamId
+     - tmd_no
 
     """
 
 
-    def __init__(self, id=None, plateNo=None, backPlateNo=None, stuffName=None, stuffId=None, enterWeight=None, companyName=None, driverName=None, isSale=None, price=None, customerId=None, orderNo=None, multiStuff=None, isMulti=None, createTime=None, driverPhone=None, driverId=None, supplierName=None, supplierId=None, vehicleTeamName=None, vehicleTeamId=None,):
+    def __init__(self, id=None, plateNo=None, backPlateNo=None, stuffName=None, stuffId=None, enterWeight=None, companyName=None, driverName=None, isSale=None, price=None, customerId=None, orderNo=None, multiStuff=None, isMulti=None, createTime=None, driverPhone=None, driverId=None, supplierName=None, supplierId=None, vehicleTeamName=None, vehicleTeamId=None, tmd_no=None,):
         self.id = id
         self.plateNo = plateNo
         self.backPlateNo = backPlateNo
@@ -3343,6 +3366,7 @@ class vehicle_info_resp(object):
         self.supplierId = supplierId
         self.vehicleTeamName = vehicleTeamName
         self.vehicleTeamId = vehicleTeamId
+        self.tmd_no = tmd_no
 
     def read(self, iprot):
         if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
@@ -3464,6 +3488,11 @@ class vehicle_info_resp(object):
                     self.vehicleTeamId = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
                 else:
                     iprot.skip(ftype)
+            elif fid == 22:
+                if ftype == TType.STRING:
+                    self.tmd_no = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
             else:
                 iprot.skip(ftype)
             iprot.readFieldEnd()
@@ -3560,6 +3589,10 @@ class vehicle_info_resp(object):
         if self.vehicleTeamId is not None:
             oprot.writeFieldBegin('vehicleTeamId', TType.STRING, 21)
             oprot.writeString(self.vehicleTeamId.encode('utf-8') if sys.version_info[0] == 2 else self.vehicleTeamId)
+            oprot.writeFieldEnd()
+        if self.tmd_no is not None:
+            oprot.writeFieldBegin('tmd_no', TType.STRING, 22)
+            oprot.writeString(self.tmd_no.encode('utf-8') if sys.version_info[0] == 2 else self.tmd_no)
             oprot.writeFieldEnd()
         oprot.writeFieldStop()
         oprot.writeStructEnd()
@@ -4480,6 +4513,96 @@ class vichele_team(object):
 
     def __ne__(self, other):
         return not (self == other)
+
+
+class supplier_basic_info(object):
+    """
+    Attributes:
+     - name
+     - reserves
+     - max_vichele
+     - id
+
+    """
+
+
+    def __init__(self, name=None, reserves=None, max_vichele=None, id=None,):
+        self.name = name
+        self.reserves = reserves
+        self.max_vichele = max_vichele
+        self.id = id
+
+    def read(self, iprot):
+        if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
+            iprot._fast_decode(self, iprot, [self.__class__, self.thrift_spec])
+            return
+        iprot.readStructBegin()
+        while True:
+            (fname, ftype, fid) = iprot.readFieldBegin()
+            if ftype == TType.STOP:
+                break
+            if fid == 1:
+                if ftype == TType.STRING:
+                    self.name = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 2:
+                if ftype == TType.DOUBLE:
+                    self.reserves = iprot.readDouble()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 3:
+                if ftype == TType.I64:
+                    self.max_vichele = iprot.readI64()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 4:
+                if ftype == TType.I64:
+                    self.id = iprot.readI64()
+                else:
+                    iprot.skip(ftype)
+            else:
+                iprot.skip(ftype)
+            iprot.readFieldEnd()
+        iprot.readStructEnd()
+
+    def write(self, oprot):
+        if oprot._fast_encode is not None and self.thrift_spec is not None:
+            oprot.trans.write(oprot._fast_encode(self, [self.__class__, self.thrift_spec]))
+            return
+        oprot.writeStructBegin('supplier_basic_info')
+        if self.name is not None:
+            oprot.writeFieldBegin('name', TType.STRING, 1)
+            oprot.writeString(self.name.encode('utf-8') if sys.version_info[0] == 2 else self.name)
+            oprot.writeFieldEnd()
+        if self.reserves is not None:
+            oprot.writeFieldBegin('reserves', TType.DOUBLE, 2)
+            oprot.writeDouble(self.reserves)
+            oprot.writeFieldEnd()
+        if self.max_vichele is not None:
+            oprot.writeFieldBegin('max_vichele', TType.I64, 3)
+            oprot.writeI64(self.max_vichele)
+            oprot.writeFieldEnd()
+        if self.id is not None:
+            oprot.writeFieldBegin('id', TType.I64, 4)
+            oprot.writeI64(self.id)
+            oprot.writeFieldEnd()
+        oprot.writeFieldStop()
+        oprot.writeStructEnd()
+
+    def validate(self):
+        return
+
+    def __repr__(self):
+        L = ['%s=%r' % (key, value)
+             for key, value in self.__dict__.items()]
+        return '%s(%s)' % (self.__class__.__name__, ', '.join(L))
+
+    def __eq__(self, other):
+        return isinstance(other, self.__class__) and self.__dict__ == other.__dict__
+
+    def __ne__(self, other):
+        return not (self == other)
 all_structs.append(gen_exp)
 gen_exp.thrift_spec = (
     None,  # 0
@@ -4727,6 +4850,8 @@ today_driver_info.thrift_spec = (
     (12, TType.STRING, 'register_order', 'UTF8', None, ),  # 12
     (13, TType.BOOL, 'is_buy', None, None, ),  # 13
     (14, TType.LIST, 'company_for_select', (TType.STRING, 'UTF8', False), None, ),  # 14
+    (15, TType.BOOL, 'need_tmd', None, None, ),  # 15
+    (16, TType.STRING, 'tmd_no', 'UTF8', None, ),  # 16
 )
 all_structs.append(driver_detail_info)
 driver_detail_info.thrift_spec = (
@@ -4793,6 +4918,7 @@ vehicle_info_resp.thrift_spec = (
     (19, TType.STRING, 'supplierId', 'UTF8', None, ),  # 19
     (20, TType.STRING, 'vehicleTeamName', 'UTF8', None, ),  # 20
     (21, TType.STRING, 'vehicleTeamId', 'UTF8', None, ),  # 21
+    (22, TType.STRING, 'tmd_no', 'UTF8', None, ),  # 22
 )
 all_structs.append(push_weight_req)
 push_weight_req.thrift_spec = (
@@ -4873,6 +4999,14 @@ vichele_team.thrift_spec = (
     (1, TType.LIST, 'members', (TType.STRUCT, [vichele_team_member, None], False), None, ),  # 1
     (2, TType.STRING, 'name', 'UTF8', None, ),  # 2
     (3, TType.I64, 'id', None, None, ),  # 3
+)
+all_structs.append(supplier_basic_info)
+supplier_basic_info.thrift_spec = (
+    None,  # 0
+    (1, TType.STRING, 'name', 'UTF8', None, ),  # 1
+    (2, TType.DOUBLE, 'reserves', None, None, ),  # 2
+    (3, TType.I64, 'max_vichele', None, None, ),  # 3
+    (4, TType.I64, 'id', None, None, ),  # 4
 )
 fix_spec(all_structs)
 del all_structs

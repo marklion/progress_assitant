@@ -44,6 +44,13 @@ if len(sys.argv) <= 1 or sys.argv[1] == '--help':
     print('  bool change_company_name(string ssid, i64 vichele_id, string company_name)')
     print('  bool fill_company_name(string open_id, i64 vichele_id, string company_name)')
     print('   company_history(string ssid)')
+    print('  bool add_supplier(string ssid, supplier_basic_info supplier_info)')
+    print('  bool update_supplier(string ssid, supplier_basic_info supplier_info)')
+    print('  bool del_supplier(string ssid, i64 supplier_id)')
+    print('   get_all_supplier(string ssid)')
+    print('  string smart_assign(string ssid,  vichele_info)')
+    print('  i64 get_max_vichele_by_supplier(string supplier, string company)')
+    print('  bool fill_tmd(string open_id, i64 vichele_id, string tmd_no)')
     print('')
     sys.exit(0)
 
@@ -242,6 +249,48 @@ elif cmd == 'company_history':
         print('company_history requires 1 args')
         sys.exit(1)
     pp.pprint(client.company_history(args[0],))
+
+elif cmd == 'add_supplier':
+    if len(args) != 2:
+        print('add_supplier requires 2 args')
+        sys.exit(1)
+    pp.pprint(client.add_supplier(args[0], eval(args[1]),))
+
+elif cmd == 'update_supplier':
+    if len(args) != 2:
+        print('update_supplier requires 2 args')
+        sys.exit(1)
+    pp.pprint(client.update_supplier(args[0], eval(args[1]),))
+
+elif cmd == 'del_supplier':
+    if len(args) != 2:
+        print('del_supplier requires 2 args')
+        sys.exit(1)
+    pp.pprint(client.del_supplier(args[0], eval(args[1]),))
+
+elif cmd == 'get_all_supplier':
+    if len(args) != 1:
+        print('get_all_supplier requires 1 args')
+        sys.exit(1)
+    pp.pprint(client.get_all_supplier(args[0],))
+
+elif cmd == 'smart_assign':
+    if len(args) != 2:
+        print('smart_assign requires 2 args')
+        sys.exit(1)
+    pp.pprint(client.smart_assign(args[0], eval(args[1]),))
+
+elif cmd == 'get_max_vichele_by_supplier':
+    if len(args) != 2:
+        print('get_max_vichele_by_supplier requires 2 args')
+        sys.exit(1)
+    pp.pprint(client.get_max_vichele_by_supplier(args[0], args[1],))
+
+elif cmd == 'fill_tmd':
+    if len(args) != 3:
+        print('fill_tmd requires 3 args')
+        sys.exit(1)
+    pp.pprint(client.fill_tmd(args[0], eval(args[1]), args[2],))
 
 else:
     print('Unrecognized method %s' % cmd)

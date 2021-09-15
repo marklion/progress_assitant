@@ -2906,6 +2906,8 @@ var today_driver_info = module.exports.today_driver_info = function(args) {
   this.register_order = null;
   this.is_buy = null;
   this.company_for_select = null;
+  this.need_tmd = null;
+  this.tmd_no = null;
   if (args) {
     if (args.id !== undefined && args.id !== null) {
       this.id = args.id;
@@ -2948,6 +2950,12 @@ var today_driver_info = module.exports.today_driver_info = function(args) {
     }
     if (args.company_for_select !== undefined && args.company_for_select !== null) {
       this.company_for_select = Thrift.copyList(args.company_for_select, [null]);
+    }
+    if (args.need_tmd !== undefined && args.need_tmd !== null) {
+      this.need_tmd = args.need_tmd;
+    }
+    if (args.tmd_no !== undefined && args.tmd_no !== null) {
+      this.tmd_no = args.tmd_no;
     }
   }
 };
@@ -3068,6 +3076,20 @@ today_driver_info.prototype.read = function(input) {
         input.skip(ftype);
       }
       break;
+      case 15:
+      if (ftype == Thrift.Type.BOOL) {
+        this.need_tmd = input.readBool();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 16:
+      if (ftype == Thrift.Type.STRING) {
+        this.tmd_no = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
       default:
         input.skip(ftype);
     }
@@ -3154,6 +3176,16 @@ today_driver_info.prototype.write = function(output) {
       }
     }
     output.writeListEnd();
+    output.writeFieldEnd();
+  }
+  if (this.need_tmd !== null && this.need_tmd !== undefined) {
+    output.writeFieldBegin('need_tmd', Thrift.Type.BOOL, 15);
+    output.writeBool(this.need_tmd);
+    output.writeFieldEnd();
+  }
+  if (this.tmd_no !== null && this.tmd_no !== undefined) {
+    output.writeFieldBegin('tmd_no', Thrift.Type.STRING, 16);
+    output.writeString(this.tmd_no);
     output.writeFieldEnd();
   }
   output.writeFieldStop();
@@ -3675,6 +3707,7 @@ var vehicle_info_resp = module.exports.vehicle_info_resp = function(args) {
   this.supplierId = null;
   this.vehicleTeamName = null;
   this.vehicleTeamId = null;
+  this.tmd_no = null;
   if (args) {
     if (args.id !== undefined && args.id !== null) {
       this.id = args.id;
@@ -3738,6 +3771,9 @@ var vehicle_info_resp = module.exports.vehicle_info_resp = function(args) {
     }
     if (args.vehicleTeamId !== undefined && args.vehicleTeamId !== null) {
       this.vehicleTeamId = args.vehicleTeamId;
+    }
+    if (args.tmd_no !== undefined && args.tmd_no !== null) {
+      this.tmd_no = args.tmd_no;
     }
   }
 };
@@ -3908,6 +3944,13 @@ vehicle_info_resp.prototype.read = function(input) {
         input.skip(ftype);
       }
       break;
+      case 22:
+      if (ftype == Thrift.Type.STRING) {
+        this.tmd_no = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
       default:
         input.skip(ftype);
     }
@@ -4029,6 +4072,11 @@ vehicle_info_resp.prototype.write = function(output) {
   if (this.vehicleTeamId !== null && this.vehicleTeamId !== undefined) {
     output.writeFieldBegin('vehicleTeamId', Thrift.Type.STRING, 21);
     output.writeString(this.vehicleTeamId);
+    output.writeFieldEnd();
+  }
+  if (this.tmd_no !== null && this.tmd_no !== undefined) {
+    output.writeFieldBegin('tmd_no', Thrift.Type.STRING, 22);
+    output.writeString(this.tmd_no);
     output.writeFieldEnd();
   }
   output.writeFieldStop();
@@ -5093,6 +5141,101 @@ vichele_team.prototype.write = function(output) {
   }
   if (this.id !== null && this.id !== undefined) {
     output.writeFieldBegin('id', Thrift.Type.I64, 3);
+    output.writeI64(this.id);
+    output.writeFieldEnd();
+  }
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+
+var supplier_basic_info = module.exports.supplier_basic_info = function(args) {
+  this.name = null;
+  this.reserves = null;
+  this.max_vichele = null;
+  this.id = null;
+  if (args) {
+    if (args.name !== undefined && args.name !== null) {
+      this.name = args.name;
+    }
+    if (args.reserves !== undefined && args.reserves !== null) {
+      this.reserves = args.reserves;
+    }
+    if (args.max_vichele !== undefined && args.max_vichele !== null) {
+      this.max_vichele = args.max_vichele;
+    }
+    if (args.id !== undefined && args.id !== null) {
+      this.id = args.id;
+    }
+  }
+};
+supplier_basic_info.prototype = {};
+supplier_basic_info.prototype.read = function(input) {
+  input.readStructBegin();
+  while (true) {
+    var ret = input.readFieldBegin();
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    switch (fid) {
+      case 1:
+      if (ftype == Thrift.Type.STRING) {
+        this.name = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 2:
+      if (ftype == Thrift.Type.DOUBLE) {
+        this.reserves = input.readDouble();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 3:
+      if (ftype == Thrift.Type.I64) {
+        this.max_vichele = input.readI64();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 4:
+      if (ftype == Thrift.Type.I64) {
+        this.id = input.readI64();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      default:
+        input.skip(ftype);
+    }
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+supplier_basic_info.prototype.write = function(output) {
+  output.writeStructBegin('supplier_basic_info');
+  if (this.name !== null && this.name !== undefined) {
+    output.writeFieldBegin('name', Thrift.Type.STRING, 1);
+    output.writeString(this.name);
+    output.writeFieldEnd();
+  }
+  if (this.reserves !== null && this.reserves !== undefined) {
+    output.writeFieldBegin('reserves', Thrift.Type.DOUBLE, 2);
+    output.writeDouble(this.reserves);
+    output.writeFieldEnd();
+  }
+  if (this.max_vichele !== null && this.max_vichele !== undefined) {
+    output.writeFieldBegin('max_vichele', Thrift.Type.I64, 3);
+    output.writeI64(this.max_vichele);
+    output.writeFieldEnd();
+  }
+  if (this.id !== null && this.id !== undefined) {
+    output.writeFieldBegin('id', Thrift.Type.I64, 4);
     output.writeI64(this.id);
     output.writeFieldEnd();
   }

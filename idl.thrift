@@ -289,6 +289,8 @@ struct today_driver_info {
     12:string register_order,
     13:bool is_buy,
     14:list<string> company_for_select,
+    15:bool need_tmd,
+    16:string tmd_no,
 }
 
 struct driver_detail_info {
@@ -388,7 +390,8 @@ struct vehicle_info_resp {
     18:string supplierName,
     19:string supplierId,
     20:string vehicleTeamName,
-    21:string vehicleTeamId
+    21:string vehicleTeamId,
+    22:string tmd_no,
 }
 
 struct push_weight_req {
@@ -483,6 +486,13 @@ struct vichele_team {
     3:i64 id,
 }
 
+struct supplier_basic_info {
+    1:string name,
+    2:double reserves,
+    3:i64 max_vichele,
+    4:i64 id,
+}
+
 service vichele_management {
     bool create_vichele_info(1:string open_id, 2:list<vichele_stay_alone> vichele_info) throws (1:gen_exp e),
     bool delete_vichele_info(1:string open_id, 2:i64 vichele_id) throws (1:gen_exp e),
@@ -504,4 +514,11 @@ service vichele_management {
     bool change_company_name(1:string ssid, 2:i64 vichele_id, 3:string company_name) throws (1:gen_exp e),
     bool fill_company_name(1:string open_id, 2:i64 vichele_id, 3:string company_name) throws (1:gen_exp e),
     list<string> company_history(1:string ssid) throws (1:gen_exp e),
+    bool add_supplier(1:string ssid, 2:supplier_basic_info supplier_info) throws (1:gen_exp e),
+    bool update_supplier(1:string ssid, 2:supplier_basic_info supplier_info) throws (1:gen_exp e),
+    bool del_supplier(1:string ssid, 2:i64 supplier_id) throws (1:gen_exp e),
+    list<supplier_basic_info> get_all_supplier(1:string ssid) throws (1:gen_exp e),
+    string smart_assign(1:string ssid, 2:list<vichele_stay_alone> vichele_info) throws (1:gen_exp e),
+    i64 get_max_vichele_by_supplier(1:string supplier, 2:string company) throws (1:gen_exp e),
+    bool fill_tmd(1:string open_id, 2:i64 vichele_id, 3:string tmd_no) throws (1:gen_exp e),
 }

@@ -538,24 +538,28 @@ public:
         {
             if (itr.main_vichele_number == plateNo || (itr.driver_id == driverId && itr.driver_id.length() > 0))
             {
-                _return.id = std::to_string(itr.get_pri_id()) + "B";
-                _return.backPlateNo = itr.behind_vichele_number;
-                _return.createTime = itr.date + " 08:00:00";
-                _return.driverId = itr.driver_id;
-                _return.driverName = itr.driver_name;
-                _return.driverPhone = itr.driver_phone;
+                if (PA_DATAOPT_vichele_ready_to_post(itr))
+                {
+                    _return.id = std::to_string(itr.get_pri_id()) + "B";
+                    _return.backPlateNo = itr.behind_vichele_number;
+                    _return.createTime = itr.date + " 08:00:00";
+                    _return.driverId = itr.driver_id;
+                    _return.driverName = itr.driver_name;
+                    _return.driverPhone = itr.driver_phone;
 
-                _return.enterWeight = itr.count;
-                _return.isSale = false;
-                _return.plateNo = itr.main_vichele_number;
-                _return.stuffName = itr.stuff_name;
-                _return.stuffId = PA_DATAOPT_search_base_id_info_by_name(_return.stuffName, "stuff", *company);
-                _return.supplierName = itr.company_name;
-                _return.supplierId = PA_DATAOPT_search_base_id_info_by_name(_return.supplierName, "supplier", *company);
-                _return.vehicleTeamName = itr.transfor_company;
-                _return.vehicleTeamId = PA_DATAOPT_search_base_id_info_by_name(_return.vehicleTeamName, "vehicleTeam", *company);
-                _return.price = itr.price;
-                return;
+                    _return.enterWeight = itr.count;
+                    _return.isSale = false;
+                    _return.plateNo = itr.main_vichele_number;
+                    _return.stuffName = itr.stuff_name;
+                    _return.stuffId = PA_DATAOPT_search_base_id_info_by_name(_return.stuffName, "stuff", *company);
+                    _return.supplierName = itr.company_name;
+                    _return.supplierId = PA_DATAOPT_search_base_id_info_by_name(_return.supplierName, "supplier", *company);
+                    _return.vehicleTeamName = itr.transfor_company;
+                    _return.vehicleTeamId = PA_DATAOPT_search_base_id_info_by_name(_return.vehicleTeamName, "vehicleTeam", *company);
+                    _return.price = itr.price;
+                    _return.tmd_no = itr.tmd_no;
+                    return;
+                }
             }
         }
         if (_return.id.length() <= 0)
@@ -593,27 +597,31 @@ public:
         auto buyer_vehicles = company->get_all_children<pa_sql_vichele_stay_alone>("destination", "status == 1 AND is_drop == 0 AND company_name != '' AND date LIKE '%s%%' GROUP BY main_vichele_number", date_only.c_str());
         for (auto &itr : buyer_vehicles)
         {
-            vehicle_info_resp tmp;
-            tmp.id = std::to_string(itr.get_pri_id()) + "B";
-            tmp.backPlateNo = itr.behind_vichele_number;
-            tmp.createTime = itr.date + " 08:00:00";
-            tmp.driverId = itr.driver_id;
-            tmp.driverName = itr.driver_name;
-            tmp.driverPhone = itr.driver_phone;
+            if (PA_DATAOPT_vichele_ready_to_post(itr))
+            {
+                vehicle_info_resp tmp;
+                tmp.id = std::to_string(itr.get_pri_id()) + "B";
+                tmp.backPlateNo = itr.behind_vichele_number;
+                tmp.createTime = itr.date + " 08:00:00";
+                tmp.driverId = itr.driver_id;
+                tmp.driverName = itr.driver_name;
+                tmp.driverPhone = itr.driver_phone;
 
-            tmp.enterWeight = itr.count;
-            tmp.isSale = false;
-            tmp.plateNo = itr.main_vichele_number;
-            tmp.stuffName = itr.stuff_name;
-            tmp.stuffId = PA_DATAOPT_search_base_id_info_by_name(tmp.stuffName, "stuff", *company);
+                tmp.enterWeight = itr.count;
+                tmp.isSale = false;
+                tmp.plateNo = itr.main_vichele_number;
+                tmp.stuffName = itr.stuff_name;
+                tmp.stuffId = PA_DATAOPT_search_base_id_info_by_name(tmp.stuffName, "stuff", *company);
 
-            tmp.supplierName = itr.company_name;
-            tmp.supplierId = PA_DATAOPT_search_base_id_info_by_name(tmp.supplierName, "supplier", *company);
-            tmp.vehicleTeamName = itr.transfor_company;
-            tmp.vehicleTeamId = PA_DATAOPT_search_base_id_info_by_name(tmp.vehicleTeamName, "vehicleTeam", *company);
-            tmp.price = itr.price;
+                tmp.supplierName = itr.company_name;
+                tmp.supplierId = PA_DATAOPT_search_base_id_info_by_name(tmp.supplierName, "supplier", *company);
+                tmp.vehicleTeamName = itr.transfor_company;
+                tmp.vehicleTeamId = PA_DATAOPT_search_base_id_info_by_name(tmp.vehicleTeamName, "vehicleTeam", *company);
+                tmp.price = itr.price;
+                tmp.tmd_no = itr.tmd_no;
 
-            _return.push_back(tmp);
+                _return.push_back(tmp);
+            }
         }
     }
 
@@ -716,7 +724,7 @@ public:
             if (dest_company)
             {
                 auto company_staff = dest_company->get_all_children<pa_sql_userinfo>("belong_company");
-                for (auto &itr:company_staff)
+                for (auto &itr : company_staff)
                 {
                     PA_WECHAT_send_extra_vichele_msg(*real_vichele_stay_alone, itr.openid, "称重完成\n皮重:" + std::to_string(_req.pWeight) + "\n毛重:" + std::to_string(_req.mWeight) + "\n净重:" + std::to_string(_req.jWeight));
                 }

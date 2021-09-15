@@ -42,6 +42,13 @@ class vichele_managementIf {
   virtual bool change_company_name(const std::string& ssid, const int64_t vichele_id, const std::string& company_name) = 0;
   virtual bool fill_company_name(const std::string& open_id, const int64_t vichele_id, const std::string& company_name) = 0;
   virtual void company_history(std::vector<std::string> & _return, const std::string& ssid) = 0;
+  virtual bool add_supplier(const std::string& ssid, const supplier_basic_info& supplier_info) = 0;
+  virtual bool update_supplier(const std::string& ssid, const supplier_basic_info& supplier_info) = 0;
+  virtual bool del_supplier(const std::string& ssid, const int64_t supplier_id) = 0;
+  virtual void get_all_supplier(std::vector<supplier_basic_info> & _return, const std::string& ssid) = 0;
+  virtual void smart_assign(std::string& _return, const std::string& ssid, const std::vector<vichele_stay_alone> & vichele_info) = 0;
+  virtual int64_t get_max_vichele_by_supplier(const std::string& supplier, const std::string& company) = 0;
+  virtual bool fill_tmd(const std::string& open_id, const int64_t vichele_id, const std::string& tmd_no) = 0;
 };
 
 class vichele_managementIfFactory {
@@ -141,6 +148,32 @@ class vichele_managementNull : virtual public vichele_managementIf {
   }
   void company_history(std::vector<std::string> & /* _return */, const std::string& /* ssid */) {
     return;
+  }
+  bool add_supplier(const std::string& /* ssid */, const supplier_basic_info& /* supplier_info */) {
+    bool _return = false;
+    return _return;
+  }
+  bool update_supplier(const std::string& /* ssid */, const supplier_basic_info& /* supplier_info */) {
+    bool _return = false;
+    return _return;
+  }
+  bool del_supplier(const std::string& /* ssid */, const int64_t /* supplier_id */) {
+    bool _return = false;
+    return _return;
+  }
+  void get_all_supplier(std::vector<supplier_basic_info> & /* _return */, const std::string& /* ssid */) {
+    return;
+  }
+  void smart_assign(std::string& /* _return */, const std::string& /* ssid */, const std::vector<vichele_stay_alone> & /* vichele_info */) {
+    return;
+  }
+  int64_t get_max_vichele_by_supplier(const std::string& /* supplier */, const std::string& /* company */) {
+    int64_t _return = 0;
+    return _return;
+  }
+  bool fill_tmd(const std::string& /* open_id */, const int64_t /* vichele_id */, const std::string& /* tmd_no */) {
+    bool _return = false;
+    return _return;
   }
 };
 
@@ -2502,6 +2535,839 @@ class vichele_management_company_history_presult {
 
 };
 
+typedef struct _vichele_management_add_supplier_args__isset {
+  _vichele_management_add_supplier_args__isset() : ssid(false), supplier_info(false) {}
+  bool ssid :1;
+  bool supplier_info :1;
+} _vichele_management_add_supplier_args__isset;
+
+class vichele_management_add_supplier_args {
+ public:
+
+  vichele_management_add_supplier_args(const vichele_management_add_supplier_args&);
+  vichele_management_add_supplier_args& operator=(const vichele_management_add_supplier_args&);
+  vichele_management_add_supplier_args() : ssid() {
+  }
+
+  virtual ~vichele_management_add_supplier_args() noexcept;
+  std::string ssid;
+  supplier_basic_info supplier_info;
+
+  _vichele_management_add_supplier_args__isset __isset;
+
+  void __set_ssid(const std::string& val);
+
+  void __set_supplier_info(const supplier_basic_info& val);
+
+  bool operator == (const vichele_management_add_supplier_args & rhs) const
+  {
+    if (!(ssid == rhs.ssid))
+      return false;
+    if (!(supplier_info == rhs.supplier_info))
+      return false;
+    return true;
+  }
+  bool operator != (const vichele_management_add_supplier_args &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const vichele_management_add_supplier_args & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+
+class vichele_management_add_supplier_pargs {
+ public:
+
+
+  virtual ~vichele_management_add_supplier_pargs() noexcept;
+  const std::string* ssid;
+  const supplier_basic_info* supplier_info;
+
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _vichele_management_add_supplier_result__isset {
+  _vichele_management_add_supplier_result__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _vichele_management_add_supplier_result__isset;
+
+class vichele_management_add_supplier_result {
+ public:
+
+  vichele_management_add_supplier_result(const vichele_management_add_supplier_result&);
+  vichele_management_add_supplier_result& operator=(const vichele_management_add_supplier_result&);
+  vichele_management_add_supplier_result() : success(0) {
+  }
+
+  virtual ~vichele_management_add_supplier_result() noexcept;
+  bool success;
+  gen_exp e;
+
+  _vichele_management_add_supplier_result__isset __isset;
+
+  void __set_success(const bool val);
+
+  void __set_e(const gen_exp& val);
+
+  bool operator == (const vichele_management_add_supplier_result & rhs) const
+  {
+    if (!(success == rhs.success))
+      return false;
+    if (!(e == rhs.e))
+      return false;
+    return true;
+  }
+  bool operator != (const vichele_management_add_supplier_result &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const vichele_management_add_supplier_result & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _vichele_management_add_supplier_presult__isset {
+  _vichele_management_add_supplier_presult__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _vichele_management_add_supplier_presult__isset;
+
+class vichele_management_add_supplier_presult {
+ public:
+
+
+  virtual ~vichele_management_add_supplier_presult() noexcept;
+  bool* success;
+  gen_exp e;
+
+  _vichele_management_add_supplier_presult__isset __isset;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+
+};
+
+typedef struct _vichele_management_update_supplier_args__isset {
+  _vichele_management_update_supplier_args__isset() : ssid(false), supplier_info(false) {}
+  bool ssid :1;
+  bool supplier_info :1;
+} _vichele_management_update_supplier_args__isset;
+
+class vichele_management_update_supplier_args {
+ public:
+
+  vichele_management_update_supplier_args(const vichele_management_update_supplier_args&);
+  vichele_management_update_supplier_args& operator=(const vichele_management_update_supplier_args&);
+  vichele_management_update_supplier_args() : ssid() {
+  }
+
+  virtual ~vichele_management_update_supplier_args() noexcept;
+  std::string ssid;
+  supplier_basic_info supplier_info;
+
+  _vichele_management_update_supplier_args__isset __isset;
+
+  void __set_ssid(const std::string& val);
+
+  void __set_supplier_info(const supplier_basic_info& val);
+
+  bool operator == (const vichele_management_update_supplier_args & rhs) const
+  {
+    if (!(ssid == rhs.ssid))
+      return false;
+    if (!(supplier_info == rhs.supplier_info))
+      return false;
+    return true;
+  }
+  bool operator != (const vichele_management_update_supplier_args &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const vichele_management_update_supplier_args & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+
+class vichele_management_update_supplier_pargs {
+ public:
+
+
+  virtual ~vichele_management_update_supplier_pargs() noexcept;
+  const std::string* ssid;
+  const supplier_basic_info* supplier_info;
+
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _vichele_management_update_supplier_result__isset {
+  _vichele_management_update_supplier_result__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _vichele_management_update_supplier_result__isset;
+
+class vichele_management_update_supplier_result {
+ public:
+
+  vichele_management_update_supplier_result(const vichele_management_update_supplier_result&);
+  vichele_management_update_supplier_result& operator=(const vichele_management_update_supplier_result&);
+  vichele_management_update_supplier_result() : success(0) {
+  }
+
+  virtual ~vichele_management_update_supplier_result() noexcept;
+  bool success;
+  gen_exp e;
+
+  _vichele_management_update_supplier_result__isset __isset;
+
+  void __set_success(const bool val);
+
+  void __set_e(const gen_exp& val);
+
+  bool operator == (const vichele_management_update_supplier_result & rhs) const
+  {
+    if (!(success == rhs.success))
+      return false;
+    if (!(e == rhs.e))
+      return false;
+    return true;
+  }
+  bool operator != (const vichele_management_update_supplier_result &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const vichele_management_update_supplier_result & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _vichele_management_update_supplier_presult__isset {
+  _vichele_management_update_supplier_presult__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _vichele_management_update_supplier_presult__isset;
+
+class vichele_management_update_supplier_presult {
+ public:
+
+
+  virtual ~vichele_management_update_supplier_presult() noexcept;
+  bool* success;
+  gen_exp e;
+
+  _vichele_management_update_supplier_presult__isset __isset;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+
+};
+
+typedef struct _vichele_management_del_supplier_args__isset {
+  _vichele_management_del_supplier_args__isset() : ssid(false), supplier_id(false) {}
+  bool ssid :1;
+  bool supplier_id :1;
+} _vichele_management_del_supplier_args__isset;
+
+class vichele_management_del_supplier_args {
+ public:
+
+  vichele_management_del_supplier_args(const vichele_management_del_supplier_args&);
+  vichele_management_del_supplier_args& operator=(const vichele_management_del_supplier_args&);
+  vichele_management_del_supplier_args() : ssid(), supplier_id(0) {
+  }
+
+  virtual ~vichele_management_del_supplier_args() noexcept;
+  std::string ssid;
+  int64_t supplier_id;
+
+  _vichele_management_del_supplier_args__isset __isset;
+
+  void __set_ssid(const std::string& val);
+
+  void __set_supplier_id(const int64_t val);
+
+  bool operator == (const vichele_management_del_supplier_args & rhs) const
+  {
+    if (!(ssid == rhs.ssid))
+      return false;
+    if (!(supplier_id == rhs.supplier_id))
+      return false;
+    return true;
+  }
+  bool operator != (const vichele_management_del_supplier_args &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const vichele_management_del_supplier_args & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+
+class vichele_management_del_supplier_pargs {
+ public:
+
+
+  virtual ~vichele_management_del_supplier_pargs() noexcept;
+  const std::string* ssid;
+  const int64_t* supplier_id;
+
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _vichele_management_del_supplier_result__isset {
+  _vichele_management_del_supplier_result__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _vichele_management_del_supplier_result__isset;
+
+class vichele_management_del_supplier_result {
+ public:
+
+  vichele_management_del_supplier_result(const vichele_management_del_supplier_result&);
+  vichele_management_del_supplier_result& operator=(const vichele_management_del_supplier_result&);
+  vichele_management_del_supplier_result() : success(0) {
+  }
+
+  virtual ~vichele_management_del_supplier_result() noexcept;
+  bool success;
+  gen_exp e;
+
+  _vichele_management_del_supplier_result__isset __isset;
+
+  void __set_success(const bool val);
+
+  void __set_e(const gen_exp& val);
+
+  bool operator == (const vichele_management_del_supplier_result & rhs) const
+  {
+    if (!(success == rhs.success))
+      return false;
+    if (!(e == rhs.e))
+      return false;
+    return true;
+  }
+  bool operator != (const vichele_management_del_supplier_result &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const vichele_management_del_supplier_result & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _vichele_management_del_supplier_presult__isset {
+  _vichele_management_del_supplier_presult__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _vichele_management_del_supplier_presult__isset;
+
+class vichele_management_del_supplier_presult {
+ public:
+
+
+  virtual ~vichele_management_del_supplier_presult() noexcept;
+  bool* success;
+  gen_exp e;
+
+  _vichele_management_del_supplier_presult__isset __isset;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+
+};
+
+typedef struct _vichele_management_get_all_supplier_args__isset {
+  _vichele_management_get_all_supplier_args__isset() : ssid(false) {}
+  bool ssid :1;
+} _vichele_management_get_all_supplier_args__isset;
+
+class vichele_management_get_all_supplier_args {
+ public:
+
+  vichele_management_get_all_supplier_args(const vichele_management_get_all_supplier_args&);
+  vichele_management_get_all_supplier_args& operator=(const vichele_management_get_all_supplier_args&);
+  vichele_management_get_all_supplier_args() : ssid() {
+  }
+
+  virtual ~vichele_management_get_all_supplier_args() noexcept;
+  std::string ssid;
+
+  _vichele_management_get_all_supplier_args__isset __isset;
+
+  void __set_ssid(const std::string& val);
+
+  bool operator == (const vichele_management_get_all_supplier_args & rhs) const
+  {
+    if (!(ssid == rhs.ssid))
+      return false;
+    return true;
+  }
+  bool operator != (const vichele_management_get_all_supplier_args &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const vichele_management_get_all_supplier_args & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+
+class vichele_management_get_all_supplier_pargs {
+ public:
+
+
+  virtual ~vichele_management_get_all_supplier_pargs() noexcept;
+  const std::string* ssid;
+
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _vichele_management_get_all_supplier_result__isset {
+  _vichele_management_get_all_supplier_result__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _vichele_management_get_all_supplier_result__isset;
+
+class vichele_management_get_all_supplier_result {
+ public:
+
+  vichele_management_get_all_supplier_result(const vichele_management_get_all_supplier_result&);
+  vichele_management_get_all_supplier_result& operator=(const vichele_management_get_all_supplier_result&);
+  vichele_management_get_all_supplier_result() {
+  }
+
+  virtual ~vichele_management_get_all_supplier_result() noexcept;
+  std::vector<supplier_basic_info>  success;
+  gen_exp e;
+
+  _vichele_management_get_all_supplier_result__isset __isset;
+
+  void __set_success(const std::vector<supplier_basic_info> & val);
+
+  void __set_e(const gen_exp& val);
+
+  bool operator == (const vichele_management_get_all_supplier_result & rhs) const
+  {
+    if (!(success == rhs.success))
+      return false;
+    if (!(e == rhs.e))
+      return false;
+    return true;
+  }
+  bool operator != (const vichele_management_get_all_supplier_result &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const vichele_management_get_all_supplier_result & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _vichele_management_get_all_supplier_presult__isset {
+  _vichele_management_get_all_supplier_presult__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _vichele_management_get_all_supplier_presult__isset;
+
+class vichele_management_get_all_supplier_presult {
+ public:
+
+
+  virtual ~vichele_management_get_all_supplier_presult() noexcept;
+  std::vector<supplier_basic_info> * success;
+  gen_exp e;
+
+  _vichele_management_get_all_supplier_presult__isset __isset;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+
+};
+
+typedef struct _vichele_management_smart_assign_args__isset {
+  _vichele_management_smart_assign_args__isset() : ssid(false), vichele_info(false) {}
+  bool ssid :1;
+  bool vichele_info :1;
+} _vichele_management_smart_assign_args__isset;
+
+class vichele_management_smart_assign_args {
+ public:
+
+  vichele_management_smart_assign_args(const vichele_management_smart_assign_args&);
+  vichele_management_smart_assign_args& operator=(const vichele_management_smart_assign_args&);
+  vichele_management_smart_assign_args() : ssid() {
+  }
+
+  virtual ~vichele_management_smart_assign_args() noexcept;
+  std::string ssid;
+  std::vector<vichele_stay_alone>  vichele_info;
+
+  _vichele_management_smart_assign_args__isset __isset;
+
+  void __set_ssid(const std::string& val);
+
+  void __set_vichele_info(const std::vector<vichele_stay_alone> & val);
+
+  bool operator == (const vichele_management_smart_assign_args & rhs) const
+  {
+    if (!(ssid == rhs.ssid))
+      return false;
+    if (!(vichele_info == rhs.vichele_info))
+      return false;
+    return true;
+  }
+  bool operator != (const vichele_management_smart_assign_args &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const vichele_management_smart_assign_args & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+
+class vichele_management_smart_assign_pargs {
+ public:
+
+
+  virtual ~vichele_management_smart_assign_pargs() noexcept;
+  const std::string* ssid;
+  const std::vector<vichele_stay_alone> * vichele_info;
+
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _vichele_management_smart_assign_result__isset {
+  _vichele_management_smart_assign_result__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _vichele_management_smart_assign_result__isset;
+
+class vichele_management_smart_assign_result {
+ public:
+
+  vichele_management_smart_assign_result(const vichele_management_smart_assign_result&);
+  vichele_management_smart_assign_result& operator=(const vichele_management_smart_assign_result&);
+  vichele_management_smart_assign_result() : success() {
+  }
+
+  virtual ~vichele_management_smart_assign_result() noexcept;
+  std::string success;
+  gen_exp e;
+
+  _vichele_management_smart_assign_result__isset __isset;
+
+  void __set_success(const std::string& val);
+
+  void __set_e(const gen_exp& val);
+
+  bool operator == (const vichele_management_smart_assign_result & rhs) const
+  {
+    if (!(success == rhs.success))
+      return false;
+    if (!(e == rhs.e))
+      return false;
+    return true;
+  }
+  bool operator != (const vichele_management_smart_assign_result &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const vichele_management_smart_assign_result & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _vichele_management_smart_assign_presult__isset {
+  _vichele_management_smart_assign_presult__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _vichele_management_smart_assign_presult__isset;
+
+class vichele_management_smart_assign_presult {
+ public:
+
+
+  virtual ~vichele_management_smart_assign_presult() noexcept;
+  std::string* success;
+  gen_exp e;
+
+  _vichele_management_smart_assign_presult__isset __isset;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+
+};
+
+typedef struct _vichele_management_get_max_vichele_by_supplier_args__isset {
+  _vichele_management_get_max_vichele_by_supplier_args__isset() : supplier(false), company(false) {}
+  bool supplier :1;
+  bool company :1;
+} _vichele_management_get_max_vichele_by_supplier_args__isset;
+
+class vichele_management_get_max_vichele_by_supplier_args {
+ public:
+
+  vichele_management_get_max_vichele_by_supplier_args(const vichele_management_get_max_vichele_by_supplier_args&);
+  vichele_management_get_max_vichele_by_supplier_args& operator=(const vichele_management_get_max_vichele_by_supplier_args&);
+  vichele_management_get_max_vichele_by_supplier_args() : supplier(), company() {
+  }
+
+  virtual ~vichele_management_get_max_vichele_by_supplier_args() noexcept;
+  std::string supplier;
+  std::string company;
+
+  _vichele_management_get_max_vichele_by_supplier_args__isset __isset;
+
+  void __set_supplier(const std::string& val);
+
+  void __set_company(const std::string& val);
+
+  bool operator == (const vichele_management_get_max_vichele_by_supplier_args & rhs) const
+  {
+    if (!(supplier == rhs.supplier))
+      return false;
+    if (!(company == rhs.company))
+      return false;
+    return true;
+  }
+  bool operator != (const vichele_management_get_max_vichele_by_supplier_args &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const vichele_management_get_max_vichele_by_supplier_args & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+
+class vichele_management_get_max_vichele_by_supplier_pargs {
+ public:
+
+
+  virtual ~vichele_management_get_max_vichele_by_supplier_pargs() noexcept;
+  const std::string* supplier;
+  const std::string* company;
+
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _vichele_management_get_max_vichele_by_supplier_result__isset {
+  _vichele_management_get_max_vichele_by_supplier_result__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _vichele_management_get_max_vichele_by_supplier_result__isset;
+
+class vichele_management_get_max_vichele_by_supplier_result {
+ public:
+
+  vichele_management_get_max_vichele_by_supplier_result(const vichele_management_get_max_vichele_by_supplier_result&);
+  vichele_management_get_max_vichele_by_supplier_result& operator=(const vichele_management_get_max_vichele_by_supplier_result&);
+  vichele_management_get_max_vichele_by_supplier_result() : success(0) {
+  }
+
+  virtual ~vichele_management_get_max_vichele_by_supplier_result() noexcept;
+  int64_t success;
+  gen_exp e;
+
+  _vichele_management_get_max_vichele_by_supplier_result__isset __isset;
+
+  void __set_success(const int64_t val);
+
+  void __set_e(const gen_exp& val);
+
+  bool operator == (const vichele_management_get_max_vichele_by_supplier_result & rhs) const
+  {
+    if (!(success == rhs.success))
+      return false;
+    if (!(e == rhs.e))
+      return false;
+    return true;
+  }
+  bool operator != (const vichele_management_get_max_vichele_by_supplier_result &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const vichele_management_get_max_vichele_by_supplier_result & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _vichele_management_get_max_vichele_by_supplier_presult__isset {
+  _vichele_management_get_max_vichele_by_supplier_presult__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _vichele_management_get_max_vichele_by_supplier_presult__isset;
+
+class vichele_management_get_max_vichele_by_supplier_presult {
+ public:
+
+
+  virtual ~vichele_management_get_max_vichele_by_supplier_presult() noexcept;
+  int64_t* success;
+  gen_exp e;
+
+  _vichele_management_get_max_vichele_by_supplier_presult__isset __isset;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+
+};
+
+typedef struct _vichele_management_fill_tmd_args__isset {
+  _vichele_management_fill_tmd_args__isset() : open_id(false), vichele_id(false), tmd_no(false) {}
+  bool open_id :1;
+  bool vichele_id :1;
+  bool tmd_no :1;
+} _vichele_management_fill_tmd_args__isset;
+
+class vichele_management_fill_tmd_args {
+ public:
+
+  vichele_management_fill_tmd_args(const vichele_management_fill_tmd_args&);
+  vichele_management_fill_tmd_args& operator=(const vichele_management_fill_tmd_args&);
+  vichele_management_fill_tmd_args() : open_id(), vichele_id(0), tmd_no() {
+  }
+
+  virtual ~vichele_management_fill_tmd_args() noexcept;
+  std::string open_id;
+  int64_t vichele_id;
+  std::string tmd_no;
+
+  _vichele_management_fill_tmd_args__isset __isset;
+
+  void __set_open_id(const std::string& val);
+
+  void __set_vichele_id(const int64_t val);
+
+  void __set_tmd_no(const std::string& val);
+
+  bool operator == (const vichele_management_fill_tmd_args & rhs) const
+  {
+    if (!(open_id == rhs.open_id))
+      return false;
+    if (!(vichele_id == rhs.vichele_id))
+      return false;
+    if (!(tmd_no == rhs.tmd_no))
+      return false;
+    return true;
+  }
+  bool operator != (const vichele_management_fill_tmd_args &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const vichele_management_fill_tmd_args & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+
+class vichele_management_fill_tmd_pargs {
+ public:
+
+
+  virtual ~vichele_management_fill_tmd_pargs() noexcept;
+  const std::string* open_id;
+  const int64_t* vichele_id;
+  const std::string* tmd_no;
+
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _vichele_management_fill_tmd_result__isset {
+  _vichele_management_fill_tmd_result__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _vichele_management_fill_tmd_result__isset;
+
+class vichele_management_fill_tmd_result {
+ public:
+
+  vichele_management_fill_tmd_result(const vichele_management_fill_tmd_result&);
+  vichele_management_fill_tmd_result& operator=(const vichele_management_fill_tmd_result&);
+  vichele_management_fill_tmd_result() : success(0) {
+  }
+
+  virtual ~vichele_management_fill_tmd_result() noexcept;
+  bool success;
+  gen_exp e;
+
+  _vichele_management_fill_tmd_result__isset __isset;
+
+  void __set_success(const bool val);
+
+  void __set_e(const gen_exp& val);
+
+  bool operator == (const vichele_management_fill_tmd_result & rhs) const
+  {
+    if (!(success == rhs.success))
+      return false;
+    if (!(e == rhs.e))
+      return false;
+    return true;
+  }
+  bool operator != (const vichele_management_fill_tmd_result &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const vichele_management_fill_tmd_result & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _vichele_management_fill_tmd_presult__isset {
+  _vichele_management_fill_tmd_presult__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _vichele_management_fill_tmd_presult__isset;
+
+class vichele_management_fill_tmd_presult {
+ public:
+
+
+  virtual ~vichele_management_fill_tmd_presult() noexcept;
+  bool* success;
+  gen_exp e;
+
+  _vichele_management_fill_tmd_presult__isset __isset;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+
+};
+
 class vichele_managementClient : virtual public vichele_managementIf {
  public:
   vichele_managementClient(std::shared_ptr< ::apache::thrift::protocol::TProtocol> prot) {
@@ -2587,6 +3453,27 @@ class vichele_managementClient : virtual public vichele_managementIf {
   void company_history(std::vector<std::string> & _return, const std::string& ssid);
   void send_company_history(const std::string& ssid);
   void recv_company_history(std::vector<std::string> & _return);
+  bool add_supplier(const std::string& ssid, const supplier_basic_info& supplier_info);
+  void send_add_supplier(const std::string& ssid, const supplier_basic_info& supplier_info);
+  bool recv_add_supplier();
+  bool update_supplier(const std::string& ssid, const supplier_basic_info& supplier_info);
+  void send_update_supplier(const std::string& ssid, const supplier_basic_info& supplier_info);
+  bool recv_update_supplier();
+  bool del_supplier(const std::string& ssid, const int64_t supplier_id);
+  void send_del_supplier(const std::string& ssid, const int64_t supplier_id);
+  bool recv_del_supplier();
+  void get_all_supplier(std::vector<supplier_basic_info> & _return, const std::string& ssid);
+  void send_get_all_supplier(const std::string& ssid);
+  void recv_get_all_supplier(std::vector<supplier_basic_info> & _return);
+  void smart_assign(std::string& _return, const std::string& ssid, const std::vector<vichele_stay_alone> & vichele_info);
+  void send_smart_assign(const std::string& ssid, const std::vector<vichele_stay_alone> & vichele_info);
+  void recv_smart_assign(std::string& _return);
+  int64_t get_max_vichele_by_supplier(const std::string& supplier, const std::string& company);
+  void send_get_max_vichele_by_supplier(const std::string& supplier, const std::string& company);
+  int64_t recv_get_max_vichele_by_supplier();
+  bool fill_tmd(const std::string& open_id, const int64_t vichele_id, const std::string& tmd_no);
+  void send_fill_tmd(const std::string& open_id, const int64_t vichele_id, const std::string& tmd_no);
+  bool recv_fill_tmd();
  protected:
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> piprot_;
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> poprot_;
@@ -2622,6 +3509,13 @@ class vichele_managementProcessor : public ::apache::thrift::TDispatchProcessor 
   void process_change_company_name(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
   void process_fill_company_name(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
   void process_company_history(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
+  void process_add_supplier(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
+  void process_update_supplier(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
+  void process_del_supplier(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
+  void process_get_all_supplier(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
+  void process_smart_assign(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
+  void process_get_max_vichele_by_supplier(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
+  void process_fill_tmd(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
  public:
   vichele_managementProcessor(::std::shared_ptr<vichele_managementIf> iface) :
     iface_(iface) {
@@ -2645,6 +3539,13 @@ class vichele_managementProcessor : public ::apache::thrift::TDispatchProcessor 
     processMap_["change_company_name"] = &vichele_managementProcessor::process_change_company_name;
     processMap_["fill_company_name"] = &vichele_managementProcessor::process_fill_company_name;
     processMap_["company_history"] = &vichele_managementProcessor::process_company_history;
+    processMap_["add_supplier"] = &vichele_managementProcessor::process_add_supplier;
+    processMap_["update_supplier"] = &vichele_managementProcessor::process_update_supplier;
+    processMap_["del_supplier"] = &vichele_managementProcessor::process_del_supplier;
+    processMap_["get_all_supplier"] = &vichele_managementProcessor::process_get_all_supplier;
+    processMap_["smart_assign"] = &vichele_managementProcessor::process_smart_assign;
+    processMap_["get_max_vichele_by_supplier"] = &vichele_managementProcessor::process_get_max_vichele_by_supplier;
+    processMap_["fill_tmd"] = &vichele_managementProcessor::process_fill_tmd;
   }
 
   virtual ~vichele_managementProcessor() {}
@@ -2861,6 +3762,71 @@ class vichele_managementMultiface : virtual public vichele_managementIf {
     return;
   }
 
+  bool add_supplier(const std::string& ssid, const supplier_basic_info& supplier_info) {
+    size_t sz = ifaces_.size();
+    size_t i = 0;
+    for (; i < (sz - 1); ++i) {
+      ifaces_[i]->add_supplier(ssid, supplier_info);
+    }
+    return ifaces_[i]->add_supplier(ssid, supplier_info);
+  }
+
+  bool update_supplier(const std::string& ssid, const supplier_basic_info& supplier_info) {
+    size_t sz = ifaces_.size();
+    size_t i = 0;
+    for (; i < (sz - 1); ++i) {
+      ifaces_[i]->update_supplier(ssid, supplier_info);
+    }
+    return ifaces_[i]->update_supplier(ssid, supplier_info);
+  }
+
+  bool del_supplier(const std::string& ssid, const int64_t supplier_id) {
+    size_t sz = ifaces_.size();
+    size_t i = 0;
+    for (; i < (sz - 1); ++i) {
+      ifaces_[i]->del_supplier(ssid, supplier_id);
+    }
+    return ifaces_[i]->del_supplier(ssid, supplier_id);
+  }
+
+  void get_all_supplier(std::vector<supplier_basic_info> & _return, const std::string& ssid) {
+    size_t sz = ifaces_.size();
+    size_t i = 0;
+    for (; i < (sz - 1); ++i) {
+      ifaces_[i]->get_all_supplier(_return, ssid);
+    }
+    ifaces_[i]->get_all_supplier(_return, ssid);
+    return;
+  }
+
+  void smart_assign(std::string& _return, const std::string& ssid, const std::vector<vichele_stay_alone> & vichele_info) {
+    size_t sz = ifaces_.size();
+    size_t i = 0;
+    for (; i < (sz - 1); ++i) {
+      ifaces_[i]->smart_assign(_return, ssid, vichele_info);
+    }
+    ifaces_[i]->smart_assign(_return, ssid, vichele_info);
+    return;
+  }
+
+  int64_t get_max_vichele_by_supplier(const std::string& supplier, const std::string& company) {
+    size_t sz = ifaces_.size();
+    size_t i = 0;
+    for (; i < (sz - 1); ++i) {
+      ifaces_[i]->get_max_vichele_by_supplier(supplier, company);
+    }
+    return ifaces_[i]->get_max_vichele_by_supplier(supplier, company);
+  }
+
+  bool fill_tmd(const std::string& open_id, const int64_t vichele_id, const std::string& tmd_no) {
+    size_t sz = ifaces_.size();
+    size_t i = 0;
+    for (; i < (sz - 1); ++i) {
+      ifaces_[i]->fill_tmd(open_id, vichele_id, tmd_no);
+    }
+    return ifaces_[i]->fill_tmd(open_id, vichele_id, tmd_no);
+  }
+
 };
 
 // The 'concurrent' client is a thread safe client that correctly handles
@@ -2953,6 +3919,27 @@ class vichele_managementConcurrentClient : virtual public vichele_managementIf {
   void company_history(std::vector<std::string> & _return, const std::string& ssid);
   int32_t send_company_history(const std::string& ssid);
   void recv_company_history(std::vector<std::string> & _return, const int32_t seqid);
+  bool add_supplier(const std::string& ssid, const supplier_basic_info& supplier_info);
+  int32_t send_add_supplier(const std::string& ssid, const supplier_basic_info& supplier_info);
+  bool recv_add_supplier(const int32_t seqid);
+  bool update_supplier(const std::string& ssid, const supplier_basic_info& supplier_info);
+  int32_t send_update_supplier(const std::string& ssid, const supplier_basic_info& supplier_info);
+  bool recv_update_supplier(const int32_t seqid);
+  bool del_supplier(const std::string& ssid, const int64_t supplier_id);
+  int32_t send_del_supplier(const std::string& ssid, const int64_t supplier_id);
+  bool recv_del_supplier(const int32_t seqid);
+  void get_all_supplier(std::vector<supplier_basic_info> & _return, const std::string& ssid);
+  int32_t send_get_all_supplier(const std::string& ssid);
+  void recv_get_all_supplier(std::vector<supplier_basic_info> & _return, const int32_t seqid);
+  void smart_assign(std::string& _return, const std::string& ssid, const std::vector<vichele_stay_alone> & vichele_info);
+  int32_t send_smart_assign(const std::string& ssid, const std::vector<vichele_stay_alone> & vichele_info);
+  void recv_smart_assign(std::string& _return, const int32_t seqid);
+  int64_t get_max_vichele_by_supplier(const std::string& supplier, const std::string& company);
+  int32_t send_get_max_vichele_by_supplier(const std::string& supplier, const std::string& company);
+  int64_t recv_get_max_vichele_by_supplier(const int32_t seqid);
+  bool fill_tmd(const std::string& open_id, const int64_t vichele_id, const std::string& tmd_no);
+  int32_t send_fill_tmd(const std::string& open_id, const int64_t vichele_id, const std::string& tmd_no);
+  bool recv_fill_tmd(const int32_t seqid);
  protected:
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> piprot_;
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> poprot_;

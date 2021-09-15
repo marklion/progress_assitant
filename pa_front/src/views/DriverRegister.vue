@@ -28,8 +28,13 @@
                     还需等待：{{single_trans.register_order}}个
                 </div>
             </van-cell>
-            <van-cell title="详细地址：" :value="single_trans.destination_address"></van-cell>
+            <van-cell v-if="single_trans.destination_address" title="详细地址：" :value="single_trans.destination_address"></van-cell>
             <van-cell v-if="single_trans.is_registered" title="进厂位置：" :value="single_trans.enter_location" :label="'签到时间:' + single_trans.register_timestamp"></van-cell>
+            <van-field v-if="single_trans.need_tmd" label="提煤单号" placeholder="输入提煤单号方可进厂" v-model="single_trans.tmd_no" center>
+                <template #right-icon>
+                    <van-button type="info" @click="save_tmd(single_trans)" size="small">保存</van-button>
+                </template>
+            </van-field>
         </div>
         <van-action-sheet v-model="act_select_company" :actions="company_for_select" @select="fill_company" />
     </div>
@@ -128,6 +133,14 @@ export default {
         },
     },
     methods: {
+        save_tmd: function (_trans) {
+            var vue_this = this;
+            vue_this.$call_remote_process("vichele_management", "fill_tmd", [vue_this.$cookies.get('driver_silent_id'), _trans.id, _trans.tmd_no]).then(function (resp) {
+                if (resp) {
+                    vue_this.$router.go(0);
+                }
+            });
+        },
         fill_company: function (item) {
             var vue_this = this;
             vue_this.$call_remote_process("vichele_management", "fill_company_name", [vue_this.$cookies.get('driver_silent_id'), vue_this.trans_info[vue_this.focus_vichele_index].id, item.name]).then(function (resp) {

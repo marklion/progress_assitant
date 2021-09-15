@@ -65,9 +65,13 @@
             </div>
         </van-list>
     </van-checkbox-group>
-    <van-dialog v-model="show_confirm_diag" close-on-click-overlay title="确认单价" :show-confirm-button="false">
+    <van-dialog v-model="show_confirm_diag" close-on-click-overlay title="是否改派" :show-confirm-button="false">
         <van-form @submit="confirm_vichele">
-            <van-field v-model="price" type="number" label="单价" placeholder="请填入与供货方协商后的单价" :rules="[{ required: true, message: '请输入单价' }]" />
+            <van-field v-if="!catch_free" v-model="smart_company" label="改派地点" placeholder="点击智能改派获取最佳提货地" >
+                <template #button>
+                    <van-button native-type="button" type="primary" size="small" @click="smart_assign">智能改派</van-button>
+                </template>
+            </van-field>
             <van-field name="switch" label="自由拉货">
                 <template #input>
                     <van-switch v-model="catch_free" size="20" />
@@ -159,6 +163,7 @@ export default {
     },
     data: function () {
         return {
+            smart_company: '',
             new_company_name: '',
             change_diag_show: false,
             change_id: 0,
@@ -166,7 +171,6 @@ export default {
             company_selected: [],
             catch_free: false,
             show_confirm_diag: false,
-            price: '',
             vichele_search_filter: '',
             items: [],
             loading: false,
@@ -243,6 +247,12 @@ export default {
         },
     },
     methods: {
+        smart_assign:function() {
+            var vue_this = this;
+            vue_this.$call_remote_process("vichele_management", "smart_assign", [vue_this.$cookies.get('pa_ssid'), vue_this.select_pool]).then(function (resp) {
+                vue_this.smart_company = resp;
+            });
+        },
         change_company_name_2_server: function () {
             var vue_this = this;
             vue_this.$call_remote_process("vichele_management", "change_company_name", [vue_this.$cookies.get('pa_ssid'), vue_this.change_id, vue_this.new_company_name]).then(function (resp) {
@@ -294,12 +304,12 @@ export default {
         confirm_vichele: function () {
             var vue_this = this;
             vue_this.select_pool.forEach(element => {
-                element.price = parseFloat(vue_this.price);
                 if (vue_this.catch_free) {
                     element.company_name = "";
+                } else if (vue_this.smart_company) {
+                    element.company_name = vue_this.smart_company;
                 }
             });
-            vue_this.price = '';
             vue_this.$call_remote_process("vichele_management", 'confirm_vichele', [vue_this.$cookies.get('pa_ssid'), vue_this.select_pool, vue_this.company_selected]).then(function (resp) {
                 if (resp) {
                     vue_this.show_confirm_diag = false;

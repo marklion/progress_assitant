@@ -9,6 +9,8 @@
                 <history-input search_key="company_name" v-model="new_form.company_name" :rules="[{ required: true, message: '请填写公司名' }]"></history-input>
                 <history-input search_key="destination" v-model="new_form.destination" :rules="[{ required: true, message: '请填写公司名' }]"></history-input>
                 <history-input search_key="transfor_company" v-model="new_form.transfor_company" :rules="[{ required: true, message: '请填写公司名' }]"></history-input>
+                <history-input search_key="stuff_name" v-model="new_form.stuff_name" :rules="[{ required: true, message: '请填写货物名称' }]"></history-input>
+                <van-field v-model="new_form.price" label="单价" type="number" placeholder="请输入货品单价" :rules="[{ required: true, message: '请填写货品单价' }]" />
                 <van-field center readonly clickable name="datetimePicker" :value="new_form.date" label="到厂日期" placeholder="点击选择日期" @click="show_time_picker = true">
                     <template #right-icon>
                         <van-tag type="primary">{{plan_time_easy}}</van-tag>
@@ -20,7 +22,6 @@
                 <van-divider>车辆信息</van-divider>
                 <van-dialog v-model="team_brief_show" title="车队信息" :showConfirmButton="false" closeOnClickOverlay>
                     <van-form @submit="finish_team_brief">
-                        <van-field v-model="team_brief_stuff_name" name="货品" label="货品" placeholder="请输入货品" :rules="[{ required: true, message: '请填写货品' }]" />
                         <van-field v-model="team_brief_count" type="number" name="重量" label="重量" placeholder="请输入重量" :rules="[{ required: true, message: '请填写重量' }]" />
                         <div style="margin: 16px;">
                             <van-button round block type="info" native-type="submit">提交</van-button>
@@ -32,7 +33,6 @@
                 <div class="vichele_show" v-for="(single_vichele, index) in new_vichele" :key="index">
                     <history-input search_key="main_vichele_number" v-model="single_vichele.main_vichele_number" :formatter="convert_bigger" :rules="[{ required: true, message: '请填写车牌号' }, {pattern: vichele_number_patten, message: '请填写正确的车牌号'}]"></history-input>
                     <history-input search_key="behind_vichele_number" v-model="single_vichele.behind_vichele_number" :formatter="convert_bigger" :rules="[{ required: true, message: '请填写车牌号' }, {pattern: vichele_number_patten, message: '请填写正确的车牌号'}, {validator:have_to_have_gua, message: '挂车要以挂结尾'}]"></history-input>
-                    <history-input search_key="stuff_name" v-model="single_vichele.stuff_name" :rules="[{ required: true, message: '请填写货物名称' }]"></history-input>
                     <van-field v-model="single_vichele.count" type="number" name="重量" label="重量（吨）" placeholder="重量" :rules="[{ required: true, message: '请填写重量' }]" />
                     <history-input search_key="comment" v-model="single_vichele.comment"></history-input>
                     <history-input search_key="driver_name" v-model="single_vichele.driver_name" :rules="[{ required: true, message: '请填写司机姓名' }]"></history-input>
@@ -107,6 +107,7 @@
                     <history-input search_key="main_vichele_number" v-model="vichele_update_info.main_vichele_number" :formatter="convert_bigger" :rules="[{ required: true, message: '请填写车牌号' }, {pattern: vichele_number_patten, message: '请填写正确的车牌号'}]"></history-input>
                     <history-input search_key="behind_vichele_number" v-model="vichele_update_info.behind_vichele_number" :formatter="convert_bigger" :rules="[{ required: true, message: '请填写车牌号' }, {pattern: vichele_number_patten, message: '请填写正确的车牌号'}, {validator:have_to_have_gua, message: '挂车要以挂结尾'}]"></history-input>
                     <history-input search_key="stuff_name" v-model="vichele_update_info.stuff_name" :rules="[{ required: true, message: '请填写货物名称' }]"></history-input>
+                    <van-field v-model="vichele_update_info.price" label="单价" type="number" placeholder="请输入货品单价" :rules="[{ required: true, message: '请填写货品单价' }]" />
                     <van-field v-model="vichele_update_info.count" type="number" name="重量" label="重量（吨）" placeholder="重量" :rules="[{ required: true, message: '请填写重量' }]" />
                     <history-input search_key="comment" v-model="vichele_update_info.comment"></history-input>
                     <div style="margin: 16px;">
@@ -273,7 +274,6 @@ export default {
     data: function () {
         return {
             team_brief_show: false,
-            team_brief_stuff_name: '',
             team_brief_count: 0,
             show_select_vichele_team: false,
             add_team_member_show: false,
@@ -315,6 +315,8 @@ export default {
                 destination: '',
                 date: this.formatDateTime(new Date()),
                 transfor_company: '',
+                stuff_name: '',
+                price: '',
             },
             new_vichele: [{
                 main_vichele_number: '',
@@ -368,7 +370,6 @@ export default {
                     behind_vichele_number: element.behind_vichele_number,
                     count: parseFloat(vue_this.team_brief_count),
                     comment: '',
-                    stuff_name: vue_this.team_brief_stuff_name,
                     repeated: false,
                     driver_phone: element.driver_phone,
                     driver_id: element.driver_id,
@@ -511,11 +512,12 @@ export default {
                     behind_vichele_number: element.behind_vichele_number,
                     count: parseFloat(element.count),
                     comment: element.comment,
-                    stuff_name: element.stuff_name,
+                    stuff_name: vue_this.new_form.stuff_name,
                     repeated: element.repeated,
                     driver_phone: element.driver_phone,
                     driver_id: element.driver_id,
                     driver_name: element.driver_name,
+                    price: parseFloat(vue_this.new_form.price),
                 });
             });
             vue_this.$call_remote_process("vichele_management", 'create_vichele_info', [vue_this.$cookies.get('silent_id'), extra_vichele]).then(function (resp) {
@@ -595,7 +597,7 @@ export default {
     margin-left: 10px;
     margin-right: 10px;
     margin-bottom: 10px;
-    margin-top:10px;
+    margin-top: 10px;
     padding-top: 8px;
 }
 

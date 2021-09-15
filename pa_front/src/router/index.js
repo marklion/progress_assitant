@@ -183,6 +183,15 @@ const routes = [
       has_go_back: true,
       extra_page:false,
     },
+  },{
+    path: '/supplier_info',
+    name: 'SupplierInfo',
+    component: () => import('../views/SupplierInfo.vue'),
+    meta: {
+      private_title: '供应商管理',
+      has_go_back: true,
+      extra_page:false,
+    },
   }
 ]
 
