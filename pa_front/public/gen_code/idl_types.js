@@ -2950,6 +2950,8 @@ today_driver_info = class {
     this.register_order = null;
     this.is_buy = null;
     this.company_for_select = null;
+    this.need_tmd = null;
+    this.tmd_no = null;
     if (args) {
       if (args.id !== undefined && args.id !== null) {
         this.id = args.id;
@@ -2992,6 +2994,12 @@ today_driver_info = class {
       }
       if (args.company_for_select !== undefined && args.company_for_select !== null) {
         this.company_for_select = Thrift.copyList(args.company_for_select, [null]);
+      }
+      if (args.need_tmd !== undefined && args.need_tmd !== null) {
+        this.need_tmd = args.need_tmd;
+      }
+      if (args.tmd_no !== undefined && args.tmd_no !== null) {
+        this.tmd_no = args.tmd_no;
       }
     }
   }
@@ -3112,6 +3120,20 @@ today_driver_info = class {
           input.skip(ftype);
         }
         break;
+        case 15:
+        if (ftype == Thrift.Type.BOOL) {
+          this.need_tmd = input.readBool().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        case 16:
+        if (ftype == Thrift.Type.STRING) {
+          this.tmd_no = input.readString().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
         default:
           input.skip(ftype);
       }
@@ -3198,6 +3220,16 @@ today_driver_info = class {
         }
       }
       output.writeListEnd();
+      output.writeFieldEnd();
+    }
+    if (this.need_tmd !== null && this.need_tmd !== undefined) {
+      output.writeFieldBegin('need_tmd', Thrift.Type.BOOL, 15);
+      output.writeBool(this.need_tmd);
+      output.writeFieldEnd();
+    }
+    if (this.tmd_no !== null && this.tmd_no !== undefined) {
+      output.writeFieldBegin('tmd_no', Thrift.Type.STRING, 16);
+      output.writeString(this.tmd_no);
       output.writeFieldEnd();
     }
     output.writeFieldStop();
@@ -3731,6 +3763,7 @@ vehicle_info_resp = class {
     this.supplierId = null;
     this.vehicleTeamName = null;
     this.vehicleTeamId = null;
+    this.tmd_no = null;
     if (args) {
       if (args.id !== undefined && args.id !== null) {
         this.id = args.id;
@@ -3794,6 +3827,9 @@ vehicle_info_resp = class {
       }
       if (args.vehicleTeamId !== undefined && args.vehicleTeamId !== null) {
         this.vehicleTeamId = args.vehicleTeamId;
+      }
+      if (args.tmd_no !== undefined && args.tmd_no !== null) {
+        this.tmd_no = args.tmd_no;
       }
     }
   }
@@ -3964,6 +4000,13 @@ vehicle_info_resp = class {
           input.skip(ftype);
         }
         break;
+        case 22:
+        if (ftype == Thrift.Type.STRING) {
+          this.tmd_no = input.readString().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
         default:
           input.skip(ftype);
       }
@@ -4085,6 +4128,11 @@ vehicle_info_resp = class {
     if (this.vehicleTeamId !== null && this.vehicleTeamId !== undefined) {
       output.writeFieldBegin('vehicleTeamId', Thrift.Type.STRING, 21);
       output.writeString(this.vehicleTeamId);
+      output.writeFieldEnd();
+    }
+    if (this.tmd_no !== null && this.tmd_no !== undefined) {
+      output.writeFieldBegin('tmd_no', Thrift.Type.STRING, 22);
+      output.writeString(this.tmd_no);
       output.writeFieldEnd();
     }
     output.writeFieldStop();

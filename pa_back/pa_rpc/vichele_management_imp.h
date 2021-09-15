@@ -663,6 +663,7 @@ public:
             }
         }
         vichele_info->company_name = company_name;
+        vichele_info->tmd_no = "";
         vichele_info->update_record();
         std::list<pa_sql_vichele_stay_alone> tmp;
         tmp.push_back(*vichele_info);
@@ -919,6 +920,28 @@ public:
         }
 
         return ret;
+    }
+
+    virtual bool fill_tmd(const std::string &open_id, const int64_t vichele_id, const std::string &tmd_no)
+    {
+        auto driver = sqlite_orm::search_record<pa_sql_driver>("silent_id = '%s'", open_id.c_str());
+        if (!driver)
+        {
+            PA_RETURN_NOPRIVA_MSG();
+        }
+        auto vichele_info = sqlite_orm::search_record<pa_sql_vichele_stay_alone>("PRI_ID == %ld AND driver_phone == '%s'", vichele_id, driver->phone.c_str());
+        if (!vichele_info)
+        {
+            PA_RETURN_NOPRIVA_MSG();
+        }
+        vichele_info->tmd_no = tmd_no;
+
+        vichele_info->update_record();
+        std::list<pa_sql_vichele_stay_alone> tmp;
+        tmp.push_back(*vichele_info);
+        PA_DATAOPT_post_save_register(tmp);
+
+        return true;
     }
 };
 

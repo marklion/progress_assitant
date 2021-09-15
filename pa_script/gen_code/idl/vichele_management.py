@@ -250,6 +250,16 @@ class Iface(object):
         """
         pass
 
+    def fill_tmd(self, open_id, vichele_id, tmd_no):
+        """
+        Parameters:
+         - open_id
+         - vichele_id
+         - tmd_no
+
+        """
+        pass
+
 
 class Client(Iface):
     def __init__(self, iprot, oprot=None):
@@ -1186,6 +1196,44 @@ class Client(Iface):
             raise result.e
         raise TApplicationException(TApplicationException.MISSING_RESULT, "get_max_vichele_by_supplier failed: unknown result")
 
+    def fill_tmd(self, open_id, vichele_id, tmd_no):
+        """
+        Parameters:
+         - open_id
+         - vichele_id
+         - tmd_no
+
+        """
+        self.send_fill_tmd(open_id, vichele_id, tmd_no)
+        return self.recv_fill_tmd()
+
+    def send_fill_tmd(self, open_id, vichele_id, tmd_no):
+        self._oprot.writeMessageBegin('fill_tmd', TMessageType.CALL, self._seqid)
+        args = fill_tmd_args()
+        args.open_id = open_id
+        args.vichele_id = vichele_id
+        args.tmd_no = tmd_no
+        args.write(self._oprot)
+        self._oprot.writeMessageEnd()
+        self._oprot.trans.flush()
+
+    def recv_fill_tmd(self):
+        iprot = self._iprot
+        (fname, mtype, rseqid) = iprot.readMessageBegin()
+        if mtype == TMessageType.EXCEPTION:
+            x = TApplicationException()
+            x.read(iprot)
+            iprot.readMessageEnd()
+            raise x
+        result = fill_tmd_result()
+        result.read(iprot)
+        iprot.readMessageEnd()
+        if result.success is not None:
+            return result.success
+        if result.e is not None:
+            raise result.e
+        raise TApplicationException(TApplicationException.MISSING_RESULT, "fill_tmd failed: unknown result")
+
 
 class Processor(Iface, TProcessor):
     def __init__(self, handler):
@@ -1217,6 +1265,7 @@ class Processor(Iface, TProcessor):
         self._processMap["get_all_supplier"] = Processor.process_get_all_supplier
         self._processMap["smart_assign"] = Processor.process_smart_assign
         self._processMap["get_max_vichele_by_supplier"] = Processor.process_get_max_vichele_by_supplier
+        self._processMap["fill_tmd"] = Processor.process_fill_tmd
         self._on_message_begin = None
 
     def on_message_begin(self, func):
@@ -1911,6 +1960,32 @@ class Processor(Iface, TProcessor):
             msg_type = TMessageType.EXCEPTION
             result = TApplicationException(TApplicationException.INTERNAL_ERROR, 'Internal error')
         oprot.writeMessageBegin("get_max_vichele_by_supplier", msg_type, seqid)
+        result.write(oprot)
+        oprot.writeMessageEnd()
+        oprot.trans.flush()
+
+    def process_fill_tmd(self, seqid, iprot, oprot):
+        args = fill_tmd_args()
+        args.read(iprot)
+        iprot.readMessageEnd()
+        result = fill_tmd_result()
+        try:
+            result.success = self._handler.fill_tmd(args.open_id, args.vichele_id, args.tmd_no)
+            msg_type = TMessageType.REPLY
+        except TTransport.TTransportException:
+            raise
+        except gen_exp as e:
+            msg_type = TMessageType.REPLY
+            result.e = e
+        except TApplicationException as ex:
+            logging.exception('TApplication exception in handler')
+            msg_type = TMessageType.EXCEPTION
+            result = ex
+        except Exception:
+            logging.exception('Unexpected exception in handler')
+            msg_type = TMessageType.EXCEPTION
+            result = TApplicationException(TApplicationException.INTERNAL_ERROR, 'Internal error')
+        oprot.writeMessageBegin("fill_tmd", msg_type, seqid)
         result.write(oprot)
         oprot.writeMessageEnd()
         oprot.trans.flush()
@@ -5794,6 +5869,165 @@ class get_max_vichele_by_supplier_result(object):
 all_structs.append(get_max_vichele_by_supplier_result)
 get_max_vichele_by_supplier_result.thrift_spec = (
     (0, TType.I64, 'success', None, None, ),  # 0
+    (1, TType.STRUCT, 'e', [gen_exp, None], None, ),  # 1
+)
+
+
+class fill_tmd_args(object):
+    """
+    Attributes:
+     - open_id
+     - vichele_id
+     - tmd_no
+
+    """
+
+
+    def __init__(self, open_id=None, vichele_id=None, tmd_no=None,):
+        self.open_id = open_id
+        self.vichele_id = vichele_id
+        self.tmd_no = tmd_no
+
+    def read(self, iprot):
+        if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
+            iprot._fast_decode(self, iprot, [self.__class__, self.thrift_spec])
+            return
+        iprot.readStructBegin()
+        while True:
+            (fname, ftype, fid) = iprot.readFieldBegin()
+            if ftype == TType.STOP:
+                break
+            if fid == 1:
+                if ftype == TType.STRING:
+                    self.open_id = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 2:
+                if ftype == TType.I64:
+                    self.vichele_id = iprot.readI64()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 3:
+                if ftype == TType.STRING:
+                    self.tmd_no = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
+            else:
+                iprot.skip(ftype)
+            iprot.readFieldEnd()
+        iprot.readStructEnd()
+
+    def write(self, oprot):
+        if oprot._fast_encode is not None and self.thrift_spec is not None:
+            oprot.trans.write(oprot._fast_encode(self, [self.__class__, self.thrift_spec]))
+            return
+        oprot.writeStructBegin('fill_tmd_args')
+        if self.open_id is not None:
+            oprot.writeFieldBegin('open_id', TType.STRING, 1)
+            oprot.writeString(self.open_id.encode('utf-8') if sys.version_info[0] == 2 else self.open_id)
+            oprot.writeFieldEnd()
+        if self.vichele_id is not None:
+            oprot.writeFieldBegin('vichele_id', TType.I64, 2)
+            oprot.writeI64(self.vichele_id)
+            oprot.writeFieldEnd()
+        if self.tmd_no is not None:
+            oprot.writeFieldBegin('tmd_no', TType.STRING, 3)
+            oprot.writeString(self.tmd_no.encode('utf-8') if sys.version_info[0] == 2 else self.tmd_no)
+            oprot.writeFieldEnd()
+        oprot.writeFieldStop()
+        oprot.writeStructEnd()
+
+    def validate(self):
+        return
+
+    def __repr__(self):
+        L = ['%s=%r' % (key, value)
+             for key, value in self.__dict__.items()]
+        return '%s(%s)' % (self.__class__.__name__, ', '.join(L))
+
+    def __eq__(self, other):
+        return isinstance(other, self.__class__) and self.__dict__ == other.__dict__
+
+    def __ne__(self, other):
+        return not (self == other)
+all_structs.append(fill_tmd_args)
+fill_tmd_args.thrift_spec = (
+    None,  # 0
+    (1, TType.STRING, 'open_id', 'UTF8', None, ),  # 1
+    (2, TType.I64, 'vichele_id', None, None, ),  # 2
+    (3, TType.STRING, 'tmd_no', 'UTF8', None, ),  # 3
+)
+
+
+class fill_tmd_result(object):
+    """
+    Attributes:
+     - success
+     - e
+
+    """
+
+
+    def __init__(self, success=None, e=None,):
+        self.success = success
+        self.e = e
+
+    def read(self, iprot):
+        if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
+            iprot._fast_decode(self, iprot, [self.__class__, self.thrift_spec])
+            return
+        iprot.readStructBegin()
+        while True:
+            (fname, ftype, fid) = iprot.readFieldBegin()
+            if ftype == TType.STOP:
+                break
+            if fid == 0:
+                if ftype == TType.BOOL:
+                    self.success = iprot.readBool()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 1:
+                if ftype == TType.STRUCT:
+                    self.e = gen_exp.read(iprot)
+                else:
+                    iprot.skip(ftype)
+            else:
+                iprot.skip(ftype)
+            iprot.readFieldEnd()
+        iprot.readStructEnd()
+
+    def write(self, oprot):
+        if oprot._fast_encode is not None and self.thrift_spec is not None:
+            oprot.trans.write(oprot._fast_encode(self, [self.__class__, self.thrift_spec]))
+            return
+        oprot.writeStructBegin('fill_tmd_result')
+        if self.success is not None:
+            oprot.writeFieldBegin('success', TType.BOOL, 0)
+            oprot.writeBool(self.success)
+            oprot.writeFieldEnd()
+        if self.e is not None:
+            oprot.writeFieldBegin('e', TType.STRUCT, 1)
+            self.e.write(oprot)
+            oprot.writeFieldEnd()
+        oprot.writeFieldStop()
+        oprot.writeStructEnd()
+
+    def validate(self):
+        return
+
+    def __repr__(self):
+        L = ['%s=%r' % (key, value)
+             for key, value in self.__dict__.items()]
+        return '%s(%s)' % (self.__class__.__name__, ', '.join(L))
+
+    def __eq__(self, other):
+        return isinstance(other, self.__class__) and self.__dict__ == other.__dict__
+
+    def __ne__(self, other):
+        return not (self == other)
+all_structs.append(fill_tmd_result)
+fill_tmd_result.thrift_spec = (
+    (0, TType.BOOL, 'success', None, None, ),  # 0
     (1, TType.STRUCT, 'e', [gen_exp, None], None, ),  # 1
 )
 fix_spec(all_structs)

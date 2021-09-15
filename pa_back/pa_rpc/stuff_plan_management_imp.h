@@ -1775,10 +1775,19 @@ public:
             tmp.is_buy = true;
             tmp.main_vichele = itr.main_vichele_number;
             std::string dest_company;
+            tmp.tmd_no = itr.tmd_no;
             auto dest_company_p = itr.get_parent<pa_sql_company>("destination");
             if (dest_company_p)
             {
                 dest_company = dest_company_p->name;
+                auto creator = itr.get_parent<pa_sql_silent_user>("created_by");
+                if (creator)
+                {
+                    if (dest_company_p->get_children<pa_sql_userinfo>("belong_company", "openid == '%s'", creator->open_id.c_str()))
+                    {
+                        tmp.need_tmd = true;
+                    }
+                }
             }
             int pos = 0;
             int found_pos = 0;

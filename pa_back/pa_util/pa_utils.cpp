@@ -609,6 +609,33 @@ std::string PA_DATAOPT_search_base_id_info_by_name(const std::string &name, cons
     return ret;
 }
 
+bool PA_DATAOPT_vichele_ready_to_post(pa_sql_vichele_stay_alone &_vichele)
+{
+    bool ret = false;
+
+    if (_vichele.company_name.length() > 0)
+    {
+        auto dest_company = _vichele.get_parent<pa_sql_company>("destination");
+        auto creator = _vichele.get_parent<pa_sql_silent_user>("created_by");
+        if (dest_company && creator)
+        {
+            if (dest_company->get_children<pa_sql_userinfo>("belong_company", "openid == '%s'", creator->open_id.c_str()))
+            {
+                if (_vichele.tmd_no.length() > 0)
+                {
+                    ret = true;
+                }
+            }
+            else
+            {
+                ret = true;
+            }
+        }
+    }
+
+    return ret;
+}
+
 void PA_DATAOPT_post_save_register(std::list<pa_sql_vichele_stay_alone> &_vicheles)
 {
     std::string ctrl_url = "";
@@ -639,10 +666,11 @@ void PA_DATAOPT_post_save_register(std::list<pa_sql_vichele_stay_alone> &_vichel
             {
                 continue;
             }
-            if (itr.company_name.length() <= 0)
+            if (!PA_DATAOPT_vichele_ready_to_post(itr))
             {
                 continue;
             }
+
             neb::CJsonObject sub_req;
             sub_req.Add("id", std::to_string(itr.get_pri_id()) + "B");
             sub_req.Add("plateNo", itr.main_vichele_number);
@@ -665,6 +693,7 @@ void PA_DATAOPT_post_save_register(std::list<pa_sql_vichele_stay_alone> &_vichel
             sub_req.Add("isMulti", false, false);
             sub_req.Add("enterWeight", itr.count);
             sub_req.Add("stuffName", itr.stuff_name);
+            sub_req.Add("tmdNo", itr.tmd_no);
             sub_req.Add("stuffId", PA_DATAOPT_search_base_id_info_by_name(itr.stuff_name, "stuff", *company));
             req.Add(sub_req);
         }
@@ -785,75 +814,6 @@ std::string PA_DATAOPT_post_sync_change_register(pa_sql_single_vichele &_vichele
     return ret;
 }
 
-void PA_DATAOPT_post_change_register(pa_sql_single_vichele &_vichele, bool is_update)
-{
-    std::string ctrl_url = "";
-    std::string key;
-    std::string token;
-
-    auto company = PA_DATAOPT_get_sale_company(_vichele);
-    if (!company)
-    {
-        return;
-    }
-
-    auto _plan = _vichele.get_parent<pa_sql_plan>("belong_plan");
-    if (!_plan)
-    {
-        return;
-    }
-
-    key = company->third_key;
-    token = company->third_token;
-    ctrl_url += company->third_url + "/thirdParty/zyzl/changeRegister";
-
-    if (key.length() > 0)
-    {
-        neb::CJsonObject fin_req;
-        stuff_plan_management_handler sp;
-        stuff_plan tmp;
-        sp.get_plan(tmp, _plan->get_pri_id());
-        for (auto &itr : tmp.vichele_info)
-        {
-            if (itr.vichele_id == _vichele.get_pri_id())
-            {
-                neb::CJsonObject sub_req;
-                sub_req.Add("id", std::to_string(itr.vichele_id) + "S");
-                sub_req.Add("plateNo", itr.main_vichele);
-                sub_req.Add("backPlateNo", itr.behind_vichele);
-                sub_req.Add("stuffName", tmp.name);
-                sub_req.Add("stuffId", PA_DATAOPT_search_base_id_info_by_name(tmp.name, "stuff", *company));
-                sub_req.Add("supplierName", "");
-                sub_req.Add("supplierId", "");
-                sub_req.Add("vehicleTeamName", tmp.buy_company);
-                sub_req.Add("vehicleTeamId", PA_DATAOPT_search_base_id_info_by_name(tmp.buy_company, "customer", *company));
-                sub_req.Add("enterWeight", 0);
-                sub_req.Add("companyName", tmp.buy_company);
-                sub_req.Add("customerId", PA_DATAOPT_search_base_id_info_by_name(tmp.buy_company, "customer", *company));
-                sub_req.Add("driverName", itr.driver_name);
-                sub_req.Add("driverPhone", itr.driver_phone);
-                sub_req.Add("driverId", itr.driver_id);
-                sub_req.Add("isSale", true, true);
-                sub_req.Add("price", tmp.price);
-                sub_req.Add("createTime", tmp.plan_time.substr(0, 13) + ":00:00");
-                sub_req.Add("orderNo", std::to_string(tmp.created_time) + std::to_string(tmp.plan_id));
-                sub_req.AddEmptySubArray("multiStuff");
-                sub_req.Add("isMulti", false, false);
-                if (is_update)
-                {
-                    sub_req.Add("changeType", 0);
-                }
-                else
-                {
-                    sub_req.Add("changeType", 1);
-                }
-                fin_req.Add("data", sub_req);
-                break;
-            }
-        }
-        post_json_to_third(ctrl_url, fin_req.ToString(), key, token);
-    }
-}
 std::string PA_DATAOPT_post_sync_change_register(pa_sql_vichele_stay_alone &_vichele, bool is_auto)
 {
     std::string ctrl_url = "";
@@ -897,6 +857,7 @@ std::string PA_DATAOPT_post_sync_change_register(pa_sql_vichele_stay_alone &_vic
         sub_req.Add("isMulti", false, false);
         sub_req.Add("enterWeight", real_vichele.count);
         sub_req.Add("stuffName", real_vichele.stuff_name);
+        sub_req.Add("tmdNo", real_vichele.tmd_no);
         sub_req.Add("stuffId", PA_DATAOPT_search_base_id_info_by_name(real_vichele.stuff_name, "stuff", *company));
         if (is_auto)
         {

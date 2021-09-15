@@ -48,6 +48,7 @@ class vichele_managementIf {
   virtual void get_all_supplier(std::vector<supplier_basic_info> & _return, const std::string& ssid) = 0;
   virtual void smart_assign(std::string& _return, const std::string& ssid, const std::vector<vichele_stay_alone> & vichele_info) = 0;
   virtual int64_t get_max_vichele_by_supplier(const std::string& supplier, const std::string& company) = 0;
+  virtual bool fill_tmd(const std::string& open_id, const int64_t vichele_id, const std::string& tmd_no) = 0;
 };
 
 class vichele_managementIfFactory {
@@ -168,6 +169,10 @@ class vichele_managementNull : virtual public vichele_managementIf {
   }
   int64_t get_max_vichele_by_supplier(const std::string& /* supplier */, const std::string& /* company */) {
     int64_t _return = 0;
+    return _return;
+  }
+  bool fill_tmd(const std::string& /* open_id */, const int64_t /* vichele_id */, const std::string& /* tmd_no */) {
+    bool _return = false;
     return _return;
   }
 };
@@ -3237,6 +3242,132 @@ class vichele_management_get_max_vichele_by_supplier_presult {
 
 };
 
+typedef struct _vichele_management_fill_tmd_args__isset {
+  _vichele_management_fill_tmd_args__isset() : open_id(false), vichele_id(false), tmd_no(false) {}
+  bool open_id :1;
+  bool vichele_id :1;
+  bool tmd_no :1;
+} _vichele_management_fill_tmd_args__isset;
+
+class vichele_management_fill_tmd_args {
+ public:
+
+  vichele_management_fill_tmd_args(const vichele_management_fill_tmd_args&);
+  vichele_management_fill_tmd_args& operator=(const vichele_management_fill_tmd_args&);
+  vichele_management_fill_tmd_args() : open_id(), vichele_id(0), tmd_no() {
+  }
+
+  virtual ~vichele_management_fill_tmd_args() noexcept;
+  std::string open_id;
+  int64_t vichele_id;
+  std::string tmd_no;
+
+  _vichele_management_fill_tmd_args__isset __isset;
+
+  void __set_open_id(const std::string& val);
+
+  void __set_vichele_id(const int64_t val);
+
+  void __set_tmd_no(const std::string& val);
+
+  bool operator == (const vichele_management_fill_tmd_args & rhs) const
+  {
+    if (!(open_id == rhs.open_id))
+      return false;
+    if (!(vichele_id == rhs.vichele_id))
+      return false;
+    if (!(tmd_no == rhs.tmd_no))
+      return false;
+    return true;
+  }
+  bool operator != (const vichele_management_fill_tmd_args &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const vichele_management_fill_tmd_args & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+
+class vichele_management_fill_tmd_pargs {
+ public:
+
+
+  virtual ~vichele_management_fill_tmd_pargs() noexcept;
+  const std::string* open_id;
+  const int64_t* vichele_id;
+  const std::string* tmd_no;
+
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _vichele_management_fill_tmd_result__isset {
+  _vichele_management_fill_tmd_result__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _vichele_management_fill_tmd_result__isset;
+
+class vichele_management_fill_tmd_result {
+ public:
+
+  vichele_management_fill_tmd_result(const vichele_management_fill_tmd_result&);
+  vichele_management_fill_tmd_result& operator=(const vichele_management_fill_tmd_result&);
+  vichele_management_fill_tmd_result() : success(0) {
+  }
+
+  virtual ~vichele_management_fill_tmd_result() noexcept;
+  bool success;
+  gen_exp e;
+
+  _vichele_management_fill_tmd_result__isset __isset;
+
+  void __set_success(const bool val);
+
+  void __set_e(const gen_exp& val);
+
+  bool operator == (const vichele_management_fill_tmd_result & rhs) const
+  {
+    if (!(success == rhs.success))
+      return false;
+    if (!(e == rhs.e))
+      return false;
+    return true;
+  }
+  bool operator != (const vichele_management_fill_tmd_result &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const vichele_management_fill_tmd_result & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _vichele_management_fill_tmd_presult__isset {
+  _vichele_management_fill_tmd_presult__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _vichele_management_fill_tmd_presult__isset;
+
+class vichele_management_fill_tmd_presult {
+ public:
+
+
+  virtual ~vichele_management_fill_tmd_presult() noexcept;
+  bool* success;
+  gen_exp e;
+
+  _vichele_management_fill_tmd_presult__isset __isset;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+
+};
+
 class vichele_managementClient : virtual public vichele_managementIf {
  public:
   vichele_managementClient(std::shared_ptr< ::apache::thrift::protocol::TProtocol> prot) {
@@ -3340,6 +3471,9 @@ class vichele_managementClient : virtual public vichele_managementIf {
   int64_t get_max_vichele_by_supplier(const std::string& supplier, const std::string& company);
   void send_get_max_vichele_by_supplier(const std::string& supplier, const std::string& company);
   int64_t recv_get_max_vichele_by_supplier();
+  bool fill_tmd(const std::string& open_id, const int64_t vichele_id, const std::string& tmd_no);
+  void send_fill_tmd(const std::string& open_id, const int64_t vichele_id, const std::string& tmd_no);
+  bool recv_fill_tmd();
  protected:
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> piprot_;
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> poprot_;
@@ -3381,6 +3515,7 @@ class vichele_managementProcessor : public ::apache::thrift::TDispatchProcessor 
   void process_get_all_supplier(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
   void process_smart_assign(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
   void process_get_max_vichele_by_supplier(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
+  void process_fill_tmd(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
  public:
   vichele_managementProcessor(::std::shared_ptr<vichele_managementIf> iface) :
     iface_(iface) {
@@ -3410,6 +3545,7 @@ class vichele_managementProcessor : public ::apache::thrift::TDispatchProcessor 
     processMap_["get_all_supplier"] = &vichele_managementProcessor::process_get_all_supplier;
     processMap_["smart_assign"] = &vichele_managementProcessor::process_smart_assign;
     processMap_["get_max_vichele_by_supplier"] = &vichele_managementProcessor::process_get_max_vichele_by_supplier;
+    processMap_["fill_tmd"] = &vichele_managementProcessor::process_fill_tmd;
   }
 
   virtual ~vichele_managementProcessor() {}
@@ -3682,6 +3818,15 @@ class vichele_managementMultiface : virtual public vichele_managementIf {
     return ifaces_[i]->get_max_vichele_by_supplier(supplier, company);
   }
 
+  bool fill_tmd(const std::string& open_id, const int64_t vichele_id, const std::string& tmd_no) {
+    size_t sz = ifaces_.size();
+    size_t i = 0;
+    for (; i < (sz - 1); ++i) {
+      ifaces_[i]->fill_tmd(open_id, vichele_id, tmd_no);
+    }
+    return ifaces_[i]->fill_tmd(open_id, vichele_id, tmd_no);
+  }
+
 };
 
 // The 'concurrent' client is a thread safe client that correctly handles
@@ -3792,6 +3937,9 @@ class vichele_managementConcurrentClient : virtual public vichele_managementIf {
   int64_t get_max_vichele_by_supplier(const std::string& supplier, const std::string& company);
   int32_t send_get_max_vichele_by_supplier(const std::string& supplier, const std::string& company);
   int64_t recv_get_max_vichele_by_supplier(const int32_t seqid);
+  bool fill_tmd(const std::string& open_id, const int64_t vichele_id, const std::string& tmd_no);
+  int32_t send_fill_tmd(const std::string& open_id, const int64_t vichele_id, const std::string& tmd_no);
+  bool recv_fill_tmd(const int32_t seqid);
  protected:
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> piprot_;
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> poprot_;

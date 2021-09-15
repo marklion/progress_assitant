@@ -50,6 +50,7 @@ if len(sys.argv) <= 1 or sys.argv[1] == '--help':
     print('   get_all_supplier(string ssid)')
     print('  string smart_assign(string ssid,  vichele_info)')
     print('  i64 get_max_vichele_by_supplier(string supplier, string company)')
+    print('  bool fill_tmd(string open_id, i64 vichele_id, string tmd_no)')
     print('')
     sys.exit(0)
 
@@ -284,6 +285,12 @@ elif cmd == 'get_max_vichele_by_supplier':
         print('get_max_vichele_by_supplier requires 2 args')
         sys.exit(1)
     pp.pprint(client.get_max_vichele_by_supplier(args[0], args[1],))
+
+elif cmd == 'fill_tmd':
+    if len(args) != 3:
+        print('fill_tmd requires 3 args')
+        sys.exit(1)
+    pp.pprint(client.fill_tmd(args[0], eval(args[1]), args[2],))
 
 else:
     print('Unrecognized method %s' % cmd)

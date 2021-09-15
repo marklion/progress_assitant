@@ -289,6 +289,8 @@ struct today_driver_info {
     12:string register_order,
     13:bool is_buy,
     14:list<string> company_for_select,
+    15:bool need_tmd,
+    16:string tmd_no,
 }
 
 struct driver_detail_info {
@@ -388,7 +390,8 @@ struct vehicle_info_resp {
     18:string supplierName,
     19:string supplierId,
     20:string vehicleTeamName,
-    21:string vehicleTeamId
+    21:string vehicleTeamId,
+    22:string tmd_no,
 }
 
 struct push_weight_req {
@@ -517,4 +520,5 @@ service vichele_management {
     list<supplier_basic_info> get_all_supplier(1:string ssid) throws (1:gen_exp e),
     string smart_assign(1:string ssid, 2:list<vichele_stay_alone> vichele_info) throws (1:gen_exp e),
     i64 get_max_vichele_by_supplier(1:string supplier, 2:string company) throws (1:gen_exp e),
+    bool fill_tmd(1:string open_id, 2:i64 vichele_id, 3:string tmd_no) throws (1:gen_exp e),
 }

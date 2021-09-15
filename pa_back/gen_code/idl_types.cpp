@@ -4504,6 +4504,14 @@ void today_driver_info::__set_is_buy(const bool val) {
 void today_driver_info::__set_company_for_select(const std::vector<std::string> & val) {
   this->company_for_select = val;
 }
+
+void today_driver_info::__set_need_tmd(const bool val) {
+  this->need_tmd = val;
+}
+
+void today_driver_info::__set_tmd_no(const std::string& val) {
+  this->tmd_no = val;
+}
 std::ostream& operator<<(std::ostream& out, const today_driver_info& obj)
 {
   obj.printTo(out);
@@ -4656,6 +4664,22 @@ uint32_t today_driver_info::read(::apache::thrift::protocol::TProtocol* iprot) {
           xfer += iprot->skip(ftype);
         }
         break;
+      case 15:
+        if (ftype == ::apache::thrift::protocol::T_BOOL) {
+          xfer += iprot->readBool(this->need_tmd);
+          this->__isset.need_tmd = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 16:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->tmd_no);
+          this->__isset.tmd_no = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
       default:
         xfer += iprot->skip(ftype);
         break;
@@ -4737,6 +4761,14 @@ uint32_t today_driver_info::write(::apache::thrift::protocol::TProtocol* oprot) 
   }
   xfer += oprot->writeFieldEnd();
 
+  xfer += oprot->writeFieldBegin("need_tmd", ::apache::thrift::protocol::T_BOOL, 15);
+  xfer += oprot->writeBool(this->need_tmd);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("tmd_no", ::apache::thrift::protocol::T_STRING, 16);
+  xfer += oprot->writeString(this->tmd_no);
+  xfer += oprot->writeFieldEnd();
+
   xfer += oprot->writeFieldStop();
   xfer += oprot->writeStructEnd();
   return xfer;
@@ -4758,6 +4790,8 @@ void swap(today_driver_info &a, today_driver_info &b) {
   swap(a.register_order, b.register_order);
   swap(a.is_buy, b.is_buy);
   swap(a.company_for_select, b.company_for_select);
+  swap(a.need_tmd, b.need_tmd);
+  swap(a.tmd_no, b.tmd_no);
   swap(a.__isset, b.__isset);
 }
 
@@ -4776,6 +4810,8 @@ today_driver_info::today_driver_info(const today_driver_info& other62) {
   register_order = other62.register_order;
   is_buy = other62.is_buy;
   company_for_select = other62.company_for_select;
+  need_tmd = other62.need_tmd;
+  tmd_no = other62.tmd_no;
   __isset = other62.__isset;
 }
 today_driver_info& today_driver_info::operator=(const today_driver_info& other63) {
@@ -4793,6 +4829,8 @@ today_driver_info& today_driver_info::operator=(const today_driver_info& other63
   register_order = other63.register_order;
   is_buy = other63.is_buy;
   company_for_select = other63.company_for_select;
+  need_tmd = other63.need_tmd;
+  tmd_no = other63.tmd_no;
   __isset = other63.__isset;
   return *this;
 }
@@ -4813,6 +4851,8 @@ void today_driver_info::printTo(std::ostream& out) const {
   out << ", " << "register_order=" << to_string(register_order);
   out << ", " << "is_buy=" << to_string(is_buy);
   out << ", " << "company_for_select=" << to_string(company_for_select);
+  out << ", " << "need_tmd=" << to_string(need_tmd);
+  out << ", " << "tmd_no=" << to_string(tmd_no);
   out << ")";
 }
 
@@ -5684,6 +5724,10 @@ void vehicle_info_resp::__set_vehicleTeamName(const std::string& val) {
 void vehicle_info_resp::__set_vehicleTeamId(const std::string& val) {
   this->vehicleTeamId = val;
 }
+
+void vehicle_info_resp::__set_tmd_no(const std::string& val) {
+  this->tmd_no = val;
+}
 std::ostream& operator<<(std::ostream& out, const vehicle_info_resp& obj)
 {
   obj.printTo(out);
@@ -5892,6 +5936,14 @@ uint32_t vehicle_info_resp::read(::apache::thrift::protocol::TProtocol* iprot) {
           xfer += iprot->skip(ftype);
         }
         break;
+      case 22:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->tmd_no);
+          this->__isset.tmd_no = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
       default:
         xfer += iprot->skip(ftype);
         break;
@@ -6001,6 +6053,10 @@ uint32_t vehicle_info_resp::write(::apache::thrift::protocol::TProtocol* oprot) 
   xfer += oprot->writeString(this->vehicleTeamId);
   xfer += oprot->writeFieldEnd();
 
+  xfer += oprot->writeFieldBegin("tmd_no", ::apache::thrift::protocol::T_STRING, 22);
+  xfer += oprot->writeString(this->tmd_no);
+  xfer += oprot->writeFieldEnd();
+
   xfer += oprot->writeFieldStop();
   xfer += oprot->writeStructEnd();
   return xfer;
@@ -6029,6 +6085,7 @@ void swap(vehicle_info_resp &a, vehicle_info_resp &b) {
   swap(a.supplierId, b.supplierId);
   swap(a.vehicleTeamName, b.vehicleTeamName);
   swap(a.vehicleTeamId, b.vehicleTeamId);
+  swap(a.tmd_no, b.tmd_no);
   swap(a.__isset, b.__isset);
 }
 
@@ -6054,6 +6111,7 @@ vehicle_info_resp::vehicle_info_resp(const vehicle_info_resp& other80) {
   supplierId = other80.supplierId;
   vehicleTeamName = other80.vehicleTeamName;
   vehicleTeamId = other80.vehicleTeamId;
+  tmd_no = other80.tmd_no;
   __isset = other80.__isset;
 }
 vehicle_info_resp& vehicle_info_resp::operator=(const vehicle_info_resp& other81) {
@@ -6078,6 +6136,7 @@ vehicle_info_resp& vehicle_info_resp::operator=(const vehicle_info_resp& other81
   supplierId = other81.supplierId;
   vehicleTeamName = other81.vehicleTeamName;
   vehicleTeamId = other81.vehicleTeamId;
+  tmd_no = other81.tmd_no;
   __isset = other81.__isset;
   return *this;
 }
@@ -6105,6 +6164,7 @@ void vehicle_info_resp::printTo(std::ostream& out) const {
   out << ", " << "supplierId=" << to_string(supplierId);
   out << ", " << "vehicleTeamName=" << to_string(vehicleTeamName);
   out << ", " << "vehicleTeamId=" << to_string(vehicleTeamId);
+  out << ", " << "tmd_no=" << to_string(tmd_no);
   out << ")";
 }
 
