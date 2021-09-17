@@ -609,7 +609,7 @@ std::string PA_DATAOPT_search_base_id_info_by_name(const std::string &name, cons
     return ret;
 }
 
-bool PA_DATAOPT_vichele_ready_to_post(pa_sql_vichele_stay_alone &_vichele)
+bool PA_DATAOPT_vichele_ready_to_post(pa_sql_vichele_stay_alone &_vichele, bool is_post)
 {
     bool ret = false;
 
@@ -619,7 +619,7 @@ bool PA_DATAOPT_vichele_ready_to_post(pa_sql_vichele_stay_alone &_vichele)
         auto creator = _vichele.get_parent<pa_sql_silent_user>("created_by");
         if (dest_company && creator)
         {
-            if (dest_company->get_children<pa_sql_userinfo>("belong_company", "openid == '%s'", creator->open_id.c_str()))
+            if (!is_post && dest_company->get_children<pa_sql_userinfo>("belong_company", "openid == '%s'", creator->open_id.c_str()))
             {
                 if (_vichele.tmd_no.length() > 0)
                 {
@@ -666,7 +666,7 @@ void PA_DATAOPT_post_save_register(std::list<pa_sql_vichele_stay_alone> &_vichel
             {
                 continue;
             }
-            if (!PA_DATAOPT_vichele_ready_to_post(itr))
+            if (!PA_DATAOPT_vichele_ready_to_post(itr, true))
             {
                 continue;
             }
