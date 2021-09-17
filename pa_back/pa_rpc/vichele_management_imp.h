@@ -937,9 +937,6 @@ public:
         vichele_info->tmd_no = tmd_no;
 
         vichele_info->update_record();
-        std::list<pa_sql_vichele_stay_alone> tmp;
-        tmp.push_back(*vichele_info);
-        PA_DATAOPT_post_save_register(tmp);
 
         return true;
     }

@@ -30,7 +30,7 @@
             </van-cell>
             <van-cell v-if="single_trans.destination_address" title="详细地址：" :value="single_trans.destination_address"></van-cell>
             <van-cell v-if="single_trans.is_registered" title="进厂位置：" :value="single_trans.enter_location" :label="'签到时间:' + single_trans.register_timestamp"></van-cell>
-            <van-field v-if="single_trans.need_tmd" label="提煤单号" placeholder="输入提煤单号方可进厂" v-model="single_trans.tmd_no" center>
+            <van-field v-if="single_trans.need_tmd" label="提煤单号" placeholder="输入提煤单号方可进厂" v-model="single_trans.tmd_no" center :formatter="tmd_upper">
                 <template #right-icon>
                     <van-button type="info" @click="save_tmd(single_trans)" size="small">保存</van-button>
                 </template>
@@ -133,6 +133,9 @@ export default {
         },
     },
     methods: {
+        tmd_upper:function(_value) {
+            return _value.toUpperCase();
+        },
         save_tmd: function (_trans) {
             var vue_this = this;
             vue_this.$call_remote_process("vichele_management", "fill_tmd", [vue_this.$cookies.get('driver_silent_id'), _trans.id, _trans.tmd_no]).then(function (resp) {
