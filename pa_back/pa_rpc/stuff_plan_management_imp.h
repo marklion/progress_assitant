@@ -993,7 +993,24 @@ public:
         {
             PA_RETURN_NOPRIVA_MSG();
         }
-        double requie_cash = stuff_type->price * plan.vichele_info.size() * 20;
+        double total_vichele = plan.vichele_info.size();
+        auto company_user = company->get_all_children<pa_sql_userinfo>("belong_company");
+        for (auto &itr : company_user)
+        {
+            auto related_plan = stuff_type->get_all_children<pa_sql_plan>("belong_stuff", "created_by_ext_key == %ld AND status < 4", itr.get_pri_id());
+            for (auto &itr_in_plan:related_plan)
+            {
+                auto all_vichele_in_plan = itr_in_plan.get_all_children<pa_sql_single_vichele>("belong_plan");
+                for (auto &itr_vichele:all_vichele_in_plan)
+                {
+                    if (!itr_vichele.finish)
+                    {
+                        total_vichele++;
+                    }
+                }
+            }
+        }
+        double requie_cash = stuff_type->price * total_vichele * 22;
         auto contract = company->get_children<pa_sql_contract>("a_side", "b_side_ext_key == %ld", sale_company->get_pri_id());
         double has_balance = 0;
         if (contract)
@@ -1008,7 +1025,7 @@ public:
                 req_cash = req_cash.substr(0, req_cash.size() - 4);
                 auto has_cash = std::to_string(has_balance);
                 has_cash = has_cash.substr(0, has_cash.size() - 4);
-                _return.append("计划金额（" + req_cash + "）可能超过公司余额(" + has_cash + ")");
+                _return.append("所有未完成的计划总金额（" + req_cash + "）可能超过公司余额(" + has_cash + ")");
             }
         }
 
