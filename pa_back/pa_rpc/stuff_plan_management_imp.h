@@ -1208,9 +1208,9 @@ public:
     virtual void clean_unclose_plan()
     {
         sqlite_orm_lock a;
-        auto current_date = PA_DATAOPT_current_time();
-        auto current_day = current_date.substr(0, 10);
-        auto plans_need_close = sqlite_orm::search_record_all<pa_sql_plan>("status != 4 AND plan_time LIKE '%s%%'", current_day.c_str());
+        auto yestardey_sec = time(NULL) - 3600 * 24;
+        auto yestardey_str = PA_DATAOPT_date_2_timestring(yestardey_sec).substr(0, 10);
+        auto plans_need_close = sqlite_orm::search_record_all<pa_sql_plan>("status != 4 AND plan_time LIKE '%s%%'", yestardey_str.c_str());
         for (auto &itr : plans_need_close)
         {
             auto delivered_vichele = itr.get_all_children<pa_sql_single_vichele>("belong_plan", "finish = 1");
@@ -1714,11 +1714,9 @@ public:
             sample_phone = sample_driver->phone;
         }
         auto drivers = sqlite_orm::search_record_all<pa_sql_driver>("phone == '%s'", sample_phone.c_str());
-        auto current_time = PA_DATAOPT_current_time();
-        auto date_only = current_time.substr(0, 10);
         for (auto &itr : drivers)
         {
-            auto related_plans = sqlite_orm::search_record_all<pa_sql_plan>("plan_time LIKE '%s%%' AND status == 3 AND is_cancel == 0", date_only.c_str());
+            auto related_plans = sqlite_orm::search_record_all<pa_sql_plan>("status == 3 AND is_cancel == 0");
             for (auto &single_plan : related_plans)
             {
                 auto related_single_vicheles = single_plan.get_all_children<pa_sql_single_vichele>("belong_plan", "finish == 0 AND driver_ext_key == %ld", itr.get_pri_id());
@@ -1738,6 +1736,7 @@ public:
                         auto sale_company = stuff_info->get_parent<pa_sql_company>("belong_company");
                         if (create_company && sale_company)
                         {
+                            tmp.date = single_plan.plan_time;
                             tmp.behind_vichele = behind_vichele->number;
                             tmp.destination_address = sale_company->address;
                             tmp.destination_company = sale_company->name;
@@ -1761,7 +1760,7 @@ public:
                 }
             }
         }
-        auto related_stay_alone_vichele = sqlite_orm::search_record_all<pa_sql_vichele_stay_alone>("status == 1 AND is_drop == 0 AND date == '%s' AND driver_phone == '%s'", date_only.c_str(), sample_phone.c_str());
+        auto related_stay_alone_vichele = sqlite_orm::search_record_all<pa_sql_vichele_stay_alone>("status == 1 AND is_drop == 0 AND driver_phone == '%s'", sample_phone.c_str());
         for (auto &itr:related_stay_alone_vichele)
         {
             today_driver_info tmp;
@@ -1776,6 +1775,7 @@ public:
             tmp.main_vichele = itr.main_vichele_number;
             std::string dest_company;
             tmp.tmd_no = itr.tmd_no;
+            tmp.date = itr.date;
             auto dest_company_p = itr.get_parent<pa_sql_company>("destination");
             if (dest_company_p)
             {

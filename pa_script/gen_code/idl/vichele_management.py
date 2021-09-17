@@ -2023,11 +2023,11 @@ class create_vichele_info_args(object):
             elif fid == 2:
                 if ftype == TType.LIST:
                     self.vichele_info = []
-                    (_etype241, _size238) = iprot.readListBegin()
-                    for _i242 in range(_size238):
-                        _elem243 = vichele_stay_alone()
-                        _elem243.read(iprot)
-                        self.vichele_info.append(_elem243)
+                    (_etype234, _size231) = iprot.readListBegin()
+                    for _i235 in range(_size231):
+                        _elem236 = vichele_stay_alone()
+                        _elem236.read(iprot)
+                        self.vichele_info.append(_elem236)
                     iprot.readListEnd()
                 else:
                     iprot.skip(ftype)
@@ -2048,8 +2048,8 @@ class create_vichele_info_args(object):
         if self.vichele_info is not None:
             oprot.writeFieldBegin('vichele_info', TType.LIST, 2)
             oprot.writeListBegin(TType.STRUCT, len(self.vichele_info))
-            for iter244 in self.vichele_info:
-                iter244.write(oprot)
+            for iter237 in self.vichele_info:
+                iter237.write(oprot)
             oprot.writeListEnd()
             oprot.writeFieldEnd()
         oprot.writeFieldStop()
@@ -2543,11 +2543,11 @@ class get_created_vichele_info_result(object):
             if fid == 0:
                 if ftype == TType.LIST:
                     self.success = []
-                    (_etype248, _size245) = iprot.readListBegin()
-                    for _i249 in range(_size245):
-                        _elem250 = vichele_stay_alone()
-                        _elem250.read(iprot)
-                        self.success.append(_elem250)
+                    (_etype241, _size238) = iprot.readListBegin()
+                    for _i242 in range(_size238):
+                        _elem243 = vichele_stay_alone()
+                        _elem243.read(iprot)
+                        self.success.append(_elem243)
                     iprot.readListEnd()
                 else:
                     iprot.skip(ftype)
@@ -2569,8 +2569,8 @@ class get_created_vichele_info_result(object):
         if self.success is not None:
             oprot.writeFieldBegin('success', TType.LIST, 0)
             oprot.writeListBegin(TType.STRUCT, len(self.success))
-            for iter251 in self.success:
-                iter251.write(oprot)
+            for iter244 in self.success:
+                iter244.write(oprot)
             oprot.writeListEnd()
             oprot.writeFieldEnd()
         if self.e is not None:
@@ -3243,10 +3243,10 @@ class get_input_history_result(object):
             if fid == 0:
                 if ftype == TType.LIST:
                     self.success = []
-                    (_etype255, _size252) = iprot.readListBegin()
-                    for _i256 in range(_size252):
-                        _elem257 = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
-                        self.success.append(_elem257)
+                    (_etype248, _size245) = iprot.readListBegin()
+                    for _i249 in range(_size245):
+                        _elem250 = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                        self.success.append(_elem250)
                     iprot.readListEnd()
                 else:
                     iprot.skip(ftype)
@@ -3268,8 +3268,8 @@ class get_input_history_result(object):
         if self.success is not None:
             oprot.writeFieldBegin('success', TType.LIST, 0)
             oprot.writeListBegin(TType.STRING, len(self.success))
-            for iter258 in self.success:
-                oprot.writeString(iter258.encode('utf-8') if sys.version_info[0] == 2 else iter258)
+            for iter251 in self.success:
+                oprot.writeString(iter251.encode('utf-8') if sys.version_info[0] == 2 else iter251)
             oprot.writeListEnd()
             oprot.writeFieldEnd()
         if self.e is not None:
@@ -3398,11 +3398,11 @@ class get_company_vichele_info_result(object):
             if fid == 0:
                 if ftype == TType.LIST:
                     self.success = []
-                    (_etype262, _size259) = iprot.readListBegin()
-                    for _i263 in range(_size259):
-                        _elem264 = vichele_stay_alone()
-                        _elem264.read(iprot)
-                        self.success.append(_elem264)
+                    (_etype255, _size252) = iprot.readListBegin()
+                    for _i256 in range(_size252):
+                        _elem257 = vichele_stay_alone()
+                        _elem257.read(iprot)
+                        self.success.append(_elem257)
                     iprot.readListEnd()
                 else:
                     iprot.skip(ftype)
@@ -3424,8 +3424,8 @@ class get_company_vichele_info_result(object):
         if self.success is not None:
             oprot.writeFieldBegin('success', TType.LIST, 0)
             oprot.writeListBegin(TType.STRUCT, len(self.success))
-            for iter265 in self.success:
-                iter265.write(oprot)
+            for iter258 in self.success:
+                iter258.write(oprot)
             oprot.writeListEnd()
             oprot.writeFieldEnd()
         if self.e is not None:
@@ -3487,21 +3487,21 @@ class confirm_vichele_args(object):
             elif fid == 2:
                 if ftype == TType.LIST:
                     self.info = []
-                    (_etype269, _size266) = iprot.readListBegin()
-                    for _i270 in range(_size266):
-                        _elem271 = vichele_stay_alone()
-                        _elem271.read(iprot)
-                        self.info.append(_elem271)
+                    (_etype262, _size259) = iprot.readListBegin()
+                    for _i263 in range(_size259):
+                        _elem264 = vichele_stay_alone()
+                        _elem264.read(iprot)
+                        self.info.append(_elem264)
                     iprot.readListEnd()
                 else:
                     iprot.skip(ftype)
             elif fid == 3:
                 if ftype == TType.LIST:
                     self.company_for_select = []
-                    (_etype275, _size272) = iprot.readListBegin()
-                    for _i276 in range(_size272):
-                        _elem277 = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
-                        self.company_for_select.append(_elem277)
+                    (_etype268, _size265) = iprot.readListBegin()
+                    for _i269 in range(_size265):
+                        _elem270 = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                        self.company_for_select.append(_elem270)
                     iprot.readListEnd()
                 else:
                     iprot.skip(ftype)
@@ -3522,15 +3522,15 @@ class confirm_vichele_args(object):
         if self.info is not None:
             oprot.writeFieldBegin('info', TType.LIST, 2)
             oprot.writeListBegin(TType.STRUCT, len(self.info))
-            for iter278 in self.info:
-                iter278.write(oprot)
+            for iter271 in self.info:
+                iter271.write(oprot)
             oprot.writeListEnd()
             oprot.writeFieldEnd()
         if self.company_for_select is not None:
             oprot.writeFieldBegin('company_for_select', TType.LIST, 3)
             oprot.writeListBegin(TType.STRING, len(self.company_for_select))
-            for iter279 in self.company_for_select:
-                oprot.writeString(iter279.encode('utf-8') if sys.version_info[0] == 2 else iter279)
+            for iter272 in self.company_for_select:
+                oprot.writeString(iter272.encode('utf-8') if sys.version_info[0] == 2 else iter272)
             oprot.writeListEnd()
             oprot.writeFieldEnd()
         oprot.writeFieldStop()
@@ -3661,11 +3661,11 @@ class cancel_vichele_args(object):
             elif fid == 2:
                 if ftype == TType.LIST:
                     self.info = []
-                    (_etype283, _size280) = iprot.readListBegin()
-                    for _i284 in range(_size280):
-                        _elem285 = vichele_stay_alone()
-                        _elem285.read(iprot)
-                        self.info.append(_elem285)
+                    (_etype276, _size273) = iprot.readListBegin()
+                    for _i277 in range(_size273):
+                        _elem278 = vichele_stay_alone()
+                        _elem278.read(iprot)
+                        self.info.append(_elem278)
                     iprot.readListEnd()
                 else:
                     iprot.skip(ftype)
@@ -3686,8 +3686,8 @@ class cancel_vichele_args(object):
         if self.info is not None:
             oprot.writeFieldBegin('info', TType.LIST, 2)
             oprot.writeListBegin(TType.STRUCT, len(self.info))
-            for iter286 in self.info:
-                iter286.write(oprot)
+            for iter279 in self.info:
+                iter279.write(oprot)
             oprot.writeListEnd()
             oprot.writeFieldEnd()
         oprot.writeFieldStop()
@@ -4317,11 +4317,11 @@ class get_all_vichele_team_result(object):
             if fid == 0:
                 if ftype == TType.LIST:
                     self.success = []
-                    (_etype290, _size287) = iprot.readListBegin()
-                    for _i291 in range(_size287):
-                        _elem292 = vichele_team()
-                        _elem292.read(iprot)
-                        self.success.append(_elem292)
+                    (_etype283, _size280) = iprot.readListBegin()
+                    for _i284 in range(_size280):
+                        _elem285 = vichele_team()
+                        _elem285.read(iprot)
+                        self.success.append(_elem285)
                     iprot.readListEnd()
                 else:
                     iprot.skip(ftype)
@@ -4343,8 +4343,8 @@ class get_all_vichele_team_result(object):
         if self.success is not None:
             oprot.writeFieldBegin('success', TType.LIST, 0)
             oprot.writeListBegin(TType.STRUCT, len(self.success))
-            for iter293 in self.success:
-                iter293.write(oprot)
+            for iter286 in self.success:
+                iter286.write(oprot)
             oprot.writeListEnd()
             oprot.writeFieldEnd()
         if self.e is not None:
@@ -4927,10 +4927,10 @@ class company_history_result(object):
             if fid == 0:
                 if ftype == TType.LIST:
                     self.success = []
-                    (_etype297, _size294) = iprot.readListBegin()
-                    for _i298 in range(_size294):
-                        _elem299 = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
-                        self.success.append(_elem299)
+                    (_etype290, _size287) = iprot.readListBegin()
+                    for _i291 in range(_size287):
+                        _elem292 = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                        self.success.append(_elem292)
                     iprot.readListEnd()
                 else:
                     iprot.skip(ftype)
@@ -4952,8 +4952,8 @@ class company_history_result(object):
         if self.success is not None:
             oprot.writeFieldBegin('success', TType.LIST, 0)
             oprot.writeListBegin(TType.STRING, len(self.success))
-            for iter300 in self.success:
-                oprot.writeString(iter300.encode('utf-8') if sys.version_info[0] == 2 else iter300)
+            for iter293 in self.success:
+                oprot.writeString(iter293.encode('utf-8') if sys.version_info[0] == 2 else iter293)
             oprot.writeListEnd()
             oprot.writeFieldEnd()
         if self.e is not None:
@@ -5513,11 +5513,11 @@ class get_all_supplier_result(object):
             if fid == 0:
                 if ftype == TType.LIST:
                     self.success = []
-                    (_etype304, _size301) = iprot.readListBegin()
-                    for _i305 in range(_size301):
-                        _elem306 = supplier_basic_info()
-                        _elem306.read(iprot)
-                        self.success.append(_elem306)
+                    (_etype297, _size294) = iprot.readListBegin()
+                    for _i298 in range(_size294):
+                        _elem299 = supplier_basic_info()
+                        _elem299.read(iprot)
+                        self.success.append(_elem299)
                     iprot.readListEnd()
                 else:
                     iprot.skip(ftype)
@@ -5539,8 +5539,8 @@ class get_all_supplier_result(object):
         if self.success is not None:
             oprot.writeFieldBegin('success', TType.LIST, 0)
             oprot.writeListBegin(TType.STRUCT, len(self.success))
-            for iter307 in self.success:
-                iter307.write(oprot)
+            for iter300 in self.success:
+                iter300.write(oprot)
             oprot.writeListEnd()
             oprot.writeFieldEnd()
         if self.e is not None:
@@ -5600,11 +5600,11 @@ class smart_assign_args(object):
             elif fid == 2:
                 if ftype == TType.LIST:
                     self.vichele_info = []
-                    (_etype311, _size308) = iprot.readListBegin()
-                    for _i312 in range(_size308):
-                        _elem313 = vichele_stay_alone()
-                        _elem313.read(iprot)
-                        self.vichele_info.append(_elem313)
+                    (_etype304, _size301) = iprot.readListBegin()
+                    for _i305 in range(_size301):
+                        _elem306 = vichele_stay_alone()
+                        _elem306.read(iprot)
+                        self.vichele_info.append(_elem306)
                     iprot.readListEnd()
                 else:
                     iprot.skip(ftype)
@@ -5625,8 +5625,8 @@ class smart_assign_args(object):
         if self.vichele_info is not None:
             oprot.writeFieldBegin('vichele_info', TType.LIST, 2)
             oprot.writeListBegin(TType.STRUCT, len(self.vichele_info))
-            for iter314 in self.vichele_info:
-                iter314.write(oprot)
+            for iter307 in self.vichele_info:
+                iter307.write(oprot)
             oprot.writeListEnd()
             oprot.writeFieldEnd()
         oprot.writeFieldStop()

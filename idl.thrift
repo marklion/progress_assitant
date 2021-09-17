@@ -291,6 +291,7 @@ struct today_driver_info {
     14:list<string> company_for_select,
     15:bool need_tmd,
     16:string tmd_no,
+    17:string date,
 }
 
 struct driver_detail_info {
@@ -427,9 +428,6 @@ service open_api_management {
     bool verify_email_code(1:string email, 2:string code) throws (1:gen_exp e),
     bool unregister_api_user(1:string email, 2:string password) throws (1:gen_exp e),
     string get_token(1:string email, 2:string password) throws (1:gen_exp e),
-    list<api_transformation_info> get_today_transformation(1:string token) throws (1:gen_exp e),
-    bool push_exit_count(1:i64 id, 2:double count, 3:bool is_sale, 4:string token) throws (1:gen_exp e),
-    bool push_arrange(1:i64 id, 2:string order, 3:bool is_sale, 4:string location, 5:string token) throws (1:gen_exp e),
     bool proc_call_vehicle(1:call_vehicle_req _req, 2:string token) throws (1:gen_exp e),
     vehicle_info_resp proc_vehicle_info(1:string plateNo, 2:string driverId, 3:string token) throws (1:gen_exp e),
     list<vehicle_info_resp> proc_all_vehicle_info(1:string token) throws (1:gen_exp e),

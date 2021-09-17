@@ -940,6 +940,28 @@ public:
 
         return true;
     }
+
+    void clean_unclose_vichele()
+    {
+        auto yesterday_sec = time(NULL) - 3600 * 24;
+        auto yestardey_str = PA_DATAOPT_date_2_timestring(yesterday_sec).substr(0, 10);
+        auto need_clean = sqlite_orm::search_record_all<pa_sql_vichele_stay_alone>("is_drop == 0 AND status <= 1 AND date == %s", yestardey_str.c_str());
+        for (auto &itr : need_clean)
+        {
+            try
+            {
+                if (PA_DATAOPT_post_sync_change_register(itr, true).length() == 0)
+                {
+                    itr.is_drop = 1;
+                    itr.update_record();
+                }
+            }
+            catch (const gen_exp &e)
+            {
+                std::cerr << e.msg << '\n';
+            }
+        }
+    }
 };
 
 #endif // _VICHELE_MANAGEMENT_H_

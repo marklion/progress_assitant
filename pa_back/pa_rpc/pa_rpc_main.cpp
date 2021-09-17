@@ -61,9 +61,7 @@ int main(int argc, char **argv)
                         auto st_time = localtime(&cur_time);
                         if (st_time->tm_min % 5 == 0)
                         {
-                            auto current_time = PA_DATAOPT_current_time();
-                            auto date_only = current_time.substr(0, 10);
-                            auto all_driver_register = sqlite_orm::search_record_all<pa_sql_driver_register>("timestamp Like '%s%%'", date_only.c_str());
+                            auto all_driver_register = sqlite_orm::search_record_all<pa_sql_driver_register>();
                             for (auto &itr : all_driver_register)
                             {
                                 auto related_vichele = itr.get_parent<pa_sql_single_vichele>("belong_vichele");
@@ -73,49 +71,17 @@ int main(int argc, char **argv)
                                 }
                             }
                         }
-                        if (st_time->tm_min == 58 && st_time->tm_hour == 23)
-                        {
-                            std::cout << "pass one day" << std::endl;
-                            stuff_plan_management_handler hd;
-                            hd.clean_unclose_plan();
-                            auto current_time = PA_DATAOPT_current_time();
-                            auto date_only = current_time.substr(0, 10);
-                            auto all_stay_alone_vichele = sqlite_orm::search_record_all<pa_sql_vichele_stay_alone>("date LIKE '%s%%' AND status <= 1 AND is_drop == 0", date_only.c_str());
-                            for (auto &itr : all_stay_alone_vichele)
-                            {
-                                try
-                                {
-                                    auto update_ret = PA_DATAOPT_post_sync_change_register(itr, true);
-                                    if (update_ret.length() <= 0)
-                                    {
-                                        itr.is_drop = 1;
-                                        itr.update_record();
-                                    }
-                                }
-                                catch (gen_exp &e)
-                                {
-                                }
-                            }
-                        }
-                        if (st_time->tm_min == 57 && st_time->tm_hour == 22)
+                        if (st_time->tm_min == 47 && st_time->tm_hour == 23)
                         {
                             auto all_contract = sqlite_orm::search_record_all<pa_sql_contract>();
                             for (auto &itr : all_contract)
                             {
                                 itr.update_status();
                             }
-                        }
-                        if (st_time->tm_min == 2 && st_time->tm_hour == 3)
-                        {
-                            auto current_time = PA_DATAOPT_current_time();
-                            auto date_only = current_time.substr(0, 10);
-                            auto all_plan = sqlite_orm::search_record_all<pa_sql_plan>("status == 3 AND plan_time LIKE '%s%%'", date_only.c_str());
-                            for (auto &itr : all_plan)
-                            {
-                                PA_DATAOPT_post_save_register(itr);
-                            }
-                            auto all_stay_alone_vichele = sqlite_orm::search_record_all<pa_sql_vichele_stay_alone>("date LIKE '%s%%' AND status == 1 AND is_drop == 0", date_only.c_str());
-                            PA_DATAOPT_post_save_register(all_stay_alone_vichele);
+                            stuff_plan_management_handler spm;
+                            vichele_management_handler vm;
+                            spm.clean_unclose_plan();
+                            vm.clean_unclose_vichele();
                         }
                         auto sale_companys = sqlite_orm::search_record_all<pa_sql_company>("is_sale == 1");
                         auto current_min = st_time->tm_min + st_time->tm_hour * 60;

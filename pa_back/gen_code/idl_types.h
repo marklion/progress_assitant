@@ -1784,7 +1784,7 @@ void swap(company_plan_brief &a, company_plan_brief &b);
 std::ostream& operator<<(std::ostream& out, const company_plan_brief& obj);
 
 typedef struct _today_driver_info__isset {
-  _today_driver_info__isset() : id(false), destination_company(false), destination_address(false), order_company(false), main_vichele(false), behind_vichele(false), stuff_name(false), register_timestamp(false), register_number(false), enter_location(false), is_registered(false), register_order(false), is_buy(false), company_for_select(false), need_tmd(false), tmd_no(false) {}
+  _today_driver_info__isset() : id(false), destination_company(false), destination_address(false), order_company(false), main_vichele(false), behind_vichele(false), stuff_name(false), register_timestamp(false), register_number(false), enter_location(false), is_registered(false), register_order(false), is_buy(false), company_for_select(false), need_tmd(false), tmd_no(false), date(false) {}
   bool id :1;
   bool destination_company :1;
   bool destination_address :1;
@@ -1801,6 +1801,7 @@ typedef struct _today_driver_info__isset {
   bool company_for_select :1;
   bool need_tmd :1;
   bool tmd_no :1;
+  bool date :1;
 } _today_driver_info__isset;
 
 class today_driver_info : public virtual ::apache::thrift::TBase {
@@ -1808,7 +1809,7 @@ class today_driver_info : public virtual ::apache::thrift::TBase {
 
   today_driver_info(const today_driver_info&);
   today_driver_info& operator=(const today_driver_info&);
-  today_driver_info() : id(0), destination_company(), destination_address(), order_company(), main_vichele(), behind_vichele(), stuff_name(), register_timestamp(), register_number(), enter_location(), is_registered(0), register_order(), is_buy(0), need_tmd(0), tmd_no() {
+  today_driver_info() : id(0), destination_company(), destination_address(), order_company(), main_vichele(), behind_vichele(), stuff_name(), register_timestamp(), register_number(), enter_location(), is_registered(0), register_order(), is_buy(0), need_tmd(0), tmd_no(), date() {
   }
 
   virtual ~today_driver_info() noexcept;
@@ -1828,6 +1829,7 @@ class today_driver_info : public virtual ::apache::thrift::TBase {
   std::vector<std::string>  company_for_select;
   bool need_tmd;
   std::string tmd_no;
+  std::string date;
 
   _today_driver_info__isset __isset;
 
@@ -1863,6 +1865,8 @@ class today_driver_info : public virtual ::apache::thrift::TBase {
 
   void __set_tmd_no(const std::string& val);
 
+  void __set_date(const std::string& val);
+
   bool operator == (const today_driver_info & rhs) const
   {
     if (!(id == rhs.id))
@@ -1896,6 +1900,8 @@ class today_driver_info : public virtual ::apache::thrift::TBase {
     if (!(need_tmd == rhs.need_tmd))
       return false;
     if (!(tmd_no == rhs.tmd_no))
+      return false;
+    if (!(date == rhs.date))
       return false;
     return true;
   }

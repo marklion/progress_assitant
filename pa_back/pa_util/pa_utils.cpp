@@ -540,13 +540,7 @@ void PA_DATAOPT_post_save_register(pa_sql_plan &_plan)
     {
         return;
     }
-
-    auto current_time = PA_DATAOPT_current_time();
-    auto date_only = current_time.substr(0, 10);
-    if (_plan.plan_time.substr(0, 10) != date_only)
-    {
-        return;
-    }
+    
     auto company = stuff_info->get_parent<pa_sql_company>("belong_company");
     if (!company)
     {
@@ -652,8 +646,7 @@ void PA_DATAOPT_post_save_register(std::list<pa_sql_vichele_stay_alone> &_vichel
     {
         return;
     }
-    auto current_time = PA_DATAOPT_current_time();
-    auto date_only = current_time.substr(0, 10);
+    
     key = company->third_key;
     token = company->third_token;
     ctrl_url += company->third_url + "/thirdParty/zyzl/saveRegister";
@@ -662,10 +655,6 @@ void PA_DATAOPT_post_save_register(std::list<pa_sql_vichele_stay_alone> &_vichel
         neb::CJsonObject req;
         for (auto &itr : _vicheles)
         {
-            if (itr.date.substr(0, 10) != date_only)
-            {
-                continue;
-            }
             if (!PA_DATAOPT_vichele_ready_to_post(itr, true))
             {
                 continue;
@@ -706,27 +695,7 @@ void PA_DATAOPT_post_save_register(std::list<pa_sql_vichele_stay_alone> &_vichel
         }
     }
 }
-std::vector<meta_stuff_info> PA_DATAOPT_search_multi_stuff(pa_sql_vichele_stay_alone &_vichele)
-{
-    std::vector<meta_stuff_info> ret;
-    auto destination = _vichele.get_parent<pa_sql_company>("destination");
-    if (destination)
-    {
-        auto current_time = PA_DATAOPT_current_time();
-        auto date_only = current_time.substr(0, 10);
-        auto same_vicheles = sqlite_orm::search_record_all<pa_sql_vichele_stay_alone>("main_vichele_number == '%s' AND behind_vichele_number == '%s' AND destination_ext_key == %ld AND is_drop == 0 AND status == 1 AND date LIKE '%s%%'", _vichele.main_vichele_number.c_str(), _vichele.behind_vichele_number.c_str(), destination->get_pri_id(), date_only.c_str());
-        for (auto &itr : same_vicheles)
-        {
-            meta_stuff_info tmp;
-            tmp.stuffName = itr.stuff_name;
-            tmp.weight = itr.count;
-            tmp.stuffId = PA_DATAOPT_search_base_id_info_by_name(tmp.stuffName, "stuff", *destination);
-            ret.push_back(tmp);
-        }
-    }
 
-    return ret;
-}
 
 std::string PA_DATAOPT_post_sync_change_register(pa_sql_single_vichele &_vichele, bool is_auto)
 {
@@ -885,11 +854,9 @@ std::string PA_DATAOPT_post_sync_change_register(pa_sql_vichele_stay_alone &_vic
 
 static void proc_que_info_back(neb::CJsonObject &ret)
 {
-    auto current_time = PA_DATAOPT_current_time();
-    auto date_only = current_time.substr(0, 10);
     auto plate_no = ret["data"]("plateNo");
     auto driver_name = ret["data"]("driverName");
-    auto today_plan = sqlite_orm::search_record_all<pa_sql_plan>("status == 3 AND plan_time LIKE '%s%%'", date_only.c_str());
+    auto today_plan = sqlite_orm::search_record_all<pa_sql_plan>("status == 3");
     for (auto &itr : today_plan)
     {
         auto vichele_in_plan = itr.get_all_children<pa_sql_single_vichele>("belong_plan");

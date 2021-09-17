@@ -169,214 +169,6 @@ public:
         m_log.log("api user %s call %s for %s", api_user->email.c_str(), _function_name, company->name.c_str());
     }
 
-    virtual void get_today_transformation(std::vector<api_transformation_info> &_return, const std::string &token)
-    {
-        log_audit_basedon_token(token, __FUNCTION__);
-        auto api_user = sqlite_orm::search_record<pa_sql_api_user>("token == '%s'", token.c_str());
-        if (!api_user)
-        {
-            PA_RETURN_MSG(OPEN_API_MSG_USER_NOT_EXIST);
-        }
-        auto company = api_user->get_parent<pa_sql_company>("belong_company");
-        if (!company)
-        {
-            PA_RETURN_MSG(OPEN_API_MSG_NOCOMPANY);
-        }
-        auto sale_stuff = company->get_all_children<pa_sql_stuff_info>("belong_company");
-        for (auto &itr:sale_stuff)
-        {
-            auto stuff_name = itr.name;
-            auto plans = itr.get_all_children<pa_sql_plan>("belong_stuff", "status == 3");
-            for (auto &itr:plans)
-            {
-                std::string company_name;
-                auto creator = itr.get_parent<pa_sql_userinfo>("created_by");
-                if (creator)
-                {
-                    auto creator_company = creator->get_parent<pa_sql_company>("belong_company");
-                    if (creator_company)
-                    {
-                        company_name = creator_company->name;
-                    }
-                }
-
-                auto sale_vicheles = itr.get_all_children<pa_sql_single_vichele>("belong_plan", "finish == 0");
-                for (auto &itr:sale_vicheles)
-                {
-                    api_transformation_info tmp;
-                    auto main_vichele = itr.get_parent<pa_sql_vichele>("main_vichele");
-                    auto behind_vichele = itr.get_parent<pa_sql_vichele_behind>("behind_vichele");
-                    auto driver_info = itr.get_parent<pa_sql_driver>("driver");
-                    if (main_vichele && behind_vichele && driver_info)
-                    {
-                        tmp.behind_vichele_number = behind_vichele->number;
-                        tmp.company_name = company_name;
-                        tmp.enter_count = 0;
-                        tmp.exit_count = 0;
-                        tmp.id = itr.get_pri_id();
-                        tmp.is_sale = true;
-                        tmp.main_vichele_number = main_vichele->number;
-                        tmp.extra_info.driver_id = "";
-                        tmp.extra_info.driver_name = driver_info->name;
-                        tmp.extra_info.driver_phone = driver_info->phone;
-                        tmp.stuff_name = stuff_name;
-                        _return.push_back(tmp);
-                    }
-                }
-            }
-        }
-
-        auto current_time = PA_DATAOPT_current_time();
-        current_time = current_time.substr(0, 10);
-        auto buy_vicheles = company->get_all_children<pa_sql_vichele_stay_alone>("destination", "date == '%s' AND status == 1", current_time.c_str());
-        for (auto &itr:buy_vicheles)
-        {
-            api_transformation_info tmp;
-            tmp.behind_vichele_number = itr.behind_vichele_number;
-            tmp.company_name = itr.company_name;
-            tmp.enter_count = itr.count;
-            tmp.exit_count = 0;
-            tmp.id = itr.get_pri_id();
-            tmp.is_sale = false;
-            tmp.main_vichele_number = itr.main_vichele_number;
-            tmp.stuff_name = itr.stuff_name;
-            _return.push_back(tmp);
-        }
-    }
-
-    virtual bool push_exit_count(const int64_t id, const double count, const bool is_sale, const std::string& token)
-    {
-        bool ret = false;
-        log_audit_basedon_token(token, __FUNCTION__);
-
-        if (is_sale)
-        {
-            auto single_vichele = sqlite_orm::search_record<pa_sql_single_vichele>("PRI_ID == %ld AND finish == 0", id);
-            if (!single_vichele)
-            {
-                PA_RETURN_MSG(OPEN_API_MSG_VICHELE_NOT_EXIST);
-            }
-            auto plan = single_vichele->get_parent<pa_sql_plan>("belong_plan");
-            if (!plan)
-            {
-                PA_RETURN_MSG(OPEN_API_MSG_VICHELE_NOT_EXIST);
-            }
-            bool has_permission = false;
-            auto stuff_info = plan->get_parent<pa_sql_stuff_info>("belong_stuff");
-            if (stuff_info && plan->status == 3)
-            {
-                auto target_company = stuff_info->get_parent<pa_sql_company>("belong_company");
-                auto api_user = sqlite_orm::search_record<pa_sql_api_user>("token == '%s'", token.c_str());
-                if (api_user)
-                {
-                    auto api_user_company = api_user->get_parent<pa_sql_company>("belong_company");
-                    if (api_user_company && target_company && api_user_company->get_pri_id() == target_company->get_pri_id())
-                    {
-                        has_permission = true;
-                    }
-                }
-            }
-
-            if (has_permission)
-            {
-                deliver_info tmp;
-                tmp.count = count;
-                tmp.id = id;
-                std::vector<deliver_info> tmp_list;
-                tmp_list.push_back(tmp);
-
-                stuff_plan_management_handler sp_handler;
-                ret = sp_handler.pri_confirm_deliver(plan->get_pri_id(), *get_sysadmin_user(), tmp_list, "");
-            }
-            else
-            {
-                PA_RETURN_MSG(OPEN_API_MSG_NO_PERMISSION);
-            }
-            
-        }
-
-        return ret;
-    }
-
-    virtual bool push_arrange(const int64_t id, const std::string &order, const bool is_sale, const std::string &location, const std::string &token)
-    {
-        bool ret = false;
-        log_audit_basedon_token(token, __FUNCTION__);
-        if (is_sale)
-        {
-            auto single_vichele = sqlite_orm::search_record<pa_sql_single_vichele>("PRI_ID == %ld AND finish == 0", id);
-            if (!single_vichele)
-            {
-                PA_RETURN_MSG(OPEN_API_MSG_VICHELE_NOT_EXIST);
-            }
-            auto plan = single_vichele->get_parent<pa_sql_plan>("belong_plan");
-            if (!plan)
-            {
-                PA_RETURN_MSG(OPEN_API_MSG_VICHELE_NOT_EXIST);
-            }
-            bool has_permission = false;
-            auto stuff_info = plan->get_parent<pa_sql_stuff_info>("belong_stuff");
-            if (stuff_info && plan->status == 3)
-            {
-                auto target_company = stuff_info->get_parent<pa_sql_company>("belong_company");
-                auto api_user = sqlite_orm::search_record<pa_sql_api_user>("token == '%s'", token.c_str());
-                if (api_user)
-                {
-                    auto api_user_company = api_user->get_parent<pa_sql_company>("belong_company");
-                    if (api_user_company && target_company && api_user_company->get_pri_id() == target_company->get_pri_id())
-                    {
-                        has_permission = true;
-                    }
-                }
-            }
-            if (has_permission)
-            {
-                auto exist_register_info = single_vichele->get_children<pa_sql_driver_register>("belong_vichele");
-                if (exist_register_info)
-                {
-                    if (order == "0")
-                    {
-                        exist_register_info->remove_record();
-                        ret = true;
-                    }
-                    else
-                    {
-                        exist_register_info->enter_location = location;
-                        exist_register_info->number = order;
-                        exist_register_info->timestamp = PA_DATAOPT_current_time();
-                        ret = exist_register_info->update_record();
-                    }
-                }
-                else
-                {
-                    if (order == "0")
-                    {
-                        ret = true;
-                    }
-                    else
-                    {
-                        pa_sql_driver_register tmp;
-                        tmp.enter_location = location;
-                        tmp.number = order;
-                        tmp.timestamp = PA_DATAOPT_current_time();
-                        tmp.set_parent(*single_vichele, "belong_vichele");
-                        ret = tmp.insert_record();
-                    }
-                }
-            }
-            else
-            {
-                PA_RETURN_MSG(OPEN_API_MSG_NO_PERMISSION);
-            }
-        }
-        else
-        {
-            PA_RETURN_MSG(OPEN_API_MSG_NO_PERMISSION);
-        }
-
-        return ret;
-    }
-
     std::unique_ptr<pa_sql_company> _get_token_company(const std::string &_token) {
         auto api_user = sqlite_orm::search_record<pa_sql_api_user>("token == '%s'", _token.c_str());
         if (api_user)
@@ -496,9 +288,7 @@ public:
         {
             PA_RETURN_MSG(OPEN_API_MSG_NO_PERMISSION);
         }
-        auto current_time = PA_DATAOPT_current_time();
-        auto date_only = current_time.substr(0, 10);
-        auto all_active_plan = PA_RPC_get_all_plans_related_by_company(*company, "status == 3 AND plan_time LIKE '%s%%'", date_only.c_str());
+        auto all_active_plan = PA_RPC_get_all_plans_related_by_company(*company, "status == 3");
         for (auto &plan : all_active_plan)
         {
             auto all_vichele_info = plan.get_all_children<pa_sql_single_vichele>("belong_plan", "finish == 0");
@@ -533,7 +323,7 @@ public:
             }
         }
 
-        auto buyer_vehicles = company->get_all_children<pa_sql_vichele_stay_alone>("destination", "status == 1 AND is_drop == 0 AND company_name != '' AND date LIKE '%s%%' GROUP BY main_vichele_number", date_only.c_str());
+        auto buyer_vehicles = company->get_all_children<pa_sql_vichele_stay_alone>("destination", "status == 1 AND is_drop == 0 AND company_name != ''");
         for (auto &itr : buyer_vehicles)
         {
             if (itr.main_vichele_number == plateNo || (itr.driver_id == driverId && itr.driver_id.length() > 0))
@@ -577,9 +367,7 @@ public:
         {
             PA_RETURN_MSG(OPEN_API_MSG_NO_PERMISSION);
         }
-        auto current_time = PA_DATAOPT_current_time();
-        auto date_only = current_time.substr(0, 10);
-        auto all_active_plan = PA_RPC_get_all_plans_related_by_company(*company, "status == 3 AND plan_time LIKE '%s%%'", date_only.c_str());
+        auto all_active_plan = PA_RPC_get_all_plans_related_by_company(*company, "status == 3");
         for (auto &plan : all_active_plan)
         {
             auto all_vichele_info = plan.get_all_children<pa_sql_single_vichele>("belong_plan", "finish == 0");
@@ -594,7 +382,7 @@ public:
             }
         }
 
-        auto buyer_vehicles = company->get_all_children<pa_sql_vichele_stay_alone>("destination", "status == 1 AND is_drop == 0 AND company_name != '' AND date LIKE '%s%%' GROUP BY main_vichele_number", date_only.c_str());
+        auto buyer_vehicles = company->get_all_children<pa_sql_vichele_stay_alone>("destination", "status == 1 AND is_drop == 0 AND company_name != ''");
         for (auto &itr : buyer_vehicles)
         {
             if (PA_DATAOPT_vichele_ready_to_post(itr))
