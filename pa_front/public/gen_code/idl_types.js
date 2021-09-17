@@ -2952,6 +2952,7 @@ today_driver_info = class {
     this.company_for_select = null;
     this.need_tmd = null;
     this.tmd_no = null;
+    this.date = null;
     if (args) {
       if (args.id !== undefined && args.id !== null) {
         this.id = args.id;
@@ -3000,6 +3001,9 @@ today_driver_info = class {
       }
       if (args.tmd_no !== undefined && args.tmd_no !== null) {
         this.tmd_no = args.tmd_no;
+      }
+      if (args.date !== undefined && args.date !== null) {
+        this.date = args.date;
       }
     }
   }
@@ -3134,6 +3138,13 @@ today_driver_info = class {
           input.skip(ftype);
         }
         break;
+        case 17:
+        if (ftype == Thrift.Type.STRING) {
+          this.date = input.readString().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
         default:
           input.skip(ftype);
       }
@@ -3230,6 +3241,11 @@ today_driver_info = class {
     if (this.tmd_no !== null && this.tmd_no !== undefined) {
       output.writeFieldBegin('tmd_no', Thrift.Type.STRING, 16);
       output.writeString(this.tmd_no);
+      output.writeFieldEnd();
+    }
+    if (this.date !== null && this.date !== undefined) {
+      output.writeFieldBegin('date', Thrift.Type.STRING, 17);
+      output.writeString(this.date);
       output.writeFieldEnd();
     }
     output.writeFieldStop();

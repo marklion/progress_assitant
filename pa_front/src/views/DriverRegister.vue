@@ -29,6 +29,7 @@
                 </div>
             </van-cell>
             <van-cell v-if="single_trans.destination_address" title="详细地址：" :value="single_trans.destination_address"></van-cell>
+            <van-cell title="进厂时间" :value="single_trans.date"></van-cell>
             <van-cell v-if="single_trans.is_registered" title="进厂位置：" :value="single_trans.enter_location" :label="'签到时间:' + single_trans.register_timestamp"></van-cell>
             <van-field v-if="single_trans.need_tmd" label="提煤单号" placeholder="输入提煤单号方可进厂" v-model="single_trans.tmd_no" center :formatter="tmd_upper">
                 <template #right-icon>

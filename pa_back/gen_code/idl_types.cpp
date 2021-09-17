@@ -4512,6 +4512,10 @@ void today_driver_info::__set_need_tmd(const bool val) {
 void today_driver_info::__set_tmd_no(const std::string& val) {
   this->tmd_no = val;
 }
+
+void today_driver_info::__set_date(const std::string& val) {
+  this->date = val;
+}
 std::ostream& operator<<(std::ostream& out, const today_driver_info& obj)
 {
   obj.printTo(out);
@@ -4680,6 +4684,14 @@ uint32_t today_driver_info::read(::apache::thrift::protocol::TProtocol* iprot) {
           xfer += iprot->skip(ftype);
         }
         break;
+      case 17:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->date);
+          this->__isset.date = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
       default:
         xfer += iprot->skip(ftype);
         break;
@@ -4769,6 +4781,10 @@ uint32_t today_driver_info::write(::apache::thrift::protocol::TProtocol* oprot) 
   xfer += oprot->writeString(this->tmd_no);
   xfer += oprot->writeFieldEnd();
 
+  xfer += oprot->writeFieldBegin("date", ::apache::thrift::protocol::T_STRING, 17);
+  xfer += oprot->writeString(this->date);
+  xfer += oprot->writeFieldEnd();
+
   xfer += oprot->writeFieldStop();
   xfer += oprot->writeStructEnd();
   return xfer;
@@ -4792,6 +4808,7 @@ void swap(today_driver_info &a, today_driver_info &b) {
   swap(a.company_for_select, b.company_for_select);
   swap(a.need_tmd, b.need_tmd);
   swap(a.tmd_no, b.tmd_no);
+  swap(a.date, b.date);
   swap(a.__isset, b.__isset);
 }
 
@@ -4812,6 +4829,7 @@ today_driver_info::today_driver_info(const today_driver_info& other62) {
   company_for_select = other62.company_for_select;
   need_tmd = other62.need_tmd;
   tmd_no = other62.tmd_no;
+  date = other62.date;
   __isset = other62.__isset;
 }
 today_driver_info& today_driver_info::operator=(const today_driver_info& other63) {
@@ -4831,6 +4849,7 @@ today_driver_info& today_driver_info::operator=(const today_driver_info& other63
   company_for_select = other63.company_for_select;
   need_tmd = other63.need_tmd;
   tmd_no = other63.tmd_no;
+  date = other63.date;
   __isset = other63.__isset;
   return *this;
 }
@@ -4853,6 +4872,7 @@ void today_driver_info::printTo(std::ostream& out) const {
   out << ", " << "company_for_select=" << to_string(company_for_select);
   out << ", " << "need_tmd=" << to_string(need_tmd);
   out << ", " << "tmd_no=" << to_string(tmd_no);
+  out << ", " << "date=" << to_string(date);
   out << ")";
 }
 

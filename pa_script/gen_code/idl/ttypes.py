@@ -2642,11 +2642,12 @@ class today_driver_info(object):
      - company_for_select
      - need_tmd
      - tmd_no
+     - date
 
     """
 
 
-    def __init__(self, id=None, destination_company=None, destination_address=None, order_company=None, main_vichele=None, behind_vichele=None, stuff_name=None, register_timestamp=None, register_number=None, enter_location=None, is_registered=None, register_order=None, is_buy=None, company_for_select=None, need_tmd=None, tmd_no=None,):
+    def __init__(self, id=None, destination_company=None, destination_address=None, order_company=None, main_vichele=None, behind_vichele=None, stuff_name=None, register_timestamp=None, register_number=None, enter_location=None, is_registered=None, register_order=None, is_buy=None, company_for_select=None, need_tmd=None, tmd_no=None, date=None,):
         self.id = id
         self.destination_company = destination_company
         self.destination_address = destination_address
@@ -2663,6 +2664,7 @@ class today_driver_info(object):
         self.company_for_select = company_for_select
         self.need_tmd = need_tmd
         self.tmd_no = tmd_no
+        self.date = date
 
     def read(self, iprot):
         if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
@@ -2758,6 +2760,11 @@ class today_driver_info(object):
                     self.tmd_no = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
                 else:
                     iprot.skip(ftype)
+            elif fid == 17:
+                if ftype == TType.STRING:
+                    self.date = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
             else:
                 iprot.skip(ftype)
             iprot.readFieldEnd()
@@ -2834,6 +2841,10 @@ class today_driver_info(object):
         if self.tmd_no is not None:
             oprot.writeFieldBegin('tmd_no', TType.STRING, 16)
             oprot.writeString(self.tmd_no.encode('utf-8') if sys.version_info[0] == 2 else self.tmd_no)
+            oprot.writeFieldEnd()
+        if self.date is not None:
+            oprot.writeFieldBegin('date', TType.STRING, 17)
+            oprot.writeString(self.date.encode('utf-8') if sys.version_info[0] == 2 else self.date)
             oprot.writeFieldEnd()
         oprot.writeFieldStop()
         oprot.writeStructEnd()
@@ -4852,6 +4863,7 @@ today_driver_info.thrift_spec = (
     (14, TType.LIST, 'company_for_select', (TType.STRING, 'UTF8', False), None, ),  # 14
     (15, TType.BOOL, 'need_tmd', None, None, ),  # 15
     (16, TType.STRING, 'tmd_no', 'UTF8', None, ),  # 16
+    (17, TType.STRING, 'date', 'UTF8', None, ),  # 17
 )
 all_structs.append(driver_detail_info)
 driver_detail_info.thrift_spec = (
