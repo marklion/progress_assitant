@@ -297,7 +297,7 @@ export default {
                     if (resp.length > 0) {
                         console.log(resp);
                         Dialog.confirm({
-                            title: '计划车辆冲突',
+                            title: '计划调整',
                             message: resp,
                             confirmButtonText: '继续上报',
                             cancelButtonText: '再调整下'

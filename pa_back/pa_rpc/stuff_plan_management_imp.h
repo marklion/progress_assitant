@@ -997,7 +997,7 @@ public:
         auto company_user = company->get_all_children<pa_sql_userinfo>("belong_company");
         for (auto &itr : company_user)
         {
-            auto related_plan = stuff_type->get_all_children<pa_sql_plan>("belong_stuff", "created_by_ext_key == %ld AND status < 4", itr.get_pri_id());
+            auto related_plan = stuff_type->get_all_children<pa_sql_plan>("belong_stuff", "(created_by_ext_key == %ld OR proxy_company == '%s') AND status < 4", itr.get_pri_id(), company->name.c_str());
             for (auto &itr_in_plan:related_plan)
             {
                 auto all_vichele_in_plan = itr_in_plan.get_all_children<pa_sql_single_vichele>("belong_plan");
