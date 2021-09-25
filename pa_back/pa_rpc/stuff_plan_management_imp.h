@@ -1621,7 +1621,7 @@ public:
     {
         sqlite_orm_lock a;
         bool ret = false;
-        auto user = sqlite_orm::search_record<pa_sql_driver>("phone == '%s'", driver_phone.c_str());
+        auto user = PA_DATAOPT_link_driver(driver_phone);
         if (user)
         {
             std::string send_cmd = "/script/send_sms.py " + driver_phone;

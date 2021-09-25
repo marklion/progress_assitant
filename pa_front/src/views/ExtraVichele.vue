@@ -119,7 +119,7 @@
         <van-tab title="车队维护">
             <van-grid>
                 <van-grid-item v-for="(single_vichele_team, index) in all_vichele_team" :key="index" icon="logistics" :text="single_vichele_team.name" @click="current_vichele_team = single_vichele_team" />
-                <van-grid-item v-if="all_vichele_team.length < 8" @click="add_vichele_team_show = true" icon="plus" />
+                <van-grid-item v-if="all_vichele_team.length < 32" @click="add_vichele_team_show = true" icon="plus" />
             </van-grid>
             <div v-if="current_vichele_team.id != 0">
                 <van-field v-model="current_vichele_team.name" label="车队名">

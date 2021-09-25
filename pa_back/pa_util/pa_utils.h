@@ -66,5 +66,7 @@ void PA_DATAOPT_post_get_queue(pa_sql_single_vichele &_vichele);
 std::unique_ptr<pa_sql_company> PA_DATAOPT_get_company_by_ssid(const std::string &ssid);
 bool PA_DATAOPT_vichele_ready_to_post(pa_sql_vichele_stay_alone &_vichele, bool is_post = false);
 
+std::unique_ptr<pa_sql_driver> PA_DATAOPT_link_driver(const std::string &_driver_phone);
+
 
 #endif // _PA_UTILS_H_

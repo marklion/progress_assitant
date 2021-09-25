@@ -1011,3 +1011,20 @@ std::unique_ptr<pa_sql_company> PA_DATAOPT_get_company_by_ssid(const std::string
 
     return std::unique_ptr<pa_sql_company>();
 }
+std::unique_ptr<pa_sql_driver> PA_DATAOPT_link_driver(const std::string &_driver_phone)
+{
+    auto user = sqlite_orm::search_record<pa_sql_driver>("phone == '%s'", _driver_phone.c_str());
+    if (!user)
+    {
+        auto stay_alone_vichele = sqlite_orm::search_record<pa_sql_vichele_stay_alone>("driver_phone == '%s'", _driver_phone.c_str());
+        if (stay_alone_vichele)
+        {
+            pa_sql_driver tmp;
+            tmp.driver_id = stay_alone_vichele->driver_id;
+            tmp.name = stay_alone_vichele->driver_name;
+            tmp.phone = stay_alone_vichele->driver_phone;
+            tmp.insert_record();
+        }
+    }
+    return sqlite_orm::search_record<pa_sql_driver>("phone == '%s'", _driver_phone.c_str());
+}
