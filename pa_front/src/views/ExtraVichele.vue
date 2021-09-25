@@ -363,18 +363,26 @@ export default {
         },
         select_team: function (_team) {
             var vue_this = this;
-            vue_this.new_vichele = [];
             _team.members.forEach((element) => {
-                vue_this.new_vichele.push({
-                    main_vichele_number: element.main_vichele_number,
-                    behind_vichele_number: element.behind_vichele_number,
-                    count: parseFloat(vue_this.team_brief_count),
-                    comment: '',
-                    repeated: false,
-                    driver_phone: element.driver_phone,
-                    driver_id: element.driver_id,
-                    driver_name: element.driver_name,
-                });
+                if (!vue_this.new_vichele.find((value) => {
+                        if (value.main_vichele_number == element.main_vichele_number) {
+                            return true;
+                        } else {
+                            return false;
+                        }
+                    })) {
+                    vue_this.new_vichele.push({
+                        main_vichele_number: element.main_vichele_number,
+                        behind_vichele_number: element.behind_vichele_number,
+                        count: parseFloat(vue_this.team_brief_count),
+                        comment: '',
+                        repeated: false,
+                        driver_phone: element.driver_phone,
+                        driver_id: element.driver_id,
+                        driver_name: element.driver_name,
+                    });
+
+                }
             });
             vue_this.show_select_vichele_team = false;
         },
