@@ -38,6 +38,8 @@
                         </div>
                     </template>
                 </van-cell>
+                <van-divider>司机信息</van-divider>
+                <van-cell :title="single_vichele.driver_name" :value="single_vichele.driver_phone" :label="single_vichele.driver_id"></van-cell>
                 <div class="extra_info_show">
                     <van-row type="flex" align="center" :gutter="10">
                         <van-col>
@@ -67,7 +69,7 @@
     </van-checkbox-group>
     <van-dialog v-model="show_confirm_diag" close-on-click-overlay title="是否改派" :show-confirm-button="false">
         <van-form @submit="confirm_vichele">
-            <van-field v-if="!catch_free" v-model="smart_company" label="改派地点" placeholder="点击智能改派获取最佳提货地" >
+            <van-field v-if="!catch_free" v-model="smart_company" label="改派地点" placeholder="点击智能改派获取最佳提货地">
                 <template #button>
                     <van-button native-type="button" type="primary" size="small" @click="smart_assign">智能改派</van-button>
                 </template>
@@ -140,6 +142,11 @@ import {
     Switch
 } from 'vant';
 import HistoryInput from '../components/HistoryInput.vue'
+import {
+    Divider
+} from 'vant';
+
+Vue.use(Divider);
 Vue.use(Switch);
 Vue.use(Form);
 Vue.use(Field);
@@ -197,6 +204,9 @@ export default {
             }, {
                 text: '已确认',
                 value: 1,
+            }, {
+                text: '已完成',
+                value: 2,
             }, ],
         };
     },
@@ -247,7 +257,7 @@ export default {
         },
     },
     methods: {
-        smart_assign:function() {
+        smart_assign: function () {
             var vue_this = this;
             vue_this.$call_remote_process("vichele_management", "smart_assign", [vue_this.$cookies.get('pa_ssid'), vue_this.select_pool]).then(function (resp) {
                 vue_this.smart_company = resp;
