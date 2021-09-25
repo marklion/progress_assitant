@@ -797,7 +797,7 @@ public:
     }
     virtual std::vector<sqlite_orm_column> self_columns_defined() { 
         std::vector<sqlite_orm_column> ret;
-        ret.push_back(sqlite_orm_column("name", sqlite_orm_column::STRING, &name, SQLITE_ORM_COLUMN_LIMIT_UNIQ));
+        ret.push_back(sqlite_orm_column("name", sqlite_orm_column::STRING, &name));
         ret.push_back(sqlite_orm_column("reserves", sqlite_orm_column::REAL, &reserves));
         ret.push_back(sqlite_orm_column("max_vichele", sqlite_orm_column::INTEGER, &max_vichele));
 
