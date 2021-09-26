@@ -366,7 +366,7 @@ public:
         }
     }
 
-    virtual bool confirm_vichele(const std::string &ssid, const std::vector<vichele_stay_alone> &info, const std::vector<std::string> &company_for_select)
+    virtual bool confirm_vichele(const std::string &ssid, const std::vector<vichele_stay_alone> &info, const std::vector<std::string> &company_for_select, const bool all_select)
     {
         auto user = PA_DATAOPT_get_online_user(ssid);
         if (!user)
@@ -388,9 +388,13 @@ public:
             price = itr.price;
             company_name = itr.company_name;
         }
+        if (all_select)
+        {
+            query_cmd = "PRI_ID != 0";
+        }
 
         std::string company_for_select_string;
-        for (auto &itr:company_for_select)
+        for (auto &itr : company_for_select)
         {
             company_for_select_string += itr + ";";
         }
@@ -424,7 +428,7 @@ public:
 
         return true;
     }
-    virtual bool cancel_vichele(const std::string &ssid, const std::vector<vichele_stay_alone> &info)
+    virtual bool cancel_vichele(const std::string &ssid, const std::vector<vichele_stay_alone> &info, const bool all_select)
     {
         auto user = PA_DATAOPT_get_online_user(ssid);
         if (!user)
@@ -441,6 +445,10 @@ public:
         for (auto &itr : info)
         {
             query_cmd += " OR PRI_ID == " + std::to_string(itr.id);
+        }
+        if (all_select)
+        {
+            query_cmd = "PRI_ID != 0";
         }
 
         auto extra_vichele = company->get_all_children<pa_sql_vichele_stay_alone>("destination", "(%s)  AND is_drop == 0 AND status != 2", query_cmd.c_str());
@@ -712,7 +720,7 @@ public:
     {
         std::vector<supplier_basic_info> ret;
         get_all_supplier(ret, ssid);
-        for (auto &itr:ret)
+        for (auto &itr : ret)
         {
             _return.push_back(itr.name);
         }
@@ -945,7 +953,7 @@ public:
     {
         auto yesterday_sec = time(NULL) - 3600 * 24;
         auto yestardey_str = PA_DATAOPT_date_2_timestring(yesterday_sec).substr(0, 10);
-        auto need_clean = sqlite_orm::search_record_all<pa_sql_vichele_stay_alone>("is_drop == 0 AND status <= 1 AND date == %s", yestardey_str.c_str());
+        auto need_clean = sqlite_orm::search_record_all<pa_sql_vichele_stay_alone>("is_drop == 0 AND status <= 1 AND date == '%s'", yestardey_str.c_str());
         for (auto &itr : need_clean)
         {
             try

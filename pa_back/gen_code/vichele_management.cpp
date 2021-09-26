@@ -2368,6 +2368,14 @@ uint32_t vichele_management_confirm_vichele_args::read(::apache::thrift::protoco
           xfer += iprot->skip(ftype);
         }
         break;
+      case 4:
+        if (ftype == ::apache::thrift::protocol::T_BOOL) {
+          xfer += iprot->readBool(this->all_select);
+          this->__isset.all_select = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
       default:
         xfer += iprot->skip(ftype);
         break;
@@ -2413,6 +2421,10 @@ uint32_t vichele_management_confirm_vichele_args::write(::apache::thrift::protoc
   }
   xfer += oprot->writeFieldEnd();
 
+  xfer += oprot->writeFieldBegin("all_select", ::apache::thrift::protocol::T_BOOL, 4);
+  xfer += oprot->writeBool(this->all_select);
+  xfer += oprot->writeFieldEnd();
+
   xfer += oprot->writeFieldStop();
   xfer += oprot->writeStructEnd();
   return xfer;
@@ -2454,6 +2466,10 @@ uint32_t vichele_management_confirm_vichele_pargs::write(::apache::thrift::proto
     }
     xfer += oprot->writeListEnd();
   }
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("all_select", ::apache::thrift::protocol::T_BOOL, 4);
+  xfer += oprot->writeBool((*(this->all_select)));
   xfer += oprot->writeFieldEnd();
 
   xfer += oprot->writeFieldStop();
@@ -2643,6 +2659,14 @@ uint32_t vichele_management_cancel_vichele_args::read(::apache::thrift::protocol
           xfer += iprot->skip(ftype);
         }
         break;
+      case 3:
+        if (ftype == ::apache::thrift::protocol::T_BOOL) {
+          xfer += iprot->readBool(this->all_select);
+          this->__isset.all_select = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
       default:
         xfer += iprot->skip(ftype);
         break;
@@ -2676,6 +2700,10 @@ uint32_t vichele_management_cancel_vichele_args::write(::apache::thrift::protoco
   }
   xfer += oprot->writeFieldEnd();
 
+  xfer += oprot->writeFieldBegin("all_select", ::apache::thrift::protocol::T_BOOL, 3);
+  xfer += oprot->writeBool(this->all_select);
+  xfer += oprot->writeFieldEnd();
+
   xfer += oprot->writeFieldStop();
   xfer += oprot->writeStructEnd();
   return xfer;
@@ -2705,6 +2733,10 @@ uint32_t vichele_management_cancel_vichele_pargs::write(::apache::thrift::protoc
     }
     xfer += oprot->writeListEnd();
   }
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("all_select", ::apache::thrift::protocol::T_BOOL, 3);
+  xfer += oprot->writeBool((*(this->all_select)));
   xfer += oprot->writeFieldEnd();
 
   xfer += oprot->writeFieldStop();
@@ -6921,13 +6953,13 @@ void vichele_managementClient::recv_get_company_vichele_info(std::vector<vichele
   throw ::apache::thrift::TApplicationException(::apache::thrift::TApplicationException::MISSING_RESULT, "get_company_vichele_info failed: unknown result");
 }
 
-bool vichele_managementClient::confirm_vichele(const std::string& ssid, const std::vector<vichele_stay_alone> & info, const std::vector<std::string> & company_for_select)
+bool vichele_managementClient::confirm_vichele(const std::string& ssid, const std::vector<vichele_stay_alone> & info, const std::vector<std::string> & company_for_select, const bool all_select)
 {
-  send_confirm_vichele(ssid, info, company_for_select);
+  send_confirm_vichele(ssid, info, company_for_select, all_select);
   return recv_confirm_vichele();
 }
 
-void vichele_managementClient::send_confirm_vichele(const std::string& ssid, const std::vector<vichele_stay_alone> & info, const std::vector<std::string> & company_for_select)
+void vichele_managementClient::send_confirm_vichele(const std::string& ssid, const std::vector<vichele_stay_alone> & info, const std::vector<std::string> & company_for_select, const bool all_select)
 {
   int32_t cseqid = 0;
   oprot_->writeMessageBegin("confirm_vichele", ::apache::thrift::protocol::T_CALL, cseqid);
@@ -6936,6 +6968,7 @@ void vichele_managementClient::send_confirm_vichele(const std::string& ssid, con
   args.ssid = &ssid;
   args.info = &info;
   args.company_for_select = &company_for_select;
+  args.all_select = &all_select;
   args.write(oprot_);
 
   oprot_->writeMessageEnd();
@@ -6984,13 +7017,13 @@ bool vichele_managementClient::recv_confirm_vichele()
   throw ::apache::thrift::TApplicationException(::apache::thrift::TApplicationException::MISSING_RESULT, "confirm_vichele failed: unknown result");
 }
 
-bool vichele_managementClient::cancel_vichele(const std::string& ssid, const std::vector<vichele_stay_alone> & info)
+bool vichele_managementClient::cancel_vichele(const std::string& ssid, const std::vector<vichele_stay_alone> & info, const bool all_select)
 {
-  send_cancel_vichele(ssid, info);
+  send_cancel_vichele(ssid, info, all_select);
   return recv_cancel_vichele();
 }
 
-void vichele_managementClient::send_cancel_vichele(const std::string& ssid, const std::vector<vichele_stay_alone> & info)
+void vichele_managementClient::send_cancel_vichele(const std::string& ssid, const std::vector<vichele_stay_alone> & info, const bool all_select)
 {
   int32_t cseqid = 0;
   oprot_->writeMessageBegin("cancel_vichele", ::apache::thrift::protocol::T_CALL, cseqid);
@@ -6998,6 +7031,7 @@ void vichele_managementClient::send_cancel_vichele(const std::string& ssid, cons
   vichele_management_cancel_vichele_pargs args;
   args.ssid = &ssid;
   args.info = &info;
+  args.all_select = &all_select;
   args.write(oprot_);
 
   oprot_->writeMessageEnd();
@@ -8587,7 +8621,7 @@ void vichele_managementProcessor::process_confirm_vichele(int32_t seqid, ::apach
 
   vichele_management_confirm_vichele_result result;
   try {
-    result.success = iface_->confirm_vichele(args.ssid, args.info, args.company_for_select);
+    result.success = iface_->confirm_vichele(args.ssid, args.info, args.company_for_select, args.all_select);
     result.__isset.success = true;
   } catch (gen_exp &e) {
     result.e = e;
@@ -8644,7 +8678,7 @@ void vichele_managementProcessor::process_cancel_vichele(int32_t seqid, ::apache
 
   vichele_management_cancel_vichele_result result;
   try {
-    result.success = iface_->cancel_vichele(args.ssid, args.info);
+    result.success = iface_->cancel_vichele(args.ssid, args.info, args.all_select);
     result.__isset.success = true;
   } catch (gen_exp &e) {
     result.e = e;
@@ -10421,13 +10455,13 @@ void vichele_managementConcurrentClient::recv_get_company_vichele_info(std::vect
   } // end while(true)
 }
 
-bool vichele_managementConcurrentClient::confirm_vichele(const std::string& ssid, const std::vector<vichele_stay_alone> & info, const std::vector<std::string> & company_for_select)
+bool vichele_managementConcurrentClient::confirm_vichele(const std::string& ssid, const std::vector<vichele_stay_alone> & info, const std::vector<std::string> & company_for_select, const bool all_select)
 {
-  int32_t seqid = send_confirm_vichele(ssid, info, company_for_select);
+  int32_t seqid = send_confirm_vichele(ssid, info, company_for_select, all_select);
   return recv_confirm_vichele(seqid);
 }
 
-int32_t vichele_managementConcurrentClient::send_confirm_vichele(const std::string& ssid, const std::vector<vichele_stay_alone> & info, const std::vector<std::string> & company_for_select)
+int32_t vichele_managementConcurrentClient::send_confirm_vichele(const std::string& ssid, const std::vector<vichele_stay_alone> & info, const std::vector<std::string> & company_for_select, const bool all_select)
 {
   int32_t cseqid = this->sync_->generateSeqId();
   ::apache::thrift::async::TConcurrentSendSentry sentry(this->sync_.get());
@@ -10437,6 +10471,7 @@ int32_t vichele_managementConcurrentClient::send_confirm_vichele(const std::stri
   args.ssid = &ssid;
   args.info = &info;
   args.company_for_select = &company_for_select;
+  args.all_select = &all_select;
   args.write(oprot_);
 
   oprot_->writeMessageEnd();
@@ -10511,13 +10546,13 @@ bool vichele_managementConcurrentClient::recv_confirm_vichele(const int32_t seqi
   } // end while(true)
 }
 
-bool vichele_managementConcurrentClient::cancel_vichele(const std::string& ssid, const std::vector<vichele_stay_alone> & info)
+bool vichele_managementConcurrentClient::cancel_vichele(const std::string& ssid, const std::vector<vichele_stay_alone> & info, const bool all_select)
 {
-  int32_t seqid = send_cancel_vichele(ssid, info);
+  int32_t seqid = send_cancel_vichele(ssid, info, all_select);
   return recv_cancel_vichele(seqid);
 }
 
-int32_t vichele_managementConcurrentClient::send_cancel_vichele(const std::string& ssid, const std::vector<vichele_stay_alone> & info)
+int32_t vichele_managementConcurrentClient::send_cancel_vichele(const std::string& ssid, const std::vector<vichele_stay_alone> & info, const bool all_select)
 {
   int32_t cseqid = this->sync_->generateSeqId();
   ::apache::thrift::async::TConcurrentSendSentry sentry(this->sync_.get());
@@ -10526,6 +10561,7 @@ int32_t vichele_managementConcurrentClient::send_cancel_vichele(const std::strin
   vichele_management_cancel_vichele_pargs args;
   args.ssid = &ssid;
   args.info = &info;
+  args.all_select = &all_select;
   args.write(oprot_);
 
   oprot_->writeMessageEnd();

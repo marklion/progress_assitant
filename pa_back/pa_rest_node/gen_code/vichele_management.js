@@ -1343,6 +1343,7 @@ var vichele_management_confirm_vichele_args = function(args) {
   this.ssid = null;
   this.info = null;
   this.company_for_select = null;
+  this.all_select = null;
   if (args) {
     if (args.ssid !== undefined && args.ssid !== null) {
       this.ssid = args.ssid;
@@ -1352,6 +1353,9 @@ var vichele_management_confirm_vichele_args = function(args) {
     }
     if (args.company_for_select !== undefined && args.company_for_select !== null) {
       this.company_for_select = Thrift.copyList(args.company_for_select, [null]);
+    }
+    if (args.all_select !== undefined && args.all_select !== null) {
+      this.all_select = args.all_select;
     }
   }
 };
@@ -1404,6 +1408,13 @@ vichele_management_confirm_vichele_args.prototype.read = function(input) {
         input.skip(ftype);
       }
       break;
+      case 4:
+      if (ftype == Thrift.Type.BOOL) {
+        this.all_select = input.readBool();
+      } else {
+        input.skip(ftype);
+      }
+      break;
       default:
         input.skip(ftype);
     }
@@ -1442,6 +1453,11 @@ vichele_management_confirm_vichele_args.prototype.write = function(output) {
       }
     }
     output.writeListEnd();
+    output.writeFieldEnd();
+  }
+  if (this.all_select !== null && this.all_select !== undefined) {
+    output.writeFieldBegin('all_select', Thrift.Type.BOOL, 4);
+    output.writeBool(this.all_select);
     output.writeFieldEnd();
   }
   output.writeFieldStop();
@@ -1520,12 +1536,16 @@ vichele_management_confirm_vichele_result.prototype.write = function(output) {
 var vichele_management_cancel_vichele_args = function(args) {
   this.ssid = null;
   this.info = null;
+  this.all_select = null;
   if (args) {
     if (args.ssid !== undefined && args.ssid !== null) {
       this.ssid = args.ssid;
     }
     if (args.info !== undefined && args.info !== null) {
       this.info = Thrift.copyList(args.info, [ttypes.vichele_stay_alone]);
+    }
+    if (args.all_select !== undefined && args.all_select !== null) {
+      this.all_select = args.all_select;
     }
   }
 };
@@ -1563,6 +1583,13 @@ vichele_management_cancel_vichele_args.prototype.read = function(input) {
         input.skip(ftype);
       }
       break;
+      case 3:
+      if (ftype == Thrift.Type.BOOL) {
+        this.all_select = input.readBool();
+      } else {
+        input.skip(ftype);
+      }
+      break;
       default:
         input.skip(ftype);
     }
@@ -1589,6 +1616,11 @@ vichele_management_cancel_vichele_args.prototype.write = function(output) {
       }
     }
     output.writeListEnd();
+    output.writeFieldEnd();
+  }
+  if (this.all_select !== null && this.all_select !== undefined) {
+    output.writeFieldBegin('all_select', Thrift.Type.BOOL, 3);
+    output.writeBool(this.all_select);
     output.writeFieldEnd();
   }
   output.writeFieldStop();
@@ -4340,7 +4372,7 @@ vichele_managementClient.prototype.recv_get_company_vichele_info = function(inpu
   return callback('get_company_vichele_info failed: unknown result');
 };
 
-vichele_managementClient.prototype.confirm_vichele = function(ssid, info, company_for_select, callback) {
+vichele_managementClient.prototype.confirm_vichele = function(ssid, info, company_for_select, all_select, callback) {
   this._seqid = this.new_seqid();
   if (callback === undefined) {
     var _defer = Q.defer();
@@ -4351,20 +4383,21 @@ vichele_managementClient.prototype.confirm_vichele = function(ssid, info, compan
         _defer.resolve(result);
       }
     };
-    this.send_confirm_vichele(ssid, info, company_for_select);
+    this.send_confirm_vichele(ssid, info, company_for_select, all_select);
     return _defer.promise;
   } else {
     this._reqs[this.seqid()] = callback;
-    this.send_confirm_vichele(ssid, info, company_for_select);
+    this.send_confirm_vichele(ssid, info, company_for_select, all_select);
   }
 };
 
-vichele_managementClient.prototype.send_confirm_vichele = function(ssid, info, company_for_select) {
+vichele_managementClient.prototype.send_confirm_vichele = function(ssid, info, company_for_select, all_select) {
   var output = new this.pClass(this.output);
   var params = {
     ssid: ssid,
     info: info,
-    company_for_select: company_for_select
+    company_for_select: company_for_select,
+    all_select: all_select
   };
   var args = new vichele_management_confirm_vichele_args(params);
   try {
@@ -4404,7 +4437,7 @@ vichele_managementClient.prototype.recv_confirm_vichele = function(input,mtype,r
   return callback('confirm_vichele failed: unknown result');
 };
 
-vichele_managementClient.prototype.cancel_vichele = function(ssid, info, callback) {
+vichele_managementClient.prototype.cancel_vichele = function(ssid, info, all_select, callback) {
   this._seqid = this.new_seqid();
   if (callback === undefined) {
     var _defer = Q.defer();
@@ -4415,19 +4448,20 @@ vichele_managementClient.prototype.cancel_vichele = function(ssid, info, callbac
         _defer.resolve(result);
       }
     };
-    this.send_cancel_vichele(ssid, info);
+    this.send_cancel_vichele(ssid, info, all_select);
     return _defer.promise;
   } else {
     this._reqs[this.seqid()] = callback;
-    this.send_cancel_vichele(ssid, info);
+    this.send_cancel_vichele(ssid, info, all_select);
   }
 };
 
-vichele_managementClient.prototype.send_cancel_vichele = function(ssid, info) {
+vichele_managementClient.prototype.send_cancel_vichele = function(ssid, info, all_select) {
   var output = new this.pClass(this.output);
   var params = {
     ssid: ssid,
-    info: info
+    info: info,
+    all_select: all_select
   };
   var args = new vichele_management_cancel_vichele_args(params);
   try {
@@ -5859,11 +5893,12 @@ vichele_managementProcessor.prototype.process_confirm_vichele = function(seqid, 
   var args = new vichele_management_confirm_vichele_args();
   args.read(input);
   input.readMessageEnd();
-  if (this._handler.confirm_vichele.length === 3) {
+  if (this._handler.confirm_vichele.length === 4) {
     Q.fcall(this._handler.confirm_vichele.bind(this._handler),
       args.ssid,
       args.info,
-      args.company_for_select
+      args.company_for_select,
+      args.all_select
     ).then(function(result) {
       var result_obj = new vichele_management_confirm_vichele_result({success: result});
       output.writeMessageBegin("confirm_vichele", Thrift.MessageType.REPLY, seqid);
@@ -5884,7 +5919,7 @@ vichele_managementProcessor.prototype.process_confirm_vichele = function(seqid, 
       output.flush();
     });
   } else {
-    this._handler.confirm_vichele(args.ssid, args.info, args.company_for_select, function (err, result) {
+    this._handler.confirm_vichele(args.ssid, args.info, args.company_for_select, args.all_select, function (err, result) {
       var result_obj;
       if ((err === null || typeof err === 'undefined') || err instanceof ttypes.gen_exp) {
         result_obj = new vichele_management_confirm_vichele_result((err !== null || typeof err === 'undefined') ? err : {success: result});
@@ -5903,10 +5938,11 @@ vichele_managementProcessor.prototype.process_cancel_vichele = function(seqid, i
   var args = new vichele_management_cancel_vichele_args();
   args.read(input);
   input.readMessageEnd();
-  if (this._handler.cancel_vichele.length === 2) {
+  if (this._handler.cancel_vichele.length === 3) {
     Q.fcall(this._handler.cancel_vichele.bind(this._handler),
       args.ssid,
-      args.info
+      args.info,
+      args.all_select
     ).then(function(result) {
       var result_obj = new vichele_management_cancel_vichele_result({success: result});
       output.writeMessageBegin("cancel_vichele", Thrift.MessageType.REPLY, seqid);
@@ -5927,7 +5963,7 @@ vichele_managementProcessor.prototype.process_cancel_vichele = function(seqid, i
       output.flush();
     });
   } else {
-    this._handler.cancel_vichele(args.ssid, args.info, function (err, result) {
+    this._handler.cancel_vichele(args.ssid, args.info, args.all_select, function (err, result) {
       var result_obj;
       if ((err === null || typeof err === 'undefined') || err instanceof ttypes.gen_exp) {
         result_obj = new vichele_management_cancel_vichele_result((err !== null || typeof err === 'undefined') ? err : {success: result});

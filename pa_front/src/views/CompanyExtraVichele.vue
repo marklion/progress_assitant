@@ -5,18 +5,20 @@
         <van-dropdown-item v-model="status_filter" :options="status_condition" @change="refresh_all_records" />
     </van-dropdown-menu>
     <van-search v-model="vichele_search_filter" placeholder="过滤车号/提交人/拼音首字母" @input="refresh_all_records" />
-    <van-row type="flex" align="center" v-if="select_pool.length != 0">
-        <van-col :span="8">
-            <van-button v-if="select_pool.length != items_need_show.length" block type="info" @click="select_pool = items_need_show">全选</van-button>
-            <van-button v-else block type="info" @click="select_pool = []">取消全选</van-button>
-        </van-col>
-        <van-col :span="8">
-            <van-button block type="primary" @click="show_confirm_diag = true">确认车辆</van-button>
-        </van-col>
-        <van-col :span="8">
-            <van-button block type="danger" @click="cancel_vichele">取消车辆</van-button>
-        </van-col>
-    </van-row>
+    <van-sticky>
+        <van-row type="flex" align="center" v-if="select_pool.length != 0">
+            <van-col :span="8">
+                <van-button v-if="select_pool.length != items_need_show.length" block type="info" @click="select_pool = items_need_show">全选</van-button>
+                <van-button v-else block type="info" @click="select_pool = []">取消全选</van-button>
+            </van-col>
+            <van-col :span="8">
+                <van-button block type="primary" @click="show_confirm_diag = true">确认车辆</van-button>
+            </van-col>
+            <van-col :span="8">
+                <van-button block type="danger" @click="cancel_vichele">取消车辆</van-button>
+            </van-col>
+        </van-row>
+    </van-sticky>
     <van-checkbox-group v-model="select_pool">
         <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="onLoad" ref="all_record">
             <div v-for="(single_vichele, index) in items_need_show" :key="index" class="one_record_show">
@@ -145,7 +147,11 @@ import HistoryInput from '../components/HistoryInput.vue'
 import {
     Divider
 } from 'vant';
+import {
+    Sticky
+} from 'vant';
 
+Vue.use(Sticky);
 Vue.use(Divider);
 Vue.use(Switch);
 Vue.use(Form);
@@ -292,6 +298,14 @@ export default {
             d = d < 10 ? ('0' + d) : d;
             return y + '-' + m + '-' + d;
         },
+        is_all_select: function () {
+            var ret = false;
+            if (this.select_pool.length == this.items_need_show.length) {
+                ret = true;
+            }
+
+            return ret;
+        },
         cancel_vichele: function () {
             var vue_this = this;
             Dialog.confirm({
@@ -299,7 +313,7 @@ export default {
                     message: '确认取消所选的车辆进厂吗？',
                 })
                 .then(() => {
-                    vue_this.$call_remote_process("vichele_management", 'cancel_vichele', [vue_this.$cookies.get('pa_ssid'), vue_this.select_pool]).then(function (resp) {
+                    vue_this.$call_remote_process("vichele_management", 'cancel_vichele', [vue_this.$cookies.get('pa_ssid'), vue_this.select_pool, vue_this.is_all_select()]).then(function (resp) {
                         if (resp) {
                             vue_this.finished = false;
                             vue_this.items = [];
@@ -320,7 +334,7 @@ export default {
                     element.company_name = vue_this.smart_company;
                 }
             });
-            vue_this.$call_remote_process("vichele_management", 'confirm_vichele', [vue_this.$cookies.get('pa_ssid'), vue_this.select_pool, vue_this.company_selected]).then(function (resp) {
+            vue_this.$call_remote_process("vichele_management", 'confirm_vichele', [vue_this.$cookies.get('pa_ssid'), vue_this.select_pool, vue_this.company_selected, vue_this.is_all_select()]).then(function (resp) {
                 if (resp) {
                     vue_this.show_confirm_diag = false;
                     vue_this.finished = false;

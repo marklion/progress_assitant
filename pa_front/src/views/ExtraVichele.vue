@@ -23,6 +23,11 @@
                 <van-dialog v-model="team_brief_show" title="车队信息" :showConfirmButton="false" closeOnClickOverlay>
                     <van-form @submit="finish_team_brief">
                         <van-field v-model="team_brief_count" type="number" name="重量" label="重量" placeholder="请输入重量" :rules="[{ required: true, message: '请填写重量' }]" />
+                        <van-field name="switch" label="多次进厂">
+                            <template #input>
+                                <van-switch v-model="team_brief_multi" size="20" />
+                            </template>
+                        </van-field>
                         <div style="margin: 16px;">
                             <van-button round block type="info" native-type="submit">提交</van-button>
                         </div>
@@ -32,7 +37,7 @@
                 <van-action-sheet v-model="show_select_vichele_team" :actions="all_vichele_team" @select="select_team" />
                 <div class="vichele_show" v-for="(single_vichele, index) in new_vichele" :key="index">
                     <history-input search_key="main_vichele_number" v-model="single_vichele.main_vichele_number" :formatter="convert_bigger" :rules="[{ required: true, message: '请填写车牌号' }, {pattern: vichele_number_patten, message: '请填写正确的车牌号'}]"></history-input>
-                    <history-input search_key="behind_vichele_number" v-model="single_vichele.behind_vichele_number" :formatter="convert_bigger" :rules="[{ required: true, message: '请填写车牌号' }, {pattern: vichele_number_patten, message: '请填写正确的车牌号'}, {validator:have_to_have_gua, message: '挂车要以挂结尾'}]"></history-input>
+                    <history-input search_key="behind_vichele_number" v-model="single_vichele.behind_vichele_number" :formatter="convert_bigger" :rules="[{validator:have_to_have_gua, message: '请输入正确挂车'}]"></history-input>
                     <van-field v-model="single_vichele.count" type="number" name="重量" label="重量（吨）" placeholder="重量" :rules="[{ required: true, message: '请填写重量' }]" />
                     <history-input search_key="comment" v-model="single_vichele.comment"></history-input>
                     <history-input search_key="driver_name" v-model="single_vichele.driver_name" :rules="[{ required: true, message: '请填写司机姓名' }]"></history-input>
@@ -105,7 +110,7 @@
                         <van-datetime-picker type="date" title="请选择日期" :min-date="new Date()" @cancel="show_time_update_picker = false" @confirm="confirm_update_time" />
                     </van-popup>
                     <history-input search_key="main_vichele_number" v-model="vichele_update_info.main_vichele_number" :formatter="convert_bigger" :rules="[{ required: true, message: '请填写车牌号' }, {pattern: vichele_number_patten, message: '请填写正确的车牌号'}]"></history-input>
-                    <history-input search_key="behind_vichele_number" v-model="vichele_update_info.behind_vichele_number" :formatter="convert_bigger" :rules="[{ required: true, message: '请填写车牌号' }, {pattern: vichele_number_patten, message: '请填写正确的车牌号'}, {validator:have_to_have_gua, message: '挂车要以挂结尾'}]"></history-input>
+                    <history-input search_key="behind_vichele_number" v-model="vichele_update_info.behind_vichele_number" :formatter="convert_bigger" :rules="[{validator:have_to_have_gua, message: '请输入正确挂车'}]"></history-input>
                     <history-input search_key="stuff_name" v-model="vichele_update_info.stuff_name" :rules="[{ required: true, message: '请填写货物名称' }]"></history-input>
                     <van-field v-model="vichele_update_info.price" label="单价" type="number" placeholder="请输入货品单价" :rules="[{ required: true, message: '请填写货品单价' }]" />
                     <van-field v-model="vichele_update_info.count" type="number" name="重量" label="重量（吨）" placeholder="重量" :rules="[{ required: true, message: '请填写重量' }]" />
@@ -132,7 +137,7 @@
                 <van-button type="primary" block round icon="plus" @click="add_team_member_show = true">新增车辆</van-button>
                 <div class="team_member_show" v-for="(single_member, index) in current_vichele_team.members" :key="index">
                     <van-field v-model="single_member.main_vichele_number" name="主车牌" label="主车牌" :formatter="convert_bigger" placeholder="请输入主车牌" :rules="[{ required: true, message: '请填写车牌号' }, {pattern: vichele_number_patten, message: '请填写正确的车牌号'}]" />
-                    <van-field v-model="single_member.behind_vichele_number" name="挂车牌" label="挂车牌" :formatter="convert_bigger" placeholder="请输入挂车牌" :rules="[{ required: true, message: '请填写车牌号' }, {pattern: vichele_number_patten, message: '请填写正确的车牌号'}]" />
+                    <van-field v-model="single_member.behind_vichele_number" name="挂车牌" label="挂车牌" :formatter="convert_bigger" placeholder="请输入挂车牌" :rules="[{validator:have_to_have_gua, message: '请输入正确挂车'}]" />
                     <van-field v-model="single_member.driver_name" name="司机姓名" label="司机姓名" placeholder="请输入司机姓名" :rules="[{ required: true, message: '请填写司机姓名' }]" />
                     <van-field v-model="single_member.driver_phone" name="司机电话" label="司机电话" placeholder="请输入司机电话" :rules="[{ required: true, message: '请填写司机电话'}, {pattern:/^(13[0-9]|14[01456879]|15[0-35-9]|16[2567]|17[0-8]|18[0-9]|19[0-35-9])\d{8}$/, message:'请输入正确手机号'}]" />
                     <van-field v-model="single_member.driver_id" name="司机身份证" label="司机身份证" placeholder="请输入司机身份证" :rules="[{ required: true, message: '请填写司机身份证'}, {pattern:/^[1-9]\d{5}(18|19|20|(3\d))\d{2}((0[1-9])|(1[0-2]))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$/, message:'请输入正确的身份证'}]" />
@@ -157,7 +162,7 @@
             <van-dialog v-model="add_team_member_show" title="新增车辆" :showConfirmButton="false" closeOnClickOverlay>
                 <van-form @submit="add_team_member">
                     <van-field v-model="new_team_member.main_vichele_number" name="主车牌" label="主车牌" :formatter="convert_bigger" placeholder="请输入主车牌" :rules="[{ required: true, message: '请填写车牌号' }, {pattern: vichele_number_patten, message: '请填写正确的车牌号'}]" />
-                    <van-field v-model="new_team_member.behind_vichele_number" name="挂车牌" label="挂车牌" :formatter="convert_bigger" placeholder="请输入挂车牌" :rules="[{ required: true, message: '请填写车牌号' }, {pattern: vichele_number_patten, message: '请填写正确的车牌号'}]" />
+                    <van-field v-model="new_team_member.behind_vichele_number" name="挂车牌" label="挂车牌" :formatter="convert_bigger" placeholder="请输入挂车牌" :rules="[{validator:have_to_have_gua, message: '请输入正确挂车'}]" />
                     <van-field v-model="new_team_member.driver_name" name="司机姓名" label="司机姓名" placeholder="请输入司机姓名" :rules="[{ required: true, message: '请填写司机姓名' }]" />
                     <van-field v-model="new_team_member.driver_phone" name="司机电话" label="司机电话" placeholder="请输入司机电话" :rules="[{ required: true, message: '请填写司机电话'}, {pattern:/^(13[0-9]|14[01456879]|15[0-35-9]|16[2567]|17[0-8]|18[0-9]|19[0-35-9])\d{8}$/, message:'请输入正确手机号'}]" />
                     <van-field v-model="new_team_member.driver_id" name="司机身份证" label="司机身份证" placeholder="请输入司机身份证" :rules="[{ required: true, message: '请填写司机身份证'}, {pattern:/^[1-9]\d{5}(18|19|20|(3\d))\d{2}((0[1-9])|(1[0-2]))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$/, message:'请输入正确的身份证'}]" />
@@ -275,6 +280,7 @@ export default {
         return {
             team_brief_show: false,
             team_brief_count: 0,
+            team_brief_multi: false,
             show_select_vichele_team: false,
             add_team_member_show: false,
             new_team_member: {
@@ -376,7 +382,7 @@ export default {
                         behind_vichele_number: element.behind_vichele_number,
                         count: parseFloat(vue_this.team_brief_count),
                         comment: '',
-                        repeated: false,
+                        repeated: vue_this.team_brief_multi,
                         driver_phone: element.driver_phone,
                         driver_id: element.driver_id,
                         driver_name: element.driver_name,
@@ -489,8 +495,12 @@ export default {
         },
         have_to_have_gua: function (value) {
             var ret = false;
-            if (value.split('')[value.length - 1] == "挂") {
+            if (!value) {
                 ret = true;
+            } else if (this.vichele_number_patten.test(value)) {
+                if (value.split('')[value.length - 1] == "挂") {
+                    ret = true;
+                }
             }
             return ret;
         },

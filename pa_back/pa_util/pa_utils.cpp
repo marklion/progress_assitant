@@ -607,23 +607,20 @@ bool PA_DATAOPT_vichele_ready_to_post(pa_sql_vichele_stay_alone &_vichele, bool 
 {
     bool ret = false;
 
-    if (_vichele.company_name.length() > 0)
+    auto dest_company = _vichele.get_parent<pa_sql_company>("destination");
+    auto creator = _vichele.get_parent<pa_sql_silent_user>("created_by");
+    if (dest_company && creator)
     {
-        auto dest_company = _vichele.get_parent<pa_sql_company>("destination");
-        auto creator = _vichele.get_parent<pa_sql_silent_user>("created_by");
-        if (dest_company && creator)
+        if (!is_post && _vichele.company_name.length() > 0 && dest_company->get_children<pa_sql_userinfo>("belong_company", "openid == '%s'", creator->open_id.c_str()))
         {
-            if (!is_post && dest_company->get_children<pa_sql_userinfo>("belong_company", "openid == '%s'", creator->open_id.c_str()))
-            {
-                if (_vichele.tmd_no.length() > 0)
-                {
-                    ret = true;
-                }
-            }
-            else
+            if (_vichele.tmd_no.length() > 0)
             {
                 ret = true;
             }
+        }
+        else
+        {
+            ret = true;
         }
     }
 
@@ -646,7 +643,7 @@ void PA_DATAOPT_post_save_register(std::list<pa_sql_vichele_stay_alone> &_vichel
     {
         return;
     }
-    
+
     key = company->third_key;
     token = company->third_token;
     ctrl_url += company->third_url + "/thirdParty/zyzl/saveRegister";
@@ -695,7 +692,6 @@ void PA_DATAOPT_post_save_register(std::list<pa_sql_vichele_stay_alone> &_vichel
         }
     }
 }
-
 
 std::string PA_DATAOPT_post_sync_change_register(pa_sql_single_vichele &_vichele, bool is_auto)
 {

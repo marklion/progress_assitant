@@ -32,8 +32,8 @@ class vichele_managementIf {
   virtual void set_silent_user_info(const std::string& open_id, const silent_user_info& info) = 0;
   virtual void get_input_history(std::vector<std::string> & _return, const std::string& open_id, const vichele_stay_alone& search_key) = 0;
   virtual void get_company_vichele_info(std::vector<vichele_stay_alone> & _return, const std::string& ssid, const int64_t anchor) = 0;
-  virtual bool confirm_vichele(const std::string& ssid, const std::vector<vichele_stay_alone> & info, const std::vector<std::string> & company_for_select) = 0;
-  virtual bool cancel_vichele(const std::string& ssid, const std::vector<vichele_stay_alone> & info) = 0;
+  virtual bool confirm_vichele(const std::string& ssid, const std::vector<vichele_stay_alone> & info, const std::vector<std::string> & company_for_select, const bool all_select) = 0;
+  virtual bool cancel_vichele(const std::string& ssid, const std::vector<vichele_stay_alone> & info, const bool all_select) = 0;
   virtual bool create_vichele_team(const std::string& open_id, const vichele_team& team_info) = 0;
   virtual bool update_vichele_team(const std::string& open_id, const vichele_team& team_info) = 0;
   virtual bool del_vichele_team(const std::string& open_id, const int64_t team_id) = 0;
@@ -112,11 +112,11 @@ class vichele_managementNull : virtual public vichele_managementIf {
   void get_company_vichele_info(std::vector<vichele_stay_alone> & /* _return */, const std::string& /* ssid */, const int64_t /* anchor */) {
     return;
   }
-  bool confirm_vichele(const std::string& /* ssid */, const std::vector<vichele_stay_alone> & /* info */, const std::vector<std::string> & /* company_for_select */) {
+  bool confirm_vichele(const std::string& /* ssid */, const std::vector<vichele_stay_alone> & /* info */, const std::vector<std::string> & /* company_for_select */, const bool /* all_select */) {
     bool _return = false;
     return _return;
   }
-  bool cancel_vichele(const std::string& /* ssid */, const std::vector<vichele_stay_alone> & /* info */) {
+  bool cancel_vichele(const std::string& /* ssid */, const std::vector<vichele_stay_alone> & /* info */, const bool /* all_select */) {
     bool _return = false;
     return _return;
   }
@@ -1339,10 +1339,11 @@ class vichele_management_get_company_vichele_info_presult {
 };
 
 typedef struct _vichele_management_confirm_vichele_args__isset {
-  _vichele_management_confirm_vichele_args__isset() : ssid(false), info(false), company_for_select(false) {}
+  _vichele_management_confirm_vichele_args__isset() : ssid(false), info(false), company_for_select(false), all_select(false) {}
   bool ssid :1;
   bool info :1;
   bool company_for_select :1;
+  bool all_select :1;
 } _vichele_management_confirm_vichele_args__isset;
 
 class vichele_management_confirm_vichele_args {
@@ -1350,13 +1351,14 @@ class vichele_management_confirm_vichele_args {
 
   vichele_management_confirm_vichele_args(const vichele_management_confirm_vichele_args&);
   vichele_management_confirm_vichele_args& operator=(const vichele_management_confirm_vichele_args&);
-  vichele_management_confirm_vichele_args() : ssid() {
+  vichele_management_confirm_vichele_args() : ssid(), all_select(0) {
   }
 
   virtual ~vichele_management_confirm_vichele_args() noexcept;
   std::string ssid;
   std::vector<vichele_stay_alone>  info;
   std::vector<std::string>  company_for_select;
+  bool all_select;
 
   _vichele_management_confirm_vichele_args__isset __isset;
 
@@ -1366,6 +1368,8 @@ class vichele_management_confirm_vichele_args {
 
   void __set_company_for_select(const std::vector<std::string> & val);
 
+  void __set_all_select(const bool val);
+
   bool operator == (const vichele_management_confirm_vichele_args & rhs) const
   {
     if (!(ssid == rhs.ssid))
@@ -1373,6 +1377,8 @@ class vichele_management_confirm_vichele_args {
     if (!(info == rhs.info))
       return false;
     if (!(company_for_select == rhs.company_for_select))
+      return false;
+    if (!(all_select == rhs.all_select))
       return false;
     return true;
   }
@@ -1396,6 +1402,7 @@ class vichele_management_confirm_vichele_pargs {
   const std::string* ssid;
   const std::vector<vichele_stay_alone> * info;
   const std::vector<std::string> * company_for_select;
+  const bool* all_select;
 
   uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
 
@@ -1465,9 +1472,10 @@ class vichele_management_confirm_vichele_presult {
 };
 
 typedef struct _vichele_management_cancel_vichele_args__isset {
-  _vichele_management_cancel_vichele_args__isset() : ssid(false), info(false) {}
+  _vichele_management_cancel_vichele_args__isset() : ssid(false), info(false), all_select(false) {}
   bool ssid :1;
   bool info :1;
+  bool all_select :1;
 } _vichele_management_cancel_vichele_args__isset;
 
 class vichele_management_cancel_vichele_args {
@@ -1475,12 +1483,13 @@ class vichele_management_cancel_vichele_args {
 
   vichele_management_cancel_vichele_args(const vichele_management_cancel_vichele_args&);
   vichele_management_cancel_vichele_args& operator=(const vichele_management_cancel_vichele_args&);
-  vichele_management_cancel_vichele_args() : ssid() {
+  vichele_management_cancel_vichele_args() : ssid(), all_select(0) {
   }
 
   virtual ~vichele_management_cancel_vichele_args() noexcept;
   std::string ssid;
   std::vector<vichele_stay_alone>  info;
+  bool all_select;
 
   _vichele_management_cancel_vichele_args__isset __isset;
 
@@ -1488,11 +1497,15 @@ class vichele_management_cancel_vichele_args {
 
   void __set_info(const std::vector<vichele_stay_alone> & val);
 
+  void __set_all_select(const bool val);
+
   bool operator == (const vichele_management_cancel_vichele_args & rhs) const
   {
     if (!(ssid == rhs.ssid))
       return false;
     if (!(info == rhs.info))
+      return false;
+    if (!(all_select == rhs.all_select))
       return false;
     return true;
   }
@@ -1515,6 +1528,7 @@ class vichele_management_cancel_vichele_pargs {
   virtual ~vichele_management_cancel_vichele_pargs() noexcept;
   const std::string* ssid;
   const std::vector<vichele_stay_alone> * info;
+  const bool* all_select;
 
   uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
 
@@ -3423,11 +3437,11 @@ class vichele_managementClient : virtual public vichele_managementIf {
   void get_company_vichele_info(std::vector<vichele_stay_alone> & _return, const std::string& ssid, const int64_t anchor);
   void send_get_company_vichele_info(const std::string& ssid, const int64_t anchor);
   void recv_get_company_vichele_info(std::vector<vichele_stay_alone> & _return);
-  bool confirm_vichele(const std::string& ssid, const std::vector<vichele_stay_alone> & info, const std::vector<std::string> & company_for_select);
-  void send_confirm_vichele(const std::string& ssid, const std::vector<vichele_stay_alone> & info, const std::vector<std::string> & company_for_select);
+  bool confirm_vichele(const std::string& ssid, const std::vector<vichele_stay_alone> & info, const std::vector<std::string> & company_for_select, const bool all_select);
+  void send_confirm_vichele(const std::string& ssid, const std::vector<vichele_stay_alone> & info, const std::vector<std::string> & company_for_select, const bool all_select);
   bool recv_confirm_vichele();
-  bool cancel_vichele(const std::string& ssid, const std::vector<vichele_stay_alone> & info);
-  void send_cancel_vichele(const std::string& ssid, const std::vector<vichele_stay_alone> & info);
+  bool cancel_vichele(const std::string& ssid, const std::vector<vichele_stay_alone> & info, const bool all_select);
+  void send_cancel_vichele(const std::string& ssid, const std::vector<vichele_stay_alone> & info, const bool all_select);
   bool recv_cancel_vichele();
   bool create_vichele_team(const std::string& open_id, const vichele_team& team_info);
   void send_create_vichele_team(const std::string& open_id, const vichele_team& team_info);
@@ -3669,22 +3683,22 @@ class vichele_managementMultiface : virtual public vichele_managementIf {
     return;
   }
 
-  bool confirm_vichele(const std::string& ssid, const std::vector<vichele_stay_alone> & info, const std::vector<std::string> & company_for_select) {
+  bool confirm_vichele(const std::string& ssid, const std::vector<vichele_stay_alone> & info, const std::vector<std::string> & company_for_select, const bool all_select) {
     size_t sz = ifaces_.size();
     size_t i = 0;
     for (; i < (sz - 1); ++i) {
-      ifaces_[i]->confirm_vichele(ssid, info, company_for_select);
+      ifaces_[i]->confirm_vichele(ssid, info, company_for_select, all_select);
     }
-    return ifaces_[i]->confirm_vichele(ssid, info, company_for_select);
+    return ifaces_[i]->confirm_vichele(ssid, info, company_for_select, all_select);
   }
 
-  bool cancel_vichele(const std::string& ssid, const std::vector<vichele_stay_alone> & info) {
+  bool cancel_vichele(const std::string& ssid, const std::vector<vichele_stay_alone> & info, const bool all_select) {
     size_t sz = ifaces_.size();
     size_t i = 0;
     for (; i < (sz - 1); ++i) {
-      ifaces_[i]->cancel_vichele(ssid, info);
+      ifaces_[i]->cancel_vichele(ssid, info, all_select);
     }
-    return ifaces_[i]->cancel_vichele(ssid, info);
+    return ifaces_[i]->cancel_vichele(ssid, info, all_select);
   }
 
   bool create_vichele_team(const std::string& open_id, const vichele_team& team_info) {
@@ -3889,11 +3903,11 @@ class vichele_managementConcurrentClient : virtual public vichele_managementIf {
   void get_company_vichele_info(std::vector<vichele_stay_alone> & _return, const std::string& ssid, const int64_t anchor);
   int32_t send_get_company_vichele_info(const std::string& ssid, const int64_t anchor);
   void recv_get_company_vichele_info(std::vector<vichele_stay_alone> & _return, const int32_t seqid);
-  bool confirm_vichele(const std::string& ssid, const std::vector<vichele_stay_alone> & info, const std::vector<std::string> & company_for_select);
-  int32_t send_confirm_vichele(const std::string& ssid, const std::vector<vichele_stay_alone> & info, const std::vector<std::string> & company_for_select);
+  bool confirm_vichele(const std::string& ssid, const std::vector<vichele_stay_alone> & info, const std::vector<std::string> & company_for_select, const bool all_select);
+  int32_t send_confirm_vichele(const std::string& ssid, const std::vector<vichele_stay_alone> & info, const std::vector<std::string> & company_for_select, const bool all_select);
   bool recv_confirm_vichele(const int32_t seqid);
-  bool cancel_vichele(const std::string& ssid, const std::vector<vichele_stay_alone> & info);
-  int32_t send_cancel_vichele(const std::string& ssid, const std::vector<vichele_stay_alone> & info);
+  bool cancel_vichele(const std::string& ssid, const std::vector<vichele_stay_alone> & info, const bool all_select);
+  int32_t send_cancel_vichele(const std::string& ssid, const std::vector<vichele_stay_alone> & info, const bool all_select);
   bool recv_cancel_vichele(const int32_t seqid);
   bool create_vichele_team(const std::string& open_id, const vichele_team& team_info);
   int32_t send_create_vichele_team(const std::string& open_id, const vichele_team& team_info);

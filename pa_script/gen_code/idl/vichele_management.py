@@ -106,21 +106,23 @@ class Iface(object):
         """
         pass
 
-    def confirm_vichele(self, ssid, info, company_for_select):
+    def confirm_vichele(self, ssid, info, company_for_select, all_select):
         """
         Parameters:
          - ssid
          - info
          - company_for_select
+         - all_select
 
         """
         pass
 
-    def cancel_vichele(self, ssid, info):
+    def cancel_vichele(self, ssid, info, all_select):
         """
         Parameters:
          - ssid
          - info
+         - all_select
 
         """
         pass
@@ -620,23 +622,25 @@ class Client(Iface):
             raise result.e
         raise TApplicationException(TApplicationException.MISSING_RESULT, "get_company_vichele_info failed: unknown result")
 
-    def confirm_vichele(self, ssid, info, company_for_select):
+    def confirm_vichele(self, ssid, info, company_for_select, all_select):
         """
         Parameters:
          - ssid
          - info
          - company_for_select
+         - all_select
 
         """
-        self.send_confirm_vichele(ssid, info, company_for_select)
+        self.send_confirm_vichele(ssid, info, company_for_select, all_select)
         return self.recv_confirm_vichele()
 
-    def send_confirm_vichele(self, ssid, info, company_for_select):
+    def send_confirm_vichele(self, ssid, info, company_for_select, all_select):
         self._oprot.writeMessageBegin('confirm_vichele', TMessageType.CALL, self._seqid)
         args = confirm_vichele_args()
         args.ssid = ssid
         args.info = info
         args.company_for_select = company_for_select
+        args.all_select = all_select
         args.write(self._oprot)
         self._oprot.writeMessageEnd()
         self._oprot.trans.flush()
@@ -658,21 +662,23 @@ class Client(Iface):
             raise result.e
         raise TApplicationException(TApplicationException.MISSING_RESULT, "confirm_vichele failed: unknown result")
 
-    def cancel_vichele(self, ssid, info):
+    def cancel_vichele(self, ssid, info, all_select):
         """
         Parameters:
          - ssid
          - info
+         - all_select
 
         """
-        self.send_cancel_vichele(ssid, info)
+        self.send_cancel_vichele(ssid, info, all_select)
         return self.recv_cancel_vichele()
 
-    def send_cancel_vichele(self, ssid, info):
+    def send_cancel_vichele(self, ssid, info, all_select):
         self._oprot.writeMessageBegin('cancel_vichele', TMessageType.CALL, self._seqid)
         args = cancel_vichele_args()
         args.ssid = ssid
         args.info = info
+        args.all_select = all_select
         args.write(self._oprot)
         self._oprot.writeMessageEnd()
         self._oprot.trans.flush()
@@ -1554,7 +1560,7 @@ class Processor(Iface, TProcessor):
         iprot.readMessageEnd()
         result = confirm_vichele_result()
         try:
-            result.success = self._handler.confirm_vichele(args.ssid, args.info, args.company_for_select)
+            result.success = self._handler.confirm_vichele(args.ssid, args.info, args.company_for_select, args.all_select)
             msg_type = TMessageType.REPLY
         except TTransport.TTransportException:
             raise
@@ -1580,7 +1586,7 @@ class Processor(Iface, TProcessor):
         iprot.readMessageEnd()
         result = cancel_vichele_result()
         try:
-            result.success = self._handler.cancel_vichele(args.ssid, args.info)
+            result.success = self._handler.cancel_vichele(args.ssid, args.info, args.all_select)
             msg_type = TMessageType.REPLY
         except TTransport.TTransportException:
             raise
@@ -3461,14 +3467,16 @@ class confirm_vichele_args(object):
      - ssid
      - info
      - company_for_select
+     - all_select
 
     """
 
 
-    def __init__(self, ssid=None, info=None, company_for_select=None,):
+    def __init__(self, ssid=None, info=None, company_for_select=None, all_select=None,):
         self.ssid = ssid
         self.info = info
         self.company_for_select = company_for_select
+        self.all_select = all_select
 
     def read(self, iprot):
         if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
@@ -3505,6 +3513,11 @@ class confirm_vichele_args(object):
                     iprot.readListEnd()
                 else:
                     iprot.skip(ftype)
+            elif fid == 4:
+                if ftype == TType.BOOL:
+                    self.all_select = iprot.readBool()
+                else:
+                    iprot.skip(ftype)
             else:
                 iprot.skip(ftype)
             iprot.readFieldEnd()
@@ -3533,6 +3546,10 @@ class confirm_vichele_args(object):
                 oprot.writeString(iter272.encode('utf-8') if sys.version_info[0] == 2 else iter272)
             oprot.writeListEnd()
             oprot.writeFieldEnd()
+        if self.all_select is not None:
+            oprot.writeFieldBegin('all_select', TType.BOOL, 4)
+            oprot.writeBool(self.all_select)
+            oprot.writeFieldEnd()
         oprot.writeFieldStop()
         oprot.writeStructEnd()
 
@@ -3555,6 +3572,7 @@ confirm_vichele_args.thrift_spec = (
     (1, TType.STRING, 'ssid', 'UTF8', None, ),  # 1
     (2, TType.LIST, 'info', (TType.STRUCT, [vichele_stay_alone, None], False), None, ),  # 2
     (3, TType.LIST, 'company_for_select', (TType.STRING, 'UTF8', False), None, ),  # 3
+    (4, TType.BOOL, 'all_select', None, None, ),  # 4
 )
 
 
@@ -3636,13 +3654,15 @@ class cancel_vichele_args(object):
     Attributes:
      - ssid
      - info
+     - all_select
 
     """
 
 
-    def __init__(self, ssid=None, info=None,):
+    def __init__(self, ssid=None, info=None, all_select=None,):
         self.ssid = ssid
         self.info = info
+        self.all_select = all_select
 
     def read(self, iprot):
         if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
@@ -3669,6 +3689,11 @@ class cancel_vichele_args(object):
                     iprot.readListEnd()
                 else:
                     iprot.skip(ftype)
+            elif fid == 3:
+                if ftype == TType.BOOL:
+                    self.all_select = iprot.readBool()
+                else:
+                    iprot.skip(ftype)
             else:
                 iprot.skip(ftype)
             iprot.readFieldEnd()
@@ -3689,6 +3714,10 @@ class cancel_vichele_args(object):
             for iter279 in self.info:
                 iter279.write(oprot)
             oprot.writeListEnd()
+            oprot.writeFieldEnd()
+        if self.all_select is not None:
+            oprot.writeFieldBegin('all_select', TType.BOOL, 3)
+            oprot.writeBool(self.all_select)
             oprot.writeFieldEnd()
         oprot.writeFieldStop()
         oprot.writeStructEnd()
@@ -3711,6 +3740,7 @@ cancel_vichele_args.thrift_spec = (
     None,  # 0
     (1, TType.STRING, 'ssid', 'UTF8', None, ),  # 1
     (2, TType.LIST, 'info', (TType.STRUCT, [vichele_stay_alone, None], False), None, ),  # 2
+    (3, TType.BOOL, 'all_select', None, None, ),  # 3
 )
 
 

@@ -1380,6 +1380,7 @@ vichele_management_confirm_vichele_args = class {
     this.ssid = null;
     this.info = null;
     this.company_for_select = null;
+    this.all_select = null;
     if (args) {
       if (args.ssid !== undefined && args.ssid !== null) {
         this.ssid = args.ssid;
@@ -1389,6 +1390,9 @@ vichele_management_confirm_vichele_args = class {
       }
       if (args.company_for_select !== undefined && args.company_for_select !== null) {
         this.company_for_select = Thrift.copyList(args.company_for_select, [null]);
+      }
+      if (args.all_select !== undefined && args.all_select !== null) {
+        this.all_select = args.all_select;
       }
     }
   }
@@ -1441,6 +1445,13 @@ vichele_management_confirm_vichele_args = class {
           input.skip(ftype);
         }
         break;
+        case 4:
+        if (ftype == Thrift.Type.BOOL) {
+          this.all_select = input.readBool().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
         default:
           input.skip(ftype);
       }
@@ -1479,6 +1490,11 @@ vichele_management_confirm_vichele_args = class {
         }
       }
       output.writeListEnd();
+      output.writeFieldEnd();
+    }
+    if (this.all_select !== null && this.all_select !== undefined) {
+      output.writeFieldBegin('all_select', Thrift.Type.BOOL, 4);
+      output.writeBool(this.all_select);
       output.writeFieldEnd();
     }
     output.writeFieldStop();
@@ -1561,12 +1577,16 @@ vichele_management_cancel_vichele_args = class {
   constructor(args) {
     this.ssid = null;
     this.info = null;
+    this.all_select = null;
     if (args) {
       if (args.ssid !== undefined && args.ssid !== null) {
         this.ssid = args.ssid;
       }
       if (args.info !== undefined && args.info !== null) {
         this.info = Thrift.copyList(args.info, [vichele_stay_alone]);
+      }
+      if (args.all_select !== undefined && args.all_select !== null) {
+        this.all_select = args.all_select;
       }
     }
   }
@@ -1604,6 +1624,13 @@ vichele_management_cancel_vichele_args = class {
           input.skip(ftype);
         }
         break;
+        case 3:
+        if (ftype == Thrift.Type.BOOL) {
+          this.all_select = input.readBool().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
         default:
           input.skip(ftype);
       }
@@ -1630,6 +1657,11 @@ vichele_management_cancel_vichele_args = class {
         }
       }
       output.writeListEnd();
+      output.writeFieldEnd();
+    }
+    if (this.all_select !== null && this.all_select !== undefined) {
+      output.writeFieldBegin('all_select', Thrift.Type.BOOL, 3);
+      output.writeBool(this.all_select);
       output.writeFieldEnd();
     }
     output.writeFieldStop();
@@ -4411,20 +4443,21 @@ vichele_managementClient = class vichele_managementClient {
     throw 'get_company_vichele_info failed: unknown result';
   }
 
-  confirm_vichele (ssid, info, company_for_select) {
+  confirm_vichele (ssid, info, company_for_select, all_select) {
     const self = this;
     return new Promise((resolve, reject) => {
-      self.send_confirm_vichele(ssid, info, company_for_select, (error, result) => {
+      self.send_confirm_vichele(ssid, info, company_for_select, all_select, (error, result) => {
         return error ? reject(error) : resolve(result);
       });
     });
   }
 
-  send_confirm_vichele (ssid, info, company_for_select, callback) {
+  send_confirm_vichele (ssid, info, company_for_select, all_select, callback) {
     const params = {
       ssid: ssid,
       info: info,
-      company_for_select: company_for_select
+      company_for_select: company_for_select,
+      all_select: all_select
     };
     const args = new vichele_management_confirm_vichele_args(params);
     try {
@@ -4472,19 +4505,20 @@ vichele_managementClient = class vichele_managementClient {
     throw 'confirm_vichele failed: unknown result';
   }
 
-  cancel_vichele (ssid, info) {
+  cancel_vichele (ssid, info, all_select) {
     const self = this;
     return new Promise((resolve, reject) => {
-      self.send_cancel_vichele(ssid, info, (error, result) => {
+      self.send_cancel_vichele(ssid, info, all_select, (error, result) => {
         return error ? reject(error) : resolve(result);
       });
     });
   }
 
-  send_cancel_vichele (ssid, info, callback) {
+  send_cancel_vichele (ssid, info, all_select, callback) {
     const params = {
       ssid: ssid,
-      info: info
+      info: info,
+      all_select: all_select
     };
     const args = new vichele_management_cancel_vichele_args(params);
     try {

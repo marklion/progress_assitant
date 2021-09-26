@@ -34,8 +34,8 @@ if len(sys.argv) <= 1 or sys.argv[1] == '--help':
     print('  void set_silent_user_info(string open_id, silent_user_info info)')
     print('   get_input_history(string open_id, vichele_stay_alone search_key)')
     print('   get_company_vichele_info(string ssid, i64 anchor)')
-    print('  bool confirm_vichele(string ssid,  info,  company_for_select)')
-    print('  bool cancel_vichele(string ssid,  info)')
+    print('  bool confirm_vichele(string ssid,  info,  company_for_select, bool all_select)')
+    print('  bool cancel_vichele(string ssid,  info, bool all_select)')
     print('  bool create_vichele_team(string open_id, vichele_team team_info)')
     print('  bool update_vichele_team(string open_id, vichele_team team_info)')
     print('  bool del_vichele_team(string open_id, i64 team_id)')
@@ -191,16 +191,16 @@ elif cmd == 'get_company_vichele_info':
     pp.pprint(client.get_company_vichele_info(args[0], eval(args[1]),))
 
 elif cmd == 'confirm_vichele':
-    if len(args) != 3:
-        print('confirm_vichele requires 3 args')
+    if len(args) != 4:
+        print('confirm_vichele requires 4 args')
         sys.exit(1)
-    pp.pprint(client.confirm_vichele(args[0], eval(args[1]), eval(args[2]),))
+    pp.pprint(client.confirm_vichele(args[0], eval(args[1]), eval(args[2]), eval(args[3]),))
 
 elif cmd == 'cancel_vichele':
-    if len(args) != 2:
-        print('cancel_vichele requires 2 args')
+    if len(args) != 3:
+        print('cancel_vichele requires 3 args')
         sys.exit(1)
-    pp.pprint(client.cancel_vichele(args[0], eval(args[1]),))
+    pp.pprint(client.cancel_vichele(args[0], eval(args[1]), eval(args[2]),))
 
 elif cmd == 'create_vichele_team':
     if len(args) != 2:

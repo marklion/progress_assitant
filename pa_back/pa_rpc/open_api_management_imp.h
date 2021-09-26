@@ -483,18 +483,16 @@ public:
             if (real_vichele_stay_alone->is_repeated != 0 && real_vichele_stay_alone->status == 1)
             {
                 pa_sql_vichele_stay_alone new_one(*real_vichele_stay_alone);
+                new_one.tmd_no = "";
                 new_one.insert_record();
                 if (new_one.company_for_select.length() > 0)
                 {
                     new_one.company_name = "";
                     new_one.update_record();
                 }
-                else
-                {
-                    std::list<pa_sql_vichele_stay_alone> tmp;
-                    tmp.push_back(new_one);
-                    PA_DATAOPT_post_save_register(tmp);
-                }
+                std::list<pa_sql_vichele_stay_alone> tmp;
+                tmp.push_back(new_one);
+                PA_DATAOPT_post_save_register(tmp);
             }
             real_vichele_stay_alone->p_time = _req.pTime;
             real_vichele_stay_alone->m_time = _req.mTime;
