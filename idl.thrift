@@ -10,6 +10,7 @@ struct user_info {
     4:string company,
     5:bool buyer,
     6:string phone,
+    7:i64 groupid,
 }
 
 struct driver_info {
@@ -157,6 +158,7 @@ service company_management {
     bool set_third_info(1:third_dev_info _info, 2:string ssid) throws (1:gen_exp e),
     third_dev_info get_third_info(1:string ssid) throws (1:gen_exp e),
     list<string> get_related_company(1:string ssid) throws (1:gen_exp e),
+    bool set_user_group(1:string ssid, 2:i64 user_id, 3:i64 groupid) throws (1:gen_exp e),
 }
 
 service stuff_info {

@@ -76,6 +76,7 @@ public:
     int buyer = 1;
     std::string email;
     bool is_sys_admin = false;
+    int groupid = 0;
     pa_sql_userinfo()
     {
         add_parent_type<pa_sql_company>("belong_company");
@@ -89,6 +90,7 @@ public:
         ret.push_back(sqlite_orm_column("openid", sqlite_orm_column::STRING, &openid, SQLITE_ORM_COLUMN_LIMIT_UNIQ));
         ret.push_back(sqlite_orm_column("buyer", sqlite_orm_column::INTEGER, &buyer));
         ret.push_back(sqlite_orm_column("email", sqlite_orm_column::STRING, &email));
+        ret.push_back(sqlite_orm_column("groupid", sqlite_orm_column::INTEGER, &groupid));
 
         return ret;
     }

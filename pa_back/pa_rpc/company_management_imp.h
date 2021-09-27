@@ -404,6 +404,7 @@ public:
             tmp.name = itr.name;
             tmp.phone = itr.phone;
             tmp.user_id = itr.get_pri_id();
+            tmp.groupid = itr.groupid;
             _return.push_back(tmp);
         }
     }
@@ -981,6 +982,33 @@ public:
             std::sort(_return.begin(), _return.end());
             _return.erase(std::unique(_return.begin(), _return.end()), _return.end());
         }
+    }
+
+    virtual bool set_user_group(const std::string &ssid, const int64_t user_id, const int64_t groupid)
+    {
+        bool ret = false;
+
+        auto opt_user = PA_DATAOPT_get_online_user(ssid);
+        if (!opt_user)
+        {
+            PA_RETURN_UNLOGIN_MSG();
+        }
+        auto company = opt_user->get_parent<pa_sql_company>("belong_company");
+        if (!company)
+        {
+            PA_RETURN_NOCOMPANY_MSG();
+        }
+        if (!PA_DATAOPT_is_admin(opt_user->phone, company->name))
+        {
+            PA_RETURN_NOPRIVA_MSG();
+        }
+        auto user = company->get_children<pa_sql_userinfo>("belong_company", "PRI_ID == %ld", user_id);
+        if (!user)
+        {
+            PA_RETURN_NOPRIVA_MSG();
+        }
+        user->groupid = groupid;
+        return user->update_record();
     }
 };
 #endif // _COMPANY_MANAGEMENT_IMP_H_

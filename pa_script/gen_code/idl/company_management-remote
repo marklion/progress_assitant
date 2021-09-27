@@ -60,6 +60,7 @@ if len(sys.argv) <= 1 or sys.argv[1] == '--help':
     print('  bool set_third_info(third_dev_info _info, string ssid)')
     print('  third_dev_info get_third_info(string ssid)')
     print('   get_related_company(string ssid)')
+    print('  bool set_user_group(string ssid, i64 user_id, i64 groupid)')
     print('')
     sys.exit(0)
 
@@ -354,6 +355,12 @@ elif cmd == 'get_related_company':
         print('get_related_company requires 1 args')
         sys.exit(1)
     pp.pprint(client.get_related_company(args[0],))
+
+elif cmd == 'set_user_group':
+    if len(args) != 3:
+        print('set_user_group requires 3 args')
+        sys.exit(1)
+    pp.pprint(client.set_user_group(args[0], eval(args[1]), eval(args[2]),))
 
 else:
     print('Unrecognized method %s' % cmd)
