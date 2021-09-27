@@ -348,6 +348,7 @@ public:
                     _return.vehicleTeamId = PA_DATAOPT_search_base_id_info_by_name(_return.vehicleTeamName, "vehicleTeam", *company);
                     _return.price = itr.price;
                     _return.tmd_no = itr.tmd_no;
+                    _return.attachUrl = "https://www.d8sis.cn/pa_web" + itr.attach_path;
                     return;
                 }
             }
@@ -407,6 +408,7 @@ public:
                 tmp.vehicleTeamId = PA_DATAOPT_search_base_id_info_by_name(tmp.vehicleTeamName, "vehicleTeam", *company);
                 tmp.price = itr.price;
                 tmp.tmd_no = itr.tmd_no;
+                tmp.attachUrl = "https://www.d8sis.cn/pa_web" + itr.attach_path;
 
                 _return.push_back(tmp);
             }
@@ -484,6 +486,9 @@ public:
             {
                 pa_sql_vichele_stay_alone new_one(*real_vichele_stay_alone);
                 new_one.tmd_no = "";
+                new_one.no_permission == 1;
+                new_one.attach_path = "";
+                new_one.date = PA_DATAOPT_current_time().substr(0,10);
                 new_one.insert_record();
                 if (new_one.company_for_select.length() > 0)
                 {

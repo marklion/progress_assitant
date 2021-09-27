@@ -262,6 +262,26 @@ class Iface(object):
         """
         pass
 
+    def fill_enter_weight(self, open_id, vichele_id, enter_weight):
+        """
+        Parameters:
+         - open_id
+         - vichele_id
+         - enter_weight
+
+        """
+        pass
+
+    def fill_weight_attach(self, open_id, vichele_id, weight_attach):
+        """
+        Parameters:
+         - open_id
+         - vichele_id
+         - weight_attach
+
+        """
+        pass
+
 
 class Client(Iface):
     def __init__(self, iprot, oprot=None):
@@ -1240,6 +1260,82 @@ class Client(Iface):
             raise result.e
         raise TApplicationException(TApplicationException.MISSING_RESULT, "fill_tmd failed: unknown result")
 
+    def fill_enter_weight(self, open_id, vichele_id, enter_weight):
+        """
+        Parameters:
+         - open_id
+         - vichele_id
+         - enter_weight
+
+        """
+        self.send_fill_enter_weight(open_id, vichele_id, enter_weight)
+        return self.recv_fill_enter_weight()
+
+    def send_fill_enter_weight(self, open_id, vichele_id, enter_weight):
+        self._oprot.writeMessageBegin('fill_enter_weight', TMessageType.CALL, self._seqid)
+        args = fill_enter_weight_args()
+        args.open_id = open_id
+        args.vichele_id = vichele_id
+        args.enter_weight = enter_weight
+        args.write(self._oprot)
+        self._oprot.writeMessageEnd()
+        self._oprot.trans.flush()
+
+    def recv_fill_enter_weight(self):
+        iprot = self._iprot
+        (fname, mtype, rseqid) = iprot.readMessageBegin()
+        if mtype == TMessageType.EXCEPTION:
+            x = TApplicationException()
+            x.read(iprot)
+            iprot.readMessageEnd()
+            raise x
+        result = fill_enter_weight_result()
+        result.read(iprot)
+        iprot.readMessageEnd()
+        if result.success is not None:
+            return result.success
+        if result.e is not None:
+            raise result.e
+        raise TApplicationException(TApplicationException.MISSING_RESULT, "fill_enter_weight failed: unknown result")
+
+    def fill_weight_attach(self, open_id, vichele_id, weight_attach):
+        """
+        Parameters:
+         - open_id
+         - vichele_id
+         - weight_attach
+
+        """
+        self.send_fill_weight_attach(open_id, vichele_id, weight_attach)
+        return self.recv_fill_weight_attach()
+
+    def send_fill_weight_attach(self, open_id, vichele_id, weight_attach):
+        self._oprot.writeMessageBegin('fill_weight_attach', TMessageType.CALL, self._seqid)
+        args = fill_weight_attach_args()
+        args.open_id = open_id
+        args.vichele_id = vichele_id
+        args.weight_attach = weight_attach
+        args.write(self._oprot)
+        self._oprot.writeMessageEnd()
+        self._oprot.trans.flush()
+
+    def recv_fill_weight_attach(self):
+        iprot = self._iprot
+        (fname, mtype, rseqid) = iprot.readMessageBegin()
+        if mtype == TMessageType.EXCEPTION:
+            x = TApplicationException()
+            x.read(iprot)
+            iprot.readMessageEnd()
+            raise x
+        result = fill_weight_attach_result()
+        result.read(iprot)
+        iprot.readMessageEnd()
+        if result.success is not None:
+            return result.success
+        if result.e is not None:
+            raise result.e
+        raise TApplicationException(TApplicationException.MISSING_RESULT, "fill_weight_attach failed: unknown result")
+
 
 class Processor(Iface, TProcessor):
     def __init__(self, handler):
@@ -1272,6 +1368,8 @@ class Processor(Iface, TProcessor):
         self._processMap["smart_assign"] = Processor.process_smart_assign
         self._processMap["get_max_vichele_by_supplier"] = Processor.process_get_max_vichele_by_supplier
         self._processMap["fill_tmd"] = Processor.process_fill_tmd
+        self._processMap["fill_enter_weight"] = Processor.process_fill_enter_weight
+        self._processMap["fill_weight_attach"] = Processor.process_fill_weight_attach
         self._on_message_begin = None
 
     def on_message_begin(self, func):
@@ -1992,6 +2090,58 @@ class Processor(Iface, TProcessor):
             msg_type = TMessageType.EXCEPTION
             result = TApplicationException(TApplicationException.INTERNAL_ERROR, 'Internal error')
         oprot.writeMessageBegin("fill_tmd", msg_type, seqid)
+        result.write(oprot)
+        oprot.writeMessageEnd()
+        oprot.trans.flush()
+
+    def process_fill_enter_weight(self, seqid, iprot, oprot):
+        args = fill_enter_weight_args()
+        args.read(iprot)
+        iprot.readMessageEnd()
+        result = fill_enter_weight_result()
+        try:
+            result.success = self._handler.fill_enter_weight(args.open_id, args.vichele_id, args.enter_weight)
+            msg_type = TMessageType.REPLY
+        except TTransport.TTransportException:
+            raise
+        except gen_exp as e:
+            msg_type = TMessageType.REPLY
+            result.e = e
+        except TApplicationException as ex:
+            logging.exception('TApplication exception in handler')
+            msg_type = TMessageType.EXCEPTION
+            result = ex
+        except Exception:
+            logging.exception('Unexpected exception in handler')
+            msg_type = TMessageType.EXCEPTION
+            result = TApplicationException(TApplicationException.INTERNAL_ERROR, 'Internal error')
+        oprot.writeMessageBegin("fill_enter_weight", msg_type, seqid)
+        result.write(oprot)
+        oprot.writeMessageEnd()
+        oprot.trans.flush()
+
+    def process_fill_weight_attach(self, seqid, iprot, oprot):
+        args = fill_weight_attach_args()
+        args.read(iprot)
+        iprot.readMessageEnd()
+        result = fill_weight_attach_result()
+        try:
+            result.success = self._handler.fill_weight_attach(args.open_id, args.vichele_id, args.weight_attach)
+            msg_type = TMessageType.REPLY
+        except TTransport.TTransportException:
+            raise
+        except gen_exp as e:
+            msg_type = TMessageType.REPLY
+            result.e = e
+        except TApplicationException as ex:
+            logging.exception('TApplication exception in handler')
+            msg_type = TMessageType.EXCEPTION
+            result = ex
+        except Exception:
+            logging.exception('Unexpected exception in handler')
+            msg_type = TMessageType.EXCEPTION
+            result = TApplicationException(TApplicationException.INTERNAL_ERROR, 'Internal error')
+        oprot.writeMessageBegin("fill_weight_attach", msg_type, seqid)
         result.write(oprot)
         oprot.writeMessageEnd()
         oprot.trans.flush()
@@ -6057,6 +6207,324 @@ class fill_tmd_result(object):
         return not (self == other)
 all_structs.append(fill_tmd_result)
 fill_tmd_result.thrift_spec = (
+    (0, TType.BOOL, 'success', None, None, ),  # 0
+    (1, TType.STRUCT, 'e', [gen_exp, None], None, ),  # 1
+)
+
+
+class fill_enter_weight_args(object):
+    """
+    Attributes:
+     - open_id
+     - vichele_id
+     - enter_weight
+
+    """
+
+
+    def __init__(self, open_id=None, vichele_id=None, enter_weight=None,):
+        self.open_id = open_id
+        self.vichele_id = vichele_id
+        self.enter_weight = enter_weight
+
+    def read(self, iprot):
+        if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
+            iprot._fast_decode(self, iprot, [self.__class__, self.thrift_spec])
+            return
+        iprot.readStructBegin()
+        while True:
+            (fname, ftype, fid) = iprot.readFieldBegin()
+            if ftype == TType.STOP:
+                break
+            if fid == 1:
+                if ftype == TType.STRING:
+                    self.open_id = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 2:
+                if ftype == TType.I64:
+                    self.vichele_id = iprot.readI64()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 3:
+                if ftype == TType.DOUBLE:
+                    self.enter_weight = iprot.readDouble()
+                else:
+                    iprot.skip(ftype)
+            else:
+                iprot.skip(ftype)
+            iprot.readFieldEnd()
+        iprot.readStructEnd()
+
+    def write(self, oprot):
+        if oprot._fast_encode is not None and self.thrift_spec is not None:
+            oprot.trans.write(oprot._fast_encode(self, [self.__class__, self.thrift_spec]))
+            return
+        oprot.writeStructBegin('fill_enter_weight_args')
+        if self.open_id is not None:
+            oprot.writeFieldBegin('open_id', TType.STRING, 1)
+            oprot.writeString(self.open_id.encode('utf-8') if sys.version_info[0] == 2 else self.open_id)
+            oprot.writeFieldEnd()
+        if self.vichele_id is not None:
+            oprot.writeFieldBegin('vichele_id', TType.I64, 2)
+            oprot.writeI64(self.vichele_id)
+            oprot.writeFieldEnd()
+        if self.enter_weight is not None:
+            oprot.writeFieldBegin('enter_weight', TType.DOUBLE, 3)
+            oprot.writeDouble(self.enter_weight)
+            oprot.writeFieldEnd()
+        oprot.writeFieldStop()
+        oprot.writeStructEnd()
+
+    def validate(self):
+        return
+
+    def __repr__(self):
+        L = ['%s=%r' % (key, value)
+             for key, value in self.__dict__.items()]
+        return '%s(%s)' % (self.__class__.__name__, ', '.join(L))
+
+    def __eq__(self, other):
+        return isinstance(other, self.__class__) and self.__dict__ == other.__dict__
+
+    def __ne__(self, other):
+        return not (self == other)
+all_structs.append(fill_enter_weight_args)
+fill_enter_weight_args.thrift_spec = (
+    None,  # 0
+    (1, TType.STRING, 'open_id', 'UTF8', None, ),  # 1
+    (2, TType.I64, 'vichele_id', None, None, ),  # 2
+    (3, TType.DOUBLE, 'enter_weight', None, None, ),  # 3
+)
+
+
+class fill_enter_weight_result(object):
+    """
+    Attributes:
+     - success
+     - e
+
+    """
+
+
+    def __init__(self, success=None, e=None,):
+        self.success = success
+        self.e = e
+
+    def read(self, iprot):
+        if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
+            iprot._fast_decode(self, iprot, [self.__class__, self.thrift_spec])
+            return
+        iprot.readStructBegin()
+        while True:
+            (fname, ftype, fid) = iprot.readFieldBegin()
+            if ftype == TType.STOP:
+                break
+            if fid == 0:
+                if ftype == TType.BOOL:
+                    self.success = iprot.readBool()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 1:
+                if ftype == TType.STRUCT:
+                    self.e = gen_exp.read(iprot)
+                else:
+                    iprot.skip(ftype)
+            else:
+                iprot.skip(ftype)
+            iprot.readFieldEnd()
+        iprot.readStructEnd()
+
+    def write(self, oprot):
+        if oprot._fast_encode is not None and self.thrift_spec is not None:
+            oprot.trans.write(oprot._fast_encode(self, [self.__class__, self.thrift_spec]))
+            return
+        oprot.writeStructBegin('fill_enter_weight_result')
+        if self.success is not None:
+            oprot.writeFieldBegin('success', TType.BOOL, 0)
+            oprot.writeBool(self.success)
+            oprot.writeFieldEnd()
+        if self.e is not None:
+            oprot.writeFieldBegin('e', TType.STRUCT, 1)
+            self.e.write(oprot)
+            oprot.writeFieldEnd()
+        oprot.writeFieldStop()
+        oprot.writeStructEnd()
+
+    def validate(self):
+        return
+
+    def __repr__(self):
+        L = ['%s=%r' % (key, value)
+             for key, value in self.__dict__.items()]
+        return '%s(%s)' % (self.__class__.__name__, ', '.join(L))
+
+    def __eq__(self, other):
+        return isinstance(other, self.__class__) and self.__dict__ == other.__dict__
+
+    def __ne__(self, other):
+        return not (self == other)
+all_structs.append(fill_enter_weight_result)
+fill_enter_weight_result.thrift_spec = (
+    (0, TType.BOOL, 'success', None, None, ),  # 0
+    (1, TType.STRUCT, 'e', [gen_exp, None], None, ),  # 1
+)
+
+
+class fill_weight_attach_args(object):
+    """
+    Attributes:
+     - open_id
+     - vichele_id
+     - weight_attach
+
+    """
+
+
+    def __init__(self, open_id=None, vichele_id=None, weight_attach=None,):
+        self.open_id = open_id
+        self.vichele_id = vichele_id
+        self.weight_attach = weight_attach
+
+    def read(self, iprot):
+        if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
+            iprot._fast_decode(self, iprot, [self.__class__, self.thrift_spec])
+            return
+        iprot.readStructBegin()
+        while True:
+            (fname, ftype, fid) = iprot.readFieldBegin()
+            if ftype == TType.STOP:
+                break
+            if fid == 1:
+                if ftype == TType.STRING:
+                    self.open_id = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 2:
+                if ftype == TType.I64:
+                    self.vichele_id = iprot.readI64()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 3:
+                if ftype == TType.STRING:
+                    self.weight_attach = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
+            else:
+                iprot.skip(ftype)
+            iprot.readFieldEnd()
+        iprot.readStructEnd()
+
+    def write(self, oprot):
+        if oprot._fast_encode is not None and self.thrift_spec is not None:
+            oprot.trans.write(oprot._fast_encode(self, [self.__class__, self.thrift_spec]))
+            return
+        oprot.writeStructBegin('fill_weight_attach_args')
+        if self.open_id is not None:
+            oprot.writeFieldBegin('open_id', TType.STRING, 1)
+            oprot.writeString(self.open_id.encode('utf-8') if sys.version_info[0] == 2 else self.open_id)
+            oprot.writeFieldEnd()
+        if self.vichele_id is not None:
+            oprot.writeFieldBegin('vichele_id', TType.I64, 2)
+            oprot.writeI64(self.vichele_id)
+            oprot.writeFieldEnd()
+        if self.weight_attach is not None:
+            oprot.writeFieldBegin('weight_attach', TType.STRING, 3)
+            oprot.writeString(self.weight_attach.encode('utf-8') if sys.version_info[0] == 2 else self.weight_attach)
+            oprot.writeFieldEnd()
+        oprot.writeFieldStop()
+        oprot.writeStructEnd()
+
+    def validate(self):
+        return
+
+    def __repr__(self):
+        L = ['%s=%r' % (key, value)
+             for key, value in self.__dict__.items()]
+        return '%s(%s)' % (self.__class__.__name__, ', '.join(L))
+
+    def __eq__(self, other):
+        return isinstance(other, self.__class__) and self.__dict__ == other.__dict__
+
+    def __ne__(self, other):
+        return not (self == other)
+all_structs.append(fill_weight_attach_args)
+fill_weight_attach_args.thrift_spec = (
+    None,  # 0
+    (1, TType.STRING, 'open_id', 'UTF8', None, ),  # 1
+    (2, TType.I64, 'vichele_id', None, None, ),  # 2
+    (3, TType.STRING, 'weight_attach', 'UTF8', None, ),  # 3
+)
+
+
+class fill_weight_attach_result(object):
+    """
+    Attributes:
+     - success
+     - e
+
+    """
+
+
+    def __init__(self, success=None, e=None,):
+        self.success = success
+        self.e = e
+
+    def read(self, iprot):
+        if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
+            iprot._fast_decode(self, iprot, [self.__class__, self.thrift_spec])
+            return
+        iprot.readStructBegin()
+        while True:
+            (fname, ftype, fid) = iprot.readFieldBegin()
+            if ftype == TType.STOP:
+                break
+            if fid == 0:
+                if ftype == TType.BOOL:
+                    self.success = iprot.readBool()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 1:
+                if ftype == TType.STRUCT:
+                    self.e = gen_exp.read(iprot)
+                else:
+                    iprot.skip(ftype)
+            else:
+                iprot.skip(ftype)
+            iprot.readFieldEnd()
+        iprot.readStructEnd()
+
+    def write(self, oprot):
+        if oprot._fast_encode is not None and self.thrift_spec is not None:
+            oprot.trans.write(oprot._fast_encode(self, [self.__class__, self.thrift_spec]))
+            return
+        oprot.writeStructBegin('fill_weight_attach_result')
+        if self.success is not None:
+            oprot.writeFieldBegin('success', TType.BOOL, 0)
+            oprot.writeBool(self.success)
+            oprot.writeFieldEnd()
+        if self.e is not None:
+            oprot.writeFieldBegin('e', TType.STRUCT, 1)
+            self.e.write(oprot)
+            oprot.writeFieldEnd()
+        oprot.writeFieldStop()
+        oprot.writeStructEnd()
+
+    def validate(self):
+        return
+
+    def __repr__(self):
+        L = ['%s=%r' % (key, value)
+             for key, value in self.__dict__.items()]
+        return '%s(%s)' % (self.__class__.__name__, ', '.join(L))
+
+    def __eq__(self, other):
+        return isinstance(other, self.__class__) and self.__dict__ == other.__dict__
+
+    def __ne__(self, other):
+        return not (self == other)
+all_structs.append(fill_weight_attach_result)
+fill_weight_attach_result.thrift_spec = (
     (0, TType.BOOL, 'success', None, None, ),  # 0
     (1, TType.STRUCT, 'e', [gen_exp, None], None, ),  # 1
 )

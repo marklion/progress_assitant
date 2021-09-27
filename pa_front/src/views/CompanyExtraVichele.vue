@@ -227,7 +227,8 @@ export default {
                     ret.push(element);
                 } else {
                     var vichele_day = new Date(element.date);
-                    vichele_day = vichele_day.getTime() / 1000 / 60 / 60 / 24;
+                    vichele_day = parseInt(vichele_day.getTime() / 1000 / 60 / 60 / 24);
+                    console.log(vichele_day - current_day);
                     if (vue_this.date_filter == (vichele_day - current_day)) {
                         ret.push(element);
                     }

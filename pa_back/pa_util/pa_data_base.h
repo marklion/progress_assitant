@@ -614,6 +614,8 @@ public:
     double price = 0;
     std::string company_for_select;
     std::string tmd_no;
+    int no_permission = 1;
+    std::string attach_path;
     pa_sql_vichele_stay_alone() {
         add_parent_type<pa_sql_silent_user>("created_by");
         add_parent_type<pa_sql_company>("destination");
@@ -644,6 +646,8 @@ public:
         ret.push_back(sqlite_orm_column("price", sqlite_orm_column::REAL, &price));
         ret.push_back(sqlite_orm_column("company_for_select", sqlite_orm_column::STRING, &company_for_select));
         ret.push_back(sqlite_orm_column("tmd_no", sqlite_orm_column::STRING, &tmd_no));
+        ret.push_back(sqlite_orm_column("no_permission", sqlite_orm_column::INTEGER, &no_permission));
+        ret.push_back(sqlite_orm_column("attach_path", sqlite_orm_column::STRING, &attach_path));
 
         return ret;
     }

@@ -294,6 +294,9 @@ struct today_driver_info {
     15:bool need_tmd,
     16:string tmd_no,
     17:string date,
+    18:bool can_enter,
+    19:string attach_url,
+    20:double count,
 }
 
 struct driver_detail_info {
@@ -395,6 +398,7 @@ struct vehicle_info_resp {
     20:string vehicleTeamName,
     21:string vehicleTeamId,
     22:string tmd_no,
+    23:string attachUrl,
 }
 
 struct push_weight_req {
@@ -465,6 +469,7 @@ struct vichele_stay_alone {
     21:double m_weight,
     22:double j_weight,
     23:double price,
+    24:bool can_enter,
 }
 
 struct silent_user_info {
@@ -521,4 +526,6 @@ service vichele_management {
     string smart_assign(1:string ssid, 2:list<vichele_stay_alone> vichele_info) throws (1:gen_exp e),
     i64 get_max_vichele_by_supplier(1:string supplier, 2:string company) throws (1:gen_exp e),
     bool fill_tmd(1:string open_id, 2:i64 vichele_id, 3:string tmd_no) throws (1:gen_exp e),
+    bool fill_enter_weight(1:string open_id, 2:i64 vichele_id, 3:double enter_weight) throws (1:gen_exp e),
+    bool fill_weight_attach(1:string open_id, 2:i64 vichele_id, 3:string weight_attach) throws (1:gen_exp e),
 }

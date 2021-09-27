@@ -3738,6 +3738,300 @@ vichele_management_fill_tmd_result.prototype.write = function(output) {
   return;
 };
 
+var vichele_management_fill_enter_weight_args = function(args) {
+  this.open_id = null;
+  this.vichele_id = null;
+  this.enter_weight = null;
+  if (args) {
+    if (args.open_id !== undefined && args.open_id !== null) {
+      this.open_id = args.open_id;
+    }
+    if (args.vichele_id !== undefined && args.vichele_id !== null) {
+      this.vichele_id = args.vichele_id;
+    }
+    if (args.enter_weight !== undefined && args.enter_weight !== null) {
+      this.enter_weight = args.enter_weight;
+    }
+  }
+};
+vichele_management_fill_enter_weight_args.prototype = {};
+vichele_management_fill_enter_weight_args.prototype.read = function(input) {
+  input.readStructBegin();
+  while (true) {
+    var ret = input.readFieldBegin();
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    switch (fid) {
+      case 1:
+      if (ftype == Thrift.Type.STRING) {
+        this.open_id = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 2:
+      if (ftype == Thrift.Type.I64) {
+        this.vichele_id = input.readI64();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 3:
+      if (ftype == Thrift.Type.DOUBLE) {
+        this.enter_weight = input.readDouble();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      default:
+        input.skip(ftype);
+    }
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+vichele_management_fill_enter_weight_args.prototype.write = function(output) {
+  output.writeStructBegin('vichele_management_fill_enter_weight_args');
+  if (this.open_id !== null && this.open_id !== undefined) {
+    output.writeFieldBegin('open_id', Thrift.Type.STRING, 1);
+    output.writeString(this.open_id);
+    output.writeFieldEnd();
+  }
+  if (this.vichele_id !== null && this.vichele_id !== undefined) {
+    output.writeFieldBegin('vichele_id', Thrift.Type.I64, 2);
+    output.writeI64(this.vichele_id);
+    output.writeFieldEnd();
+  }
+  if (this.enter_weight !== null && this.enter_weight !== undefined) {
+    output.writeFieldBegin('enter_weight', Thrift.Type.DOUBLE, 3);
+    output.writeDouble(this.enter_weight);
+    output.writeFieldEnd();
+  }
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+
+var vichele_management_fill_enter_weight_result = function(args) {
+  this.success = null;
+  this.e = null;
+  if (args instanceof ttypes.gen_exp) {
+    this.e = args;
+    return;
+  }
+  if (args) {
+    if (args.success !== undefined && args.success !== null) {
+      this.success = args.success;
+    }
+    if (args.e !== undefined && args.e !== null) {
+      this.e = args.e;
+    }
+  }
+};
+vichele_management_fill_enter_weight_result.prototype = {};
+vichele_management_fill_enter_weight_result.prototype.read = function(input) {
+  input.readStructBegin();
+  while (true) {
+    var ret = input.readFieldBegin();
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    switch (fid) {
+      case 0:
+      if (ftype == Thrift.Type.BOOL) {
+        this.success = input.readBool();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 1:
+      if (ftype == Thrift.Type.STRUCT) {
+        this.e = new ttypes.gen_exp();
+        this.e.read(input);
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      default:
+        input.skip(ftype);
+    }
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+vichele_management_fill_enter_weight_result.prototype.write = function(output) {
+  output.writeStructBegin('vichele_management_fill_enter_weight_result');
+  if (this.success !== null && this.success !== undefined) {
+    output.writeFieldBegin('success', Thrift.Type.BOOL, 0);
+    output.writeBool(this.success);
+    output.writeFieldEnd();
+  }
+  if (this.e !== null && this.e !== undefined) {
+    output.writeFieldBegin('e', Thrift.Type.STRUCT, 1);
+    this.e.write(output);
+    output.writeFieldEnd();
+  }
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+
+var vichele_management_fill_weight_attach_args = function(args) {
+  this.open_id = null;
+  this.vichele_id = null;
+  this.weight_attach = null;
+  if (args) {
+    if (args.open_id !== undefined && args.open_id !== null) {
+      this.open_id = args.open_id;
+    }
+    if (args.vichele_id !== undefined && args.vichele_id !== null) {
+      this.vichele_id = args.vichele_id;
+    }
+    if (args.weight_attach !== undefined && args.weight_attach !== null) {
+      this.weight_attach = args.weight_attach;
+    }
+  }
+};
+vichele_management_fill_weight_attach_args.prototype = {};
+vichele_management_fill_weight_attach_args.prototype.read = function(input) {
+  input.readStructBegin();
+  while (true) {
+    var ret = input.readFieldBegin();
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    switch (fid) {
+      case 1:
+      if (ftype == Thrift.Type.STRING) {
+        this.open_id = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 2:
+      if (ftype == Thrift.Type.I64) {
+        this.vichele_id = input.readI64();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 3:
+      if (ftype == Thrift.Type.STRING) {
+        this.weight_attach = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      default:
+        input.skip(ftype);
+    }
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+vichele_management_fill_weight_attach_args.prototype.write = function(output) {
+  output.writeStructBegin('vichele_management_fill_weight_attach_args');
+  if (this.open_id !== null && this.open_id !== undefined) {
+    output.writeFieldBegin('open_id', Thrift.Type.STRING, 1);
+    output.writeString(this.open_id);
+    output.writeFieldEnd();
+  }
+  if (this.vichele_id !== null && this.vichele_id !== undefined) {
+    output.writeFieldBegin('vichele_id', Thrift.Type.I64, 2);
+    output.writeI64(this.vichele_id);
+    output.writeFieldEnd();
+  }
+  if (this.weight_attach !== null && this.weight_attach !== undefined) {
+    output.writeFieldBegin('weight_attach', Thrift.Type.STRING, 3);
+    output.writeString(this.weight_attach);
+    output.writeFieldEnd();
+  }
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+
+var vichele_management_fill_weight_attach_result = function(args) {
+  this.success = null;
+  this.e = null;
+  if (args instanceof ttypes.gen_exp) {
+    this.e = args;
+    return;
+  }
+  if (args) {
+    if (args.success !== undefined && args.success !== null) {
+      this.success = args.success;
+    }
+    if (args.e !== undefined && args.e !== null) {
+      this.e = args.e;
+    }
+  }
+};
+vichele_management_fill_weight_attach_result.prototype = {};
+vichele_management_fill_weight_attach_result.prototype.read = function(input) {
+  input.readStructBegin();
+  while (true) {
+    var ret = input.readFieldBegin();
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    switch (fid) {
+      case 0:
+      if (ftype == Thrift.Type.BOOL) {
+        this.success = input.readBool();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 1:
+      if (ftype == Thrift.Type.STRUCT) {
+        this.e = new ttypes.gen_exp();
+        this.e.read(input);
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      default:
+        input.skip(ftype);
+    }
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+vichele_management_fill_weight_attach_result.prototype.write = function(output) {
+  output.writeStructBegin('vichele_management_fill_weight_attach_result');
+  if (this.success !== null && this.success !== undefined) {
+    output.writeFieldBegin('success', Thrift.Type.BOOL, 0);
+    output.writeBool(this.success);
+    output.writeFieldEnd();
+  }
+  if (this.e !== null && this.e !== undefined) {
+    output.writeFieldBegin('e', Thrift.Type.STRUCT, 1);
+    this.e.write(output);
+    output.writeFieldEnd();
+  }
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+
 var vichele_managementClient = exports.Client = function(output, pClass) {
   this.output = output;
   this.pClass = pClass;
@@ -5445,6 +5739,134 @@ vichele_managementClient.prototype.recv_fill_tmd = function(input,mtype,rseqid) 
   }
   return callback('fill_tmd failed: unknown result');
 };
+
+vichele_managementClient.prototype.fill_enter_weight = function(open_id, vichele_id, enter_weight, callback) {
+  this._seqid = this.new_seqid();
+  if (callback === undefined) {
+    var _defer = Q.defer();
+    this._reqs[this.seqid()] = function(error, result) {
+      if (error) {
+        _defer.reject(error);
+      } else {
+        _defer.resolve(result);
+      }
+    };
+    this.send_fill_enter_weight(open_id, vichele_id, enter_weight);
+    return _defer.promise;
+  } else {
+    this._reqs[this.seqid()] = callback;
+    this.send_fill_enter_weight(open_id, vichele_id, enter_weight);
+  }
+};
+
+vichele_managementClient.prototype.send_fill_enter_weight = function(open_id, vichele_id, enter_weight) {
+  var output = new this.pClass(this.output);
+  var params = {
+    open_id: open_id,
+    vichele_id: vichele_id,
+    enter_weight: enter_weight
+  };
+  var args = new vichele_management_fill_enter_weight_args(params);
+  try {
+    output.writeMessageBegin('fill_enter_weight', Thrift.MessageType.CALL, this.seqid());
+    args.write(output);
+    output.writeMessageEnd();
+    return this.output.flush();
+  }
+  catch (e) {
+    delete this._reqs[this.seqid()];
+    if (typeof output.reset === 'function') {
+      output.reset();
+    }
+    throw e;
+  }
+};
+
+vichele_managementClient.prototype.recv_fill_enter_weight = function(input,mtype,rseqid) {
+  var callback = this._reqs[rseqid] || function() {};
+  delete this._reqs[rseqid];
+  if (mtype == Thrift.MessageType.EXCEPTION) {
+    var x = new Thrift.TApplicationException();
+    x.read(input);
+    input.readMessageEnd();
+    return callback(x);
+  }
+  var result = new vichele_management_fill_enter_weight_result();
+  result.read(input);
+  input.readMessageEnd();
+
+  if (null !== result.e) {
+    return callback(result.e);
+  }
+  if (null !== result.success) {
+    return callback(null, result.success);
+  }
+  return callback('fill_enter_weight failed: unknown result');
+};
+
+vichele_managementClient.prototype.fill_weight_attach = function(open_id, vichele_id, weight_attach, callback) {
+  this._seqid = this.new_seqid();
+  if (callback === undefined) {
+    var _defer = Q.defer();
+    this._reqs[this.seqid()] = function(error, result) {
+      if (error) {
+        _defer.reject(error);
+      } else {
+        _defer.resolve(result);
+      }
+    };
+    this.send_fill_weight_attach(open_id, vichele_id, weight_attach);
+    return _defer.promise;
+  } else {
+    this._reqs[this.seqid()] = callback;
+    this.send_fill_weight_attach(open_id, vichele_id, weight_attach);
+  }
+};
+
+vichele_managementClient.prototype.send_fill_weight_attach = function(open_id, vichele_id, weight_attach) {
+  var output = new this.pClass(this.output);
+  var params = {
+    open_id: open_id,
+    vichele_id: vichele_id,
+    weight_attach: weight_attach
+  };
+  var args = new vichele_management_fill_weight_attach_args(params);
+  try {
+    output.writeMessageBegin('fill_weight_attach', Thrift.MessageType.CALL, this.seqid());
+    args.write(output);
+    output.writeMessageEnd();
+    return this.output.flush();
+  }
+  catch (e) {
+    delete this._reqs[this.seqid()];
+    if (typeof output.reset === 'function') {
+      output.reset();
+    }
+    throw e;
+  }
+};
+
+vichele_managementClient.prototype.recv_fill_weight_attach = function(input,mtype,rseqid) {
+  var callback = this._reqs[rseqid] || function() {};
+  delete this._reqs[rseqid];
+  if (mtype == Thrift.MessageType.EXCEPTION) {
+    var x = new Thrift.TApplicationException();
+    x.read(input);
+    input.readMessageEnd();
+    return callback(x);
+  }
+  var result = new vichele_management_fill_weight_attach_result();
+  result.read(input);
+  input.readMessageEnd();
+
+  if (null !== result.e) {
+    return callback(result.e);
+  }
+  if (null !== result.success) {
+    return callback(null, result.success);
+  }
+  return callback('fill_weight_attach failed: unknown result');
+};
 var vichele_managementProcessor = exports.Processor = function(handler) {
   this._handler = handler;
 };
@@ -6616,6 +7038,94 @@ vichele_managementProcessor.prototype.process_fill_tmd = function(seqid, input, 
       } else {
         result_obj = new Thrift.TApplicationException(Thrift.TApplicationExceptionType.UNKNOWN, err.message);
         output.writeMessageBegin("fill_tmd", Thrift.MessageType.EXCEPTION, seqid);
+      }
+      result_obj.write(output);
+      output.writeMessageEnd();
+      output.flush();
+    });
+  }
+};
+vichele_managementProcessor.prototype.process_fill_enter_weight = function(seqid, input, output) {
+  var args = new vichele_management_fill_enter_weight_args();
+  args.read(input);
+  input.readMessageEnd();
+  if (this._handler.fill_enter_weight.length === 3) {
+    Q.fcall(this._handler.fill_enter_weight.bind(this._handler),
+      args.open_id,
+      args.vichele_id,
+      args.enter_weight
+    ).then(function(result) {
+      var result_obj = new vichele_management_fill_enter_weight_result({success: result});
+      output.writeMessageBegin("fill_enter_weight", Thrift.MessageType.REPLY, seqid);
+      result_obj.write(output);
+      output.writeMessageEnd();
+      output.flush();
+    }).catch(function (err) {
+      var result;
+      if (err instanceof ttypes.gen_exp) {
+        result = new vichele_management_fill_enter_weight_result(err);
+        output.writeMessageBegin("fill_enter_weight", Thrift.MessageType.REPLY, seqid);
+      } else {
+        result = new Thrift.TApplicationException(Thrift.TApplicationExceptionType.UNKNOWN, err.message);
+        output.writeMessageBegin("fill_enter_weight", Thrift.MessageType.EXCEPTION, seqid);
+      }
+      result.write(output);
+      output.writeMessageEnd();
+      output.flush();
+    });
+  } else {
+    this._handler.fill_enter_weight(args.open_id, args.vichele_id, args.enter_weight, function (err, result) {
+      var result_obj;
+      if ((err === null || typeof err === 'undefined') || err instanceof ttypes.gen_exp) {
+        result_obj = new vichele_management_fill_enter_weight_result((err !== null || typeof err === 'undefined') ? err : {success: result});
+        output.writeMessageBegin("fill_enter_weight", Thrift.MessageType.REPLY, seqid);
+      } else {
+        result_obj = new Thrift.TApplicationException(Thrift.TApplicationExceptionType.UNKNOWN, err.message);
+        output.writeMessageBegin("fill_enter_weight", Thrift.MessageType.EXCEPTION, seqid);
+      }
+      result_obj.write(output);
+      output.writeMessageEnd();
+      output.flush();
+    });
+  }
+};
+vichele_managementProcessor.prototype.process_fill_weight_attach = function(seqid, input, output) {
+  var args = new vichele_management_fill_weight_attach_args();
+  args.read(input);
+  input.readMessageEnd();
+  if (this._handler.fill_weight_attach.length === 3) {
+    Q.fcall(this._handler.fill_weight_attach.bind(this._handler),
+      args.open_id,
+      args.vichele_id,
+      args.weight_attach
+    ).then(function(result) {
+      var result_obj = new vichele_management_fill_weight_attach_result({success: result});
+      output.writeMessageBegin("fill_weight_attach", Thrift.MessageType.REPLY, seqid);
+      result_obj.write(output);
+      output.writeMessageEnd();
+      output.flush();
+    }).catch(function (err) {
+      var result;
+      if (err instanceof ttypes.gen_exp) {
+        result = new vichele_management_fill_weight_attach_result(err);
+        output.writeMessageBegin("fill_weight_attach", Thrift.MessageType.REPLY, seqid);
+      } else {
+        result = new Thrift.TApplicationException(Thrift.TApplicationExceptionType.UNKNOWN, err.message);
+        output.writeMessageBegin("fill_weight_attach", Thrift.MessageType.EXCEPTION, seqid);
+      }
+      result.write(output);
+      output.writeMessageEnd();
+      output.flush();
+    });
+  } else {
+    this._handler.fill_weight_attach(args.open_id, args.vichele_id, args.weight_attach, function (err, result) {
+      var result_obj;
+      if ((err === null || typeof err === 'undefined') || err instanceof ttypes.gen_exp) {
+        result_obj = new vichele_management_fill_weight_attach_result((err !== null || typeof err === 'undefined') ? err : {success: result});
+        output.writeMessageBegin("fill_weight_attach", Thrift.MessageType.REPLY, seqid);
+      } else {
+        result_obj = new Thrift.TApplicationException(Thrift.TApplicationExceptionType.UNKNOWN, err.message);
+        output.writeMessageBegin("fill_weight_attach", Thrift.MessageType.EXCEPTION, seqid);
       }
       result_obj.write(output);
       output.writeMessageEnd();

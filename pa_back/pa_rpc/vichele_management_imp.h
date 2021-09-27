@@ -74,6 +74,7 @@ public:
             tmp.driver_id = itr.driver_id;
             tmp.transfor_company = itr.transfor_company;
             tmp.price = itr.price;
+            tmp.no_permission = 1;
 
             ret = tmp.insert_record();
             if (ret)
@@ -362,6 +363,7 @@ public:
             tmp.m_weight = itr.m_weight;
             tmp.j_weight = itr.j_weight;
             tmp.price = itr.price;
+            tmp.can_enter = itr.no_permission==0?true:false;
             _return.push_back(tmp);
         }
     }
@@ -406,12 +408,14 @@ public:
             itr.status = 1;
             itr.price = price;
             itr.company_name = company_name;
+            itr.no_permission = 0;
             auto created_user = itr.get_parent<pa_sql_silent_user>("created_by");
             if (created_user)
             {
                 if (company->get_children<pa_sql_userinfo>("belong_company", "openid == '%s'", created_user->open_id.c_str()))
                 {
                     itr.company_for_select = company_for_select_string;
+                    itr.no_permission = 1;
                 }
             }
             if (itr.update_record())
@@ -969,6 +973,52 @@ public:
                 std::cerr << e.msg << '\n';
             }
         }
+    }
+
+    virtual bool fill_enter_weight(const std::string &open_id, const int64_t vichele_id, const double enter_weight)
+    {
+        auto driver = sqlite_orm::search_record<pa_sql_driver>("silent_id = '%s'", open_id.c_str());
+        if (!driver)
+        {
+            PA_RETURN_NOPRIVA_MSG();
+        }
+        auto vichele_info = sqlite_orm::search_record<pa_sql_vichele_stay_alone>("PRI_ID == %ld AND driver_phone == '%s'", vichele_id, driver->phone.c_str());
+        if (!vichele_info)
+        {
+            PA_RETURN_NOPRIVA_MSG();
+        }
+        vichele_info->count = enter_weight;
+        if (vichele_info->attach_path.length() > 0)
+        {
+            vichele_info->no_permission = 0;
+        }
+
+        return vichele_info->update_record();
+    }
+    virtual bool fill_weight_attach(const std::string &open_id, const int64_t vichele_id, const std::string &weight_attach)
+    {
+        bool ret = false;
+        auto driver = sqlite_orm::search_record<pa_sql_driver>("silent_id = '%s'", open_id.c_str());
+        if (!driver)
+        {
+            PA_RETURN_NOPRIVA_MSG();
+        }
+        auto vichele_info = sqlite_orm::search_record<pa_sql_vichele_stay_alone>("PRI_ID == %ld AND driver_phone == '%s'", vichele_id, driver->phone.c_str());
+        if (!vichele_info)
+        {
+            PA_RETURN_NOPRIVA_MSG();
+        }
+        std::string content;
+
+        Base64::Decode(weight_attach, &content);
+        if (content.length() > 0)
+        {
+            auto file_name = std::to_string(vichele_id) + "weight_attach";
+
+            vichele_info->attach_path = PA_DATAOPT_store_attach_file(content, false, file_name);
+            ret = vichele_info->update_record();
+        }
+        return ret;
     }
 };
 

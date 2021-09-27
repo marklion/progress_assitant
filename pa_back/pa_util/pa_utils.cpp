@@ -611,14 +611,11 @@ bool PA_DATAOPT_vichele_ready_to_post(pa_sql_vichele_stay_alone &_vichele, bool 
     auto creator = _vichele.get_parent<pa_sql_silent_user>("created_by");
     if (dest_company && creator)
     {
-        if (!is_post && _vichele.company_name.length() > 0 && dest_company->get_children<pa_sql_userinfo>("belong_company", "openid == '%s'", creator->open_id.c_str()))
+        if (is_post)
         {
-            if (_vichele.tmd_no.length() > 0)
-            {
-                ret = true;
-            }
+            ret = true;
         }
-        else
+        else if (_vichele.no_permission == 0)
         {
             ret = true;
         }
@@ -680,6 +677,7 @@ void PA_DATAOPT_post_save_register(std::list<pa_sql_vichele_stay_alone> &_vichel
             sub_req.Add("enterWeight", itr.count);
             sub_req.Add("stuffName", itr.stuff_name);
             sub_req.Add("tmdNo", itr.tmd_no);
+            sub_req.Add("attachUrl", itr.attach_path);
             sub_req.Add("stuffId", PA_DATAOPT_search_base_id_info_by_name(itr.stuff_name, "stuff", *company));
             req.Add(sub_req);
         }

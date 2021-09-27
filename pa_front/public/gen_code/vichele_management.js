@@ -3842,6 +3842,308 @@ vichele_management_fill_tmd_result = class {
   }
 
 };
+vichele_management_fill_enter_weight_args = class {
+  constructor(args) {
+    this.open_id = null;
+    this.vichele_id = null;
+    this.enter_weight = null;
+    if (args) {
+      if (args.open_id !== undefined && args.open_id !== null) {
+        this.open_id = args.open_id;
+      }
+      if (args.vichele_id !== undefined && args.vichele_id !== null) {
+        this.vichele_id = args.vichele_id;
+      }
+      if (args.enter_weight !== undefined && args.enter_weight !== null) {
+        this.enter_weight = args.enter_weight;
+      }
+    }
+  }
+
+  read (input) {
+    input.readStructBegin();
+    while (true) {
+      const ret = input.readFieldBegin();
+      const ftype = ret.ftype;
+      const fid = ret.fid;
+      if (ftype == Thrift.Type.STOP) {
+        break;
+      }
+      switch (fid) {
+        case 1:
+        if (ftype == Thrift.Type.STRING) {
+          this.open_id = input.readString().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        case 2:
+        if (ftype == Thrift.Type.I64) {
+          this.vichele_id = input.readI64().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        case 3:
+        if (ftype == Thrift.Type.DOUBLE) {
+          this.enter_weight = input.readDouble().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        default:
+          input.skip(ftype);
+      }
+      input.readFieldEnd();
+    }
+    input.readStructEnd();
+    return;
+  }
+
+  write (output) {
+    output.writeStructBegin('vichele_management_fill_enter_weight_args');
+    if (this.open_id !== null && this.open_id !== undefined) {
+      output.writeFieldBegin('open_id', Thrift.Type.STRING, 1);
+      output.writeString(this.open_id);
+      output.writeFieldEnd();
+    }
+    if (this.vichele_id !== null && this.vichele_id !== undefined) {
+      output.writeFieldBegin('vichele_id', Thrift.Type.I64, 2);
+      output.writeI64(this.vichele_id);
+      output.writeFieldEnd();
+    }
+    if (this.enter_weight !== null && this.enter_weight !== undefined) {
+      output.writeFieldBegin('enter_weight', Thrift.Type.DOUBLE, 3);
+      output.writeDouble(this.enter_weight);
+      output.writeFieldEnd();
+    }
+    output.writeFieldStop();
+    output.writeStructEnd();
+    return;
+  }
+
+};
+vichele_management_fill_enter_weight_result = class {
+  constructor(args) {
+    this.success = null;
+    this.e = null;
+    if (args instanceof gen_exp) {
+        this.e = args;
+        return;
+    }
+    if (args) {
+      if (args.success !== undefined && args.success !== null) {
+        this.success = args.success;
+      }
+      if (args.e !== undefined && args.e !== null) {
+        this.e = args.e;
+      }
+    }
+  }
+
+  read (input) {
+    input.readStructBegin();
+    while (true) {
+      const ret = input.readFieldBegin();
+      const ftype = ret.ftype;
+      const fid = ret.fid;
+      if (ftype == Thrift.Type.STOP) {
+        break;
+      }
+      switch (fid) {
+        case 0:
+        if (ftype == Thrift.Type.BOOL) {
+          this.success = input.readBool().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        case 1:
+        if (ftype == Thrift.Type.STRUCT) {
+          this.e = new gen_exp();
+          this.e.read(input);
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        default:
+          input.skip(ftype);
+      }
+      input.readFieldEnd();
+    }
+    input.readStructEnd();
+    return;
+  }
+
+  write (output) {
+    output.writeStructBegin('vichele_management_fill_enter_weight_result');
+    if (this.success !== null && this.success !== undefined) {
+      output.writeFieldBegin('success', Thrift.Type.BOOL, 0);
+      output.writeBool(this.success);
+      output.writeFieldEnd();
+    }
+    if (this.e !== null && this.e !== undefined) {
+      output.writeFieldBegin('e', Thrift.Type.STRUCT, 1);
+      this.e.write(output);
+      output.writeFieldEnd();
+    }
+    output.writeFieldStop();
+    output.writeStructEnd();
+    return;
+  }
+
+};
+vichele_management_fill_weight_attach_args = class {
+  constructor(args) {
+    this.open_id = null;
+    this.vichele_id = null;
+    this.weight_attach = null;
+    if (args) {
+      if (args.open_id !== undefined && args.open_id !== null) {
+        this.open_id = args.open_id;
+      }
+      if (args.vichele_id !== undefined && args.vichele_id !== null) {
+        this.vichele_id = args.vichele_id;
+      }
+      if (args.weight_attach !== undefined && args.weight_attach !== null) {
+        this.weight_attach = args.weight_attach;
+      }
+    }
+  }
+
+  read (input) {
+    input.readStructBegin();
+    while (true) {
+      const ret = input.readFieldBegin();
+      const ftype = ret.ftype;
+      const fid = ret.fid;
+      if (ftype == Thrift.Type.STOP) {
+        break;
+      }
+      switch (fid) {
+        case 1:
+        if (ftype == Thrift.Type.STRING) {
+          this.open_id = input.readString().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        case 2:
+        if (ftype == Thrift.Type.I64) {
+          this.vichele_id = input.readI64().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        case 3:
+        if (ftype == Thrift.Type.STRING) {
+          this.weight_attach = input.readString().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        default:
+          input.skip(ftype);
+      }
+      input.readFieldEnd();
+    }
+    input.readStructEnd();
+    return;
+  }
+
+  write (output) {
+    output.writeStructBegin('vichele_management_fill_weight_attach_args');
+    if (this.open_id !== null && this.open_id !== undefined) {
+      output.writeFieldBegin('open_id', Thrift.Type.STRING, 1);
+      output.writeString(this.open_id);
+      output.writeFieldEnd();
+    }
+    if (this.vichele_id !== null && this.vichele_id !== undefined) {
+      output.writeFieldBegin('vichele_id', Thrift.Type.I64, 2);
+      output.writeI64(this.vichele_id);
+      output.writeFieldEnd();
+    }
+    if (this.weight_attach !== null && this.weight_attach !== undefined) {
+      output.writeFieldBegin('weight_attach', Thrift.Type.STRING, 3);
+      output.writeString(this.weight_attach);
+      output.writeFieldEnd();
+    }
+    output.writeFieldStop();
+    output.writeStructEnd();
+    return;
+  }
+
+};
+vichele_management_fill_weight_attach_result = class {
+  constructor(args) {
+    this.success = null;
+    this.e = null;
+    if (args instanceof gen_exp) {
+        this.e = args;
+        return;
+    }
+    if (args) {
+      if (args.success !== undefined && args.success !== null) {
+        this.success = args.success;
+      }
+      if (args.e !== undefined && args.e !== null) {
+        this.e = args.e;
+      }
+    }
+  }
+
+  read (input) {
+    input.readStructBegin();
+    while (true) {
+      const ret = input.readFieldBegin();
+      const ftype = ret.ftype;
+      const fid = ret.fid;
+      if (ftype == Thrift.Type.STOP) {
+        break;
+      }
+      switch (fid) {
+        case 0:
+        if (ftype == Thrift.Type.BOOL) {
+          this.success = input.readBool().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        case 1:
+        if (ftype == Thrift.Type.STRUCT) {
+          this.e = new gen_exp();
+          this.e.read(input);
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        default:
+          input.skip(ftype);
+      }
+      input.readFieldEnd();
+    }
+    input.readStructEnd();
+    return;
+  }
+
+  write (output) {
+    output.writeStructBegin('vichele_management_fill_weight_attach_result');
+    if (this.success !== null && this.success !== undefined) {
+      output.writeFieldBegin('success', Thrift.Type.BOOL, 0);
+      output.writeBool(this.success);
+      output.writeFieldEnd();
+    }
+    if (this.e !== null && this.e !== undefined) {
+      output.writeFieldBegin('e', Thrift.Type.STRUCT, 1);
+      this.e.write(output);
+      output.writeFieldEnd();
+    }
+    output.writeFieldStop();
+    output.writeStructEnd();
+    return;
+  }
+
+};
 vichele_managementClient = class vichele_managementClient {
   constructor(input, output) {
     this.input = input;
@@ -5464,5 +5766,127 @@ vichele_managementClient = class vichele_managementClient {
       return result.success;
     }
     throw 'fill_tmd failed: unknown result';
+  }
+
+  fill_enter_weight (open_id, vichele_id, enter_weight) {
+    const self = this;
+    return new Promise((resolve, reject) => {
+      self.send_fill_enter_weight(open_id, vichele_id, enter_weight, (error, result) => {
+        return error ? reject(error) : resolve(result);
+      });
+    });
+  }
+
+  send_fill_enter_weight (open_id, vichele_id, enter_weight, callback) {
+    const params = {
+      open_id: open_id,
+      vichele_id: vichele_id,
+      enter_weight: enter_weight
+    };
+    const args = new vichele_management_fill_enter_weight_args(params);
+    try {
+      this.output.writeMessageBegin('fill_enter_weight', Thrift.MessageType.CALL, this.seqid);
+      args.write(this.output);
+      this.output.writeMessageEnd();
+      const self = this;
+      this.output.getTransport().flush(true, () => {
+        let error = null, result = null;
+        try {
+          result = self.recv_fill_enter_weight();
+        } catch (e) {
+          error = e;
+        }
+        callback(error, result);
+      });
+    }
+    catch (e) {
+      if (typeof this.output.getTransport().reset === 'function') {
+        this.output.getTransport().reset();
+      }
+      throw e;
+    }
+  }
+
+  recv_fill_enter_weight () {
+    const ret = this.input.readMessageBegin();
+    const mtype = ret.mtype;
+    if (mtype == Thrift.MessageType.EXCEPTION) {
+      const x = new Thrift.TApplicationException();
+      x.read(this.input);
+      this.input.readMessageEnd();
+      throw x;
+    }
+    const result = new vichele_management_fill_enter_weight_result();
+    result.read(this.input);
+    this.input.readMessageEnd();
+
+    if (null !== result.e) {
+      throw result.e;
+    }
+    if (null !== result.success) {
+      return result.success;
+    }
+    throw 'fill_enter_weight failed: unknown result';
+  }
+
+  fill_weight_attach (open_id, vichele_id, weight_attach) {
+    const self = this;
+    return new Promise((resolve, reject) => {
+      self.send_fill_weight_attach(open_id, vichele_id, weight_attach, (error, result) => {
+        return error ? reject(error) : resolve(result);
+      });
+    });
+  }
+
+  send_fill_weight_attach (open_id, vichele_id, weight_attach, callback) {
+    const params = {
+      open_id: open_id,
+      vichele_id: vichele_id,
+      weight_attach: weight_attach
+    };
+    const args = new vichele_management_fill_weight_attach_args(params);
+    try {
+      this.output.writeMessageBegin('fill_weight_attach', Thrift.MessageType.CALL, this.seqid);
+      args.write(this.output);
+      this.output.writeMessageEnd();
+      const self = this;
+      this.output.getTransport().flush(true, () => {
+        let error = null, result = null;
+        try {
+          result = self.recv_fill_weight_attach();
+        } catch (e) {
+          error = e;
+        }
+        callback(error, result);
+      });
+    }
+    catch (e) {
+      if (typeof this.output.getTransport().reset === 'function') {
+        this.output.getTransport().reset();
+      }
+      throw e;
+    }
+  }
+
+  recv_fill_weight_attach () {
+    const ret = this.input.readMessageBegin();
+    const mtype = ret.mtype;
+    if (mtype == Thrift.MessageType.EXCEPTION) {
+      const x = new Thrift.TApplicationException();
+      x.read(this.input);
+      this.input.readMessageEnd();
+      throw x;
+    }
+    const result = new vichele_management_fill_weight_attach_result();
+    result.read(this.input);
+    this.input.readMessageEnd();
+
+    if (null !== result.e) {
+      throw result.e;
+    }
+    if (null !== result.success) {
+      return result.success;
+    }
+    throw 'fill_weight_attach failed: unknown result';
   }
 };
