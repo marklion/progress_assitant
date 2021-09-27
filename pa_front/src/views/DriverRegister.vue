@@ -13,8 +13,11 @@
         <van-cell title="身份证号" :value="driver_id"></van-cell>
         <van-divider>今日承运信息</van-divider>
         <div class="single_record_show" v-for="(single_trans, index) in trans_info" :key="index">
+            <div v-if="!single_trans.can_enter" style="color:red;">不可进</div>
+            <div v-else style="color:green;">可进</div>
+            <van-cell title="进厂时间" :value="single_trans.date"></van-cell>
             <van-cell :title="single_trans.main_vichele + '-' + single_trans.behind_vichele" :value="single_trans.stuff_name" :label="single_trans.order_company?single_trans.order_company:'(未指定拉货公司)'" />
-            <van-cell :title="single_trans.destination_company" center>
+            <van-cell v-if="!single_trans.is_buy" :title="single_trans.destination_company" center>
                 <template #right-icon>
                     <div style="margin-left:8px;">
                         <van-button v-if="!single_trans.is_registered && single_trans.destination_company" type="info" size="small" @click="register_vichele(single_trans.destination_company, single_trans.id)">排号</van-button>
@@ -28,14 +31,29 @@
                     还需等待：{{single_trans.register_order}}个
                 </div>
             </van-cell>
+            <div v-if="single_trans.is_buy">
+                <van-button v-if="!single_trans.order_company" type="info" size="small" @click="act_select_company = true;focus_vichele_index = index">指定拉货公司</van-button>
+                <div v-else>
+                    <van-cell title="磅单照片" center>
+                        <template #right-icon>
+                            <van-button v-if="single_trans.attach_url" size="small" type="info" @click="pre_view_attach(single_trans.attach_url)">预览</van-button>
+                            <van-uploader :after-read="upload_attachment" @click-upload="proc_focus(single_trans.id)" accept="image/*">
+                                <van-button icon="plus" size="small" type="primary">上传</van-button>
+                            </van-uploader>
+                        </template>
+                    </van-cell>
+                    <div v-if="single_trans.attach_url">
+                        <van-field label="出厂净重" type="number" v-model="input_enter_weight[index]" placeholder="请输入出厂净重"></van-field>
+                        <van-field label="确认出厂净重" type="number" v-model="input_enter_weight_confirm[index]" placeholder="请再次输入出厂净重"></van-field>
+                        <div style="margin:16px;">
+                            <van-button type="primary" block size="small" @click="fill_enter_weight(single_trans.id, index)">提交</van-button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
             <van-cell v-if="single_trans.destination_address" title="详细地址：" :value="single_trans.destination_address"></van-cell>
-            <van-cell title="进厂时间" :value="single_trans.date"></van-cell>
             <van-cell v-if="single_trans.is_registered" title="进厂位置：" :value="single_trans.enter_location" :label="'签到时间:' + single_trans.register_timestamp"></van-cell>
-            <van-field v-if="single_trans.need_tmd" label="提煤单号" placeholder="输入提煤单号方可进厂" v-model="single_trans.tmd_no" center :formatter="tmd_upper">
-                <template #right-icon>
-                    <van-button type="info" @click="save_tmd(single_trans)" size="small">保存</van-button>
-                </template>
-            </van-field>
         </div>
         <van-action-sheet v-model="act_select_company" :actions="company_for_select" @select="fill_company" />
     </div>
@@ -88,7 +106,19 @@ import {
 import {
     ActionSheet
 } from 'vant';
-
+import {
+    Uploader
+} from 'vant';
+import {
+    compressAccurately
+} from 'image-conversion';
+import {
+    ImagePreview
+} from 'vant';
+import {
+    Notify
+} from 'vant';
+Vue.use(Uploader);
 Vue.use(ActionSheet);
 Vue.use(CountDown);
 Vue.use(Cell);
@@ -117,6 +147,9 @@ export default {
             current_count_down: 0,
             act_select_company: false,
             focus_vichele_index: 0,
+            focus_vichele: 0,
+            input_enter_weight: [],
+            input_enter_weight_confirm: [],
         };
     },
     computed: {
@@ -134,7 +167,51 @@ export default {
         },
     },
     methods: {
-        tmd_upper:function(_value) {
+        proc_focus: function (_id) {
+            console.log(_id);
+            this.focus_vichele = _id;
+        },
+        fill_enter_weight: function (_id, index) {
+            var vue_this = this;
+            if (vue_this.input_enter_weight[index] != vue_this.input_enter_weight_confirm[index]) {
+                Notify("出厂重量填写错误");
+                return;
+            }
+            vue_this.$call_remote_process("vichele_management", "fill_enter_weight", [vue_this.$cookies.get('driver_silent_id'), _id, parseFloat(vue_this.input_enter_weight[index])]).then(function (resp) {
+                if (resp) {
+                    vue_this.$router.go(0);
+                }
+            });
+        },
+        convert_2_base64_send: function (_file) {
+            var vue_this = this;
+            var reader = new FileReader();
+            reader.readAsDataURL(_file);
+            reader.onloadend = function () {
+                var result = this.result;
+                var file_content = result.split(';base64,')[1];
+                vue_this.$call_remote_process("vichele_management", "fill_weight_attach", [vue_this.$cookies.get('driver_silent_id'), vue_this.focus_vichele, file_content]).then(function (resp) {
+                    if (resp) {
+                        vue_this.$router.go(0);
+                    }
+                });
+            };
+        },
+        upload_attachment: function (_file) {
+            var vue_this = this;
+
+            compressAccurately(_file.file, 400).then(function (res) {
+                vue_this.convert_2_base64_send(res, false);
+            });
+
+        },
+        pre_view_attach: function (_remote_path) {
+            ImagePreview({
+                images: [this.$remote_url + _remote_path],
+                closeable: true
+            });
+        },
+        tmd_upper: function (_value) {
             return _value.toUpperCase();
         },
         save_tmd: function (_trans) {
@@ -192,6 +269,12 @@ export default {
             vue_this.$call_remote_process("stuff_plan_management", 'get_today_driver_info', [vue_this.$cookies.get('driver_silent_id')]).then(function (resp) {
                 resp.forEach((element, index) => {
                     vue_this.$set(vue_this.trans_info, index, element);
+                    if (element.can_enter) {
+                        vue_this.$set(vue_this.input_enter_weight, index, element.count);
+                    } else {
+                        vue_this.$set(vue_this.input_enter_weight, index, "");
+                    }
+                    vue_this.$set(vue_this.input_enter_weight_confirm, index, "");
                 });
             });
         },

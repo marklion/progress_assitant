@@ -1790,7 +1790,7 @@ void swap(company_plan_brief &a, company_plan_brief &b);
 std::ostream& operator<<(std::ostream& out, const company_plan_brief& obj);
 
 typedef struct _today_driver_info__isset {
-  _today_driver_info__isset() : id(false), destination_company(false), destination_address(false), order_company(false), main_vichele(false), behind_vichele(false), stuff_name(false), register_timestamp(false), register_number(false), enter_location(false), is_registered(false), register_order(false), is_buy(false), company_for_select(false), need_tmd(false), tmd_no(false), date(false) {}
+  _today_driver_info__isset() : id(false), destination_company(false), destination_address(false), order_company(false), main_vichele(false), behind_vichele(false), stuff_name(false), register_timestamp(false), register_number(false), enter_location(false), is_registered(false), register_order(false), is_buy(false), company_for_select(false), need_tmd(false), tmd_no(false), date(false), can_enter(false), attach_url(false), count(false) {}
   bool id :1;
   bool destination_company :1;
   bool destination_address :1;
@@ -1808,6 +1808,9 @@ typedef struct _today_driver_info__isset {
   bool need_tmd :1;
   bool tmd_no :1;
   bool date :1;
+  bool can_enter :1;
+  bool attach_url :1;
+  bool count :1;
 } _today_driver_info__isset;
 
 class today_driver_info : public virtual ::apache::thrift::TBase {
@@ -1815,7 +1818,7 @@ class today_driver_info : public virtual ::apache::thrift::TBase {
 
   today_driver_info(const today_driver_info&);
   today_driver_info& operator=(const today_driver_info&);
-  today_driver_info() : id(0), destination_company(), destination_address(), order_company(), main_vichele(), behind_vichele(), stuff_name(), register_timestamp(), register_number(), enter_location(), is_registered(0), register_order(), is_buy(0), need_tmd(0), tmd_no(), date() {
+  today_driver_info() : id(0), destination_company(), destination_address(), order_company(), main_vichele(), behind_vichele(), stuff_name(), register_timestamp(), register_number(), enter_location(), is_registered(0), register_order(), is_buy(0), need_tmd(0), tmd_no(), date(), can_enter(0), attach_url(), count(0) {
   }
 
   virtual ~today_driver_info() noexcept;
@@ -1836,6 +1839,9 @@ class today_driver_info : public virtual ::apache::thrift::TBase {
   bool need_tmd;
   std::string tmd_no;
   std::string date;
+  bool can_enter;
+  std::string attach_url;
+  double count;
 
   _today_driver_info__isset __isset;
 
@@ -1873,6 +1879,12 @@ class today_driver_info : public virtual ::apache::thrift::TBase {
 
   void __set_date(const std::string& val);
 
+  void __set_can_enter(const bool val);
+
+  void __set_attach_url(const std::string& val);
+
+  void __set_count(const double val);
+
   bool operator == (const today_driver_info & rhs) const
   {
     if (!(id == rhs.id))
@@ -1908,6 +1920,12 @@ class today_driver_info : public virtual ::apache::thrift::TBase {
     if (!(tmd_no == rhs.tmd_no))
       return false;
     if (!(date == rhs.date))
+      return false;
+    if (!(can_enter == rhs.can_enter))
+      return false;
+    if (!(attach_url == rhs.attach_url))
+      return false;
+    if (!(count == rhs.count))
       return false;
     return true;
   }
@@ -2234,7 +2252,7 @@ void swap(meta_stuff_info &a, meta_stuff_info &b);
 std::ostream& operator<<(std::ostream& out, const meta_stuff_info& obj);
 
 typedef struct _vehicle_info_resp__isset {
-  _vehicle_info_resp__isset() : id(false), plateNo(false), backPlateNo(false), stuffName(false), stuffId(false), enterWeight(false), companyName(false), driverName(false), isSale(false), price(false), customerId(false), orderNo(false), multiStuff(false), isMulti(false), createTime(false), driverPhone(false), driverId(false), supplierName(false), supplierId(false), vehicleTeamName(false), vehicleTeamId(false), tmd_no(false) {}
+  _vehicle_info_resp__isset() : id(false), plateNo(false), backPlateNo(false), stuffName(false), stuffId(false), enterWeight(false), companyName(false), driverName(false), isSale(false), price(false), customerId(false), orderNo(false), multiStuff(false), isMulti(false), createTime(false), driverPhone(false), driverId(false), supplierName(false), supplierId(false), vehicleTeamName(false), vehicleTeamId(false), tmd_no(false), attachUrl(false) {}
   bool id :1;
   bool plateNo :1;
   bool backPlateNo :1;
@@ -2257,6 +2275,7 @@ typedef struct _vehicle_info_resp__isset {
   bool vehicleTeamName :1;
   bool vehicleTeamId :1;
   bool tmd_no :1;
+  bool attachUrl :1;
 } _vehicle_info_resp__isset;
 
 class vehicle_info_resp : public virtual ::apache::thrift::TBase {
@@ -2264,7 +2283,7 @@ class vehicle_info_resp : public virtual ::apache::thrift::TBase {
 
   vehicle_info_resp(const vehicle_info_resp&);
   vehicle_info_resp& operator=(const vehicle_info_resp&);
-  vehicle_info_resp() : id(), plateNo(), backPlateNo(), stuffName(), stuffId(), enterWeight(0), companyName(), driverName(), isSale(0), price(0), customerId(), orderNo(), isMulti(0), createTime(), driverPhone(), driverId(), supplierName(), supplierId(), vehicleTeamName(), vehicleTeamId(), tmd_no() {
+  vehicle_info_resp() : id(), plateNo(), backPlateNo(), stuffName(), stuffId(), enterWeight(0), companyName(), driverName(), isSale(0), price(0), customerId(), orderNo(), isMulti(0), createTime(), driverPhone(), driverId(), supplierName(), supplierId(), vehicleTeamName(), vehicleTeamId(), tmd_no(), attachUrl() {
   }
 
   virtual ~vehicle_info_resp() noexcept;
@@ -2290,6 +2309,7 @@ class vehicle_info_resp : public virtual ::apache::thrift::TBase {
   std::string vehicleTeamName;
   std::string vehicleTeamId;
   std::string tmd_no;
+  std::string attachUrl;
 
   _vehicle_info_resp__isset __isset;
 
@@ -2337,6 +2357,8 @@ class vehicle_info_resp : public virtual ::apache::thrift::TBase {
 
   void __set_tmd_no(const std::string& val);
 
+  void __set_attachUrl(const std::string& val);
+
   bool operator == (const vehicle_info_resp & rhs) const
   {
     if (!(id == rhs.id))
@@ -2382,6 +2404,8 @@ class vehicle_info_resp : public virtual ::apache::thrift::TBase {
     if (!(vehicleTeamId == rhs.vehicleTeamId))
       return false;
     if (!(tmd_no == rhs.tmd_no))
+      return false;
+    if (!(attachUrl == rhs.attachUrl))
       return false;
     return true;
   }
@@ -2624,7 +2648,7 @@ void swap(push_balance_req &a, push_balance_req &b);
 std::ostream& operator<<(std::ostream& out, const push_balance_req& obj);
 
 typedef struct _vichele_stay_alone__isset {
-  _vichele_stay_alone__isset() : id(false), stuff_name(false), company_name(false), main_vichele_number(false), behind_vichele_number(false), count(false), comment(false), date(false), destination(false), status(false), creator_name(false), creator_phone(false), repeated(false), driver_name(false), driver_phone(false), driver_id(false), transfor_company(false), p_time(false), m_time(false), p_weight(false), m_weight(false), j_weight(false), price(false) {}
+  _vichele_stay_alone__isset() : id(false), stuff_name(false), company_name(false), main_vichele_number(false), behind_vichele_number(false), count(false), comment(false), date(false), destination(false), status(false), creator_name(false), creator_phone(false), repeated(false), driver_name(false), driver_phone(false), driver_id(false), transfor_company(false), p_time(false), m_time(false), p_weight(false), m_weight(false), j_weight(false), price(false), can_enter(false) {}
   bool id :1;
   bool stuff_name :1;
   bool company_name :1;
@@ -2648,6 +2672,7 @@ typedef struct _vichele_stay_alone__isset {
   bool m_weight :1;
   bool j_weight :1;
   bool price :1;
+  bool can_enter :1;
 } _vichele_stay_alone__isset;
 
 class vichele_stay_alone : public virtual ::apache::thrift::TBase {
@@ -2655,7 +2680,7 @@ class vichele_stay_alone : public virtual ::apache::thrift::TBase {
 
   vichele_stay_alone(const vichele_stay_alone&);
   vichele_stay_alone& operator=(const vichele_stay_alone&);
-  vichele_stay_alone() : id(0), stuff_name(), company_name(), main_vichele_number(), behind_vichele_number(), count(0), comment(), date(), destination(), status(0), creator_name(), creator_phone(), repeated(0), driver_name(), driver_phone(), driver_id(), transfor_company(), p_time(), m_time(), p_weight(0), m_weight(0), j_weight(0), price(0) {
+  vichele_stay_alone() : id(0), stuff_name(), company_name(), main_vichele_number(), behind_vichele_number(), count(0), comment(), date(), destination(), status(0), creator_name(), creator_phone(), repeated(0), driver_name(), driver_phone(), driver_id(), transfor_company(), p_time(), m_time(), p_weight(0), m_weight(0), j_weight(0), price(0), can_enter(0) {
   }
 
   virtual ~vichele_stay_alone() noexcept;
@@ -2682,6 +2707,7 @@ class vichele_stay_alone : public virtual ::apache::thrift::TBase {
   double m_weight;
   double j_weight;
   double price;
+  bool can_enter;
 
   _vichele_stay_alone__isset __isset;
 
@@ -2731,6 +2757,8 @@ class vichele_stay_alone : public virtual ::apache::thrift::TBase {
 
   void __set_price(const double val);
 
+  void __set_can_enter(const bool val);
+
   bool operator == (const vichele_stay_alone & rhs) const
   {
     if (!(id == rhs.id))
@@ -2778,6 +2806,8 @@ class vichele_stay_alone : public virtual ::apache::thrift::TBase {
     if (!(j_weight == rhs.j_weight))
       return false;
     if (!(price == rhs.price))
+      return false;
+    if (!(can_enter == rhs.can_enter))
       return false;
     return true;
   }

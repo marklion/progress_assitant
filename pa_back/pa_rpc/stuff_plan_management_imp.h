@@ -1770,6 +1770,7 @@ public:
                                 tmp.enter_location = register_info->enter_location;
                                 tmp.is_registered = true;
                                 tmp.register_order = register_info->order_number;
+                                tmp.can_enter = true;
                             }
                             _return.push_back(tmp);
                         }
@@ -1793,6 +1794,9 @@ public:
             std::string dest_company;
             tmp.tmd_no = itr.tmd_no;
             tmp.date = itr.date;
+            tmp.can_enter = itr.no_permission == 0?true:false;
+            tmp.attach_url = itr.attach_path;
+            tmp.count = itr.count;
             auto dest_company_p = itr.get_parent<pa_sql_company>("destination");
             if (dest_company_p)
             {

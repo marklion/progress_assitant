@@ -4536,6 +4536,18 @@ void today_driver_info::__set_tmd_no(const std::string& val) {
 void today_driver_info::__set_date(const std::string& val) {
   this->date = val;
 }
+
+void today_driver_info::__set_can_enter(const bool val) {
+  this->can_enter = val;
+}
+
+void today_driver_info::__set_attach_url(const std::string& val) {
+  this->attach_url = val;
+}
+
+void today_driver_info::__set_count(const double val) {
+  this->count = val;
+}
 std::ostream& operator<<(std::ostream& out, const today_driver_info& obj)
 {
   obj.printTo(out);
@@ -4712,6 +4724,30 @@ uint32_t today_driver_info::read(::apache::thrift::protocol::TProtocol* iprot) {
           xfer += iprot->skip(ftype);
         }
         break;
+      case 18:
+        if (ftype == ::apache::thrift::protocol::T_BOOL) {
+          xfer += iprot->readBool(this->can_enter);
+          this->__isset.can_enter = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 19:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->attach_url);
+          this->__isset.attach_url = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 20:
+        if (ftype == ::apache::thrift::protocol::T_DOUBLE) {
+          xfer += iprot->readDouble(this->count);
+          this->__isset.count = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
       default:
         xfer += iprot->skip(ftype);
         break;
@@ -4805,6 +4841,18 @@ uint32_t today_driver_info::write(::apache::thrift::protocol::TProtocol* oprot) 
   xfer += oprot->writeString(this->date);
   xfer += oprot->writeFieldEnd();
 
+  xfer += oprot->writeFieldBegin("can_enter", ::apache::thrift::protocol::T_BOOL, 18);
+  xfer += oprot->writeBool(this->can_enter);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("attach_url", ::apache::thrift::protocol::T_STRING, 19);
+  xfer += oprot->writeString(this->attach_url);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("count", ::apache::thrift::protocol::T_DOUBLE, 20);
+  xfer += oprot->writeDouble(this->count);
+  xfer += oprot->writeFieldEnd();
+
   xfer += oprot->writeFieldStop();
   xfer += oprot->writeStructEnd();
   return xfer;
@@ -4829,6 +4877,9 @@ void swap(today_driver_info &a, today_driver_info &b) {
   swap(a.need_tmd, b.need_tmd);
   swap(a.tmd_no, b.tmd_no);
   swap(a.date, b.date);
+  swap(a.can_enter, b.can_enter);
+  swap(a.attach_url, b.attach_url);
+  swap(a.count, b.count);
   swap(a.__isset, b.__isset);
 }
 
@@ -4850,6 +4901,9 @@ today_driver_info::today_driver_info(const today_driver_info& other62) {
   need_tmd = other62.need_tmd;
   tmd_no = other62.tmd_no;
   date = other62.date;
+  can_enter = other62.can_enter;
+  attach_url = other62.attach_url;
+  count = other62.count;
   __isset = other62.__isset;
 }
 today_driver_info& today_driver_info::operator=(const today_driver_info& other63) {
@@ -4870,6 +4924,9 @@ today_driver_info& today_driver_info::operator=(const today_driver_info& other63
   need_tmd = other63.need_tmd;
   tmd_no = other63.tmd_no;
   date = other63.date;
+  can_enter = other63.can_enter;
+  attach_url = other63.attach_url;
+  count = other63.count;
   __isset = other63.__isset;
   return *this;
 }
@@ -4893,6 +4950,9 @@ void today_driver_info::printTo(std::ostream& out) const {
   out << ", " << "need_tmd=" << to_string(need_tmd);
   out << ", " << "tmd_no=" << to_string(tmd_no);
   out << ", " << "date=" << to_string(date);
+  out << ", " << "can_enter=" << to_string(can_enter);
+  out << ", " << "attach_url=" << to_string(attach_url);
+  out << ", " << "count=" << to_string(count);
   out << ")";
 }
 
@@ -5768,6 +5828,10 @@ void vehicle_info_resp::__set_vehicleTeamId(const std::string& val) {
 void vehicle_info_resp::__set_tmd_no(const std::string& val) {
   this->tmd_no = val;
 }
+
+void vehicle_info_resp::__set_attachUrl(const std::string& val) {
+  this->attachUrl = val;
+}
 std::ostream& operator<<(std::ostream& out, const vehicle_info_resp& obj)
 {
   obj.printTo(out);
@@ -5984,6 +6048,14 @@ uint32_t vehicle_info_resp::read(::apache::thrift::protocol::TProtocol* iprot) {
           xfer += iprot->skip(ftype);
         }
         break;
+      case 23:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->attachUrl);
+          this->__isset.attachUrl = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
       default:
         xfer += iprot->skip(ftype);
         break;
@@ -6097,6 +6169,10 @@ uint32_t vehicle_info_resp::write(::apache::thrift::protocol::TProtocol* oprot) 
   xfer += oprot->writeString(this->tmd_no);
   xfer += oprot->writeFieldEnd();
 
+  xfer += oprot->writeFieldBegin("attachUrl", ::apache::thrift::protocol::T_STRING, 23);
+  xfer += oprot->writeString(this->attachUrl);
+  xfer += oprot->writeFieldEnd();
+
   xfer += oprot->writeFieldStop();
   xfer += oprot->writeStructEnd();
   return xfer;
@@ -6126,6 +6202,7 @@ void swap(vehicle_info_resp &a, vehicle_info_resp &b) {
   swap(a.vehicleTeamName, b.vehicleTeamName);
   swap(a.vehicleTeamId, b.vehicleTeamId);
   swap(a.tmd_no, b.tmd_no);
+  swap(a.attachUrl, b.attachUrl);
   swap(a.__isset, b.__isset);
 }
 
@@ -6152,6 +6229,7 @@ vehicle_info_resp::vehicle_info_resp(const vehicle_info_resp& other80) {
   vehicleTeamName = other80.vehicleTeamName;
   vehicleTeamId = other80.vehicleTeamId;
   tmd_no = other80.tmd_no;
+  attachUrl = other80.attachUrl;
   __isset = other80.__isset;
 }
 vehicle_info_resp& vehicle_info_resp::operator=(const vehicle_info_resp& other81) {
@@ -6177,6 +6255,7 @@ vehicle_info_resp& vehicle_info_resp::operator=(const vehicle_info_resp& other81
   vehicleTeamName = other81.vehicleTeamName;
   vehicleTeamId = other81.vehicleTeamId;
   tmd_no = other81.tmd_no;
+  attachUrl = other81.attachUrl;
   __isset = other81.__isset;
   return *this;
 }
@@ -6205,6 +6284,7 @@ void vehicle_info_resp::printTo(std::ostream& out) const {
   out << ", " << "vehicleTeamName=" << to_string(vehicleTeamName);
   out << ", " << "vehicleTeamId=" << to_string(vehicleTeamId);
   out << ", " << "tmd_no=" << to_string(tmd_no);
+  out << ", " << "attachUrl=" << to_string(attachUrl);
   out << ")";
 }
 
@@ -6900,6 +6980,10 @@ void vichele_stay_alone::__set_j_weight(const double val) {
 void vichele_stay_alone::__set_price(const double val) {
   this->price = val;
 }
+
+void vichele_stay_alone::__set_can_enter(const bool val) {
+  this->can_enter = val;
+}
 std::ostream& operator<<(std::ostream& out, const vichele_stay_alone& obj)
 {
   obj.printTo(out);
@@ -7112,6 +7196,14 @@ uint32_t vichele_stay_alone::read(::apache::thrift::protocol::TProtocol* iprot) 
           xfer += iprot->skip(ftype);
         }
         break;
+      case 24:
+        if (ftype == ::apache::thrift::protocol::T_BOOL) {
+          xfer += iprot->readBool(this->can_enter);
+          this->__isset.can_enter = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
       default:
         xfer += iprot->skip(ftype);
         break;
@@ -7221,6 +7313,10 @@ uint32_t vichele_stay_alone::write(::apache::thrift::protocol::TProtocol* oprot)
   xfer += oprot->writeDouble(this->price);
   xfer += oprot->writeFieldEnd();
 
+  xfer += oprot->writeFieldBegin("can_enter", ::apache::thrift::protocol::T_BOOL, 24);
+  xfer += oprot->writeBool(this->can_enter);
+  xfer += oprot->writeFieldEnd();
+
   xfer += oprot->writeFieldStop();
   xfer += oprot->writeStructEnd();
   return xfer;
@@ -7251,6 +7347,7 @@ void swap(vichele_stay_alone &a, vichele_stay_alone &b) {
   swap(a.m_weight, b.m_weight);
   swap(a.j_weight, b.j_weight);
   swap(a.price, b.price);
+  swap(a.can_enter, b.can_enter);
   swap(a.__isset, b.__isset);
 }
 
@@ -7278,6 +7375,7 @@ vichele_stay_alone::vichele_stay_alone(const vichele_stay_alone& other88) {
   m_weight = other88.m_weight;
   j_weight = other88.j_weight;
   price = other88.price;
+  can_enter = other88.can_enter;
   __isset = other88.__isset;
 }
 vichele_stay_alone& vichele_stay_alone::operator=(const vichele_stay_alone& other89) {
@@ -7304,6 +7402,7 @@ vichele_stay_alone& vichele_stay_alone::operator=(const vichele_stay_alone& othe
   m_weight = other89.m_weight;
   j_weight = other89.j_weight;
   price = other89.price;
+  can_enter = other89.can_enter;
   __isset = other89.__isset;
   return *this;
 }
@@ -7333,6 +7432,7 @@ void vichele_stay_alone::printTo(std::ostream& out) const {
   out << ", " << "m_weight=" << to_string(m_weight);
   out << ", " << "j_weight=" << to_string(j_weight);
   out << ", " << "price=" << to_string(price);
+  out << ", " << "can_enter=" << to_string(can_enter);
   out << ")";
 }
 

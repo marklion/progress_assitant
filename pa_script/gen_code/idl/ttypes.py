@@ -2654,11 +2654,14 @@ class today_driver_info(object):
      - need_tmd
      - tmd_no
      - date
+     - can_enter
+     - attach_url
+     - count
 
     """
 
 
-    def __init__(self, id=None, destination_company=None, destination_address=None, order_company=None, main_vichele=None, behind_vichele=None, stuff_name=None, register_timestamp=None, register_number=None, enter_location=None, is_registered=None, register_order=None, is_buy=None, company_for_select=None, need_tmd=None, tmd_no=None, date=None,):
+    def __init__(self, id=None, destination_company=None, destination_address=None, order_company=None, main_vichele=None, behind_vichele=None, stuff_name=None, register_timestamp=None, register_number=None, enter_location=None, is_registered=None, register_order=None, is_buy=None, company_for_select=None, need_tmd=None, tmd_no=None, date=None, can_enter=None, attach_url=None, count=None,):
         self.id = id
         self.destination_company = destination_company
         self.destination_address = destination_address
@@ -2676,6 +2679,9 @@ class today_driver_info(object):
         self.need_tmd = need_tmd
         self.tmd_no = tmd_no
         self.date = date
+        self.can_enter = can_enter
+        self.attach_url = attach_url
+        self.count = count
 
     def read(self, iprot):
         if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
@@ -2776,6 +2782,21 @@ class today_driver_info(object):
                     self.date = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
                 else:
                     iprot.skip(ftype)
+            elif fid == 18:
+                if ftype == TType.BOOL:
+                    self.can_enter = iprot.readBool()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 19:
+                if ftype == TType.STRING:
+                    self.attach_url = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 20:
+                if ftype == TType.DOUBLE:
+                    self.count = iprot.readDouble()
+                else:
+                    iprot.skip(ftype)
             else:
                 iprot.skip(ftype)
             iprot.readFieldEnd()
@@ -2856,6 +2877,18 @@ class today_driver_info(object):
         if self.date is not None:
             oprot.writeFieldBegin('date', TType.STRING, 17)
             oprot.writeString(self.date.encode('utf-8') if sys.version_info[0] == 2 else self.date)
+            oprot.writeFieldEnd()
+        if self.can_enter is not None:
+            oprot.writeFieldBegin('can_enter', TType.BOOL, 18)
+            oprot.writeBool(self.can_enter)
+            oprot.writeFieldEnd()
+        if self.attach_url is not None:
+            oprot.writeFieldBegin('attach_url', TType.STRING, 19)
+            oprot.writeString(self.attach_url.encode('utf-8') if sys.version_info[0] == 2 else self.attach_url)
+            oprot.writeFieldEnd()
+        if self.count is not None:
+            oprot.writeFieldBegin('count', TType.DOUBLE, 20)
+            oprot.writeDouble(self.count)
             oprot.writeFieldEnd()
         oprot.writeFieldStop()
         oprot.writeStructEnd()
@@ -3362,11 +3395,12 @@ class vehicle_info_resp(object):
      - vehicleTeamName
      - vehicleTeamId
      - tmd_no
+     - attachUrl
 
     """
 
 
-    def __init__(self, id=None, plateNo=None, backPlateNo=None, stuffName=None, stuffId=None, enterWeight=None, companyName=None, driverName=None, isSale=None, price=None, customerId=None, orderNo=None, multiStuff=None, isMulti=None, createTime=None, driverPhone=None, driverId=None, supplierName=None, supplierId=None, vehicleTeamName=None, vehicleTeamId=None, tmd_no=None,):
+    def __init__(self, id=None, plateNo=None, backPlateNo=None, stuffName=None, stuffId=None, enterWeight=None, companyName=None, driverName=None, isSale=None, price=None, customerId=None, orderNo=None, multiStuff=None, isMulti=None, createTime=None, driverPhone=None, driverId=None, supplierName=None, supplierId=None, vehicleTeamName=None, vehicleTeamId=None, tmd_no=None, attachUrl=None,):
         self.id = id
         self.plateNo = plateNo
         self.backPlateNo = backPlateNo
@@ -3389,6 +3423,7 @@ class vehicle_info_resp(object):
         self.vehicleTeamName = vehicleTeamName
         self.vehicleTeamId = vehicleTeamId
         self.tmd_no = tmd_no
+        self.attachUrl = attachUrl
 
     def read(self, iprot):
         if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
@@ -3515,6 +3550,11 @@ class vehicle_info_resp(object):
                     self.tmd_no = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
                 else:
                     iprot.skip(ftype)
+            elif fid == 23:
+                if ftype == TType.STRING:
+                    self.attachUrl = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
             else:
                 iprot.skip(ftype)
             iprot.readFieldEnd()
@@ -3615,6 +3655,10 @@ class vehicle_info_resp(object):
         if self.tmd_no is not None:
             oprot.writeFieldBegin('tmd_no', TType.STRING, 22)
             oprot.writeString(self.tmd_no.encode('utf-8') if sys.version_info[0] == 2 else self.tmd_no)
+            oprot.writeFieldEnd()
+        if self.attachUrl is not None:
+            oprot.writeFieldBegin('attachUrl', TType.STRING, 23)
+            oprot.writeString(self.attachUrl.encode('utf-8') if sys.version_info[0] == 2 else self.attachUrl)
             oprot.writeFieldEnd()
         oprot.writeFieldStop()
         oprot.writeStructEnd()
@@ -4007,11 +4051,12 @@ class vichele_stay_alone(object):
      - m_weight
      - j_weight
      - price
+     - can_enter
 
     """
 
 
-    def __init__(self, id=None, stuff_name=None, company_name=None, main_vichele_number=None, behind_vichele_number=None, count=None, comment=None, date=None, destination=None, status=None, creator_name=None, creator_phone=None, repeated=None, driver_name=None, driver_phone=None, driver_id=None, transfor_company=None, p_time=None, m_time=None, p_weight=None, m_weight=None, j_weight=None, price=None,):
+    def __init__(self, id=None, stuff_name=None, company_name=None, main_vichele_number=None, behind_vichele_number=None, count=None, comment=None, date=None, destination=None, status=None, creator_name=None, creator_phone=None, repeated=None, driver_name=None, driver_phone=None, driver_id=None, transfor_company=None, p_time=None, m_time=None, p_weight=None, m_weight=None, j_weight=None, price=None, can_enter=None,):
         self.id = id
         self.stuff_name = stuff_name
         self.company_name = company_name
@@ -4035,6 +4080,7 @@ class vichele_stay_alone(object):
         self.m_weight = m_weight
         self.j_weight = j_weight
         self.price = price
+        self.can_enter = can_enter
 
     def read(self, iprot):
         if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
@@ -4160,6 +4206,11 @@ class vichele_stay_alone(object):
                     self.price = iprot.readDouble()
                 else:
                     iprot.skip(ftype)
+            elif fid == 24:
+                if ftype == TType.BOOL:
+                    self.can_enter = iprot.readBool()
+                else:
+                    iprot.skip(ftype)
             else:
                 iprot.skip(ftype)
             iprot.readFieldEnd()
@@ -4261,6 +4312,10 @@ class vichele_stay_alone(object):
         if self.price is not None:
             oprot.writeFieldBegin('price', TType.DOUBLE, 23)
             oprot.writeDouble(self.price)
+            oprot.writeFieldEnd()
+        if self.can_enter is not None:
+            oprot.writeFieldBegin('can_enter', TType.BOOL, 24)
+            oprot.writeBool(self.can_enter)
             oprot.writeFieldEnd()
         oprot.writeFieldStop()
         oprot.writeStructEnd()
@@ -4876,6 +4931,9 @@ today_driver_info.thrift_spec = (
     (15, TType.BOOL, 'need_tmd', None, None, ),  # 15
     (16, TType.STRING, 'tmd_no', 'UTF8', None, ),  # 16
     (17, TType.STRING, 'date', 'UTF8', None, ),  # 17
+    (18, TType.BOOL, 'can_enter', None, None, ),  # 18
+    (19, TType.STRING, 'attach_url', 'UTF8', None, ),  # 19
+    (20, TType.DOUBLE, 'count', None, None, ),  # 20
 )
 all_structs.append(driver_detail_info)
 driver_detail_info.thrift_spec = (
@@ -4943,6 +5001,7 @@ vehicle_info_resp.thrift_spec = (
     (20, TType.STRING, 'vehicleTeamName', 'UTF8', None, ),  # 20
     (21, TType.STRING, 'vehicleTeamId', 'UTF8', None, ),  # 21
     (22, TType.STRING, 'tmd_no', 'UTF8', None, ),  # 22
+    (23, TType.STRING, 'attachUrl', 'UTF8', None, ),  # 23
 )
 all_structs.append(push_weight_req)
 push_weight_req.thrift_spec = (
@@ -5001,6 +5060,7 @@ vichele_stay_alone.thrift_spec = (
     (21, TType.DOUBLE, 'm_weight', None, None, ),  # 21
     (22, TType.DOUBLE, 'j_weight', None, None, ),  # 22
     (23, TType.DOUBLE, 'price', None, None, ),  # 23
+    (24, TType.BOOL, 'can_enter', None, None, ),  # 24
 )
 all_structs.append(silent_user_info)
 silent_user_info.thrift_spec = (

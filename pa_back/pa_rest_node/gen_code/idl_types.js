@@ -2925,6 +2925,9 @@ var today_driver_info = module.exports.today_driver_info = function(args) {
   this.need_tmd = null;
   this.tmd_no = null;
   this.date = null;
+  this.can_enter = null;
+  this.attach_url = null;
+  this.count = null;
   if (args) {
     if (args.id !== undefined && args.id !== null) {
       this.id = args.id;
@@ -2976,6 +2979,15 @@ var today_driver_info = module.exports.today_driver_info = function(args) {
     }
     if (args.date !== undefined && args.date !== null) {
       this.date = args.date;
+    }
+    if (args.can_enter !== undefined && args.can_enter !== null) {
+      this.can_enter = args.can_enter;
+    }
+    if (args.attach_url !== undefined && args.attach_url !== null) {
+      this.attach_url = args.attach_url;
+    }
+    if (args.count !== undefined && args.count !== null) {
+      this.count = args.count;
     }
   }
 };
@@ -3117,6 +3129,27 @@ today_driver_info.prototype.read = function(input) {
         input.skip(ftype);
       }
       break;
+      case 18:
+      if (ftype == Thrift.Type.BOOL) {
+        this.can_enter = input.readBool();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 19:
+      if (ftype == Thrift.Type.STRING) {
+        this.attach_url = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 20:
+      if (ftype == Thrift.Type.DOUBLE) {
+        this.count = input.readDouble();
+      } else {
+        input.skip(ftype);
+      }
+      break;
       default:
         input.skip(ftype);
     }
@@ -3218,6 +3251,21 @@ today_driver_info.prototype.write = function(output) {
   if (this.date !== null && this.date !== undefined) {
     output.writeFieldBegin('date', Thrift.Type.STRING, 17);
     output.writeString(this.date);
+    output.writeFieldEnd();
+  }
+  if (this.can_enter !== null && this.can_enter !== undefined) {
+    output.writeFieldBegin('can_enter', Thrift.Type.BOOL, 18);
+    output.writeBool(this.can_enter);
+    output.writeFieldEnd();
+  }
+  if (this.attach_url !== null && this.attach_url !== undefined) {
+    output.writeFieldBegin('attach_url', Thrift.Type.STRING, 19);
+    output.writeString(this.attach_url);
+    output.writeFieldEnd();
+  }
+  if (this.count !== null && this.count !== undefined) {
+    output.writeFieldBegin('count', Thrift.Type.DOUBLE, 20);
+    output.writeDouble(this.count);
     output.writeFieldEnd();
   }
   output.writeFieldStop();
@@ -3740,6 +3788,7 @@ var vehicle_info_resp = module.exports.vehicle_info_resp = function(args) {
   this.vehicleTeamName = null;
   this.vehicleTeamId = null;
   this.tmd_no = null;
+  this.attachUrl = null;
   if (args) {
     if (args.id !== undefined && args.id !== null) {
       this.id = args.id;
@@ -3806,6 +3855,9 @@ var vehicle_info_resp = module.exports.vehicle_info_resp = function(args) {
     }
     if (args.tmd_no !== undefined && args.tmd_no !== null) {
       this.tmd_no = args.tmd_no;
+    }
+    if (args.attachUrl !== undefined && args.attachUrl !== null) {
+      this.attachUrl = args.attachUrl;
     }
   }
 };
@@ -3983,6 +4035,13 @@ vehicle_info_resp.prototype.read = function(input) {
         input.skip(ftype);
       }
       break;
+      case 23:
+      if (ftype == Thrift.Type.STRING) {
+        this.attachUrl = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
       default:
         input.skip(ftype);
     }
@@ -4109,6 +4168,11 @@ vehicle_info_resp.prototype.write = function(output) {
   if (this.tmd_no !== null && this.tmd_no !== undefined) {
     output.writeFieldBegin('tmd_no', Thrift.Type.STRING, 22);
     output.writeString(this.tmd_no);
+    output.writeFieldEnd();
+  }
+  if (this.attachUrl !== null && this.attachUrl !== undefined) {
+    output.writeFieldBegin('attachUrl', Thrift.Type.STRING, 23);
+    output.writeString(this.attachUrl);
     output.writeFieldEnd();
   }
   output.writeFieldStop();
@@ -4537,6 +4601,7 @@ var vichele_stay_alone = module.exports.vichele_stay_alone = function(args) {
   this.m_weight = null;
   this.j_weight = null;
   this.price = null;
+  this.can_enter = null;
   if (args) {
     if (args.id !== undefined && args.id !== null) {
       this.id = args.id;
@@ -4606,6 +4671,9 @@ var vichele_stay_alone = module.exports.vichele_stay_alone = function(args) {
     }
     if (args.price !== undefined && args.price !== null) {
       this.price = args.price;
+    }
+    if (args.can_enter !== undefined && args.can_enter !== null) {
+      this.can_enter = args.can_enter;
     }
   }
 };
@@ -4781,6 +4849,13 @@ vichele_stay_alone.prototype.read = function(input) {
         input.skip(ftype);
       }
       break;
+      case 24:
+      if (ftype == Thrift.Type.BOOL) {
+        this.can_enter = input.readBool();
+      } else {
+        input.skip(ftype);
+      }
+      break;
       default:
         input.skip(ftype);
     }
@@ -4905,6 +4980,11 @@ vichele_stay_alone.prototype.write = function(output) {
   if (this.price !== null && this.price !== undefined) {
     output.writeFieldBegin('price', Thrift.Type.DOUBLE, 23);
     output.writeDouble(this.price);
+    output.writeFieldEnd();
+  }
+  if (this.can_enter !== null && this.can_enter !== undefined) {
+    output.writeFieldBegin('can_enter', Thrift.Type.BOOL, 24);
+    output.writeBool(this.can_enter);
     output.writeFieldEnd();
   }
   output.writeFieldStop();
