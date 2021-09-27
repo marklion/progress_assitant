@@ -146,13 +146,14 @@ void swap(gen_exp &a, gen_exp &b);
 std::ostream& operator<<(std::ostream& out, const gen_exp& obj);
 
 typedef struct _user_info__isset {
-  _user_info__isset() : user_id(false), name(false), logo(false), company(false), buyer(false), phone(false) {}
+  _user_info__isset() : user_id(false), name(false), logo(false), company(false), buyer(false), phone(false), groupid(false) {}
   bool user_id :1;
   bool name :1;
   bool logo :1;
   bool company :1;
   bool buyer :1;
   bool phone :1;
+  bool groupid :1;
 } _user_info__isset;
 
 class user_info : public virtual ::apache::thrift::TBase {
@@ -160,7 +161,7 @@ class user_info : public virtual ::apache::thrift::TBase {
 
   user_info(const user_info&);
   user_info& operator=(const user_info&);
-  user_info() : user_id(0), name(), logo(), company(), buyer(0), phone() {
+  user_info() : user_id(0), name(), logo(), company(), buyer(0), phone(), groupid(0) {
   }
 
   virtual ~user_info() noexcept;
@@ -170,6 +171,7 @@ class user_info : public virtual ::apache::thrift::TBase {
   std::string company;
   bool buyer;
   std::string phone;
+  int64_t groupid;
 
   _user_info__isset __isset;
 
@@ -185,6 +187,8 @@ class user_info : public virtual ::apache::thrift::TBase {
 
   void __set_phone(const std::string& val);
 
+  void __set_groupid(const int64_t val);
+
   bool operator == (const user_info & rhs) const
   {
     if (!(user_id == rhs.user_id))
@@ -198,6 +202,8 @@ class user_info : public virtual ::apache::thrift::TBase {
     if (!(buyer == rhs.buyer))
       return false;
     if (!(phone == rhs.phone))
+      return false;
+    if (!(groupid == rhs.groupid))
       return false;
     return true;
   }

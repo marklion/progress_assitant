@@ -144,6 +144,10 @@ void user_info::__set_buyer(const bool val) {
 void user_info::__set_phone(const std::string& val) {
   this->phone = val;
 }
+
+void user_info::__set_groupid(const int64_t val) {
+  this->groupid = val;
+}
 std::ostream& operator<<(std::ostream& out, const user_info& obj)
 {
   obj.printTo(out);
@@ -220,6 +224,14 @@ uint32_t user_info::read(::apache::thrift::protocol::TProtocol* iprot) {
           xfer += iprot->skip(ftype);
         }
         break;
+      case 7:
+        if (ftype == ::apache::thrift::protocol::T_I64) {
+          xfer += iprot->readI64(this->groupid);
+          this->__isset.groupid = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
       default:
         xfer += iprot->skip(ftype);
         break;
@@ -261,6 +273,10 @@ uint32_t user_info::write(::apache::thrift::protocol::TProtocol* oprot) const {
   xfer += oprot->writeString(this->phone);
   xfer += oprot->writeFieldEnd();
 
+  xfer += oprot->writeFieldBegin("groupid", ::apache::thrift::protocol::T_I64, 7);
+  xfer += oprot->writeI64(this->groupid);
+  xfer += oprot->writeFieldEnd();
+
   xfer += oprot->writeFieldStop();
   xfer += oprot->writeStructEnd();
   return xfer;
@@ -274,6 +290,7 @@ void swap(user_info &a, user_info &b) {
   swap(a.company, b.company);
   swap(a.buyer, b.buyer);
   swap(a.phone, b.phone);
+  swap(a.groupid, b.groupid);
   swap(a.__isset, b.__isset);
 }
 
@@ -284,6 +301,7 @@ user_info::user_info(const user_info& other2) {
   company = other2.company;
   buyer = other2.buyer;
   phone = other2.phone;
+  groupid = other2.groupid;
   __isset = other2.__isset;
 }
 user_info& user_info::operator=(const user_info& other3) {
@@ -293,6 +311,7 @@ user_info& user_info::operator=(const user_info& other3) {
   company = other3.company;
   buyer = other3.buyer;
   phone = other3.phone;
+  groupid = other3.groupid;
   __isset = other3.__isset;
   return *this;
 }
@@ -305,6 +324,7 @@ void user_info::printTo(std::ostream& out) const {
   out << ", " << "company=" << to_string(company);
   out << ", " << "buyer=" << to_string(buyer);
   out << ", " << "phone=" << to_string(phone);
+  out << ", " << "groupid=" << to_string(groupid);
   out << ")";
 }
 

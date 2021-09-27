@@ -1017,7 +1017,7 @@ public:
         {
             has_balance = contract->balance;
         }
-        if (sale_company->third_url.length() > 0)
+        if (sale_company->third_url.length() > 0 && false)
         {
             if (requie_cash > has_balance)
             {

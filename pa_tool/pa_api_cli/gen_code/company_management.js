@@ -4677,6 +4677,153 @@ company_management_get_related_company_result.prototype.write = function(output)
   return;
 };
 
+var company_management_set_user_group_args = function(args) {
+  this.ssid = null;
+  this.user_id = null;
+  this.groupid = null;
+  if (args) {
+    if (args.ssid !== undefined && args.ssid !== null) {
+      this.ssid = args.ssid;
+    }
+    if (args.user_id !== undefined && args.user_id !== null) {
+      this.user_id = args.user_id;
+    }
+    if (args.groupid !== undefined && args.groupid !== null) {
+      this.groupid = args.groupid;
+    }
+  }
+};
+company_management_set_user_group_args.prototype = {};
+company_management_set_user_group_args.prototype.read = function(input) {
+  input.readStructBegin();
+  while (true) {
+    var ret = input.readFieldBegin();
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    switch (fid) {
+      case 1:
+      if (ftype == Thrift.Type.STRING) {
+        this.ssid = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 2:
+      if (ftype == Thrift.Type.I64) {
+        this.user_id = input.readI64();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 3:
+      if (ftype == Thrift.Type.I64) {
+        this.groupid = input.readI64();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      default:
+        input.skip(ftype);
+    }
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+company_management_set_user_group_args.prototype.write = function(output) {
+  output.writeStructBegin('company_management_set_user_group_args');
+  if (this.ssid !== null && this.ssid !== undefined) {
+    output.writeFieldBegin('ssid', Thrift.Type.STRING, 1);
+    output.writeString(this.ssid);
+    output.writeFieldEnd();
+  }
+  if (this.user_id !== null && this.user_id !== undefined) {
+    output.writeFieldBegin('user_id', Thrift.Type.I64, 2);
+    output.writeI64(this.user_id);
+    output.writeFieldEnd();
+  }
+  if (this.groupid !== null && this.groupid !== undefined) {
+    output.writeFieldBegin('groupid', Thrift.Type.I64, 3);
+    output.writeI64(this.groupid);
+    output.writeFieldEnd();
+  }
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+
+var company_management_set_user_group_result = function(args) {
+  this.success = null;
+  this.e = null;
+  if (args instanceof ttypes.gen_exp) {
+    this.e = args;
+    return;
+  }
+  if (args) {
+    if (args.success !== undefined && args.success !== null) {
+      this.success = args.success;
+    }
+    if (args.e !== undefined && args.e !== null) {
+      this.e = args.e;
+    }
+  }
+};
+company_management_set_user_group_result.prototype = {};
+company_management_set_user_group_result.prototype.read = function(input) {
+  input.readStructBegin();
+  while (true) {
+    var ret = input.readFieldBegin();
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    switch (fid) {
+      case 0:
+      if (ftype == Thrift.Type.BOOL) {
+        this.success = input.readBool();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 1:
+      if (ftype == Thrift.Type.STRUCT) {
+        this.e = new ttypes.gen_exp();
+        this.e.read(input);
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      default:
+        input.skip(ftype);
+    }
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+company_management_set_user_group_result.prototype.write = function(output) {
+  output.writeStructBegin('company_management_set_user_group_result');
+  if (this.success !== null && this.success !== undefined) {
+    output.writeFieldBegin('success', Thrift.Type.BOOL, 0);
+    output.writeBool(this.success);
+    output.writeFieldEnd();
+  }
+  if (this.e !== null && this.e !== undefined) {
+    output.writeFieldBegin('e', Thrift.Type.STRUCT, 1);
+    this.e.write(output);
+    output.writeFieldEnd();
+  }
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+
 var company_managementClient = exports.Client = function(output, pClass) {
   this.output = output;
   this.pClass = pClass;
@@ -6930,6 +7077,70 @@ company_managementClient.prototype.recv_get_related_company = function(input,mty
   }
   return callback('get_related_company failed: unknown result');
 };
+
+company_managementClient.prototype.set_user_group = function(ssid, user_id, groupid, callback) {
+  this._seqid = this.new_seqid();
+  if (callback === undefined) {
+    var _defer = Q.defer();
+    this._reqs[this.seqid()] = function(error, result) {
+      if (error) {
+        _defer.reject(error);
+      } else {
+        _defer.resolve(result);
+      }
+    };
+    this.send_set_user_group(ssid, user_id, groupid);
+    return _defer.promise;
+  } else {
+    this._reqs[this.seqid()] = callback;
+    this.send_set_user_group(ssid, user_id, groupid);
+  }
+};
+
+company_managementClient.prototype.send_set_user_group = function(ssid, user_id, groupid) {
+  var output = new this.pClass(this.output);
+  var params = {
+    ssid: ssid,
+    user_id: user_id,
+    groupid: groupid
+  };
+  var args = new company_management_set_user_group_args(params);
+  try {
+    output.writeMessageBegin('set_user_group', Thrift.MessageType.CALL, this.seqid());
+    args.write(output);
+    output.writeMessageEnd();
+    return this.output.flush();
+  }
+  catch (e) {
+    delete this._reqs[this.seqid()];
+    if (typeof output.reset === 'function') {
+      output.reset();
+    }
+    throw e;
+  }
+};
+
+company_managementClient.prototype.recv_set_user_group = function(input,mtype,rseqid) {
+  var callback = this._reqs[rseqid] || function() {};
+  delete this._reqs[rseqid];
+  if (mtype == Thrift.MessageType.EXCEPTION) {
+    var x = new Thrift.TApplicationException();
+    x.read(input);
+    input.readMessageEnd();
+    return callback(x);
+  }
+  var result = new company_management_set_user_group_result();
+  result.read(input);
+  input.readMessageEnd();
+
+  if (null !== result.e) {
+    return callback(result.e);
+  }
+  if (null !== result.success) {
+    return callback(null, result.success);
+  }
+  return callback('set_user_group failed: unknown result');
+};
 var company_managementProcessor = exports.Processor = function(handler) {
   this._handler = handler;
 };
@@ -8476,6 +8687,50 @@ company_managementProcessor.prototype.process_get_related_company = function(seq
       } else {
         result_obj = new Thrift.TApplicationException(Thrift.TApplicationExceptionType.UNKNOWN, err.message);
         output.writeMessageBegin("get_related_company", Thrift.MessageType.EXCEPTION, seqid);
+      }
+      result_obj.write(output);
+      output.writeMessageEnd();
+      output.flush();
+    });
+  }
+};
+company_managementProcessor.prototype.process_set_user_group = function(seqid, input, output) {
+  var args = new company_management_set_user_group_args();
+  args.read(input);
+  input.readMessageEnd();
+  if (this._handler.set_user_group.length === 3) {
+    Q.fcall(this._handler.set_user_group.bind(this._handler),
+      args.ssid,
+      args.user_id,
+      args.groupid
+    ).then(function(result) {
+      var result_obj = new company_management_set_user_group_result({success: result});
+      output.writeMessageBegin("set_user_group", Thrift.MessageType.REPLY, seqid);
+      result_obj.write(output);
+      output.writeMessageEnd();
+      output.flush();
+    }).catch(function (err) {
+      var result;
+      if (err instanceof ttypes.gen_exp) {
+        result = new company_management_set_user_group_result(err);
+        output.writeMessageBegin("set_user_group", Thrift.MessageType.REPLY, seqid);
+      } else {
+        result = new Thrift.TApplicationException(Thrift.TApplicationExceptionType.UNKNOWN, err.message);
+        output.writeMessageBegin("set_user_group", Thrift.MessageType.EXCEPTION, seqid);
+      }
+      result.write(output);
+      output.writeMessageEnd();
+      output.flush();
+    });
+  } else {
+    this._handler.set_user_group(args.ssid, args.user_id, args.groupid, function (err, result) {
+      var result_obj;
+      if ((err === null || typeof err === 'undefined') || err instanceof ttypes.gen_exp) {
+        result_obj = new company_management_set_user_group_result((err !== null || typeof err === 'undefined') ? err : {success: result});
+        output.writeMessageBegin("set_user_group", Thrift.MessageType.REPLY, seqid);
+      } else {
+        result_obj = new Thrift.TApplicationException(Thrift.TApplicationExceptionType.UNKNOWN, err.message);
+        output.writeMessageBegin("set_user_group", Thrift.MessageType.EXCEPTION, seqid);
       }
       result_obj.write(output);
       output.writeMessageEnd();

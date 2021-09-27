@@ -72,6 +72,7 @@ var user_info = module.exports.user_info = function(args) {
   this.company = null;
   this.buyer = null;
   this.phone = null;
+  this.groupid = null;
   if (args) {
     if (args.user_id !== undefined && args.user_id !== null) {
       this.user_id = args.user_id;
@@ -90,6 +91,9 @@ var user_info = module.exports.user_info = function(args) {
     }
     if (args.phone !== undefined && args.phone !== null) {
       this.phone = args.phone;
+    }
+    if (args.groupid !== undefined && args.groupid !== null) {
+      this.groupid = args.groupid;
     }
   }
 };
@@ -146,6 +150,13 @@ user_info.prototype.read = function(input) {
         input.skip(ftype);
       }
       break;
+      case 7:
+      if (ftype == Thrift.Type.I64) {
+        this.groupid = input.readI64();
+      } else {
+        input.skip(ftype);
+      }
+      break;
       default:
         input.skip(ftype);
     }
@@ -185,6 +196,11 @@ user_info.prototype.write = function(output) {
   if (this.phone !== null && this.phone !== undefined) {
     output.writeFieldBegin('phone', Thrift.Type.STRING, 6);
     output.writeString(this.phone);
+    output.writeFieldEnd();
+  }
+  if (this.groupid !== null && this.groupid !== undefined) {
+    output.writeFieldBegin('groupid', Thrift.Type.I64, 7);
+    output.writeI64(this.groupid);
     output.writeFieldEnd();
   }
   output.writeFieldStop();

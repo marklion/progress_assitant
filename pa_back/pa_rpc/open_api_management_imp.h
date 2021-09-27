@@ -509,7 +509,7 @@ public:
             auto dest_company = real_vichele_stay_alone->get_parent<pa_sql_company>("destination");
             if (dest_company)
             {
-                auto company_staff = dest_company->get_all_children<pa_sql_userinfo>("belong_company");
+                auto company_staff = dest_company->get_all_children<pa_sql_userinfo>("belong_company", "(groupid == 0 OR groupid == 2)");
                 for (auto &itr : company_staff)
                 {
                     PA_WECHAT_send_extra_vichele_msg(*real_vichele_stay_alone, itr.openid, "称重完成\n皮重:" + std::to_string(_req.pWeight) + "\n毛重:" + std::to_string(_req.mWeight) + "\n净重:" + std::to_string(_req.jWeight));

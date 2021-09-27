@@ -27,7 +27,18 @@
         <van-tab title="所有员工">
             <van-cell v-for="(single_user, index) in all_user" :key="index" :label="'手机号' + single_user.phone" :title="single_user.name">
                 <template #right-icon>
-                    <van-button type="danger" plain size="small" @click="remove_user(single_user)">移除用户</van-button>
+                    <van-row :gutter="10" type="flex" align="center">
+                        <van-col>
+                            <van-popover v-model="showPopover[index]" trigger="click" :actions="actions" @select="onSelect" @open="focus_user = single_user.user_id" @close="focus_user = 0">
+                                <template #reference>
+                                    <van-button type="primary" plain size="small">{{group_name(single_user.groupid)}}</van-button>
+                                </template>
+                            </van-popover>
+                        </van-col>
+                        <van-col>
+                            <van-button type="danger" plain size="small" @click="remove_user(single_user)">移除用户</van-button>
+                        </van-col>
+                    </van-row>
                 </template>
             </van-cell>
         </van-tab>
@@ -78,7 +89,11 @@ import {
 import {
     DatetimePicker
 } from 'vant';
+import {
+    Popover
+} from 'vant';
 
+Vue.use(Popover);
 Vue.use(DatetimePicker);
 Vue.use(Popup);
 Vue.use(Field);
@@ -101,9 +116,44 @@ export default {
             show_start_Picker: false,
             work_end_time: 0,
             show_end_Picker: false,
+            showPopover: [],
+            group_name(_id) {
+                var ret = "未分组";
+                switch (_id) {
+                    case 1:
+                        ret = "销售";
+                        break;
+                    case 2:
+                        ret = "采购";
+                        break;
+                    default:
+                        break;
+                }
+
+                return ret;
+            },
+            actions: [{
+                text: '未分组',
+                groupid: 0
+            }, {
+                text: '销售',
+                groupid: 1
+            }, {
+                text: '采购',
+                groupid: 2
+            }],
+            focus_user: 0,
         };
     },
     methods: {
+        onSelect: function (_item) {
+            var vue_this = this;
+            vue_this.$call_remote_process("company_management", "set_user_group", [vue_this.$cookies.get('pa_ssid'), vue_this.focus_user, _item.groupid]).then(function (resp) {
+                if (resp) {
+                    vue_this.init_all_user();
+                }
+            });
+        },
         on_start_Confirm: function (_time) {
             var start_time = parseInt(_time.split(":")[0]) * 60 + parseInt(_time.split(":")[1]);
             var end_time = parseInt(this.work_end_time.split(":")[0]) * 60 + parseInt(this.work_end_time.split(":")[1]);
@@ -158,9 +208,11 @@ export default {
         init_all_user: function () {
             var vue_this = this;
             vue_this.all_user = [];
+            vue_this.showPopover = [];
             vue_this.$call_remote_process("company_management", "get_all_compay_user", [vue_this.$cookies.get('pa_ssid')]).then(function (resp) {
                 resp.forEach((element, index) => {
                     vue_this.$set(vue_this.all_user, index, element);
+                    vue_this.$set(vue_this.showPopover, index, false);
                 });
             });
         },

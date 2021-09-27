@@ -98,17 +98,19 @@ class user_info(object):
      - company
      - buyer
      - phone
+     - groupid
 
     """
 
 
-    def __init__(self, user_id=None, name=None, logo=None, company=None, buyer=None, phone=None,):
+    def __init__(self, user_id=None, name=None, logo=None, company=None, buyer=None, phone=None, groupid=None,):
         self.user_id = user_id
         self.name = name
         self.logo = logo
         self.company = company
         self.buyer = buyer
         self.phone = phone
+        self.groupid = groupid
 
     def read(self, iprot):
         if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
@@ -149,6 +151,11 @@ class user_info(object):
                     self.phone = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
                 else:
                     iprot.skip(ftype)
+            elif fid == 7:
+                if ftype == TType.I64:
+                    self.groupid = iprot.readI64()
+                else:
+                    iprot.skip(ftype)
             else:
                 iprot.skip(ftype)
             iprot.readFieldEnd()
@@ -182,6 +189,10 @@ class user_info(object):
         if self.phone is not None:
             oprot.writeFieldBegin('phone', TType.STRING, 6)
             oprot.writeString(self.phone.encode('utf-8') if sys.version_info[0] == 2 else self.phone)
+            oprot.writeFieldEnd()
+        if self.groupid is not None:
+            oprot.writeFieldBegin('groupid', TType.I64, 7)
+            oprot.writeI64(self.groupid)
             oprot.writeFieldEnd()
         oprot.writeFieldStop()
         oprot.writeStructEnd()
@@ -4628,6 +4639,7 @@ user_info.thrift_spec = (
     (4, TType.STRING, 'company', 'UTF8', None, ),  # 4
     (5, TType.BOOL, 'buyer', None, None, ),  # 5
     (6, TType.STRING, 'phone', 'UTF8', None, ),  # 6
+    (7, TType.I64, 'groupid', None, None, ),  # 7
 )
 all_structs.append(driver_info)
 driver_info.thrift_spec = (
