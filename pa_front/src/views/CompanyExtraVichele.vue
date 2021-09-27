@@ -300,7 +300,7 @@ export default {
         },
         is_all_select: function () {
             var ret = false;
-            if (this.select_pool.length == this.items_need_show.length) {
+            if (this.select_pool.length == this.items_need_show.length && !this.finished) {
                 ret = true;
             }
 
