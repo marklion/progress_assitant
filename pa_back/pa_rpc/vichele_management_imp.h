@@ -84,6 +84,18 @@ public:
                 {
                     PA_WECHAT_send_extra_vichele_msg(tmp, itr.openid, opt_user->name + "创建了进厂申请");
                 }
+                if (dest_company->get_children<pa_sql_except_stuff>("belong_company", "name == '%s'", tmp.stuff_name.c_str()))
+                {
+                    auto company_create_user = dest_company->get_children<pa_sql_userinfo>("belong_company", "openid == '%s'", open_id.c_str());
+                    if (company_create_user)
+                    {
+                        std::vector<vichele_stay_alone> auto_confirm;
+                        vichele_stay_alone single_auto(itr);
+                        single_auto.id = tmp.get_pri_id();
+                        auto_confirm.push_back(single_auto);
+                        auto_confirm_vichele(*company_create_user, auto_confirm);
+                    }
+                }
             }
         }
 
@@ -363,11 +375,50 @@ public:
             tmp.m_weight = itr.m_weight;
             tmp.j_weight = itr.j_weight;
             tmp.price = itr.price;
-            tmp.can_enter = itr.no_permission==0?true:false;
+            tmp.can_enter = itr.no_permission == 0 ? true : false;
             _return.push_back(tmp);
         }
     }
+    virtual bool auto_confirm_vichele(pa_sql_userinfo &user, const std::vector<vichele_stay_alone> &info)
+    {
+        auto company = user.get_parent<pa_sql_company>("belong_company");
+        if (!company)
+        {
+            PA_RETURN_NOCOMPANY_MSG();
+        }
 
+        std::string query_cmd = "PRI_ID == 0";
+        double price = 0;
+        std::string company_name;
+        for (auto &itr : info)
+        {
+            query_cmd += " OR PRI_ID == " + std::to_string(itr.id);
+            price = itr.price;
+            company_name = itr.company_name;
+        }
+
+        std::list<pa_sql_vichele_stay_alone> tmp;
+        auto extra_vichele = company->get_all_children<pa_sql_vichele_stay_alone>("destination", "(%s) AND status == 0 AND is_drop == 0", query_cmd.c_str());
+        for (auto &itr : extra_vichele)
+        {
+            itr.status = 1;
+            itr.price = price;
+            itr.company_name = company_name;
+            itr.no_permission = 0;
+            if (itr.update_record())
+            {
+                auto silent_user = itr.get_parent<pa_sql_silent_user>("created_by");
+                if (silent_user)
+                {
+                    PA_WECHAT_send_extra_vichele_msg(itr, silent_user->open_id, user.name + "确认了进厂申请");
+                }
+                tmp.push_back(itr);
+            }
+        }
+        PA_DATAOPT_post_save_register(tmp);
+
+        return true;
+    }
     virtual bool confirm_vichele(const std::string &ssid, const std::vector<vichele_stay_alone> &info, const std::vector<std::string> &company_for_select, const bool all_select)
     {
         auto user = PA_DATAOPT_get_online_user(ssid);
@@ -410,7 +461,7 @@ public:
             itr.company_name = company_name;
             itr.no_permission = 0;
             auto created_user = itr.get_parent<pa_sql_silent_user>("created_by");
-            if (created_user)
+            if (created_user && !company->get_children<pa_sql_except_stuff>("belong_company", "name == '%s'", itr.stuff_name.c_str()))
             {
                 if (company->get_children<pa_sql_userinfo>("belong_company", "openid == '%s'", created_user->open_id.c_str()))
                 {
@@ -1019,6 +1070,57 @@ public:
             ret = vichele_info->update_record();
         }
         return ret;
+    }
+
+    virtual bool add_exception(const std::string &ssid, const std::string &stuff_name)
+    {
+        bool ret = false;
+        auto company = PA_DATAOPT_get_company_by_ssid(ssid);
+        if (!company)
+        {
+            PA_RETURN_NOPRIVA_MSG();
+        }
+
+        if (!company->get_children<pa_sql_except_stuff>("belong_company", "name == '%s'", stuff_name.c_str()))
+        {
+            pa_sql_except_stuff tmp;
+            tmp.set_parent(*company, "belong_company");
+            tmp.name = stuff_name;
+            ret = tmp.insert_record();
+        }
+
+        return ret;
+    }
+    virtual bool del_exception(const std::string &ssid, const std::string &stuff_name)
+    {
+        bool ret = false;
+        auto company = PA_DATAOPT_get_company_by_ssid(ssid);
+        if (!company)
+        {
+            PA_RETURN_NOPRIVA_MSG();
+        }
+
+        auto exist_record = company->get_children<pa_sql_except_stuff>("belong_company", "name == '%s'", stuff_name.c_str());
+        if (exist_record)
+        {
+            exist_record->remove_record();
+            ret = true;
+        }
+        return ret;
+    }
+
+    virtual void get_all_exceptions(std::vector<std::string> &_return, const std::string &ssid)
+    {
+        auto company = PA_DATAOPT_get_company_by_ssid(ssid);
+        if (!company)
+        {
+            PA_RETURN_NOPRIVA_MSG();
+        }
+        auto all_except = company->get_all_children<pa_sql_except_stuff>("belong_company");
+        for (auto &itr : all_except)
+        {
+            _return.push_back(itr.name);
+        }
     }
 };
 

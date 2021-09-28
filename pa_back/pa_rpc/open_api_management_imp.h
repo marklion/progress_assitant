@@ -486,9 +486,16 @@ public:
             {
                 pa_sql_vichele_stay_alone new_one(*real_vichele_stay_alone);
                 new_one.tmd_no = "";
-                new_one.no_permission == 1;
+                if (company->get_children<pa_sql_except_stuff>("belong_company", "name == '%s'", new_one.stuff_name.c_str()))
+                {
+                    new_one.no_permission = 0;
+                }
+                else
+                {
+                    new_one.no_permission = 1;
+                }
                 new_one.attach_path = "";
-                new_one.date = PA_DATAOPT_current_time().substr(0,10);
+                new_one.date = PA_DATAOPT_current_time().substr(0, 10);
                 new_one.insert_record();
                 if (new_one.company_for_select.length() > 0)
                 {

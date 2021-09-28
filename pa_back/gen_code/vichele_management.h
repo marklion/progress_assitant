@@ -51,6 +51,9 @@ class vichele_managementIf {
   virtual bool fill_tmd(const std::string& open_id, const int64_t vichele_id, const std::string& tmd_no) = 0;
   virtual bool fill_enter_weight(const std::string& open_id, const int64_t vichele_id, const double enter_weight) = 0;
   virtual bool fill_weight_attach(const std::string& open_id, const int64_t vichele_id, const std::string& weight_attach) = 0;
+  virtual bool add_exception(const std::string& ssid, const std::string& stuff_name) = 0;
+  virtual bool del_exception(const std::string& ssid, const std::string& stuff_name) = 0;
+  virtual void get_all_exceptions(std::vector<std::string> & _return, const std::string& ssid) = 0;
 };
 
 class vichele_managementIfFactory {
@@ -184,6 +187,17 @@ class vichele_managementNull : virtual public vichele_managementIf {
   bool fill_weight_attach(const std::string& /* open_id */, const int64_t /* vichele_id */, const std::string& /* weight_attach */) {
     bool _return = false;
     return _return;
+  }
+  bool add_exception(const std::string& /* ssid */, const std::string& /* stuff_name */) {
+    bool _return = false;
+    return _return;
+  }
+  bool del_exception(const std::string& /* ssid */, const std::string& /* stuff_name */) {
+    bool _return = false;
+    return _return;
+  }
+  void get_all_exceptions(std::vector<std::string> & /* _return */, const std::string& /* ssid */) {
+    return;
   }
 };
 
@@ -3644,6 +3658,356 @@ class vichele_management_fill_weight_attach_presult {
 
 };
 
+typedef struct _vichele_management_add_exception_args__isset {
+  _vichele_management_add_exception_args__isset() : ssid(false), stuff_name(false) {}
+  bool ssid :1;
+  bool stuff_name :1;
+} _vichele_management_add_exception_args__isset;
+
+class vichele_management_add_exception_args {
+ public:
+
+  vichele_management_add_exception_args(const vichele_management_add_exception_args&);
+  vichele_management_add_exception_args& operator=(const vichele_management_add_exception_args&);
+  vichele_management_add_exception_args() : ssid(), stuff_name() {
+  }
+
+  virtual ~vichele_management_add_exception_args() noexcept;
+  std::string ssid;
+  std::string stuff_name;
+
+  _vichele_management_add_exception_args__isset __isset;
+
+  void __set_ssid(const std::string& val);
+
+  void __set_stuff_name(const std::string& val);
+
+  bool operator == (const vichele_management_add_exception_args & rhs) const
+  {
+    if (!(ssid == rhs.ssid))
+      return false;
+    if (!(stuff_name == rhs.stuff_name))
+      return false;
+    return true;
+  }
+  bool operator != (const vichele_management_add_exception_args &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const vichele_management_add_exception_args & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+
+class vichele_management_add_exception_pargs {
+ public:
+
+
+  virtual ~vichele_management_add_exception_pargs() noexcept;
+  const std::string* ssid;
+  const std::string* stuff_name;
+
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _vichele_management_add_exception_result__isset {
+  _vichele_management_add_exception_result__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _vichele_management_add_exception_result__isset;
+
+class vichele_management_add_exception_result {
+ public:
+
+  vichele_management_add_exception_result(const vichele_management_add_exception_result&);
+  vichele_management_add_exception_result& operator=(const vichele_management_add_exception_result&);
+  vichele_management_add_exception_result() : success(0) {
+  }
+
+  virtual ~vichele_management_add_exception_result() noexcept;
+  bool success;
+  gen_exp e;
+
+  _vichele_management_add_exception_result__isset __isset;
+
+  void __set_success(const bool val);
+
+  void __set_e(const gen_exp& val);
+
+  bool operator == (const vichele_management_add_exception_result & rhs) const
+  {
+    if (!(success == rhs.success))
+      return false;
+    if (!(e == rhs.e))
+      return false;
+    return true;
+  }
+  bool operator != (const vichele_management_add_exception_result &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const vichele_management_add_exception_result & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _vichele_management_add_exception_presult__isset {
+  _vichele_management_add_exception_presult__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _vichele_management_add_exception_presult__isset;
+
+class vichele_management_add_exception_presult {
+ public:
+
+
+  virtual ~vichele_management_add_exception_presult() noexcept;
+  bool* success;
+  gen_exp e;
+
+  _vichele_management_add_exception_presult__isset __isset;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+
+};
+
+typedef struct _vichele_management_del_exception_args__isset {
+  _vichele_management_del_exception_args__isset() : ssid(false), stuff_name(false) {}
+  bool ssid :1;
+  bool stuff_name :1;
+} _vichele_management_del_exception_args__isset;
+
+class vichele_management_del_exception_args {
+ public:
+
+  vichele_management_del_exception_args(const vichele_management_del_exception_args&);
+  vichele_management_del_exception_args& operator=(const vichele_management_del_exception_args&);
+  vichele_management_del_exception_args() : ssid(), stuff_name() {
+  }
+
+  virtual ~vichele_management_del_exception_args() noexcept;
+  std::string ssid;
+  std::string stuff_name;
+
+  _vichele_management_del_exception_args__isset __isset;
+
+  void __set_ssid(const std::string& val);
+
+  void __set_stuff_name(const std::string& val);
+
+  bool operator == (const vichele_management_del_exception_args & rhs) const
+  {
+    if (!(ssid == rhs.ssid))
+      return false;
+    if (!(stuff_name == rhs.stuff_name))
+      return false;
+    return true;
+  }
+  bool operator != (const vichele_management_del_exception_args &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const vichele_management_del_exception_args & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+
+class vichele_management_del_exception_pargs {
+ public:
+
+
+  virtual ~vichele_management_del_exception_pargs() noexcept;
+  const std::string* ssid;
+  const std::string* stuff_name;
+
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _vichele_management_del_exception_result__isset {
+  _vichele_management_del_exception_result__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _vichele_management_del_exception_result__isset;
+
+class vichele_management_del_exception_result {
+ public:
+
+  vichele_management_del_exception_result(const vichele_management_del_exception_result&);
+  vichele_management_del_exception_result& operator=(const vichele_management_del_exception_result&);
+  vichele_management_del_exception_result() : success(0) {
+  }
+
+  virtual ~vichele_management_del_exception_result() noexcept;
+  bool success;
+  gen_exp e;
+
+  _vichele_management_del_exception_result__isset __isset;
+
+  void __set_success(const bool val);
+
+  void __set_e(const gen_exp& val);
+
+  bool operator == (const vichele_management_del_exception_result & rhs) const
+  {
+    if (!(success == rhs.success))
+      return false;
+    if (!(e == rhs.e))
+      return false;
+    return true;
+  }
+  bool operator != (const vichele_management_del_exception_result &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const vichele_management_del_exception_result & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _vichele_management_del_exception_presult__isset {
+  _vichele_management_del_exception_presult__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _vichele_management_del_exception_presult__isset;
+
+class vichele_management_del_exception_presult {
+ public:
+
+
+  virtual ~vichele_management_del_exception_presult() noexcept;
+  bool* success;
+  gen_exp e;
+
+  _vichele_management_del_exception_presult__isset __isset;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+
+};
+
+typedef struct _vichele_management_get_all_exceptions_args__isset {
+  _vichele_management_get_all_exceptions_args__isset() : ssid(false) {}
+  bool ssid :1;
+} _vichele_management_get_all_exceptions_args__isset;
+
+class vichele_management_get_all_exceptions_args {
+ public:
+
+  vichele_management_get_all_exceptions_args(const vichele_management_get_all_exceptions_args&);
+  vichele_management_get_all_exceptions_args& operator=(const vichele_management_get_all_exceptions_args&);
+  vichele_management_get_all_exceptions_args() : ssid() {
+  }
+
+  virtual ~vichele_management_get_all_exceptions_args() noexcept;
+  std::string ssid;
+
+  _vichele_management_get_all_exceptions_args__isset __isset;
+
+  void __set_ssid(const std::string& val);
+
+  bool operator == (const vichele_management_get_all_exceptions_args & rhs) const
+  {
+    if (!(ssid == rhs.ssid))
+      return false;
+    return true;
+  }
+  bool operator != (const vichele_management_get_all_exceptions_args &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const vichele_management_get_all_exceptions_args & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+
+class vichele_management_get_all_exceptions_pargs {
+ public:
+
+
+  virtual ~vichele_management_get_all_exceptions_pargs() noexcept;
+  const std::string* ssid;
+
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _vichele_management_get_all_exceptions_result__isset {
+  _vichele_management_get_all_exceptions_result__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _vichele_management_get_all_exceptions_result__isset;
+
+class vichele_management_get_all_exceptions_result {
+ public:
+
+  vichele_management_get_all_exceptions_result(const vichele_management_get_all_exceptions_result&);
+  vichele_management_get_all_exceptions_result& operator=(const vichele_management_get_all_exceptions_result&);
+  vichele_management_get_all_exceptions_result() {
+  }
+
+  virtual ~vichele_management_get_all_exceptions_result() noexcept;
+  std::vector<std::string>  success;
+  gen_exp e;
+
+  _vichele_management_get_all_exceptions_result__isset __isset;
+
+  void __set_success(const std::vector<std::string> & val);
+
+  void __set_e(const gen_exp& val);
+
+  bool operator == (const vichele_management_get_all_exceptions_result & rhs) const
+  {
+    if (!(success == rhs.success))
+      return false;
+    if (!(e == rhs.e))
+      return false;
+    return true;
+  }
+  bool operator != (const vichele_management_get_all_exceptions_result &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const vichele_management_get_all_exceptions_result & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _vichele_management_get_all_exceptions_presult__isset {
+  _vichele_management_get_all_exceptions_presult__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _vichele_management_get_all_exceptions_presult__isset;
+
+class vichele_management_get_all_exceptions_presult {
+ public:
+
+
+  virtual ~vichele_management_get_all_exceptions_presult() noexcept;
+  std::vector<std::string> * success;
+  gen_exp e;
+
+  _vichele_management_get_all_exceptions_presult__isset __isset;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+
+};
+
 class vichele_managementClient : virtual public vichele_managementIf {
  public:
   vichele_managementClient(std::shared_ptr< ::apache::thrift::protocol::TProtocol> prot) {
@@ -3756,6 +4120,15 @@ class vichele_managementClient : virtual public vichele_managementIf {
   bool fill_weight_attach(const std::string& open_id, const int64_t vichele_id, const std::string& weight_attach);
   void send_fill_weight_attach(const std::string& open_id, const int64_t vichele_id, const std::string& weight_attach);
   bool recv_fill_weight_attach();
+  bool add_exception(const std::string& ssid, const std::string& stuff_name);
+  void send_add_exception(const std::string& ssid, const std::string& stuff_name);
+  bool recv_add_exception();
+  bool del_exception(const std::string& ssid, const std::string& stuff_name);
+  void send_del_exception(const std::string& ssid, const std::string& stuff_name);
+  bool recv_del_exception();
+  void get_all_exceptions(std::vector<std::string> & _return, const std::string& ssid);
+  void send_get_all_exceptions(const std::string& ssid);
+  void recv_get_all_exceptions(std::vector<std::string> & _return);
  protected:
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> piprot_;
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> poprot_;
@@ -3800,6 +4173,9 @@ class vichele_managementProcessor : public ::apache::thrift::TDispatchProcessor 
   void process_fill_tmd(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
   void process_fill_enter_weight(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
   void process_fill_weight_attach(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
+  void process_add_exception(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
+  void process_del_exception(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
+  void process_get_all_exceptions(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
  public:
   vichele_managementProcessor(::std::shared_ptr<vichele_managementIf> iface) :
     iface_(iface) {
@@ -3832,6 +4208,9 @@ class vichele_managementProcessor : public ::apache::thrift::TDispatchProcessor 
     processMap_["fill_tmd"] = &vichele_managementProcessor::process_fill_tmd;
     processMap_["fill_enter_weight"] = &vichele_managementProcessor::process_fill_enter_weight;
     processMap_["fill_weight_attach"] = &vichele_managementProcessor::process_fill_weight_attach;
+    processMap_["add_exception"] = &vichele_managementProcessor::process_add_exception;
+    processMap_["del_exception"] = &vichele_managementProcessor::process_del_exception;
+    processMap_["get_all_exceptions"] = &vichele_managementProcessor::process_get_all_exceptions;
   }
 
   virtual ~vichele_managementProcessor() {}
@@ -4131,6 +4510,34 @@ class vichele_managementMultiface : virtual public vichele_managementIf {
     return ifaces_[i]->fill_weight_attach(open_id, vichele_id, weight_attach);
   }
 
+  bool add_exception(const std::string& ssid, const std::string& stuff_name) {
+    size_t sz = ifaces_.size();
+    size_t i = 0;
+    for (; i < (sz - 1); ++i) {
+      ifaces_[i]->add_exception(ssid, stuff_name);
+    }
+    return ifaces_[i]->add_exception(ssid, stuff_name);
+  }
+
+  bool del_exception(const std::string& ssid, const std::string& stuff_name) {
+    size_t sz = ifaces_.size();
+    size_t i = 0;
+    for (; i < (sz - 1); ++i) {
+      ifaces_[i]->del_exception(ssid, stuff_name);
+    }
+    return ifaces_[i]->del_exception(ssid, stuff_name);
+  }
+
+  void get_all_exceptions(std::vector<std::string> & _return, const std::string& ssid) {
+    size_t sz = ifaces_.size();
+    size_t i = 0;
+    for (; i < (sz - 1); ++i) {
+      ifaces_[i]->get_all_exceptions(_return, ssid);
+    }
+    ifaces_[i]->get_all_exceptions(_return, ssid);
+    return;
+  }
+
 };
 
 // The 'concurrent' client is a thread safe client that correctly handles
@@ -4250,6 +4657,15 @@ class vichele_managementConcurrentClient : virtual public vichele_managementIf {
   bool fill_weight_attach(const std::string& open_id, const int64_t vichele_id, const std::string& weight_attach);
   int32_t send_fill_weight_attach(const std::string& open_id, const int64_t vichele_id, const std::string& weight_attach);
   bool recv_fill_weight_attach(const int32_t seqid);
+  bool add_exception(const std::string& ssid, const std::string& stuff_name);
+  int32_t send_add_exception(const std::string& ssid, const std::string& stuff_name);
+  bool recv_add_exception(const int32_t seqid);
+  bool del_exception(const std::string& ssid, const std::string& stuff_name);
+  int32_t send_del_exception(const std::string& ssid, const std::string& stuff_name);
+  bool recv_del_exception(const int32_t seqid);
+  void get_all_exceptions(std::vector<std::string> & _return, const std::string& ssid);
+  int32_t send_get_all_exceptions(const std::string& ssid);
+  void recv_get_all_exceptions(std::vector<std::string> & _return, const int32_t seqid);
  protected:
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> piprot_;
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> poprot_;
