@@ -528,4 +528,7 @@ service vichele_management {
     bool fill_tmd(1:string open_id, 2:i64 vichele_id, 3:string tmd_no) throws (1:gen_exp e),
     bool fill_enter_weight(1:string open_id, 2:i64 vichele_id, 3:double enter_weight) throws (1:gen_exp e),
     bool fill_weight_attach(1:string open_id, 2:i64 vichele_id, 3:string weight_attach) throws (1:gen_exp e),
+    bool add_exception(1:string ssid, 2:string stuff_name) throws (1:gen_exp e),
+    bool del_exception(1:string ssid, 2:string stuff_name) throws (1:gen_exp e),
+    list<string> get_all_exceptions(1:string ssid) throws (1:gen_exp e),
 }

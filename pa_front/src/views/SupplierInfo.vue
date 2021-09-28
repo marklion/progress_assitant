@@ -18,6 +18,30 @@
             </template>
         </van-cell>
     </van-cell-group>
+    <van-cell-group>
+        <template #title>
+            <van-row type="flex" justify="space-between" align="center">
+                <van-col>例外货品</van-col>
+                <van-col>
+                    <van-button type="primary" size="small" @click="show_add_except = true">添加</van-button>
+                </van-col>
+            </van-row>
+        </template>
+        <van-field v-model="new_except" v-if="show_add_except" placeholder="请输入例外货品名">
+            <template #right-icon>
+                <div style="margin-left:5px;">
+                    <van-button type="primary" size="small" @click="add_except">保存</van-button>
+                </div>
+            </template>
+        </van-field>
+        <van-cell v-for="(single_except, index) in all_except" :key="index" center :title="single_except">
+            <template #right-icon>
+                <div style="margin-left:5px;">
+                    <van-button type="danger" size="small" @click="del_except(single_except)">删除</van-button>
+                </div>
+            </template>
+        </van-cell>
+    </van-cell-group>
     <van-dialog v-model="edit_supplier_show" title="新增供应商" :showConfirmButton="false" closeOnClickOverlay>
         <van-form @submit="edit_supplier">
             <van-field v-model="focus_supplier.name" :disabled="!cur_opt_add" label="公司名称" placeholder="请输入公司名" :rules="[{ required: true, message: '请填写公司名' }]" />
@@ -74,9 +98,31 @@ export default {
             },
             edit_supplier_show: false,
             all_suppliers: [],
+            show_add_except: false,
+            new_except: '',
+            all_except: [],
         };
     },
     methods: {
+        add_except: function () {
+            var vue_this = this;
+            vue_this.$call_remote_process("vichele_management", "add_exception", [vue_this.$cookies.get('pa_ssid'), vue_this.new_except]).then(function (resp) {
+                if (resp) {
+                    vue_this.show_add_except = false;
+                    vue_this.new_except = '';
+                    vue_this.init_except();
+                }
+            });
+        },
+        del_except: function (_name) {
+            var vue_this = this;
+            vue_this.$call_remote_process("vichele_management", "del_exception", [vue_this.$cookies.get('pa_ssid'), _name]).then(function (resp) {
+                if (resp) {
+                    vue_this.init_except();
+                }
+            });
+
+        },
         trigger_update: function (_supplier) {
             this.focus_supplier = {
                 ..._supplier
@@ -98,6 +144,15 @@ export default {
                     });
                 })
 
+        },
+        init_except: function () {
+            var vue_this = this;
+            vue_this.$call_remote_process("vichele_management", 'get_all_exceptions', [vue_this.$cookies.get('pa_ssid')]).then(function (resp) {
+                vue_this.all_except = [];
+                resp.forEach((element, index) => {
+                    vue_this.$set(vue_this.all_except, index, element);
+                });
+            });
         },
         init_supplier: function () {
             var vue_this = this;
@@ -131,6 +186,7 @@ export default {
     },
     beforeMount: function () {
         this.init_supplier();
+        this.init_except();
     }
 }
 </script>
