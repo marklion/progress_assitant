@@ -747,7 +747,7 @@ public:
         {
             PA_RETURN_NOPRIVA_MSG();
         }
-        auto vichele_info = sqlite_orm::search_record<pa_sql_vichele_stay_alone>("PRI_ID == %ld AND driver_phone == '%s' AND company_name == ''", vichele_id, driver->phone.c_str());
+        auto vichele_info = sqlite_orm::search_record<pa_sql_vichele_stay_alone>("PRI_ID == %ld AND driver_phone == '%s'", vichele_id, driver->phone.c_str());
         if (!vichele_info)
         {
             PA_RETURN_NOPRIVA_MSG();
