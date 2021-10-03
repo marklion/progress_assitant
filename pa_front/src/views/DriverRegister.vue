@@ -21,7 +21,6 @@
                 <template #right-icon>
                     <div style="margin-left:8px;">
                         <van-button v-if="!single_trans.is_registered && single_trans.destination_company" type="info" size="small" @click="register_vichele(single_trans.destination_company, single_trans.id)">排号</van-button>
-                        <van-button v-if="!single_trans.order_company && single_trans.is_buy" type="info" size="small" @click="act_select_company = true;focus_vichele_index = index">指定拉货公司</van-button>
                     </div>
                 </template>
                 <div v-if="single_trans.is_registered">
@@ -34,6 +33,7 @@
             <div v-if="single_trans.is_buy">
                 <van-button v-if="!single_trans.order_company" type="info" size="small" @click="act_select_company = true;focus_vichele_index = index">指定拉货公司</van-button>
                 <div v-else>
+                    <van-button v-if="single_trans.company_for_select.length > 0 && single_trans.is_buy" type="warning" size="small" @click="act_select_company = true;focus_vichele_index = index">修改拉货公司</van-button>
                     <van-cell title="磅单照片" center>
                         <template #right-icon>
                             <van-button v-if="single_trans.attach_url" size="small" type="info" @click="pre_view_attach(single_trans.attach_url)">预览</van-button>
@@ -173,6 +173,10 @@ export default {
         },
         fill_enter_weight: function (_id, index) {
             var vue_this = this;
+            if (vue_this.input_enter_weight[index].length <= 0 || vue_this.input_enter_weight_confirm[index].length <= 0) {
+                Notify("出厂重量填写错误");
+                return;
+            }
             if (vue_this.input_enter_weight[index] != vue_this.input_enter_weight_confirm[index]) {
                 Notify("出厂重量填写错误");
                 return;
