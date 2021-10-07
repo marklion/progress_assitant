@@ -97,11 +97,16 @@ class Iface(object):
         """
         pass
 
-    def get_company_vichele_info(self, ssid, anchor):
+    def get_company_vichele_info(self, ssid, anchor, status, enter_date, stuff_name, supplier_name, vichele_number):
         """
         Parameters:
          - ssid
          - anchor
+         - status
+         - enter_date
+         - stuff_name
+         - supplier_name
+         - vichele_number
 
         """
         pass
@@ -301,6 +306,14 @@ class Iface(object):
         pass
 
     def get_all_exceptions(self, ssid):
+        """
+        Parameters:
+         - ssid
+
+        """
+        pass
+
+    def get_company_brief(self, ssid):
         """
         Parameters:
          - ssid
@@ -632,21 +645,31 @@ class Client(Iface):
             raise result.e
         raise TApplicationException(TApplicationException.MISSING_RESULT, "get_input_history failed: unknown result")
 
-    def get_company_vichele_info(self, ssid, anchor):
+    def get_company_vichele_info(self, ssid, anchor, status, enter_date, stuff_name, supplier_name, vichele_number):
         """
         Parameters:
          - ssid
          - anchor
+         - status
+         - enter_date
+         - stuff_name
+         - supplier_name
+         - vichele_number
 
         """
-        self.send_get_company_vichele_info(ssid, anchor)
+        self.send_get_company_vichele_info(ssid, anchor, status, enter_date, stuff_name, supplier_name, vichele_number)
         return self.recv_get_company_vichele_info()
 
-    def send_get_company_vichele_info(self, ssid, anchor):
+    def send_get_company_vichele_info(self, ssid, anchor, status, enter_date, stuff_name, supplier_name, vichele_number):
         self._oprot.writeMessageBegin('get_company_vichele_info', TMessageType.CALL, self._seqid)
         args = get_company_vichele_info_args()
         args.ssid = ssid
         args.anchor = anchor
+        args.status = status
+        args.enter_date = enter_date
+        args.stuff_name = stuff_name
+        args.supplier_name = supplier_name
+        args.vichele_number = vichele_number
         args.write(self._oprot)
         self._oprot.writeMessageEnd()
         self._oprot.trans.flush()
@@ -1468,6 +1491,40 @@ class Client(Iface):
             raise result.e
         raise TApplicationException(TApplicationException.MISSING_RESULT, "get_all_exceptions failed: unknown result")
 
+    def get_company_brief(self, ssid):
+        """
+        Parameters:
+         - ssid
+
+        """
+        self.send_get_company_brief(ssid)
+        return self.recv_get_company_brief()
+
+    def send_get_company_brief(self, ssid):
+        self._oprot.writeMessageBegin('get_company_brief', TMessageType.CALL, self._seqid)
+        args = get_company_brief_args()
+        args.ssid = ssid
+        args.write(self._oprot)
+        self._oprot.writeMessageEnd()
+        self._oprot.trans.flush()
+
+    def recv_get_company_brief(self):
+        iprot = self._iprot
+        (fname, mtype, rseqid) = iprot.readMessageBegin()
+        if mtype == TMessageType.EXCEPTION:
+            x = TApplicationException()
+            x.read(iprot)
+            iprot.readMessageEnd()
+            raise x
+        result = get_company_brief_result()
+        result.read(iprot)
+        iprot.readMessageEnd()
+        if result.success is not None:
+            return result.success
+        if result.e is not None:
+            raise result.e
+        raise TApplicationException(TApplicationException.MISSING_RESULT, "get_company_brief failed: unknown result")
+
 
 class Processor(Iface, TProcessor):
     def __init__(self, handler):
@@ -1505,6 +1562,7 @@ class Processor(Iface, TProcessor):
         self._processMap["add_exception"] = Processor.process_add_exception
         self._processMap["del_exception"] = Processor.process_del_exception
         self._processMap["get_all_exceptions"] = Processor.process_get_all_exceptions
+        self._processMap["get_company_brief"] = Processor.process_get_company_brief
         self._on_message_begin = None
 
     def on_message_begin(self, func):
@@ -1767,7 +1825,7 @@ class Processor(Iface, TProcessor):
         iprot.readMessageEnd()
         result = get_company_vichele_info_result()
         try:
-            result.success = self._handler.get_company_vichele_info(args.ssid, args.anchor)
+            result.success = self._handler.get_company_vichele_info(args.ssid, args.anchor, args.status, args.enter_date, args.stuff_name, args.supplier_name, args.vichele_number)
             msg_type = TMessageType.REPLY
         except TTransport.TTransportException:
             raise
@@ -2359,6 +2417,32 @@ class Processor(Iface, TProcessor):
         oprot.writeMessageEnd()
         oprot.trans.flush()
 
+    def process_get_company_brief(self, seqid, iprot, oprot):
+        args = get_company_brief_args()
+        args.read(iprot)
+        iprot.readMessageEnd()
+        result = get_company_brief_result()
+        try:
+            result.success = self._handler.get_company_brief(args.ssid)
+            msg_type = TMessageType.REPLY
+        except TTransport.TTransportException:
+            raise
+        except gen_exp as e:
+            msg_type = TMessageType.REPLY
+            result.e = e
+        except TApplicationException as ex:
+            logging.exception('TApplication exception in handler')
+            msg_type = TMessageType.EXCEPTION
+            result = ex
+        except Exception:
+            logging.exception('Unexpected exception in handler')
+            msg_type = TMessageType.EXCEPTION
+            result = TApplicationException(TApplicationException.INTERNAL_ERROR, 'Internal error')
+        oprot.writeMessageBegin("get_company_brief", msg_type, seqid)
+        result.write(oprot)
+        oprot.writeMessageEnd()
+        oprot.trans.flush()
+
 # HELPER FUNCTIONS AND STRUCTURES
 
 
@@ -2392,11 +2476,11 @@ class create_vichele_info_args(object):
             elif fid == 2:
                 if ftype == TType.LIST:
                     self.vichele_info = []
-                    (_etype234, _size231) = iprot.readListBegin()
-                    for _i235 in range(_size231):
-                        _elem236 = vichele_stay_alone()
-                        _elem236.read(iprot)
-                        self.vichele_info.append(_elem236)
+                    (_etype248, _size245) = iprot.readListBegin()
+                    for _i249 in range(_size245):
+                        _elem250 = vichele_stay_alone()
+                        _elem250.read(iprot)
+                        self.vichele_info.append(_elem250)
                     iprot.readListEnd()
                 else:
                     iprot.skip(ftype)
@@ -2417,8 +2501,8 @@ class create_vichele_info_args(object):
         if self.vichele_info is not None:
             oprot.writeFieldBegin('vichele_info', TType.LIST, 2)
             oprot.writeListBegin(TType.STRUCT, len(self.vichele_info))
-            for iter237 in self.vichele_info:
-                iter237.write(oprot)
+            for iter251 in self.vichele_info:
+                iter251.write(oprot)
             oprot.writeListEnd()
             oprot.writeFieldEnd()
         oprot.writeFieldStop()
@@ -2912,11 +2996,11 @@ class get_created_vichele_info_result(object):
             if fid == 0:
                 if ftype == TType.LIST:
                     self.success = []
-                    (_etype241, _size238) = iprot.readListBegin()
-                    for _i242 in range(_size238):
-                        _elem243 = vichele_stay_alone()
-                        _elem243.read(iprot)
-                        self.success.append(_elem243)
+                    (_etype255, _size252) = iprot.readListBegin()
+                    for _i256 in range(_size252):
+                        _elem257 = vichele_stay_alone()
+                        _elem257.read(iprot)
+                        self.success.append(_elem257)
                     iprot.readListEnd()
                 else:
                     iprot.skip(ftype)
@@ -2938,8 +3022,8 @@ class get_created_vichele_info_result(object):
         if self.success is not None:
             oprot.writeFieldBegin('success', TType.LIST, 0)
             oprot.writeListBegin(TType.STRUCT, len(self.success))
-            for iter244 in self.success:
-                iter244.write(oprot)
+            for iter258 in self.success:
+                iter258.write(oprot)
             oprot.writeListEnd()
             oprot.writeFieldEnd()
         if self.e is not None:
@@ -3612,10 +3696,10 @@ class get_input_history_result(object):
             if fid == 0:
                 if ftype == TType.LIST:
                     self.success = []
-                    (_etype248, _size245) = iprot.readListBegin()
-                    for _i249 in range(_size245):
-                        _elem250 = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
-                        self.success.append(_elem250)
+                    (_etype262, _size259) = iprot.readListBegin()
+                    for _i263 in range(_size259):
+                        _elem264 = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                        self.success.append(_elem264)
                     iprot.readListEnd()
                 else:
                     iprot.skip(ftype)
@@ -3637,8 +3721,8 @@ class get_input_history_result(object):
         if self.success is not None:
             oprot.writeFieldBegin('success', TType.LIST, 0)
             oprot.writeListBegin(TType.STRING, len(self.success))
-            for iter251 in self.success:
-                oprot.writeString(iter251.encode('utf-8') if sys.version_info[0] == 2 else iter251)
+            for iter265 in self.success:
+                oprot.writeString(iter265.encode('utf-8') if sys.version_info[0] == 2 else iter265)
             oprot.writeListEnd()
             oprot.writeFieldEnd()
         if self.e is not None:
@@ -3673,13 +3757,23 @@ class get_company_vichele_info_args(object):
     Attributes:
      - ssid
      - anchor
+     - status
+     - enter_date
+     - stuff_name
+     - supplier_name
+     - vichele_number
 
     """
 
 
-    def __init__(self, ssid=None, anchor=None,):
+    def __init__(self, ssid=None, anchor=None, status=None, enter_date=None, stuff_name=None, supplier_name=None, vichele_number=None,):
         self.ssid = ssid
         self.anchor = anchor
+        self.status = status
+        self.enter_date = enter_date
+        self.stuff_name = stuff_name
+        self.supplier_name = supplier_name
+        self.vichele_number = vichele_number
 
     def read(self, iprot):
         if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
@@ -3700,6 +3794,31 @@ class get_company_vichele_info_args(object):
                     self.anchor = iprot.readI64()
                 else:
                     iprot.skip(ftype)
+            elif fid == 3:
+                if ftype == TType.I64:
+                    self.status = iprot.readI64()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 4:
+                if ftype == TType.STRING:
+                    self.enter_date = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 5:
+                if ftype == TType.STRING:
+                    self.stuff_name = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 6:
+                if ftype == TType.STRING:
+                    self.supplier_name = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 7:
+                if ftype == TType.STRING:
+                    self.vichele_number = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
             else:
                 iprot.skip(ftype)
             iprot.readFieldEnd()
@@ -3717,6 +3836,26 @@ class get_company_vichele_info_args(object):
         if self.anchor is not None:
             oprot.writeFieldBegin('anchor', TType.I64, 2)
             oprot.writeI64(self.anchor)
+            oprot.writeFieldEnd()
+        if self.status is not None:
+            oprot.writeFieldBegin('status', TType.I64, 3)
+            oprot.writeI64(self.status)
+            oprot.writeFieldEnd()
+        if self.enter_date is not None:
+            oprot.writeFieldBegin('enter_date', TType.STRING, 4)
+            oprot.writeString(self.enter_date.encode('utf-8') if sys.version_info[0] == 2 else self.enter_date)
+            oprot.writeFieldEnd()
+        if self.stuff_name is not None:
+            oprot.writeFieldBegin('stuff_name', TType.STRING, 5)
+            oprot.writeString(self.stuff_name.encode('utf-8') if sys.version_info[0] == 2 else self.stuff_name)
+            oprot.writeFieldEnd()
+        if self.supplier_name is not None:
+            oprot.writeFieldBegin('supplier_name', TType.STRING, 6)
+            oprot.writeString(self.supplier_name.encode('utf-8') if sys.version_info[0] == 2 else self.supplier_name)
+            oprot.writeFieldEnd()
+        if self.vichele_number is not None:
+            oprot.writeFieldBegin('vichele_number', TType.STRING, 7)
+            oprot.writeString(self.vichele_number.encode('utf-8') if sys.version_info[0] == 2 else self.vichele_number)
             oprot.writeFieldEnd()
         oprot.writeFieldStop()
         oprot.writeStructEnd()
@@ -3739,6 +3878,11 @@ get_company_vichele_info_args.thrift_spec = (
     None,  # 0
     (1, TType.STRING, 'ssid', 'UTF8', None, ),  # 1
     (2, TType.I64, 'anchor', None, None, ),  # 2
+    (3, TType.I64, 'status', None, None, ),  # 3
+    (4, TType.STRING, 'enter_date', 'UTF8', None, ),  # 4
+    (5, TType.STRING, 'stuff_name', 'UTF8', None, ),  # 5
+    (6, TType.STRING, 'supplier_name', 'UTF8', None, ),  # 6
+    (7, TType.STRING, 'vichele_number', 'UTF8', None, ),  # 7
 )
 
 
@@ -3767,11 +3911,11 @@ class get_company_vichele_info_result(object):
             if fid == 0:
                 if ftype == TType.LIST:
                     self.success = []
-                    (_etype255, _size252) = iprot.readListBegin()
-                    for _i256 in range(_size252):
-                        _elem257 = vichele_stay_alone()
-                        _elem257.read(iprot)
-                        self.success.append(_elem257)
+                    (_etype269, _size266) = iprot.readListBegin()
+                    for _i270 in range(_size266):
+                        _elem271 = vichele_stay_alone()
+                        _elem271.read(iprot)
+                        self.success.append(_elem271)
                     iprot.readListEnd()
                 else:
                     iprot.skip(ftype)
@@ -3793,8 +3937,8 @@ class get_company_vichele_info_result(object):
         if self.success is not None:
             oprot.writeFieldBegin('success', TType.LIST, 0)
             oprot.writeListBegin(TType.STRUCT, len(self.success))
-            for iter258 in self.success:
-                iter258.write(oprot)
+            for iter272 in self.success:
+                iter272.write(oprot)
             oprot.writeListEnd()
             oprot.writeFieldEnd()
         if self.e is not None:
@@ -3858,21 +4002,21 @@ class confirm_vichele_args(object):
             elif fid == 2:
                 if ftype == TType.LIST:
                     self.info = []
-                    (_etype262, _size259) = iprot.readListBegin()
-                    for _i263 in range(_size259):
-                        _elem264 = vichele_stay_alone()
-                        _elem264.read(iprot)
-                        self.info.append(_elem264)
+                    (_etype276, _size273) = iprot.readListBegin()
+                    for _i277 in range(_size273):
+                        _elem278 = vichele_stay_alone()
+                        _elem278.read(iprot)
+                        self.info.append(_elem278)
                     iprot.readListEnd()
                 else:
                     iprot.skip(ftype)
             elif fid == 3:
                 if ftype == TType.LIST:
                     self.company_for_select = []
-                    (_etype268, _size265) = iprot.readListBegin()
-                    for _i269 in range(_size265):
-                        _elem270 = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
-                        self.company_for_select.append(_elem270)
+                    (_etype282, _size279) = iprot.readListBegin()
+                    for _i283 in range(_size279):
+                        _elem284 = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                        self.company_for_select.append(_elem284)
                     iprot.readListEnd()
                 else:
                     iprot.skip(ftype)
@@ -3898,15 +4042,15 @@ class confirm_vichele_args(object):
         if self.info is not None:
             oprot.writeFieldBegin('info', TType.LIST, 2)
             oprot.writeListBegin(TType.STRUCT, len(self.info))
-            for iter271 in self.info:
-                iter271.write(oprot)
+            for iter285 in self.info:
+                iter285.write(oprot)
             oprot.writeListEnd()
             oprot.writeFieldEnd()
         if self.company_for_select is not None:
             oprot.writeFieldBegin('company_for_select', TType.LIST, 3)
             oprot.writeListBegin(TType.STRING, len(self.company_for_select))
-            for iter272 in self.company_for_select:
-                oprot.writeString(iter272.encode('utf-8') if sys.version_info[0] == 2 else iter272)
+            for iter286 in self.company_for_select:
+                oprot.writeString(iter286.encode('utf-8') if sys.version_info[0] == 2 else iter286)
             oprot.writeListEnd()
             oprot.writeFieldEnd()
         if self.all_select is not None:
@@ -4044,11 +4188,11 @@ class cancel_vichele_args(object):
             elif fid == 2:
                 if ftype == TType.LIST:
                     self.info = []
-                    (_etype276, _size273) = iprot.readListBegin()
-                    for _i277 in range(_size273):
-                        _elem278 = vichele_stay_alone()
-                        _elem278.read(iprot)
-                        self.info.append(_elem278)
+                    (_etype290, _size287) = iprot.readListBegin()
+                    for _i291 in range(_size287):
+                        _elem292 = vichele_stay_alone()
+                        _elem292.read(iprot)
+                        self.info.append(_elem292)
                     iprot.readListEnd()
                 else:
                     iprot.skip(ftype)
@@ -4074,8 +4218,8 @@ class cancel_vichele_args(object):
         if self.info is not None:
             oprot.writeFieldBegin('info', TType.LIST, 2)
             oprot.writeListBegin(TType.STRUCT, len(self.info))
-            for iter279 in self.info:
-                iter279.write(oprot)
+            for iter293 in self.info:
+                iter293.write(oprot)
             oprot.writeListEnd()
             oprot.writeFieldEnd()
         if self.all_select is not None:
@@ -4710,11 +4854,11 @@ class get_all_vichele_team_result(object):
             if fid == 0:
                 if ftype == TType.LIST:
                     self.success = []
-                    (_etype283, _size280) = iprot.readListBegin()
-                    for _i284 in range(_size280):
-                        _elem285 = vichele_team()
-                        _elem285.read(iprot)
-                        self.success.append(_elem285)
+                    (_etype297, _size294) = iprot.readListBegin()
+                    for _i298 in range(_size294):
+                        _elem299 = vichele_team()
+                        _elem299.read(iprot)
+                        self.success.append(_elem299)
                     iprot.readListEnd()
                 else:
                     iprot.skip(ftype)
@@ -4736,8 +4880,8 @@ class get_all_vichele_team_result(object):
         if self.success is not None:
             oprot.writeFieldBegin('success', TType.LIST, 0)
             oprot.writeListBegin(TType.STRUCT, len(self.success))
-            for iter286 in self.success:
-                iter286.write(oprot)
+            for iter300 in self.success:
+                iter300.write(oprot)
             oprot.writeListEnd()
             oprot.writeFieldEnd()
         if self.e is not None:
@@ -5320,10 +5464,10 @@ class company_history_result(object):
             if fid == 0:
                 if ftype == TType.LIST:
                     self.success = []
-                    (_etype290, _size287) = iprot.readListBegin()
-                    for _i291 in range(_size287):
-                        _elem292 = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
-                        self.success.append(_elem292)
+                    (_etype304, _size301) = iprot.readListBegin()
+                    for _i305 in range(_size301):
+                        _elem306 = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                        self.success.append(_elem306)
                     iprot.readListEnd()
                 else:
                     iprot.skip(ftype)
@@ -5345,8 +5489,8 @@ class company_history_result(object):
         if self.success is not None:
             oprot.writeFieldBegin('success', TType.LIST, 0)
             oprot.writeListBegin(TType.STRING, len(self.success))
-            for iter293 in self.success:
-                oprot.writeString(iter293.encode('utf-8') if sys.version_info[0] == 2 else iter293)
+            for iter307 in self.success:
+                oprot.writeString(iter307.encode('utf-8') if sys.version_info[0] == 2 else iter307)
             oprot.writeListEnd()
             oprot.writeFieldEnd()
         if self.e is not None:
@@ -5906,11 +6050,11 @@ class get_all_supplier_result(object):
             if fid == 0:
                 if ftype == TType.LIST:
                     self.success = []
-                    (_etype297, _size294) = iprot.readListBegin()
-                    for _i298 in range(_size294):
-                        _elem299 = supplier_basic_info()
-                        _elem299.read(iprot)
-                        self.success.append(_elem299)
+                    (_etype311, _size308) = iprot.readListBegin()
+                    for _i312 in range(_size308):
+                        _elem313 = supplier_basic_info()
+                        _elem313.read(iprot)
+                        self.success.append(_elem313)
                     iprot.readListEnd()
                 else:
                     iprot.skip(ftype)
@@ -5932,8 +6076,8 @@ class get_all_supplier_result(object):
         if self.success is not None:
             oprot.writeFieldBegin('success', TType.LIST, 0)
             oprot.writeListBegin(TType.STRUCT, len(self.success))
-            for iter300 in self.success:
-                iter300.write(oprot)
+            for iter314 in self.success:
+                iter314.write(oprot)
             oprot.writeListEnd()
             oprot.writeFieldEnd()
         if self.e is not None:
@@ -5993,11 +6137,11 @@ class smart_assign_args(object):
             elif fid == 2:
                 if ftype == TType.LIST:
                     self.vichele_info = []
-                    (_etype304, _size301) = iprot.readListBegin()
-                    for _i305 in range(_size301):
-                        _elem306 = vichele_stay_alone()
-                        _elem306.read(iprot)
-                        self.vichele_info.append(_elem306)
+                    (_etype318, _size315) = iprot.readListBegin()
+                    for _i319 in range(_size315):
+                        _elem320 = vichele_stay_alone()
+                        _elem320.read(iprot)
+                        self.vichele_info.append(_elem320)
                     iprot.readListEnd()
                 else:
                     iprot.skip(ftype)
@@ -6018,8 +6162,8 @@ class smart_assign_args(object):
         if self.vichele_info is not None:
             oprot.writeFieldBegin('vichele_info', TType.LIST, 2)
             oprot.writeListBegin(TType.STRUCT, len(self.vichele_info))
-            for iter307 in self.vichele_info:
-                iter307.write(oprot)
+            for iter321 in self.vichele_info:
+                iter321.write(oprot)
             oprot.writeListEnd()
             oprot.writeFieldEnd()
         oprot.writeFieldStop()
@@ -7124,10 +7268,10 @@ class get_all_exceptions_result(object):
             if fid == 0:
                 if ftype == TType.LIST:
                     self.success = []
-                    (_etype311, _size308) = iprot.readListBegin()
-                    for _i312 in range(_size308):
-                        _elem313 = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
-                        self.success.append(_elem313)
+                    (_etype325, _size322) = iprot.readListBegin()
+                    for _i326 in range(_size322):
+                        _elem327 = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                        self.success.append(_elem327)
                     iprot.readListEnd()
                 else:
                     iprot.skip(ftype)
@@ -7149,8 +7293,8 @@ class get_all_exceptions_result(object):
         if self.success is not None:
             oprot.writeFieldBegin('success', TType.LIST, 0)
             oprot.writeListBegin(TType.STRING, len(self.success))
-            for iter314 in self.success:
-                oprot.writeString(iter314.encode('utf-8') if sys.version_info[0] == 2 else iter314)
+            for iter328 in self.success:
+                oprot.writeString(iter328.encode('utf-8') if sys.version_info[0] == 2 else iter328)
             oprot.writeListEnd()
             oprot.writeFieldEnd()
         if self.e is not None:
@@ -7176,6 +7320,142 @@ class get_all_exceptions_result(object):
 all_structs.append(get_all_exceptions_result)
 get_all_exceptions_result.thrift_spec = (
     (0, TType.LIST, 'success', (TType.STRING, 'UTF8', False), None, ),  # 0
+    (1, TType.STRUCT, 'e', [gen_exp, None], None, ),  # 1
+)
+
+
+class get_company_brief_args(object):
+    """
+    Attributes:
+     - ssid
+
+    """
+
+
+    def __init__(self, ssid=None,):
+        self.ssid = ssid
+
+    def read(self, iprot):
+        if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
+            iprot._fast_decode(self, iprot, [self.__class__, self.thrift_spec])
+            return
+        iprot.readStructBegin()
+        while True:
+            (fname, ftype, fid) = iprot.readFieldBegin()
+            if ftype == TType.STOP:
+                break
+            if fid == 1:
+                if ftype == TType.STRING:
+                    self.ssid = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
+            else:
+                iprot.skip(ftype)
+            iprot.readFieldEnd()
+        iprot.readStructEnd()
+
+    def write(self, oprot):
+        if oprot._fast_encode is not None and self.thrift_spec is not None:
+            oprot.trans.write(oprot._fast_encode(self, [self.__class__, self.thrift_spec]))
+            return
+        oprot.writeStructBegin('get_company_brief_args')
+        if self.ssid is not None:
+            oprot.writeFieldBegin('ssid', TType.STRING, 1)
+            oprot.writeString(self.ssid.encode('utf-8') if sys.version_info[0] == 2 else self.ssid)
+            oprot.writeFieldEnd()
+        oprot.writeFieldStop()
+        oprot.writeStructEnd()
+
+    def validate(self):
+        return
+
+    def __repr__(self):
+        L = ['%s=%r' % (key, value)
+             for key, value in self.__dict__.items()]
+        return '%s(%s)' % (self.__class__.__name__, ', '.join(L))
+
+    def __eq__(self, other):
+        return isinstance(other, self.__class__) and self.__dict__ == other.__dict__
+
+    def __ne__(self, other):
+        return not (self == other)
+all_structs.append(get_company_brief_args)
+get_company_brief_args.thrift_spec = (
+    None,  # 0
+    (1, TType.STRING, 'ssid', 'UTF8', None, ),  # 1
+)
+
+
+class get_company_brief_result(object):
+    """
+    Attributes:
+     - success
+     - e
+
+    """
+
+
+    def __init__(self, success=None, e=None,):
+        self.success = success
+        self.e = e
+
+    def read(self, iprot):
+        if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
+            iprot._fast_decode(self, iprot, [self.__class__, self.thrift_spec])
+            return
+        iprot.readStructBegin()
+        while True:
+            (fname, ftype, fid) = iprot.readFieldBegin()
+            if ftype == TType.STOP:
+                break
+            if fid == 0:
+                if ftype == TType.STRUCT:
+                    self.success = single_vichele_brief()
+                    self.success.read(iprot)
+                else:
+                    iprot.skip(ftype)
+            elif fid == 1:
+                if ftype == TType.STRUCT:
+                    self.e = gen_exp.read(iprot)
+                else:
+                    iprot.skip(ftype)
+            else:
+                iprot.skip(ftype)
+            iprot.readFieldEnd()
+        iprot.readStructEnd()
+
+    def write(self, oprot):
+        if oprot._fast_encode is not None and self.thrift_spec is not None:
+            oprot.trans.write(oprot._fast_encode(self, [self.__class__, self.thrift_spec]))
+            return
+        oprot.writeStructBegin('get_company_brief_result')
+        if self.success is not None:
+            oprot.writeFieldBegin('success', TType.STRUCT, 0)
+            self.success.write(oprot)
+            oprot.writeFieldEnd()
+        if self.e is not None:
+            oprot.writeFieldBegin('e', TType.STRUCT, 1)
+            self.e.write(oprot)
+            oprot.writeFieldEnd()
+        oprot.writeFieldStop()
+        oprot.writeStructEnd()
+
+    def validate(self):
+        return
+
+    def __repr__(self):
+        L = ['%s=%r' % (key, value)
+             for key, value in self.__dict__.items()]
+        return '%s(%s)' % (self.__class__.__name__, ', '.join(L))
+
+    def __eq__(self, other):
+        return isinstance(other, self.__class__) and self.__dict__ == other.__dict__
+
+    def __ne__(self, other):
+        return not (self == other)
+all_structs.append(get_company_brief_result)
+get_company_brief_result.thrift_spec = (
+    (0, TType.STRUCT, 'success', [single_vichele_brief, None], None, ),  # 0
     (1, TType.STRUCT, 'e', [gen_exp, None], None, ),  # 1
 )
 fix_spec(all_structs)

@@ -101,6 +101,8 @@ class vichele_team;
 
 class supplier_basic_info;
 
+class single_vichele_brief;
+
 typedef struct _gen_exp__isset {
   _gen_exp__isset() : msg(false) {}
   bool msg :1;
@@ -3054,6 +3056,54 @@ class supplier_basic_info : public virtual ::apache::thrift::TBase {
 void swap(supplier_basic_info &a, supplier_basic_info &b);
 
 std::ostream& operator<<(std::ostream& out, const supplier_basic_info& obj);
+
+typedef struct _single_vichele_brief__isset {
+  _single_vichele_brief__isset() : stuff_names(false), supplier_names(false) {}
+  bool stuff_names :1;
+  bool supplier_names :1;
+} _single_vichele_brief__isset;
+
+class single_vichele_brief : public virtual ::apache::thrift::TBase {
+ public:
+
+  single_vichele_brief(const single_vichele_brief&);
+  single_vichele_brief& operator=(const single_vichele_brief&);
+  single_vichele_brief() {
+  }
+
+  virtual ~single_vichele_brief() noexcept;
+  std::vector<std::string>  stuff_names;
+  std::vector<std::string>  supplier_names;
+
+  _single_vichele_brief__isset __isset;
+
+  void __set_stuff_names(const std::vector<std::string> & val);
+
+  void __set_supplier_names(const std::vector<std::string> & val);
+
+  bool operator == (const single_vichele_brief & rhs) const
+  {
+    if (!(stuff_names == rhs.stuff_names))
+      return false;
+    if (!(supplier_names == rhs.supplier_names))
+      return false;
+    return true;
+  }
+  bool operator != (const single_vichele_brief &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const single_vichele_brief & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+  virtual void printTo(std::ostream& out) const;
+};
+
+void swap(single_vichele_brief &a, single_vichele_brief &b);
+
+std::ostream& operator<<(std::ostream& out, const single_vichele_brief& obj);
 
 
 

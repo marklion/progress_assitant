@@ -4680,6 +4680,90 @@ class supplier_basic_info(object):
 
     def __ne__(self, other):
         return not (self == other)
+
+
+class single_vichele_brief(object):
+    """
+    Attributes:
+     - stuff_names
+     - supplier_names
+
+    """
+
+
+    def __init__(self, stuff_names=None, supplier_names=None,):
+        self.stuff_names = stuff_names
+        self.supplier_names = supplier_names
+
+    def read(self, iprot):
+        if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
+            iprot._fast_decode(self, iprot, [self.__class__, self.thrift_spec])
+            return
+        iprot.readStructBegin()
+        while True:
+            (fname, ftype, fid) = iprot.readFieldBegin()
+            if ftype == TType.STOP:
+                break
+            if fid == 1:
+                if ftype == TType.LIST:
+                    self.stuff_names = []
+                    (_etype31, _size28) = iprot.readListBegin()
+                    for _i32 in range(_size28):
+                        _elem33 = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                        self.stuff_names.append(_elem33)
+                    iprot.readListEnd()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 2:
+                if ftype == TType.LIST:
+                    self.supplier_names = []
+                    (_etype37, _size34) = iprot.readListBegin()
+                    for _i38 in range(_size34):
+                        _elem39 = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                        self.supplier_names.append(_elem39)
+                    iprot.readListEnd()
+                else:
+                    iprot.skip(ftype)
+            else:
+                iprot.skip(ftype)
+            iprot.readFieldEnd()
+        iprot.readStructEnd()
+
+    def write(self, oprot):
+        if oprot._fast_encode is not None and self.thrift_spec is not None:
+            oprot.trans.write(oprot._fast_encode(self, [self.__class__, self.thrift_spec]))
+            return
+        oprot.writeStructBegin('single_vichele_brief')
+        if self.stuff_names is not None:
+            oprot.writeFieldBegin('stuff_names', TType.LIST, 1)
+            oprot.writeListBegin(TType.STRING, len(self.stuff_names))
+            for iter40 in self.stuff_names:
+                oprot.writeString(iter40.encode('utf-8') if sys.version_info[0] == 2 else iter40)
+            oprot.writeListEnd()
+            oprot.writeFieldEnd()
+        if self.supplier_names is not None:
+            oprot.writeFieldBegin('supplier_names', TType.LIST, 2)
+            oprot.writeListBegin(TType.STRING, len(self.supplier_names))
+            for iter41 in self.supplier_names:
+                oprot.writeString(iter41.encode('utf-8') if sys.version_info[0] == 2 else iter41)
+            oprot.writeListEnd()
+            oprot.writeFieldEnd()
+        oprot.writeFieldStop()
+        oprot.writeStructEnd()
+
+    def validate(self):
+        return
+
+    def __repr__(self):
+        L = ['%s=%r' % (key, value)
+             for key, value in self.__dict__.items()]
+        return '%s(%s)' % (self.__class__.__name__, ', '.join(L))
+
+    def __eq__(self, other):
+        return isinstance(other, self.__class__) and self.__dict__ == other.__dict__
+
+    def __ne__(self, other):
+        return not (self == other)
 all_structs.append(gen_exp)
 gen_exp.thrift_spec = (
     None,  # 0
@@ -5091,6 +5175,12 @@ supplier_basic_info.thrift_spec = (
     (2, TType.DOUBLE, 'reserves', None, None, ),  # 2
     (3, TType.I64, 'max_vichele', None, None, ),  # 3
     (4, TType.I64, 'id', None, None, ),  # 4
+)
+all_structs.append(single_vichele_brief)
+single_vichele_brief.thrift_spec = (
+    None,  # 0
+    (1, TType.LIST, 'stuff_names', (TType.STRING, 'UTF8', False), None, ),  # 1
+    (2, TType.LIST, 'supplier_names', (TType.STRING, 'UTF8', False), None, ),  # 2
 )
 fix_spec(all_structs)
 del all_structs

@@ -8025,3 +8025,155 @@ void supplier_basic_info::printTo(std::ostream& out) const {
 }
 
 
+single_vichele_brief::~single_vichele_brief() noexcept {
+}
+
+
+void single_vichele_brief::__set_stuff_names(const std::vector<std::string> & val) {
+  this->stuff_names = val;
+}
+
+void single_vichele_brief::__set_supplier_names(const std::vector<std::string> & val) {
+  this->supplier_names = val;
+}
+std::ostream& operator<<(std::ostream& out, const single_vichele_brief& obj)
+{
+  obj.printTo(out);
+  return out;
+}
+
+
+uint32_t single_vichele_brief::read(::apache::thrift::protocol::TProtocol* iprot) {
+
+  ::apache::thrift::protocol::TInputRecursionTracker tracker(*iprot);
+  uint32_t xfer = 0;
+  std::string fname;
+  ::apache::thrift::protocol::TType ftype;
+  int16_t fid;
+
+  xfer += iprot->readStructBegin(fname);
+
+  using ::apache::thrift::protocol::TProtocolException;
+
+
+  while (true)
+  {
+    xfer += iprot->readFieldBegin(fname, ftype, fid);
+    if (ftype == ::apache::thrift::protocol::T_STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 1:
+        if (ftype == ::apache::thrift::protocol::T_LIST) {
+          {
+            this->stuff_names.clear();
+            uint32_t _size104;
+            ::apache::thrift::protocol::TType _etype107;
+            xfer += iprot->readListBegin(_etype107, _size104);
+            this->stuff_names.resize(_size104);
+            uint32_t _i108;
+            for (_i108 = 0; _i108 < _size104; ++_i108)
+            {
+              xfer += iprot->readString(this->stuff_names[_i108]);
+            }
+            xfer += iprot->readListEnd();
+          }
+          this->__isset.stuff_names = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 2:
+        if (ftype == ::apache::thrift::protocol::T_LIST) {
+          {
+            this->supplier_names.clear();
+            uint32_t _size109;
+            ::apache::thrift::protocol::TType _etype112;
+            xfer += iprot->readListBegin(_etype112, _size109);
+            this->supplier_names.resize(_size109);
+            uint32_t _i113;
+            for (_i113 = 0; _i113 < _size109; ++_i113)
+            {
+              xfer += iprot->readString(this->supplier_names[_i113]);
+            }
+            xfer += iprot->readListEnd();
+          }
+          this->__isset.supplier_names = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      default:
+        xfer += iprot->skip(ftype);
+        break;
+    }
+    xfer += iprot->readFieldEnd();
+  }
+
+  xfer += iprot->readStructEnd();
+
+  return xfer;
+}
+
+uint32_t single_vichele_brief::write(::apache::thrift::protocol::TProtocol* oprot) const {
+  uint32_t xfer = 0;
+  ::apache::thrift::protocol::TOutputRecursionTracker tracker(*oprot);
+  xfer += oprot->writeStructBegin("single_vichele_brief");
+
+  xfer += oprot->writeFieldBegin("stuff_names", ::apache::thrift::protocol::T_LIST, 1);
+  {
+    xfer += oprot->writeListBegin(::apache::thrift::protocol::T_STRING, static_cast<uint32_t>(this->stuff_names.size()));
+    std::vector<std::string> ::const_iterator _iter114;
+    for (_iter114 = this->stuff_names.begin(); _iter114 != this->stuff_names.end(); ++_iter114)
+    {
+      xfer += oprot->writeString((*_iter114));
+    }
+    xfer += oprot->writeListEnd();
+  }
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("supplier_names", ::apache::thrift::protocol::T_LIST, 2);
+  {
+    xfer += oprot->writeListBegin(::apache::thrift::protocol::T_STRING, static_cast<uint32_t>(this->supplier_names.size()));
+    std::vector<std::string> ::const_iterator _iter115;
+    for (_iter115 = this->supplier_names.begin(); _iter115 != this->supplier_names.end(); ++_iter115)
+    {
+      xfer += oprot->writeString((*_iter115));
+    }
+    xfer += oprot->writeListEnd();
+  }
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldStop();
+  xfer += oprot->writeStructEnd();
+  return xfer;
+}
+
+void swap(single_vichele_brief &a, single_vichele_brief &b) {
+  using ::std::swap;
+  swap(a.stuff_names, b.stuff_names);
+  swap(a.supplier_names, b.supplier_names);
+  swap(a.__isset, b.__isset);
+}
+
+single_vichele_brief::single_vichele_brief(const single_vichele_brief& other116) {
+  stuff_names = other116.stuff_names;
+  supplier_names = other116.supplier_names;
+  __isset = other116.__isset;
+}
+single_vichele_brief& single_vichele_brief::operator=(const single_vichele_brief& other117) {
+  stuff_names = other117.stuff_names;
+  supplier_names = other117.supplier_names;
+  __isset = other117.__isset;
+  return *this;
+}
+void single_vichele_brief::printTo(std::ostream& out) const {
+  using ::apache::thrift::to_string;
+  out << "single_vichele_brief(";
+  out << "stuff_names=" << to_string(stuff_names);
+  out << ", " << "supplier_names=" << to_string(supplier_names);
+  out << ")";
+}
+
+

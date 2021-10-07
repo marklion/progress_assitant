@@ -31,7 +31,7 @@ class vichele_managementIf {
   virtual void get_silent_user_info(silent_user_info& _return, const std::string& open_id) = 0;
   virtual void set_silent_user_info(const std::string& open_id, const silent_user_info& info) = 0;
   virtual void get_input_history(std::vector<std::string> & _return, const std::string& open_id, const vichele_stay_alone& search_key) = 0;
-  virtual void get_company_vichele_info(std::vector<vichele_stay_alone> & _return, const std::string& ssid, const int64_t anchor) = 0;
+  virtual void get_company_vichele_info(std::vector<vichele_stay_alone> & _return, const std::string& ssid, const int64_t anchor, const int64_t status, const std::string& enter_date, const std::string& stuff_name, const std::string& supplier_name, const std::string& vichele_number) = 0;
   virtual bool confirm_vichele(const std::string& ssid, const std::vector<vichele_stay_alone> & info, const std::vector<std::string> & company_for_select, const bool all_select) = 0;
   virtual bool cancel_vichele(const std::string& ssid, const std::vector<vichele_stay_alone> & info, const bool all_select) = 0;
   virtual bool create_vichele_team(const std::string& open_id, const vichele_team& team_info) = 0;
@@ -54,6 +54,7 @@ class vichele_managementIf {
   virtual bool add_exception(const std::string& ssid, const std::string& stuff_name) = 0;
   virtual bool del_exception(const std::string& ssid, const std::string& stuff_name) = 0;
   virtual void get_all_exceptions(std::vector<std::string> & _return, const std::string& ssid) = 0;
+  virtual void get_company_brief(single_vichele_brief& _return, const std::string& ssid) = 0;
 };
 
 class vichele_managementIfFactory {
@@ -114,7 +115,7 @@ class vichele_managementNull : virtual public vichele_managementIf {
   void get_input_history(std::vector<std::string> & /* _return */, const std::string& /* open_id */, const vichele_stay_alone& /* search_key */) {
     return;
   }
-  void get_company_vichele_info(std::vector<vichele_stay_alone> & /* _return */, const std::string& /* ssid */, const int64_t /* anchor */) {
+  void get_company_vichele_info(std::vector<vichele_stay_alone> & /* _return */, const std::string& /* ssid */, const int64_t /* anchor */, const int64_t /* status */, const std::string& /* enter_date */, const std::string& /* stuff_name */, const std::string& /* supplier_name */, const std::string& /* vichele_number */) {
     return;
   }
   bool confirm_vichele(const std::string& /* ssid */, const std::vector<vichele_stay_alone> & /* info */, const std::vector<std::string> & /* company_for_select */, const bool /* all_select */) {
@@ -197,6 +198,9 @@ class vichele_managementNull : virtual public vichele_managementIf {
     return _return;
   }
   void get_all_exceptions(std::vector<std::string> & /* _return */, const std::string& /* ssid */) {
+    return;
+  }
+  void get_company_brief(single_vichele_brief& /* _return */, const std::string& /* ssid */) {
     return;
   }
 };
@@ -1244,9 +1248,14 @@ class vichele_management_get_input_history_presult {
 };
 
 typedef struct _vichele_management_get_company_vichele_info_args__isset {
-  _vichele_management_get_company_vichele_info_args__isset() : ssid(false), anchor(false) {}
+  _vichele_management_get_company_vichele_info_args__isset() : ssid(false), anchor(false), status(false), enter_date(false), stuff_name(false), supplier_name(false), vichele_number(false) {}
   bool ssid :1;
   bool anchor :1;
+  bool status :1;
+  bool enter_date :1;
+  bool stuff_name :1;
+  bool supplier_name :1;
+  bool vichele_number :1;
 } _vichele_management_get_company_vichele_info_args__isset;
 
 class vichele_management_get_company_vichele_info_args {
@@ -1254,12 +1263,17 @@ class vichele_management_get_company_vichele_info_args {
 
   vichele_management_get_company_vichele_info_args(const vichele_management_get_company_vichele_info_args&);
   vichele_management_get_company_vichele_info_args& operator=(const vichele_management_get_company_vichele_info_args&);
-  vichele_management_get_company_vichele_info_args() : ssid(), anchor(0) {
+  vichele_management_get_company_vichele_info_args() : ssid(), anchor(0), status(0), enter_date(), stuff_name(), supplier_name(), vichele_number() {
   }
 
   virtual ~vichele_management_get_company_vichele_info_args() noexcept;
   std::string ssid;
   int64_t anchor;
+  int64_t status;
+  std::string enter_date;
+  std::string stuff_name;
+  std::string supplier_name;
+  std::string vichele_number;
 
   _vichele_management_get_company_vichele_info_args__isset __isset;
 
@@ -1267,11 +1281,31 @@ class vichele_management_get_company_vichele_info_args {
 
   void __set_anchor(const int64_t val);
 
+  void __set_status(const int64_t val);
+
+  void __set_enter_date(const std::string& val);
+
+  void __set_stuff_name(const std::string& val);
+
+  void __set_supplier_name(const std::string& val);
+
+  void __set_vichele_number(const std::string& val);
+
   bool operator == (const vichele_management_get_company_vichele_info_args & rhs) const
   {
     if (!(ssid == rhs.ssid))
       return false;
     if (!(anchor == rhs.anchor))
+      return false;
+    if (!(status == rhs.status))
+      return false;
+    if (!(enter_date == rhs.enter_date))
+      return false;
+    if (!(stuff_name == rhs.stuff_name))
+      return false;
+    if (!(supplier_name == rhs.supplier_name))
+      return false;
+    if (!(vichele_number == rhs.vichele_number))
       return false;
     return true;
   }
@@ -1294,6 +1328,11 @@ class vichele_management_get_company_vichele_info_pargs {
   virtual ~vichele_management_get_company_vichele_info_pargs() noexcept;
   const std::string* ssid;
   const int64_t* anchor;
+  const int64_t* status;
+  const std::string* enter_date;
+  const std::string* stuff_name;
+  const std::string* supplier_name;
+  const std::string* vichele_number;
 
   uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
 
@@ -4008,6 +4047,118 @@ class vichele_management_get_all_exceptions_presult {
 
 };
 
+typedef struct _vichele_management_get_company_brief_args__isset {
+  _vichele_management_get_company_brief_args__isset() : ssid(false) {}
+  bool ssid :1;
+} _vichele_management_get_company_brief_args__isset;
+
+class vichele_management_get_company_brief_args {
+ public:
+
+  vichele_management_get_company_brief_args(const vichele_management_get_company_brief_args&);
+  vichele_management_get_company_brief_args& operator=(const vichele_management_get_company_brief_args&);
+  vichele_management_get_company_brief_args() : ssid() {
+  }
+
+  virtual ~vichele_management_get_company_brief_args() noexcept;
+  std::string ssid;
+
+  _vichele_management_get_company_brief_args__isset __isset;
+
+  void __set_ssid(const std::string& val);
+
+  bool operator == (const vichele_management_get_company_brief_args & rhs) const
+  {
+    if (!(ssid == rhs.ssid))
+      return false;
+    return true;
+  }
+  bool operator != (const vichele_management_get_company_brief_args &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const vichele_management_get_company_brief_args & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+
+class vichele_management_get_company_brief_pargs {
+ public:
+
+
+  virtual ~vichele_management_get_company_brief_pargs() noexcept;
+  const std::string* ssid;
+
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _vichele_management_get_company_brief_result__isset {
+  _vichele_management_get_company_brief_result__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _vichele_management_get_company_brief_result__isset;
+
+class vichele_management_get_company_brief_result {
+ public:
+
+  vichele_management_get_company_brief_result(const vichele_management_get_company_brief_result&);
+  vichele_management_get_company_brief_result& operator=(const vichele_management_get_company_brief_result&);
+  vichele_management_get_company_brief_result() {
+  }
+
+  virtual ~vichele_management_get_company_brief_result() noexcept;
+  single_vichele_brief success;
+  gen_exp e;
+
+  _vichele_management_get_company_brief_result__isset __isset;
+
+  void __set_success(const single_vichele_brief& val);
+
+  void __set_e(const gen_exp& val);
+
+  bool operator == (const vichele_management_get_company_brief_result & rhs) const
+  {
+    if (!(success == rhs.success))
+      return false;
+    if (!(e == rhs.e))
+      return false;
+    return true;
+  }
+  bool operator != (const vichele_management_get_company_brief_result &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const vichele_management_get_company_brief_result & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _vichele_management_get_company_brief_presult__isset {
+  _vichele_management_get_company_brief_presult__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _vichele_management_get_company_brief_presult__isset;
+
+class vichele_management_get_company_brief_presult {
+ public:
+
+
+  virtual ~vichele_management_get_company_brief_presult() noexcept;
+  single_vichele_brief* success;
+  gen_exp e;
+
+  _vichele_management_get_company_brief_presult__isset __isset;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+
+};
+
 class vichele_managementClient : virtual public vichele_managementIf {
  public:
   vichele_managementClient(std::shared_ptr< ::apache::thrift::protocol::TProtocol> prot) {
@@ -4060,8 +4211,8 @@ class vichele_managementClient : virtual public vichele_managementIf {
   void get_input_history(std::vector<std::string> & _return, const std::string& open_id, const vichele_stay_alone& search_key);
   void send_get_input_history(const std::string& open_id, const vichele_stay_alone& search_key);
   void recv_get_input_history(std::vector<std::string> & _return);
-  void get_company_vichele_info(std::vector<vichele_stay_alone> & _return, const std::string& ssid, const int64_t anchor);
-  void send_get_company_vichele_info(const std::string& ssid, const int64_t anchor);
+  void get_company_vichele_info(std::vector<vichele_stay_alone> & _return, const std::string& ssid, const int64_t anchor, const int64_t status, const std::string& enter_date, const std::string& stuff_name, const std::string& supplier_name, const std::string& vichele_number);
+  void send_get_company_vichele_info(const std::string& ssid, const int64_t anchor, const int64_t status, const std::string& enter_date, const std::string& stuff_name, const std::string& supplier_name, const std::string& vichele_number);
   void recv_get_company_vichele_info(std::vector<vichele_stay_alone> & _return);
   bool confirm_vichele(const std::string& ssid, const std::vector<vichele_stay_alone> & info, const std::vector<std::string> & company_for_select, const bool all_select);
   void send_confirm_vichele(const std::string& ssid, const std::vector<vichele_stay_alone> & info, const std::vector<std::string> & company_for_select, const bool all_select);
@@ -4129,6 +4280,9 @@ class vichele_managementClient : virtual public vichele_managementIf {
   void get_all_exceptions(std::vector<std::string> & _return, const std::string& ssid);
   void send_get_all_exceptions(const std::string& ssid);
   void recv_get_all_exceptions(std::vector<std::string> & _return);
+  void get_company_brief(single_vichele_brief& _return, const std::string& ssid);
+  void send_get_company_brief(const std::string& ssid);
+  void recv_get_company_brief(single_vichele_brief& _return);
  protected:
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> piprot_;
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> poprot_;
@@ -4176,6 +4330,7 @@ class vichele_managementProcessor : public ::apache::thrift::TDispatchProcessor 
   void process_add_exception(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
   void process_del_exception(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
   void process_get_all_exceptions(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
+  void process_get_company_brief(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
  public:
   vichele_managementProcessor(::std::shared_ptr<vichele_managementIf> iface) :
     iface_(iface) {
@@ -4211,6 +4366,7 @@ class vichele_managementProcessor : public ::apache::thrift::TDispatchProcessor 
     processMap_["add_exception"] = &vichele_managementProcessor::process_add_exception;
     processMap_["del_exception"] = &vichele_managementProcessor::process_del_exception;
     processMap_["get_all_exceptions"] = &vichele_managementProcessor::process_get_all_exceptions;
+    processMap_["get_company_brief"] = &vichele_managementProcessor::process_get_company_brief;
   }
 
   virtual ~vichele_managementProcessor() {}
@@ -4324,13 +4480,13 @@ class vichele_managementMultiface : virtual public vichele_managementIf {
     return;
   }
 
-  void get_company_vichele_info(std::vector<vichele_stay_alone> & _return, const std::string& ssid, const int64_t anchor) {
+  void get_company_vichele_info(std::vector<vichele_stay_alone> & _return, const std::string& ssid, const int64_t anchor, const int64_t status, const std::string& enter_date, const std::string& stuff_name, const std::string& supplier_name, const std::string& vichele_number) {
     size_t sz = ifaces_.size();
     size_t i = 0;
     for (; i < (sz - 1); ++i) {
-      ifaces_[i]->get_company_vichele_info(_return, ssid, anchor);
+      ifaces_[i]->get_company_vichele_info(_return, ssid, anchor, status, enter_date, stuff_name, supplier_name, vichele_number);
     }
-    ifaces_[i]->get_company_vichele_info(_return, ssid, anchor);
+    ifaces_[i]->get_company_vichele_info(_return, ssid, anchor, status, enter_date, stuff_name, supplier_name, vichele_number);
     return;
   }
 
@@ -4538,6 +4694,16 @@ class vichele_managementMultiface : virtual public vichele_managementIf {
     return;
   }
 
+  void get_company_brief(single_vichele_brief& _return, const std::string& ssid) {
+    size_t sz = ifaces_.size();
+    size_t i = 0;
+    for (; i < (sz - 1); ++i) {
+      ifaces_[i]->get_company_brief(_return, ssid);
+    }
+    ifaces_[i]->get_company_brief(_return, ssid);
+    return;
+  }
+
 };
 
 // The 'concurrent' client is a thread safe client that correctly handles
@@ -4597,8 +4763,8 @@ class vichele_managementConcurrentClient : virtual public vichele_managementIf {
   void get_input_history(std::vector<std::string> & _return, const std::string& open_id, const vichele_stay_alone& search_key);
   int32_t send_get_input_history(const std::string& open_id, const vichele_stay_alone& search_key);
   void recv_get_input_history(std::vector<std::string> & _return, const int32_t seqid);
-  void get_company_vichele_info(std::vector<vichele_stay_alone> & _return, const std::string& ssid, const int64_t anchor);
-  int32_t send_get_company_vichele_info(const std::string& ssid, const int64_t anchor);
+  void get_company_vichele_info(std::vector<vichele_stay_alone> & _return, const std::string& ssid, const int64_t anchor, const int64_t status, const std::string& enter_date, const std::string& stuff_name, const std::string& supplier_name, const std::string& vichele_number);
+  int32_t send_get_company_vichele_info(const std::string& ssid, const int64_t anchor, const int64_t status, const std::string& enter_date, const std::string& stuff_name, const std::string& supplier_name, const std::string& vichele_number);
   void recv_get_company_vichele_info(std::vector<vichele_stay_alone> & _return, const int32_t seqid);
   bool confirm_vichele(const std::string& ssid, const std::vector<vichele_stay_alone> & info, const std::vector<std::string> & company_for_select, const bool all_select);
   int32_t send_confirm_vichele(const std::string& ssid, const std::vector<vichele_stay_alone> & info, const std::vector<std::string> & company_for_select, const bool all_select);
@@ -4666,6 +4832,9 @@ class vichele_managementConcurrentClient : virtual public vichele_managementIf {
   void get_all_exceptions(std::vector<std::string> & _return, const std::string& ssid);
   int32_t send_get_all_exceptions(const std::string& ssid);
   void recv_get_all_exceptions(std::vector<std::string> & _return, const int32_t seqid);
+  void get_company_brief(single_vichele_brief& _return, const std::string& ssid);
+  int32_t send_get_company_brief(const std::string& ssid);
+  void recv_get_company_brief(single_vichele_brief& _return, const int32_t seqid);
  protected:
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> piprot_;
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> poprot_;

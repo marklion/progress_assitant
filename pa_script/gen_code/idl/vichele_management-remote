@@ -33,7 +33,7 @@ if len(sys.argv) <= 1 or sys.argv[1] == '--help':
     print('  silent_user_info get_silent_user_info(string open_id)')
     print('  void set_silent_user_info(string open_id, silent_user_info info)')
     print('   get_input_history(string open_id, vichele_stay_alone search_key)')
-    print('   get_company_vichele_info(string ssid, i64 anchor)')
+    print('   get_company_vichele_info(string ssid, i64 anchor, i64 status, string enter_date, string stuff_name, string supplier_name, string vichele_number)')
     print('  bool confirm_vichele(string ssid,  info,  company_for_select, bool all_select)')
     print('  bool cancel_vichele(string ssid,  info, bool all_select)')
     print('  bool create_vichele_team(string open_id, vichele_team team_info)')
@@ -56,6 +56,7 @@ if len(sys.argv) <= 1 or sys.argv[1] == '--help':
     print('  bool add_exception(string ssid, string stuff_name)')
     print('  bool del_exception(string ssid, string stuff_name)')
     print('   get_all_exceptions(string ssid)')
+    print('  single_vichele_brief get_company_brief(string ssid)')
     print('')
     sys.exit(0)
 
@@ -190,10 +191,10 @@ elif cmd == 'get_input_history':
     pp.pprint(client.get_input_history(args[0], eval(args[1]),))
 
 elif cmd == 'get_company_vichele_info':
-    if len(args) != 2:
-        print('get_company_vichele_info requires 2 args')
+    if len(args) != 7:
+        print('get_company_vichele_info requires 7 args')
         sys.exit(1)
-    pp.pprint(client.get_company_vichele_info(args[0], eval(args[1]),))
+    pp.pprint(client.get_company_vichele_info(args[0], eval(args[1]), eval(args[2]), args[3], args[4], args[5], args[6],))
 
 elif cmd == 'confirm_vichele':
     if len(args) != 4:
@@ -326,6 +327,12 @@ elif cmd == 'get_all_exceptions':
         print('get_all_exceptions requires 1 args')
         sys.exit(1)
     pp.pprint(client.get_all_exceptions(args[0],))
+
+elif cmd == 'get_company_brief':
+    if len(args) != 1:
+        print('get_company_brief requires 1 args')
+        sys.exit(1)
+    pp.pprint(client.get_company_brief(args[0],))
 
 else:
     print('Unrecognized method %s' % cmd)
