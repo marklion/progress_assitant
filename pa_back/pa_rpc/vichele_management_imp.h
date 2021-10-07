@@ -434,12 +434,16 @@ public:
 
         std::string query_cmd = "PRI_ID == 0";
         double price = 0;
-        std::string company_name;
         for (auto &itr : info)
         {
             query_cmd += " OR PRI_ID == " + std::to_string(itr.id);
             price = itr.price;
-            company_name = itr.company_name;
+            auto need_change_vichele = company->get_children<pa_sql_vichele_stay_alone>("destination", "PRI_ID == %ld", itr.id);
+            if (need_change_vichele)
+            {
+                need_change_vichele->company_name = itr.company_name;
+                need_change_vichele->update_record();
+            }
         }
         if (all_select)
         {
@@ -458,7 +462,6 @@ public:
         {
             itr.status = 1;
             itr.price = price;
-            itr.company_name = company_name;
             itr.no_permission = 0;
             auto created_user = itr.get_parent<pa_sql_silent_user>("created_by");
             if (created_user && !company->get_children<pa_sql_except_stuff>("belong_company", "name == '%s'", itr.stuff_name.c_str()))
