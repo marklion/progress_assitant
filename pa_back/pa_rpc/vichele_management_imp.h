@@ -332,7 +332,7 @@ public:
         silent_user->update_record();
     }
 
-    virtual void get_company_vichele_info(std::vector<vichele_stay_alone> &_return, const std::string &ssid, const int64_t anchor)
+    virtual void get_company_vichele_info(std::vector<vichele_stay_alone> &_return, const std::string &ssid, const int64_t anchor, const int64_t status, const std::string &enter_date, const std::string &stuff_name, const std::string &supplier_name, const std::string &vichele_number)
     {
         auto user = PA_DATAOPT_get_online_user(ssid);
         if (!user)
@@ -344,7 +344,29 @@ public:
         {
             PA_RETURN_NOCOMPANY_MSG();
         }
-        auto extra_vichele = company->get_all_children<pa_sql_vichele_stay_alone>("destination", "is_drop == 0 ORDER BY PRI_ID DESC LIMIT 15 OFFSET %ld", anchor);
+        std::string date_condition = "date != ''";
+        if (enter_date.length() > 0)
+        {
+            date_condition += " AND date == '" + enter_date +"'";
+        }
+        std::string stuff_condition = "stuff_name != ''";
+        if (stuff_name.length() > 0)
+        {
+            stuff_condition += " AND stuff_name == '" + stuff_name + "'";
+        }
+        std::string supplier_condition = "company_name != ''";
+        if (supplier_name.length() > 0)
+        {
+            if (supplier_name == "未指定")
+            {
+                supplier_condition = "company_name == ''";
+            }
+            else
+            {
+                supplier_condition += " AND company_name == '" + supplier_name + "'";
+            }
+        }
+        auto extra_vichele = company->get_all_children<pa_sql_vichele_stay_alone>("destination", "is_drop == 0 AND status == %ld AND (%s) AND (%s) AND (%s) ORDER BY PRI_ID DESC LIMIT 15 OFFSET %ld", status, date_condition.c_str(), stuff_condition.c_str(), supplier_condition.c_str(), anchor);
         for (auto &itr : extra_vichele)
         {
             vichele_stay_alone tmp;
@@ -1123,6 +1145,25 @@ public:
         for (auto &itr : all_except)
         {
             _return.push_back(itr.name);
+        }
+    }
+
+    virtual void get_company_brief(single_vichele_brief &_return, const std::string &ssid)
+    {
+        auto company = PA_DATAOPT_get_company_by_ssid(ssid);
+        if (!company)
+        {
+            PA_RETURN_NOPRIVA_MSG();
+        }
+        auto stuff_names = company->get_all_children<pa_sql_vichele_stay_alone>("destination", "is_drop == 0 GROUP BY stuff_name");
+        for (auto &itr : stuff_names)
+        {
+            _return.stuff_names.push_back(itr.stuff_name);
+        }
+        auto supplier_names = company->get_all_children<pa_sql_vichele_stay_alone>("destination", "is_drop == 0 GROUP BY company_name");
+        for (auto &itr : supplier_names)
+        {
+            _return.supplier_names.push_back(itr.company_name);
         }
     }
 };

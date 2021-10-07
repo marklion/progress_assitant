@@ -12,49 +12,54 @@
         <van-cell title="电话号" :value="driver_phone"></van-cell>
         <van-cell title="身份证号" :value="driver_id"></van-cell>
         <van-divider>今日承运信息</van-divider>
-        <div class="single_record_show" v-for="(single_trans, index) in trans_info" :key="index">
-            <div v-if="!single_trans.can_enter" style="color:red;">不可进</div>
-            <div v-else style="color:green;">可进</div>
-            <van-cell title="进厂时间" :value="single_trans.date"></van-cell>
-            <van-cell :title="single_trans.main_vichele + '-' + single_trans.behind_vichele" :value="single_trans.stuff_name" :label="single_trans.order_company?single_trans.order_company:'(未指定拉货公司)'" />
-            <van-cell v-if="!single_trans.is_buy" :title="single_trans.destination_company" center>
-                <template #right-icon>
-                    <div style="margin-left:8px;">
-                        <van-button v-if="!single_trans.is_registered && single_trans.destination_company" type="info" size="small" @click="register_vichele(single_trans.destination_company, single_trans.id)">排号</van-button>
-                    </div>
-                </template>
-                <div v-if="single_trans.is_registered">
-                    进厂序号：{{single_trans.register_number}}
-                </div>
-                <div v-if="single_trans.is_registered">
-                    还需等待：{{single_trans.register_order}}个
-                </div>
-            </van-cell>
-            <div v-if="single_trans.is_buy">
-                <van-button v-if="!single_trans.order_company" type="info" size="small" @click="act_select_company = true;focus_vichele_index = index">指定拉货公司</van-button>
-                <div v-else>
-                    <van-button v-if="single_trans.company_for_select.length > 0 && single_trans.is_buy" type="warning" size="small" @click="act_select_company = true;focus_vichele_index = index">修改拉货公司</van-button>
-                    <van-cell title="磅单照片" center>
-                        <template #right-icon>
-                            <van-button v-if="single_trans.attach_url" size="small" type="info" @click="pre_view_attach(single_trans.attach_url)">预览</van-button>
-                            <van-uploader :after-read="upload_attachment" @click-upload="proc_focus(single_trans.id)" accept="image/*">
-                                <van-button icon="plus" size="small" type="primary">上传</van-button>
-                            </van-uploader>
-                        </template>
-                    </van-cell>
-                    <div v-if="single_trans.attach_url">
-                        <van-field label="出厂净重" type="number" v-model="input_enter_weight[index]" placeholder="请输入出厂净重"></van-field>
-                        <van-field label="确认出厂净重" type="number" v-model="input_enter_weight_confirm[index]" placeholder="请再次输入出厂净重"></van-field>
-                        <div style="margin:16px;">
-                            <van-button type="primary" block size="small" @click="fill_enter_weight(single_trans.id, index)">提交</van-button>
+        <van-empty v-if="trans_info.length <= 0" description="当前无承运任务，请联系所属单位派车后点击刷新">
+        </van-empty>
+        <div v-else>
+            <div class="single_record_show" v-for="(single_trans, index) in trans_info" :key="index">
+                <div v-if="!single_trans.can_enter" style="color:red;">不可进</div>
+                <div v-else style="color:green;">可进</div>
+                <van-cell title="进厂时间" :value="single_trans.date"></van-cell>
+                <van-cell :title="single_trans.main_vichele + '-' + single_trans.behind_vichele" :value="single_trans.stuff_name" :label="single_trans.order_company?single_trans.order_company:'(未指定拉货公司)'" />
+                <van-cell v-if="!single_trans.is_buy" :title="single_trans.destination_company" center>
+                    <template #right-icon>
+                        <div style="margin-left:8px;">
+                            <van-button v-if="!single_trans.is_registered && single_trans.destination_company" type="info" size="small" @click="register_vichele(single_trans.destination_company, single_trans.id)">排号</van-button>
                         </div>
+                    </template>
+                    <div v-if="single_trans.is_registered">
+                        进厂序号：{{single_trans.register_number}}
                     </div>
+                    <div v-if="single_trans.is_registered">
+                        还需等待：{{single_trans.register_order}}个
+                    </div>
+                </van-cell>
+                <div v-if="single_trans.is_buy">
+                    <van-button v-if="!single_trans.order_company" type="info" size="small" @click="act_select_company = true;focus_vichele_index = index">指定拉货公司</van-button>
+                    <div v-else>
+                        <van-button v-if="single_trans.company_for_select.length > 0 && single_trans.is_buy" type="warning" size="small" @click="act_select_company = true;focus_vichele_index = index">修改拉货公司</van-button>
+                        <van-cell title="磅单照片" center>
+                            <template #right-icon>
+                                <van-button v-if="single_trans.attach_url" size="small" type="info" @click="pre_view_attach(single_trans.attach_url)">预览</van-button>
+                                <van-uploader :after-read="upload_attachment" @click-upload="proc_focus(single_trans.id)" accept="image/*">
+                                    <van-button icon="plus" size="small" type="primary">上传</van-button>
+                                </van-uploader>
+                            </template>
+                        </van-cell>
+                        <div v-if="single_trans.attach_url">
+                            <van-field label="出矿（厂）净重" type="number" v-model="input_enter_weight[index]" placeholder="请输入出厂净重"></van-field>
+                            <van-field label="确认出矿（厂）净重" type="number" v-model="input_enter_weight_confirm[index]" placeholder="请再次输入出厂净重"></van-field>
+                            <div style="margin:16px;">
+                                <van-button type="primary" block size="small" @click="fill_enter_weight(single_trans.id, index)">提交</van-button>
+                            </div>
+                        </div>
 
+                    </div>
                 </div>
+                <van-cell v-if="single_trans.destination_address" title="详细地址：" :value="single_trans.destination_address"></van-cell>
+                <van-cell v-if="single_trans.is_registered" title="进厂位置：" :value="single_trans.enter_location" :label="'签到时间:' + single_trans.register_timestamp"></van-cell>
             </div>
-            <van-cell v-if="single_trans.destination_address" title="详细地址：" :value="single_trans.destination_address"></van-cell>
-            <van-cell v-if="single_trans.is_registered" title="进厂位置：" :value="single_trans.enter_location" :label="'签到时间:' + single_trans.register_timestamp"></van-cell>
         </div>
+        <van-button round type="info" block @click="refresh_cur_page">刷新</van-button>
         <van-action-sheet v-model="act_select_company" :actions="company_for_select" @select="fill_company" />
     </div>
     <div v-if="need_bind_info">
@@ -118,6 +123,14 @@ import {
 import {
     Notify
 } from 'vant';
+import {
+    Empty
+} from 'vant';
+import {
+    Dialog
+} from 'vant';
+
+Vue.use(Empty);
 Vue.use(Uploader);
 Vue.use(ActionSheet);
 Vue.use(CountDown);
@@ -167,6 +180,9 @@ export default {
         },
     },
     methods: {
+        refresh_cur_page: function () {
+            this.$router.go(0);
+        },
         proc_focus: function (_id) {
             console.log(_id);
             this.focus_vichele = _id;
@@ -183,7 +199,9 @@ export default {
             }
             vue_this.$call_remote_process("vichele_management", "fill_enter_weight", [vue_this.$cookies.get('driver_silent_id'), _id, parseFloat(vue_this.input_enter_weight[index])]).then(function (resp) {
                 if (resp) {
-                    vue_this.$router.go(0);
+                    Dialog.confirm({title:'提交成功'}).finally(function () {
+                        vue_this.$router.go(0);
+                    });
                 }
             });
         },
@@ -237,8 +255,13 @@ export default {
         },
         reset_user: function () {
             var vue_this = this;
-            vue_this.$call_remote_process("stuff_plan_management", 'driver_silent_unregister', [vue_this.$cookies.get('driver_silent_id')]).then(function () {
-                vue_this.$router.go(0);
+            Dialog.confirm({
+                title: '重置确认',
+                message: '只有电话或身份证等信息输入错误时才需要重置，确认重置吗？',
+            }).then(() => {
+                vue_this.$call_remote_process("stuff_plan_management", 'driver_silent_unregister', [vue_this.$cookies.get('driver_silent_id')]).then(function () {
+                    vue_this.$router.go(0);
+                });
             });
         },
         send_sms: function () {

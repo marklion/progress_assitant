@@ -1,10 +1,16 @@
 <template>
 <div class="company_extra_vichele_show">
+    <van-tabs v-model="active" @change="refresh_all_records">
+        <van-tab title="未确认"></van-tab>
+        <van-tab title="已确认"></van-tab>
+        <van-tab title="已完成"></van-tab>
+    </van-tabs>
     <van-dropdown-menu>
         <van-dropdown-item v-model="date_filter" :options="date_condition" @change="refresh_all_records" />
-        <van-dropdown-item v-model="status_filter" :options="status_condition" @change="refresh_all_records" />
+        <van-dropdown-item v-model="stuff_filter" :options="stuff_condition" @change="refresh_all_records" />
+        <van-dropdown-item v-model="supplier_filter" :options="supplier_condition" @change="refresh_all_records" />
     </van-dropdown-menu>
-    <van-search v-model="vichele_search_filter" placeholder="过滤车号/提交人/拼音首字母" @input="refresh_all_records" />
+    <van-search v-model="vichele_search_filter" placeholder="过滤车号" @input="refresh_all_records" />
     <van-sticky>
         <van-row type="flex" align="center" v-if="select_pool.length != 0">
             <van-col :span="8">
@@ -150,7 +156,13 @@ import {
 import {
     Sticky
 } from 'vant';
+import {
+    Tab,
+    Tabs
+} from 'vant';
 
+Vue.use(Tab);
+Vue.use(Tabs);
 Vue.use(Sticky);
 Vue.use(Divider);
 Vue.use(Switch);
@@ -176,6 +188,7 @@ export default {
     },
     data: function () {
         return {
+            active: 0,
             smart_company: '',
             new_company_name: '',
             change_diag_show: false,
@@ -189,9 +202,12 @@ export default {
             loading: false,
             finished: false,
             select_pool: [],
-            date_filter: -1,
+            date_filter: -2,
             date_condition: [{
                 text: '所有进厂日期',
+                value: -2,
+            }, {
+                text: '昨日进厂',
                 value: -1,
             }, {
                 text: '今日进厂',
@@ -200,61 +216,29 @@ export default {
                 text: '明日进厂',
                 value: 1,
             }],
-            status_filter: -1,
-            status_condition: [{
-                text: '所有申请',
+            stuff_filter: -1,
+            stuff_condition: [{
+                text: '所有货物',
                 value: -1,
-            }, {
-                text: '未确认',
-                value: 0,
-            }, {
-                text: '已确认',
-                value: 1,
-            }, {
-                text: '已完成',
-                value: 2,
+            }, ],
+            supplier_filter: -1,
+            supplier_condition: [{
+                text: '所有供应商',
+                value: -1,
             }, ],
         };
     },
     computed: {
         items_need_show: function () {
             var ret = [];
-            var current_date = new Date();
-            var current_day = parseInt(current_date.getTime() / 1000 / 60 / 60 / 24);
             var vue_this = this;
-            this.items.forEach(element => {
-                if (vue_this.date_filter == -1) {
-                    ret.push(element);
-                } else {
-                    var vichele_day = new Date(element.date);
-                    vichele_day = parseInt(vichele_day.getTime() / 1000 / 60 / 60 / 24);
-                    console.log(vichele_day - current_day);
-                    if (vue_this.date_filter == (vichele_day - current_day)) {
-                        ret.push(element);
-                    }
-                }
-            });
-            var tmp_ret = ret;
-            ret = [];
-            tmp_ret.forEach(element => {
-                if (vue_this.status_filter == -1) {
-                    ret.push(element);
-                } else {
-                    if (vue_this.status_filter == element.status) {
-                        ret.push(element);
-                    }
-                }
-            });
-            tmp_ret = ret;
-            ret = [];
 
-            tmp_ret.forEach(element => {
+            this.items.forEach(element => {
                 if (vue_this.vichele_search_filter.length == 0) {
                     ret.push(element);
                 } else {
                     if (PinyinMatch.match(element.main_vichele_number, vue_this.vichele_search_filter) ||
-                        PinyinMatch.match(element.behind_vichele_number, vue_this.vichele_search_filter) ||
-                        PinyinMatch.match(element.creator_name, vue_this.vichele_search_filter)) {
+                        PinyinMatch.match(element.behind_vichele_number, vue_this.vichele_search_filter)) {
                         ret.push(element);
                     }
                 }
@@ -289,6 +273,8 @@ export default {
             this.change_diag_show = true;
         },
         refresh_all_records: function () {
+            this.finished = false;
+            this.items = [];
             this.$refs.all_record.check();
         },
         formatDateTime: function (date) {
@@ -349,7 +335,27 @@ export default {
         },
         onLoad: function () {
             var vue_this = this;
-            vue_this.$call_remote_process("vichele_management", 'get_company_vichele_info', [vue_this.$cookies.get('pa_ssid'), vue_this.items.length]).then(function (resp) {
+            var status = vue_this.active;
+            var cur_date = new Date();
+            cur_date.setDate(cur_date.getDate() + vue_this.date_filter)
+            var date_condition = '';
+            if (vue_this.date_filter != -2) {
+                date_condition = vue_this.formatDateTime(cur_date);
+            }
+            var stuff_condition = '';
+            if (vue_this.stuff_filter != -1) {
+                stuff_condition = vue_this.stuff_condition.find(value => {
+                    return value.value == vue_this.stuff_filter
+                }).text;
+            }
+            var supplier_condition = '';
+            if (vue_this.supplier_filter != -1) {
+                supplier_condition = vue_this.supplier_condition.find(value => {
+                    return value.value == vue_this.supplier_filter
+                }).text;
+            }
+
+            vue_this.$call_remote_process("vichele_management", 'get_company_vichele_info', [vue_this.$cookies.get('pa_ssid'), vue_this.items.length, status, date_condition, stuff_condition, supplier_condition, '']).then(function (resp) {
                 resp.forEach(element => {
                     vue_this.items.push(element);
                 });
@@ -370,9 +376,27 @@ export default {
                 });
             });
         },
+        init_brief_data: function () {
+            var vue_this = this;
+            vue_this.$call_remote_process("vichele_management", "get_company_brief", [vue_this.$cookies.get('pa_ssid')]).then(function (resp) {
+                resp.stuff_names.forEach(element => {
+                    vue_this.stuff_condition.push({
+                        text: element,
+                        value: vue_this.stuff_condition.length
+                    });
+                });
+                resp.supplier_names.forEach(element => {
+                    vue_this.supplier_condition.push({
+                        text: element.length > 0 ? element : '未指定',
+                        value: vue_this.supplier_condition.length
+                    });
+                });
+            });
+        },
     },
     beforeMount: function () {
         this.init_company_for_select();
+        this.init_brief_data();
     },
 }
 </script>

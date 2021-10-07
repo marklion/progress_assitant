@@ -973,14 +973,14 @@ uint32_t user_management_get_bound_vichele_result::read(::apache::thrift::protoc
         if (ftype == ::apache::thrift::protocol::T_LIST) {
           {
             this->success.clear();
-            uint32_t _size104;
-            ::apache::thrift::protocol::TType _etype107;
-            xfer += iprot->readListBegin(_etype107, _size104);
-            this->success.resize(_size104);
-            uint32_t _i108;
-            for (_i108 = 0; _i108 < _size104; ++_i108)
+            uint32_t _size118;
+            ::apache::thrift::protocol::TType _etype121;
+            xfer += iprot->readListBegin(_etype121, _size118);
+            this->success.resize(_size118);
+            uint32_t _i122;
+            for (_i122 = 0; _i122 < _size118; ++_i122)
             {
-              xfer += this->success[_i108].read(iprot);
+              xfer += this->success[_i122].read(iprot);
             }
             xfer += iprot->readListEnd();
           }
@@ -1019,10 +1019,10 @@ uint32_t user_management_get_bound_vichele_result::write(::apache::thrift::proto
     xfer += oprot->writeFieldBegin("success", ::apache::thrift::protocol::T_LIST, 0);
     {
       xfer += oprot->writeListBegin(::apache::thrift::protocol::T_STRUCT, static_cast<uint32_t>(this->success.size()));
-      std::vector<vichele_info_t> ::const_iterator _iter109;
-      for (_iter109 = this->success.begin(); _iter109 != this->success.end(); ++_iter109)
+      std::vector<vichele_info_t> ::const_iterator _iter123;
+      for (_iter123 = this->success.begin(); _iter123 != this->success.end(); ++_iter123)
       {
-        xfer += (*_iter109).write(oprot);
+        xfer += (*_iter123).write(oprot);
       }
       xfer += oprot->writeListEnd();
     }
@@ -1067,14 +1067,14 @@ uint32_t user_management_get_bound_vichele_presult::read(::apache::thrift::proto
         if (ftype == ::apache::thrift::protocol::T_LIST) {
           {
             (*(this->success)).clear();
-            uint32_t _size110;
-            ::apache::thrift::protocol::TType _etype113;
-            xfer += iprot->readListBegin(_etype113, _size110);
-            (*(this->success)).resize(_size110);
-            uint32_t _i114;
-            for (_i114 = 0; _i114 < _size110; ++_i114)
+            uint32_t _size124;
+            ::apache::thrift::protocol::TType _etype127;
+            xfer += iprot->readListBegin(_etype127, _size124);
+            (*(this->success)).resize(_size124);
+            uint32_t _i128;
+            for (_i128 = 0; _i128 < _size124; ++_i128)
             {
-              xfer += (*(this->success))[_i114].read(iprot);
+              xfer += (*(this->success))[_i128].read(iprot);
             }
             xfer += iprot->readListEnd();
           }
@@ -2526,14 +2526,14 @@ uint32_t user_management_get_bound_driver_info_result::read(::apache::thrift::pr
         if (ftype == ::apache::thrift::protocol::T_LIST) {
           {
             this->success.clear();
-            uint32_t _size115;
-            ::apache::thrift::protocol::TType _etype118;
-            xfer += iprot->readListBegin(_etype118, _size115);
-            this->success.resize(_size115);
-            uint32_t _i119;
-            for (_i119 = 0; _i119 < _size115; ++_i119)
+            uint32_t _size129;
+            ::apache::thrift::protocol::TType _etype132;
+            xfer += iprot->readListBegin(_etype132, _size129);
+            this->success.resize(_size129);
+            uint32_t _i133;
+            for (_i133 = 0; _i133 < _size129; ++_i133)
             {
-              xfer += this->success[_i119].read(iprot);
+              xfer += this->success[_i133].read(iprot);
             }
             xfer += iprot->readListEnd();
           }
@@ -2572,10 +2572,10 @@ uint32_t user_management_get_bound_driver_info_result::write(::apache::thrift::p
     xfer += oprot->writeFieldBegin("success", ::apache::thrift::protocol::T_LIST, 0);
     {
       xfer += oprot->writeListBegin(::apache::thrift::protocol::T_STRUCT, static_cast<uint32_t>(this->success.size()));
-      std::vector<driver_info> ::const_iterator _iter120;
-      for (_iter120 = this->success.begin(); _iter120 != this->success.end(); ++_iter120)
+      std::vector<driver_info> ::const_iterator _iter134;
+      for (_iter134 = this->success.begin(); _iter134 != this->success.end(); ++_iter134)
       {
-        xfer += (*_iter120).write(oprot);
+        xfer += (*_iter134).write(oprot);
       }
       xfer += oprot->writeListEnd();
     }
@@ -2620,14 +2620,14 @@ uint32_t user_management_get_bound_driver_info_presult::read(::apache::thrift::p
         if (ftype == ::apache::thrift::protocol::T_LIST) {
           {
             (*(this->success)).clear();
-            uint32_t _size121;
-            ::apache::thrift::protocol::TType _etype124;
-            xfer += iprot->readListBegin(_etype124, _size121);
-            (*(this->success)).resize(_size121);
-            uint32_t _i125;
-            for (_i125 = 0; _i125 < _size121; ++_i125)
+            uint32_t _size135;
+            ::apache::thrift::protocol::TType _etype138;
+            xfer += iprot->readListBegin(_etype138, _size135);
+            (*(this->success)).resize(_size135);
+            uint32_t _i139;
+            for (_i139 = 0; _i139 < _size135; ++_i139)
             {
-              xfer += (*(this->success))[_i125].read(iprot);
+              xfer += (*(this->success))[_i139].read(iprot);
             }
             xfer += iprot->readListEnd();
           }

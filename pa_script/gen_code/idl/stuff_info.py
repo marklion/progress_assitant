@@ -714,11 +714,11 @@ class get_today_result(object):
             if fid == 0:
                 if ftype == TType.LIST:
                     self.success = []
-                    (_etype101, _size98) = iprot.readListBegin()
-                    for _i102 in range(_size98):
-                        _elem103 = stuff_detail()
-                        _elem103.read(iprot)
-                        self.success.append(_elem103)
+                    (_etype115, _size112) = iprot.readListBegin()
+                    for _i116 in range(_size112):
+                        _elem117 = stuff_detail()
+                        _elem117.read(iprot)
+                        self.success.append(_elem117)
                     iprot.readListEnd()
                 else:
                     iprot.skip(ftype)
@@ -740,8 +740,8 @@ class get_today_result(object):
         if self.success is not None:
             oprot.writeFieldBegin('success', TType.LIST, 0)
             oprot.writeListBegin(TType.STRUCT, len(self.success))
-            for iter104 in self.success:
-                iter104.write(oprot)
+            for iter118 in self.success:
+                iter118.write(oprot)
             oprot.writeListEnd()
             oprot.writeFieldEnd()
         if self.e is not None:
@@ -858,11 +858,11 @@ class get_today_unfollow_result(object):
             if fid == 0:
                 if ftype == TType.LIST:
                     self.success = []
-                    (_etype108, _size105) = iprot.readListBegin()
-                    for _i109 in range(_size105):
-                        _elem110 = stuff_detail()
-                        _elem110.read(iprot)
-                        self.success.append(_elem110)
+                    (_etype122, _size119) = iprot.readListBegin()
+                    for _i123 in range(_size119):
+                        _elem124 = stuff_detail()
+                        _elem124.read(iprot)
+                        self.success.append(_elem124)
                     iprot.readListEnd()
                 else:
                     iprot.skip(ftype)
@@ -884,8 +884,8 @@ class get_today_unfollow_result(object):
         if self.success is not None:
             oprot.writeFieldBegin('success', TType.LIST, 0)
             oprot.writeListBegin(TType.STRUCT, len(self.success))
-            for iter111 in self.success:
-                iter111.write(oprot)
+            for iter125 in self.success:
+                iter125.write(oprot)
             oprot.writeListEnd()
             oprot.writeFieldEnd()
         if self.e is not None:
@@ -1468,11 +1468,11 @@ class get_follow_stuff_by_company_result(object):
             if fid == 0:
                 if ftype == TType.LIST:
                     self.success = []
-                    (_etype115, _size112) = iprot.readListBegin()
-                    for _i116 in range(_size112):
-                        _elem117 = stuff_detail()
-                        _elem117.read(iprot)
-                        self.success.append(_elem117)
+                    (_etype129, _size126) = iprot.readListBegin()
+                    for _i130 in range(_size126):
+                        _elem131 = stuff_detail()
+                        _elem131.read(iprot)
+                        self.success.append(_elem131)
                     iprot.readListEnd()
                 else:
                     iprot.skip(ftype)
@@ -1494,8 +1494,8 @@ class get_follow_stuff_by_company_result(object):
         if self.success is not None:
             oprot.writeFieldBegin('success', TType.LIST, 0)
             oprot.writeListBegin(TType.STRUCT, len(self.success))
-            for iter118 in self.success:
-                iter118.write(oprot)
+            for iter132 in self.success:
+                iter132.write(oprot)
             oprot.writeListEnd()
             oprot.writeFieldEnd()
         if self.e is not None:
@@ -1624,10 +1624,10 @@ class get_follow_company_by_stuff_result(object):
             if fid == 0:
                 if ftype == TType.LIST:
                     self.success = []
-                    (_etype122, _size119) = iprot.readListBegin()
-                    for _i123 in range(_size119):
-                        _elem124 = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
-                        self.success.append(_elem124)
+                    (_etype136, _size133) = iprot.readListBegin()
+                    for _i137 in range(_size133):
+                        _elem138 = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                        self.success.append(_elem138)
                     iprot.readListEnd()
                 else:
                     iprot.skip(ftype)
@@ -1649,8 +1649,8 @@ class get_follow_company_by_stuff_result(object):
         if self.success is not None:
             oprot.writeFieldBegin('success', TType.LIST, 0)
             oprot.writeListBegin(TType.STRING, len(self.success))
-            for iter125 in self.success:
-                oprot.writeString(iter125.encode('utf-8') if sys.version_info[0] == 2 else iter125)
+            for iter139 in self.success:
+                oprot.writeString(iter139.encode('utf-8') if sys.version_info[0] == 2 else iter139)
             oprot.writeListEnd()
             oprot.writeFieldEnd()
         if self.e is not None:
@@ -1767,10 +1767,10 @@ class get_related_stuff_result(object):
             if fid == 0:
                 if ftype == TType.LIST:
                     self.success = []
-                    (_etype129, _size126) = iprot.readListBegin()
-                    for _i130 in range(_size126):
-                        _elem131 = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
-                        self.success.append(_elem131)
+                    (_etype143, _size140) = iprot.readListBegin()
+                    for _i144 in range(_size140):
+                        _elem145 = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                        self.success.append(_elem145)
                     iprot.readListEnd()
                 else:
                     iprot.skip(ftype)
@@ -1792,8 +1792,8 @@ class get_related_stuff_result(object):
         if self.success is not None:
             oprot.writeFieldBegin('success', TType.LIST, 0)
             oprot.writeListBegin(TType.STRING, len(self.success))
-            for iter132 in self.success:
-                oprot.writeString(iter132.encode('utf-8') if sys.version_info[0] == 2 else iter132)
+            for iter146 in self.success:
+                oprot.writeString(iter146.encode('utf-8') if sys.version_info[0] == 2 else iter146)
             oprot.writeListEnd()
             oprot.writeFieldEnd()
         if self.e is not None:

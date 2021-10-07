@@ -5429,3 +5429,98 @@ supplier_basic_info = class {
   }
 
 };
+single_vichele_brief = class {
+  constructor(args) {
+    this.stuff_names = null;
+    this.supplier_names = null;
+    if (args) {
+      if (args.stuff_names !== undefined && args.stuff_names !== null) {
+        this.stuff_names = Thrift.copyList(args.stuff_names, [null]);
+      }
+      if (args.supplier_names !== undefined && args.supplier_names !== null) {
+        this.supplier_names = Thrift.copyList(args.supplier_names, [null]);
+      }
+    }
+  }
+
+  read (input) {
+    input.readStructBegin();
+    while (true) {
+      const ret = input.readFieldBegin();
+      const ftype = ret.ftype;
+      const fid = ret.fid;
+      if (ftype == Thrift.Type.STOP) {
+        break;
+      }
+      switch (fid) {
+        case 1:
+        if (ftype == Thrift.Type.LIST) {
+          this.stuff_names = [];
+          const _rtmp321 = input.readListBegin();
+          const _size20 = _rtmp321.size || 0;
+          for (let _i22 = 0; _i22 < _size20; ++_i22) {
+            let elem23 = null;
+            elem23 = input.readString().value;
+            this.stuff_names.push(elem23);
+          }
+          input.readListEnd();
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        case 2:
+        if (ftype == Thrift.Type.LIST) {
+          this.supplier_names = [];
+          const _rtmp325 = input.readListBegin();
+          const _size24 = _rtmp325.size || 0;
+          for (let _i26 = 0; _i26 < _size24; ++_i26) {
+            let elem27 = null;
+            elem27 = input.readString().value;
+            this.supplier_names.push(elem27);
+          }
+          input.readListEnd();
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        default:
+          input.skip(ftype);
+      }
+      input.readFieldEnd();
+    }
+    input.readStructEnd();
+    return;
+  }
+
+  write (output) {
+    output.writeStructBegin('single_vichele_brief');
+    if (this.stuff_names !== null && this.stuff_names !== undefined) {
+      output.writeFieldBegin('stuff_names', Thrift.Type.LIST, 1);
+      output.writeListBegin(Thrift.Type.STRING, this.stuff_names.length);
+      for (let iter28 in this.stuff_names) {
+        if (this.stuff_names.hasOwnProperty(iter28)) {
+          iter28 = this.stuff_names[iter28];
+          output.writeString(iter28);
+        }
+      }
+      output.writeListEnd();
+      output.writeFieldEnd();
+    }
+    if (this.supplier_names !== null && this.supplier_names !== undefined) {
+      output.writeFieldBegin('supplier_names', Thrift.Type.LIST, 2);
+      output.writeListBegin(Thrift.Type.STRING, this.supplier_names.length);
+      for (let iter29 in this.supplier_names) {
+        if (this.supplier_names.hasOwnProperty(iter29)) {
+          iter29 = this.supplier_names[iter29];
+          output.writeString(iter29);
+        }
+      }
+      output.writeListEnd();
+      output.writeFieldEnd();
+    }
+    output.writeFieldStop();
+    output.writeStructEnd();
+    return;
+  }
+
+};

@@ -5356,3 +5356,96 @@ supplier_basic_info.prototype.write = function(output) {
   return;
 };
 
+var single_vichele_brief = module.exports.single_vichele_brief = function(args) {
+  this.stuff_names = null;
+  this.supplier_names = null;
+  if (args) {
+    if (args.stuff_names !== undefined && args.stuff_names !== null) {
+      this.stuff_names = Thrift.copyList(args.stuff_names, [null]);
+    }
+    if (args.supplier_names !== undefined && args.supplier_names !== null) {
+      this.supplier_names = Thrift.copyList(args.supplier_names, [null]);
+    }
+  }
+};
+single_vichele_brief.prototype = {};
+single_vichele_brief.prototype.read = function(input) {
+  input.readStructBegin();
+  while (true) {
+    var ret = input.readFieldBegin();
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    switch (fid) {
+      case 1:
+      if (ftype == Thrift.Type.LIST) {
+        this.stuff_names = [];
+        var _rtmp321 = input.readListBegin();
+        var _size20 = _rtmp321.size || 0;
+        for (var _i22 = 0; _i22 < _size20; ++_i22) {
+          var elem23 = null;
+          elem23 = input.readString();
+          this.stuff_names.push(elem23);
+        }
+        input.readListEnd();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 2:
+      if (ftype == Thrift.Type.LIST) {
+        this.supplier_names = [];
+        var _rtmp325 = input.readListBegin();
+        var _size24 = _rtmp325.size || 0;
+        for (var _i26 = 0; _i26 < _size24; ++_i26) {
+          var elem27 = null;
+          elem27 = input.readString();
+          this.supplier_names.push(elem27);
+        }
+        input.readListEnd();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      default:
+        input.skip(ftype);
+    }
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+single_vichele_brief.prototype.write = function(output) {
+  output.writeStructBegin('single_vichele_brief');
+  if (this.stuff_names !== null && this.stuff_names !== undefined) {
+    output.writeFieldBegin('stuff_names', Thrift.Type.LIST, 1);
+    output.writeListBegin(Thrift.Type.STRING, this.stuff_names.length);
+    for (var iter28 in this.stuff_names) {
+      if (this.stuff_names.hasOwnProperty(iter28)) {
+        iter28 = this.stuff_names[iter28];
+        output.writeString(iter28);
+      }
+    }
+    output.writeListEnd();
+    output.writeFieldEnd();
+  }
+  if (this.supplier_names !== null && this.supplier_names !== undefined) {
+    output.writeFieldBegin('supplier_names', Thrift.Type.LIST, 2);
+    output.writeListBegin(Thrift.Type.STRING, this.supplier_names.length);
+    for (var iter29 in this.supplier_names) {
+      if (this.supplier_names.hasOwnProperty(iter29)) {
+        iter29 = this.supplier_names[iter29];
+        output.writeString(iter29);
+      }
+    }
+    output.writeListEnd();
+    output.writeFieldEnd();
+  }
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+

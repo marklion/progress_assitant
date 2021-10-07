@@ -498,6 +498,11 @@ struct supplier_basic_info {
     4:i64 id,
 }
 
+struct single_vichele_brief {
+    1:list<string> stuff_names,
+    2:list<string> supplier_names,
+}
+
 service vichele_management {
     bool create_vichele_info(1:string open_id, 2:list<vichele_stay_alone> vichele_info) throws (1:gen_exp e),
     bool delete_vichele_info(1:string open_id, 2:i64 vichele_id) throws (1:gen_exp e),
@@ -508,7 +513,7 @@ service vichele_management {
     silent_user_info get_silent_user_info(1:string open_id) throws (1:gen_exp e),
     void set_silent_user_info(1:string open_id, 2:silent_user_info info) throws (1:gen_exp e),
     list<string> get_input_history(1:string open_id, 2:vichele_stay_alone search_key) throws (1:gen_exp e),
-    list<vichele_stay_alone> get_company_vichele_info(1:string ssid, 2:i64 anchor) throws (1:gen_exp e),
+    list<vichele_stay_alone> get_company_vichele_info(1:string ssid, 2:i64 anchor, 3:i64 status, 4:string enter_date, 5:string stuff_name, 6:string supplier_name, 7:string vichele_number) throws (1:gen_exp e),
     bool confirm_vichele(1:string ssid, 2:list<vichele_stay_alone> info, 3:list<string> company_for_select, 4:bool all_select) throws (1:gen_exp e),
     bool cancel_vichele(1:string ssid, 2:list<vichele_stay_alone> info, 3:bool all_select) throws (1:gen_exp e),
     bool create_vichele_team(1:string open_id, 2:vichele_team team_info) throws (1:gen_exp e),
@@ -531,4 +536,5 @@ service vichele_management {
     bool add_exception(1:string ssid, 2:string stuff_name) throws (1:gen_exp e),
     bool del_exception(1:string ssid, 2:string stuff_name) throws (1:gen_exp e),
     list<string> get_all_exceptions(1:string ssid) throws (1:gen_exp e),
+    single_vichele_brief get_company_brief(1:string ssid) throws (1:gen_exp e),
 }

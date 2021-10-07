@@ -1912,11 +1912,11 @@ class get_bound_vichele_result(object):
             if fid == 0:
                 if ftype == TType.LIST:
                     self.success = []
-                    (_etype31, _size28) = iprot.readListBegin()
-                    for _i32 in range(_size28):
-                        _elem33 = vichele_info_t()
-                        _elem33.read(iprot)
-                        self.success.append(_elem33)
+                    (_etype45, _size42) = iprot.readListBegin()
+                    for _i46 in range(_size42):
+                        _elem47 = vichele_info_t()
+                        _elem47.read(iprot)
+                        self.success.append(_elem47)
                     iprot.readListEnd()
                 else:
                     iprot.skip(ftype)
@@ -1938,8 +1938,8 @@ class get_bound_vichele_result(object):
         if self.success is not None:
             oprot.writeFieldBegin('success', TType.LIST, 0)
             oprot.writeListBegin(TType.STRUCT, len(self.success))
-            for iter34 in self.success:
-                iter34.write(oprot)
+            for iter48 in self.success:
+                iter48.write(oprot)
             oprot.writeListEnd()
             oprot.writeFieldEnd()
         if self.e is not None:
@@ -2927,11 +2927,11 @@ class get_bound_driver_info_result(object):
             if fid == 0:
                 if ftype == TType.LIST:
                     self.success = []
-                    (_etype38, _size35) = iprot.readListBegin()
-                    for _i39 in range(_size35):
-                        _elem40 = driver_info()
-                        _elem40.read(iprot)
-                        self.success.append(_elem40)
+                    (_etype52, _size49) = iprot.readListBegin()
+                    for _i53 in range(_size49):
+                        _elem54 = driver_info()
+                        _elem54.read(iprot)
+                        self.success.append(_elem54)
                     iprot.readListEnd()
                 else:
                     iprot.skip(ftype)
@@ -2953,8 +2953,8 @@ class get_bound_driver_info_result(object):
         if self.success is not None:
             oprot.writeFieldBegin('success', TType.LIST, 0)
             oprot.writeListBegin(TType.STRUCT, len(self.success))
-            for iter41 in self.success:
-                iter41.write(oprot)
+            for iter55 in self.success:
+                iter55.write(oprot)
             oprot.writeListEnd()
             oprot.writeFieldEnd()
         if self.e is not None:
