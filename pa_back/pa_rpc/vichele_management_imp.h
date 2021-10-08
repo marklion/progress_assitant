@@ -354,7 +354,7 @@ public:
         {
             stuff_condition += " AND stuff_name == '" + stuff_name + "'";
         }
-        std::string supplier_condition = "company_name != ''";
+        std::string supplier_condition = "company_name != 'NULL'";
         if (supplier_name.length() > 0)
         {
             if (supplier_name == "未指定")
@@ -488,11 +488,8 @@ public:
             auto created_user = itr.get_parent<pa_sql_silent_user>("created_by");
             if (created_user && !company->get_children<pa_sql_except_stuff>("belong_company", "name == '%s'", itr.stuff_name.c_str()))
             {
-                if (company->get_children<pa_sql_userinfo>("belong_company", "openid == '%s'", created_user->open_id.c_str()))
-                {
-                    itr.company_for_select = company_for_select_string;
-                    itr.no_permission = 1;
-                }
+                itr.company_for_select = company_for_select_string;
+                itr.no_permission = 1;
             }
             if (itr.update_record())
             {
@@ -1041,9 +1038,9 @@ public:
 
     void clean_unclose_vichele()
     {
-        auto yesterday_sec = time(NULL) - 3600 * 24;
-        auto yestardey_str = PA_DATAOPT_date_2_timestring(yesterday_sec).substr(0, 10);
-        auto need_clean = sqlite_orm::search_record_all<pa_sql_vichele_stay_alone>("is_drop == 0 AND status <= 1 AND date == '%s'", yestardey_str.c_str());
+        auto the_day_before_yesterday_sec = time(NULL) - 3600 * 48;
+        auto the_day_before_yestardey_str = PA_DATAOPT_date_2_timestring(the_day_before_yesterday_sec).substr(0, 10);
+        auto need_clean = sqlite_orm::search_record_all<pa_sql_vichele_stay_alone>("is_drop == 0 AND status <= 1 AND date == '%s'", the_day_before_yestardey_str.c_str());
         for (auto &itr : need_clean)
         {
             try

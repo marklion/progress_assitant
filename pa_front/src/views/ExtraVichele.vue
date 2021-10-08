@@ -33,7 +33,24 @@
                         </div>
                     </van-form>
                 </van-dialog>
-                <van-button type="info" size="small" round native-type="button" block @click="team_brief_show= true">选择车队</van-button>
+                <van-dialog v-model="add_single_vichele_show" title="选择车辆" :showConfirmButton="false" closeOnClickOverlay>
+                    <div style="height: 70vh;overflow: auto;">
+                        <van-search v-model="single_search_key" placeholder="请输入车牌号" />
+                        <van-cell v-for="(single_vichele, index) in vichele_searched" :key="index" :title="single_vichele.main_vichele_number">
+                            <template #right-icon>
+                                <van-button type="primary" size="small" @click="add_single_vichele(single_vichele)">选择</van-button>
+                            </template>
+                        </van-cell>
+                    </div>
+                </van-dialog>
+                <van-row type="flex" align="center" justify="space-between">
+                    <van-col :span="12">
+                        <van-button type="info" size="small" round native-type="button" block @click="team_brief_show= true">选择车队</van-button>
+                    </van-col>
+                    <van-col :span="12">
+                        <van-button type="primary" size="small" round native-type="button" block @click="add_single_vichele_show = true">选择车辆</van-button>
+                    </van-col>
+                </van-row>
                 <van-action-sheet v-model="show_select_vichele_team" :actions="all_vichele_team" @select="select_team" />
                 <div class="vichele_show" v-for="(single_vichele, index) in new_vichele" :key="index" ref="new_vichele">
                     <history-input search_key="main_vichele_number" v-model="single_vichele.main_vichele_number" :formatter="convert_bigger" :rules="[{ required: true, message: '请填写车牌号' }, {pattern: vichele_number_patten, message: '请填写正确的车牌号'}]"></history-input>
@@ -230,7 +247,12 @@ import {
 import {
     ActionSheet
 } from 'vant';
+import {
+    Search
+} from 'vant';
+import PinyinMatch from 'pinyin-match';
 
+Vue.use(Search);
 Vue.use(ActionSheet);
 Vue.use(Grid);
 Vue.use(GridItem);
@@ -275,9 +297,33 @@ export default {
 
             return ret;
         },
+        vichele_searched: function () {
+            var vue_this = this;
+            var all_vicheles = [];
+            var ret = [];
+            vue_this.all_vichele_team.forEach(team_ele => {
+                team_ele.members.forEach(element => {
+                    all_vicheles.push(element);
+                });
+            });
+
+            if (vue_this.single_search_key.length <= 0) {
+                ret = all_vicheles;
+            } else {
+                all_vicheles.forEach(element => {
+                    if (PinyinMatch.match(element.main_vichele_number, vue_this.single_search_key)) {
+                        ret.push(element);
+                    }
+                });
+            }
+
+            return ret;
+        },
     },
     data: function () {
         return {
+            single_search_key: '',
+            add_single_vichele_show: false,
             team_brief_show: false,
             team_brief_count: 0,
             team_brief_multi: false,
@@ -350,6 +396,10 @@ export default {
         },
     },
     methods: {
+        add_single_vichele: function(_vichele) {
+            this.new_vichele.push(_vichele);
+            this.add_single_vichele_show = false;
+        },
         remove_vichele_team: function () {
             var vue_this = this;
             vue_this.$call_remote_process("vichele_management", "del_vichele_team", [vue_this.$cookies.get('silent_id'), vue_this.current_vichele_team.id]).then(function (resp) {
@@ -366,7 +416,7 @@ export default {
         remove_vichele: function (_index) {
             var vue_this = this;
             vue_this.new_vichele.splice(_index, 1);
-            vue_this.$refs.new_vichele.forEach(element=>{
+            vue_this.$refs.new_vichele.forEach(element => {
                 element.style["border-color"] = 'blue';
             });
         },

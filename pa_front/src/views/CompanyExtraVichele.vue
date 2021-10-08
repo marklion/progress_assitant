@@ -10,7 +10,7 @@
         <van-dropdown-item v-model="stuff_filter" :options="stuff_condition" @change="refresh_all_records" />
         <van-dropdown-item v-model="supplier_filter" :options="supplier_condition" @change="refresh_all_records" />
     </van-dropdown-menu>
-    <van-search v-model="vichele_search_filter" placeholder="过滤车号" @input="refresh_all_records" />
+    <van-search v-model="vichele_search_filter" placeholder="过滤车号" @input="search_more" />
     <van-sticky>
         <van-row type="flex" align="center" v-if="select_pool.length != 0">
             <van-col :span="8">
@@ -271,6 +271,9 @@ export default {
         change_company_name: function (_id) {
             this.change_id = _id;
             this.change_diag_show = true;
+        },
+        search_more:function () {
+            this.$refs.all_record.check();
         },
         refresh_all_records: function () {
             this.finished = false;
