@@ -531,23 +531,33 @@ public:
             query_cmd = "PRI_ID != 0";
         }
 
+        std::string except_ret;
+
         auto extra_vichele = company->get_all_children<pa_sql_vichele_stay_alone>("destination", "(%s)  AND is_drop == 0 AND status != 2", query_cmd.c_str());
         for (auto &itr : extra_vichele)
         {
             auto update_ret = PA_DATAOPT_post_sync_change_register(itr);
-            if (update_ret.length() > 0)
+            if (update_ret.length() <= 0)
             {
-                PA_RETURN_CANNOT_CANCLE(update_ret);
-            }
-            itr.is_drop = 1;
-            if (itr.update_record())
-            {
-                auto silent_user = itr.get_parent<pa_sql_silent_user>("created_by");
-                if (silent_user)
+                itr.is_drop = 1;
+                if (itr.update_record())
                 {
-                    PA_WECHAT_send_extra_vichele_msg(itr, silent_user->open_id, user->name + "删除了进厂申请");
+                    auto silent_user = itr.get_parent<pa_sql_silent_user>("created_by");
+                    if (silent_user)
+                    {
+                        PA_WECHAT_send_extra_vichele_msg(itr, silent_user->open_id, user->name + "删除了进厂申请");
+                    }
                 }
             }
+            else
+            {
+                except_ret += update_ret + "\n";
+            }
+        }
+
+        if (except_ret.length() > 0)
+        {
+            PA_RETURN_CANNOT_CANCLE(except_ret);
         }
 
         return true;
