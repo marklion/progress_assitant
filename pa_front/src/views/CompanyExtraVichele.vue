@@ -300,13 +300,11 @@ export default {
                     message: '确认取消所选的车辆进厂吗？',
                 })
                 .then(() => {
-                    vue_this.$call_remote_process("vichele_management", 'cancel_vichele', [vue_this.$cookies.get('pa_ssid'), vue_this.select_pool, vue_this.is_all_select()]).then(function (resp) {
-                        if (resp) {
-                            vue_this.finished = false;
-                            vue_this.items = [];
-                            vue_this.select_pool = [];
-                            vue_this.$refs.all_record.check();
-                        }
+                    vue_this.$call_remote_process("vichele_management", 'cancel_vichele', [vue_this.$cookies.get('pa_ssid'), vue_this.select_pool, vue_this.is_all_select()]).finally(function () {
+                        vue_this.finished = false;
+                        vue_this.items = [];
+                        vue_this.select_pool = [];
+                        vue_this.$refs.all_record.check();
 
                     });
                 });
