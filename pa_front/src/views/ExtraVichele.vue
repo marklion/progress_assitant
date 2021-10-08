@@ -35,7 +35,7 @@
                 </van-dialog>
                 <van-button type="info" size="small" round native-type="button" block @click="team_brief_show= true">选择车队</van-button>
                 <van-action-sheet v-model="show_select_vichele_team" :actions="all_vichele_team" @select="select_team" />
-                <div class="vichele_show" v-for="(single_vichele, index) in new_vichele" :key="index">
+                <div class="vichele_show" v-for="(single_vichele, index) in new_vichele" :key="index" ref="new_vichele">
                     <history-input search_key="main_vichele_number" v-model="single_vichele.main_vichele_number" :formatter="convert_bigger" :rules="[{ required: true, message: '请填写车牌号' }, {pattern: vichele_number_patten, message: '请填写正确的车牌号'}]"></history-input>
                     <history-input search_key="behind_vichele_number" v-model="single_vichele.behind_vichele_number" :formatter="convert_bigger" :rules="[{validator:have_to_have_gua, message: '请输入正确挂车'}]"></history-input>
                     <van-field v-model="single_vichele.count" type="number" name="重量" label="重量（吨）" placeholder="重量" :rules="[{ required: true, message: '请填写重量' }]" />
@@ -366,6 +366,9 @@ export default {
         remove_vichele: function (_index) {
             var vue_this = this;
             vue_this.new_vichele.splice(_index, 1);
+            vue_this.$refs.new_vichele.forEach(element=>{
+                element.style["border-color"] = 'blue';
+            });
         },
         select_team: function (_team) {
             var vue_this = this;
@@ -544,6 +547,15 @@ export default {
                     vue_this.finished = false;
                     vue_this.active = 1;
                     vue_this.$refs.all_record.check();
+                }
+            }).catch(err => {
+                var main_vichele_number = err.msg.split('重复派出')[0];
+                var focus_index = vue_this.new_vichele.findIndex(value => {
+                    return value.main_vichele_number == main_vichele_number;
+                });
+                if (focus_index >= 0) {
+                    vue_this.$refs.new_vichele[focus_index].style["border-color"] = 'red';
+                    vue_this.$refs.new_vichele[focus_index].scrollIntoView();
                 }
             });
         },
