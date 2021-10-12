@@ -5449,3 +5449,98 @@ single_vichele_brief.prototype.write = function(output) {
   return;
 };
 
+var vichele_stay_alone_statistics = module.exports.vichele_stay_alone_statistics = function(args) {
+  this.yestarday_left = null;
+  this.yestarday_total = null;
+  this.today_finish = null;
+  this.today_total = null;
+  if (args) {
+    if (args.yestarday_left !== undefined && args.yestarday_left !== null) {
+      this.yestarday_left = args.yestarday_left;
+    }
+    if (args.yestarday_total !== undefined && args.yestarday_total !== null) {
+      this.yestarday_total = args.yestarday_total;
+    }
+    if (args.today_finish !== undefined && args.today_finish !== null) {
+      this.today_finish = args.today_finish;
+    }
+    if (args.today_total !== undefined && args.today_total !== null) {
+      this.today_total = args.today_total;
+    }
+  }
+};
+vichele_stay_alone_statistics.prototype = {};
+vichele_stay_alone_statistics.prototype.read = function(input) {
+  input.readStructBegin();
+  while (true) {
+    var ret = input.readFieldBegin();
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    switch (fid) {
+      case 1:
+      if (ftype == Thrift.Type.I64) {
+        this.yestarday_left = input.readI64();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 2:
+      if (ftype == Thrift.Type.I64) {
+        this.yestarday_total = input.readI64();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 3:
+      if (ftype == Thrift.Type.I64) {
+        this.today_finish = input.readI64();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 4:
+      if (ftype == Thrift.Type.I64) {
+        this.today_total = input.readI64();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      default:
+        input.skip(ftype);
+    }
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+vichele_stay_alone_statistics.prototype.write = function(output) {
+  output.writeStructBegin('vichele_stay_alone_statistics');
+  if (this.yestarday_left !== null && this.yestarday_left !== undefined) {
+    output.writeFieldBegin('yestarday_left', Thrift.Type.I64, 1);
+    output.writeI64(this.yestarday_left);
+    output.writeFieldEnd();
+  }
+  if (this.yestarday_total !== null && this.yestarday_total !== undefined) {
+    output.writeFieldBegin('yestarday_total', Thrift.Type.I64, 2);
+    output.writeI64(this.yestarday_total);
+    output.writeFieldEnd();
+  }
+  if (this.today_finish !== null && this.today_finish !== undefined) {
+    output.writeFieldBegin('today_finish', Thrift.Type.I64, 3);
+    output.writeI64(this.today_finish);
+    output.writeFieldEnd();
+  }
+  if (this.today_total !== null && this.today_total !== undefined) {
+    output.writeFieldBegin('today_total', Thrift.Type.I64, 4);
+    output.writeI64(this.today_total);
+    output.writeFieldEnd();
+  }
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+

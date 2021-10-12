@@ -103,6 +103,8 @@ class supplier_basic_info;
 
 class single_vichele_brief;
 
+class vichele_stay_alone_statistics;
+
 typedef struct _gen_exp__isset {
   _gen_exp__isset() : msg(false) {}
   bool msg :1;
@@ -3104,6 +3106,66 @@ class single_vichele_brief : public virtual ::apache::thrift::TBase {
 void swap(single_vichele_brief &a, single_vichele_brief &b);
 
 std::ostream& operator<<(std::ostream& out, const single_vichele_brief& obj);
+
+typedef struct _vichele_stay_alone_statistics__isset {
+  _vichele_stay_alone_statistics__isset() : yestarday_left(false), yestarday_total(false), today_finish(false), today_total(false) {}
+  bool yestarday_left :1;
+  bool yestarday_total :1;
+  bool today_finish :1;
+  bool today_total :1;
+} _vichele_stay_alone_statistics__isset;
+
+class vichele_stay_alone_statistics : public virtual ::apache::thrift::TBase {
+ public:
+
+  vichele_stay_alone_statistics(const vichele_stay_alone_statistics&);
+  vichele_stay_alone_statistics& operator=(const vichele_stay_alone_statistics&);
+  vichele_stay_alone_statistics() : yestarday_left(0), yestarday_total(0), today_finish(0), today_total(0) {
+  }
+
+  virtual ~vichele_stay_alone_statistics() noexcept;
+  int64_t yestarday_left;
+  int64_t yestarday_total;
+  int64_t today_finish;
+  int64_t today_total;
+
+  _vichele_stay_alone_statistics__isset __isset;
+
+  void __set_yestarday_left(const int64_t val);
+
+  void __set_yestarday_total(const int64_t val);
+
+  void __set_today_finish(const int64_t val);
+
+  void __set_today_total(const int64_t val);
+
+  bool operator == (const vichele_stay_alone_statistics & rhs) const
+  {
+    if (!(yestarday_left == rhs.yestarday_left))
+      return false;
+    if (!(yestarday_total == rhs.yestarday_total))
+      return false;
+    if (!(today_finish == rhs.today_finish))
+      return false;
+    if (!(today_total == rhs.today_total))
+      return false;
+    return true;
+  }
+  bool operator != (const vichele_stay_alone_statistics &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const vichele_stay_alone_statistics & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+  virtual void printTo(std::ostream& out) const;
+};
+
+void swap(vichele_stay_alone_statistics &a, vichele_stay_alone_statistics &b);
+
+std::ostream& operator<<(std::ostream& out, const vichele_stay_alone_statistics& obj);
 
 
 

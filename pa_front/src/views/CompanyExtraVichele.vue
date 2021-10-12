@@ -5,6 +5,7 @@
         <van-tab title="已确认"></van-tab>
         <van-tab title="已完成"></van-tab>
     </van-tabs>
+    <van-notice-bar left-icon="volume-o" :text="'昨日共派 ' + vichele_statistics.yestarday_total + '车， 未到 ' + vichele_statistics.yestarday_left + '车 今日共派 ' + vichele_statistics.today_total + '车，已到 ' + vichele_statistics.today_finish + '车'" />
     <van-dropdown-menu>
         <van-dropdown-item v-model="date_filter" :options="date_condition" @change="refresh_all_records" />
         <van-dropdown-item v-model="stuff_filter" :options="stuff_condition" @change="refresh_all_records" />
@@ -160,7 +161,11 @@ import {
     Tab,
     Tabs
 } from 'vant';
+import {
+    NoticeBar
+} from 'vant';
 
+Vue.use(NoticeBar);
 Vue.use(Tab);
 Vue.use(Tabs);
 Vue.use(Sticky);
@@ -188,6 +193,12 @@ export default {
     },
     data: function () {
         return {
+            vichele_statistics: {
+                today_finish: 0,
+                today_total: 0,
+                yestarday_left: 0,
+                yestarday_total: 0,
+            },
             active: 0,
             smart_company: '',
             new_company_name: '',
@@ -272,7 +283,7 @@ export default {
             this.change_id = _id;
             this.change_diag_show = true;
         },
-        search_more:function () {
+        search_more: function () {
             this.$refs.all_record.check();
         },
         refresh_all_records: function () {
@@ -394,10 +405,17 @@ export default {
                 });
             });
         },
+        init_vichele_statistices: function () {
+            var vue_this = this;
+            vue_this.$call_remote_process("vichele_management", 'get_statistics', [vue_this.$cookies.get('pa_ssid')]).then(function (resp) {
+                vue_this.vichele_statistics = resp;
+            });
+        },
     },
     beforeMount: function () {
         this.init_company_for_select();
         this.init_brief_data();
+        this.init_vichele_statistices();
     },
 }
 </script>

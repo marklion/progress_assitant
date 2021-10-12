@@ -503,6 +503,13 @@ struct single_vichele_brief {
     2:list<string> supplier_names,
 }
 
+struct vichele_stay_alone_statistics {
+    1:i64 yestarday_left,
+    2:i64 yestarday_total,
+    3:i64 today_finish,
+    4:i64 today_total,
+}
+
 service vichele_management {
     bool create_vichele_info(1:string open_id, 2:list<vichele_stay_alone> vichele_info) throws (1:gen_exp e),
     bool delete_vichele_info(1:string open_id, 2:i64 vichele_id) throws (1:gen_exp e),
@@ -537,4 +544,5 @@ service vichele_management {
     bool del_exception(1:string ssid, 2:string stuff_name) throws (1:gen_exp e),
     list<string> get_all_exceptions(1:string ssid) throws (1:gen_exp e),
     single_vichele_brief get_company_brief(1:string ssid) throws (1:gen_exp e),
+    vichele_stay_alone_statistics get_statistics(1:string ssid) throws (1:gen_exp e),
 }

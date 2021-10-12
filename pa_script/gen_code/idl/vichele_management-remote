@@ -57,6 +57,7 @@ if len(sys.argv) <= 1 or sys.argv[1] == '--help':
     print('  bool del_exception(string ssid, string stuff_name)')
     print('   get_all_exceptions(string ssid)')
     print('  single_vichele_brief get_company_brief(string ssid)')
+    print('  vichele_stay_alone_statistics get_statistics(string ssid)')
     print('')
     sys.exit(0)
 
@@ -333,6 +334,12 @@ elif cmd == 'get_company_brief':
         print('get_company_brief requires 1 args')
         sys.exit(1)
     pp.pprint(client.get_company_brief(args[0],))
+
+elif cmd == 'get_statistics':
+    if len(args) != 1:
+        print('get_statistics requires 1 args')
+        sys.exit(1)
+    pp.pprint(client.get_statistics(args[0],))
 
 else:
     print('Unrecognized method %s' % cmd)
