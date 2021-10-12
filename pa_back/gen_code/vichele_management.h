@@ -55,6 +55,7 @@ class vichele_managementIf {
   virtual bool del_exception(const std::string& ssid, const std::string& stuff_name) = 0;
   virtual void get_all_exceptions(std::vector<std::string> & _return, const std::string& ssid) = 0;
   virtual void get_company_brief(single_vichele_brief& _return, const std::string& ssid) = 0;
+  virtual void get_statistics(vichele_stay_alone_statistics& _return, const std::string& ssid) = 0;
 };
 
 class vichele_managementIfFactory {
@@ -201,6 +202,9 @@ class vichele_managementNull : virtual public vichele_managementIf {
     return;
   }
   void get_company_brief(single_vichele_brief& /* _return */, const std::string& /* ssid */) {
+    return;
+  }
+  void get_statistics(vichele_stay_alone_statistics& /* _return */, const std::string& /* ssid */) {
     return;
   }
 };
@@ -4159,6 +4163,118 @@ class vichele_management_get_company_brief_presult {
 
 };
 
+typedef struct _vichele_management_get_statistics_args__isset {
+  _vichele_management_get_statistics_args__isset() : ssid(false) {}
+  bool ssid :1;
+} _vichele_management_get_statistics_args__isset;
+
+class vichele_management_get_statistics_args {
+ public:
+
+  vichele_management_get_statistics_args(const vichele_management_get_statistics_args&);
+  vichele_management_get_statistics_args& operator=(const vichele_management_get_statistics_args&);
+  vichele_management_get_statistics_args() : ssid() {
+  }
+
+  virtual ~vichele_management_get_statistics_args() noexcept;
+  std::string ssid;
+
+  _vichele_management_get_statistics_args__isset __isset;
+
+  void __set_ssid(const std::string& val);
+
+  bool operator == (const vichele_management_get_statistics_args & rhs) const
+  {
+    if (!(ssid == rhs.ssid))
+      return false;
+    return true;
+  }
+  bool operator != (const vichele_management_get_statistics_args &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const vichele_management_get_statistics_args & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+
+class vichele_management_get_statistics_pargs {
+ public:
+
+
+  virtual ~vichele_management_get_statistics_pargs() noexcept;
+  const std::string* ssid;
+
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _vichele_management_get_statistics_result__isset {
+  _vichele_management_get_statistics_result__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _vichele_management_get_statistics_result__isset;
+
+class vichele_management_get_statistics_result {
+ public:
+
+  vichele_management_get_statistics_result(const vichele_management_get_statistics_result&);
+  vichele_management_get_statistics_result& operator=(const vichele_management_get_statistics_result&);
+  vichele_management_get_statistics_result() {
+  }
+
+  virtual ~vichele_management_get_statistics_result() noexcept;
+  vichele_stay_alone_statistics success;
+  gen_exp e;
+
+  _vichele_management_get_statistics_result__isset __isset;
+
+  void __set_success(const vichele_stay_alone_statistics& val);
+
+  void __set_e(const gen_exp& val);
+
+  bool operator == (const vichele_management_get_statistics_result & rhs) const
+  {
+    if (!(success == rhs.success))
+      return false;
+    if (!(e == rhs.e))
+      return false;
+    return true;
+  }
+  bool operator != (const vichele_management_get_statistics_result &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const vichele_management_get_statistics_result & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _vichele_management_get_statistics_presult__isset {
+  _vichele_management_get_statistics_presult__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _vichele_management_get_statistics_presult__isset;
+
+class vichele_management_get_statistics_presult {
+ public:
+
+
+  virtual ~vichele_management_get_statistics_presult() noexcept;
+  vichele_stay_alone_statistics* success;
+  gen_exp e;
+
+  _vichele_management_get_statistics_presult__isset __isset;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+
+};
+
 class vichele_managementClient : virtual public vichele_managementIf {
  public:
   vichele_managementClient(std::shared_ptr< ::apache::thrift::protocol::TProtocol> prot) {
@@ -4283,6 +4399,9 @@ class vichele_managementClient : virtual public vichele_managementIf {
   void get_company_brief(single_vichele_brief& _return, const std::string& ssid);
   void send_get_company_brief(const std::string& ssid);
   void recv_get_company_brief(single_vichele_brief& _return);
+  void get_statistics(vichele_stay_alone_statistics& _return, const std::string& ssid);
+  void send_get_statistics(const std::string& ssid);
+  void recv_get_statistics(vichele_stay_alone_statistics& _return);
  protected:
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> piprot_;
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> poprot_;
@@ -4331,6 +4450,7 @@ class vichele_managementProcessor : public ::apache::thrift::TDispatchProcessor 
   void process_del_exception(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
   void process_get_all_exceptions(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
   void process_get_company_brief(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
+  void process_get_statistics(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
  public:
   vichele_managementProcessor(::std::shared_ptr<vichele_managementIf> iface) :
     iface_(iface) {
@@ -4367,6 +4487,7 @@ class vichele_managementProcessor : public ::apache::thrift::TDispatchProcessor 
     processMap_["del_exception"] = &vichele_managementProcessor::process_del_exception;
     processMap_["get_all_exceptions"] = &vichele_managementProcessor::process_get_all_exceptions;
     processMap_["get_company_brief"] = &vichele_managementProcessor::process_get_company_brief;
+    processMap_["get_statistics"] = &vichele_managementProcessor::process_get_statistics;
   }
 
   virtual ~vichele_managementProcessor() {}
@@ -4704,6 +4825,16 @@ class vichele_managementMultiface : virtual public vichele_managementIf {
     return;
   }
 
+  void get_statistics(vichele_stay_alone_statistics& _return, const std::string& ssid) {
+    size_t sz = ifaces_.size();
+    size_t i = 0;
+    for (; i < (sz - 1); ++i) {
+      ifaces_[i]->get_statistics(_return, ssid);
+    }
+    ifaces_[i]->get_statistics(_return, ssid);
+    return;
+  }
+
 };
 
 // The 'concurrent' client is a thread safe client that correctly handles
@@ -4835,6 +4966,9 @@ class vichele_managementConcurrentClient : virtual public vichele_managementIf {
   void get_company_brief(single_vichele_brief& _return, const std::string& ssid);
   int32_t send_get_company_brief(const std::string& ssid);
   void recv_get_company_brief(single_vichele_brief& _return, const int32_t seqid);
+  void get_statistics(vichele_stay_alone_statistics& _return, const std::string& ssid);
+  int32_t send_get_statistics(const std::string& ssid);
+  void recv_get_statistics(vichele_stay_alone_statistics& _return, const int32_t seqid);
  protected:
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> piprot_;
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> poprot_;

@@ -8177,3 +8177,155 @@ void single_vichele_brief::printTo(std::ostream& out) const {
 }
 
 
+vichele_stay_alone_statistics::~vichele_stay_alone_statistics() noexcept {
+}
+
+
+void vichele_stay_alone_statistics::__set_yestarday_left(const int64_t val) {
+  this->yestarday_left = val;
+}
+
+void vichele_stay_alone_statistics::__set_yestarday_total(const int64_t val) {
+  this->yestarday_total = val;
+}
+
+void vichele_stay_alone_statistics::__set_today_finish(const int64_t val) {
+  this->today_finish = val;
+}
+
+void vichele_stay_alone_statistics::__set_today_total(const int64_t val) {
+  this->today_total = val;
+}
+std::ostream& operator<<(std::ostream& out, const vichele_stay_alone_statistics& obj)
+{
+  obj.printTo(out);
+  return out;
+}
+
+
+uint32_t vichele_stay_alone_statistics::read(::apache::thrift::protocol::TProtocol* iprot) {
+
+  ::apache::thrift::protocol::TInputRecursionTracker tracker(*iprot);
+  uint32_t xfer = 0;
+  std::string fname;
+  ::apache::thrift::protocol::TType ftype;
+  int16_t fid;
+
+  xfer += iprot->readStructBegin(fname);
+
+  using ::apache::thrift::protocol::TProtocolException;
+
+
+  while (true)
+  {
+    xfer += iprot->readFieldBegin(fname, ftype, fid);
+    if (ftype == ::apache::thrift::protocol::T_STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 1:
+        if (ftype == ::apache::thrift::protocol::T_I64) {
+          xfer += iprot->readI64(this->yestarday_left);
+          this->__isset.yestarday_left = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 2:
+        if (ftype == ::apache::thrift::protocol::T_I64) {
+          xfer += iprot->readI64(this->yestarday_total);
+          this->__isset.yestarday_total = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 3:
+        if (ftype == ::apache::thrift::protocol::T_I64) {
+          xfer += iprot->readI64(this->today_finish);
+          this->__isset.today_finish = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 4:
+        if (ftype == ::apache::thrift::protocol::T_I64) {
+          xfer += iprot->readI64(this->today_total);
+          this->__isset.today_total = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      default:
+        xfer += iprot->skip(ftype);
+        break;
+    }
+    xfer += iprot->readFieldEnd();
+  }
+
+  xfer += iprot->readStructEnd();
+
+  return xfer;
+}
+
+uint32_t vichele_stay_alone_statistics::write(::apache::thrift::protocol::TProtocol* oprot) const {
+  uint32_t xfer = 0;
+  ::apache::thrift::protocol::TOutputRecursionTracker tracker(*oprot);
+  xfer += oprot->writeStructBegin("vichele_stay_alone_statistics");
+
+  xfer += oprot->writeFieldBegin("yestarday_left", ::apache::thrift::protocol::T_I64, 1);
+  xfer += oprot->writeI64(this->yestarday_left);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("yestarday_total", ::apache::thrift::protocol::T_I64, 2);
+  xfer += oprot->writeI64(this->yestarday_total);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("today_finish", ::apache::thrift::protocol::T_I64, 3);
+  xfer += oprot->writeI64(this->today_finish);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("today_total", ::apache::thrift::protocol::T_I64, 4);
+  xfer += oprot->writeI64(this->today_total);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldStop();
+  xfer += oprot->writeStructEnd();
+  return xfer;
+}
+
+void swap(vichele_stay_alone_statistics &a, vichele_stay_alone_statistics &b) {
+  using ::std::swap;
+  swap(a.yestarday_left, b.yestarday_left);
+  swap(a.yestarday_total, b.yestarday_total);
+  swap(a.today_finish, b.today_finish);
+  swap(a.today_total, b.today_total);
+  swap(a.__isset, b.__isset);
+}
+
+vichele_stay_alone_statistics::vichele_stay_alone_statistics(const vichele_stay_alone_statistics& other118) {
+  yestarday_left = other118.yestarday_left;
+  yestarday_total = other118.yestarday_total;
+  today_finish = other118.today_finish;
+  today_total = other118.today_total;
+  __isset = other118.__isset;
+}
+vichele_stay_alone_statistics& vichele_stay_alone_statistics::operator=(const vichele_stay_alone_statistics& other119) {
+  yestarday_left = other119.yestarday_left;
+  yestarday_total = other119.yestarday_total;
+  today_finish = other119.today_finish;
+  today_total = other119.today_total;
+  __isset = other119.__isset;
+  return *this;
+}
+void vichele_stay_alone_statistics::printTo(std::ostream& out) const {
+  using ::apache::thrift::to_string;
+  out << "vichele_stay_alone_statistics(";
+  out << "yestarday_left=" << to_string(yestarday_left);
+  out << ", " << "yestarday_total=" << to_string(yestarday_total);
+  out << ", " << "today_finish=" << to_string(today_finish);
+  out << ", " << "today_total=" << to_string(today_total);
+  out << ")";
+}
+
+

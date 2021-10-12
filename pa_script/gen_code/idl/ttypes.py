@@ -4764,6 +4764,96 @@ class single_vichele_brief(object):
 
     def __ne__(self, other):
         return not (self == other)
+
+
+class vichele_stay_alone_statistics(object):
+    """
+    Attributes:
+     - yestarday_left
+     - yestarday_total
+     - today_finish
+     - today_total
+
+    """
+
+
+    def __init__(self, yestarday_left=None, yestarday_total=None, today_finish=None, today_total=None,):
+        self.yestarday_left = yestarday_left
+        self.yestarday_total = yestarday_total
+        self.today_finish = today_finish
+        self.today_total = today_total
+
+    def read(self, iprot):
+        if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
+            iprot._fast_decode(self, iprot, [self.__class__, self.thrift_spec])
+            return
+        iprot.readStructBegin()
+        while True:
+            (fname, ftype, fid) = iprot.readFieldBegin()
+            if ftype == TType.STOP:
+                break
+            if fid == 1:
+                if ftype == TType.I64:
+                    self.yestarday_left = iprot.readI64()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 2:
+                if ftype == TType.I64:
+                    self.yestarday_total = iprot.readI64()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 3:
+                if ftype == TType.I64:
+                    self.today_finish = iprot.readI64()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 4:
+                if ftype == TType.I64:
+                    self.today_total = iprot.readI64()
+                else:
+                    iprot.skip(ftype)
+            else:
+                iprot.skip(ftype)
+            iprot.readFieldEnd()
+        iprot.readStructEnd()
+
+    def write(self, oprot):
+        if oprot._fast_encode is not None and self.thrift_spec is not None:
+            oprot.trans.write(oprot._fast_encode(self, [self.__class__, self.thrift_spec]))
+            return
+        oprot.writeStructBegin('vichele_stay_alone_statistics')
+        if self.yestarday_left is not None:
+            oprot.writeFieldBegin('yestarday_left', TType.I64, 1)
+            oprot.writeI64(self.yestarday_left)
+            oprot.writeFieldEnd()
+        if self.yestarday_total is not None:
+            oprot.writeFieldBegin('yestarday_total', TType.I64, 2)
+            oprot.writeI64(self.yestarday_total)
+            oprot.writeFieldEnd()
+        if self.today_finish is not None:
+            oprot.writeFieldBegin('today_finish', TType.I64, 3)
+            oprot.writeI64(self.today_finish)
+            oprot.writeFieldEnd()
+        if self.today_total is not None:
+            oprot.writeFieldBegin('today_total', TType.I64, 4)
+            oprot.writeI64(self.today_total)
+            oprot.writeFieldEnd()
+        oprot.writeFieldStop()
+        oprot.writeStructEnd()
+
+    def validate(self):
+        return
+
+    def __repr__(self):
+        L = ['%s=%r' % (key, value)
+             for key, value in self.__dict__.items()]
+        return '%s(%s)' % (self.__class__.__name__, ', '.join(L))
+
+    def __eq__(self, other):
+        return isinstance(other, self.__class__) and self.__dict__ == other.__dict__
+
+    def __ne__(self, other):
+        return not (self == other)
 all_structs.append(gen_exp)
 gen_exp.thrift_spec = (
     None,  # 0
@@ -5181,6 +5271,14 @@ single_vichele_brief.thrift_spec = (
     None,  # 0
     (1, TType.LIST, 'stuff_names', (TType.STRING, 'UTF8', False), None, ),  # 1
     (2, TType.LIST, 'supplier_names', (TType.STRING, 'UTF8', False), None, ),  # 2
+)
+all_structs.append(vichele_stay_alone_statistics)
+vichele_stay_alone_statistics.thrift_spec = (
+    None,  # 0
+    (1, TType.I64, 'yestarday_left', None, None, ),  # 1
+    (2, TType.I64, 'yestarday_total', None, None, ),  # 2
+    (3, TType.I64, 'today_finish', None, None, ),  # 3
+    (4, TType.I64, 'today_total', None, None, ),  # 4
 )
 fix_spec(all_structs)
 del all_structs

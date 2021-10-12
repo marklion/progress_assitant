@@ -1173,6 +1173,28 @@ public:
             _return.supplier_names.push_back(itr.company_name);
         }
     }
+
+    virtual void get_statistics(vichele_stay_alone_statistics &_return, const std::string &ssid)
+    {
+        auto yst_sec = time(nullptr) - 3600 * 24;
+        auto yst_date = PA_DATAOPT_date_2_timestring(yst_sec).substr(0, 10);
+        auto tdy_date = PA_DATAOPT_current_time().substr(0, 10);
+
+        auto company = PA_DATAOPT_get_company_by_ssid(ssid);
+        if (!company)
+        {
+            PA_RETURN_NOPRIVA_MSG();
+        }
+
+        auto yst_total = company->get_all_children<pa_sql_vichele_stay_alone>("destination", "is_drop == 0 AND date == '%s'", yst_date.c_str());
+        auto yst_left = company->get_all_children<pa_sql_vichele_stay_alone>("destination", "is_drop == 0 AND date == '%s' AND status == 1", yst_date.c_str());
+        auto tdy_total = company->get_all_children<pa_sql_vichele_stay_alone>("destination", "is_drop == 0 AND date == '%s'", tdy_date.c_str());
+        auto tdy_finish = company->get_all_children<pa_sql_vichele_stay_alone>("destination", "is_drop == 0 AND date == '%s' AND status == 2", tdy_date.c_str());
+        _return.yestarday_left = yst_left.size();
+        _return.yestarday_total = yst_total.size();
+        _return.today_finish = tdy_finish.size();
+        _return.today_total = tdy_total.size();
+    }
 };
 
 #endif // _VICHELE_MANAGEMENT_H_
