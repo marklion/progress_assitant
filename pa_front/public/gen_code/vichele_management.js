@@ -1461,6 +1461,9 @@ vichele_management_confirm_vichele_args = class {
     this.info = null;
     this.company_for_select = null;
     this.all_select = null;
+    this.enter_date = null;
+    this.stuff_name = null;
+    this.supplier_name = null;
     if (args) {
       if (args.ssid !== undefined && args.ssid !== null) {
         this.ssid = args.ssid;
@@ -1473,6 +1476,15 @@ vichele_management_confirm_vichele_args = class {
       }
       if (args.all_select !== undefined && args.all_select !== null) {
         this.all_select = args.all_select;
+      }
+      if (args.enter_date !== undefined && args.enter_date !== null) {
+        this.enter_date = args.enter_date;
+      }
+      if (args.stuff_name !== undefined && args.stuff_name !== null) {
+        this.stuff_name = args.stuff_name;
+      }
+      if (args.supplier_name !== undefined && args.supplier_name !== null) {
+        this.supplier_name = args.supplier_name;
       }
     }
   }
@@ -1532,6 +1544,27 @@ vichele_management_confirm_vichele_args = class {
           input.skip(ftype);
         }
         break;
+        case 5:
+        if (ftype == Thrift.Type.STRING) {
+          this.enter_date = input.readString().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        case 6:
+        if (ftype == Thrift.Type.STRING) {
+          this.stuff_name = input.readString().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        case 7:
+        if (ftype == Thrift.Type.STRING) {
+          this.supplier_name = input.readString().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
         default:
           input.skip(ftype);
       }
@@ -1575,6 +1608,21 @@ vichele_management_confirm_vichele_args = class {
     if (this.all_select !== null && this.all_select !== undefined) {
       output.writeFieldBegin('all_select', Thrift.Type.BOOL, 4);
       output.writeBool(this.all_select);
+      output.writeFieldEnd();
+    }
+    if (this.enter_date !== null && this.enter_date !== undefined) {
+      output.writeFieldBegin('enter_date', Thrift.Type.STRING, 5);
+      output.writeString(this.enter_date);
+      output.writeFieldEnd();
+    }
+    if (this.stuff_name !== null && this.stuff_name !== undefined) {
+      output.writeFieldBegin('stuff_name', Thrift.Type.STRING, 6);
+      output.writeString(this.stuff_name);
+      output.writeFieldEnd();
+    }
+    if (this.supplier_name !== null && this.supplier_name !== undefined) {
+      output.writeFieldBegin('supplier_name', Thrift.Type.STRING, 7);
+      output.writeString(this.supplier_name);
       output.writeFieldEnd();
     }
     output.writeFieldStop();
@@ -1658,6 +1706,9 @@ vichele_management_cancel_vichele_args = class {
     this.ssid = null;
     this.info = null;
     this.all_select = null;
+    this.enter_date = null;
+    this.stuff_name = null;
+    this.supplier_name = null;
     if (args) {
       if (args.ssid !== undefined && args.ssid !== null) {
         this.ssid = args.ssid;
@@ -1667,6 +1718,15 @@ vichele_management_cancel_vichele_args = class {
       }
       if (args.all_select !== undefined && args.all_select !== null) {
         this.all_select = args.all_select;
+      }
+      if (args.enter_date !== undefined && args.enter_date !== null) {
+        this.enter_date = args.enter_date;
+      }
+      if (args.stuff_name !== undefined && args.stuff_name !== null) {
+        this.stuff_name = args.stuff_name;
+      }
+      if (args.supplier_name !== undefined && args.supplier_name !== null) {
+        this.supplier_name = args.supplier_name;
       }
     }
   }
@@ -1711,6 +1771,27 @@ vichele_management_cancel_vichele_args = class {
           input.skip(ftype);
         }
         break;
+        case 4:
+        if (ftype == Thrift.Type.STRING) {
+          this.enter_date = input.readString().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        case 5:
+        if (ftype == Thrift.Type.STRING) {
+          this.stuff_name = input.readString().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        case 6:
+        if (ftype == Thrift.Type.STRING) {
+          this.supplier_name = input.readString().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
         default:
           input.skip(ftype);
       }
@@ -1742,6 +1823,21 @@ vichele_management_cancel_vichele_args = class {
     if (this.all_select !== null && this.all_select !== undefined) {
       output.writeFieldBegin('all_select', Thrift.Type.BOOL, 3);
       output.writeBool(this.all_select);
+      output.writeFieldEnd();
+    }
+    if (this.enter_date !== null && this.enter_date !== undefined) {
+      output.writeFieldBegin('enter_date', Thrift.Type.STRING, 4);
+      output.writeString(this.enter_date);
+      output.writeFieldEnd();
+    }
+    if (this.stuff_name !== null && this.stuff_name !== undefined) {
+      output.writeFieldBegin('stuff_name', Thrift.Type.STRING, 5);
+      output.writeString(this.stuff_name);
+      output.writeFieldEnd();
+    }
+    if (this.supplier_name !== null && this.supplier_name !== undefined) {
+      output.writeFieldBegin('supplier_name', Thrift.Type.STRING, 6);
+      output.writeString(this.supplier_name);
       output.writeFieldEnd();
     }
     output.writeFieldStop();
@@ -4877,6 +4973,237 @@ vichele_management_get_statistics_result = class {
   }
 
 };
+vichele_management_change_price_args = class {
+  constructor(args) {
+    this.ssid = null;
+    this.info = null;
+    this.all_select = null;
+    this.enter_date = null;
+    this.stuff_name = null;
+    this.supplier_name = null;
+    this.new_price = null;
+    if (args) {
+      if (args.ssid !== undefined && args.ssid !== null) {
+        this.ssid = args.ssid;
+      }
+      if (args.info !== undefined && args.info !== null) {
+        this.info = Thrift.copyList(args.info, [vichele_stay_alone]);
+      }
+      if (args.all_select !== undefined && args.all_select !== null) {
+        this.all_select = args.all_select;
+      }
+      if (args.enter_date !== undefined && args.enter_date !== null) {
+        this.enter_date = args.enter_date;
+      }
+      if (args.stuff_name !== undefined && args.stuff_name !== null) {
+        this.stuff_name = args.stuff_name;
+      }
+      if (args.supplier_name !== undefined && args.supplier_name !== null) {
+        this.supplier_name = args.supplier_name;
+      }
+      if (args.new_price !== undefined && args.new_price !== null) {
+        this.new_price = args.new_price;
+      }
+    }
+  }
+
+  read (input) {
+    input.readStructBegin();
+    while (true) {
+      const ret = input.readFieldBegin();
+      const ftype = ret.ftype;
+      const fid = ret.fid;
+      if (ftype == Thrift.Type.STOP) {
+        break;
+      }
+      switch (fid) {
+        case 1:
+        if (ftype == Thrift.Type.STRING) {
+          this.ssid = input.readString().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        case 2:
+        if (ftype == Thrift.Type.LIST) {
+          this.info = [];
+          const _rtmp3236 = input.readListBegin();
+          const _size235 = _rtmp3236.size || 0;
+          for (let _i237 = 0; _i237 < _size235; ++_i237) {
+            let elem238 = null;
+            elem238 = new vichele_stay_alone();
+            elem238.read(input);
+            this.info.push(elem238);
+          }
+          input.readListEnd();
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        case 3:
+        if (ftype == Thrift.Type.BOOL) {
+          this.all_select = input.readBool().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        case 4:
+        if (ftype == Thrift.Type.STRING) {
+          this.enter_date = input.readString().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        case 5:
+        if (ftype == Thrift.Type.STRING) {
+          this.stuff_name = input.readString().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        case 6:
+        if (ftype == Thrift.Type.STRING) {
+          this.supplier_name = input.readString().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        case 7:
+        if (ftype == Thrift.Type.DOUBLE) {
+          this.new_price = input.readDouble().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        default:
+          input.skip(ftype);
+      }
+      input.readFieldEnd();
+    }
+    input.readStructEnd();
+    return;
+  }
+
+  write (output) {
+    output.writeStructBegin('vichele_management_change_price_args');
+    if (this.ssid !== null && this.ssid !== undefined) {
+      output.writeFieldBegin('ssid', Thrift.Type.STRING, 1);
+      output.writeString(this.ssid);
+      output.writeFieldEnd();
+    }
+    if (this.info !== null && this.info !== undefined) {
+      output.writeFieldBegin('info', Thrift.Type.LIST, 2);
+      output.writeListBegin(Thrift.Type.STRUCT, this.info.length);
+      for (let iter239 in this.info) {
+        if (this.info.hasOwnProperty(iter239)) {
+          iter239 = this.info[iter239];
+          iter239.write(output);
+        }
+      }
+      output.writeListEnd();
+      output.writeFieldEnd();
+    }
+    if (this.all_select !== null && this.all_select !== undefined) {
+      output.writeFieldBegin('all_select', Thrift.Type.BOOL, 3);
+      output.writeBool(this.all_select);
+      output.writeFieldEnd();
+    }
+    if (this.enter_date !== null && this.enter_date !== undefined) {
+      output.writeFieldBegin('enter_date', Thrift.Type.STRING, 4);
+      output.writeString(this.enter_date);
+      output.writeFieldEnd();
+    }
+    if (this.stuff_name !== null && this.stuff_name !== undefined) {
+      output.writeFieldBegin('stuff_name', Thrift.Type.STRING, 5);
+      output.writeString(this.stuff_name);
+      output.writeFieldEnd();
+    }
+    if (this.supplier_name !== null && this.supplier_name !== undefined) {
+      output.writeFieldBegin('supplier_name', Thrift.Type.STRING, 6);
+      output.writeString(this.supplier_name);
+      output.writeFieldEnd();
+    }
+    if (this.new_price !== null && this.new_price !== undefined) {
+      output.writeFieldBegin('new_price', Thrift.Type.DOUBLE, 7);
+      output.writeDouble(this.new_price);
+      output.writeFieldEnd();
+    }
+    output.writeFieldStop();
+    output.writeStructEnd();
+    return;
+  }
+
+};
+vichele_management_change_price_result = class {
+  constructor(args) {
+    this.success = null;
+    this.e = null;
+    if (args instanceof gen_exp) {
+        this.e = args;
+        return;
+    }
+    if (args) {
+      if (args.success !== undefined && args.success !== null) {
+        this.success = args.success;
+      }
+      if (args.e !== undefined && args.e !== null) {
+        this.e = args.e;
+      }
+    }
+  }
+
+  read (input) {
+    input.readStructBegin();
+    while (true) {
+      const ret = input.readFieldBegin();
+      const ftype = ret.ftype;
+      const fid = ret.fid;
+      if (ftype == Thrift.Type.STOP) {
+        break;
+      }
+      switch (fid) {
+        case 0:
+        if (ftype == Thrift.Type.BOOL) {
+          this.success = input.readBool().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        case 1:
+        if (ftype == Thrift.Type.STRUCT) {
+          this.e = new gen_exp();
+          this.e.read(input);
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        default:
+          input.skip(ftype);
+      }
+      input.readFieldEnd();
+    }
+    input.readStructEnd();
+    return;
+  }
+
+  write (output) {
+    output.writeStructBegin('vichele_management_change_price_result');
+    if (this.success !== null && this.success !== undefined) {
+      output.writeFieldBegin('success', Thrift.Type.BOOL, 0);
+      output.writeBool(this.success);
+      output.writeFieldEnd();
+    }
+    if (this.e !== null && this.e !== undefined) {
+      output.writeFieldBegin('e', Thrift.Type.STRUCT, 1);
+      this.e.write(output);
+      output.writeFieldEnd();
+    }
+    output.writeFieldStop();
+    output.writeStructEnd();
+    return;
+  }
+
+};
 vichele_managementClient = class vichele_managementClient {
   constructor(input, output) {
     this.input = input;
@@ -5483,21 +5810,24 @@ vichele_managementClient = class vichele_managementClient {
     throw 'get_company_vichele_info failed: unknown result';
   }
 
-  confirm_vichele (ssid, info, company_for_select, all_select) {
+  confirm_vichele (ssid, info, company_for_select, all_select, enter_date, stuff_name, supplier_name) {
     const self = this;
     return new Promise((resolve, reject) => {
-      self.send_confirm_vichele(ssid, info, company_for_select, all_select, (error, result) => {
+      self.send_confirm_vichele(ssid, info, company_for_select, all_select, enter_date, stuff_name, supplier_name, (error, result) => {
         return error ? reject(error) : resolve(result);
       });
     });
   }
 
-  send_confirm_vichele (ssid, info, company_for_select, all_select, callback) {
+  send_confirm_vichele (ssid, info, company_for_select, all_select, enter_date, stuff_name, supplier_name, callback) {
     const params = {
       ssid: ssid,
       info: info,
       company_for_select: company_for_select,
-      all_select: all_select
+      all_select: all_select,
+      enter_date: enter_date,
+      stuff_name: stuff_name,
+      supplier_name: supplier_name
     };
     const args = new vichele_management_confirm_vichele_args(params);
     try {
@@ -5545,20 +5875,23 @@ vichele_managementClient = class vichele_managementClient {
     throw 'confirm_vichele failed: unknown result';
   }
 
-  cancel_vichele (ssid, info, all_select) {
+  cancel_vichele (ssid, info, all_select, enter_date, stuff_name, supplier_name) {
     const self = this;
     return new Promise((resolve, reject) => {
-      self.send_cancel_vichele(ssid, info, all_select, (error, result) => {
+      self.send_cancel_vichele(ssid, info, all_select, enter_date, stuff_name, supplier_name, (error, result) => {
         return error ? reject(error) : resolve(result);
       });
     });
   }
 
-  send_cancel_vichele (ssid, info, all_select, callback) {
+  send_cancel_vichele (ssid, info, all_select, enter_date, stuff_name, supplier_name, callback) {
     const params = {
       ssid: ssid,
       info: info,
-      all_select: all_select
+      all_select: all_select,
+      enter_date: enter_date,
+      stuff_name: stuff_name,
+      supplier_name: supplier_name
     };
     const args = new vichele_management_cancel_vichele_args(params);
     try {
@@ -6923,5 +7256,70 @@ vichele_managementClient = class vichele_managementClient {
       return result.success;
     }
     throw 'get_statistics failed: unknown result';
+  }
+
+  change_price (ssid, info, all_select, enter_date, stuff_name, supplier_name, new_price) {
+    const self = this;
+    return new Promise((resolve, reject) => {
+      self.send_change_price(ssid, info, all_select, enter_date, stuff_name, supplier_name, new_price, (error, result) => {
+        return error ? reject(error) : resolve(result);
+      });
+    });
+  }
+
+  send_change_price (ssid, info, all_select, enter_date, stuff_name, supplier_name, new_price, callback) {
+    const params = {
+      ssid: ssid,
+      info: info,
+      all_select: all_select,
+      enter_date: enter_date,
+      stuff_name: stuff_name,
+      supplier_name: supplier_name,
+      new_price: new_price
+    };
+    const args = new vichele_management_change_price_args(params);
+    try {
+      this.output.writeMessageBegin('change_price', Thrift.MessageType.CALL, this.seqid);
+      args.write(this.output);
+      this.output.writeMessageEnd();
+      const self = this;
+      this.output.getTransport().flush(true, () => {
+        let error = null, result = null;
+        try {
+          result = self.recv_change_price();
+        } catch (e) {
+          error = e;
+        }
+        callback(error, result);
+      });
+    }
+    catch (e) {
+      if (typeof this.output.getTransport().reset === 'function') {
+        this.output.getTransport().reset();
+      }
+      throw e;
+    }
+  }
+
+  recv_change_price () {
+    const ret = this.input.readMessageBegin();
+    const mtype = ret.mtype;
+    if (mtype == Thrift.MessageType.EXCEPTION) {
+      const x = new Thrift.TApplicationException();
+      x.read(this.input);
+      this.input.readMessageEnd();
+      throw x;
+    }
+    const result = new vichele_management_change_price_result();
+    result.read(this.input);
+    this.input.readMessageEnd();
+
+    if (null !== result.e) {
+      throw result.e;
+    }
+    if (null !== result.success) {
+      return result.success;
+    }
+    throw 'change_price failed: unknown result';
   }
 };

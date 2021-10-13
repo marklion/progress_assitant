@@ -11,11 +11,17 @@
 #include "pa_rpc_util.h"
 #include "../pa_util/pa_advance.h"
 
-#define SEARCH_RECORD_BY_FIELD(x) if (search_key.x == "?") {auto ret = silent_user->get_all_children<pa_sql_vichele_stay_alone>("created_by", "PRI_ID != 0 GROUP BY %s", #x); for (auto &itr:ret) search_results.push_back(itr.x);}
+#define SEARCH_RECORD_BY_FIELD(x)                                                                                         \
+    if (search_key.x == "?")                                                                                              \
+    {                                                                                                                     \
+        auto ret = silent_user->get_all_children<pa_sql_vichele_stay_alone>("created_by", "PRI_ID != 0 GROUP BY %s", #x); \
+        for (auto &itr : ret)                                                                                             \
+            search_results.push_back(itr.x);                                                                              \
+    }
 class vichele_management_handler : public vichele_managementIf
 {
 public:
-    virtual bool create_vichele_info(const std::string& open_id, const std::vector<vichele_stay_alone> & vichele_info) 
+    virtual bool create_vichele_info(const std::string &open_id, const std::vector<vichele_stay_alone> &vichele_info)
     {
         bool ret = false;
 
@@ -25,7 +31,7 @@ public:
             PA_RETURN_OP_FAIL();
         }
 
-        for (auto &itr:vichele_info)
+        for (auto &itr : vichele_info)
         {
             auto dest_company = sqlite_orm::search_record<pa_sql_company>("name = '%s'", itr.destination.c_str());
             if (!dest_company)
@@ -332,22 +338,12 @@ public:
         silent_user->update_record();
     }
 
-    virtual void get_company_vichele_info(std::vector<vichele_stay_alone> &_return, const std::string &ssid, const int64_t anchor, const int64_t status, const std::string &enter_date, const std::string &stuff_name, const std::string &supplier_name, const std::string &vichele_number)
+    std::string make_qurey_condition(const std::string &enter_date, const std::string &stuff_name, const std::string &supplier_name)
     {
-        auto user = PA_DATAOPT_get_online_user(ssid);
-        if (!user)
-        {
-            PA_RETURN_UNLOGIN_MSG();
-        }
-        auto company = user->get_parent<pa_sql_company>("belong_company");
-        if (!company)
-        {
-            PA_RETURN_NOCOMPANY_MSG();
-        }
         std::string date_condition = "date != ''";
         if (enter_date.length() > 0)
         {
-            date_condition += " AND date == '" + enter_date +"'";
+            date_condition += " AND date == '" + enter_date + "'";
         }
         std::string stuff_condition = "stuff_name != ''";
         if (stuff_name.length() > 0)
@@ -366,7 +362,24 @@ public:
                 supplier_condition += " AND company_name == '" + supplier_name + "'";
             }
         }
-        auto extra_vichele = company->get_all_children<pa_sql_vichele_stay_alone>("destination", "is_drop == 0 AND status == %ld AND (%s) AND (%s) AND (%s) ORDER BY PRI_ID DESC LIMIT 15 OFFSET %ld", status, date_condition.c_str(), stuff_condition.c_str(), supplier_condition.c_str(), anchor);
+
+        return "(" + date_condition + ") AND (" + stuff_condition + ") AND (" + supplier_condition + ")";
+    }
+
+    virtual void get_company_vichele_info(std::vector<vichele_stay_alone> &_return, const std::string &ssid, const int64_t anchor, const int64_t status, const std::string &enter_date, const std::string &stuff_name, const std::string &supplier_name, const std::string &vichele_number)
+    {
+        auto user = PA_DATAOPT_get_online_user(ssid);
+        if (!user)
+        {
+            PA_RETURN_UNLOGIN_MSG();
+        }
+        auto company = user->get_parent<pa_sql_company>("belong_company");
+        if (!company)
+        {
+            PA_RETURN_NOCOMPANY_MSG();
+        }
+        auto query_conditions = make_qurey_condition(enter_date, stuff_name, supplier_name);
+        auto extra_vichele = company->get_all_children<pa_sql_vichele_stay_alone>("destination", "is_drop == 0 AND status == %ld AND (%s) ORDER BY PRI_ID DESC LIMIT 15 OFFSET %ld", status, query_conditions.c_str(), anchor);
         for (auto &itr : extra_vichele)
         {
             vichele_stay_alone tmp;
@@ -441,7 +454,7 @@ public:
 
         return true;
     }
-    virtual bool confirm_vichele(const std::string &ssid, const std::vector<vichele_stay_alone> &info, const std::vector<std::string> &company_for_select, const bool all_select)
+    virtual bool confirm_vichele(const std::string &ssid, const std::vector<vichele_stay_alone> &info, const std::vector<std::string> &company_for_select, const bool all_select, const std::string &enter_date, const std::string &stuff_name, const std::string &supplier_name)
     {
         auto user = PA_DATAOPT_get_online_user(ssid);
         if (!user)
@@ -477,9 +490,9 @@ public:
         {
             company_for_select_string += itr + ";";
         }
-
+        auto query_conditions = make_qurey_condition(enter_date, stuff_name, supplier_name);
         std::list<pa_sql_vichele_stay_alone> tmp;
-        auto extra_vichele = company->get_all_children<pa_sql_vichele_stay_alone>("destination", "(%s) AND status == 0 AND is_drop == 0", query_cmd.c_str());
+        auto extra_vichele = company->get_all_children<pa_sql_vichele_stay_alone>("destination", "(%s) AND status == 0 AND is_drop == 0 AND (%s)", query_cmd.c_str(), query_conditions.c_str());
         for (auto &itr : extra_vichele)
         {
             itr.status = 1;
@@ -505,7 +518,7 @@ public:
 
         return true;
     }
-    virtual bool cancel_vichele(const std::string &ssid, const std::vector<vichele_stay_alone> &info, const bool all_select)
+    virtual bool cancel_vichele(const std::string &ssid, const std::vector<vichele_stay_alone> &info, const bool all_select, const std::string &enter_date, const std::string &stuff_name, const std::string &supplier_name)
     {
         auto user = PA_DATAOPT_get_online_user(ssid);
         if (!user)
@@ -530,7 +543,8 @@ public:
 
         std::string except_ret;
 
-        auto extra_vichele = company->get_all_children<pa_sql_vichele_stay_alone>("destination", "(%s)  AND is_drop == 0 AND status != 2", query_cmd.c_str());
+        auto query_conditions = make_qurey_condition(enter_date, stuff_name, supplier_name);
+        auto extra_vichele = company->get_all_children<pa_sql_vichele_stay_alone>("destination", "(%s)  AND is_drop == 0 AND status != 2 AND (%s)", query_cmd.c_str(), query_conditions.c_str());
         for (auto &itr : extra_vichele)
         {
             auto update_ret = PA_DATAOPT_post_sync_change_register(itr);
@@ -1194,6 +1208,48 @@ public:
         _return.yestarday_total = yst_total.size();
         _return.today_finish = tdy_finish.size();
         _return.today_total = tdy_total.size();
+    }
+
+    virtual bool change_price(const std::string &ssid, const std::vector<vichele_stay_alone> &info, const bool all_select, const std::string &enter_date, const std::string &stuff_name, const std::string &supplier_name, const double new_price)
+    {
+        auto user = PA_DATAOPT_get_online_user(ssid);
+        if (!user)
+        {
+            PA_RETURN_UNLOGIN_MSG();
+        }
+        auto company = user->get_parent<pa_sql_company>("belong_company");
+        if (!company)
+        {
+            PA_RETURN_NOCOMPANY_MSG();
+        }
+
+        std::string query_cmd = "PRI_ID == 0";
+        for (auto &itr : info)
+        {
+            query_cmd += " OR PRI_ID == " + std::to_string(itr.id);
+        }
+        if (all_select)
+        {
+            query_cmd = "PRI_ID != 0";
+        }
+
+        auto query_conditions = make_qurey_condition(enter_date, stuff_name, supplier_name);
+        auto extra_vichele = company->get_all_children<pa_sql_vichele_stay_alone>("destination", "(%s) AND status != 2 AND is_drop == 0 AND (%s)", query_cmd.c_str(), query_conditions.c_str());
+        for (auto &itr : extra_vichele)
+        {
+            auto orig_price = itr.price;
+            itr.price = new_price;
+            if (itr.update_record())
+            {
+                auto silent_user = itr.get_parent<pa_sql_silent_user>("created_by");
+                if (silent_user)
+                {
+                    PA_WECHAT_send_extra_vichele_msg(itr, silent_user->open_id, user->name + "调整了货物单价 原价： " + std::to_string(orig_price) + " 现价：" + std::to_string(itr.price));
+                }
+            }
+        }
+
+        return true;
     }
 };
 

@@ -111,23 +111,29 @@ class Iface(object):
         """
         pass
 
-    def confirm_vichele(self, ssid, info, company_for_select, all_select):
+    def confirm_vichele(self, ssid, info, company_for_select, all_select, enter_date, stuff_name, supplier_name):
         """
         Parameters:
          - ssid
          - info
          - company_for_select
          - all_select
+         - enter_date
+         - stuff_name
+         - supplier_name
 
         """
         pass
 
-    def cancel_vichele(self, ssid, info, all_select):
+    def cancel_vichele(self, ssid, info, all_select, enter_date, stuff_name, supplier_name):
         """
         Parameters:
          - ssid
          - info
          - all_select
+         - enter_date
+         - stuff_name
+         - supplier_name
 
         """
         pass
@@ -325,6 +331,20 @@ class Iface(object):
         """
         Parameters:
          - ssid
+
+        """
+        pass
+
+    def change_price(self, ssid, info, all_select, enter_date, stuff_name, supplier_name, new_price):
+        """
+        Parameters:
+         - ssid
+         - info
+         - all_select
+         - enter_date
+         - stuff_name
+         - supplier_name
+         - new_price
 
         """
         pass
@@ -699,25 +719,31 @@ class Client(Iface):
             raise result.e
         raise TApplicationException(TApplicationException.MISSING_RESULT, "get_company_vichele_info failed: unknown result")
 
-    def confirm_vichele(self, ssid, info, company_for_select, all_select):
+    def confirm_vichele(self, ssid, info, company_for_select, all_select, enter_date, stuff_name, supplier_name):
         """
         Parameters:
          - ssid
          - info
          - company_for_select
          - all_select
+         - enter_date
+         - stuff_name
+         - supplier_name
 
         """
-        self.send_confirm_vichele(ssid, info, company_for_select, all_select)
+        self.send_confirm_vichele(ssid, info, company_for_select, all_select, enter_date, stuff_name, supplier_name)
         return self.recv_confirm_vichele()
 
-    def send_confirm_vichele(self, ssid, info, company_for_select, all_select):
+    def send_confirm_vichele(self, ssid, info, company_for_select, all_select, enter_date, stuff_name, supplier_name):
         self._oprot.writeMessageBegin('confirm_vichele', TMessageType.CALL, self._seqid)
         args = confirm_vichele_args()
         args.ssid = ssid
         args.info = info
         args.company_for_select = company_for_select
         args.all_select = all_select
+        args.enter_date = enter_date
+        args.stuff_name = stuff_name
+        args.supplier_name = supplier_name
         args.write(self._oprot)
         self._oprot.writeMessageEnd()
         self._oprot.trans.flush()
@@ -739,23 +765,29 @@ class Client(Iface):
             raise result.e
         raise TApplicationException(TApplicationException.MISSING_RESULT, "confirm_vichele failed: unknown result")
 
-    def cancel_vichele(self, ssid, info, all_select):
+    def cancel_vichele(self, ssid, info, all_select, enter_date, stuff_name, supplier_name):
         """
         Parameters:
          - ssid
          - info
          - all_select
+         - enter_date
+         - stuff_name
+         - supplier_name
 
         """
-        self.send_cancel_vichele(ssid, info, all_select)
+        self.send_cancel_vichele(ssid, info, all_select, enter_date, stuff_name, supplier_name)
         return self.recv_cancel_vichele()
 
-    def send_cancel_vichele(self, ssid, info, all_select):
+    def send_cancel_vichele(self, ssid, info, all_select, enter_date, stuff_name, supplier_name):
         self._oprot.writeMessageBegin('cancel_vichele', TMessageType.CALL, self._seqid)
         args = cancel_vichele_args()
         args.ssid = ssid
         args.info = info
         args.all_select = all_select
+        args.enter_date = enter_date
+        args.stuff_name = stuff_name
+        args.supplier_name = supplier_name
         args.write(self._oprot)
         self._oprot.writeMessageEnd()
         self._oprot.trans.flush()
@@ -1567,6 +1599,52 @@ class Client(Iface):
             raise result.e
         raise TApplicationException(TApplicationException.MISSING_RESULT, "get_statistics failed: unknown result")
 
+    def change_price(self, ssid, info, all_select, enter_date, stuff_name, supplier_name, new_price):
+        """
+        Parameters:
+         - ssid
+         - info
+         - all_select
+         - enter_date
+         - stuff_name
+         - supplier_name
+         - new_price
+
+        """
+        self.send_change_price(ssid, info, all_select, enter_date, stuff_name, supplier_name, new_price)
+        return self.recv_change_price()
+
+    def send_change_price(self, ssid, info, all_select, enter_date, stuff_name, supplier_name, new_price):
+        self._oprot.writeMessageBegin('change_price', TMessageType.CALL, self._seqid)
+        args = change_price_args()
+        args.ssid = ssid
+        args.info = info
+        args.all_select = all_select
+        args.enter_date = enter_date
+        args.stuff_name = stuff_name
+        args.supplier_name = supplier_name
+        args.new_price = new_price
+        args.write(self._oprot)
+        self._oprot.writeMessageEnd()
+        self._oprot.trans.flush()
+
+    def recv_change_price(self):
+        iprot = self._iprot
+        (fname, mtype, rseqid) = iprot.readMessageBegin()
+        if mtype == TMessageType.EXCEPTION:
+            x = TApplicationException()
+            x.read(iprot)
+            iprot.readMessageEnd()
+            raise x
+        result = change_price_result()
+        result.read(iprot)
+        iprot.readMessageEnd()
+        if result.success is not None:
+            return result.success
+        if result.e is not None:
+            raise result.e
+        raise TApplicationException(TApplicationException.MISSING_RESULT, "change_price failed: unknown result")
+
 
 class Processor(Iface, TProcessor):
     def __init__(self, handler):
@@ -1606,6 +1684,7 @@ class Processor(Iface, TProcessor):
         self._processMap["get_all_exceptions"] = Processor.process_get_all_exceptions
         self._processMap["get_company_brief"] = Processor.process_get_company_brief
         self._processMap["get_statistics"] = Processor.process_get_statistics
+        self._processMap["change_price"] = Processor.process_change_price
         self._on_message_begin = None
 
     def on_message_begin(self, func):
@@ -1894,7 +1973,7 @@ class Processor(Iface, TProcessor):
         iprot.readMessageEnd()
         result = confirm_vichele_result()
         try:
-            result.success = self._handler.confirm_vichele(args.ssid, args.info, args.company_for_select, args.all_select)
+            result.success = self._handler.confirm_vichele(args.ssid, args.info, args.company_for_select, args.all_select, args.enter_date, args.stuff_name, args.supplier_name)
             msg_type = TMessageType.REPLY
         except TTransport.TTransportException:
             raise
@@ -1920,7 +1999,7 @@ class Processor(Iface, TProcessor):
         iprot.readMessageEnd()
         result = cancel_vichele_result()
         try:
-            result.success = self._handler.cancel_vichele(args.ssid, args.info, args.all_select)
+            result.success = self._handler.cancel_vichele(args.ssid, args.info, args.all_select, args.enter_date, args.stuff_name, args.supplier_name)
             msg_type = TMessageType.REPLY
         except TTransport.TTransportException:
             raise
@@ -2508,6 +2587,32 @@ class Processor(Iface, TProcessor):
             msg_type = TMessageType.EXCEPTION
             result = TApplicationException(TApplicationException.INTERNAL_ERROR, 'Internal error')
         oprot.writeMessageBegin("get_statistics", msg_type, seqid)
+        result.write(oprot)
+        oprot.writeMessageEnd()
+        oprot.trans.flush()
+
+    def process_change_price(self, seqid, iprot, oprot):
+        args = change_price_args()
+        args.read(iprot)
+        iprot.readMessageEnd()
+        result = change_price_result()
+        try:
+            result.success = self._handler.change_price(args.ssid, args.info, args.all_select, args.enter_date, args.stuff_name, args.supplier_name, args.new_price)
+            msg_type = TMessageType.REPLY
+        except TTransport.TTransportException:
+            raise
+        except gen_exp as e:
+            msg_type = TMessageType.REPLY
+            result.e = e
+        except TApplicationException as ex:
+            logging.exception('TApplication exception in handler')
+            msg_type = TMessageType.EXCEPTION
+            result = ex
+        except Exception:
+            logging.exception('Unexpected exception in handler')
+            msg_type = TMessageType.EXCEPTION
+            result = TApplicationException(TApplicationException.INTERNAL_ERROR, 'Internal error')
+        oprot.writeMessageBegin("change_price", msg_type, seqid)
         result.write(oprot)
         oprot.writeMessageEnd()
         oprot.trans.flush()
@@ -4044,15 +4149,21 @@ class confirm_vichele_args(object):
      - info
      - company_for_select
      - all_select
+     - enter_date
+     - stuff_name
+     - supplier_name
 
     """
 
 
-    def __init__(self, ssid=None, info=None, company_for_select=None, all_select=None,):
+    def __init__(self, ssid=None, info=None, company_for_select=None, all_select=None, enter_date=None, stuff_name=None, supplier_name=None,):
         self.ssid = ssid
         self.info = info
         self.company_for_select = company_for_select
         self.all_select = all_select
+        self.enter_date = enter_date
+        self.stuff_name = stuff_name
+        self.supplier_name = supplier_name
 
     def read(self, iprot):
         if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
@@ -4094,6 +4205,21 @@ class confirm_vichele_args(object):
                     self.all_select = iprot.readBool()
                 else:
                     iprot.skip(ftype)
+            elif fid == 5:
+                if ftype == TType.STRING:
+                    self.enter_date = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 6:
+                if ftype == TType.STRING:
+                    self.stuff_name = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 7:
+                if ftype == TType.STRING:
+                    self.supplier_name = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
             else:
                 iprot.skip(ftype)
             iprot.readFieldEnd()
@@ -4126,6 +4252,18 @@ class confirm_vichele_args(object):
             oprot.writeFieldBegin('all_select', TType.BOOL, 4)
             oprot.writeBool(self.all_select)
             oprot.writeFieldEnd()
+        if self.enter_date is not None:
+            oprot.writeFieldBegin('enter_date', TType.STRING, 5)
+            oprot.writeString(self.enter_date.encode('utf-8') if sys.version_info[0] == 2 else self.enter_date)
+            oprot.writeFieldEnd()
+        if self.stuff_name is not None:
+            oprot.writeFieldBegin('stuff_name', TType.STRING, 6)
+            oprot.writeString(self.stuff_name.encode('utf-8') if sys.version_info[0] == 2 else self.stuff_name)
+            oprot.writeFieldEnd()
+        if self.supplier_name is not None:
+            oprot.writeFieldBegin('supplier_name', TType.STRING, 7)
+            oprot.writeString(self.supplier_name.encode('utf-8') if sys.version_info[0] == 2 else self.supplier_name)
+            oprot.writeFieldEnd()
         oprot.writeFieldStop()
         oprot.writeStructEnd()
 
@@ -4149,6 +4287,9 @@ confirm_vichele_args.thrift_spec = (
     (2, TType.LIST, 'info', (TType.STRUCT, [vichele_stay_alone, None], False), None, ),  # 2
     (3, TType.LIST, 'company_for_select', (TType.STRING, 'UTF8', False), None, ),  # 3
     (4, TType.BOOL, 'all_select', None, None, ),  # 4
+    (5, TType.STRING, 'enter_date', 'UTF8', None, ),  # 5
+    (6, TType.STRING, 'stuff_name', 'UTF8', None, ),  # 6
+    (7, TType.STRING, 'supplier_name', 'UTF8', None, ),  # 7
 )
 
 
@@ -4231,14 +4372,20 @@ class cancel_vichele_args(object):
      - ssid
      - info
      - all_select
+     - enter_date
+     - stuff_name
+     - supplier_name
 
     """
 
 
-    def __init__(self, ssid=None, info=None, all_select=None,):
+    def __init__(self, ssid=None, info=None, all_select=None, enter_date=None, stuff_name=None, supplier_name=None,):
         self.ssid = ssid
         self.info = info
         self.all_select = all_select
+        self.enter_date = enter_date
+        self.stuff_name = stuff_name
+        self.supplier_name = supplier_name
 
     def read(self, iprot):
         if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
@@ -4270,6 +4417,21 @@ class cancel_vichele_args(object):
                     self.all_select = iprot.readBool()
                 else:
                     iprot.skip(ftype)
+            elif fid == 4:
+                if ftype == TType.STRING:
+                    self.enter_date = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 5:
+                if ftype == TType.STRING:
+                    self.stuff_name = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 6:
+                if ftype == TType.STRING:
+                    self.supplier_name = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
             else:
                 iprot.skip(ftype)
             iprot.readFieldEnd()
@@ -4295,6 +4457,18 @@ class cancel_vichele_args(object):
             oprot.writeFieldBegin('all_select', TType.BOOL, 3)
             oprot.writeBool(self.all_select)
             oprot.writeFieldEnd()
+        if self.enter_date is not None:
+            oprot.writeFieldBegin('enter_date', TType.STRING, 4)
+            oprot.writeString(self.enter_date.encode('utf-8') if sys.version_info[0] == 2 else self.enter_date)
+            oprot.writeFieldEnd()
+        if self.stuff_name is not None:
+            oprot.writeFieldBegin('stuff_name', TType.STRING, 5)
+            oprot.writeString(self.stuff_name.encode('utf-8') if sys.version_info[0] == 2 else self.stuff_name)
+            oprot.writeFieldEnd()
+        if self.supplier_name is not None:
+            oprot.writeFieldBegin('supplier_name', TType.STRING, 6)
+            oprot.writeString(self.supplier_name.encode('utf-8') if sys.version_info[0] == 2 else self.supplier_name)
+            oprot.writeFieldEnd()
         oprot.writeFieldStop()
         oprot.writeStructEnd()
 
@@ -4317,6 +4491,9 @@ cancel_vichele_args.thrift_spec = (
     (1, TType.STRING, 'ssid', 'UTF8', None, ),  # 1
     (2, TType.LIST, 'info', (TType.STRUCT, [vichele_stay_alone, None], False), None, ),  # 2
     (3, TType.BOOL, 'all_select', None, None, ),  # 3
+    (4, TType.STRING, 'enter_date', 'UTF8', None, ),  # 4
+    (5, TType.STRING, 'stuff_name', 'UTF8', None, ),  # 5
+    (6, TType.STRING, 'supplier_name', 'UTF8', None, ),  # 6
 )
 
 
@@ -7661,6 +7838,222 @@ class get_statistics_result(object):
 all_structs.append(get_statistics_result)
 get_statistics_result.thrift_spec = (
     (0, TType.STRUCT, 'success', [vichele_stay_alone_statistics, None], None, ),  # 0
+    (1, TType.STRUCT, 'e', [gen_exp, None], None, ),  # 1
+)
+
+
+class change_price_args(object):
+    """
+    Attributes:
+     - ssid
+     - info
+     - all_select
+     - enter_date
+     - stuff_name
+     - supplier_name
+     - new_price
+
+    """
+
+
+    def __init__(self, ssid=None, info=None, all_select=None, enter_date=None, stuff_name=None, supplier_name=None, new_price=None,):
+        self.ssid = ssid
+        self.info = info
+        self.all_select = all_select
+        self.enter_date = enter_date
+        self.stuff_name = stuff_name
+        self.supplier_name = supplier_name
+        self.new_price = new_price
+
+    def read(self, iprot):
+        if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
+            iprot._fast_decode(self, iprot, [self.__class__, self.thrift_spec])
+            return
+        iprot.readStructBegin()
+        while True:
+            (fname, ftype, fid) = iprot.readFieldBegin()
+            if ftype == TType.STOP:
+                break
+            if fid == 1:
+                if ftype == TType.STRING:
+                    self.ssid = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 2:
+                if ftype == TType.LIST:
+                    self.info = []
+                    (_etype332, _size329) = iprot.readListBegin()
+                    for _i333 in range(_size329):
+                        _elem334 = vichele_stay_alone()
+                        _elem334.read(iprot)
+                        self.info.append(_elem334)
+                    iprot.readListEnd()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 3:
+                if ftype == TType.BOOL:
+                    self.all_select = iprot.readBool()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 4:
+                if ftype == TType.STRING:
+                    self.enter_date = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 5:
+                if ftype == TType.STRING:
+                    self.stuff_name = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 6:
+                if ftype == TType.STRING:
+                    self.supplier_name = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 7:
+                if ftype == TType.DOUBLE:
+                    self.new_price = iprot.readDouble()
+                else:
+                    iprot.skip(ftype)
+            else:
+                iprot.skip(ftype)
+            iprot.readFieldEnd()
+        iprot.readStructEnd()
+
+    def write(self, oprot):
+        if oprot._fast_encode is not None and self.thrift_spec is not None:
+            oprot.trans.write(oprot._fast_encode(self, [self.__class__, self.thrift_spec]))
+            return
+        oprot.writeStructBegin('change_price_args')
+        if self.ssid is not None:
+            oprot.writeFieldBegin('ssid', TType.STRING, 1)
+            oprot.writeString(self.ssid.encode('utf-8') if sys.version_info[0] == 2 else self.ssid)
+            oprot.writeFieldEnd()
+        if self.info is not None:
+            oprot.writeFieldBegin('info', TType.LIST, 2)
+            oprot.writeListBegin(TType.STRUCT, len(self.info))
+            for iter335 in self.info:
+                iter335.write(oprot)
+            oprot.writeListEnd()
+            oprot.writeFieldEnd()
+        if self.all_select is not None:
+            oprot.writeFieldBegin('all_select', TType.BOOL, 3)
+            oprot.writeBool(self.all_select)
+            oprot.writeFieldEnd()
+        if self.enter_date is not None:
+            oprot.writeFieldBegin('enter_date', TType.STRING, 4)
+            oprot.writeString(self.enter_date.encode('utf-8') if sys.version_info[0] == 2 else self.enter_date)
+            oprot.writeFieldEnd()
+        if self.stuff_name is not None:
+            oprot.writeFieldBegin('stuff_name', TType.STRING, 5)
+            oprot.writeString(self.stuff_name.encode('utf-8') if sys.version_info[0] == 2 else self.stuff_name)
+            oprot.writeFieldEnd()
+        if self.supplier_name is not None:
+            oprot.writeFieldBegin('supplier_name', TType.STRING, 6)
+            oprot.writeString(self.supplier_name.encode('utf-8') if sys.version_info[0] == 2 else self.supplier_name)
+            oprot.writeFieldEnd()
+        if self.new_price is not None:
+            oprot.writeFieldBegin('new_price', TType.DOUBLE, 7)
+            oprot.writeDouble(self.new_price)
+            oprot.writeFieldEnd()
+        oprot.writeFieldStop()
+        oprot.writeStructEnd()
+
+    def validate(self):
+        return
+
+    def __repr__(self):
+        L = ['%s=%r' % (key, value)
+             for key, value in self.__dict__.items()]
+        return '%s(%s)' % (self.__class__.__name__, ', '.join(L))
+
+    def __eq__(self, other):
+        return isinstance(other, self.__class__) and self.__dict__ == other.__dict__
+
+    def __ne__(self, other):
+        return not (self == other)
+all_structs.append(change_price_args)
+change_price_args.thrift_spec = (
+    None,  # 0
+    (1, TType.STRING, 'ssid', 'UTF8', None, ),  # 1
+    (2, TType.LIST, 'info', (TType.STRUCT, [vichele_stay_alone, None], False), None, ),  # 2
+    (3, TType.BOOL, 'all_select', None, None, ),  # 3
+    (4, TType.STRING, 'enter_date', 'UTF8', None, ),  # 4
+    (5, TType.STRING, 'stuff_name', 'UTF8', None, ),  # 5
+    (6, TType.STRING, 'supplier_name', 'UTF8', None, ),  # 6
+    (7, TType.DOUBLE, 'new_price', None, None, ),  # 7
+)
+
+
+class change_price_result(object):
+    """
+    Attributes:
+     - success
+     - e
+
+    """
+
+
+    def __init__(self, success=None, e=None,):
+        self.success = success
+        self.e = e
+
+    def read(self, iprot):
+        if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
+            iprot._fast_decode(self, iprot, [self.__class__, self.thrift_spec])
+            return
+        iprot.readStructBegin()
+        while True:
+            (fname, ftype, fid) = iprot.readFieldBegin()
+            if ftype == TType.STOP:
+                break
+            if fid == 0:
+                if ftype == TType.BOOL:
+                    self.success = iprot.readBool()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 1:
+                if ftype == TType.STRUCT:
+                    self.e = gen_exp.read(iprot)
+                else:
+                    iprot.skip(ftype)
+            else:
+                iprot.skip(ftype)
+            iprot.readFieldEnd()
+        iprot.readStructEnd()
+
+    def write(self, oprot):
+        if oprot._fast_encode is not None and self.thrift_spec is not None:
+            oprot.trans.write(oprot._fast_encode(self, [self.__class__, self.thrift_spec]))
+            return
+        oprot.writeStructBegin('change_price_result')
+        if self.success is not None:
+            oprot.writeFieldBegin('success', TType.BOOL, 0)
+            oprot.writeBool(self.success)
+            oprot.writeFieldEnd()
+        if self.e is not None:
+            oprot.writeFieldBegin('e', TType.STRUCT, 1)
+            self.e.write(oprot)
+            oprot.writeFieldEnd()
+        oprot.writeFieldStop()
+        oprot.writeStructEnd()
+
+    def validate(self):
+        return
+
+    def __repr__(self):
+        L = ['%s=%r' % (key, value)
+             for key, value in self.__dict__.items()]
+        return '%s(%s)' % (self.__class__.__name__, ', '.join(L))
+
+    def __eq__(self, other):
+        return isinstance(other, self.__class__) and self.__dict__ == other.__dict__
+
+    def __ne__(self, other):
+        return not (self == other)
+all_structs.append(change_price_result)
+change_price_result.thrift_spec = (
+    (0, TType.BOOL, 'success', None, None, ),  # 0
     (1, TType.STRUCT, 'e', [gen_exp, None], None, ),  # 1
 )
 fix_spec(all_structs)

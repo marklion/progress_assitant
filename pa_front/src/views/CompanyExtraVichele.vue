@@ -14,15 +14,18 @@
     <van-search v-model="vichele_search_filter" placeholder="过滤车号" @input="search_more" />
     <van-sticky>
         <van-row type="flex" align="center" v-if="select_pool.length != 0">
-            <van-col :span="8">
+            <van-col :span="6">
                 <van-button v-if="select_pool.length != items_need_show.length" block type="info" @click="select_pool = items_need_show">全选</van-button>
                 <van-button v-else block type="info" @click="select_pool = []">取消全选</van-button>
             </van-col>
-            <van-col :span="8">
+            <van-col :span="6">
                 <van-button block type="primary" @click="show_confirm_diag = true">确认车辆</van-button>
             </van-col>
-            <van-col :span="8">
+            <van-col :span="6">
                 <van-button block type="danger" @click="cancel_vichele">取消车辆</van-button>
+            </van-col>
+            <van-col :span="6">
+                <van-button block type="warning" @click="show_change_price_diag">调价</van-button>
             </van-col>
         </van-row>
     </van-sticky>
@@ -94,6 +97,13 @@
                         <van-checkbox v-for="(single_company_name, index) in company_for_select" :key="index" :name="single_company_name">{{single_company_name}}</van-checkbox>
                     </van-checkbox-group>
                 </template>
+            </van-field>
+            <van-button round block>确认</van-button>
+        </van-form>
+    </van-dialog>
+    <van-dialog v-model="change_price_diag_show" close-on-click-overlay title="修改价格" :show-confirm-button="false">
+        <van-form @submit="change_price">
+            <van-field v-model="new_price" label="新价格" placeholder="输入新价格" :rules="[{required:true, message: '请输入新价格'}]">
             </van-field>
             <van-button round block>确认</van-button>
         </van-form>
@@ -199,6 +209,8 @@ export default {
                 yestarday_left: 0,
                 yestarday_total: 0,
             },
+            change_price_diag_show: false,
+            new_price: 0.0,
             active: 0,
             smart_company: '',
             new_company_name: '',
@@ -259,6 +271,41 @@ export default {
         },
     },
     methods: {
+        show_change_price_diag: function () {
+            this.change_price_diag_show = true;
+            this.new_price = "";
+        },
+        change_price: function () {
+            var vue_this = this;
+            var cur_date = new Date();
+            cur_date.setDate(cur_date.getDate() + vue_this.date_filter)
+            var date_condition = '';
+            if (vue_this.date_filter != -2) {
+                date_condition = vue_this.formatDateTime(cur_date);
+            }
+            var stuff_condition = '';
+            if (vue_this.stuff_filter != -1) {
+                stuff_condition = vue_this.stuff_condition.find(value => {
+                    return value.value == vue_this.stuff_filter
+                }).text;
+            }
+            var supplier_condition = '';
+            if (vue_this.supplier_filter != -1) {
+                supplier_condition = vue_this.supplier_condition.find(value => {
+                    return value.value == vue_this.supplier_filter
+                }).text;
+            }
+            vue_this.$call_remote_process("vichele_management", 'change_price', [vue_this.$cookies.get('pa_ssid'), vue_this.select_pool, vue_this.is_all_select(), date_condition, stuff_condition, supplier_condition, parseFloat(vue_this.new_price)]).then(function (resp) {
+                if (resp) {
+                    vue_this.finished = false;
+                    vue_this.items = [];
+                    vue_this.select_pool = [];
+                    vue_this.$refs.all_record.check();
+                    vue_this.change_price_diag_show = false;
+                }
+
+            });
+        },
         smart_assign: function () {
             var vue_this = this;
             vue_this.$call_remote_process("vichele_management", "smart_assign", [vue_this.$cookies.get('pa_ssid'), vue_this.select_pool]).then(function (resp) {
@@ -314,7 +361,25 @@ export default {
                     message: '确认取消所选的车辆进厂吗？',
                 })
                 .then(() => {
-                    vue_this.$call_remote_process("vichele_management", 'cancel_vichele', [vue_this.$cookies.get('pa_ssid'), vue_this.select_pool, vue_this.is_all_select()]).finally(function () {
+                    var date_condition = '';
+                    var cur_date = new Date();
+                    cur_date.setDate(cur_date.getDate() + vue_this.date_filter)
+                    if (vue_this.date_filter != -2) {
+                        date_condition = vue_this.formatDateTime(cur_date);
+                    }
+                    var stuff_condition = '';
+                    if (vue_this.stuff_filter != -1) {
+                        stuff_condition = vue_this.stuff_condition.find(value => {
+                            return value.value == vue_this.stuff_filter
+                        }).text;
+                    }
+                    var supplier_condition = '';
+                    if (vue_this.supplier_filter != -1) {
+                        supplier_condition = vue_this.supplier_condition.find(value => {
+                            return value.value == vue_this.supplier_filter
+                        }).text;
+                    }
+                    vue_this.$call_remote_process("vichele_management", 'cancel_vichele', [vue_this.$cookies.get('pa_ssid'), vue_this.select_pool, vue_this.is_all_select(), date_condition, stuff_condition, supplier_condition]).finally(function () {
                         vue_this.finished = false;
                         vue_this.items = [];
                         vue_this.select_pool = [];
@@ -333,7 +398,25 @@ export default {
                     element.company_name = vue_this.smart_company;
                 }
             });
-            vue_this.$call_remote_process("vichele_management", 'confirm_vichele', [vue_this.$cookies.get('pa_ssid'), vue_this.select_pool, vue_this.company_selected, vue_this.is_all_select()]).then(function (resp) {
+            var date_condition = '';
+            var cur_date = new Date();
+            cur_date.setDate(cur_date.getDate() + vue_this.date_filter)
+            if (vue_this.date_filter != -2) {
+                date_condition = vue_this.formatDateTime(cur_date);
+            }
+            var stuff_condition = '';
+            if (vue_this.stuff_filter != -1) {
+                stuff_condition = vue_this.stuff_condition.find(value => {
+                    return value.value == vue_this.stuff_filter
+                }).text;
+            }
+            var supplier_condition = '';
+            if (vue_this.supplier_filter != -1) {
+                supplier_condition = vue_this.supplier_condition.find(value => {
+                    return value.value == vue_this.supplier_filter
+                }).text;
+            }
+            vue_this.$call_remote_process("vichele_management", 'confirm_vichele', [vue_this.$cookies.get('pa_ssid'), vue_this.select_pool, vue_this.company_selected, vue_this.is_all_select(), date_condition, stuff_condition, supplier_condition]).then(function (resp) {
                 if (resp) {
                     vue_this.show_confirm_diag = false;
                     vue_this.finished = false;
