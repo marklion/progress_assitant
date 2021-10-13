@@ -32,8 +32,8 @@ class vichele_managementIf {
   virtual void set_silent_user_info(const std::string& open_id, const silent_user_info& info) = 0;
   virtual void get_input_history(std::vector<std::string> & _return, const std::string& open_id, const vichele_stay_alone& search_key) = 0;
   virtual void get_company_vichele_info(std::vector<vichele_stay_alone> & _return, const std::string& ssid, const int64_t anchor, const int64_t status, const std::string& enter_date, const std::string& stuff_name, const std::string& supplier_name, const std::string& vichele_number) = 0;
-  virtual bool confirm_vichele(const std::string& ssid, const std::vector<vichele_stay_alone> & info, const std::vector<std::string> & company_for_select, const bool all_select) = 0;
-  virtual bool cancel_vichele(const std::string& ssid, const std::vector<vichele_stay_alone> & info, const bool all_select) = 0;
+  virtual bool confirm_vichele(const std::string& ssid, const std::vector<vichele_stay_alone> & info, const std::vector<std::string> & company_for_select, const bool all_select, const std::string& enter_date, const std::string& stuff_name, const std::string& supplier_name) = 0;
+  virtual bool cancel_vichele(const std::string& ssid, const std::vector<vichele_stay_alone> & info, const bool all_select, const std::string& enter_date, const std::string& stuff_name, const std::string& supplier_name) = 0;
   virtual bool create_vichele_team(const std::string& open_id, const vichele_team& team_info) = 0;
   virtual bool update_vichele_team(const std::string& open_id, const vichele_team& team_info) = 0;
   virtual bool del_vichele_team(const std::string& open_id, const int64_t team_id) = 0;
@@ -56,6 +56,7 @@ class vichele_managementIf {
   virtual void get_all_exceptions(std::vector<std::string> & _return, const std::string& ssid) = 0;
   virtual void get_company_brief(single_vichele_brief& _return, const std::string& ssid) = 0;
   virtual void get_statistics(vichele_stay_alone_statistics& _return, const std::string& ssid) = 0;
+  virtual bool change_price(const std::string& ssid, const std::vector<vichele_stay_alone> & info, const bool all_select, const std::string& enter_date, const std::string& stuff_name, const std::string& supplier_name, const double new_price) = 0;
 };
 
 class vichele_managementIfFactory {
@@ -119,11 +120,11 @@ class vichele_managementNull : virtual public vichele_managementIf {
   void get_company_vichele_info(std::vector<vichele_stay_alone> & /* _return */, const std::string& /* ssid */, const int64_t /* anchor */, const int64_t /* status */, const std::string& /* enter_date */, const std::string& /* stuff_name */, const std::string& /* supplier_name */, const std::string& /* vichele_number */) {
     return;
   }
-  bool confirm_vichele(const std::string& /* ssid */, const std::vector<vichele_stay_alone> & /* info */, const std::vector<std::string> & /* company_for_select */, const bool /* all_select */) {
+  bool confirm_vichele(const std::string& /* ssid */, const std::vector<vichele_stay_alone> & /* info */, const std::vector<std::string> & /* company_for_select */, const bool /* all_select */, const std::string& /* enter_date */, const std::string& /* stuff_name */, const std::string& /* supplier_name */) {
     bool _return = false;
     return _return;
   }
-  bool cancel_vichele(const std::string& /* ssid */, const std::vector<vichele_stay_alone> & /* info */, const bool /* all_select */) {
+  bool cancel_vichele(const std::string& /* ssid */, const std::vector<vichele_stay_alone> & /* info */, const bool /* all_select */, const std::string& /* enter_date */, const std::string& /* stuff_name */, const std::string& /* supplier_name */) {
     bool _return = false;
     return _return;
   }
@@ -206,6 +207,10 @@ class vichele_managementNull : virtual public vichele_managementIf {
   }
   void get_statistics(vichele_stay_alone_statistics& /* _return */, const std::string& /* ssid */) {
     return;
+  }
+  bool change_price(const std::string& /* ssid */, const std::vector<vichele_stay_alone> & /* info */, const bool /* all_select */, const std::string& /* enter_date */, const std::string& /* stuff_name */, const std::string& /* supplier_name */, const double /* new_price */) {
+    bool _return = false;
+    return _return;
   }
 };
 
@@ -1406,11 +1411,14 @@ class vichele_management_get_company_vichele_info_presult {
 };
 
 typedef struct _vichele_management_confirm_vichele_args__isset {
-  _vichele_management_confirm_vichele_args__isset() : ssid(false), info(false), company_for_select(false), all_select(false) {}
+  _vichele_management_confirm_vichele_args__isset() : ssid(false), info(false), company_for_select(false), all_select(false), enter_date(false), stuff_name(false), supplier_name(false) {}
   bool ssid :1;
   bool info :1;
   bool company_for_select :1;
   bool all_select :1;
+  bool enter_date :1;
+  bool stuff_name :1;
+  bool supplier_name :1;
 } _vichele_management_confirm_vichele_args__isset;
 
 class vichele_management_confirm_vichele_args {
@@ -1418,7 +1426,7 @@ class vichele_management_confirm_vichele_args {
 
   vichele_management_confirm_vichele_args(const vichele_management_confirm_vichele_args&);
   vichele_management_confirm_vichele_args& operator=(const vichele_management_confirm_vichele_args&);
-  vichele_management_confirm_vichele_args() : ssid(), all_select(0) {
+  vichele_management_confirm_vichele_args() : ssid(), all_select(0), enter_date(), stuff_name(), supplier_name() {
   }
 
   virtual ~vichele_management_confirm_vichele_args() noexcept;
@@ -1426,6 +1434,9 @@ class vichele_management_confirm_vichele_args {
   std::vector<vichele_stay_alone>  info;
   std::vector<std::string>  company_for_select;
   bool all_select;
+  std::string enter_date;
+  std::string stuff_name;
+  std::string supplier_name;
 
   _vichele_management_confirm_vichele_args__isset __isset;
 
@@ -1437,6 +1448,12 @@ class vichele_management_confirm_vichele_args {
 
   void __set_all_select(const bool val);
 
+  void __set_enter_date(const std::string& val);
+
+  void __set_stuff_name(const std::string& val);
+
+  void __set_supplier_name(const std::string& val);
+
   bool operator == (const vichele_management_confirm_vichele_args & rhs) const
   {
     if (!(ssid == rhs.ssid))
@@ -1446,6 +1463,12 @@ class vichele_management_confirm_vichele_args {
     if (!(company_for_select == rhs.company_for_select))
       return false;
     if (!(all_select == rhs.all_select))
+      return false;
+    if (!(enter_date == rhs.enter_date))
+      return false;
+    if (!(stuff_name == rhs.stuff_name))
+      return false;
+    if (!(supplier_name == rhs.supplier_name))
       return false;
     return true;
   }
@@ -1470,6 +1493,9 @@ class vichele_management_confirm_vichele_pargs {
   const std::vector<vichele_stay_alone> * info;
   const std::vector<std::string> * company_for_select;
   const bool* all_select;
+  const std::string* enter_date;
+  const std::string* stuff_name;
+  const std::string* supplier_name;
 
   uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
 
@@ -1539,10 +1565,13 @@ class vichele_management_confirm_vichele_presult {
 };
 
 typedef struct _vichele_management_cancel_vichele_args__isset {
-  _vichele_management_cancel_vichele_args__isset() : ssid(false), info(false), all_select(false) {}
+  _vichele_management_cancel_vichele_args__isset() : ssid(false), info(false), all_select(false), enter_date(false), stuff_name(false), supplier_name(false) {}
   bool ssid :1;
   bool info :1;
   bool all_select :1;
+  bool enter_date :1;
+  bool stuff_name :1;
+  bool supplier_name :1;
 } _vichele_management_cancel_vichele_args__isset;
 
 class vichele_management_cancel_vichele_args {
@@ -1550,13 +1579,16 @@ class vichele_management_cancel_vichele_args {
 
   vichele_management_cancel_vichele_args(const vichele_management_cancel_vichele_args&);
   vichele_management_cancel_vichele_args& operator=(const vichele_management_cancel_vichele_args&);
-  vichele_management_cancel_vichele_args() : ssid(), all_select(0) {
+  vichele_management_cancel_vichele_args() : ssid(), all_select(0), enter_date(), stuff_name(), supplier_name() {
   }
 
   virtual ~vichele_management_cancel_vichele_args() noexcept;
   std::string ssid;
   std::vector<vichele_stay_alone>  info;
   bool all_select;
+  std::string enter_date;
+  std::string stuff_name;
+  std::string supplier_name;
 
   _vichele_management_cancel_vichele_args__isset __isset;
 
@@ -1566,6 +1598,12 @@ class vichele_management_cancel_vichele_args {
 
   void __set_all_select(const bool val);
 
+  void __set_enter_date(const std::string& val);
+
+  void __set_stuff_name(const std::string& val);
+
+  void __set_supplier_name(const std::string& val);
+
   bool operator == (const vichele_management_cancel_vichele_args & rhs) const
   {
     if (!(ssid == rhs.ssid))
@@ -1573,6 +1611,12 @@ class vichele_management_cancel_vichele_args {
     if (!(info == rhs.info))
       return false;
     if (!(all_select == rhs.all_select))
+      return false;
+    if (!(enter_date == rhs.enter_date))
+      return false;
+    if (!(stuff_name == rhs.stuff_name))
+      return false;
+    if (!(supplier_name == rhs.supplier_name))
       return false;
     return true;
   }
@@ -1596,6 +1640,9 @@ class vichele_management_cancel_vichele_pargs {
   const std::string* ssid;
   const std::vector<vichele_stay_alone> * info;
   const bool* all_select;
+  const std::string* enter_date;
+  const std::string* stuff_name;
+  const std::string* supplier_name;
 
   uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
 
@@ -4275,6 +4322,160 @@ class vichele_management_get_statistics_presult {
 
 };
 
+typedef struct _vichele_management_change_price_args__isset {
+  _vichele_management_change_price_args__isset() : ssid(false), info(false), all_select(false), enter_date(false), stuff_name(false), supplier_name(false), new_price(false) {}
+  bool ssid :1;
+  bool info :1;
+  bool all_select :1;
+  bool enter_date :1;
+  bool stuff_name :1;
+  bool supplier_name :1;
+  bool new_price :1;
+} _vichele_management_change_price_args__isset;
+
+class vichele_management_change_price_args {
+ public:
+
+  vichele_management_change_price_args(const vichele_management_change_price_args&);
+  vichele_management_change_price_args& operator=(const vichele_management_change_price_args&);
+  vichele_management_change_price_args() : ssid(), all_select(0), enter_date(), stuff_name(), supplier_name(), new_price(0) {
+  }
+
+  virtual ~vichele_management_change_price_args() noexcept;
+  std::string ssid;
+  std::vector<vichele_stay_alone>  info;
+  bool all_select;
+  std::string enter_date;
+  std::string stuff_name;
+  std::string supplier_name;
+  double new_price;
+
+  _vichele_management_change_price_args__isset __isset;
+
+  void __set_ssid(const std::string& val);
+
+  void __set_info(const std::vector<vichele_stay_alone> & val);
+
+  void __set_all_select(const bool val);
+
+  void __set_enter_date(const std::string& val);
+
+  void __set_stuff_name(const std::string& val);
+
+  void __set_supplier_name(const std::string& val);
+
+  void __set_new_price(const double val);
+
+  bool operator == (const vichele_management_change_price_args & rhs) const
+  {
+    if (!(ssid == rhs.ssid))
+      return false;
+    if (!(info == rhs.info))
+      return false;
+    if (!(all_select == rhs.all_select))
+      return false;
+    if (!(enter_date == rhs.enter_date))
+      return false;
+    if (!(stuff_name == rhs.stuff_name))
+      return false;
+    if (!(supplier_name == rhs.supplier_name))
+      return false;
+    if (!(new_price == rhs.new_price))
+      return false;
+    return true;
+  }
+  bool operator != (const vichele_management_change_price_args &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const vichele_management_change_price_args & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+
+class vichele_management_change_price_pargs {
+ public:
+
+
+  virtual ~vichele_management_change_price_pargs() noexcept;
+  const std::string* ssid;
+  const std::vector<vichele_stay_alone> * info;
+  const bool* all_select;
+  const std::string* enter_date;
+  const std::string* stuff_name;
+  const std::string* supplier_name;
+  const double* new_price;
+
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _vichele_management_change_price_result__isset {
+  _vichele_management_change_price_result__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _vichele_management_change_price_result__isset;
+
+class vichele_management_change_price_result {
+ public:
+
+  vichele_management_change_price_result(const vichele_management_change_price_result&);
+  vichele_management_change_price_result& operator=(const vichele_management_change_price_result&);
+  vichele_management_change_price_result() : success(0) {
+  }
+
+  virtual ~vichele_management_change_price_result() noexcept;
+  bool success;
+  gen_exp e;
+
+  _vichele_management_change_price_result__isset __isset;
+
+  void __set_success(const bool val);
+
+  void __set_e(const gen_exp& val);
+
+  bool operator == (const vichele_management_change_price_result & rhs) const
+  {
+    if (!(success == rhs.success))
+      return false;
+    if (!(e == rhs.e))
+      return false;
+    return true;
+  }
+  bool operator != (const vichele_management_change_price_result &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const vichele_management_change_price_result & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _vichele_management_change_price_presult__isset {
+  _vichele_management_change_price_presult__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _vichele_management_change_price_presult__isset;
+
+class vichele_management_change_price_presult {
+ public:
+
+
+  virtual ~vichele_management_change_price_presult() noexcept;
+  bool* success;
+  gen_exp e;
+
+  _vichele_management_change_price_presult__isset __isset;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+
+};
+
 class vichele_managementClient : virtual public vichele_managementIf {
  public:
   vichele_managementClient(std::shared_ptr< ::apache::thrift::protocol::TProtocol> prot) {
@@ -4330,11 +4531,11 @@ class vichele_managementClient : virtual public vichele_managementIf {
   void get_company_vichele_info(std::vector<vichele_stay_alone> & _return, const std::string& ssid, const int64_t anchor, const int64_t status, const std::string& enter_date, const std::string& stuff_name, const std::string& supplier_name, const std::string& vichele_number);
   void send_get_company_vichele_info(const std::string& ssid, const int64_t anchor, const int64_t status, const std::string& enter_date, const std::string& stuff_name, const std::string& supplier_name, const std::string& vichele_number);
   void recv_get_company_vichele_info(std::vector<vichele_stay_alone> & _return);
-  bool confirm_vichele(const std::string& ssid, const std::vector<vichele_stay_alone> & info, const std::vector<std::string> & company_for_select, const bool all_select);
-  void send_confirm_vichele(const std::string& ssid, const std::vector<vichele_stay_alone> & info, const std::vector<std::string> & company_for_select, const bool all_select);
+  bool confirm_vichele(const std::string& ssid, const std::vector<vichele_stay_alone> & info, const std::vector<std::string> & company_for_select, const bool all_select, const std::string& enter_date, const std::string& stuff_name, const std::string& supplier_name);
+  void send_confirm_vichele(const std::string& ssid, const std::vector<vichele_stay_alone> & info, const std::vector<std::string> & company_for_select, const bool all_select, const std::string& enter_date, const std::string& stuff_name, const std::string& supplier_name);
   bool recv_confirm_vichele();
-  bool cancel_vichele(const std::string& ssid, const std::vector<vichele_stay_alone> & info, const bool all_select);
-  void send_cancel_vichele(const std::string& ssid, const std::vector<vichele_stay_alone> & info, const bool all_select);
+  bool cancel_vichele(const std::string& ssid, const std::vector<vichele_stay_alone> & info, const bool all_select, const std::string& enter_date, const std::string& stuff_name, const std::string& supplier_name);
+  void send_cancel_vichele(const std::string& ssid, const std::vector<vichele_stay_alone> & info, const bool all_select, const std::string& enter_date, const std::string& stuff_name, const std::string& supplier_name);
   bool recv_cancel_vichele();
   bool create_vichele_team(const std::string& open_id, const vichele_team& team_info);
   void send_create_vichele_team(const std::string& open_id, const vichele_team& team_info);
@@ -4402,6 +4603,9 @@ class vichele_managementClient : virtual public vichele_managementIf {
   void get_statistics(vichele_stay_alone_statistics& _return, const std::string& ssid);
   void send_get_statistics(const std::string& ssid);
   void recv_get_statistics(vichele_stay_alone_statistics& _return);
+  bool change_price(const std::string& ssid, const std::vector<vichele_stay_alone> & info, const bool all_select, const std::string& enter_date, const std::string& stuff_name, const std::string& supplier_name, const double new_price);
+  void send_change_price(const std::string& ssid, const std::vector<vichele_stay_alone> & info, const bool all_select, const std::string& enter_date, const std::string& stuff_name, const std::string& supplier_name, const double new_price);
+  bool recv_change_price();
  protected:
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> piprot_;
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> poprot_;
@@ -4451,6 +4655,7 @@ class vichele_managementProcessor : public ::apache::thrift::TDispatchProcessor 
   void process_get_all_exceptions(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
   void process_get_company_brief(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
   void process_get_statistics(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
+  void process_change_price(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
  public:
   vichele_managementProcessor(::std::shared_ptr<vichele_managementIf> iface) :
     iface_(iface) {
@@ -4488,6 +4693,7 @@ class vichele_managementProcessor : public ::apache::thrift::TDispatchProcessor 
     processMap_["get_all_exceptions"] = &vichele_managementProcessor::process_get_all_exceptions;
     processMap_["get_company_brief"] = &vichele_managementProcessor::process_get_company_brief;
     processMap_["get_statistics"] = &vichele_managementProcessor::process_get_statistics;
+    processMap_["change_price"] = &vichele_managementProcessor::process_change_price;
   }
 
   virtual ~vichele_managementProcessor() {}
@@ -4611,22 +4817,22 @@ class vichele_managementMultiface : virtual public vichele_managementIf {
     return;
   }
 
-  bool confirm_vichele(const std::string& ssid, const std::vector<vichele_stay_alone> & info, const std::vector<std::string> & company_for_select, const bool all_select) {
+  bool confirm_vichele(const std::string& ssid, const std::vector<vichele_stay_alone> & info, const std::vector<std::string> & company_for_select, const bool all_select, const std::string& enter_date, const std::string& stuff_name, const std::string& supplier_name) {
     size_t sz = ifaces_.size();
     size_t i = 0;
     for (; i < (sz - 1); ++i) {
-      ifaces_[i]->confirm_vichele(ssid, info, company_for_select, all_select);
+      ifaces_[i]->confirm_vichele(ssid, info, company_for_select, all_select, enter_date, stuff_name, supplier_name);
     }
-    return ifaces_[i]->confirm_vichele(ssid, info, company_for_select, all_select);
+    return ifaces_[i]->confirm_vichele(ssid, info, company_for_select, all_select, enter_date, stuff_name, supplier_name);
   }
 
-  bool cancel_vichele(const std::string& ssid, const std::vector<vichele_stay_alone> & info, const bool all_select) {
+  bool cancel_vichele(const std::string& ssid, const std::vector<vichele_stay_alone> & info, const bool all_select, const std::string& enter_date, const std::string& stuff_name, const std::string& supplier_name) {
     size_t sz = ifaces_.size();
     size_t i = 0;
     for (; i < (sz - 1); ++i) {
-      ifaces_[i]->cancel_vichele(ssid, info, all_select);
+      ifaces_[i]->cancel_vichele(ssid, info, all_select, enter_date, stuff_name, supplier_name);
     }
-    return ifaces_[i]->cancel_vichele(ssid, info, all_select);
+    return ifaces_[i]->cancel_vichele(ssid, info, all_select, enter_date, stuff_name, supplier_name);
   }
 
   bool create_vichele_team(const std::string& open_id, const vichele_team& team_info) {
@@ -4835,6 +5041,15 @@ class vichele_managementMultiface : virtual public vichele_managementIf {
     return;
   }
 
+  bool change_price(const std::string& ssid, const std::vector<vichele_stay_alone> & info, const bool all_select, const std::string& enter_date, const std::string& stuff_name, const std::string& supplier_name, const double new_price) {
+    size_t sz = ifaces_.size();
+    size_t i = 0;
+    for (; i < (sz - 1); ++i) {
+      ifaces_[i]->change_price(ssid, info, all_select, enter_date, stuff_name, supplier_name, new_price);
+    }
+    return ifaces_[i]->change_price(ssid, info, all_select, enter_date, stuff_name, supplier_name, new_price);
+  }
+
 };
 
 // The 'concurrent' client is a thread safe client that correctly handles
@@ -4897,11 +5112,11 @@ class vichele_managementConcurrentClient : virtual public vichele_managementIf {
   void get_company_vichele_info(std::vector<vichele_stay_alone> & _return, const std::string& ssid, const int64_t anchor, const int64_t status, const std::string& enter_date, const std::string& stuff_name, const std::string& supplier_name, const std::string& vichele_number);
   int32_t send_get_company_vichele_info(const std::string& ssid, const int64_t anchor, const int64_t status, const std::string& enter_date, const std::string& stuff_name, const std::string& supplier_name, const std::string& vichele_number);
   void recv_get_company_vichele_info(std::vector<vichele_stay_alone> & _return, const int32_t seqid);
-  bool confirm_vichele(const std::string& ssid, const std::vector<vichele_stay_alone> & info, const std::vector<std::string> & company_for_select, const bool all_select);
-  int32_t send_confirm_vichele(const std::string& ssid, const std::vector<vichele_stay_alone> & info, const std::vector<std::string> & company_for_select, const bool all_select);
+  bool confirm_vichele(const std::string& ssid, const std::vector<vichele_stay_alone> & info, const std::vector<std::string> & company_for_select, const bool all_select, const std::string& enter_date, const std::string& stuff_name, const std::string& supplier_name);
+  int32_t send_confirm_vichele(const std::string& ssid, const std::vector<vichele_stay_alone> & info, const std::vector<std::string> & company_for_select, const bool all_select, const std::string& enter_date, const std::string& stuff_name, const std::string& supplier_name);
   bool recv_confirm_vichele(const int32_t seqid);
-  bool cancel_vichele(const std::string& ssid, const std::vector<vichele_stay_alone> & info, const bool all_select);
-  int32_t send_cancel_vichele(const std::string& ssid, const std::vector<vichele_stay_alone> & info, const bool all_select);
+  bool cancel_vichele(const std::string& ssid, const std::vector<vichele_stay_alone> & info, const bool all_select, const std::string& enter_date, const std::string& stuff_name, const std::string& supplier_name);
+  int32_t send_cancel_vichele(const std::string& ssid, const std::vector<vichele_stay_alone> & info, const bool all_select, const std::string& enter_date, const std::string& stuff_name, const std::string& supplier_name);
   bool recv_cancel_vichele(const int32_t seqid);
   bool create_vichele_team(const std::string& open_id, const vichele_team& team_info);
   int32_t send_create_vichele_team(const std::string& open_id, const vichele_team& team_info);
@@ -4969,6 +5184,9 @@ class vichele_managementConcurrentClient : virtual public vichele_managementIf {
   void get_statistics(vichele_stay_alone_statistics& _return, const std::string& ssid);
   int32_t send_get_statistics(const std::string& ssid);
   void recv_get_statistics(vichele_stay_alone_statistics& _return, const int32_t seqid);
+  bool change_price(const std::string& ssid, const std::vector<vichele_stay_alone> & info, const bool all_select, const std::string& enter_date, const std::string& stuff_name, const std::string& supplier_name, const double new_price);
+  int32_t send_change_price(const std::string& ssid, const std::vector<vichele_stay_alone> & info, const bool all_select, const std::string& enter_date, const std::string& stuff_name, const std::string& supplier_name, const double new_price);
+  bool recv_change_price(const int32_t seqid);
  protected:
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> piprot_;
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> poprot_;

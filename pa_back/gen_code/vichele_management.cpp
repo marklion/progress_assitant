@@ -2456,6 +2456,30 @@ uint32_t vichele_management_confirm_vichele_args::read(::apache::thrift::protoco
           xfer += iprot->skip(ftype);
         }
         break;
+      case 5:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->enter_date);
+          this->__isset.enter_date = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 6:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->stuff_name);
+          this->__isset.stuff_name = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 7:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->supplier_name);
+          this->__isset.supplier_name = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
       default:
         xfer += iprot->skip(ftype);
         break;
@@ -2505,6 +2529,18 @@ uint32_t vichele_management_confirm_vichele_args::write(::apache::thrift::protoc
   xfer += oprot->writeBool(this->all_select);
   xfer += oprot->writeFieldEnd();
 
+  xfer += oprot->writeFieldBegin("enter_date", ::apache::thrift::protocol::T_STRING, 5);
+  xfer += oprot->writeString(this->enter_date);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("stuff_name", ::apache::thrift::protocol::T_STRING, 6);
+  xfer += oprot->writeString(this->stuff_name);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("supplier_name", ::apache::thrift::protocol::T_STRING, 7);
+  xfer += oprot->writeString(this->supplier_name);
+  xfer += oprot->writeFieldEnd();
+
   xfer += oprot->writeFieldStop();
   xfer += oprot->writeStructEnd();
   return xfer;
@@ -2550,6 +2586,18 @@ uint32_t vichele_management_confirm_vichele_pargs::write(::apache::thrift::proto
 
   xfer += oprot->writeFieldBegin("all_select", ::apache::thrift::protocol::T_BOOL, 4);
   xfer += oprot->writeBool((*(this->all_select)));
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("enter_date", ::apache::thrift::protocol::T_STRING, 5);
+  xfer += oprot->writeString((*(this->enter_date)));
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("stuff_name", ::apache::thrift::protocol::T_STRING, 6);
+  xfer += oprot->writeString((*(this->stuff_name)));
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("supplier_name", ::apache::thrift::protocol::T_STRING, 7);
+  xfer += oprot->writeString((*(this->supplier_name)));
   xfer += oprot->writeFieldEnd();
 
   xfer += oprot->writeFieldStop();
@@ -2747,6 +2795,30 @@ uint32_t vichele_management_cancel_vichele_args::read(::apache::thrift::protocol
           xfer += iprot->skip(ftype);
         }
         break;
+      case 4:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->enter_date);
+          this->__isset.enter_date = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 5:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->stuff_name);
+          this->__isset.stuff_name = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 6:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->supplier_name);
+          this->__isset.supplier_name = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
       default:
         xfer += iprot->skip(ftype);
         break;
@@ -2784,6 +2856,18 @@ uint32_t vichele_management_cancel_vichele_args::write(::apache::thrift::protoco
   xfer += oprot->writeBool(this->all_select);
   xfer += oprot->writeFieldEnd();
 
+  xfer += oprot->writeFieldBegin("enter_date", ::apache::thrift::protocol::T_STRING, 4);
+  xfer += oprot->writeString(this->enter_date);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("stuff_name", ::apache::thrift::protocol::T_STRING, 5);
+  xfer += oprot->writeString(this->stuff_name);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("supplier_name", ::apache::thrift::protocol::T_STRING, 6);
+  xfer += oprot->writeString(this->supplier_name);
+  xfer += oprot->writeFieldEnd();
+
   xfer += oprot->writeFieldStop();
   xfer += oprot->writeStructEnd();
   return xfer;
@@ -2817,6 +2901,18 @@ uint32_t vichele_management_cancel_vichele_pargs::write(::apache::thrift::protoc
 
   xfer += oprot->writeFieldBegin("all_select", ::apache::thrift::protocol::T_BOOL, 3);
   xfer += oprot->writeBool((*(this->all_select)));
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("enter_date", ::apache::thrift::protocol::T_STRING, 4);
+  xfer += oprot->writeString((*(this->enter_date)));
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("stuff_name", ::apache::thrift::protocol::T_STRING, 5);
+  xfer += oprot->writeString((*(this->stuff_name)));
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("supplier_name", ::apache::thrift::protocol::T_STRING, 6);
+  xfer += oprot->writeString((*(this->supplier_name)));
   xfer += oprot->writeFieldEnd();
 
   xfer += oprot->writeFieldStop();
@@ -7998,6 +8094,337 @@ uint32_t vichele_management_get_statistics_presult::read(::apache::thrift::proto
   return xfer;
 }
 
+
+vichele_management_change_price_args::~vichele_management_change_price_args() noexcept {
+}
+
+
+uint32_t vichele_management_change_price_args::read(::apache::thrift::protocol::TProtocol* iprot) {
+
+  ::apache::thrift::protocol::TInputRecursionTracker tracker(*iprot);
+  uint32_t xfer = 0;
+  std::string fname;
+  ::apache::thrift::protocol::TType ftype;
+  int16_t fid;
+
+  xfer += iprot->readStructBegin(fname);
+
+  using ::apache::thrift::protocol::TProtocolException;
+
+
+  while (true)
+  {
+    xfer += iprot->readFieldBegin(fname, ftype, fid);
+    if (ftype == ::apache::thrift::protocol::T_STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 1:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->ssid);
+          this->__isset.ssid = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 2:
+        if (ftype == ::apache::thrift::protocol::T_LIST) {
+          {
+            this->info.clear();
+            uint32_t _size535;
+            ::apache::thrift::protocol::TType _etype538;
+            xfer += iprot->readListBegin(_etype538, _size535);
+            this->info.resize(_size535);
+            uint32_t _i539;
+            for (_i539 = 0; _i539 < _size535; ++_i539)
+            {
+              xfer += this->info[_i539].read(iprot);
+            }
+            xfer += iprot->readListEnd();
+          }
+          this->__isset.info = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 3:
+        if (ftype == ::apache::thrift::protocol::T_BOOL) {
+          xfer += iprot->readBool(this->all_select);
+          this->__isset.all_select = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 4:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->enter_date);
+          this->__isset.enter_date = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 5:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->stuff_name);
+          this->__isset.stuff_name = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 6:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->supplier_name);
+          this->__isset.supplier_name = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 7:
+        if (ftype == ::apache::thrift::protocol::T_DOUBLE) {
+          xfer += iprot->readDouble(this->new_price);
+          this->__isset.new_price = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      default:
+        xfer += iprot->skip(ftype);
+        break;
+    }
+    xfer += iprot->readFieldEnd();
+  }
+
+  xfer += iprot->readStructEnd();
+
+  return xfer;
+}
+
+uint32_t vichele_management_change_price_args::write(::apache::thrift::protocol::TProtocol* oprot) const {
+  uint32_t xfer = 0;
+  ::apache::thrift::protocol::TOutputRecursionTracker tracker(*oprot);
+  xfer += oprot->writeStructBegin("vichele_management_change_price_args");
+
+  xfer += oprot->writeFieldBegin("ssid", ::apache::thrift::protocol::T_STRING, 1);
+  xfer += oprot->writeString(this->ssid);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("info", ::apache::thrift::protocol::T_LIST, 2);
+  {
+    xfer += oprot->writeListBegin(::apache::thrift::protocol::T_STRUCT, static_cast<uint32_t>(this->info.size()));
+    std::vector<vichele_stay_alone> ::const_iterator _iter540;
+    for (_iter540 = this->info.begin(); _iter540 != this->info.end(); ++_iter540)
+    {
+      xfer += (*_iter540).write(oprot);
+    }
+    xfer += oprot->writeListEnd();
+  }
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("all_select", ::apache::thrift::protocol::T_BOOL, 3);
+  xfer += oprot->writeBool(this->all_select);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("enter_date", ::apache::thrift::protocol::T_STRING, 4);
+  xfer += oprot->writeString(this->enter_date);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("stuff_name", ::apache::thrift::protocol::T_STRING, 5);
+  xfer += oprot->writeString(this->stuff_name);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("supplier_name", ::apache::thrift::protocol::T_STRING, 6);
+  xfer += oprot->writeString(this->supplier_name);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("new_price", ::apache::thrift::protocol::T_DOUBLE, 7);
+  xfer += oprot->writeDouble(this->new_price);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldStop();
+  xfer += oprot->writeStructEnd();
+  return xfer;
+}
+
+
+vichele_management_change_price_pargs::~vichele_management_change_price_pargs() noexcept {
+}
+
+
+uint32_t vichele_management_change_price_pargs::write(::apache::thrift::protocol::TProtocol* oprot) const {
+  uint32_t xfer = 0;
+  ::apache::thrift::protocol::TOutputRecursionTracker tracker(*oprot);
+  xfer += oprot->writeStructBegin("vichele_management_change_price_pargs");
+
+  xfer += oprot->writeFieldBegin("ssid", ::apache::thrift::protocol::T_STRING, 1);
+  xfer += oprot->writeString((*(this->ssid)));
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("info", ::apache::thrift::protocol::T_LIST, 2);
+  {
+    xfer += oprot->writeListBegin(::apache::thrift::protocol::T_STRUCT, static_cast<uint32_t>((*(this->info)).size()));
+    std::vector<vichele_stay_alone> ::const_iterator _iter541;
+    for (_iter541 = (*(this->info)).begin(); _iter541 != (*(this->info)).end(); ++_iter541)
+    {
+      xfer += (*_iter541).write(oprot);
+    }
+    xfer += oprot->writeListEnd();
+  }
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("all_select", ::apache::thrift::protocol::T_BOOL, 3);
+  xfer += oprot->writeBool((*(this->all_select)));
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("enter_date", ::apache::thrift::protocol::T_STRING, 4);
+  xfer += oprot->writeString((*(this->enter_date)));
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("stuff_name", ::apache::thrift::protocol::T_STRING, 5);
+  xfer += oprot->writeString((*(this->stuff_name)));
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("supplier_name", ::apache::thrift::protocol::T_STRING, 6);
+  xfer += oprot->writeString((*(this->supplier_name)));
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("new_price", ::apache::thrift::protocol::T_DOUBLE, 7);
+  xfer += oprot->writeDouble((*(this->new_price)));
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldStop();
+  xfer += oprot->writeStructEnd();
+  return xfer;
+}
+
+
+vichele_management_change_price_result::~vichele_management_change_price_result() noexcept {
+}
+
+
+uint32_t vichele_management_change_price_result::read(::apache::thrift::protocol::TProtocol* iprot) {
+
+  ::apache::thrift::protocol::TInputRecursionTracker tracker(*iprot);
+  uint32_t xfer = 0;
+  std::string fname;
+  ::apache::thrift::protocol::TType ftype;
+  int16_t fid;
+
+  xfer += iprot->readStructBegin(fname);
+
+  using ::apache::thrift::protocol::TProtocolException;
+
+
+  while (true)
+  {
+    xfer += iprot->readFieldBegin(fname, ftype, fid);
+    if (ftype == ::apache::thrift::protocol::T_STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 0:
+        if (ftype == ::apache::thrift::protocol::T_BOOL) {
+          xfer += iprot->readBool(this->success);
+          this->__isset.success = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 1:
+        if (ftype == ::apache::thrift::protocol::T_STRUCT) {
+          xfer += this->e.read(iprot);
+          this->__isset.e = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      default:
+        xfer += iprot->skip(ftype);
+        break;
+    }
+    xfer += iprot->readFieldEnd();
+  }
+
+  xfer += iprot->readStructEnd();
+
+  return xfer;
+}
+
+uint32_t vichele_management_change_price_result::write(::apache::thrift::protocol::TProtocol* oprot) const {
+
+  uint32_t xfer = 0;
+
+  xfer += oprot->writeStructBegin("vichele_management_change_price_result");
+
+  if (this->__isset.success) {
+    xfer += oprot->writeFieldBegin("success", ::apache::thrift::protocol::T_BOOL, 0);
+    xfer += oprot->writeBool(this->success);
+    xfer += oprot->writeFieldEnd();
+  } else if (this->__isset.e) {
+    xfer += oprot->writeFieldBegin("e", ::apache::thrift::protocol::T_STRUCT, 1);
+    xfer += this->e.write(oprot);
+    xfer += oprot->writeFieldEnd();
+  }
+  xfer += oprot->writeFieldStop();
+  xfer += oprot->writeStructEnd();
+  return xfer;
+}
+
+
+vichele_management_change_price_presult::~vichele_management_change_price_presult() noexcept {
+}
+
+
+uint32_t vichele_management_change_price_presult::read(::apache::thrift::protocol::TProtocol* iprot) {
+
+  ::apache::thrift::protocol::TInputRecursionTracker tracker(*iprot);
+  uint32_t xfer = 0;
+  std::string fname;
+  ::apache::thrift::protocol::TType ftype;
+  int16_t fid;
+
+  xfer += iprot->readStructBegin(fname);
+
+  using ::apache::thrift::protocol::TProtocolException;
+
+
+  while (true)
+  {
+    xfer += iprot->readFieldBegin(fname, ftype, fid);
+    if (ftype == ::apache::thrift::protocol::T_STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 0:
+        if (ftype == ::apache::thrift::protocol::T_BOOL) {
+          xfer += iprot->readBool((*(this->success)));
+          this->__isset.success = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 1:
+        if (ftype == ::apache::thrift::protocol::T_STRUCT) {
+          xfer += this->e.read(iprot);
+          this->__isset.e = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      default:
+        xfer += iprot->skip(ftype);
+        break;
+    }
+    xfer += iprot->readFieldEnd();
+  }
+
+  xfer += iprot->readStructEnd();
+
+  return xfer;
+}
+
 bool vichele_managementClient::create_vichele_info(const std::string& open_id, const std::vector<vichele_stay_alone> & vichele_info)
 {
   send_create_vichele_info(open_id, vichele_info);
@@ -8615,13 +9042,13 @@ void vichele_managementClient::recv_get_company_vichele_info(std::vector<vichele
   throw ::apache::thrift::TApplicationException(::apache::thrift::TApplicationException::MISSING_RESULT, "get_company_vichele_info failed: unknown result");
 }
 
-bool vichele_managementClient::confirm_vichele(const std::string& ssid, const std::vector<vichele_stay_alone> & info, const std::vector<std::string> & company_for_select, const bool all_select)
+bool vichele_managementClient::confirm_vichele(const std::string& ssid, const std::vector<vichele_stay_alone> & info, const std::vector<std::string> & company_for_select, const bool all_select, const std::string& enter_date, const std::string& stuff_name, const std::string& supplier_name)
 {
-  send_confirm_vichele(ssid, info, company_for_select, all_select);
+  send_confirm_vichele(ssid, info, company_for_select, all_select, enter_date, stuff_name, supplier_name);
   return recv_confirm_vichele();
 }
 
-void vichele_managementClient::send_confirm_vichele(const std::string& ssid, const std::vector<vichele_stay_alone> & info, const std::vector<std::string> & company_for_select, const bool all_select)
+void vichele_managementClient::send_confirm_vichele(const std::string& ssid, const std::vector<vichele_stay_alone> & info, const std::vector<std::string> & company_for_select, const bool all_select, const std::string& enter_date, const std::string& stuff_name, const std::string& supplier_name)
 {
   int32_t cseqid = 0;
   oprot_->writeMessageBegin("confirm_vichele", ::apache::thrift::protocol::T_CALL, cseqid);
@@ -8631,6 +9058,9 @@ void vichele_managementClient::send_confirm_vichele(const std::string& ssid, con
   args.info = &info;
   args.company_for_select = &company_for_select;
   args.all_select = &all_select;
+  args.enter_date = &enter_date;
+  args.stuff_name = &stuff_name;
+  args.supplier_name = &supplier_name;
   args.write(oprot_);
 
   oprot_->writeMessageEnd();
@@ -8679,13 +9109,13 @@ bool vichele_managementClient::recv_confirm_vichele()
   throw ::apache::thrift::TApplicationException(::apache::thrift::TApplicationException::MISSING_RESULT, "confirm_vichele failed: unknown result");
 }
 
-bool vichele_managementClient::cancel_vichele(const std::string& ssid, const std::vector<vichele_stay_alone> & info, const bool all_select)
+bool vichele_managementClient::cancel_vichele(const std::string& ssid, const std::vector<vichele_stay_alone> & info, const bool all_select, const std::string& enter_date, const std::string& stuff_name, const std::string& supplier_name)
 {
-  send_cancel_vichele(ssid, info, all_select);
+  send_cancel_vichele(ssid, info, all_select, enter_date, stuff_name, supplier_name);
   return recv_cancel_vichele();
 }
 
-void vichele_managementClient::send_cancel_vichele(const std::string& ssid, const std::vector<vichele_stay_alone> & info, const bool all_select)
+void vichele_managementClient::send_cancel_vichele(const std::string& ssid, const std::vector<vichele_stay_alone> & info, const bool all_select, const std::string& enter_date, const std::string& stuff_name, const std::string& supplier_name)
 {
   int32_t cseqid = 0;
   oprot_->writeMessageBegin("cancel_vichele", ::apache::thrift::protocol::T_CALL, cseqid);
@@ -8694,6 +9124,9 @@ void vichele_managementClient::send_cancel_vichele(const std::string& ssid, cons
   args.ssid = &ssid;
   args.info = &info;
   args.all_select = &all_select;
+  args.enter_date = &enter_date;
+  args.stuff_name = &stuff_name;
+  args.supplier_name = &supplier_name;
   args.write(oprot_);
 
   oprot_->writeMessageEnd();
@@ -10105,6 +10538,73 @@ void vichele_managementClient::recv_get_statistics(vichele_stay_alone_statistics
   throw ::apache::thrift::TApplicationException(::apache::thrift::TApplicationException::MISSING_RESULT, "get_statistics failed: unknown result");
 }
 
+bool vichele_managementClient::change_price(const std::string& ssid, const std::vector<vichele_stay_alone> & info, const bool all_select, const std::string& enter_date, const std::string& stuff_name, const std::string& supplier_name, const double new_price)
+{
+  send_change_price(ssid, info, all_select, enter_date, stuff_name, supplier_name, new_price);
+  return recv_change_price();
+}
+
+void vichele_managementClient::send_change_price(const std::string& ssid, const std::vector<vichele_stay_alone> & info, const bool all_select, const std::string& enter_date, const std::string& stuff_name, const std::string& supplier_name, const double new_price)
+{
+  int32_t cseqid = 0;
+  oprot_->writeMessageBegin("change_price", ::apache::thrift::protocol::T_CALL, cseqid);
+
+  vichele_management_change_price_pargs args;
+  args.ssid = &ssid;
+  args.info = &info;
+  args.all_select = &all_select;
+  args.enter_date = &enter_date;
+  args.stuff_name = &stuff_name;
+  args.supplier_name = &supplier_name;
+  args.new_price = &new_price;
+  args.write(oprot_);
+
+  oprot_->writeMessageEnd();
+  oprot_->getTransport()->writeEnd();
+  oprot_->getTransport()->flush();
+}
+
+bool vichele_managementClient::recv_change_price()
+{
+
+  int32_t rseqid = 0;
+  std::string fname;
+  ::apache::thrift::protocol::TMessageType mtype;
+
+  iprot_->readMessageBegin(fname, mtype, rseqid);
+  if (mtype == ::apache::thrift::protocol::T_EXCEPTION) {
+    ::apache::thrift::TApplicationException x;
+    x.read(iprot_);
+    iprot_->readMessageEnd();
+    iprot_->getTransport()->readEnd();
+    throw x;
+  }
+  if (mtype != ::apache::thrift::protocol::T_REPLY) {
+    iprot_->skip(::apache::thrift::protocol::T_STRUCT);
+    iprot_->readMessageEnd();
+    iprot_->getTransport()->readEnd();
+  }
+  if (fname.compare("change_price") != 0) {
+    iprot_->skip(::apache::thrift::protocol::T_STRUCT);
+    iprot_->readMessageEnd();
+    iprot_->getTransport()->readEnd();
+  }
+  bool _return;
+  vichele_management_change_price_presult result;
+  result.success = &_return;
+  result.read(iprot_);
+  iprot_->readMessageEnd();
+  iprot_->getTransport()->readEnd();
+
+  if (result.__isset.success) {
+    return _return;
+  }
+  if (result.__isset.e) {
+    throw result.e;
+  }
+  throw ::apache::thrift::TApplicationException(::apache::thrift::TApplicationException::MISSING_RESULT, "change_price failed: unknown result");
+}
+
 bool vichele_managementProcessor::dispatchCall(::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, const std::string& fname, int32_t seqid, void* callContext) {
   ProcessMap::iterator pfn;
   pfn = processMap_.find(fname);
@@ -10716,7 +11216,7 @@ void vichele_managementProcessor::process_confirm_vichele(int32_t seqid, ::apach
 
   vichele_management_confirm_vichele_result result;
   try {
-    result.success = iface_->confirm_vichele(args.ssid, args.info, args.company_for_select, args.all_select);
+    result.success = iface_->confirm_vichele(args.ssid, args.info, args.company_for_select, args.all_select, args.enter_date, args.stuff_name, args.supplier_name);
     result.__isset.success = true;
   } catch (gen_exp &e) {
     result.e = e;
@@ -10773,7 +11273,7 @@ void vichele_managementProcessor::process_cancel_vichele(int32_t seqid, ::apache
 
   vichele_management_cancel_vichele_result result;
   try {
-    result.success = iface_->cancel_vichele(args.ssid, args.info, args.all_select);
+    result.success = iface_->cancel_vichele(args.ssid, args.info, args.all_select, args.enter_date, args.stuff_name, args.supplier_name);
     result.__isset.success = true;
   } catch (gen_exp &e) {
     result.e = e;
@@ -12061,6 +12561,63 @@ void vichele_managementProcessor::process_get_statistics(int32_t seqid, ::apache
   }
 }
 
+void vichele_managementProcessor::process_change_price(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext)
+{
+  void* ctx = nullptr;
+  if (this->eventHandler_.get() != nullptr) {
+    ctx = this->eventHandler_->getContext("vichele_management.change_price", callContext);
+  }
+  ::apache::thrift::TProcessorContextFreer freer(this->eventHandler_.get(), ctx, "vichele_management.change_price");
+
+  if (this->eventHandler_.get() != nullptr) {
+    this->eventHandler_->preRead(ctx, "vichele_management.change_price");
+  }
+
+  vichele_management_change_price_args args;
+  args.read(iprot);
+  iprot->readMessageEnd();
+  uint32_t bytes = iprot->getTransport()->readEnd();
+
+  if (this->eventHandler_.get() != nullptr) {
+    this->eventHandler_->postRead(ctx, "vichele_management.change_price", bytes);
+  }
+
+  vichele_management_change_price_result result;
+  try {
+    result.success = iface_->change_price(args.ssid, args.info, args.all_select, args.enter_date, args.stuff_name, args.supplier_name, args.new_price);
+    result.__isset.success = true;
+  } catch (gen_exp &e) {
+    result.e = e;
+    result.__isset.e = true;
+  } catch (const std::exception& e) {
+    if (this->eventHandler_.get() != nullptr) {
+      this->eventHandler_->handlerError(ctx, "vichele_management.change_price");
+    }
+
+    ::apache::thrift::TApplicationException x(e.what());
+    oprot->writeMessageBegin("change_price", ::apache::thrift::protocol::T_EXCEPTION, seqid);
+    x.write(oprot);
+    oprot->writeMessageEnd();
+    oprot->getTransport()->writeEnd();
+    oprot->getTransport()->flush();
+    return;
+  }
+
+  if (this->eventHandler_.get() != nullptr) {
+    this->eventHandler_->preWrite(ctx, "vichele_management.change_price");
+  }
+
+  oprot->writeMessageBegin("change_price", ::apache::thrift::protocol::T_REPLY, seqid);
+  result.write(oprot);
+  oprot->writeMessageEnd();
+  bytes = oprot->getTransport()->writeEnd();
+  oprot->getTransport()->flush();
+
+  if (this->eventHandler_.get() != nullptr) {
+    this->eventHandler_->postWrite(ctx, "vichele_management.change_price", bytes);
+  }
+}
+
 ::std::shared_ptr< ::apache::thrift::TProcessor > vichele_managementProcessorFactory::getProcessor(const ::apache::thrift::TConnectionInfo& connInfo) {
   ::apache::thrift::ReleaseHandler< vichele_managementIfFactory > cleanup(handlerFactory_);
   ::std::shared_ptr< vichele_managementIf > handler(handlerFactory_->getHandler(connInfo), cleanup);
@@ -12954,13 +13511,13 @@ void vichele_managementConcurrentClient::recv_get_company_vichele_info(std::vect
   } // end while(true)
 }
 
-bool vichele_managementConcurrentClient::confirm_vichele(const std::string& ssid, const std::vector<vichele_stay_alone> & info, const std::vector<std::string> & company_for_select, const bool all_select)
+bool vichele_managementConcurrentClient::confirm_vichele(const std::string& ssid, const std::vector<vichele_stay_alone> & info, const std::vector<std::string> & company_for_select, const bool all_select, const std::string& enter_date, const std::string& stuff_name, const std::string& supplier_name)
 {
-  int32_t seqid = send_confirm_vichele(ssid, info, company_for_select, all_select);
+  int32_t seqid = send_confirm_vichele(ssid, info, company_for_select, all_select, enter_date, stuff_name, supplier_name);
   return recv_confirm_vichele(seqid);
 }
 
-int32_t vichele_managementConcurrentClient::send_confirm_vichele(const std::string& ssid, const std::vector<vichele_stay_alone> & info, const std::vector<std::string> & company_for_select, const bool all_select)
+int32_t vichele_managementConcurrentClient::send_confirm_vichele(const std::string& ssid, const std::vector<vichele_stay_alone> & info, const std::vector<std::string> & company_for_select, const bool all_select, const std::string& enter_date, const std::string& stuff_name, const std::string& supplier_name)
 {
   int32_t cseqid = this->sync_->generateSeqId();
   ::apache::thrift::async::TConcurrentSendSentry sentry(this->sync_.get());
@@ -12971,6 +13528,9 @@ int32_t vichele_managementConcurrentClient::send_confirm_vichele(const std::stri
   args.info = &info;
   args.company_for_select = &company_for_select;
   args.all_select = &all_select;
+  args.enter_date = &enter_date;
+  args.stuff_name = &stuff_name;
+  args.supplier_name = &supplier_name;
   args.write(oprot_);
 
   oprot_->writeMessageEnd();
@@ -13045,13 +13605,13 @@ bool vichele_managementConcurrentClient::recv_confirm_vichele(const int32_t seqi
   } // end while(true)
 }
 
-bool vichele_managementConcurrentClient::cancel_vichele(const std::string& ssid, const std::vector<vichele_stay_alone> & info, const bool all_select)
+bool vichele_managementConcurrentClient::cancel_vichele(const std::string& ssid, const std::vector<vichele_stay_alone> & info, const bool all_select, const std::string& enter_date, const std::string& stuff_name, const std::string& supplier_name)
 {
-  int32_t seqid = send_cancel_vichele(ssid, info, all_select);
+  int32_t seqid = send_cancel_vichele(ssid, info, all_select, enter_date, stuff_name, supplier_name);
   return recv_cancel_vichele(seqid);
 }
 
-int32_t vichele_managementConcurrentClient::send_cancel_vichele(const std::string& ssid, const std::vector<vichele_stay_alone> & info, const bool all_select)
+int32_t vichele_managementConcurrentClient::send_cancel_vichele(const std::string& ssid, const std::vector<vichele_stay_alone> & info, const bool all_select, const std::string& enter_date, const std::string& stuff_name, const std::string& supplier_name)
 {
   int32_t cseqid = this->sync_->generateSeqId();
   ::apache::thrift::async::TConcurrentSendSentry sentry(this->sync_.get());
@@ -13061,6 +13621,9 @@ int32_t vichele_managementConcurrentClient::send_cancel_vichele(const std::strin
   args.ssid = &ssid;
   args.info = &info;
   args.all_select = &all_select;
+  args.enter_date = &enter_date;
+  args.stuff_name = &stuff_name;
+  args.supplier_name = &supplier_name;
   args.write(oprot_);
 
   oprot_->writeMessageEnd();
@@ -15083,6 +15646,100 @@ void vichele_managementConcurrentClient::recv_get_statistics(vichele_stay_alone_
       }
       // in a bad state, don't commit
       throw ::apache::thrift::TApplicationException(::apache::thrift::TApplicationException::MISSING_RESULT, "get_statistics failed: unknown result");
+    }
+    // seqid != rseqid
+    this->sync_->updatePending(fname, mtype, rseqid);
+
+    // this will temporarily unlock the readMutex, and let other clients get work done
+    this->sync_->waitForWork(seqid);
+  } // end while(true)
+}
+
+bool vichele_managementConcurrentClient::change_price(const std::string& ssid, const std::vector<vichele_stay_alone> & info, const bool all_select, const std::string& enter_date, const std::string& stuff_name, const std::string& supplier_name, const double new_price)
+{
+  int32_t seqid = send_change_price(ssid, info, all_select, enter_date, stuff_name, supplier_name, new_price);
+  return recv_change_price(seqid);
+}
+
+int32_t vichele_managementConcurrentClient::send_change_price(const std::string& ssid, const std::vector<vichele_stay_alone> & info, const bool all_select, const std::string& enter_date, const std::string& stuff_name, const std::string& supplier_name, const double new_price)
+{
+  int32_t cseqid = this->sync_->generateSeqId();
+  ::apache::thrift::async::TConcurrentSendSentry sentry(this->sync_.get());
+  oprot_->writeMessageBegin("change_price", ::apache::thrift::protocol::T_CALL, cseqid);
+
+  vichele_management_change_price_pargs args;
+  args.ssid = &ssid;
+  args.info = &info;
+  args.all_select = &all_select;
+  args.enter_date = &enter_date;
+  args.stuff_name = &stuff_name;
+  args.supplier_name = &supplier_name;
+  args.new_price = &new_price;
+  args.write(oprot_);
+
+  oprot_->writeMessageEnd();
+  oprot_->getTransport()->writeEnd();
+  oprot_->getTransport()->flush();
+
+  sentry.commit();
+  return cseqid;
+}
+
+bool vichele_managementConcurrentClient::recv_change_price(const int32_t seqid)
+{
+
+  int32_t rseqid = 0;
+  std::string fname;
+  ::apache::thrift::protocol::TMessageType mtype;
+
+  // the read mutex gets dropped and reacquired as part of waitForWork()
+  // The destructor of this sentry wakes up other clients
+  ::apache::thrift::async::TConcurrentRecvSentry sentry(this->sync_.get(), seqid);
+
+  while(true) {
+    if(!this->sync_->getPending(fname, mtype, rseqid)) {
+      iprot_->readMessageBegin(fname, mtype, rseqid);
+    }
+    if(seqid == rseqid) {
+      if (mtype == ::apache::thrift::protocol::T_EXCEPTION) {
+        ::apache::thrift::TApplicationException x;
+        x.read(iprot_);
+        iprot_->readMessageEnd();
+        iprot_->getTransport()->readEnd();
+        sentry.commit();
+        throw x;
+      }
+      if (mtype != ::apache::thrift::protocol::T_REPLY) {
+        iprot_->skip(::apache::thrift::protocol::T_STRUCT);
+        iprot_->readMessageEnd();
+        iprot_->getTransport()->readEnd();
+      }
+      if (fname.compare("change_price") != 0) {
+        iprot_->skip(::apache::thrift::protocol::T_STRUCT);
+        iprot_->readMessageEnd();
+        iprot_->getTransport()->readEnd();
+
+        // in a bad state, don't commit
+        using ::apache::thrift::protocol::TProtocolException;
+        throw TProtocolException(TProtocolException::INVALID_DATA);
+      }
+      bool _return;
+      vichele_management_change_price_presult result;
+      result.success = &_return;
+      result.read(iprot_);
+      iprot_->readMessageEnd();
+      iprot_->getTransport()->readEnd();
+
+      if (result.__isset.success) {
+        sentry.commit();
+        return _return;
+      }
+      if (result.__isset.e) {
+        sentry.commit();
+        throw result.e;
+      }
+      // in a bad state, don't commit
+      throw ::apache::thrift::TApplicationException(::apache::thrift::TApplicationException::MISSING_RESULT, "change_price failed: unknown result");
     }
     // seqid != rseqid
     this->sync_->updatePending(fname, mtype, rseqid);

@@ -34,8 +34,8 @@ if len(sys.argv) <= 1 or sys.argv[1] == '--help':
     print('  void set_silent_user_info(string open_id, silent_user_info info)')
     print('   get_input_history(string open_id, vichele_stay_alone search_key)')
     print('   get_company_vichele_info(string ssid, i64 anchor, i64 status, string enter_date, string stuff_name, string supplier_name, string vichele_number)')
-    print('  bool confirm_vichele(string ssid,  info,  company_for_select, bool all_select)')
-    print('  bool cancel_vichele(string ssid,  info, bool all_select)')
+    print('  bool confirm_vichele(string ssid,  info,  company_for_select, bool all_select, string enter_date, string stuff_name, string supplier_name)')
+    print('  bool cancel_vichele(string ssid,  info, bool all_select, string enter_date, string stuff_name, string supplier_name)')
     print('  bool create_vichele_team(string open_id, vichele_team team_info)')
     print('  bool update_vichele_team(string open_id, vichele_team team_info)')
     print('  bool del_vichele_team(string open_id, i64 team_id)')
@@ -58,6 +58,7 @@ if len(sys.argv) <= 1 or sys.argv[1] == '--help':
     print('   get_all_exceptions(string ssid)')
     print('  single_vichele_brief get_company_brief(string ssid)')
     print('  vichele_stay_alone_statistics get_statistics(string ssid)')
+    print('  bool change_price(string ssid,  info, bool all_select, string enter_date, string stuff_name, string supplier_name, double new_price)')
     print('')
     sys.exit(0)
 
@@ -198,16 +199,16 @@ elif cmd == 'get_company_vichele_info':
     pp.pprint(client.get_company_vichele_info(args[0], eval(args[1]), eval(args[2]), args[3], args[4], args[5], args[6],))
 
 elif cmd == 'confirm_vichele':
-    if len(args) != 4:
-        print('confirm_vichele requires 4 args')
+    if len(args) != 7:
+        print('confirm_vichele requires 7 args')
         sys.exit(1)
-    pp.pprint(client.confirm_vichele(args[0], eval(args[1]), eval(args[2]), eval(args[3]),))
+    pp.pprint(client.confirm_vichele(args[0], eval(args[1]), eval(args[2]), eval(args[3]), args[4], args[5], args[6],))
 
 elif cmd == 'cancel_vichele':
-    if len(args) != 3:
-        print('cancel_vichele requires 3 args')
+    if len(args) != 6:
+        print('cancel_vichele requires 6 args')
         sys.exit(1)
-    pp.pprint(client.cancel_vichele(args[0], eval(args[1]), eval(args[2]),))
+    pp.pprint(client.cancel_vichele(args[0], eval(args[1]), eval(args[2]), args[3], args[4], args[5],))
 
 elif cmd == 'create_vichele_team':
     if len(args) != 2:
@@ -340,6 +341,12 @@ elif cmd == 'get_statistics':
         print('get_statistics requires 1 args')
         sys.exit(1)
     pp.pprint(client.get_statistics(args[0],))
+
+elif cmd == 'change_price':
+    if len(args) != 7:
+        print('change_price requires 7 args')
+        sys.exit(1)
+    pp.pprint(client.change_price(args[0], eval(args[1]), eval(args[2]), args[3], args[4], args[5], eval(args[6]),))
 
 else:
     print('Unrecognized method %s' % cmd)
