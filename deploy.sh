@@ -31,14 +31,14 @@ get_docker_image() {
 
 start_all_server() {
     line=`wc -l $0|awk '{print $1}'`
-    line=`expr $line - 104` 
+    line=`expr $line - 104`
     tail -n $line $0 | tar zx  --skip-old-files -C /
     mv /data_config.json /conf/
     nginx -c /conf/nginx.conf
     /script/auto_reply.py &
-    pa_rpc &
+    pa_rpc
     pushd /pa_rest_node
-    pm2 start index.js 
+    pm2 start index.js
     popd
     bash
 }
@@ -93,7 +93,7 @@ do
     esac
 done
 
-if is_in_container 
+if is_in_container
 then
     start_all_server
 else
