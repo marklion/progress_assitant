@@ -16,7 +16,7 @@
 #include "vichele_management_imp.h"
 #include <thrift/server/TNonblockingServer.h>
 #include <thrift/server/TThreadPoolServer.h>
-
+#include <sys/wait.h>
 #include <thrift/concurrency/ThreadManager.h>
 
 using namespace ::apache::thrift;
@@ -24,9 +24,47 @@ using namespace ::apache::thrift::protocol;
 using namespace ::apache::thrift::transport;
 using namespace ::apache::thrift::server;
 
+void daemonlize()
+{
+    auto ret = fork();
+    if (ret < 0)
+    {
+        exit(-1);
+    }
+    if (ret == 0)
+    {
+        while (1)
+        {
+            ret = fork();
+            if (ret < 0)
+            {
+                exit(-1);
+            }
+            if (ret == 0)
+            {
+                return;
+            }
+            else
+            {
+                int child_status = 0;
+                wait(&child_status);
+                if (child_status != 0)
+                {
+                    system(std::string("cp core '/dist/logo_res/core" + PA_DATAOPT_current_time() + "'").c_str());
+                }
+                system("/script/send_mail.py liuyang@d8sis.cn '服务异常重启' '服务异常重启'");
+            }
+        }
+    }
+    else
+    {
+        exit(0);
+    }
+}
+
 int main(int argc, char **argv)
 {
-
+    daemonlize();
     Py_Initialize();
     PA_STATUS_RULE_init();
     sqlite_orm_lock::init_lock();
