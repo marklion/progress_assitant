@@ -1,5 +1,5 @@
 #include "tdf_include.h"
-#include <sys/types.h>          
+#include <sys/types.h>
 #include <sys/socket.h>
 #include <unistd.h>
 #include <netdb.h>
@@ -62,8 +62,6 @@ static void work_thread_main_loop()
         wt.detach();
     }
 }
-
-static std::thread g_work_thread(work_thread_main_loop);
 
 class tdf_data;
 class tdf_listen;
@@ -337,6 +335,7 @@ void tdf_main::close_listen(unsigned short _port)
 
 bool tdf_main::run()
 {
+    std::thread(work_thread_main_loop).detach();
     bool ret = true;
     epoll_event evs[128];
 
