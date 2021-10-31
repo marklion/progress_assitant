@@ -1949,6 +1949,56 @@ public:
         }
         return true;
     }
+
+    virtual bool change_driver(const std::string &ssid, const int64_t vichele_id, const std::string &driver_name, const std::string &driver_phone)
+    {
+        auto company = PA_DATAOPT_get_company_by_ssid(ssid);
+        if (!company)
+        {
+            PA_RETURN_NOPRIVA_MSG();
+        }
+        auto single_vichele = sqlite_orm::search_record<pa_sql_single_vichele>("PRI_ID == %ld AND finish == 0", vichele_id);
+        if (!single_vichele)
+        {
+            PA_RETURN_NOPRIVA_MSG();
+        }
+        if (single_vichele->get_children<pa_sql_driver_register>("belong_vichele"))
+        {
+            PA_RETURN_NOPRIVA_MSG();
+        }
+        auto plan = single_vichele->get_parent<pa_sql_plan>("belong_plan");
+        if (!plan)
+        {
+            PA_RETURN_NOPRIVA_MSG();
+        }
+        auto stuff = plan->get_parent<pa_sql_stuff_info>("belong_stuff");
+        if (!stuff)
+        {
+            PA_RETURN_NOPRIVA_MSG();
+        }
+        if (company->get_children<pa_sql_stuff_info>("belong_company", "PRI_ID == %ld", stuff->get_pri_id()))
+        {
+            auto exist_driver = sqlite_orm::search_record<pa_sql_driver>("phone == '%s'", driver_phone.c_str());
+            if (!exist_driver)
+            {
+                pa_sql_driver tmp;
+                tmp.name = driver_name;
+                tmp.phone = driver_phone;
+                tmp.insert_record();
+                single_vichele->set_parent(tmp, "driver");
+            }
+            else
+            {
+                single_vichele->set_parent(*exist_driver, "driver");
+            }
+
+            return single_vichele->update_record();
+        }
+        else
+        {
+            PA_RETURN_NOPRIVA_MSG();
+        }
+    }
 };
 
 #endif // _STUFF_PLAN_MANAGEMENT_H_

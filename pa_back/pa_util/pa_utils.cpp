@@ -540,7 +540,7 @@ void PA_DATAOPT_post_save_register(pa_sql_plan &_plan)
     {
         return;
     }
-    
+
     auto company = stuff_info->get_parent<pa_sql_company>("belong_company");
     if (!company)
     {
@@ -954,6 +954,8 @@ void PA_DATAOPT_post_checkin(pa_sql_single_vichele &_vichele)
                 req.Add("orderNo", std::to_string(tmp.created_time) + std::to_string(tmp.plan_id));
                 req.AddEmptySubArray("multiStuff");
                 req.Add("isMulti", false, false);
+                req.Add("dropAddress", itr.drop_address);
+                req.Add("useFor", itr.use_for);
 
                 break;
             }

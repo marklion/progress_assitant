@@ -61,6 +61,7 @@ if len(sys.argv) <= 1 or sys.argv[1] == '--help':
     print('  bool register_vichele(string silent_id, i64 vichele_id)')
     print('  bool unregister_vichele(string silent_id, i64 vichele_id)')
     print('  bool multi_confirm_plan(string ssid,  plan_ids)')
+    print('  bool change_driver(string ssid, i64 vichele_id, string driver_name, string driver_phone)')
     print('')
     sys.exit(0)
 
@@ -361,6 +362,12 @@ elif cmd == 'multi_confirm_plan':
         print('multi_confirm_plan requires 2 args')
         sys.exit(1)
     pp.pprint(client.multi_confirm_plan(args[0], eval(args[1]),))
+
+elif cmd == 'change_driver':
+    if len(args) != 4:
+        print('change_driver requires 4 args')
+        sys.exit(1)
+    pp.pprint(client.change_driver(args[0], eval(args[1]), args[2], args[3],))
 
 else:
     print('Unrecognized method %s' % cmd)
