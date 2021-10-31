@@ -33,9 +33,21 @@
                         </van-col>
                     </van-row>
                 </div>
+                <div v-else-if="!$store.state.userinfo.buyer">
+                    <van-button type="primary" size="small" @click="open_change_driver(item.vichele_id)">换司机</van-button>
+                </div>
             </div>
         </van-cell-group>
     </van-checkbox-group>
+    <van-dialog v-model="focus_driver_change" title="更换司机" close-on-click-overlay :show-confirm-button="false">
+        <van-form @submit="change_driver">
+            <van-field v-model="new_driver_name" name="姓名" label="姓名" placeholder="请输入司机姓名" :rules="[{ required: true, message: '请输入司机姓名' }]" />
+            <van-field v-model="new_driver_phone" name="电话" label="电话" placeholder="请输入司机电话" :rules="[{ required: true, message: '请输入司机电话' , pattern: phone_pattern}]" />
+            <div style="margin: 16px;">
+                <van-button round block type="info" native-type="submit">提交</van-button>
+            </div>
+        </van-form>
+    </van-dialog>
     <van-row :gutter="10" type="flex" justify="center" align="center" v-if="can_change_to(4)">
         <van-col :span="8">
             <van-button block type="info" size="small" :disabled="pre_deliver_vichele_index.length == 0" @click="submit_confirm_deliver">确认出货选中车辆</van-button>
@@ -49,8 +61,8 @@
     </van-row>
 
     <van-cell-group title="已出货车辆">
-        <van-collapse v-model="expend_weight" >
-            <van-collapse-item  name="1" v-for="(item, index) in delivered_vichele" center :value="item.count + '吨'" :key="index" :title="item.main_vichele + '-' + item.behind_vichele" :label="item.driver_name + '-' + item.driver_phone">
+        <van-collapse v-model="expend_weight">
+            <van-collapse-item name="1" v-for="(item, index) in delivered_vichele" center :value="item.count + '吨'" :key="index" :title="item.main_vichele + '-' + item.behind_vichele" :label="item.driver_name + '-' + item.driver_phone">
                 <van-cell :title="'皮重：' + item.p_weight" :value="item.p_time"></van-cell>
                 <van-cell :title="'毛重：' + item.m_weight" :value="item.deliver_timestamp"></van-cell>
             </van-collapse-item>
@@ -93,8 +105,13 @@ import {
 import {
     Stepper
 } from 'vant';
-import { Collapse, CollapseItem } from 'vant';
+import {
+    Collapse,
+    CollapseItem
+} from 'vant';
+import { Field } from 'vant';
 
+Vue.use(Field);
 Vue.use(Collapse);
 Vue.use(CollapseItem);
 Vue.use(Stepper);
@@ -112,6 +129,7 @@ export default {
     name: 'DeliverPlan',
     data: function () {
         return {
+            focus_driver_change: false,
             status: 0,
             plan_id: 0,
             user_name: '',
@@ -132,7 +150,11 @@ export default {
             },
             close_reason: '',
             fource_reason_diag: false,
-            expend_weight:['1'],
+            expend_weight: ['1'],
+            phone_pattern: /^(13[0-9]|14[01456879]|15[0-35-9]|16[2567]|17[0-8]|18[0-9]|19[0-35-9])\d{8}$/,
+            focus_change_id: 0,
+            new_driver_name:'',
+            new_driver_phone:'',
         };
     },
     computed: {
@@ -158,6 +180,21 @@ export default {
         },
     },
     methods: {
+        open_change_driver:function(_vichele_id) {
+            this.focus_change_id = _vichele_id;
+            this.focus_driver_change = true;
+            this.new_driver_name = "";
+            this.new_driver_phone = "";
+        },
+        change_driver: function () {
+            var vue_this = this;
+            vue_this.$call_remote_process("stuff_plan_management", "change_driver", [vue_this.$cookies.get('pa_ssid'), vue_this.focus_change_id, vue_this.new_driver_name, vue_this.new_driver_phone]).then(function (resp) {
+                if (resp) {
+                    vue_this.$router.go(0);
+                    vue_this.focus_driver_change = false;
+                }
+            });
+        },
         submit_confirm_deliver: function () {
             var vue_this = this;
             var pre_deliver_vichele = [];

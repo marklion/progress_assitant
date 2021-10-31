@@ -14,7 +14,7 @@ struct user_info {
 }
 
 struct driver_info {
-    1:string name, 
+    1:string name,
     2:string phone,
     3:i64 id,
 }
@@ -45,7 +45,7 @@ service user_management{
 }
 
 struct stuff_detail {
-    1:string name, 
+    1:string name,
     2:string last,
     3:i64 price,
     4:string company,
@@ -56,7 +56,7 @@ struct stuff_detail {
 }
 
 struct user_apply {
-    1:string name, 
+    1:string name,
     2:string phone,
     3:string logo,
     4:i64 apply_id,
@@ -115,7 +115,7 @@ struct company_positon_lat_lag {
 }
 
 struct third_dev_info {
-    1:string key, 
+    1:string key,
     2:string ctrl_url,
     3:string dms_url,
     4:string token,
@@ -209,7 +209,7 @@ struct stuff_plan {
     4:i64 plan_id,
     5:string plan_time,
     6:i64 created_time,
-    7:string name, 
+    7:string name,
     8:double price,
     9:i64 status,
     10:string proxy_company,
@@ -221,7 +221,7 @@ struct stuff_plan {
 }
 
 struct plan_status {
-    1:i64 plan_id, 
+    1:i64 plan_id,
     2:i64 status,
     3:i64 plan_time,
     4:string conflict_reason,
@@ -342,6 +342,7 @@ service stuff_plan_management {
     bool register_vichele(1:string silent_id, 2:i64 vichele_id) throws (1:gen_exp e),
     bool unregister_vichele(1:string silent_id, 2:i64 vichele_id) throws (1:gen_exp e),
     bool multi_confirm_plan(1:string ssid, 2:list<i64> plan_ids) throws (1:gen_exp e),
+    bool change_driver(1:string ssid, 2:i64 vichele_id, 3:string driver_name, 4:string driver_phone) throws (1:gen_exp e),
 }
 
 struct api_extra_transformation {

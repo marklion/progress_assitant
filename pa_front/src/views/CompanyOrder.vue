@@ -53,7 +53,7 @@
         <plan-brief @select_trigger="proc_select" ref="single_plan" v-for="(single_plan, index) in order_need_show" :key="index" :conflict_reason="single_plan.conflict_reason" :plan_id="single_plan.plan_id" :company_view="!$store.state.userinfo.buyer" :status_prompt="single_plan.status_prompt"></plan-brief>
     </van-list>
     <export-file :remote_file="export_file_path" v-model="show_export_email"></export-file>
-    <van-dialog :show-confirm-button="false" close-on-click-overlay v-model="show_search_result" title="搜索结果">
+    <van-dialog :show-confirm-button="false" close-on-click-overlay v-model="show_search_result" title="搜索结果" width="400">
         <vxe-table size="small" stripe align="center" :data="search_result" max-height="400">
             <vxe-table-column field="plan_info.number" title="计划单号">
                 <template #default="{ row }">
@@ -62,7 +62,12 @@
             </vxe-table-column>
             <vxe-table-column field="vichele_numbers" title="车号"></vxe-table-column>
             <vxe-table-column field="plan_time" title="计划进厂时间"></vxe-table-column>
-            <vxe-table-column field="status" title="状态"></vxe-table-column>
+            <vxe-table-column field="status" title="状态">
+                <template #default="{ row }">
+                    <van-button v-if="row.status == '待出货确认'" plain hairline type="primary" :to="{name:'DeliverPlan', params:{plan_id:row.plan_info.id}}">{{row.status}}</van-button>
+                    <div v-else>{{row.status}}</div>
+                </template>
+            </vxe-table-column>
         </vxe-table>
     </van-dialog>
 

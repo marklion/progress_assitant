@@ -5139,6 +5139,169 @@ stuff_plan_management_multi_confirm_plan_result.prototype.write = function(outpu
   return;
 };
 
+var stuff_plan_management_change_driver_args = function(args) {
+  this.ssid = null;
+  this.vichele_id = null;
+  this.driver_name = null;
+  this.driver_phone = null;
+  if (args) {
+    if (args.ssid !== undefined && args.ssid !== null) {
+      this.ssid = args.ssid;
+    }
+    if (args.vichele_id !== undefined && args.vichele_id !== null) {
+      this.vichele_id = args.vichele_id;
+    }
+    if (args.driver_name !== undefined && args.driver_name !== null) {
+      this.driver_name = args.driver_name;
+    }
+    if (args.driver_phone !== undefined && args.driver_phone !== null) {
+      this.driver_phone = args.driver_phone;
+    }
+  }
+};
+stuff_plan_management_change_driver_args.prototype = {};
+stuff_plan_management_change_driver_args.prototype.read = function(input) {
+  input.readStructBegin();
+  while (true) {
+    var ret = input.readFieldBegin();
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    switch (fid) {
+      case 1:
+      if (ftype == Thrift.Type.STRING) {
+        this.ssid = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 2:
+      if (ftype == Thrift.Type.I64) {
+        this.vichele_id = input.readI64();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 3:
+      if (ftype == Thrift.Type.STRING) {
+        this.driver_name = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 4:
+      if (ftype == Thrift.Type.STRING) {
+        this.driver_phone = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      default:
+        input.skip(ftype);
+    }
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+stuff_plan_management_change_driver_args.prototype.write = function(output) {
+  output.writeStructBegin('stuff_plan_management_change_driver_args');
+  if (this.ssid !== null && this.ssid !== undefined) {
+    output.writeFieldBegin('ssid', Thrift.Type.STRING, 1);
+    output.writeString(this.ssid);
+    output.writeFieldEnd();
+  }
+  if (this.vichele_id !== null && this.vichele_id !== undefined) {
+    output.writeFieldBegin('vichele_id', Thrift.Type.I64, 2);
+    output.writeI64(this.vichele_id);
+    output.writeFieldEnd();
+  }
+  if (this.driver_name !== null && this.driver_name !== undefined) {
+    output.writeFieldBegin('driver_name', Thrift.Type.STRING, 3);
+    output.writeString(this.driver_name);
+    output.writeFieldEnd();
+  }
+  if (this.driver_phone !== null && this.driver_phone !== undefined) {
+    output.writeFieldBegin('driver_phone', Thrift.Type.STRING, 4);
+    output.writeString(this.driver_phone);
+    output.writeFieldEnd();
+  }
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+
+var stuff_plan_management_change_driver_result = function(args) {
+  this.success = null;
+  this.e = null;
+  if (args instanceof ttypes.gen_exp) {
+    this.e = args;
+    return;
+  }
+  if (args) {
+    if (args.success !== undefined && args.success !== null) {
+      this.success = args.success;
+    }
+    if (args.e !== undefined && args.e !== null) {
+      this.e = args.e;
+    }
+  }
+};
+stuff_plan_management_change_driver_result.prototype = {};
+stuff_plan_management_change_driver_result.prototype.read = function(input) {
+  input.readStructBegin();
+  while (true) {
+    var ret = input.readFieldBegin();
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    switch (fid) {
+      case 0:
+      if (ftype == Thrift.Type.BOOL) {
+        this.success = input.readBool();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 1:
+      if (ftype == Thrift.Type.STRUCT) {
+        this.e = new ttypes.gen_exp();
+        this.e.read(input);
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      default:
+        input.skip(ftype);
+    }
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+stuff_plan_management_change_driver_result.prototype.write = function(output) {
+  output.writeStructBegin('stuff_plan_management_change_driver_result');
+  if (this.success !== null && this.success !== undefined) {
+    output.writeFieldBegin('success', Thrift.Type.BOOL, 0);
+    output.writeBool(this.success);
+    output.writeFieldEnd();
+  }
+  if (this.e !== null && this.e !== undefined) {
+    output.writeFieldBegin('e', Thrift.Type.STRUCT, 1);
+    this.e.write(output);
+    output.writeFieldEnd();
+  }
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+
 var stuff_plan_managementClient = exports.Client = function(output, pClass) {
   this.output = output;
   this.pClass = pClass;
@@ -7475,6 +7638,71 @@ stuff_plan_managementClient.prototype.recv_multi_confirm_plan = function(input,m
   }
   return callback('multi_confirm_plan failed: unknown result');
 };
+
+stuff_plan_managementClient.prototype.change_driver = function(ssid, vichele_id, driver_name, driver_phone, callback) {
+  this._seqid = this.new_seqid();
+  if (callback === undefined) {
+    var _defer = Q.defer();
+    this._reqs[this.seqid()] = function(error, result) {
+      if (error) {
+        _defer.reject(error);
+      } else {
+        _defer.resolve(result);
+      }
+    };
+    this.send_change_driver(ssid, vichele_id, driver_name, driver_phone);
+    return _defer.promise;
+  } else {
+    this._reqs[this.seqid()] = callback;
+    this.send_change_driver(ssid, vichele_id, driver_name, driver_phone);
+  }
+};
+
+stuff_plan_managementClient.prototype.send_change_driver = function(ssid, vichele_id, driver_name, driver_phone) {
+  var output = new this.pClass(this.output);
+  var params = {
+    ssid: ssid,
+    vichele_id: vichele_id,
+    driver_name: driver_name,
+    driver_phone: driver_phone
+  };
+  var args = new stuff_plan_management_change_driver_args(params);
+  try {
+    output.writeMessageBegin('change_driver', Thrift.MessageType.CALL, this.seqid());
+    args.write(output);
+    output.writeMessageEnd();
+    return this.output.flush();
+  }
+  catch (e) {
+    delete this._reqs[this.seqid()];
+    if (typeof output.reset === 'function') {
+      output.reset();
+    }
+    throw e;
+  }
+};
+
+stuff_plan_managementClient.prototype.recv_change_driver = function(input,mtype,rseqid) {
+  var callback = this._reqs[rseqid] || function() {};
+  delete this._reqs[rseqid];
+  if (mtype == Thrift.MessageType.EXCEPTION) {
+    var x = new Thrift.TApplicationException();
+    x.read(input);
+    input.readMessageEnd();
+    return callback(x);
+  }
+  var result = new stuff_plan_management_change_driver_result();
+  result.read(input);
+  input.readMessageEnd();
+
+  if (null !== result.e) {
+    return callback(result.e);
+  }
+  if (null !== result.success) {
+    return callback(null, result.success);
+  }
+  return callback('change_driver failed: unknown result');
+};
 var stuff_plan_managementProcessor = exports.Processor = function(handler) {
   this._handler = handler;
 };
@@ -9080,6 +9308,51 @@ stuff_plan_managementProcessor.prototype.process_multi_confirm_plan = function(s
       } else {
         result_obj = new Thrift.TApplicationException(Thrift.TApplicationExceptionType.UNKNOWN, err.message);
         output.writeMessageBegin("multi_confirm_plan", Thrift.MessageType.EXCEPTION, seqid);
+      }
+      result_obj.write(output);
+      output.writeMessageEnd();
+      output.flush();
+    });
+  }
+};
+stuff_plan_managementProcessor.prototype.process_change_driver = function(seqid, input, output) {
+  var args = new stuff_plan_management_change_driver_args();
+  args.read(input);
+  input.readMessageEnd();
+  if (this._handler.change_driver.length === 4) {
+    Q.fcall(this._handler.change_driver.bind(this._handler),
+      args.ssid,
+      args.vichele_id,
+      args.driver_name,
+      args.driver_phone
+    ).then(function(result) {
+      var result_obj = new stuff_plan_management_change_driver_result({success: result});
+      output.writeMessageBegin("change_driver", Thrift.MessageType.REPLY, seqid);
+      result_obj.write(output);
+      output.writeMessageEnd();
+      output.flush();
+    }).catch(function (err) {
+      var result;
+      if (err instanceof ttypes.gen_exp) {
+        result = new stuff_plan_management_change_driver_result(err);
+        output.writeMessageBegin("change_driver", Thrift.MessageType.REPLY, seqid);
+      } else {
+        result = new Thrift.TApplicationException(Thrift.TApplicationExceptionType.UNKNOWN, err.message);
+        output.writeMessageBegin("change_driver", Thrift.MessageType.EXCEPTION, seqid);
+      }
+      result.write(output);
+      output.writeMessageEnd();
+      output.flush();
+    });
+  } else {
+    this._handler.change_driver(args.ssid, args.vichele_id, args.driver_name, args.driver_phone, function (err, result) {
+      var result_obj;
+      if ((err === null || typeof err === 'undefined') || err instanceof ttypes.gen_exp) {
+        result_obj = new stuff_plan_management_change_driver_result((err !== null || typeof err === 'undefined') ? err : {success: result});
+        output.writeMessageBegin("change_driver", Thrift.MessageType.REPLY, seqid);
+      } else {
+        result_obj = new Thrift.TApplicationException(Thrift.TApplicationExceptionType.UNKNOWN, err.message);
+        output.writeMessageBegin("change_driver", Thrift.MessageType.EXCEPTION, seqid);
       }
       result_obj.write(output);
       output.writeMessageEnd();
