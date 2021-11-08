@@ -5302,6 +5302,168 @@ stuff_plan_management_change_driver_result.prototype.write = function(output) {
   return;
 };
 
+var stuff_plan_management_change_plan_price_args = function(args) {
+  this.ssid = null;
+  this.plan_id = null;
+  this.new_price = null;
+  if (args) {
+    if (args.ssid !== undefined && args.ssid !== null) {
+      this.ssid = args.ssid;
+    }
+    if (args.plan_id !== undefined && args.plan_id !== null) {
+      this.plan_id = Thrift.copyList(args.plan_id, [null]);
+    }
+    if (args.new_price !== undefined && args.new_price !== null) {
+      this.new_price = args.new_price;
+    }
+  }
+};
+stuff_plan_management_change_plan_price_args.prototype = {};
+stuff_plan_management_change_plan_price_args.prototype.read = function(input) {
+  input.readStructBegin();
+  while (true) {
+    var ret = input.readFieldBegin();
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    switch (fid) {
+      case 1:
+      if (ftype == Thrift.Type.STRING) {
+        this.ssid = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 2:
+      if (ftype == Thrift.Type.LIST) {
+        this.plan_id = [];
+        var _rtmp3171 = input.readListBegin();
+        var _size170 = _rtmp3171.size || 0;
+        for (var _i172 = 0; _i172 < _size170; ++_i172) {
+          var elem173 = null;
+          elem173 = input.readI64();
+          this.plan_id.push(elem173);
+        }
+        input.readListEnd();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 3:
+      if (ftype == Thrift.Type.DOUBLE) {
+        this.new_price = input.readDouble();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      default:
+        input.skip(ftype);
+    }
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+stuff_plan_management_change_plan_price_args.prototype.write = function(output) {
+  output.writeStructBegin('stuff_plan_management_change_plan_price_args');
+  if (this.ssid !== null && this.ssid !== undefined) {
+    output.writeFieldBegin('ssid', Thrift.Type.STRING, 1);
+    output.writeString(this.ssid);
+    output.writeFieldEnd();
+  }
+  if (this.plan_id !== null && this.plan_id !== undefined) {
+    output.writeFieldBegin('plan_id', Thrift.Type.LIST, 2);
+    output.writeListBegin(Thrift.Type.I64, this.plan_id.length);
+    for (var iter174 in this.plan_id) {
+      if (this.plan_id.hasOwnProperty(iter174)) {
+        iter174 = this.plan_id[iter174];
+        output.writeI64(iter174);
+      }
+    }
+    output.writeListEnd();
+    output.writeFieldEnd();
+  }
+  if (this.new_price !== null && this.new_price !== undefined) {
+    output.writeFieldBegin('new_price', Thrift.Type.DOUBLE, 3);
+    output.writeDouble(this.new_price);
+    output.writeFieldEnd();
+  }
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+
+var stuff_plan_management_change_plan_price_result = function(args) {
+  this.success = null;
+  this.e = null;
+  if (args instanceof ttypes.gen_exp) {
+    this.e = args;
+    return;
+  }
+  if (args) {
+    if (args.success !== undefined && args.success !== null) {
+      this.success = args.success;
+    }
+    if (args.e !== undefined && args.e !== null) {
+      this.e = args.e;
+    }
+  }
+};
+stuff_plan_management_change_plan_price_result.prototype = {};
+stuff_plan_management_change_plan_price_result.prototype.read = function(input) {
+  input.readStructBegin();
+  while (true) {
+    var ret = input.readFieldBegin();
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    switch (fid) {
+      case 0:
+      if (ftype == Thrift.Type.BOOL) {
+        this.success = input.readBool();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 1:
+      if (ftype == Thrift.Type.STRUCT) {
+        this.e = new ttypes.gen_exp();
+        this.e.read(input);
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      default:
+        input.skip(ftype);
+    }
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+stuff_plan_management_change_plan_price_result.prototype.write = function(output) {
+  output.writeStructBegin('stuff_plan_management_change_plan_price_result');
+  if (this.success !== null && this.success !== undefined) {
+    output.writeFieldBegin('success', Thrift.Type.BOOL, 0);
+    output.writeBool(this.success);
+    output.writeFieldEnd();
+  }
+  if (this.e !== null && this.e !== undefined) {
+    output.writeFieldBegin('e', Thrift.Type.STRUCT, 1);
+    this.e.write(output);
+    output.writeFieldEnd();
+  }
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+
 var stuff_plan_managementClient = exports.Client = function(output, pClass) {
   this.output = output;
   this.pClass = pClass;
@@ -7703,6 +7865,70 @@ stuff_plan_managementClient.prototype.recv_change_driver = function(input,mtype,
   }
   return callback('change_driver failed: unknown result');
 };
+
+stuff_plan_managementClient.prototype.change_plan_price = function(ssid, plan_id, new_price, callback) {
+  this._seqid = this.new_seqid();
+  if (callback === undefined) {
+    var _defer = Q.defer();
+    this._reqs[this.seqid()] = function(error, result) {
+      if (error) {
+        _defer.reject(error);
+      } else {
+        _defer.resolve(result);
+      }
+    };
+    this.send_change_plan_price(ssid, plan_id, new_price);
+    return _defer.promise;
+  } else {
+    this._reqs[this.seqid()] = callback;
+    this.send_change_plan_price(ssid, plan_id, new_price);
+  }
+};
+
+stuff_plan_managementClient.prototype.send_change_plan_price = function(ssid, plan_id, new_price) {
+  var output = new this.pClass(this.output);
+  var params = {
+    ssid: ssid,
+    plan_id: plan_id,
+    new_price: new_price
+  };
+  var args = new stuff_plan_management_change_plan_price_args(params);
+  try {
+    output.writeMessageBegin('change_plan_price', Thrift.MessageType.CALL, this.seqid());
+    args.write(output);
+    output.writeMessageEnd();
+    return this.output.flush();
+  }
+  catch (e) {
+    delete this._reqs[this.seqid()];
+    if (typeof output.reset === 'function') {
+      output.reset();
+    }
+    throw e;
+  }
+};
+
+stuff_plan_managementClient.prototype.recv_change_plan_price = function(input,mtype,rseqid) {
+  var callback = this._reqs[rseqid] || function() {};
+  delete this._reqs[rseqid];
+  if (mtype == Thrift.MessageType.EXCEPTION) {
+    var x = new Thrift.TApplicationException();
+    x.read(input);
+    input.readMessageEnd();
+    return callback(x);
+  }
+  var result = new stuff_plan_management_change_plan_price_result();
+  result.read(input);
+  input.readMessageEnd();
+
+  if (null !== result.e) {
+    return callback(result.e);
+  }
+  if (null !== result.success) {
+    return callback(null, result.success);
+  }
+  return callback('change_plan_price failed: unknown result');
+};
 var stuff_plan_managementProcessor = exports.Processor = function(handler) {
   this._handler = handler;
 };
@@ -9353,6 +9579,50 @@ stuff_plan_managementProcessor.prototype.process_change_driver = function(seqid,
       } else {
         result_obj = new Thrift.TApplicationException(Thrift.TApplicationExceptionType.UNKNOWN, err.message);
         output.writeMessageBegin("change_driver", Thrift.MessageType.EXCEPTION, seqid);
+      }
+      result_obj.write(output);
+      output.writeMessageEnd();
+      output.flush();
+    });
+  }
+};
+stuff_plan_managementProcessor.prototype.process_change_plan_price = function(seqid, input, output) {
+  var args = new stuff_plan_management_change_plan_price_args();
+  args.read(input);
+  input.readMessageEnd();
+  if (this._handler.change_plan_price.length === 3) {
+    Q.fcall(this._handler.change_plan_price.bind(this._handler),
+      args.ssid,
+      args.plan_id,
+      args.new_price
+    ).then(function(result) {
+      var result_obj = new stuff_plan_management_change_plan_price_result({success: result});
+      output.writeMessageBegin("change_plan_price", Thrift.MessageType.REPLY, seqid);
+      result_obj.write(output);
+      output.writeMessageEnd();
+      output.flush();
+    }).catch(function (err) {
+      var result;
+      if (err instanceof ttypes.gen_exp) {
+        result = new stuff_plan_management_change_plan_price_result(err);
+        output.writeMessageBegin("change_plan_price", Thrift.MessageType.REPLY, seqid);
+      } else {
+        result = new Thrift.TApplicationException(Thrift.TApplicationExceptionType.UNKNOWN, err.message);
+        output.writeMessageBegin("change_plan_price", Thrift.MessageType.EXCEPTION, seqid);
+      }
+      result.write(output);
+      output.writeMessageEnd();
+      output.flush();
+    });
+  } else {
+    this._handler.change_plan_price(args.ssid, args.plan_id, args.new_price, function (err, result) {
+      var result_obj;
+      if ((err === null || typeof err === 'undefined') || err instanceof ttypes.gen_exp) {
+        result_obj = new stuff_plan_management_change_plan_price_result((err !== null || typeof err === 'undefined') ? err : {success: result});
+        output.writeMessageBegin("change_plan_price", Thrift.MessageType.REPLY, seqid);
+      } else {
+        result_obj = new Thrift.TApplicationException(Thrift.TApplicationExceptionType.UNKNOWN, err.message);
+        output.writeMessageBegin("change_plan_price", Thrift.MessageType.EXCEPTION, seqid);
       }
       result_obj.write(output);
       output.writeMessageEnd();

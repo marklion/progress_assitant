@@ -132,9 +132,9 @@ void pa_sql_archive_plan::translate_from_plan(pa_sql_plan &_plan)
         {
             this->sale_company = sale_company->name;
         }
-        this->unit_price = std::to_string(stuff_info->price);
-        this->total_price = std::to_string(stuff_info->price * count);
     }
+    this->unit_price = std::to_string(_plan.price);
+    this->total_price = std::to_string(_plan.price * count);
     this->stuff_name = _plan.name;
     this->is_cancel = _plan.is_cancel;
     this->insert_record();
@@ -213,7 +213,7 @@ void pa_sql_contract::update_status()
     auto end_time_sec = PA_DATAOPT_timestring_2_date(this->end_time + " 0:");
     auto time_left = end_time_sec - current_time;
     time_left /= 3600 * 24;
-    
+
     if (time_left <= 0)
     {
         status = 2;
@@ -258,12 +258,12 @@ std::string pa_sql_blacklist::target_was_blocked(const std::string &_target, bla
     {
     case vehicle:
     {
-        black_record.reset(_company.get_children<pa_sql_blacklist_vichele>("belong_company","target == '%s'", _target.c_str()).release());
+        black_record.reset(_company.get_children<pa_sql_blacklist_vichele>("belong_company", "target == '%s'", _target.c_str()).release());
         break;
     }
     case driver:
     {
-        black_record.reset(_company.get_children<pa_sql_blacklist_driver>("belong_company","target == '%s'", _target.c_str()).release());
+        black_record.reset(_company.get_children<pa_sql_blacklist_driver>("belong_company", "target == '%s'", _target.c_str()).release());
         break;
     }
 

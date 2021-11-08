@@ -343,6 +343,7 @@ service stuff_plan_management {
     bool unregister_vichele(1:string silent_id, 2:i64 vichele_id) throws (1:gen_exp e),
     bool multi_confirm_plan(1:string ssid, 2:list<i64> plan_ids) throws (1:gen_exp e),
     bool change_driver(1:string ssid, 2:i64 vichele_id, 3:string driver_name, 4:string driver_phone) throws (1:gen_exp e),
+    bool change_plan_price(1:string ssid, 2:list<i64> plan_id, 3:double new_price) throws (1:gen_exp e),
 }
 
 struct api_extra_transformation {

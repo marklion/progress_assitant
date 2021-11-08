@@ -130,7 +130,7 @@ public:
         {
             PA_RETURN_MSG(OPEN_API_MSG_WRONG_IDENTITY);
         }
-        
+
 
         return ret;
     }
@@ -194,7 +194,7 @@ public:
         for (auto& plan : all_active_plan)
         {
             auto all_vichele_info = plan.get_all_children<pa_sql_single_vichele>("belong_plan");
-            for (auto &itr:all_vichele_info) 
+            for (auto &itr:all_vichele_info)
             {
                 auto main_vichele = itr.get_parent<pa_sql_vichele>("main_vichele");
                 auto driver = itr.get_parent<pa_sql_driver>("driver");
@@ -261,11 +261,7 @@ public:
                 }
             }
 
-            auto stuff_info = plan->get_parent<pa_sql_stuff_info>("belong_stuff");
-            if (stuff_info)
-            {
-                ret.price = stuff_info->price;
-            }
+            ret.price = plan->price;
 
             ret.createTime = plan->plan_time.substr(0, 13) + ":00:00";
             ret.orderNo = std::to_string(plan->create_time) + std::to_string(plan->get_pri_id());

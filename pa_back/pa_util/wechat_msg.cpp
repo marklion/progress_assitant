@@ -29,13 +29,13 @@ struct content_from_wx {
             ret = m_content_from_wx;
             g_log.log("content still ready");
         }
-        
+
         return ret;
     }
 };
 struct acc_tok_from_wx:content_from_wx {
     void refresh_content() {
-        std::string wechat_secret = getenv("WECHAT_MP_SECRET"); 
+        std::string wechat_secret = getenv("WECHAT_MP_SECRET");
         auto in_buff = PA_DATAOPT_rest_req("https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=wxfbf41c757510dc4c&secret=" + wechat_secret);
         g_log.log("recv tok from wx:%s", in_buff.c_str());
         neb::CJsonObject oJson(in_buff);
@@ -49,14 +49,14 @@ struct acc_tok_from_wx:content_from_wx {
             m_content_from_wx = oJson("access_token");
             m_expires_timestamp = time(NULL) + atoi(oJson("expires_in").c_str());
         }
-        
+
 
     }
 } g_acc_tok;
 
 struct acc_tok_pub_from_wx:content_from_wx {
     void refresh_content() {
-        std::string wechat_secret = getenv("WECHAT_SECRET"); 
+        std::string wechat_secret = getenv("WECHAT_SECRET");
         auto in_buff = PA_DATAOPT_rest_req("https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=wxa390f8b6f68e9c6d&secret=" + wechat_secret);
         g_log.log("recv tok from wx:%s", in_buff.c_str());
         neb::CJsonObject oJson(in_buff);
@@ -70,7 +70,7 @@ struct acc_tok_pub_from_wx:content_from_wx {
             m_content_from_wx = oJson("access_token");
             m_expires_timestamp = time(NULL) + atoi(oJson("expires_in").c_str());
         }
-        
+
 
     }
 } g_acc_pub_tok;
@@ -118,7 +118,7 @@ std::string PA_WECHAT_wx_sign(const std::string& nonceStr, long timestamp, const
         sprintf(tmp, "%02x", md[i]);
         ret.append(tmp);
     }
-    
+
     return ret;
 }
 static void send_msg_to_wechat(const std::string &_touser, const std::string &_tmp_id, const std::string &_first, const std::vector<std::string> &_keywords, const std::string &_remark, const std::string &_url = "/")
@@ -230,11 +230,7 @@ void PA_WECHAT_send_plan_msg(pa_sql_userinfo &_touser, pa_sql_plan &_plan, const
     std::string total_price = "未知";
     if (count > 0)
     {
-        auto stuff_info = _plan.get_parent<pa_sql_stuff_info>("belong_stuff");
-        if (stuff_info)
-        {
-            total_price = std::to_string(_plan.calcu_all_count() * stuff_info->price);
-        }
+        total_price = std::to_string(_plan.calcu_all_count() * _plan.price);
     }
 
     std::string status = "";

@@ -20,7 +20,12 @@
             </van-col>
         </van-row>
     </div>
-    <van-card class="stuff_card_show" :desc="company" :title="name" @click="nav_to_detail">
+    <van-card class="stuff_card_show" :desc="company" @click="nav_to_detail">
+        <template #title>
+            <span class="stuff_card_show_head ">
+                {{name}}
+            </span>
+        </template>
         <template #num v-if="plan_count != 0">
             {{plan_count}}吨
         </template>
@@ -208,9 +213,10 @@ export default {
 </script>
 
 <style scoped>
-.stuff_card_show /deep/ .van-card__title {
+.stuff_card_show_head {
     font-size: 18px;
     line-height: 20px;
+    font-weight: bold;
 }
 
 .stuff_card_show /deep/ .van-card__desc {
