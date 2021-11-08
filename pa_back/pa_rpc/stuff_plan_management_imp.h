@@ -679,7 +679,7 @@ public:
             }
             if (ret)
             {
-                std::string deliver_vichele_numbers = "车辆 ";
+                std::string deliver_vichele_numbers = "";
                 for (auto &itr:deliver_infos)
                 {
                     auto delivered_vichele_info = plan->get_children<pa_sql_single_vichele>("belong_plan", "PRI_ID = %ld AND finish = 1", itr.id);
@@ -688,12 +688,11 @@ public:
                         auto delivered_main_vehicle = delivered_vichele_info->get_parent<pa_sql_vichele>("main_vichele");
                         if (delivered_main_vehicle)
                         {
-                            deliver_vichele_numbers.append(delivered_main_vehicle->number + " ");
+                            deliver_vichele_numbers.append(delivered_main_vehicle->number + " 出货 " + std::to_string(delivered_vichele_info->count) + " 吨");
                         }
                     }
                 }
-                deliver_vichele_numbers += "出货";
-                plan->send_wechat_msg(opt_user, deliver_vichele_numbers +  ", 当前已出货" + std::to_string(deliver_count) + "车/共" + std::to_string(total_count) + "车");
+                plan->send_wechat_msg(opt_user, deliver_vichele_numbers +  " 当前已出货" + std::to_string(deliver_count) + "车/共" + std::to_string(total_count) + "车");
             }
         }
         else
