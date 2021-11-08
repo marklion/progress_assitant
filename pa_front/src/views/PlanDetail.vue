@@ -32,7 +32,13 @@
                 <van-cell is-link @click="preview_sale_attach">查看卖方资质</van-cell>
             </van-collapse-item>
         </van-collapse>
-        <van-cell title="单价" :value="plan_detail.unit_price" />
+        <van-cell title="单价" center :value="plan_detail.unit_price">
+            <template #right-icon>
+                <div style="padding-left:8px;">
+                    <van-button size="small" type="warning" @click="change_price_diag = true">调价</van-button>
+                </div>
+            </template>
+        </van-cell>
         <van-cell title="总价" v-if="plan_detail.total_price != 0" :value="plan_detail.total_price" />
         <van-cell title="计划到厂" :value="plan_detail.plan_time" />
     </van-cell-group>
@@ -81,6 +87,12 @@
     <van-dialog v-model="reason_diag" title="确认撤销" closeOnClickOverlay :showConfirmButton="false">
         <van-form @submit="except_close">
             <van-field v-model="reason_input" name="关闭理由" label="撤销原因" placeholder="请输入撤销原因" :rules="[{ required: true, message: '请填写撤销原因' }]" />
+            <van-button plain block>确认</van-button>
+        </van-form>
+    </van-dialog>
+    <van-dialog v-model="change_price_diag" title="调价" closeOnClickOverlay :showConfirmButton="false">
+        <van-form @submit="change_plan_price">
+            <van-field v-model="new_price" name="新价格" label="新价格" placeholder="请输入新价格" :rules="[{ required: true, message: '请输入新价格' }]" />
             <van-button plain block>确认</van-button>
         </van-form>
     </van-dialog>
@@ -154,6 +166,8 @@ export default {
     },
     data: function () {
         return {
+            change_price_diag: false,
+            new_price: "",
             show_vichele_table: false,
             vichele_panel: [
                 []
@@ -203,6 +217,15 @@ export default {
 
     },
     methods: {
+        change_plan_price: function () {
+            var vue_this = this;
+            vue_this.$call_remote_process("stuff_plan_management", "change_plan_price", [vue_this.$cookies.get('pa_ssid'), [vue_this.plan_detail.plan_id], parseFloat(vue_this.new_price)]).then(function (resp) {
+                if (resp) {
+                    vue_this.change_price_diag = false;
+                    vue_this.$router.go(0);
+                }
+            });
+        },
         cancel_vichele_from_plan: function (vichele_info) {
             var vue_this = this;
             Dialog.confirm({

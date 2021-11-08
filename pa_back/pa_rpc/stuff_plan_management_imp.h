@@ -272,10 +272,10 @@ public:
                 _return.plan_id = plan->get_pri_id();
                 _return.plan_time = plan->plan_time;
                 _return.status = plan->status;
+                _return.price = plan->price;
                 auto belong_type = plan->get_parent<pa_sql_stuff_info>("belong_stuff");
                 if (belong_type)
                 {
-                    _return.price = belong_type->price;
                     _return.type_id = belong_type->get_pri_id();
                     auto sale_company = belong_type->get_parent<pa_sql_company>("belong_company");
                     if (sale_company)
@@ -1997,6 +1997,30 @@ public:
         {
             PA_RETURN_NOPRIVA_MSG();
         }
+    }
+
+    virtual bool change_plan_price(const std::string &ssid, const std::vector<int64_t> &plan_id, const double new_price)
+    {
+        auto opt_user = PA_DATAOPT_get_online_user(ssid);
+        if (!opt_user)
+        {
+            PA_RETURN_UNLOGIN_MSG();
+        }
+        std::string query_cmd = "PRI_ID == 0";
+        for (auto &itr:plan_id)
+        {
+            query_cmd += " OR PRI_ID == " + std::to_string(itr);
+        }
+        auto plans = PA_RPC_get_all_plans_related_by_user(ssid, "(%s) AND status != 4", query_cmd.c_str());
+        for (auto &itr:plans)
+        {
+            std::string remark = "调整了该计划中的货品单价，原价" + std::to_string(itr.price) + "，现价" + std::to_string(new_price);
+            itr.price = new_price;
+            itr.update_record();
+            itr.send_wechat_msg(*opt_user, remark);
+        }
+
+        return true;
     }
 };
 

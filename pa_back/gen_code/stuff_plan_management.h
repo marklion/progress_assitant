@@ -60,6 +60,7 @@ class stuff_plan_managementIf {
   virtual bool unregister_vichele(const std::string& silent_id, const int64_t vichele_id) = 0;
   virtual bool multi_confirm_plan(const std::string& ssid, const std::vector<int64_t> & plan_ids) = 0;
   virtual bool change_driver(const std::string& ssid, const int64_t vichele_id, const std::string& driver_name, const std::string& driver_phone) = 0;
+  virtual bool change_plan_price(const std::string& ssid, const std::vector<int64_t> & plan_id, const double new_price) = 0;
 };
 
 class stuff_plan_managementIfFactory {
@@ -218,6 +219,10 @@ class stuff_plan_managementNull : virtual public stuff_plan_managementIf {
     return _return;
   }
   bool change_driver(const std::string& /* ssid */, const int64_t /* vichele_id */, const std::string& /* driver_name */, const std::string& /* driver_phone */) {
+    bool _return = false;
+    return _return;
+  }
+  bool change_plan_price(const std::string& /* ssid */, const std::vector<int64_t> & /* plan_id */, const double /* new_price */) {
     bool _return = false;
     return _return;
   }
@@ -4766,6 +4771,132 @@ class stuff_plan_management_change_driver_presult {
 
 };
 
+typedef struct _stuff_plan_management_change_plan_price_args__isset {
+  _stuff_plan_management_change_plan_price_args__isset() : ssid(false), plan_id(false), new_price(false) {}
+  bool ssid :1;
+  bool plan_id :1;
+  bool new_price :1;
+} _stuff_plan_management_change_plan_price_args__isset;
+
+class stuff_plan_management_change_plan_price_args {
+ public:
+
+  stuff_plan_management_change_plan_price_args(const stuff_plan_management_change_plan_price_args&);
+  stuff_plan_management_change_plan_price_args& operator=(const stuff_plan_management_change_plan_price_args&);
+  stuff_plan_management_change_plan_price_args() : ssid(), new_price(0) {
+  }
+
+  virtual ~stuff_plan_management_change_plan_price_args() noexcept;
+  std::string ssid;
+  std::vector<int64_t>  plan_id;
+  double new_price;
+
+  _stuff_plan_management_change_plan_price_args__isset __isset;
+
+  void __set_ssid(const std::string& val);
+
+  void __set_plan_id(const std::vector<int64_t> & val);
+
+  void __set_new_price(const double val);
+
+  bool operator == (const stuff_plan_management_change_plan_price_args & rhs) const
+  {
+    if (!(ssid == rhs.ssid))
+      return false;
+    if (!(plan_id == rhs.plan_id))
+      return false;
+    if (!(new_price == rhs.new_price))
+      return false;
+    return true;
+  }
+  bool operator != (const stuff_plan_management_change_plan_price_args &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const stuff_plan_management_change_plan_price_args & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+
+class stuff_plan_management_change_plan_price_pargs {
+ public:
+
+
+  virtual ~stuff_plan_management_change_plan_price_pargs() noexcept;
+  const std::string* ssid;
+  const std::vector<int64_t> * plan_id;
+  const double* new_price;
+
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _stuff_plan_management_change_plan_price_result__isset {
+  _stuff_plan_management_change_plan_price_result__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _stuff_plan_management_change_plan_price_result__isset;
+
+class stuff_plan_management_change_plan_price_result {
+ public:
+
+  stuff_plan_management_change_plan_price_result(const stuff_plan_management_change_plan_price_result&);
+  stuff_plan_management_change_plan_price_result& operator=(const stuff_plan_management_change_plan_price_result&);
+  stuff_plan_management_change_plan_price_result() : success(0) {
+  }
+
+  virtual ~stuff_plan_management_change_plan_price_result() noexcept;
+  bool success;
+  gen_exp e;
+
+  _stuff_plan_management_change_plan_price_result__isset __isset;
+
+  void __set_success(const bool val);
+
+  void __set_e(const gen_exp& val);
+
+  bool operator == (const stuff_plan_management_change_plan_price_result & rhs) const
+  {
+    if (!(success == rhs.success))
+      return false;
+    if (!(e == rhs.e))
+      return false;
+    return true;
+  }
+  bool operator != (const stuff_plan_management_change_plan_price_result &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const stuff_plan_management_change_plan_price_result & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _stuff_plan_management_change_plan_price_presult__isset {
+  _stuff_plan_management_change_plan_price_presult__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _stuff_plan_management_change_plan_price_presult__isset;
+
+class stuff_plan_management_change_plan_price_presult {
+ public:
+
+
+  virtual ~stuff_plan_management_change_plan_price_presult() noexcept;
+  bool* success;
+  gen_exp e;
+
+  _stuff_plan_management_change_plan_price_presult__isset __isset;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+
+};
+
 class stuff_plan_managementClient : virtual public stuff_plan_managementIf {
  public:
   stuff_plan_managementClient(std::shared_ptr< ::apache::thrift::protocol::TProtocol> prot) {
@@ -4905,6 +5036,9 @@ class stuff_plan_managementClient : virtual public stuff_plan_managementIf {
   bool change_driver(const std::string& ssid, const int64_t vichele_id, const std::string& driver_name, const std::string& driver_phone);
   void send_change_driver(const std::string& ssid, const int64_t vichele_id, const std::string& driver_name, const std::string& driver_phone);
   bool recv_change_driver();
+  bool change_plan_price(const std::string& ssid, const std::vector<int64_t> & plan_id, const double new_price);
+  void send_change_plan_price(const std::string& ssid, const std::vector<int64_t> & plan_id, const double new_price);
+  bool recv_change_plan_price();
  protected:
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> piprot_;
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> poprot_;
@@ -4958,6 +5092,7 @@ class stuff_plan_managementProcessor : public ::apache::thrift::TDispatchProcess
   void process_unregister_vichele(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
   void process_multi_confirm_plan(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
   void process_change_driver(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
+  void process_change_plan_price(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
  public:
   stuff_plan_managementProcessor(::std::shared_ptr<stuff_plan_managementIf> iface) :
     iface_(iface) {
@@ -4999,6 +5134,7 @@ class stuff_plan_managementProcessor : public ::apache::thrift::TDispatchProcess
     processMap_["unregister_vichele"] = &stuff_plan_managementProcessor::process_unregister_vichele;
     processMap_["multi_confirm_plan"] = &stuff_plan_managementProcessor::process_multi_confirm_plan;
     processMap_["change_driver"] = &stuff_plan_managementProcessor::process_change_driver;
+    processMap_["change_plan_price"] = &stuff_plan_managementProcessor::process_change_plan_price;
   }
 
   virtual ~stuff_plan_managementProcessor() {}
@@ -5387,6 +5523,15 @@ class stuff_plan_managementMultiface : virtual public stuff_plan_managementIf {
     return ifaces_[i]->change_driver(ssid, vichele_id, driver_name, driver_phone);
   }
 
+  bool change_plan_price(const std::string& ssid, const std::vector<int64_t> & plan_id, const double new_price) {
+    size_t sz = ifaces_.size();
+    size_t i = 0;
+    for (; i < (sz - 1); ++i) {
+      ifaces_[i]->change_plan_price(ssid, plan_id, new_price);
+    }
+    return ifaces_[i]->change_plan_price(ssid, plan_id, new_price);
+  }
+
 };
 
 // The 'concurrent' client is a thread safe client that correctly handles
@@ -5533,6 +5678,9 @@ class stuff_plan_managementConcurrentClient : virtual public stuff_plan_manageme
   bool change_driver(const std::string& ssid, const int64_t vichele_id, const std::string& driver_name, const std::string& driver_phone);
   int32_t send_change_driver(const std::string& ssid, const int64_t vichele_id, const std::string& driver_name, const std::string& driver_phone);
   bool recv_change_driver(const int32_t seqid);
+  bool change_plan_price(const std::string& ssid, const std::vector<int64_t> & plan_id, const double new_price);
+  int32_t send_change_plan_price(const std::string& ssid, const std::vector<int64_t> & plan_id, const double new_price);
+  bool recv_change_plan_price(const int32_t seqid);
  protected:
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> piprot_;
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> poprot_;

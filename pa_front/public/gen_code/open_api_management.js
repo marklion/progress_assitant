@@ -937,13 +937,13 @@ open_api_management_proc_all_vehicle_info_result = class {
         case 0:
         if (ftype == Thrift.Type.LIST) {
           this.success = [];
-          const _rtmp3171 = input.readListBegin();
-          const _size170 = _rtmp3171.size || 0;
-          for (let _i172 = 0; _i172 < _size170; ++_i172) {
-            let elem173 = null;
-            elem173 = new vehicle_info_resp();
-            elem173.read(input);
-            this.success.push(elem173);
+          const _rtmp3176 = input.readListBegin();
+          const _size175 = _rtmp3176.size || 0;
+          for (let _i177 = 0; _i177 < _size175; ++_i177) {
+            let elem178 = null;
+            elem178 = new vehicle_info_resp();
+            elem178.read(input);
+            this.success.push(elem178);
           }
           input.readListEnd();
         } else {
@@ -972,10 +972,10 @@ open_api_management_proc_all_vehicle_info_result = class {
     if (this.success !== null && this.success !== undefined) {
       output.writeFieldBegin('success', Thrift.Type.LIST, 0);
       output.writeListBegin(Thrift.Type.STRUCT, this.success.length);
-      for (let iter174 in this.success) {
-        if (this.success.hasOwnProperty(iter174)) {
-          iter174 = this.success[iter174];
-          iter174.write(output);
+      for (let iter179 in this.success) {
+        if (this.success.hasOwnProperty(iter179)) {
+          iter179 = this.success[iter179];
+          iter179.write(output);
         }
       }
       output.writeListEnd();

@@ -99,6 +99,7 @@ public:
                     auto related_plans = PA_RPC_get_all_plans_related_by_user(ssid, "belong_stuff_ext_key == %ld AND status < 4", stuff_need_edit->get_pri_id());
                     for (auto &itr:related_plans)
                     {
+                        itr.price = stuff.price;
                         itr.send_wechat_msg(*user, remark);
                     }
                 }
@@ -363,7 +364,7 @@ public:
         return ret;
     }
 
-    virtual void get_notice(std::string &_return, const std::string &company_name) 
+    virtual void get_notice(std::string &_return, const std::string &company_name)
     {
         auto company = sqlite_orm::search_record<pa_sql_company>("name = '%s'", company_name.c_str());
         if (company)
@@ -375,7 +376,7 @@ public:
             PA_RETURN_NOCOMPANY_MSG();
         }
     }
-    virtual void clear_notice(const std::string &ssid) 
+    virtual void clear_notice(const std::string &ssid)
     {
         sqlite_orm_lock a;
         set_notice(ssid, "");
@@ -409,7 +410,7 @@ public:
         }
     }
 
-    virtual bool remove_user_from_company(const std::string &ssid, const int64_t user_id) 
+    virtual bool remove_user_from_company(const std::string &ssid, const int64_t user_id)
     {
         sqlite_orm_lock a;
         auto user = PA_DATAOPT_get_online_user(ssid);
@@ -509,7 +510,7 @@ public:
         _return.contact = company->contact;
     }
 
-    void update_company_attachment_pic(pa_sql_company &_company) { 
+    void update_company_attachment_pic(pa_sql_company &_company) {
         sqlite_orm_lock a;
         auto attachments = _company.get_all_children<pa_sql_company_attachment>("belong_company");
         std::string params;
