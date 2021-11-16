@@ -68,8 +68,11 @@ export default {
 
         vue_this.$call_remote_process("stuff_plan_management", 'get_plan', [parseInt(vue_this.$route.params.plan_id)]).then(function (resp) {
             vue_this.plan_time = resp.plan_time;
-            resp.vichele_info.forEach((element, index) => {
-                vue_this.$set(vue_this.vichele_info, index, element);
+
+            resp.vichele_info.forEach(element => {
+                if (!element.finish || !vue_this.$route.query.delay) {
+                    vue_this.vichele_info.push(element);
+                }
             });
             vue_this.name = resp.name;
             vue_this.proxy_company = resp.proxy_company;
@@ -82,6 +85,9 @@ export default {
                 });
             });
         });
+        if (vue_this.$route.query.delay) {
+            vue_this.$route.meta.private_title = "计划延期";
+        }
     },
 }
 </script>

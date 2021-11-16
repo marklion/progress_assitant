@@ -33,7 +33,7 @@
             </van-collapse-item>
         </van-collapse>
         <van-cell title="单价" center :value="plan_detail.unit_price">
-            <template #right-icon>
+            <template #right-icon v-if="!$store.state.userinfo.buyer">
                 <div style="padding-left:8px;">
                     <van-button size="small" type="warning" @click="change_price_diag = true">调价</van-button>
                 </div>
