@@ -23,7 +23,7 @@
                 <van-cell v-if="!single_trans.is_buy" :title="single_trans.destination_company" center>
                     <template #right-icon>
                         <div style="margin-left:8px;">
-                            <van-button v-if="!single_trans.is_registered && single_trans.destination_company" type="info" size="small" @click="register_vichele(single_trans.destination_company, single_trans.id)">排号</van-button>
+                            <van-button v-if="should_checkin(single_trans.date) && !single_trans.is_registered && single_trans.destination_company" type="info" size="small" @click="register_vichele(single_trans.destination_company, single_trans.id)">排号</van-button>
                         </div>
                     </template>
                     <div v-if="single_trans.is_registered">
@@ -163,6 +163,25 @@ export default {
             focus_vichele: 0,
             input_enter_weight: [],
             input_enter_weight_confirm: [],
+            current_date: new Date(),
+            formatDateTime: function (date) {
+                var y = date.getFullYear();
+                var m = date.getMonth() + 1;
+                m = m < 10 ? ('0' + m) : m;
+                var d = date.getDate();
+                d = d < 10 ? ('0' + d) : d;
+                return y + '-' + m + '-' + d;
+            },
+            should_checkin: function (_date) {
+                var ret = false;
+                var cur_date = this.formatDateTime(this.current_date);
+
+                if (_date.split(' ')[0] == cur_date) {
+                    ret = true;
+                }
+
+                return ret;
+            },
         };
     },
     computed: {
@@ -199,7 +218,9 @@ export default {
             }
             vue_this.$call_remote_process("vichele_management", "fill_enter_weight", [vue_this.$cookies.get('driver_silent_id'), _id, parseFloat(vue_this.input_enter_weight[index])]).then(function (resp) {
                 if (resp) {
-                    Dialog.confirm({title:'提交成功'}).finally(function () {
+                    Dialog.confirm({
+                        title: '提交成功'
+                    }).finally(function () {
                         vue_this.$router.go(0);
                     });
                 }
@@ -396,7 +417,6 @@ export default {
                     window.location.href = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxa390f8b6f68e9c6d&redirect_uri=https%3a%2f%2fwww.d8sis.cn%2fpa_web%2fdriver_register&response_type=code&scope=snsapi_base&state=STATE#wechat_redirect"
                 }
             });
-
         }
     }
 }

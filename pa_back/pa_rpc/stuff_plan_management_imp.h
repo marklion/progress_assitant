@@ -1238,9 +1238,8 @@ public:
     virtual void clean_unclose_plan()
     {
         sqlite_orm_lock a;
-        auto yestardey_sec = time(NULL) - 3600 * 24;
-        auto yestardey_str = PA_DATAOPT_date_2_timestring(yestardey_sec).substr(0, 10);
-        auto plans_need_close = sqlite_orm::search_record_all<pa_sql_plan>("status != 4 AND plan_time LIKE '%s%%'", yestardey_str.c_str());
+        auto today_str = PA_DATAOPT_date_2_timestring(time(nullptr)).substr(0, 10);
+        auto plans_need_close = sqlite_orm::search_record_all<pa_sql_plan>("status != 4 AND plan_time NOT LIKE '%s%%'", today_str.c_str());
         for (auto &itr : plans_need_close)
         {
             auto delivered_vichele = itr.get_all_children<pa_sql_single_vichele>("belong_plan", "finish = 1");

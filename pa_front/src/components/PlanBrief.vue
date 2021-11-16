@@ -16,6 +16,7 @@
                 </van-row>
             </van-col>
             <van-col v-if="can_be_copy">
+                <van-button size="small" plain type="warning" @click="delay_plan">延期</van-button>
                 <van-button size="small" plain type="info" :to="{name:'PlanCopy', params:{plan_id:plan_id}}">复制</van-button>
             </van-col>
         </van-row>
@@ -72,7 +73,9 @@ import {
     Checkbox,
     CheckboxGroup
 } from 'vant';
-
+import {
+    Dialog
+} from 'vant';
 Vue.use(Checkbox);
 Vue.use(CheckboxGroup);
 Vue.use(Radio);
@@ -132,6 +135,31 @@ export default {
         },
     },
     methods: {
+        delay_plan: function () {
+            var vue_this = this;
+            vue_this.$call_remote_process("stuff_plan_management", "get_plan", [vue_this.plan_id]).then(function (resp) {
+                var unfinish_vehicles = [];
+                resp.vichele_info.forEach(element => {
+                    if (!element.finish) {
+                        unfinish_vehicles.push(element.main_vichele + ' ');
+                    }
+                });
+                Dialog.confirm({
+                    title: '延期确认',
+                    message: '未到厂的车辆有：\n' + unfinish_vehicles + '\n确定将它们延期吗？'
+                }).then(() => {
+                    vue_this.$router.push({
+                        name: "PlanCopy",
+                        params: {
+                            plan_id: vue_this.plan_id
+                        },
+                        query: {
+                            delay: 'true'
+                        }
+                    })
+                });
+            });
+        },
         select_it: function () {
             this.is_selected = true;
         },

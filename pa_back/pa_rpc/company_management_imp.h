@@ -100,6 +100,7 @@ public:
                     for (auto &itr:related_plans)
                     {
                         itr.price = stuff.price;
+                        itr.update_record();
                         itr.send_wechat_msg(*user, remark);
                     }
                 }

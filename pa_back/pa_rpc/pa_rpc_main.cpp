@@ -109,7 +109,7 @@ int main(int argc, char **argv)
                                 }
                             }
                         }
-                        if (st_time->tm_min == 47 && st_time->tm_hour == 23)
+                        if (st_time->tm_min == 1 && st_time->tm_hour == 0)
                         {
                             auto all_contract = sqlite_orm::search_record_all<pa_sql_contract>();
                             for (auto &itr : all_contract)

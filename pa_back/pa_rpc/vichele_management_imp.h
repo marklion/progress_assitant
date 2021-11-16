@@ -1052,7 +1052,7 @@ public:
 
     void clean_unclose_vichele()
     {
-        auto the_day_before_yesterday_sec = time(NULL) - 3600 * 48;
+        auto the_day_before_yesterday_sec = time(NULL) - 3600 * 72;
         auto the_day_before_yestardey_str = PA_DATAOPT_date_2_timestring(the_day_before_yesterday_sec).substr(0, 10);
         auto need_clean = sqlite_orm::search_record_all<pa_sql_vichele_stay_alone>("is_drop == 0 AND status <= 1 AND date == '%s'", the_day_before_yestardey_str.c_str());
         for (auto &itr : need_clean)
