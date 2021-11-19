@@ -376,6 +376,16 @@ public:
             auto orig_vichele_info = plan_in_sql->get_all_children<pa_sql_single_vichele>("belong_plan");
             for (auto &itr : orig_vichele_info)
             {
+                if (itr.finish == 1)
+                {
+                    std::string main_vichele_number;
+                    auto main_vn = itr.get_parent<pa_sql_vichele>("main_vichele");
+                    if (main_vn)
+                    {
+                        main_vichele_number = main_vn->number;
+                    }
+                    PA_RETURN_CANNOT_CANCLE((main_vichele_number + "已经完成出货"));
+                }
                 auto update_ret = PA_DATAOPT_post_sync_change_register(itr);
                 if (update_ret.length() > 0)
                 {
