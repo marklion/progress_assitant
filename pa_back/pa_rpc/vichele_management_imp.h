@@ -48,7 +48,7 @@ public:
             {
                 PA_RETURN_MSG(itr.driver_name + "在黑名单中");
             }
-            auto conflict_one = dest_company->get_children<pa_sql_vichele_stay_alone>("destination", "main_vichele_number == '%s' AND date == '%s' AND is_drop == 0 AND status < 2", itr.main_vichele_number.c_str(), itr.date.c_str());
+            auto conflict_one = dest_company->get_children<pa_sql_vichele_stay_alone>("destination", "main_vichele_number == '%s' AND is_drop == 0 AND status < 2", itr.main_vichele_number.c_str());
             if (conflict_one)
             {
                 PA_RETURN_MSG(itr.main_vichele_number + "重复派出");
@@ -188,7 +188,7 @@ public:
         {
             PA_RETURN_MSG(vichele_info.driver_name + "在黑名单中");
         }
-        auto conflict_one = dest_company->get_children<pa_sql_vichele_stay_alone>("destination", "main_vichele_number == '%s' AND date == '%s' AND is_drop == 0 AND PRI_ID != %ld", vichele_info.main_vichele_number.c_str(), vichele_info.date.c_str(), vichele_info.id);
+        auto conflict_one = dest_company->get_children<pa_sql_vichele_stay_alone>("destination", "main_vichele_number == '%s' AND is_drop == 0 AND PRI_ID != %ld", vichele_info.main_vichele_number.c_str(), vichele_info.id);
         if (conflict_one)
         {
             PA_RETURN_MSG(vichele_info.main_vichele_number + "重复派出");
@@ -205,14 +205,19 @@ public:
 
         return ret;
     }
-    virtual void get_created_vichele_info(std::vector<vichele_stay_alone> &_return, const std::string &open_id, const int64_t ancher)
+    virtual void get_created_vichele_info(std::vector<vichele_stay_alone> &_return, const std::string &open_id, const int64_t ancher, const std::string &query_key)
     {
         auto opt_user = sqlite_orm::search_record<pa_sql_silent_user>("open_id = '%s'", open_id.c_str());
         if (!opt_user)
         {
             PA_RETURN_OP_FAIL();
         }
-        auto vichele_infos = opt_user->get_all_children<pa_sql_vichele_stay_alone>("created_by", "is_drop == 0 ORDER BY PRI_ID DESC LIMIT 15 OFFSET %ld", ancher);
+        std::string defaut_key = "main_vichele_number != ''";
+        if (query_key.length() > 0)
+        {
+            defaut_key = "main_vichele_number LIKE '%" + query_key + "%' OR behind_vichele_number LIKE '%" + query_key + "%'";
+        }
+        auto vichele_infos = opt_user->get_all_children<pa_sql_vichele_stay_alone>("created_by", "is_drop == 0 AND (%s) ORDER BY PRI_ID DESC LIMIT 15 OFFSET %ld", defaut_key.c_str(),ancher );
         for (auto &itr : vichele_infos)
         {
             auto dest_company = itr.get_parent<pa_sql_company>("destination");

@@ -436,12 +436,16 @@ vichele_management_get_created_vichele_info_args = class {
   constructor(args) {
     this.open_id = null;
     this.ancher = null;
+    this.query_key = null;
     if (args) {
       if (args.open_id !== undefined && args.open_id !== null) {
         this.open_id = args.open_id;
       }
       if (args.ancher !== undefined && args.ancher !== null) {
         this.ancher = args.ancher;
+      }
+      if (args.query_key !== undefined && args.query_key !== null) {
+        this.query_key = args.query_key;
       }
     }
   }
@@ -470,6 +474,13 @@ vichele_management_get_created_vichele_info_args = class {
           input.skip(ftype);
         }
         break;
+        case 3:
+        if (ftype == Thrift.Type.STRING) {
+          this.query_key = input.readString().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
         default:
           input.skip(ftype);
       }
@@ -489,6 +500,11 @@ vichele_management_get_created_vichele_info_args = class {
     if (this.ancher !== null && this.ancher !== undefined) {
       output.writeFieldBegin('ancher', Thrift.Type.I64, 2);
       output.writeI64(this.ancher);
+      output.writeFieldEnd();
+    }
+    if (this.query_key !== null && this.query_key !== undefined) {
+      output.writeFieldBegin('query_key', Thrift.Type.STRING, 3);
+      output.writeString(this.query_key);
       output.writeFieldEnd();
     }
     output.writeFieldStop();
@@ -5391,19 +5407,20 @@ vichele_managementClient = class vichele_managementClient {
     throw 'update_vichele_info failed: unknown result';
   }
 
-  get_created_vichele_info (open_id, ancher) {
+  get_created_vichele_info (open_id, ancher, query_key) {
     const self = this;
     return new Promise((resolve, reject) => {
-      self.send_get_created_vichele_info(open_id, ancher, (error, result) => {
+      self.send_get_created_vichele_info(open_id, ancher, query_key, (error, result) => {
         return error ? reject(error) : resolve(result);
       });
     });
   }
 
-  send_get_created_vichele_info (open_id, ancher, callback) {
+  send_get_created_vichele_info (open_id, ancher, query_key, callback) {
     const params = {
       open_id: open_id,
-      ancher: ancher
+      ancher: ancher,
+      query_key: query_key
     };
     const args = new vichele_management_get_created_vichele_info_args(params);
     try {

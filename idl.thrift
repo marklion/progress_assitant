@@ -516,7 +516,7 @@ service vichele_management {
     bool create_vichele_info(1:string open_id, 2:list<vichele_stay_alone> vichele_info) throws (1:gen_exp e),
     bool delete_vichele_info(1:string open_id, 2:i64 vichele_id) throws (1:gen_exp e),
     bool update_vichele_info(1:string open_id, 2:vichele_stay_alone vichele_info) throws (1:gen_exp e),
-    list<vichele_stay_alone> get_created_vichele_info(1:string open_id, 2:i64 ancher) throws (1:gen_exp e),
+    list<vichele_stay_alone> get_created_vichele_info(1:string open_id, 2:i64 ancher, 3:string query_key) throws (1:gen_exp e),
     string silent_login(1:string code) throws (1:gen_exp e),
     bool verify_login(1:string open_id) throws (1:gen_exp e),
     silent_user_info get_silent_user_info(1:string open_id) throws (1:gen_exp e),

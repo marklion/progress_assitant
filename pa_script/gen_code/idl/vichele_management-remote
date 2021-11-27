@@ -27,7 +27,7 @@ if len(sys.argv) <= 1 or sys.argv[1] == '--help':
     print('  bool create_vichele_info(string open_id,  vichele_info)')
     print('  bool delete_vichele_info(string open_id, i64 vichele_id)')
     print('  bool update_vichele_info(string open_id, vichele_stay_alone vichele_info)')
-    print('   get_created_vichele_info(string open_id, i64 ancher)')
+    print('   get_created_vichele_info(string open_id, i64 ancher, string query_key)')
     print('  string silent_login(string code)')
     print('  bool verify_login(string open_id)')
     print('  silent_user_info get_silent_user_info(string open_id)')
@@ -157,10 +157,10 @@ elif cmd == 'update_vichele_info':
     pp.pprint(client.update_vichele_info(args[0], eval(args[1]),))
 
 elif cmd == 'get_created_vichele_info':
-    if len(args) != 2:
-        print('get_created_vichele_info requires 2 args')
+    if len(args) != 3:
+        print('get_created_vichele_info requires 3 args')
         sys.exit(1)
-    pp.pprint(client.get_created_vichele_info(args[0], eval(args[1]),))
+    pp.pprint(client.get_created_vichele_info(args[0], eval(args[1]), args[2],))
 
 elif cmd == 'silent_login':
     if len(args) != 1:

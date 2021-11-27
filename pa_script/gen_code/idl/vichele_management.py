@@ -46,11 +46,12 @@ class Iface(object):
         """
         pass
 
-    def get_created_vichele_info(self, open_id, ancher):
+    def get_created_vichele_info(self, open_id, ancher, query_key):
         """
         Parameters:
          - open_id
          - ancher
+         - query_key
 
         """
         pass
@@ -465,21 +466,23 @@ class Client(Iface):
             raise result.e
         raise TApplicationException(TApplicationException.MISSING_RESULT, "update_vichele_info failed: unknown result")
 
-    def get_created_vichele_info(self, open_id, ancher):
+    def get_created_vichele_info(self, open_id, ancher, query_key):
         """
         Parameters:
          - open_id
          - ancher
+         - query_key
 
         """
-        self.send_get_created_vichele_info(open_id, ancher)
+        self.send_get_created_vichele_info(open_id, ancher, query_key)
         return self.recv_get_created_vichele_info()
 
-    def send_get_created_vichele_info(self, open_id, ancher):
+    def send_get_created_vichele_info(self, open_id, ancher, query_key):
         self._oprot.writeMessageBegin('get_created_vichele_info', TMessageType.CALL, self._seqid)
         args = get_created_vichele_info_args()
         args.open_id = open_id
         args.ancher = ancher
+        args.query_key = query_key
         args.write(self._oprot)
         self._oprot.writeMessageEnd()
         self._oprot.trans.flush()
@@ -1791,7 +1794,7 @@ class Processor(Iface, TProcessor):
         iprot.readMessageEnd()
         result = get_created_vichele_info_result()
         try:
-            result.success = self._handler.get_created_vichele_info(args.open_id, args.ancher)
+            result.success = self._handler.get_created_vichele_info(args.open_id, args.ancher, args.query_key)
             msg_type = TMessageType.REPLY
         except TTransport.TTransportException:
             raise
@@ -3076,13 +3079,15 @@ class get_created_vichele_info_args(object):
     Attributes:
      - open_id
      - ancher
+     - query_key
 
     """
 
 
-    def __init__(self, open_id=None, ancher=None,):
+    def __init__(self, open_id=None, ancher=None, query_key=None,):
         self.open_id = open_id
         self.ancher = ancher
+        self.query_key = query_key
 
     def read(self, iprot):
         if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
@@ -3103,6 +3108,11 @@ class get_created_vichele_info_args(object):
                     self.ancher = iprot.readI64()
                 else:
                     iprot.skip(ftype)
+            elif fid == 3:
+                if ftype == TType.STRING:
+                    self.query_key = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
             else:
                 iprot.skip(ftype)
             iprot.readFieldEnd()
@@ -3120,6 +3130,10 @@ class get_created_vichele_info_args(object):
         if self.ancher is not None:
             oprot.writeFieldBegin('ancher', TType.I64, 2)
             oprot.writeI64(self.ancher)
+            oprot.writeFieldEnd()
+        if self.query_key is not None:
+            oprot.writeFieldBegin('query_key', TType.STRING, 3)
+            oprot.writeString(self.query_key.encode('utf-8') if sys.version_info[0] == 2 else self.query_key)
             oprot.writeFieldEnd()
         oprot.writeFieldStop()
         oprot.writeStructEnd()
@@ -3142,6 +3156,7 @@ get_created_vichele_info_args.thrift_spec = (
     None,  # 0
     (1, TType.STRING, 'open_id', 'UTF8', None, ),  # 1
     (2, TType.I64, 'ancher', None, None, ),  # 2
+    (3, TType.STRING, 'query_key', 'UTF8', None, ),  # 3
 )
 
 
