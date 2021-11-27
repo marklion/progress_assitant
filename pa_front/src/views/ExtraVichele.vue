@@ -78,8 +78,9 @@
             </van-form>
         </van-tab>
         <van-tab title="历史申请">
+            <van-search v-model="create_search_key" placeholder="输入车牌号过滤" @input="refresh_all_records" />
             <van-list ref="all_record" v-model="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
-                <div v-for="(item,index) in created_apply" :key="index" class="one_record_show" :id="item.id" ref="single_record" :class="{highlight_record:$route.query.pos == item.id}">
+                <div v-for="(item,index) in created_apply_show" :key="index" class="one_record_show" :id="item.id" ref="single_record" :class="{highlight_record:$route.query.pos == item.id}">
                     <van-cell center :label="item.stuff_name + '(' + item.destination + ')'">
                         <template #title>
                             <div>{{item.main_vichele_number}}</div>
@@ -281,6 +282,19 @@ export default {
         'history-input': HistoryInput,
     },
     computed: {
+        created_apply_show: function () {
+            var ret = [];
+            this.created_apply.forEach(element => {
+                if (this.create_search_key.length <= 0) {
+                    ret.push(element);
+                } else {
+                    if (PinyinMatch.match(element.main_vichele_number, this.create_search_key) || PinyinMatch.match(element.behind_vichele_number, this.create_search_key)) {
+                        ret.push(element);
+                    }
+                }
+            });
+            return ret;
+        },
         plan_time_easy: function () {
             var setted_time = new Date(/\d{4}-\d{1,2}-\d{1,2}/g.exec(this.new_form.date)[0]);
             var current_time = new Date();
@@ -322,6 +336,7 @@ export default {
     },
     data: function () {
         return {
+            create_search_key: '',
             single_search_key: '',
             add_single_vichele_show: false,
             team_brief_show: false,
@@ -396,7 +411,7 @@ export default {
         },
     },
     methods: {
-        add_single_vichele: function(_vichele) {
+        add_single_vichele: function (_vichele) {
             this.new_vichele.push(_vichele);
             this.add_single_vichele_show = false;
         },
@@ -511,6 +526,11 @@ export default {
             });
 
         },
+        refresh_all_records: function () {
+            this.created_apply = [];
+            this.finished = false;
+            this.$refs.all_record.check();
+        },
         onChange: function () {
             var vue_this = this;
             vue_this.vichele_update_info.count = parseFloat(vue_this.vichele_update_info.count);
@@ -559,7 +579,7 @@ export default {
         },
         onLoad: function () {
             var vue_this = this;
-            vue_this.$call_remote_process("vichele_management", 'get_created_vichele_info', [vue_this.$cookies.get('silent_id'), vue_this.created_apply.length]).then(function (resp) {
+            vue_this.$call_remote_process("vichele_management", 'get_created_vichele_info', [vue_this.$cookies.get('silent_id'), vue_this.created_apply.length, vue_this.create_search_key]).then(function (resp) {
                 resp.forEach(element => {
                     vue_this.created_apply.push(element);
                 });

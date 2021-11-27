@@ -747,6 +747,14 @@ uint32_t vichele_management_get_created_vichele_info_args::read(::apache::thrift
           xfer += iprot->skip(ftype);
         }
         break;
+      case 3:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->query_key);
+          this->__isset.query_key = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
       default:
         xfer += iprot->skip(ftype);
         break;
@@ -772,6 +780,10 @@ uint32_t vichele_management_get_created_vichele_info_args::write(::apache::thrif
   xfer += oprot->writeI64(this->ancher);
   xfer += oprot->writeFieldEnd();
 
+  xfer += oprot->writeFieldBegin("query_key", ::apache::thrift::protocol::T_STRING, 3);
+  xfer += oprot->writeString(this->query_key);
+  xfer += oprot->writeFieldEnd();
+
   xfer += oprot->writeFieldStop();
   xfer += oprot->writeStructEnd();
   return xfer;
@@ -793,6 +805,10 @@ uint32_t vichele_management_get_created_vichele_info_pargs::write(::apache::thri
 
   xfer += oprot->writeFieldBegin("ancher", ::apache::thrift::protocol::T_I64, 2);
   xfer += oprot->writeI64((*(this->ancher)));
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("query_key", ::apache::thrift::protocol::T_STRING, 3);
+  xfer += oprot->writeString((*(this->query_key)));
   xfer += oprot->writeFieldEnd();
 
   xfer += oprot->writeFieldStop();
@@ -8611,13 +8627,13 @@ bool vichele_managementClient::recv_update_vichele_info()
   throw ::apache::thrift::TApplicationException(::apache::thrift::TApplicationException::MISSING_RESULT, "update_vichele_info failed: unknown result");
 }
 
-void vichele_managementClient::get_created_vichele_info(std::vector<vichele_stay_alone> & _return, const std::string& open_id, const int64_t ancher)
+void vichele_managementClient::get_created_vichele_info(std::vector<vichele_stay_alone> & _return, const std::string& open_id, const int64_t ancher, const std::string& query_key)
 {
-  send_get_created_vichele_info(open_id, ancher);
+  send_get_created_vichele_info(open_id, ancher, query_key);
   recv_get_created_vichele_info(_return);
 }
 
-void vichele_managementClient::send_get_created_vichele_info(const std::string& open_id, const int64_t ancher)
+void vichele_managementClient::send_get_created_vichele_info(const std::string& open_id, const int64_t ancher, const std::string& query_key)
 {
   int32_t cseqid = 0;
   oprot_->writeMessageBegin("get_created_vichele_info", ::apache::thrift::protocol::T_CALL, cseqid);
@@ -8625,6 +8641,7 @@ void vichele_managementClient::send_get_created_vichele_info(const std::string& 
   vichele_management_get_created_vichele_info_pargs args;
   args.open_id = &open_id;
   args.ancher = &ancher;
+  args.query_key = &query_key;
   args.write(oprot_);
 
   oprot_->writeMessageEnd();
@@ -10818,7 +10835,7 @@ void vichele_managementProcessor::process_get_created_vichele_info(int32_t seqid
 
   vichele_management_get_created_vichele_info_result result;
   try {
-    iface_->get_created_vichele_info(result.success, args.open_id, args.ancher);
+    iface_->get_created_vichele_info(result.success, args.open_id, args.ancher, args.query_key);
     result.__isset.success = true;
   } catch (gen_exp &e) {
     result.e = e;
@@ -12892,13 +12909,13 @@ bool vichele_managementConcurrentClient::recv_update_vichele_info(const int32_t 
   } // end while(true)
 }
 
-void vichele_managementConcurrentClient::get_created_vichele_info(std::vector<vichele_stay_alone> & _return, const std::string& open_id, const int64_t ancher)
+void vichele_managementConcurrentClient::get_created_vichele_info(std::vector<vichele_stay_alone> & _return, const std::string& open_id, const int64_t ancher, const std::string& query_key)
 {
-  int32_t seqid = send_get_created_vichele_info(open_id, ancher);
+  int32_t seqid = send_get_created_vichele_info(open_id, ancher, query_key);
   recv_get_created_vichele_info(_return, seqid);
 }
 
-int32_t vichele_managementConcurrentClient::send_get_created_vichele_info(const std::string& open_id, const int64_t ancher)
+int32_t vichele_managementConcurrentClient::send_get_created_vichele_info(const std::string& open_id, const int64_t ancher, const std::string& query_key)
 {
   int32_t cseqid = this->sync_->generateSeqId();
   ::apache::thrift::async::TConcurrentSendSentry sentry(this->sync_.get());
@@ -12907,6 +12924,7 @@ int32_t vichele_managementConcurrentClient::send_get_created_vichele_info(const 
   vichele_management_get_created_vichele_info_pargs args;
   args.open_id = &open_id;
   args.ancher = &ancher;
+  args.query_key = &query_key;
   args.write(oprot_);
 
   oprot_->writeMessageEnd();

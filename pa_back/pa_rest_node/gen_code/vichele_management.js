@@ -427,12 +427,16 @@ vichele_management_update_vichele_info_result.prototype.write = function(output)
 var vichele_management_get_created_vichele_info_args = function(args) {
   this.open_id = null;
   this.ancher = null;
+  this.query_key = null;
   if (args) {
     if (args.open_id !== undefined && args.open_id !== null) {
       this.open_id = args.open_id;
     }
     if (args.ancher !== undefined && args.ancher !== null) {
       this.ancher = args.ancher;
+    }
+    if (args.query_key !== undefined && args.query_key !== null) {
+      this.query_key = args.query_key;
     }
   }
 };
@@ -461,6 +465,13 @@ vichele_management_get_created_vichele_info_args.prototype.read = function(input
         input.skip(ftype);
       }
       break;
+      case 3:
+      if (ftype == Thrift.Type.STRING) {
+        this.query_key = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
       default:
         input.skip(ftype);
     }
@@ -480,6 +491,11 @@ vichele_management_get_created_vichele_info_args.prototype.write = function(outp
   if (this.ancher !== null && this.ancher !== undefined) {
     output.writeFieldBegin('ancher', Thrift.Type.I64, 2);
     output.writeI64(this.ancher);
+    output.writeFieldEnd();
+  }
+  if (this.query_key !== null && this.query_key !== undefined) {
+    output.writeFieldBegin('query_key', Thrift.Type.STRING, 3);
+    output.writeString(this.query_key);
     output.writeFieldEnd();
   }
   output.writeFieldStop();
@@ -5267,7 +5283,7 @@ vichele_managementClient.prototype.recv_update_vichele_info = function(input,mty
   return callback('update_vichele_info failed: unknown result');
 };
 
-vichele_managementClient.prototype.get_created_vichele_info = function(open_id, ancher, callback) {
+vichele_managementClient.prototype.get_created_vichele_info = function(open_id, ancher, query_key, callback) {
   this._seqid = this.new_seqid();
   if (callback === undefined) {
     var _defer = Q.defer();
@@ -5278,19 +5294,20 @@ vichele_managementClient.prototype.get_created_vichele_info = function(open_id, 
         _defer.resolve(result);
       }
     };
-    this.send_get_created_vichele_info(open_id, ancher);
+    this.send_get_created_vichele_info(open_id, ancher, query_key);
     return _defer.promise;
   } else {
     this._reqs[this.seqid()] = callback;
-    this.send_get_created_vichele_info(open_id, ancher);
+    this.send_get_created_vichele_info(open_id, ancher, query_key);
   }
 };
 
-vichele_managementClient.prototype.send_get_created_vichele_info = function(open_id, ancher) {
+vichele_managementClient.prototype.send_get_created_vichele_info = function(open_id, ancher, query_key) {
   var output = new this.pClass(this.output);
   var params = {
     open_id: open_id,
-    ancher: ancher
+    ancher: ancher,
+    query_key: query_key
   };
   var args = new vichele_management_get_created_vichele_info_args(params);
   try {
@@ -7444,10 +7461,11 @@ vichele_managementProcessor.prototype.process_get_created_vichele_info = functio
   var args = new vichele_management_get_created_vichele_info_args();
   args.read(input);
   input.readMessageEnd();
-  if (this._handler.get_created_vichele_info.length === 2) {
+  if (this._handler.get_created_vichele_info.length === 3) {
     Q.fcall(this._handler.get_created_vichele_info.bind(this._handler),
       args.open_id,
-      args.ancher
+      args.ancher,
+      args.query_key
     ).then(function(result) {
       var result_obj = new vichele_management_get_created_vichele_info_result({success: result});
       output.writeMessageBegin("get_created_vichele_info", Thrift.MessageType.REPLY, seqid);
@@ -7468,7 +7486,7 @@ vichele_managementProcessor.prototype.process_get_created_vichele_info = functio
       output.flush();
     });
   } else {
-    this._handler.get_created_vichele_info(args.open_id, args.ancher, function (err, result) {
+    this._handler.get_created_vichele_info(args.open_id, args.ancher, args.query_key, function (err, result) {
       var result_obj;
       if ((err === null || typeof err === 'undefined') || err instanceof ttypes.gen_exp) {
         result_obj = new vichele_management_get_created_vichele_info_result((err !== null || typeof err === 'undefined') ? err : {success: result});

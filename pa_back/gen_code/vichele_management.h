@@ -25,7 +25,7 @@ class vichele_managementIf {
   virtual bool create_vichele_info(const std::string& open_id, const std::vector<vichele_stay_alone> & vichele_info) = 0;
   virtual bool delete_vichele_info(const std::string& open_id, const int64_t vichele_id) = 0;
   virtual bool update_vichele_info(const std::string& open_id, const vichele_stay_alone& vichele_info) = 0;
-  virtual void get_created_vichele_info(std::vector<vichele_stay_alone> & _return, const std::string& open_id, const int64_t ancher) = 0;
+  virtual void get_created_vichele_info(std::vector<vichele_stay_alone> & _return, const std::string& open_id, const int64_t ancher, const std::string& query_key) = 0;
   virtual void silent_login(std::string& _return, const std::string& code) = 0;
   virtual bool verify_login(const std::string& open_id) = 0;
   virtual void get_silent_user_info(silent_user_info& _return, const std::string& open_id) = 0;
@@ -98,7 +98,7 @@ class vichele_managementNull : virtual public vichele_managementIf {
     bool _return = false;
     return _return;
   }
-  void get_created_vichele_info(std::vector<vichele_stay_alone> & /* _return */, const std::string& /* open_id */, const int64_t /* ancher */) {
+  void get_created_vichele_info(std::vector<vichele_stay_alone> & /* _return */, const std::string& /* open_id */, const int64_t /* ancher */, const std::string& /* query_key */) {
     return;
   }
   void silent_login(std::string& /* _return */, const std::string& /* code */) {
@@ -572,9 +572,10 @@ class vichele_management_update_vichele_info_presult {
 };
 
 typedef struct _vichele_management_get_created_vichele_info_args__isset {
-  _vichele_management_get_created_vichele_info_args__isset() : open_id(false), ancher(false) {}
+  _vichele_management_get_created_vichele_info_args__isset() : open_id(false), ancher(false), query_key(false) {}
   bool open_id :1;
   bool ancher :1;
+  bool query_key :1;
 } _vichele_management_get_created_vichele_info_args__isset;
 
 class vichele_management_get_created_vichele_info_args {
@@ -582,12 +583,13 @@ class vichele_management_get_created_vichele_info_args {
 
   vichele_management_get_created_vichele_info_args(const vichele_management_get_created_vichele_info_args&);
   vichele_management_get_created_vichele_info_args& operator=(const vichele_management_get_created_vichele_info_args&);
-  vichele_management_get_created_vichele_info_args() : open_id(), ancher(0) {
+  vichele_management_get_created_vichele_info_args() : open_id(), ancher(0), query_key() {
   }
 
   virtual ~vichele_management_get_created_vichele_info_args() noexcept;
   std::string open_id;
   int64_t ancher;
+  std::string query_key;
 
   _vichele_management_get_created_vichele_info_args__isset __isset;
 
@@ -595,11 +597,15 @@ class vichele_management_get_created_vichele_info_args {
 
   void __set_ancher(const int64_t val);
 
+  void __set_query_key(const std::string& val);
+
   bool operator == (const vichele_management_get_created_vichele_info_args & rhs) const
   {
     if (!(open_id == rhs.open_id))
       return false;
     if (!(ancher == rhs.ancher))
+      return false;
+    if (!(query_key == rhs.query_key))
       return false;
     return true;
   }
@@ -622,6 +628,7 @@ class vichele_management_get_created_vichele_info_pargs {
   virtual ~vichele_management_get_created_vichele_info_pargs() noexcept;
   const std::string* open_id;
   const int64_t* ancher;
+  const std::string* query_key;
 
   uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
 
@@ -4510,8 +4517,8 @@ class vichele_managementClient : virtual public vichele_managementIf {
   bool update_vichele_info(const std::string& open_id, const vichele_stay_alone& vichele_info);
   void send_update_vichele_info(const std::string& open_id, const vichele_stay_alone& vichele_info);
   bool recv_update_vichele_info();
-  void get_created_vichele_info(std::vector<vichele_stay_alone> & _return, const std::string& open_id, const int64_t ancher);
-  void send_get_created_vichele_info(const std::string& open_id, const int64_t ancher);
+  void get_created_vichele_info(std::vector<vichele_stay_alone> & _return, const std::string& open_id, const int64_t ancher, const std::string& query_key);
+  void send_get_created_vichele_info(const std::string& open_id, const int64_t ancher, const std::string& query_key);
   void recv_get_created_vichele_info(std::vector<vichele_stay_alone> & _return);
   void silent_login(std::string& _return, const std::string& code);
   void send_silent_login(const std::string& code);
@@ -4749,13 +4756,13 @@ class vichele_managementMultiface : virtual public vichele_managementIf {
     return ifaces_[i]->update_vichele_info(open_id, vichele_info);
   }
 
-  void get_created_vichele_info(std::vector<vichele_stay_alone> & _return, const std::string& open_id, const int64_t ancher) {
+  void get_created_vichele_info(std::vector<vichele_stay_alone> & _return, const std::string& open_id, const int64_t ancher, const std::string& query_key) {
     size_t sz = ifaces_.size();
     size_t i = 0;
     for (; i < (sz - 1); ++i) {
-      ifaces_[i]->get_created_vichele_info(_return, open_id, ancher);
+      ifaces_[i]->get_created_vichele_info(_return, open_id, ancher, query_key);
     }
-    ifaces_[i]->get_created_vichele_info(_return, open_id, ancher);
+    ifaces_[i]->get_created_vichele_info(_return, open_id, ancher, query_key);
     return;
   }
 
@@ -5091,8 +5098,8 @@ class vichele_managementConcurrentClient : virtual public vichele_managementIf {
   bool update_vichele_info(const std::string& open_id, const vichele_stay_alone& vichele_info);
   int32_t send_update_vichele_info(const std::string& open_id, const vichele_stay_alone& vichele_info);
   bool recv_update_vichele_info(const int32_t seqid);
-  void get_created_vichele_info(std::vector<vichele_stay_alone> & _return, const std::string& open_id, const int64_t ancher);
-  int32_t send_get_created_vichele_info(const std::string& open_id, const int64_t ancher);
+  void get_created_vichele_info(std::vector<vichele_stay_alone> & _return, const std::string& open_id, const int64_t ancher, const std::string& query_key);
+  int32_t send_get_created_vichele_info(const std::string& open_id, const int64_t ancher, const std::string& query_key);
   void recv_get_created_vichele_info(std::vector<vichele_stay_alone> & _return, const int32_t seqid);
   void silent_login(std::string& _return, const std::string& code);
   int32_t send_silent_login(const std::string& code);
