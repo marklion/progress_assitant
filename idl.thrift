@@ -159,6 +159,9 @@ service company_management {
     third_dev_info get_third_info(1:string ssid) throws (1:gen_exp e),
     list<string> get_related_company(1:string ssid) throws (1:gen_exp e),
     bool set_user_group(1:string ssid, 2:i64 user_id, 3:i64 groupid) throws (1:gen_exp e),
+    bool add_gps_stuff(1:string ssid, 2:string stuff_name) throws (1:gen_exp e),
+    bool del_gps_stuff(1:string ssid, 2:string stuff_name) throws (1:gen_exp e),
+    list<string> get_gps_stuff(1: string ssid) throws (1:gen_exp e),
 }
 
 service stuff_info {
@@ -297,6 +300,7 @@ struct today_driver_info {
     18:bool can_enter,
     19:string attach_url,
     20:double count,
+    21:bool upload_permit,
 }
 
 struct driver_detail_info {
@@ -431,6 +435,18 @@ struct push_balance_req {
     3:double balance,
 }
 
+struct push_zone_change_req {
+    1:string plateNo,
+    2:i64 eventType,
+    3:string eventInfo,
+    4:string eventCreateTime,
+}
+
+struct push_manual_permit_req {
+    1:string plateNo,
+    2:string driverId,
+}
+
 service open_api_management {
     bool register_api_user(1:string company_name, 2:string email, 3:string password) throws (1:gen_exp e),
     bool verify_email_code(1:string email, 2:string code) throws (1:gen_exp e),
@@ -445,6 +461,8 @@ service open_api_management {
     bool proc_add_base_info(1:push_base_req _req, 2:string token) throws (1:gen_exp e),
     bool proc_del_base_info(1:push_base_req _req, 2:string token) throws (1:gen_exp e),
     bool proc_push_balance(1:push_balance_req _req, 2:string token) throws (1:gen_exp e),
+    bool proc_push_zone_change(1:push_zone_change_req _req, 2:string token) throws (1:gen_exp e),
+    bool proc_push_manual_permit(1:push_manual_permit_req _req, 2:string token) throws (1:gen_exp e),
 }
 
 struct vichele_stay_alone {
@@ -472,6 +490,7 @@ struct vichele_stay_alone {
     22:double j_weight,
     23:double price,
     24:bool can_enter,
+    25:bool upload_permit,
 }
 
 struct silent_user_info {

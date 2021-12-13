@@ -416,6 +416,7 @@ public:
             tmp.j_weight = itr.j_weight;
             tmp.price = itr.price;
             tmp.can_enter = itr.no_permission == 0 ? true : false;
+            tmp.upload_permit = itr.upload_no_permit == 0 ? true : false;
             _return.push_back(tmp);
         }
     }
@@ -445,6 +446,12 @@ public:
             itr.price = price;
             itr.company_name = company_name;
             itr.no_permission = 0;
+            itr.upload_no_permit = 0;
+            auto gps_stuff = company->get_children<pa_sql_gps_stuff>("belong_company", "stuff_name == '%s'", itr.stuff_name.c_str());
+            if (gps_stuff)
+            {
+                itr.upload_no_permit = 1;
+            }
             if (itr.update_record())
             {
                 auto silent_user = itr.get_parent<pa_sql_silent_user>("created_by");
@@ -503,11 +510,17 @@ public:
             itr.status = 1;
             itr.price = price;
             itr.no_permission = 0;
+            itr.upload_no_permit = 0;
             auto created_user = itr.get_parent<pa_sql_silent_user>("created_by");
             if (created_user && !company->get_children<pa_sql_except_stuff>("belong_company", "name == '%s'", itr.stuff_name.c_str()))
             {
                 itr.company_for_select = company_for_select_string;
                 itr.no_permission = 1;
+            }
+            auto gps_stuff = company->get_children<pa_sql_gps_stuff>("belong_company", "stuff_name == '%s'", itr.stuff_name.c_str());
+            if (gps_stuff)
+            {
+                itr.upload_no_permit = 1;
             }
             if (itr.update_record())
             {
@@ -782,6 +795,7 @@ public:
         std::list<pa_sql_vichele_stay_alone> tmp;
         tmp.push_back(*vichele_info);
         PA_DATAOPT_post_save_register(tmp);
+        PA_DATAOPT_post_save_register(tmp, true);
 
         auto driver = sqlite_orm::search_record<pa_sql_driver>("phone = '%s' AND silent_id != ''", vichele_info->driver_phone.c_str());
         if (driver)
@@ -809,6 +823,7 @@ public:
         std::list<pa_sql_vichele_stay_alone> tmp;
         tmp.push_back(*vichele_info);
         PA_DATAOPT_post_save_register(tmp);
+        PA_DATAOPT_post_save_register(tmp, true);
         auto dest_company = vichele_info->get_parent<pa_sql_company>("destination");
         if (dest_company)
         {
@@ -1109,6 +1124,10 @@ public:
         if (!vichele_info)
         {
             PA_RETURN_NOPRIVA_MSG();
+        }
+        if (vichele_info->upload_no_permit != 0)
+        {
+            PA_RETURN_MSG("当前位置不允许上传磅单");
         }
         std::string content;
 

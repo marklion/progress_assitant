@@ -168,6 +168,36 @@ app.post('/pa_rest/push_balance', async (req, res)=>{
     res.send(ret);
 });
 
+app.post('/pa_rest/push_zone_change', async (req, res)=>{
+    var token = req.query.token;
+    var ret = { err_msg: '无权限' };
+    try {
+        var resp = await request_rpc("open_api_management", 'proc_push_zone_change', [req.body, token]);
+        if (resp) {
+            ret.err_msg = "";
+        }
+    } catch (error) {
+        ret = { err_msg: error.msg };
+    }
+
+    res.send(ret);
+});
+
+app.post('/pa_rest/push_manual_permit', async (req, res)=>{
+    var token = req.query.token;
+    var ret = { err_msg: '无权限' };
+    try {
+        var resp = await request_rpc("open_api_management", 'proc_push_manual_permit', [req.body, token]);
+        if (resp) {
+            ret.err_msg = "";
+        }
+    } catch (error) {
+        ret = { err_msg: error.msg };
+    }
+
+    res.send(ret);
+});
+
 app.listen(port, () => {
     console.log('rest is runing');
 });

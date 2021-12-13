@@ -61,6 +61,9 @@ if len(sys.argv) <= 1 or sys.argv[1] == '--help':
     print('  third_dev_info get_third_info(string ssid)')
     print('   get_related_company(string ssid)')
     print('  bool set_user_group(string ssid, i64 user_id, i64 groupid)')
+    print('  bool add_gps_stuff(string ssid, string stuff_name)')
+    print('  bool del_gps_stuff(string ssid, string stuff_name)')
+    print('   get_gps_stuff(string ssid)')
     print('')
     sys.exit(0)
 
@@ -361,6 +364,24 @@ elif cmd == 'set_user_group':
         print('set_user_group requires 3 args')
         sys.exit(1)
     pp.pprint(client.set_user_group(args[0], eval(args[1]), eval(args[2]),))
+
+elif cmd == 'add_gps_stuff':
+    if len(args) != 2:
+        print('add_gps_stuff requires 2 args')
+        sys.exit(1)
+    pp.pprint(client.add_gps_stuff(args[0], args[1],))
+
+elif cmd == 'del_gps_stuff':
+    if len(args) != 2:
+        print('del_gps_stuff requires 2 args')
+        sys.exit(1)
+    pp.pprint(client.del_gps_stuff(args[0], args[1],))
+
+elif cmd == 'get_gps_stuff':
+    if len(args) != 1:
+        print('get_gps_stuff requires 1 args')
+        sys.exit(1)
+    pp.pprint(client.get_gps_stuff(args[0],))
 
 else:
     print('Unrecognized method %s' % cmd)

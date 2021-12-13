@@ -46,14 +46,14 @@ uint32_t vichele_management_create_vichele_info_args::read(::apache::thrift::pro
         if (ftype == ::apache::thrift::protocol::T_LIST) {
           {
             this->vichele_info.clear();
-            uint32_t _size430;
-            ::apache::thrift::protocol::TType _etype433;
-            xfer += iprot->readListBegin(_etype433, _size430);
-            this->vichele_info.resize(_size430);
-            uint32_t _i434;
-            for (_i434 = 0; _i434 < _size430; ++_i434)
+            uint32_t _size445;
+            ::apache::thrift::protocol::TType _etype448;
+            xfer += iprot->readListBegin(_etype448, _size445);
+            this->vichele_info.resize(_size445);
+            uint32_t _i449;
+            for (_i449 = 0; _i449 < _size445; ++_i449)
             {
-              xfer += this->vichele_info[_i434].read(iprot);
+              xfer += this->vichele_info[_i449].read(iprot);
             }
             xfer += iprot->readListEnd();
           }
@@ -86,10 +86,10 @@ uint32_t vichele_management_create_vichele_info_args::write(::apache::thrift::pr
   xfer += oprot->writeFieldBegin("vichele_info", ::apache::thrift::protocol::T_LIST, 2);
   {
     xfer += oprot->writeListBegin(::apache::thrift::protocol::T_STRUCT, static_cast<uint32_t>(this->vichele_info.size()));
-    std::vector<vichele_stay_alone> ::const_iterator _iter435;
-    for (_iter435 = this->vichele_info.begin(); _iter435 != this->vichele_info.end(); ++_iter435)
+    std::vector<vichele_stay_alone> ::const_iterator _iter450;
+    for (_iter450 = this->vichele_info.begin(); _iter450 != this->vichele_info.end(); ++_iter450)
     {
-      xfer += (*_iter435).write(oprot);
+      xfer += (*_iter450).write(oprot);
     }
     xfer += oprot->writeListEnd();
   }
@@ -117,10 +117,10 @@ uint32_t vichele_management_create_vichele_info_pargs::write(::apache::thrift::p
   xfer += oprot->writeFieldBegin("vichele_info", ::apache::thrift::protocol::T_LIST, 2);
   {
     xfer += oprot->writeListBegin(::apache::thrift::protocol::T_STRUCT, static_cast<uint32_t>((*(this->vichele_info)).size()));
-    std::vector<vichele_stay_alone> ::const_iterator _iter436;
-    for (_iter436 = (*(this->vichele_info)).begin(); _iter436 != (*(this->vichele_info)).end(); ++_iter436)
+    std::vector<vichele_stay_alone> ::const_iterator _iter451;
+    for (_iter451 = (*(this->vichele_info)).begin(); _iter451 != (*(this->vichele_info)).end(); ++_iter451)
     {
-      xfer += (*_iter436).write(oprot);
+      xfer += (*_iter451).write(oprot);
     }
     xfer += oprot->writeListEnd();
   }
@@ -846,14 +846,14 @@ uint32_t vichele_management_get_created_vichele_info_result::read(::apache::thri
         if (ftype == ::apache::thrift::protocol::T_LIST) {
           {
             this->success.clear();
-            uint32_t _size437;
-            ::apache::thrift::protocol::TType _etype440;
-            xfer += iprot->readListBegin(_etype440, _size437);
-            this->success.resize(_size437);
-            uint32_t _i441;
-            for (_i441 = 0; _i441 < _size437; ++_i441)
+            uint32_t _size452;
+            ::apache::thrift::protocol::TType _etype455;
+            xfer += iprot->readListBegin(_etype455, _size452);
+            this->success.resize(_size452);
+            uint32_t _i456;
+            for (_i456 = 0; _i456 < _size452; ++_i456)
             {
-              xfer += this->success[_i441].read(iprot);
+              xfer += this->success[_i456].read(iprot);
             }
             xfer += iprot->readListEnd();
           }
@@ -892,10 +892,10 @@ uint32_t vichele_management_get_created_vichele_info_result::write(::apache::thr
     xfer += oprot->writeFieldBegin("success", ::apache::thrift::protocol::T_LIST, 0);
     {
       xfer += oprot->writeListBegin(::apache::thrift::protocol::T_STRUCT, static_cast<uint32_t>(this->success.size()));
-      std::vector<vichele_stay_alone> ::const_iterator _iter442;
-      for (_iter442 = this->success.begin(); _iter442 != this->success.end(); ++_iter442)
+      std::vector<vichele_stay_alone> ::const_iterator _iter457;
+      for (_iter457 = this->success.begin(); _iter457 != this->success.end(); ++_iter457)
       {
-        xfer += (*_iter442).write(oprot);
+        xfer += (*_iter457).write(oprot);
       }
       xfer += oprot->writeListEnd();
     }
@@ -940,14 +940,14 @@ uint32_t vichele_management_get_created_vichele_info_presult::read(::apache::thr
         if (ftype == ::apache::thrift::protocol::T_LIST) {
           {
             (*(this->success)).clear();
-            uint32_t _size443;
-            ::apache::thrift::protocol::TType _etype446;
-            xfer += iprot->readListBegin(_etype446, _size443);
-            (*(this->success)).resize(_size443);
-            uint32_t _i447;
-            for (_i447 = 0; _i447 < _size443; ++_i447)
+            uint32_t _size458;
+            ::apache::thrift::protocol::TType _etype461;
+            xfer += iprot->readListBegin(_etype461, _size458);
+            (*(this->success)).resize(_size458);
+            uint32_t _i462;
+            for (_i462 = 0; _i462 < _size458; ++_i462)
             {
-              xfer += (*(this->success))[_i447].read(iprot);
+              xfer += (*(this->success))[_i462].read(iprot);
             }
             xfer += iprot->readListEnd();
           }
@@ -1925,14 +1925,14 @@ uint32_t vichele_management_get_input_history_result::read(::apache::thrift::pro
         if (ftype == ::apache::thrift::protocol::T_LIST) {
           {
             this->success.clear();
-            uint32_t _size448;
-            ::apache::thrift::protocol::TType _etype451;
-            xfer += iprot->readListBegin(_etype451, _size448);
-            this->success.resize(_size448);
-            uint32_t _i452;
-            for (_i452 = 0; _i452 < _size448; ++_i452)
+            uint32_t _size463;
+            ::apache::thrift::protocol::TType _etype466;
+            xfer += iprot->readListBegin(_etype466, _size463);
+            this->success.resize(_size463);
+            uint32_t _i467;
+            for (_i467 = 0; _i467 < _size463; ++_i467)
             {
-              xfer += iprot->readString(this->success[_i452]);
+              xfer += iprot->readString(this->success[_i467]);
             }
             xfer += iprot->readListEnd();
           }
@@ -1971,10 +1971,10 @@ uint32_t vichele_management_get_input_history_result::write(::apache::thrift::pr
     xfer += oprot->writeFieldBegin("success", ::apache::thrift::protocol::T_LIST, 0);
     {
       xfer += oprot->writeListBegin(::apache::thrift::protocol::T_STRING, static_cast<uint32_t>(this->success.size()));
-      std::vector<std::string> ::const_iterator _iter453;
-      for (_iter453 = this->success.begin(); _iter453 != this->success.end(); ++_iter453)
+      std::vector<std::string> ::const_iterator _iter468;
+      for (_iter468 = this->success.begin(); _iter468 != this->success.end(); ++_iter468)
       {
-        xfer += oprot->writeString((*_iter453));
+        xfer += oprot->writeString((*_iter468));
       }
       xfer += oprot->writeListEnd();
     }
@@ -2019,14 +2019,14 @@ uint32_t vichele_management_get_input_history_presult::read(::apache::thrift::pr
         if (ftype == ::apache::thrift::protocol::T_LIST) {
           {
             (*(this->success)).clear();
-            uint32_t _size454;
-            ::apache::thrift::protocol::TType _etype457;
-            xfer += iprot->readListBegin(_etype457, _size454);
-            (*(this->success)).resize(_size454);
-            uint32_t _i458;
-            for (_i458 = 0; _i458 < _size454; ++_i458)
+            uint32_t _size469;
+            ::apache::thrift::protocol::TType _etype472;
+            xfer += iprot->readListBegin(_etype472, _size469);
+            (*(this->success)).resize(_size469);
+            uint32_t _i473;
+            for (_i473 = 0; _i473 < _size469; ++_i473)
             {
-              xfer += iprot->readString((*(this->success))[_i458]);
+              xfer += iprot->readString((*(this->success))[_i473]);
             }
             xfer += iprot->readListEnd();
           }
@@ -2260,14 +2260,14 @@ uint32_t vichele_management_get_company_vichele_info_result::read(::apache::thri
         if (ftype == ::apache::thrift::protocol::T_LIST) {
           {
             this->success.clear();
-            uint32_t _size459;
-            ::apache::thrift::protocol::TType _etype462;
-            xfer += iprot->readListBegin(_etype462, _size459);
-            this->success.resize(_size459);
-            uint32_t _i463;
-            for (_i463 = 0; _i463 < _size459; ++_i463)
+            uint32_t _size474;
+            ::apache::thrift::protocol::TType _etype477;
+            xfer += iprot->readListBegin(_etype477, _size474);
+            this->success.resize(_size474);
+            uint32_t _i478;
+            for (_i478 = 0; _i478 < _size474; ++_i478)
             {
-              xfer += this->success[_i463].read(iprot);
+              xfer += this->success[_i478].read(iprot);
             }
             xfer += iprot->readListEnd();
           }
@@ -2306,10 +2306,10 @@ uint32_t vichele_management_get_company_vichele_info_result::write(::apache::thr
     xfer += oprot->writeFieldBegin("success", ::apache::thrift::protocol::T_LIST, 0);
     {
       xfer += oprot->writeListBegin(::apache::thrift::protocol::T_STRUCT, static_cast<uint32_t>(this->success.size()));
-      std::vector<vichele_stay_alone> ::const_iterator _iter464;
-      for (_iter464 = this->success.begin(); _iter464 != this->success.end(); ++_iter464)
+      std::vector<vichele_stay_alone> ::const_iterator _iter479;
+      for (_iter479 = this->success.begin(); _iter479 != this->success.end(); ++_iter479)
       {
-        xfer += (*_iter464).write(oprot);
+        xfer += (*_iter479).write(oprot);
       }
       xfer += oprot->writeListEnd();
     }
@@ -2354,14 +2354,14 @@ uint32_t vichele_management_get_company_vichele_info_presult::read(::apache::thr
         if (ftype == ::apache::thrift::protocol::T_LIST) {
           {
             (*(this->success)).clear();
-            uint32_t _size465;
-            ::apache::thrift::protocol::TType _etype468;
-            xfer += iprot->readListBegin(_etype468, _size465);
-            (*(this->success)).resize(_size465);
-            uint32_t _i469;
-            for (_i469 = 0; _i469 < _size465; ++_i469)
+            uint32_t _size480;
+            ::apache::thrift::protocol::TType _etype483;
+            xfer += iprot->readListBegin(_etype483, _size480);
+            (*(this->success)).resize(_size480);
+            uint32_t _i484;
+            for (_i484 = 0; _i484 < _size480; ++_i484)
             {
-              xfer += (*(this->success))[_i469].read(iprot);
+              xfer += (*(this->success))[_i484].read(iprot);
             }
             xfer += iprot->readListEnd();
           }
@@ -2428,14 +2428,14 @@ uint32_t vichele_management_confirm_vichele_args::read(::apache::thrift::protoco
         if (ftype == ::apache::thrift::protocol::T_LIST) {
           {
             this->info.clear();
-            uint32_t _size470;
-            ::apache::thrift::protocol::TType _etype473;
-            xfer += iprot->readListBegin(_etype473, _size470);
-            this->info.resize(_size470);
-            uint32_t _i474;
-            for (_i474 = 0; _i474 < _size470; ++_i474)
+            uint32_t _size485;
+            ::apache::thrift::protocol::TType _etype488;
+            xfer += iprot->readListBegin(_etype488, _size485);
+            this->info.resize(_size485);
+            uint32_t _i489;
+            for (_i489 = 0; _i489 < _size485; ++_i489)
             {
-              xfer += this->info[_i474].read(iprot);
+              xfer += this->info[_i489].read(iprot);
             }
             xfer += iprot->readListEnd();
           }
@@ -2448,14 +2448,14 @@ uint32_t vichele_management_confirm_vichele_args::read(::apache::thrift::protoco
         if (ftype == ::apache::thrift::protocol::T_LIST) {
           {
             this->company_for_select.clear();
-            uint32_t _size475;
-            ::apache::thrift::protocol::TType _etype478;
-            xfer += iprot->readListBegin(_etype478, _size475);
-            this->company_for_select.resize(_size475);
-            uint32_t _i479;
-            for (_i479 = 0; _i479 < _size475; ++_i479)
+            uint32_t _size490;
+            ::apache::thrift::protocol::TType _etype493;
+            xfer += iprot->readListBegin(_etype493, _size490);
+            this->company_for_select.resize(_size490);
+            uint32_t _i494;
+            for (_i494 = 0; _i494 < _size490; ++_i494)
             {
-              xfer += iprot->readString(this->company_for_select[_i479]);
+              xfer += iprot->readString(this->company_for_select[_i494]);
             }
             xfer += iprot->readListEnd();
           }
@@ -2520,10 +2520,10 @@ uint32_t vichele_management_confirm_vichele_args::write(::apache::thrift::protoc
   xfer += oprot->writeFieldBegin("info", ::apache::thrift::protocol::T_LIST, 2);
   {
     xfer += oprot->writeListBegin(::apache::thrift::protocol::T_STRUCT, static_cast<uint32_t>(this->info.size()));
-    std::vector<vichele_stay_alone> ::const_iterator _iter480;
-    for (_iter480 = this->info.begin(); _iter480 != this->info.end(); ++_iter480)
+    std::vector<vichele_stay_alone> ::const_iterator _iter495;
+    for (_iter495 = this->info.begin(); _iter495 != this->info.end(); ++_iter495)
     {
-      xfer += (*_iter480).write(oprot);
+      xfer += (*_iter495).write(oprot);
     }
     xfer += oprot->writeListEnd();
   }
@@ -2532,10 +2532,10 @@ uint32_t vichele_management_confirm_vichele_args::write(::apache::thrift::protoc
   xfer += oprot->writeFieldBegin("company_for_select", ::apache::thrift::protocol::T_LIST, 3);
   {
     xfer += oprot->writeListBegin(::apache::thrift::protocol::T_STRING, static_cast<uint32_t>(this->company_for_select.size()));
-    std::vector<std::string> ::const_iterator _iter481;
-    for (_iter481 = this->company_for_select.begin(); _iter481 != this->company_for_select.end(); ++_iter481)
+    std::vector<std::string> ::const_iterator _iter496;
+    for (_iter496 = this->company_for_select.begin(); _iter496 != this->company_for_select.end(); ++_iter496)
     {
-      xfer += oprot->writeString((*_iter481));
+      xfer += oprot->writeString((*_iter496));
     }
     xfer += oprot->writeListEnd();
   }
@@ -2579,10 +2579,10 @@ uint32_t vichele_management_confirm_vichele_pargs::write(::apache::thrift::proto
   xfer += oprot->writeFieldBegin("info", ::apache::thrift::protocol::T_LIST, 2);
   {
     xfer += oprot->writeListBegin(::apache::thrift::protocol::T_STRUCT, static_cast<uint32_t>((*(this->info)).size()));
-    std::vector<vichele_stay_alone> ::const_iterator _iter482;
-    for (_iter482 = (*(this->info)).begin(); _iter482 != (*(this->info)).end(); ++_iter482)
+    std::vector<vichele_stay_alone> ::const_iterator _iter497;
+    for (_iter497 = (*(this->info)).begin(); _iter497 != (*(this->info)).end(); ++_iter497)
     {
-      xfer += (*_iter482).write(oprot);
+      xfer += (*_iter497).write(oprot);
     }
     xfer += oprot->writeListEnd();
   }
@@ -2591,10 +2591,10 @@ uint32_t vichele_management_confirm_vichele_pargs::write(::apache::thrift::proto
   xfer += oprot->writeFieldBegin("company_for_select", ::apache::thrift::protocol::T_LIST, 3);
   {
     xfer += oprot->writeListBegin(::apache::thrift::protocol::T_STRING, static_cast<uint32_t>((*(this->company_for_select)).size()));
-    std::vector<std::string> ::const_iterator _iter483;
-    for (_iter483 = (*(this->company_for_select)).begin(); _iter483 != (*(this->company_for_select)).end(); ++_iter483)
+    std::vector<std::string> ::const_iterator _iter498;
+    for (_iter498 = (*(this->company_for_select)).begin(); _iter498 != (*(this->company_for_select)).end(); ++_iter498)
     {
-      xfer += oprot->writeString((*_iter483));
+      xfer += oprot->writeString((*_iter498));
     }
     xfer += oprot->writeListEnd();
   }
@@ -2787,14 +2787,14 @@ uint32_t vichele_management_cancel_vichele_args::read(::apache::thrift::protocol
         if (ftype == ::apache::thrift::protocol::T_LIST) {
           {
             this->info.clear();
-            uint32_t _size484;
-            ::apache::thrift::protocol::TType _etype487;
-            xfer += iprot->readListBegin(_etype487, _size484);
-            this->info.resize(_size484);
-            uint32_t _i488;
-            for (_i488 = 0; _i488 < _size484; ++_i488)
+            uint32_t _size499;
+            ::apache::thrift::protocol::TType _etype502;
+            xfer += iprot->readListBegin(_etype502, _size499);
+            this->info.resize(_size499);
+            uint32_t _i503;
+            for (_i503 = 0; _i503 < _size499; ++_i503)
             {
-              xfer += this->info[_i488].read(iprot);
+              xfer += this->info[_i503].read(iprot);
             }
             xfer += iprot->readListEnd();
           }
@@ -2859,10 +2859,10 @@ uint32_t vichele_management_cancel_vichele_args::write(::apache::thrift::protoco
   xfer += oprot->writeFieldBegin("info", ::apache::thrift::protocol::T_LIST, 2);
   {
     xfer += oprot->writeListBegin(::apache::thrift::protocol::T_STRUCT, static_cast<uint32_t>(this->info.size()));
-    std::vector<vichele_stay_alone> ::const_iterator _iter489;
-    for (_iter489 = this->info.begin(); _iter489 != this->info.end(); ++_iter489)
+    std::vector<vichele_stay_alone> ::const_iterator _iter504;
+    for (_iter504 = this->info.begin(); _iter504 != this->info.end(); ++_iter504)
     {
-      xfer += (*_iter489).write(oprot);
+      xfer += (*_iter504).write(oprot);
     }
     xfer += oprot->writeListEnd();
   }
@@ -2906,10 +2906,10 @@ uint32_t vichele_management_cancel_vichele_pargs::write(::apache::thrift::protoc
   xfer += oprot->writeFieldBegin("info", ::apache::thrift::protocol::T_LIST, 2);
   {
     xfer += oprot->writeListBegin(::apache::thrift::protocol::T_STRUCT, static_cast<uint32_t>((*(this->info)).size()));
-    std::vector<vichele_stay_alone> ::const_iterator _iter490;
-    for (_iter490 = (*(this->info)).begin(); _iter490 != (*(this->info)).end(); ++_iter490)
+    std::vector<vichele_stay_alone> ::const_iterator _iter505;
+    for (_iter505 = (*(this->info)).begin(); _iter505 != (*(this->info)).end(); ++_iter505)
     {
-      xfer += (*_iter490).write(oprot);
+      xfer += (*_iter505).write(oprot);
     }
     xfer += oprot->writeListEnd();
   }
@@ -3842,14 +3842,14 @@ uint32_t vichele_management_get_all_vichele_team_result::read(::apache::thrift::
         if (ftype == ::apache::thrift::protocol::T_LIST) {
           {
             this->success.clear();
-            uint32_t _size491;
-            ::apache::thrift::protocol::TType _etype494;
-            xfer += iprot->readListBegin(_etype494, _size491);
-            this->success.resize(_size491);
-            uint32_t _i495;
-            for (_i495 = 0; _i495 < _size491; ++_i495)
+            uint32_t _size506;
+            ::apache::thrift::protocol::TType _etype509;
+            xfer += iprot->readListBegin(_etype509, _size506);
+            this->success.resize(_size506);
+            uint32_t _i510;
+            for (_i510 = 0; _i510 < _size506; ++_i510)
             {
-              xfer += this->success[_i495].read(iprot);
+              xfer += this->success[_i510].read(iprot);
             }
             xfer += iprot->readListEnd();
           }
@@ -3888,10 +3888,10 @@ uint32_t vichele_management_get_all_vichele_team_result::write(::apache::thrift:
     xfer += oprot->writeFieldBegin("success", ::apache::thrift::protocol::T_LIST, 0);
     {
       xfer += oprot->writeListBegin(::apache::thrift::protocol::T_STRUCT, static_cast<uint32_t>(this->success.size()));
-      std::vector<vichele_team> ::const_iterator _iter496;
-      for (_iter496 = this->success.begin(); _iter496 != this->success.end(); ++_iter496)
+      std::vector<vichele_team> ::const_iterator _iter511;
+      for (_iter511 = this->success.begin(); _iter511 != this->success.end(); ++_iter511)
       {
-        xfer += (*_iter496).write(oprot);
+        xfer += (*_iter511).write(oprot);
       }
       xfer += oprot->writeListEnd();
     }
@@ -3936,14 +3936,14 @@ uint32_t vichele_management_get_all_vichele_team_presult::read(::apache::thrift:
         if (ftype == ::apache::thrift::protocol::T_LIST) {
           {
             (*(this->success)).clear();
-            uint32_t _size497;
-            ::apache::thrift::protocol::TType _etype500;
-            xfer += iprot->readListBegin(_etype500, _size497);
-            (*(this->success)).resize(_size497);
-            uint32_t _i501;
-            for (_i501 = 0; _i501 < _size497; ++_i501)
+            uint32_t _size512;
+            ::apache::thrift::protocol::TType _etype515;
+            xfer += iprot->readListBegin(_etype515, _size512);
+            (*(this->success)).resize(_size512);
+            uint32_t _i516;
+            for (_i516 = 0; _i516 < _size512; ++_i516)
             {
-              xfer += (*(this->success))[_i501].read(iprot);
+              xfer += (*(this->success))[_i516].read(iprot);
             }
             xfer += iprot->readListEnd();
           }
@@ -4782,14 +4782,14 @@ uint32_t vichele_management_company_history_result::read(::apache::thrift::proto
         if (ftype == ::apache::thrift::protocol::T_LIST) {
           {
             this->success.clear();
-            uint32_t _size502;
-            ::apache::thrift::protocol::TType _etype505;
-            xfer += iprot->readListBegin(_etype505, _size502);
-            this->success.resize(_size502);
-            uint32_t _i506;
-            for (_i506 = 0; _i506 < _size502; ++_i506)
+            uint32_t _size517;
+            ::apache::thrift::protocol::TType _etype520;
+            xfer += iprot->readListBegin(_etype520, _size517);
+            this->success.resize(_size517);
+            uint32_t _i521;
+            for (_i521 = 0; _i521 < _size517; ++_i521)
             {
-              xfer += iprot->readString(this->success[_i506]);
+              xfer += iprot->readString(this->success[_i521]);
             }
             xfer += iprot->readListEnd();
           }
@@ -4828,10 +4828,10 @@ uint32_t vichele_management_company_history_result::write(::apache::thrift::prot
     xfer += oprot->writeFieldBegin("success", ::apache::thrift::protocol::T_LIST, 0);
     {
       xfer += oprot->writeListBegin(::apache::thrift::protocol::T_STRING, static_cast<uint32_t>(this->success.size()));
-      std::vector<std::string> ::const_iterator _iter507;
-      for (_iter507 = this->success.begin(); _iter507 != this->success.end(); ++_iter507)
+      std::vector<std::string> ::const_iterator _iter522;
+      for (_iter522 = this->success.begin(); _iter522 != this->success.end(); ++_iter522)
       {
-        xfer += oprot->writeString((*_iter507));
+        xfer += oprot->writeString((*_iter522));
       }
       xfer += oprot->writeListEnd();
     }
@@ -4876,14 +4876,14 @@ uint32_t vichele_management_company_history_presult::read(::apache::thrift::prot
         if (ftype == ::apache::thrift::protocol::T_LIST) {
           {
             (*(this->success)).clear();
-            uint32_t _size508;
-            ::apache::thrift::protocol::TType _etype511;
-            xfer += iprot->readListBegin(_etype511, _size508);
-            (*(this->success)).resize(_size508);
-            uint32_t _i512;
-            for (_i512 = 0; _i512 < _size508; ++_i512)
+            uint32_t _size523;
+            ::apache::thrift::protocol::TType _etype526;
+            xfer += iprot->readListBegin(_etype526, _size523);
+            (*(this->success)).resize(_size523);
+            uint32_t _i527;
+            for (_i527 = 0; _i527 < _size523; ++_i527)
             {
-              xfer += iprot->readString((*(this->success))[_i512]);
+              xfer += iprot->readString((*(this->success))[_i527]);
             }
             xfer += iprot->readListEnd();
           }
@@ -5690,14 +5690,14 @@ uint32_t vichele_management_get_all_supplier_result::read(::apache::thrift::prot
         if (ftype == ::apache::thrift::protocol::T_LIST) {
           {
             this->success.clear();
-            uint32_t _size513;
-            ::apache::thrift::protocol::TType _etype516;
-            xfer += iprot->readListBegin(_etype516, _size513);
-            this->success.resize(_size513);
-            uint32_t _i517;
-            for (_i517 = 0; _i517 < _size513; ++_i517)
+            uint32_t _size528;
+            ::apache::thrift::protocol::TType _etype531;
+            xfer += iprot->readListBegin(_etype531, _size528);
+            this->success.resize(_size528);
+            uint32_t _i532;
+            for (_i532 = 0; _i532 < _size528; ++_i532)
             {
-              xfer += this->success[_i517].read(iprot);
+              xfer += this->success[_i532].read(iprot);
             }
             xfer += iprot->readListEnd();
           }
@@ -5736,10 +5736,10 @@ uint32_t vichele_management_get_all_supplier_result::write(::apache::thrift::pro
     xfer += oprot->writeFieldBegin("success", ::apache::thrift::protocol::T_LIST, 0);
     {
       xfer += oprot->writeListBegin(::apache::thrift::protocol::T_STRUCT, static_cast<uint32_t>(this->success.size()));
-      std::vector<supplier_basic_info> ::const_iterator _iter518;
-      for (_iter518 = this->success.begin(); _iter518 != this->success.end(); ++_iter518)
+      std::vector<supplier_basic_info> ::const_iterator _iter533;
+      for (_iter533 = this->success.begin(); _iter533 != this->success.end(); ++_iter533)
       {
-        xfer += (*_iter518).write(oprot);
+        xfer += (*_iter533).write(oprot);
       }
       xfer += oprot->writeListEnd();
     }
@@ -5784,14 +5784,14 @@ uint32_t vichele_management_get_all_supplier_presult::read(::apache::thrift::pro
         if (ftype == ::apache::thrift::protocol::T_LIST) {
           {
             (*(this->success)).clear();
-            uint32_t _size519;
-            ::apache::thrift::protocol::TType _etype522;
-            xfer += iprot->readListBegin(_etype522, _size519);
-            (*(this->success)).resize(_size519);
-            uint32_t _i523;
-            for (_i523 = 0; _i523 < _size519; ++_i523)
+            uint32_t _size534;
+            ::apache::thrift::protocol::TType _etype537;
+            xfer += iprot->readListBegin(_etype537, _size534);
+            (*(this->success)).resize(_size534);
+            uint32_t _i538;
+            for (_i538 = 0; _i538 < _size534; ++_i538)
             {
-              xfer += (*(this->success))[_i523].read(iprot);
+              xfer += (*(this->success))[_i538].read(iprot);
             }
             xfer += iprot->readListEnd();
           }
@@ -5858,14 +5858,14 @@ uint32_t vichele_management_smart_assign_args::read(::apache::thrift::protocol::
         if (ftype == ::apache::thrift::protocol::T_LIST) {
           {
             this->vichele_info.clear();
-            uint32_t _size524;
-            ::apache::thrift::protocol::TType _etype527;
-            xfer += iprot->readListBegin(_etype527, _size524);
-            this->vichele_info.resize(_size524);
-            uint32_t _i528;
-            for (_i528 = 0; _i528 < _size524; ++_i528)
+            uint32_t _size539;
+            ::apache::thrift::protocol::TType _etype542;
+            xfer += iprot->readListBegin(_etype542, _size539);
+            this->vichele_info.resize(_size539);
+            uint32_t _i543;
+            for (_i543 = 0; _i543 < _size539; ++_i543)
             {
-              xfer += this->vichele_info[_i528].read(iprot);
+              xfer += this->vichele_info[_i543].read(iprot);
             }
             xfer += iprot->readListEnd();
           }
@@ -5898,10 +5898,10 @@ uint32_t vichele_management_smart_assign_args::write(::apache::thrift::protocol:
   xfer += oprot->writeFieldBegin("vichele_info", ::apache::thrift::protocol::T_LIST, 2);
   {
     xfer += oprot->writeListBegin(::apache::thrift::protocol::T_STRUCT, static_cast<uint32_t>(this->vichele_info.size()));
-    std::vector<vichele_stay_alone> ::const_iterator _iter529;
-    for (_iter529 = this->vichele_info.begin(); _iter529 != this->vichele_info.end(); ++_iter529)
+    std::vector<vichele_stay_alone> ::const_iterator _iter544;
+    for (_iter544 = this->vichele_info.begin(); _iter544 != this->vichele_info.end(); ++_iter544)
     {
-      xfer += (*_iter529).write(oprot);
+      xfer += (*_iter544).write(oprot);
     }
     xfer += oprot->writeListEnd();
   }
@@ -5929,10 +5929,10 @@ uint32_t vichele_management_smart_assign_pargs::write(::apache::thrift::protocol
   xfer += oprot->writeFieldBegin("vichele_info", ::apache::thrift::protocol::T_LIST, 2);
   {
     xfer += oprot->writeListBegin(::apache::thrift::protocol::T_STRUCT, static_cast<uint32_t>((*(this->vichele_info)).size()));
-    std::vector<vichele_stay_alone> ::const_iterator _iter530;
-    for (_iter530 = (*(this->vichele_info)).begin(); _iter530 != (*(this->vichele_info)).end(); ++_iter530)
+    std::vector<vichele_stay_alone> ::const_iterator _iter545;
+    for (_iter545 = (*(this->vichele_info)).begin(); _iter545 != (*(this->vichele_info)).end(); ++_iter545)
     {
-      xfer += (*_iter530).write(oprot);
+      xfer += (*_iter545).write(oprot);
     }
     xfer += oprot->writeListEnd();
   }
@@ -7566,14 +7566,14 @@ uint32_t vichele_management_get_all_exceptions_result::read(::apache::thrift::pr
         if (ftype == ::apache::thrift::protocol::T_LIST) {
           {
             this->success.clear();
-            uint32_t _size531;
-            ::apache::thrift::protocol::TType _etype534;
-            xfer += iprot->readListBegin(_etype534, _size531);
-            this->success.resize(_size531);
-            uint32_t _i535;
-            for (_i535 = 0; _i535 < _size531; ++_i535)
+            uint32_t _size546;
+            ::apache::thrift::protocol::TType _etype549;
+            xfer += iprot->readListBegin(_etype549, _size546);
+            this->success.resize(_size546);
+            uint32_t _i550;
+            for (_i550 = 0; _i550 < _size546; ++_i550)
             {
-              xfer += iprot->readString(this->success[_i535]);
+              xfer += iprot->readString(this->success[_i550]);
             }
             xfer += iprot->readListEnd();
           }
@@ -7612,10 +7612,10 @@ uint32_t vichele_management_get_all_exceptions_result::write(::apache::thrift::p
     xfer += oprot->writeFieldBegin("success", ::apache::thrift::protocol::T_LIST, 0);
     {
       xfer += oprot->writeListBegin(::apache::thrift::protocol::T_STRING, static_cast<uint32_t>(this->success.size()));
-      std::vector<std::string> ::const_iterator _iter536;
-      for (_iter536 = this->success.begin(); _iter536 != this->success.end(); ++_iter536)
+      std::vector<std::string> ::const_iterator _iter551;
+      for (_iter551 = this->success.begin(); _iter551 != this->success.end(); ++_iter551)
       {
-        xfer += oprot->writeString((*_iter536));
+        xfer += oprot->writeString((*_iter551));
       }
       xfer += oprot->writeListEnd();
     }
@@ -7660,14 +7660,14 @@ uint32_t vichele_management_get_all_exceptions_presult::read(::apache::thrift::p
         if (ftype == ::apache::thrift::protocol::T_LIST) {
           {
             (*(this->success)).clear();
-            uint32_t _size537;
-            ::apache::thrift::protocol::TType _etype540;
-            xfer += iprot->readListBegin(_etype540, _size537);
-            (*(this->success)).resize(_size537);
-            uint32_t _i541;
-            for (_i541 = 0; _i541 < _size537; ++_i541)
+            uint32_t _size552;
+            ::apache::thrift::protocol::TType _etype555;
+            xfer += iprot->readListBegin(_etype555, _size552);
+            (*(this->success)).resize(_size552);
+            uint32_t _i556;
+            for (_i556 = 0; _i556 < _size552; ++_i556)
             {
-              xfer += iprot->readString((*(this->success))[_i541]);
+              xfer += iprot->readString((*(this->success))[_i556]);
             }
             xfer += iprot->readListEnd();
           }
@@ -8148,14 +8148,14 @@ uint32_t vichele_management_change_price_args::read(::apache::thrift::protocol::
         if (ftype == ::apache::thrift::protocol::T_LIST) {
           {
             this->info.clear();
-            uint32_t _size542;
-            ::apache::thrift::protocol::TType _etype545;
-            xfer += iprot->readListBegin(_etype545, _size542);
-            this->info.resize(_size542);
-            uint32_t _i546;
-            for (_i546 = 0; _i546 < _size542; ++_i546)
+            uint32_t _size557;
+            ::apache::thrift::protocol::TType _etype560;
+            xfer += iprot->readListBegin(_etype560, _size557);
+            this->info.resize(_size557);
+            uint32_t _i561;
+            for (_i561 = 0; _i561 < _size557; ++_i561)
             {
-              xfer += this->info[_i546].read(iprot);
+              xfer += this->info[_i561].read(iprot);
             }
             xfer += iprot->readListEnd();
           }
@@ -8228,10 +8228,10 @@ uint32_t vichele_management_change_price_args::write(::apache::thrift::protocol:
   xfer += oprot->writeFieldBegin("info", ::apache::thrift::protocol::T_LIST, 2);
   {
     xfer += oprot->writeListBegin(::apache::thrift::protocol::T_STRUCT, static_cast<uint32_t>(this->info.size()));
-    std::vector<vichele_stay_alone> ::const_iterator _iter547;
-    for (_iter547 = this->info.begin(); _iter547 != this->info.end(); ++_iter547)
+    std::vector<vichele_stay_alone> ::const_iterator _iter562;
+    for (_iter562 = this->info.begin(); _iter562 != this->info.end(); ++_iter562)
     {
-      xfer += (*_iter547).write(oprot);
+      xfer += (*_iter562).write(oprot);
     }
     xfer += oprot->writeListEnd();
   }
@@ -8279,10 +8279,10 @@ uint32_t vichele_management_change_price_pargs::write(::apache::thrift::protocol
   xfer += oprot->writeFieldBegin("info", ::apache::thrift::protocol::T_LIST, 2);
   {
     xfer += oprot->writeListBegin(::apache::thrift::protocol::T_STRUCT, static_cast<uint32_t>((*(this->info)).size()));
-    std::vector<vichele_stay_alone> ::const_iterator _iter548;
-    for (_iter548 = (*(this->info)).begin(); _iter548 != (*(this->info)).end(); ++_iter548)
+    std::vector<vichele_stay_alone> ::const_iterator _iter563;
+    for (_iter563 = (*(this->info)).begin(); _iter563 != (*(this->info)).end(); ++_iter563)
     {
-      xfer += (*_iter548).write(oprot);
+      xfer += (*_iter563).write(oprot);
     }
     xfer += oprot->writeListEnd();
   }

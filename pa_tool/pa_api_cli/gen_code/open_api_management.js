@@ -914,13 +914,13 @@ open_api_management_proc_all_vehicle_info_result.prototype.read = function(input
       case 0:
       if (ftype == Thrift.Type.LIST) {
         this.success = [];
-        var _rtmp3176 = input.readListBegin();
-        var _size175 = _rtmp3176.size || 0;
-        for (var _i177 = 0; _i177 < _size175; ++_i177) {
-          var elem178 = null;
-          elem178 = new ttypes.vehicle_info_resp();
-          elem178.read(input);
-          this.success.push(elem178);
+        var _rtmp3181 = input.readListBegin();
+        var _size180 = _rtmp3181.size || 0;
+        for (var _i182 = 0; _i182 < _size180; ++_i182) {
+          var elem183 = null;
+          elem183 = new ttypes.vehicle_info_resp();
+          elem183.read(input);
+          this.success.push(elem183);
         }
         input.readListEnd();
       } else {
@@ -949,10 +949,10 @@ open_api_management_proc_all_vehicle_info_result.prototype.write = function(outp
   if (this.success !== null && this.success !== undefined) {
     output.writeFieldBegin('success', Thrift.Type.LIST, 0);
     output.writeListBegin(Thrift.Type.STRUCT, this.success.length);
-    for (var iter179 in this.success) {
-      if (this.success.hasOwnProperty(iter179)) {
-        iter179 = this.success[iter179];
-        iter179.write(output);
+    for (var iter184 in this.success) {
+      if (this.success.hasOwnProperty(iter184)) {
+        iter184 = this.success[iter184];
+        iter184.write(output);
       }
     }
     output.writeListEnd();
@@ -1822,6 +1822,270 @@ open_api_management_proc_push_balance_result.prototype.write = function(output) 
   return;
 };
 
+var open_api_management_proc_push_zone_change_args = function(args) {
+  this._req = null;
+  this.token = null;
+  if (args) {
+    if (args._req !== undefined && args._req !== null) {
+      this._req = new ttypes.push_zone_change_req(args._req);
+    }
+    if (args.token !== undefined && args.token !== null) {
+      this.token = args.token;
+    }
+  }
+};
+open_api_management_proc_push_zone_change_args.prototype = {};
+open_api_management_proc_push_zone_change_args.prototype.read = function(input) {
+  input.readStructBegin();
+  while (true) {
+    var ret = input.readFieldBegin();
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    switch (fid) {
+      case 1:
+      if (ftype == Thrift.Type.STRUCT) {
+        this._req = new ttypes.push_zone_change_req();
+        this._req.read(input);
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 2:
+      if (ftype == Thrift.Type.STRING) {
+        this.token = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      default:
+        input.skip(ftype);
+    }
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+open_api_management_proc_push_zone_change_args.prototype.write = function(output) {
+  output.writeStructBegin('open_api_management_proc_push_zone_change_args');
+  if (this._req !== null && this._req !== undefined) {
+    output.writeFieldBegin('_req', Thrift.Type.STRUCT, 1);
+    this._req.write(output);
+    output.writeFieldEnd();
+  }
+  if (this.token !== null && this.token !== undefined) {
+    output.writeFieldBegin('token', Thrift.Type.STRING, 2);
+    output.writeString(this.token);
+    output.writeFieldEnd();
+  }
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+
+var open_api_management_proc_push_zone_change_result = function(args) {
+  this.success = null;
+  this.e = null;
+  if (args instanceof ttypes.gen_exp) {
+    this.e = args;
+    return;
+  }
+  if (args) {
+    if (args.success !== undefined && args.success !== null) {
+      this.success = args.success;
+    }
+    if (args.e !== undefined && args.e !== null) {
+      this.e = args.e;
+    }
+  }
+};
+open_api_management_proc_push_zone_change_result.prototype = {};
+open_api_management_proc_push_zone_change_result.prototype.read = function(input) {
+  input.readStructBegin();
+  while (true) {
+    var ret = input.readFieldBegin();
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    switch (fid) {
+      case 0:
+      if (ftype == Thrift.Type.BOOL) {
+        this.success = input.readBool();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 1:
+      if (ftype == Thrift.Type.STRUCT) {
+        this.e = new ttypes.gen_exp();
+        this.e.read(input);
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      default:
+        input.skip(ftype);
+    }
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+open_api_management_proc_push_zone_change_result.prototype.write = function(output) {
+  output.writeStructBegin('open_api_management_proc_push_zone_change_result');
+  if (this.success !== null && this.success !== undefined) {
+    output.writeFieldBegin('success', Thrift.Type.BOOL, 0);
+    output.writeBool(this.success);
+    output.writeFieldEnd();
+  }
+  if (this.e !== null && this.e !== undefined) {
+    output.writeFieldBegin('e', Thrift.Type.STRUCT, 1);
+    this.e.write(output);
+    output.writeFieldEnd();
+  }
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+
+var open_api_management_proc_push_manual_permit_args = function(args) {
+  this._req = null;
+  this.token = null;
+  if (args) {
+    if (args._req !== undefined && args._req !== null) {
+      this._req = new ttypes.push_manual_permit_req(args._req);
+    }
+    if (args.token !== undefined && args.token !== null) {
+      this.token = args.token;
+    }
+  }
+};
+open_api_management_proc_push_manual_permit_args.prototype = {};
+open_api_management_proc_push_manual_permit_args.prototype.read = function(input) {
+  input.readStructBegin();
+  while (true) {
+    var ret = input.readFieldBegin();
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    switch (fid) {
+      case 1:
+      if (ftype == Thrift.Type.STRUCT) {
+        this._req = new ttypes.push_manual_permit_req();
+        this._req.read(input);
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 2:
+      if (ftype == Thrift.Type.STRING) {
+        this.token = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      default:
+        input.skip(ftype);
+    }
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+open_api_management_proc_push_manual_permit_args.prototype.write = function(output) {
+  output.writeStructBegin('open_api_management_proc_push_manual_permit_args');
+  if (this._req !== null && this._req !== undefined) {
+    output.writeFieldBegin('_req', Thrift.Type.STRUCT, 1);
+    this._req.write(output);
+    output.writeFieldEnd();
+  }
+  if (this.token !== null && this.token !== undefined) {
+    output.writeFieldBegin('token', Thrift.Type.STRING, 2);
+    output.writeString(this.token);
+    output.writeFieldEnd();
+  }
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+
+var open_api_management_proc_push_manual_permit_result = function(args) {
+  this.success = null;
+  this.e = null;
+  if (args instanceof ttypes.gen_exp) {
+    this.e = args;
+    return;
+  }
+  if (args) {
+    if (args.success !== undefined && args.success !== null) {
+      this.success = args.success;
+    }
+    if (args.e !== undefined && args.e !== null) {
+      this.e = args.e;
+    }
+  }
+};
+open_api_management_proc_push_manual_permit_result.prototype = {};
+open_api_management_proc_push_manual_permit_result.prototype.read = function(input) {
+  input.readStructBegin();
+  while (true) {
+    var ret = input.readFieldBegin();
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    switch (fid) {
+      case 0:
+      if (ftype == Thrift.Type.BOOL) {
+        this.success = input.readBool();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 1:
+      if (ftype == Thrift.Type.STRUCT) {
+        this.e = new ttypes.gen_exp();
+        this.e.read(input);
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      default:
+        input.skip(ftype);
+    }
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+open_api_management_proc_push_manual_permit_result.prototype.write = function(output) {
+  output.writeStructBegin('open_api_management_proc_push_manual_permit_result');
+  if (this.success !== null && this.success !== undefined) {
+    output.writeFieldBegin('success', Thrift.Type.BOOL, 0);
+    output.writeBool(this.success);
+    output.writeFieldEnd();
+  }
+  if (this.e !== null && this.e !== undefined) {
+    output.writeFieldBegin('e', Thrift.Type.STRUCT, 1);
+    this.e.write(output);
+    output.writeFieldEnd();
+  }
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+
 var open_api_managementClient = exports.Client = function(output, pClass) {
   this.output = output;
   this.pClass = pClass;
@@ -2655,6 +2919,132 @@ open_api_managementClient.prototype.recv_proc_push_balance = function(input,mtyp
   }
   return callback('proc_push_balance failed: unknown result');
 };
+
+open_api_managementClient.prototype.proc_push_zone_change = function(_req, token, callback) {
+  this._seqid = this.new_seqid();
+  if (callback === undefined) {
+    var _defer = Q.defer();
+    this._reqs[this.seqid()] = function(error, result) {
+      if (error) {
+        _defer.reject(error);
+      } else {
+        _defer.resolve(result);
+      }
+    };
+    this.send_proc_push_zone_change(_req, token);
+    return _defer.promise;
+  } else {
+    this._reqs[this.seqid()] = callback;
+    this.send_proc_push_zone_change(_req, token);
+  }
+};
+
+open_api_managementClient.prototype.send_proc_push_zone_change = function(_req, token) {
+  var output = new this.pClass(this.output);
+  var params = {
+    _req: _req,
+    token: token
+  };
+  var args = new open_api_management_proc_push_zone_change_args(params);
+  try {
+    output.writeMessageBegin('proc_push_zone_change', Thrift.MessageType.CALL, this.seqid());
+    args.write(output);
+    output.writeMessageEnd();
+    return this.output.flush();
+  }
+  catch (e) {
+    delete this._reqs[this.seqid()];
+    if (typeof output.reset === 'function') {
+      output.reset();
+    }
+    throw e;
+  }
+};
+
+open_api_managementClient.prototype.recv_proc_push_zone_change = function(input,mtype,rseqid) {
+  var callback = this._reqs[rseqid] || function() {};
+  delete this._reqs[rseqid];
+  if (mtype == Thrift.MessageType.EXCEPTION) {
+    var x = new Thrift.TApplicationException();
+    x.read(input);
+    input.readMessageEnd();
+    return callback(x);
+  }
+  var result = new open_api_management_proc_push_zone_change_result();
+  result.read(input);
+  input.readMessageEnd();
+
+  if (null !== result.e) {
+    return callback(result.e);
+  }
+  if (null !== result.success) {
+    return callback(null, result.success);
+  }
+  return callback('proc_push_zone_change failed: unknown result');
+};
+
+open_api_managementClient.prototype.proc_push_manual_permit = function(_req, token, callback) {
+  this._seqid = this.new_seqid();
+  if (callback === undefined) {
+    var _defer = Q.defer();
+    this._reqs[this.seqid()] = function(error, result) {
+      if (error) {
+        _defer.reject(error);
+      } else {
+        _defer.resolve(result);
+      }
+    };
+    this.send_proc_push_manual_permit(_req, token);
+    return _defer.promise;
+  } else {
+    this._reqs[this.seqid()] = callback;
+    this.send_proc_push_manual_permit(_req, token);
+  }
+};
+
+open_api_managementClient.prototype.send_proc_push_manual_permit = function(_req, token) {
+  var output = new this.pClass(this.output);
+  var params = {
+    _req: _req,
+    token: token
+  };
+  var args = new open_api_management_proc_push_manual_permit_args(params);
+  try {
+    output.writeMessageBegin('proc_push_manual_permit', Thrift.MessageType.CALL, this.seqid());
+    args.write(output);
+    output.writeMessageEnd();
+    return this.output.flush();
+  }
+  catch (e) {
+    delete this._reqs[this.seqid()];
+    if (typeof output.reset === 'function') {
+      output.reset();
+    }
+    throw e;
+  }
+};
+
+open_api_managementClient.prototype.recv_proc_push_manual_permit = function(input,mtype,rseqid) {
+  var callback = this._reqs[rseqid] || function() {};
+  delete this._reqs[rseqid];
+  if (mtype == Thrift.MessageType.EXCEPTION) {
+    var x = new Thrift.TApplicationException();
+    x.read(input);
+    input.readMessageEnd();
+    return callback(x);
+  }
+  var result = new open_api_management_proc_push_manual_permit_result();
+  result.read(input);
+  input.readMessageEnd();
+
+  if (null !== result.e) {
+    return callback(result.e);
+  }
+  if (null !== result.success) {
+    return callback(null, result.success);
+  }
+  return callback('proc_push_manual_permit failed: unknown result');
+};
 var open_api_managementProcessor = exports.Processor = function(handler) {
   this._handler = handler;
 };
@@ -3229,6 +3619,92 @@ open_api_managementProcessor.prototype.process_proc_push_balance = function(seqi
       } else {
         result_obj = new Thrift.TApplicationException(Thrift.TApplicationExceptionType.UNKNOWN, err.message);
         output.writeMessageBegin("proc_push_balance", Thrift.MessageType.EXCEPTION, seqid);
+      }
+      result_obj.write(output);
+      output.writeMessageEnd();
+      output.flush();
+    });
+  }
+};
+open_api_managementProcessor.prototype.process_proc_push_zone_change = function(seqid, input, output) {
+  var args = new open_api_management_proc_push_zone_change_args();
+  args.read(input);
+  input.readMessageEnd();
+  if (this._handler.proc_push_zone_change.length === 2) {
+    Q.fcall(this._handler.proc_push_zone_change.bind(this._handler),
+      args._req,
+      args.token
+    ).then(function(result) {
+      var result_obj = new open_api_management_proc_push_zone_change_result({success: result});
+      output.writeMessageBegin("proc_push_zone_change", Thrift.MessageType.REPLY, seqid);
+      result_obj.write(output);
+      output.writeMessageEnd();
+      output.flush();
+    }).catch(function (err) {
+      var result;
+      if (err instanceof ttypes.gen_exp) {
+        result = new open_api_management_proc_push_zone_change_result(err);
+        output.writeMessageBegin("proc_push_zone_change", Thrift.MessageType.REPLY, seqid);
+      } else {
+        result = new Thrift.TApplicationException(Thrift.TApplicationExceptionType.UNKNOWN, err.message);
+        output.writeMessageBegin("proc_push_zone_change", Thrift.MessageType.EXCEPTION, seqid);
+      }
+      result.write(output);
+      output.writeMessageEnd();
+      output.flush();
+    });
+  } else {
+    this._handler.proc_push_zone_change(args._req, args.token, function (err, result) {
+      var result_obj;
+      if ((err === null || typeof err === 'undefined') || err instanceof ttypes.gen_exp) {
+        result_obj = new open_api_management_proc_push_zone_change_result((err !== null || typeof err === 'undefined') ? err : {success: result});
+        output.writeMessageBegin("proc_push_zone_change", Thrift.MessageType.REPLY, seqid);
+      } else {
+        result_obj = new Thrift.TApplicationException(Thrift.TApplicationExceptionType.UNKNOWN, err.message);
+        output.writeMessageBegin("proc_push_zone_change", Thrift.MessageType.EXCEPTION, seqid);
+      }
+      result_obj.write(output);
+      output.writeMessageEnd();
+      output.flush();
+    });
+  }
+};
+open_api_managementProcessor.prototype.process_proc_push_manual_permit = function(seqid, input, output) {
+  var args = new open_api_management_proc_push_manual_permit_args();
+  args.read(input);
+  input.readMessageEnd();
+  if (this._handler.proc_push_manual_permit.length === 2) {
+    Q.fcall(this._handler.proc_push_manual_permit.bind(this._handler),
+      args._req,
+      args.token
+    ).then(function(result) {
+      var result_obj = new open_api_management_proc_push_manual_permit_result({success: result});
+      output.writeMessageBegin("proc_push_manual_permit", Thrift.MessageType.REPLY, seqid);
+      result_obj.write(output);
+      output.writeMessageEnd();
+      output.flush();
+    }).catch(function (err) {
+      var result;
+      if (err instanceof ttypes.gen_exp) {
+        result = new open_api_management_proc_push_manual_permit_result(err);
+        output.writeMessageBegin("proc_push_manual_permit", Thrift.MessageType.REPLY, seqid);
+      } else {
+        result = new Thrift.TApplicationException(Thrift.TApplicationExceptionType.UNKNOWN, err.message);
+        output.writeMessageBegin("proc_push_manual_permit", Thrift.MessageType.EXCEPTION, seqid);
+      }
+      result.write(output);
+      output.writeMessageEnd();
+      output.flush();
+    });
+  } else {
+    this._handler.proc_push_manual_permit(args._req, args.token, function (err, result) {
+      var result_obj;
+      if ((err === null || typeof err === 'undefined') || err instanceof ttypes.gen_exp) {
+        result_obj = new open_api_management_proc_push_manual_permit_result((err !== null || typeof err === 'undefined') ? err : {success: result});
+        output.writeMessageBegin("proc_push_manual_permit", Thrift.MessageType.REPLY, seqid);
+      } else {
+        result_obj = new Thrift.TApplicationException(Thrift.TApplicationExceptionType.UNKNOWN, err.message);
+        output.writeMessageBegin("proc_push_manual_permit", Thrift.MessageType.EXCEPTION, seqid);
       }
       result_obj.write(output);
       output.writeMessageEnd();

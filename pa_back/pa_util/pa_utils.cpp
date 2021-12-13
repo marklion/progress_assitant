@@ -624,7 +624,7 @@ bool PA_DATAOPT_vichele_ready_to_post(pa_sql_vichele_stay_alone &_vichele, bool 
     return ret;
 }
 
-void PA_DATAOPT_post_save_register(std::list<pa_sql_vichele_stay_alone> &_vicheles)
+void PA_DATAOPT_post_save_register(std::list<pa_sql_vichele_stay_alone> &_vicheles, bool _make_dy)
 {
     std::string ctrl_url = "";
     std::string key;
@@ -643,7 +643,14 @@ void PA_DATAOPT_post_save_register(std::list<pa_sql_vichele_stay_alone> &_vichel
 
     key = company->third_key;
     token = company->third_token;
-    ctrl_url += company->third_url + "/thirdParty/zyzl/saveRegister";
+    if (_make_dy)
+    {
+        ctrl_url += company->third_url + "/thirdParty/zyzl/makeDyRegister";
+    }
+    else
+    {
+        ctrl_url += company->third_url + "/thirdParty/zyzl/saveRegister";
+    }
     if (key.length() > 0)
     {
         neb::CJsonObject req;
