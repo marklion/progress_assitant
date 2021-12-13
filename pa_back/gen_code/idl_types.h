@@ -91,6 +91,10 @@ class push_base_req;
 
 class push_balance_req;
 
+class push_zone_change_req;
+
+class push_manual_permit_req;
+
 class vichele_stay_alone;
 
 class silent_user_info;
@@ -1794,7 +1798,7 @@ void swap(company_plan_brief &a, company_plan_brief &b);
 std::ostream& operator<<(std::ostream& out, const company_plan_brief& obj);
 
 typedef struct _today_driver_info__isset {
-  _today_driver_info__isset() : id(false), destination_company(false), destination_address(false), order_company(false), main_vichele(false), behind_vichele(false), stuff_name(false), register_timestamp(false), register_number(false), enter_location(false), is_registered(false), register_order(false), is_buy(false), company_for_select(false), need_tmd(false), tmd_no(false), date(false), can_enter(false), attach_url(false), count(false) {}
+  _today_driver_info__isset() : id(false), destination_company(false), destination_address(false), order_company(false), main_vichele(false), behind_vichele(false), stuff_name(false), register_timestamp(false), register_number(false), enter_location(false), is_registered(false), register_order(false), is_buy(false), company_for_select(false), need_tmd(false), tmd_no(false), date(false), can_enter(false), attach_url(false), count(false), upload_permit(false) {}
   bool id :1;
   bool destination_company :1;
   bool destination_address :1;
@@ -1815,6 +1819,7 @@ typedef struct _today_driver_info__isset {
   bool can_enter :1;
   bool attach_url :1;
   bool count :1;
+  bool upload_permit :1;
 } _today_driver_info__isset;
 
 class today_driver_info : public virtual ::apache::thrift::TBase {
@@ -1822,7 +1827,7 @@ class today_driver_info : public virtual ::apache::thrift::TBase {
 
   today_driver_info(const today_driver_info&);
   today_driver_info& operator=(const today_driver_info&);
-  today_driver_info() : id(0), destination_company(), destination_address(), order_company(), main_vichele(), behind_vichele(), stuff_name(), register_timestamp(), register_number(), enter_location(), is_registered(0), register_order(), is_buy(0), need_tmd(0), tmd_no(), date(), can_enter(0), attach_url(), count(0) {
+  today_driver_info() : id(0), destination_company(), destination_address(), order_company(), main_vichele(), behind_vichele(), stuff_name(), register_timestamp(), register_number(), enter_location(), is_registered(0), register_order(), is_buy(0), need_tmd(0), tmd_no(), date(), can_enter(0), attach_url(), count(0), upload_permit(0) {
   }
 
   virtual ~today_driver_info() noexcept;
@@ -1846,6 +1851,7 @@ class today_driver_info : public virtual ::apache::thrift::TBase {
   bool can_enter;
   std::string attach_url;
   double count;
+  bool upload_permit;
 
   _today_driver_info__isset __isset;
 
@@ -1889,6 +1895,8 @@ class today_driver_info : public virtual ::apache::thrift::TBase {
 
   void __set_count(const double val);
 
+  void __set_upload_permit(const bool val);
+
   bool operator == (const today_driver_info & rhs) const
   {
     if (!(id == rhs.id))
@@ -1930,6 +1938,8 @@ class today_driver_info : public virtual ::apache::thrift::TBase {
     if (!(attach_url == rhs.attach_url))
       return false;
     if (!(count == rhs.count))
+      return false;
+    if (!(upload_permit == rhs.upload_permit))
       return false;
     return true;
   }
@@ -2651,8 +2661,116 @@ void swap(push_balance_req &a, push_balance_req &b);
 
 std::ostream& operator<<(std::ostream& out, const push_balance_req& obj);
 
+typedef struct _push_zone_change_req__isset {
+  _push_zone_change_req__isset() : plateNo(false), eventType(false), eventInfo(false), eventCreateTime(false) {}
+  bool plateNo :1;
+  bool eventType :1;
+  bool eventInfo :1;
+  bool eventCreateTime :1;
+} _push_zone_change_req__isset;
+
+class push_zone_change_req : public virtual ::apache::thrift::TBase {
+ public:
+
+  push_zone_change_req(const push_zone_change_req&);
+  push_zone_change_req& operator=(const push_zone_change_req&);
+  push_zone_change_req() : plateNo(), eventType(0), eventInfo(), eventCreateTime() {
+  }
+
+  virtual ~push_zone_change_req() noexcept;
+  std::string plateNo;
+  int64_t eventType;
+  std::string eventInfo;
+  std::string eventCreateTime;
+
+  _push_zone_change_req__isset __isset;
+
+  void __set_plateNo(const std::string& val);
+
+  void __set_eventType(const int64_t val);
+
+  void __set_eventInfo(const std::string& val);
+
+  void __set_eventCreateTime(const std::string& val);
+
+  bool operator == (const push_zone_change_req & rhs) const
+  {
+    if (!(plateNo == rhs.plateNo))
+      return false;
+    if (!(eventType == rhs.eventType))
+      return false;
+    if (!(eventInfo == rhs.eventInfo))
+      return false;
+    if (!(eventCreateTime == rhs.eventCreateTime))
+      return false;
+    return true;
+  }
+  bool operator != (const push_zone_change_req &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const push_zone_change_req & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+  virtual void printTo(std::ostream& out) const;
+};
+
+void swap(push_zone_change_req &a, push_zone_change_req &b);
+
+std::ostream& operator<<(std::ostream& out, const push_zone_change_req& obj);
+
+typedef struct _push_manual_permit_req__isset {
+  _push_manual_permit_req__isset() : plateNo(false), driverId(false) {}
+  bool plateNo :1;
+  bool driverId :1;
+} _push_manual_permit_req__isset;
+
+class push_manual_permit_req : public virtual ::apache::thrift::TBase {
+ public:
+
+  push_manual_permit_req(const push_manual_permit_req&);
+  push_manual_permit_req& operator=(const push_manual_permit_req&);
+  push_manual_permit_req() : plateNo(), driverId() {
+  }
+
+  virtual ~push_manual_permit_req() noexcept;
+  std::string plateNo;
+  std::string driverId;
+
+  _push_manual_permit_req__isset __isset;
+
+  void __set_plateNo(const std::string& val);
+
+  void __set_driverId(const std::string& val);
+
+  bool operator == (const push_manual_permit_req & rhs) const
+  {
+    if (!(plateNo == rhs.plateNo))
+      return false;
+    if (!(driverId == rhs.driverId))
+      return false;
+    return true;
+  }
+  bool operator != (const push_manual_permit_req &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const push_manual_permit_req & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+  virtual void printTo(std::ostream& out) const;
+};
+
+void swap(push_manual_permit_req &a, push_manual_permit_req &b);
+
+std::ostream& operator<<(std::ostream& out, const push_manual_permit_req& obj);
+
 typedef struct _vichele_stay_alone__isset {
-  _vichele_stay_alone__isset() : id(false), stuff_name(false), company_name(false), main_vichele_number(false), behind_vichele_number(false), count(false), comment(false), date(false), destination(false), status(false), creator_name(false), creator_phone(false), repeated(false), driver_name(false), driver_phone(false), driver_id(false), transfor_company(false), p_time(false), m_time(false), p_weight(false), m_weight(false), j_weight(false), price(false), can_enter(false) {}
+  _vichele_stay_alone__isset() : id(false), stuff_name(false), company_name(false), main_vichele_number(false), behind_vichele_number(false), count(false), comment(false), date(false), destination(false), status(false), creator_name(false), creator_phone(false), repeated(false), driver_name(false), driver_phone(false), driver_id(false), transfor_company(false), p_time(false), m_time(false), p_weight(false), m_weight(false), j_weight(false), price(false), can_enter(false), upload_permit(false) {}
   bool id :1;
   bool stuff_name :1;
   bool company_name :1;
@@ -2677,6 +2795,7 @@ typedef struct _vichele_stay_alone__isset {
   bool j_weight :1;
   bool price :1;
   bool can_enter :1;
+  bool upload_permit :1;
 } _vichele_stay_alone__isset;
 
 class vichele_stay_alone : public virtual ::apache::thrift::TBase {
@@ -2684,7 +2803,7 @@ class vichele_stay_alone : public virtual ::apache::thrift::TBase {
 
   vichele_stay_alone(const vichele_stay_alone&);
   vichele_stay_alone& operator=(const vichele_stay_alone&);
-  vichele_stay_alone() : id(0), stuff_name(), company_name(), main_vichele_number(), behind_vichele_number(), count(0), comment(), date(), destination(), status(0), creator_name(), creator_phone(), repeated(0), driver_name(), driver_phone(), driver_id(), transfor_company(), p_time(), m_time(), p_weight(0), m_weight(0), j_weight(0), price(0), can_enter(0) {
+  vichele_stay_alone() : id(0), stuff_name(), company_name(), main_vichele_number(), behind_vichele_number(), count(0), comment(), date(), destination(), status(0), creator_name(), creator_phone(), repeated(0), driver_name(), driver_phone(), driver_id(), transfor_company(), p_time(), m_time(), p_weight(0), m_weight(0), j_weight(0), price(0), can_enter(0), upload_permit(0) {
   }
 
   virtual ~vichele_stay_alone() noexcept;
@@ -2712,6 +2831,7 @@ class vichele_stay_alone : public virtual ::apache::thrift::TBase {
   double j_weight;
   double price;
   bool can_enter;
+  bool upload_permit;
 
   _vichele_stay_alone__isset __isset;
 
@@ -2763,6 +2883,8 @@ class vichele_stay_alone : public virtual ::apache::thrift::TBase {
 
   void __set_can_enter(const bool val);
 
+  void __set_upload_permit(const bool val);
+
   bool operator == (const vichele_stay_alone & rhs) const
   {
     if (!(id == rhs.id))
@@ -2812,6 +2934,8 @@ class vichele_stay_alone : public virtual ::apache::thrift::TBase {
     if (!(price == rhs.price))
       return false;
     if (!(can_enter == rhs.can_enter))
+      return false;
+    if (!(upload_permit == rhs.upload_permit))
       return false;
     return true;
   }

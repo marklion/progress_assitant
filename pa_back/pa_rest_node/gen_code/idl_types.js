@@ -2928,6 +2928,7 @@ var today_driver_info = module.exports.today_driver_info = function(args) {
   this.can_enter = null;
   this.attach_url = null;
   this.count = null;
+  this.upload_permit = null;
   if (args) {
     if (args.id !== undefined && args.id !== null) {
       this.id = args.id;
@@ -2988,6 +2989,9 @@ var today_driver_info = module.exports.today_driver_info = function(args) {
     }
     if (args.count !== undefined && args.count !== null) {
       this.count = args.count;
+    }
+    if (args.upload_permit !== undefined && args.upload_permit !== null) {
+      this.upload_permit = args.upload_permit;
     }
   }
 };
@@ -3150,6 +3154,13 @@ today_driver_info.prototype.read = function(input) {
         input.skip(ftype);
       }
       break;
+      case 21:
+      if (ftype == Thrift.Type.BOOL) {
+        this.upload_permit = input.readBool();
+      } else {
+        input.skip(ftype);
+      }
+      break;
       default:
         input.skip(ftype);
     }
@@ -3266,6 +3277,11 @@ today_driver_info.prototype.write = function(output) {
   if (this.count !== null && this.count !== undefined) {
     output.writeFieldBegin('count', Thrift.Type.DOUBLE, 20);
     output.writeDouble(this.count);
+    output.writeFieldEnd();
+  }
+  if (this.upload_permit !== null && this.upload_permit !== undefined) {
+    output.writeFieldBegin('upload_permit', Thrift.Type.BOOL, 21);
+    output.writeBool(this.upload_permit);
     output.writeFieldEnd();
   }
   output.writeFieldStop();
@@ -4577,6 +4593,164 @@ push_balance_req.prototype.write = function(output) {
   return;
 };
 
+var push_zone_change_req = module.exports.push_zone_change_req = function(args) {
+  this.plateNo = null;
+  this.eventType = null;
+  this.eventInfo = null;
+  this.eventCreateTime = null;
+  if (args) {
+    if (args.plateNo !== undefined && args.plateNo !== null) {
+      this.plateNo = args.plateNo;
+    }
+    if (args.eventType !== undefined && args.eventType !== null) {
+      this.eventType = args.eventType;
+    }
+    if (args.eventInfo !== undefined && args.eventInfo !== null) {
+      this.eventInfo = args.eventInfo;
+    }
+    if (args.eventCreateTime !== undefined && args.eventCreateTime !== null) {
+      this.eventCreateTime = args.eventCreateTime;
+    }
+  }
+};
+push_zone_change_req.prototype = {};
+push_zone_change_req.prototype.read = function(input) {
+  input.readStructBegin();
+  while (true) {
+    var ret = input.readFieldBegin();
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    switch (fid) {
+      case 1:
+      if (ftype == Thrift.Type.STRING) {
+        this.plateNo = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 2:
+      if (ftype == Thrift.Type.I64) {
+        this.eventType = input.readI64();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 3:
+      if (ftype == Thrift.Type.STRING) {
+        this.eventInfo = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 4:
+      if (ftype == Thrift.Type.STRING) {
+        this.eventCreateTime = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      default:
+        input.skip(ftype);
+    }
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+push_zone_change_req.prototype.write = function(output) {
+  output.writeStructBegin('push_zone_change_req');
+  if (this.plateNo !== null && this.plateNo !== undefined) {
+    output.writeFieldBegin('plateNo', Thrift.Type.STRING, 1);
+    output.writeString(this.plateNo);
+    output.writeFieldEnd();
+  }
+  if (this.eventType !== null && this.eventType !== undefined) {
+    output.writeFieldBegin('eventType', Thrift.Type.I64, 2);
+    output.writeI64(this.eventType);
+    output.writeFieldEnd();
+  }
+  if (this.eventInfo !== null && this.eventInfo !== undefined) {
+    output.writeFieldBegin('eventInfo', Thrift.Type.STRING, 3);
+    output.writeString(this.eventInfo);
+    output.writeFieldEnd();
+  }
+  if (this.eventCreateTime !== null && this.eventCreateTime !== undefined) {
+    output.writeFieldBegin('eventCreateTime', Thrift.Type.STRING, 4);
+    output.writeString(this.eventCreateTime);
+    output.writeFieldEnd();
+  }
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+
+var push_manual_permit_req = module.exports.push_manual_permit_req = function(args) {
+  this.plateNo = null;
+  this.driverId = null;
+  if (args) {
+    if (args.plateNo !== undefined && args.plateNo !== null) {
+      this.plateNo = args.plateNo;
+    }
+    if (args.driverId !== undefined && args.driverId !== null) {
+      this.driverId = args.driverId;
+    }
+  }
+};
+push_manual_permit_req.prototype = {};
+push_manual_permit_req.prototype.read = function(input) {
+  input.readStructBegin();
+  while (true) {
+    var ret = input.readFieldBegin();
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    switch (fid) {
+      case 1:
+      if (ftype == Thrift.Type.STRING) {
+        this.plateNo = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 2:
+      if (ftype == Thrift.Type.STRING) {
+        this.driverId = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      default:
+        input.skip(ftype);
+    }
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+push_manual_permit_req.prototype.write = function(output) {
+  output.writeStructBegin('push_manual_permit_req');
+  if (this.plateNo !== null && this.plateNo !== undefined) {
+    output.writeFieldBegin('plateNo', Thrift.Type.STRING, 1);
+    output.writeString(this.plateNo);
+    output.writeFieldEnd();
+  }
+  if (this.driverId !== null && this.driverId !== undefined) {
+    output.writeFieldBegin('driverId', Thrift.Type.STRING, 2);
+    output.writeString(this.driverId);
+    output.writeFieldEnd();
+  }
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+
 var vichele_stay_alone = module.exports.vichele_stay_alone = function(args) {
   this.id = null;
   this.stuff_name = null;
@@ -4602,6 +4776,7 @@ var vichele_stay_alone = module.exports.vichele_stay_alone = function(args) {
   this.j_weight = null;
   this.price = null;
   this.can_enter = null;
+  this.upload_permit = null;
   if (args) {
     if (args.id !== undefined && args.id !== null) {
       this.id = args.id;
@@ -4674,6 +4849,9 @@ var vichele_stay_alone = module.exports.vichele_stay_alone = function(args) {
     }
     if (args.can_enter !== undefined && args.can_enter !== null) {
       this.can_enter = args.can_enter;
+    }
+    if (args.upload_permit !== undefined && args.upload_permit !== null) {
+      this.upload_permit = args.upload_permit;
     }
   }
 };
@@ -4856,6 +5034,13 @@ vichele_stay_alone.prototype.read = function(input) {
         input.skip(ftype);
       }
       break;
+      case 25:
+      if (ftype == Thrift.Type.BOOL) {
+        this.upload_permit = input.readBool();
+      } else {
+        input.skip(ftype);
+      }
+      break;
       default:
         input.skip(ftype);
     }
@@ -4985,6 +5170,11 @@ vichele_stay_alone.prototype.write = function(output) {
   if (this.can_enter !== null && this.can_enter !== undefined) {
     output.writeFieldBegin('can_enter', Thrift.Type.BOOL, 24);
     output.writeBool(this.can_enter);
+    output.writeFieldEnd();
+  }
+  if (this.upload_permit !== null && this.upload_permit !== undefined) {
+    output.writeFieldBegin('upload_permit', Thrift.Type.BOOL, 25);
+    output.writeBool(this.upload_permit);
     output.writeFieldEnd();
   }
   output.writeFieldStop();

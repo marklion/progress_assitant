@@ -19,6 +19,7 @@
 #define OPEN_API_MSG_NO_PERMISSION "no permission to do this operation"
 #define OPEN_API_MSG_NO_DATA_FOUND "no data was found"
 #define OPEN_API_MSG_NO_CONTRACT "no contract was found, please add a contract first"
+#define OPEN_API_MSG_NOT_SUPPORTED_GPS "gps was not supported by stuff in vehicle"
 
 class open_api_management_handler : public open_api_managementIf
 {
@@ -504,6 +505,10 @@ public:
                 {
                     new_one.no_permission = 1;
                 }
+                if (company->get_children<pa_sql_gps_stuff>("belong_company", "stuff_name == '%s'", new_one.stuff_name.c_str()))
+                {
+                    new_one.upload_no_permit = 1;
+                }
                 new_one.attach_path = "";
                 new_one.date = PA_DATAOPT_current_time().substr(0, 10);
                 new_one.insert_record();
@@ -708,6 +713,75 @@ public:
         {
             PA_RETURN_MSG(OPEN_API_MSG_NO_DATA_FOUND);
         }
+
+        return ret;
+    }
+
+    virtual bool proc_push_zone_change(const push_zone_change_req &_req, const std::string &token)
+    {
+        bool ret = false;
+        log_audit_basedon_token(token, __FUNCTION__);
+        auto company = _get_token_company(token);
+        if (!company)
+        {
+            PA_RETURN_MSG(OPEN_API_MSG_NO_PERMISSION);
+        }
+        auto extra_vichele = company->get_children<pa_sql_vichele_stay_alone>("destination", "status == 1 AND is_drop == 0 AND main_vichele_number == '%s'", _req.plateNo.c_str());
+        if (!extra_vichele)
+        {
+            PA_RETURN_MSG(OPEN_API_MSG_VICHELE_NOT_EXIST);
+        }
+        if (!company->get_children<pa_sql_gps_stuff>("belong_company","stuff_name == '%s'", extra_vichele->stuff_name.c_str()))
+        {
+            PA_RETURN_MSG(OPEN_API_MSG_NOT_SUPPORTED_GPS);
+        }
+        auto driver = sqlite_orm::search_record<pa_sql_driver>("phone == '%s' AND silent_id IS NOT NULL", extra_vichele->driver_phone.c_str());
+        switch (_req.eventType)
+        {
+        case 1:
+            extra_vichele->upload_no_permit = 0;
+            break;
+        case 3:
+            extra_vichele->upload_no_permit = 1;
+            if (extra_vichele->no_permission && driver)
+            {
+                PA_WECHAT_send_extra_vichele_msg(*extra_vichele, driver->silent_id, "请及时填写出厂（矿）净重");
+            }
+            break;
+        case 4:
+            if (extra_vichele->no_permission && driver)
+            {
+                PA_WECHAT_send_extra_vichele_msg(*extra_vichele, driver->silent_id, "请及时填写出厂（矿）净重");
+            }
+            break;
+        default:
+            break;
+        }
+        ret = extra_vichele->update_record();
+        return ret;
+    }
+
+    virtual bool proc_push_manual_permit(const push_manual_permit_req &_req, const std::string &token)
+    {
+        bool ret = false;
+        log_audit_basedon_token(token, __FUNCTION__);
+        auto company = _get_token_company(token);
+        if (!company)
+        {
+            PA_RETURN_MSG(OPEN_API_MSG_NO_PERMISSION);
+        }
+        auto extra_vichele = company->get_children<pa_sql_vichele_stay_alone>("destination", "status == 1 AND is_drop == 0 AND (main_vichele_number == '%s' OR driver_id == '%s')", _req.plateNo.c_str(), _req.driverId.c_str());
+        if (!extra_vichele)
+        {
+            PA_RETURN_MSG(OPEN_API_MSG_VICHELE_NOT_EXIST);
+        }
+        if (!company->get_children<pa_sql_gps_stuff>("belong_company","stuff_name == '%s'", extra_vichele->stuff_name.c_str()))
+        {
+            PA_RETURN_MSG(OPEN_API_MSG_NOT_SUPPORTED_GPS);
+        }
+
+        extra_vichele->upload_no_permit = 0;
+        ret = extra_vichele->update_record();
 
         return ret;
     }

@@ -59,6 +59,9 @@ class company_managementIf {
   virtual void get_third_info(third_dev_info& _return, const std::string& ssid) = 0;
   virtual void get_related_company(std::vector<std::string> & _return, const std::string& ssid) = 0;
   virtual bool set_user_group(const std::string& ssid, const int64_t user_id, const int64_t groupid) = 0;
+  virtual bool add_gps_stuff(const std::string& ssid, const std::string& stuff_name) = 0;
+  virtual bool del_gps_stuff(const std::string& ssid, const std::string& stuff_name) = 0;
+  virtual void get_gps_stuff(std::vector<std::string> & _return, const std::string& ssid) = 0;
 };
 
 class company_managementIfFactory {
@@ -212,6 +215,17 @@ class company_managementNull : virtual public company_managementIf {
   bool set_user_group(const std::string& /* ssid */, const int64_t /* user_id */, const int64_t /* groupid */) {
     bool _return = false;
     return _return;
+  }
+  bool add_gps_stuff(const std::string& /* ssid */, const std::string& /* stuff_name */) {
+    bool _return = false;
+    return _return;
+  }
+  bool del_gps_stuff(const std::string& /* ssid */, const std::string& /* stuff_name */) {
+    bool _return = false;
+    return _return;
+  }
+  void get_gps_stuff(std::vector<std::string> & /* _return */, const std::string& /* ssid */) {
+    return;
   }
 };
 
@@ -4509,6 +4523,356 @@ class company_management_set_user_group_presult {
 
 };
 
+typedef struct _company_management_add_gps_stuff_args__isset {
+  _company_management_add_gps_stuff_args__isset() : ssid(false), stuff_name(false) {}
+  bool ssid :1;
+  bool stuff_name :1;
+} _company_management_add_gps_stuff_args__isset;
+
+class company_management_add_gps_stuff_args {
+ public:
+
+  company_management_add_gps_stuff_args(const company_management_add_gps_stuff_args&);
+  company_management_add_gps_stuff_args& operator=(const company_management_add_gps_stuff_args&);
+  company_management_add_gps_stuff_args() : ssid(), stuff_name() {
+  }
+
+  virtual ~company_management_add_gps_stuff_args() noexcept;
+  std::string ssid;
+  std::string stuff_name;
+
+  _company_management_add_gps_stuff_args__isset __isset;
+
+  void __set_ssid(const std::string& val);
+
+  void __set_stuff_name(const std::string& val);
+
+  bool operator == (const company_management_add_gps_stuff_args & rhs) const
+  {
+    if (!(ssid == rhs.ssid))
+      return false;
+    if (!(stuff_name == rhs.stuff_name))
+      return false;
+    return true;
+  }
+  bool operator != (const company_management_add_gps_stuff_args &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const company_management_add_gps_stuff_args & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+
+class company_management_add_gps_stuff_pargs {
+ public:
+
+
+  virtual ~company_management_add_gps_stuff_pargs() noexcept;
+  const std::string* ssid;
+  const std::string* stuff_name;
+
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _company_management_add_gps_stuff_result__isset {
+  _company_management_add_gps_stuff_result__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _company_management_add_gps_stuff_result__isset;
+
+class company_management_add_gps_stuff_result {
+ public:
+
+  company_management_add_gps_stuff_result(const company_management_add_gps_stuff_result&);
+  company_management_add_gps_stuff_result& operator=(const company_management_add_gps_stuff_result&);
+  company_management_add_gps_stuff_result() : success(0) {
+  }
+
+  virtual ~company_management_add_gps_stuff_result() noexcept;
+  bool success;
+  gen_exp e;
+
+  _company_management_add_gps_stuff_result__isset __isset;
+
+  void __set_success(const bool val);
+
+  void __set_e(const gen_exp& val);
+
+  bool operator == (const company_management_add_gps_stuff_result & rhs) const
+  {
+    if (!(success == rhs.success))
+      return false;
+    if (!(e == rhs.e))
+      return false;
+    return true;
+  }
+  bool operator != (const company_management_add_gps_stuff_result &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const company_management_add_gps_stuff_result & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _company_management_add_gps_stuff_presult__isset {
+  _company_management_add_gps_stuff_presult__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _company_management_add_gps_stuff_presult__isset;
+
+class company_management_add_gps_stuff_presult {
+ public:
+
+
+  virtual ~company_management_add_gps_stuff_presult() noexcept;
+  bool* success;
+  gen_exp e;
+
+  _company_management_add_gps_stuff_presult__isset __isset;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+
+};
+
+typedef struct _company_management_del_gps_stuff_args__isset {
+  _company_management_del_gps_stuff_args__isset() : ssid(false), stuff_name(false) {}
+  bool ssid :1;
+  bool stuff_name :1;
+} _company_management_del_gps_stuff_args__isset;
+
+class company_management_del_gps_stuff_args {
+ public:
+
+  company_management_del_gps_stuff_args(const company_management_del_gps_stuff_args&);
+  company_management_del_gps_stuff_args& operator=(const company_management_del_gps_stuff_args&);
+  company_management_del_gps_stuff_args() : ssid(), stuff_name() {
+  }
+
+  virtual ~company_management_del_gps_stuff_args() noexcept;
+  std::string ssid;
+  std::string stuff_name;
+
+  _company_management_del_gps_stuff_args__isset __isset;
+
+  void __set_ssid(const std::string& val);
+
+  void __set_stuff_name(const std::string& val);
+
+  bool operator == (const company_management_del_gps_stuff_args & rhs) const
+  {
+    if (!(ssid == rhs.ssid))
+      return false;
+    if (!(stuff_name == rhs.stuff_name))
+      return false;
+    return true;
+  }
+  bool operator != (const company_management_del_gps_stuff_args &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const company_management_del_gps_stuff_args & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+
+class company_management_del_gps_stuff_pargs {
+ public:
+
+
+  virtual ~company_management_del_gps_stuff_pargs() noexcept;
+  const std::string* ssid;
+  const std::string* stuff_name;
+
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _company_management_del_gps_stuff_result__isset {
+  _company_management_del_gps_stuff_result__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _company_management_del_gps_stuff_result__isset;
+
+class company_management_del_gps_stuff_result {
+ public:
+
+  company_management_del_gps_stuff_result(const company_management_del_gps_stuff_result&);
+  company_management_del_gps_stuff_result& operator=(const company_management_del_gps_stuff_result&);
+  company_management_del_gps_stuff_result() : success(0) {
+  }
+
+  virtual ~company_management_del_gps_stuff_result() noexcept;
+  bool success;
+  gen_exp e;
+
+  _company_management_del_gps_stuff_result__isset __isset;
+
+  void __set_success(const bool val);
+
+  void __set_e(const gen_exp& val);
+
+  bool operator == (const company_management_del_gps_stuff_result & rhs) const
+  {
+    if (!(success == rhs.success))
+      return false;
+    if (!(e == rhs.e))
+      return false;
+    return true;
+  }
+  bool operator != (const company_management_del_gps_stuff_result &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const company_management_del_gps_stuff_result & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _company_management_del_gps_stuff_presult__isset {
+  _company_management_del_gps_stuff_presult__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _company_management_del_gps_stuff_presult__isset;
+
+class company_management_del_gps_stuff_presult {
+ public:
+
+
+  virtual ~company_management_del_gps_stuff_presult() noexcept;
+  bool* success;
+  gen_exp e;
+
+  _company_management_del_gps_stuff_presult__isset __isset;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+
+};
+
+typedef struct _company_management_get_gps_stuff_args__isset {
+  _company_management_get_gps_stuff_args__isset() : ssid(false) {}
+  bool ssid :1;
+} _company_management_get_gps_stuff_args__isset;
+
+class company_management_get_gps_stuff_args {
+ public:
+
+  company_management_get_gps_stuff_args(const company_management_get_gps_stuff_args&);
+  company_management_get_gps_stuff_args& operator=(const company_management_get_gps_stuff_args&);
+  company_management_get_gps_stuff_args() : ssid() {
+  }
+
+  virtual ~company_management_get_gps_stuff_args() noexcept;
+  std::string ssid;
+
+  _company_management_get_gps_stuff_args__isset __isset;
+
+  void __set_ssid(const std::string& val);
+
+  bool operator == (const company_management_get_gps_stuff_args & rhs) const
+  {
+    if (!(ssid == rhs.ssid))
+      return false;
+    return true;
+  }
+  bool operator != (const company_management_get_gps_stuff_args &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const company_management_get_gps_stuff_args & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+
+class company_management_get_gps_stuff_pargs {
+ public:
+
+
+  virtual ~company_management_get_gps_stuff_pargs() noexcept;
+  const std::string* ssid;
+
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _company_management_get_gps_stuff_result__isset {
+  _company_management_get_gps_stuff_result__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _company_management_get_gps_stuff_result__isset;
+
+class company_management_get_gps_stuff_result {
+ public:
+
+  company_management_get_gps_stuff_result(const company_management_get_gps_stuff_result&);
+  company_management_get_gps_stuff_result& operator=(const company_management_get_gps_stuff_result&);
+  company_management_get_gps_stuff_result() {
+  }
+
+  virtual ~company_management_get_gps_stuff_result() noexcept;
+  std::vector<std::string>  success;
+  gen_exp e;
+
+  _company_management_get_gps_stuff_result__isset __isset;
+
+  void __set_success(const std::vector<std::string> & val);
+
+  void __set_e(const gen_exp& val);
+
+  bool operator == (const company_management_get_gps_stuff_result & rhs) const
+  {
+    if (!(success == rhs.success))
+      return false;
+    if (!(e == rhs.e))
+      return false;
+    return true;
+  }
+  bool operator != (const company_management_get_gps_stuff_result &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const company_management_get_gps_stuff_result & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _company_management_get_gps_stuff_presult__isset {
+  _company_management_get_gps_stuff_presult__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _company_management_get_gps_stuff_presult__isset;
+
+class company_management_get_gps_stuff_presult {
+ public:
+
+
+  virtual ~company_management_get_gps_stuff_presult() noexcept;
+  std::vector<std::string> * success;
+  gen_exp e;
+
+  _company_management_get_gps_stuff_presult__isset __isset;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+
+};
+
 class company_managementClient : virtual public company_managementIf {
  public:
   company_managementClient(std::shared_ptr< ::apache::thrift::protocol::TProtocol> prot) {
@@ -4645,6 +5009,15 @@ class company_managementClient : virtual public company_managementIf {
   bool set_user_group(const std::string& ssid, const int64_t user_id, const int64_t groupid);
   void send_set_user_group(const std::string& ssid, const int64_t user_id, const int64_t groupid);
   bool recv_set_user_group();
+  bool add_gps_stuff(const std::string& ssid, const std::string& stuff_name);
+  void send_add_gps_stuff(const std::string& ssid, const std::string& stuff_name);
+  bool recv_add_gps_stuff();
+  bool del_gps_stuff(const std::string& ssid, const std::string& stuff_name);
+  void send_del_gps_stuff(const std::string& ssid, const std::string& stuff_name);
+  bool recv_del_gps_stuff();
+  void get_gps_stuff(std::vector<std::string> & _return, const std::string& ssid);
+  void send_get_gps_stuff(const std::string& ssid);
+  void recv_get_gps_stuff(std::vector<std::string> & _return);
  protected:
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> piprot_;
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> poprot_;
@@ -4697,6 +5070,9 @@ class company_managementProcessor : public ::apache::thrift::TDispatchProcessor 
   void process_get_third_info(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
   void process_get_related_company(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
   void process_set_user_group(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
+  void process_add_gps_stuff(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
+  void process_del_gps_stuff(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
+  void process_get_gps_stuff(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
  public:
   company_managementProcessor(::std::shared_ptr<company_managementIf> iface) :
     iface_(iface) {
@@ -4737,6 +5113,9 @@ class company_managementProcessor : public ::apache::thrift::TDispatchProcessor 
     processMap_["get_third_info"] = &company_managementProcessor::process_get_third_info;
     processMap_["get_related_company"] = &company_managementProcessor::process_get_related_company;
     processMap_["set_user_group"] = &company_managementProcessor::process_set_user_group;
+    processMap_["add_gps_stuff"] = &company_managementProcessor::process_add_gps_stuff;
+    processMap_["del_gps_stuff"] = &company_managementProcessor::process_del_gps_stuff;
+    processMap_["get_gps_stuff"] = &company_managementProcessor::process_get_gps_stuff;
   }
 
   virtual ~company_managementProcessor() {}
@@ -5117,6 +5496,34 @@ class company_managementMultiface : virtual public company_managementIf {
     return ifaces_[i]->set_user_group(ssid, user_id, groupid);
   }
 
+  bool add_gps_stuff(const std::string& ssid, const std::string& stuff_name) {
+    size_t sz = ifaces_.size();
+    size_t i = 0;
+    for (; i < (sz - 1); ++i) {
+      ifaces_[i]->add_gps_stuff(ssid, stuff_name);
+    }
+    return ifaces_[i]->add_gps_stuff(ssid, stuff_name);
+  }
+
+  bool del_gps_stuff(const std::string& ssid, const std::string& stuff_name) {
+    size_t sz = ifaces_.size();
+    size_t i = 0;
+    for (; i < (sz - 1); ++i) {
+      ifaces_[i]->del_gps_stuff(ssid, stuff_name);
+    }
+    return ifaces_[i]->del_gps_stuff(ssid, stuff_name);
+  }
+
+  void get_gps_stuff(std::vector<std::string> & _return, const std::string& ssid) {
+    size_t sz = ifaces_.size();
+    size_t i = 0;
+    for (; i < (sz - 1); ++i) {
+      ifaces_[i]->get_gps_stuff(_return, ssid);
+    }
+    ifaces_[i]->get_gps_stuff(_return, ssid);
+    return;
+  }
+
 };
 
 // The 'concurrent' client is a thread safe client that correctly handles
@@ -5260,6 +5667,15 @@ class company_managementConcurrentClient : virtual public company_managementIf {
   bool set_user_group(const std::string& ssid, const int64_t user_id, const int64_t groupid);
   int32_t send_set_user_group(const std::string& ssid, const int64_t user_id, const int64_t groupid);
   bool recv_set_user_group(const int32_t seqid);
+  bool add_gps_stuff(const std::string& ssid, const std::string& stuff_name);
+  int32_t send_add_gps_stuff(const std::string& ssid, const std::string& stuff_name);
+  bool recv_add_gps_stuff(const int32_t seqid);
+  bool del_gps_stuff(const std::string& ssid, const std::string& stuff_name);
+  int32_t send_del_gps_stuff(const std::string& ssid, const std::string& stuff_name);
+  bool recv_del_gps_stuff(const int32_t seqid);
+  void get_gps_stuff(std::vector<std::string> & _return, const std::string& ssid);
+  int32_t send_get_gps_stuff(const std::string& ssid);
+  void recv_get_gps_stuff(std::vector<std::string> & _return, const int32_t seqid);
  protected:
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> piprot_;
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> poprot_;

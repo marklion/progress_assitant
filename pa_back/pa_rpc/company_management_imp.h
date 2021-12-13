@@ -1012,5 +1012,56 @@ public:
         user->groupid = groupid;
         return user->update_record();
     }
+
+    virtual bool add_gps_stuff(const std::string &ssid, const std::string &stuff_name)
+    {
+        bool ret = false;
+
+        auto company = PA_DATAOPT_get_company_by_ssid(ssid);
+        if (!company)
+        {
+            PA_RETURN_NOPRIVA_MSG();
+        }
+        auto exist_record = company->get_children<pa_sql_gps_stuff>("belong_company", "stuff_name == '%s'", stuff_name.c_str());
+        if (exist_record)
+        {
+            PA_RETURN_MSG("已存在");
+        }
+        pa_sql_gps_stuff tmp;
+        tmp.stuff_name = stuff_name;
+        tmp.set_parent(*company, "belong_company");
+        ret = tmp.insert_record();
+
+        return ret;
+    }
+    virtual bool del_gps_stuff(const std::string &ssid, const std::string &stuff_name)
+    {
+        auto company = PA_DATAOPT_get_company_by_ssid(ssid);
+        if (!company)
+        {
+            PA_RETURN_NOPRIVA_MSG();
+        }
+        auto exist_record = company->get_children<pa_sql_gps_stuff>("belong_company", "stuff_name == '%s'", stuff_name.c_str());
+        if (!exist_record)
+        {
+            PA_RETURN_MSG("不存在");
+        }
+        exist_record->remove_record();
+
+        return true;
+    }
+    virtual void get_gps_stuff(std::vector<std::string> &_return, const std::string &ssid)
+    {
+        auto company = PA_DATAOPT_get_company_by_ssid(ssid);
+        if (!company)
+        {
+            PA_RETURN_NOPRIVA_MSG();
+        }
+        auto all_gps_stuff = company->get_all_children<pa_sql_gps_stuff>("belong_company");
+        for (auto &itr : all_gps_stuff)
+        {
+            _return.push_back(itr.stuff_name);
+        }
+    }
 };
 #endif // _COMPANY_MANAGEMENT_IMP_H_

@@ -37,11 +37,11 @@
                     <van-button v-if="!single_trans.order_company" type="info" size="small" @click="act_select_company = true;focus_vichele_index = index">指定拉货公司</van-button>
                     <div v-else>
                         <van-button v-if="single_trans.company_for_select.length > 0 && single_trans.is_buy" type="warning" size="small" @click="act_select_company = true;focus_vichele_index = index">修改拉货公司</van-button>
-                        <van-cell title="磅单照片" center>
+                        <van-cell title="磅单照片" center :label="single_trans.upload_permit?'允许上传':'当前位置不允许上传'">
                             <template #right-icon>
                                 <van-button v-if="single_trans.attach_url" size="small" type="info" @click="pre_view_attach(single_trans.attach_url)">预览</van-button>
                                 <van-uploader :after-read="upload_attachment" @click-upload="proc_focus(single_trans.id)" accept="image/*">
-                                    <van-button icon="plus" size="small" type="primary">上传</van-button>
+                                    <van-button :disabled="!single_trans.upload_permit" icon="plus" size="small" type="primary">上传</van-button>
                                 </van-uploader>
                             </template>
                         </van-cell>

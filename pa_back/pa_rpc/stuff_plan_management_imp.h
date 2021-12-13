@@ -1819,6 +1819,7 @@ public:
             tmp.can_enter = itr.no_permission == 0?true:false;
             tmp.attach_url = itr.attach_path;
             tmp.count = itr.count;
+            tmp.upload_permit = itr.upload_no_permit == 0?true:false;
             auto dest_company_p = itr.get_parent<pa_sql_company>("destination");
             if (dest_company_p)
             {

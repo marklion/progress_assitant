@@ -35,6 +35,8 @@ class open_api_managementIf {
   virtual bool proc_add_base_info(const push_base_req& _req, const std::string& token) = 0;
   virtual bool proc_del_base_info(const push_base_req& _req, const std::string& token) = 0;
   virtual bool proc_push_balance(const push_balance_req& _req, const std::string& token) = 0;
+  virtual bool proc_push_zone_change(const push_zone_change_req& _req, const std::string& token) = 0;
+  virtual bool proc_push_manual_permit(const push_manual_permit_req& _req, const std::string& token) = 0;
 };
 
 class open_api_managementIfFactory {
@@ -110,6 +112,14 @@ class open_api_managementNull : virtual public open_api_managementIf {
     return _return;
   }
   bool proc_push_balance(const push_balance_req& /* _req */, const std::string& /* token */) {
+    bool _return = false;
+    return _return;
+  }
+  bool proc_push_zone_change(const push_zone_change_req& /* _req */, const std::string& /* token */) {
+    bool _return = false;
+    return _return;
+  }
+  bool proc_push_manual_permit(const push_manual_permit_req& /* _req */, const std::string& /* token */) {
     bool _return = false;
     return _return;
   }
@@ -1697,6 +1707,244 @@ class open_api_management_proc_push_balance_presult {
 
 };
 
+typedef struct _open_api_management_proc_push_zone_change_args__isset {
+  _open_api_management_proc_push_zone_change_args__isset() : _req(false), token(false) {}
+  bool _req :1;
+  bool token :1;
+} _open_api_management_proc_push_zone_change_args__isset;
+
+class open_api_management_proc_push_zone_change_args {
+ public:
+
+  open_api_management_proc_push_zone_change_args(const open_api_management_proc_push_zone_change_args&);
+  open_api_management_proc_push_zone_change_args& operator=(const open_api_management_proc_push_zone_change_args&);
+  open_api_management_proc_push_zone_change_args() : token() {
+  }
+
+  virtual ~open_api_management_proc_push_zone_change_args() noexcept;
+  push_zone_change_req _req;
+  std::string token;
+
+  _open_api_management_proc_push_zone_change_args__isset __isset;
+
+  void __set__req(const push_zone_change_req& val);
+
+  void __set_token(const std::string& val);
+
+  bool operator == (const open_api_management_proc_push_zone_change_args & rhs) const
+  {
+    if (!(_req == rhs._req))
+      return false;
+    if (!(token == rhs.token))
+      return false;
+    return true;
+  }
+  bool operator != (const open_api_management_proc_push_zone_change_args &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const open_api_management_proc_push_zone_change_args & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+
+class open_api_management_proc_push_zone_change_pargs {
+ public:
+
+
+  virtual ~open_api_management_proc_push_zone_change_pargs() noexcept;
+  const push_zone_change_req* _req;
+  const std::string* token;
+
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _open_api_management_proc_push_zone_change_result__isset {
+  _open_api_management_proc_push_zone_change_result__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _open_api_management_proc_push_zone_change_result__isset;
+
+class open_api_management_proc_push_zone_change_result {
+ public:
+
+  open_api_management_proc_push_zone_change_result(const open_api_management_proc_push_zone_change_result&);
+  open_api_management_proc_push_zone_change_result& operator=(const open_api_management_proc_push_zone_change_result&);
+  open_api_management_proc_push_zone_change_result() : success(0) {
+  }
+
+  virtual ~open_api_management_proc_push_zone_change_result() noexcept;
+  bool success;
+  gen_exp e;
+
+  _open_api_management_proc_push_zone_change_result__isset __isset;
+
+  void __set_success(const bool val);
+
+  void __set_e(const gen_exp& val);
+
+  bool operator == (const open_api_management_proc_push_zone_change_result & rhs) const
+  {
+    if (!(success == rhs.success))
+      return false;
+    if (!(e == rhs.e))
+      return false;
+    return true;
+  }
+  bool operator != (const open_api_management_proc_push_zone_change_result &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const open_api_management_proc_push_zone_change_result & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _open_api_management_proc_push_zone_change_presult__isset {
+  _open_api_management_proc_push_zone_change_presult__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _open_api_management_proc_push_zone_change_presult__isset;
+
+class open_api_management_proc_push_zone_change_presult {
+ public:
+
+
+  virtual ~open_api_management_proc_push_zone_change_presult() noexcept;
+  bool* success;
+  gen_exp e;
+
+  _open_api_management_proc_push_zone_change_presult__isset __isset;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+
+};
+
+typedef struct _open_api_management_proc_push_manual_permit_args__isset {
+  _open_api_management_proc_push_manual_permit_args__isset() : _req(false), token(false) {}
+  bool _req :1;
+  bool token :1;
+} _open_api_management_proc_push_manual_permit_args__isset;
+
+class open_api_management_proc_push_manual_permit_args {
+ public:
+
+  open_api_management_proc_push_manual_permit_args(const open_api_management_proc_push_manual_permit_args&);
+  open_api_management_proc_push_manual_permit_args& operator=(const open_api_management_proc_push_manual_permit_args&);
+  open_api_management_proc_push_manual_permit_args() : token() {
+  }
+
+  virtual ~open_api_management_proc_push_manual_permit_args() noexcept;
+  push_manual_permit_req _req;
+  std::string token;
+
+  _open_api_management_proc_push_manual_permit_args__isset __isset;
+
+  void __set__req(const push_manual_permit_req& val);
+
+  void __set_token(const std::string& val);
+
+  bool operator == (const open_api_management_proc_push_manual_permit_args & rhs) const
+  {
+    if (!(_req == rhs._req))
+      return false;
+    if (!(token == rhs.token))
+      return false;
+    return true;
+  }
+  bool operator != (const open_api_management_proc_push_manual_permit_args &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const open_api_management_proc_push_manual_permit_args & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+
+class open_api_management_proc_push_manual_permit_pargs {
+ public:
+
+
+  virtual ~open_api_management_proc_push_manual_permit_pargs() noexcept;
+  const push_manual_permit_req* _req;
+  const std::string* token;
+
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _open_api_management_proc_push_manual_permit_result__isset {
+  _open_api_management_proc_push_manual_permit_result__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _open_api_management_proc_push_manual_permit_result__isset;
+
+class open_api_management_proc_push_manual_permit_result {
+ public:
+
+  open_api_management_proc_push_manual_permit_result(const open_api_management_proc_push_manual_permit_result&);
+  open_api_management_proc_push_manual_permit_result& operator=(const open_api_management_proc_push_manual_permit_result&);
+  open_api_management_proc_push_manual_permit_result() : success(0) {
+  }
+
+  virtual ~open_api_management_proc_push_manual_permit_result() noexcept;
+  bool success;
+  gen_exp e;
+
+  _open_api_management_proc_push_manual_permit_result__isset __isset;
+
+  void __set_success(const bool val);
+
+  void __set_e(const gen_exp& val);
+
+  bool operator == (const open_api_management_proc_push_manual_permit_result & rhs) const
+  {
+    if (!(success == rhs.success))
+      return false;
+    if (!(e == rhs.e))
+      return false;
+    return true;
+  }
+  bool operator != (const open_api_management_proc_push_manual_permit_result &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const open_api_management_proc_push_manual_permit_result & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _open_api_management_proc_push_manual_permit_presult__isset {
+  _open_api_management_proc_push_manual_permit_presult__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _open_api_management_proc_push_manual_permit_presult__isset;
+
+class open_api_management_proc_push_manual_permit_presult {
+ public:
+
+
+  virtual ~open_api_management_proc_push_manual_permit_presult() noexcept;
+  bool* success;
+  gen_exp e;
+
+  _open_api_management_proc_push_manual_permit_presult__isset __isset;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+
+};
+
 class open_api_managementClient : virtual public open_api_managementIf {
  public:
   open_api_managementClient(std::shared_ptr< ::apache::thrift::protocol::TProtocol> prot) {
@@ -1761,6 +2009,12 @@ class open_api_managementClient : virtual public open_api_managementIf {
   bool proc_push_balance(const push_balance_req& _req, const std::string& token);
   void send_proc_push_balance(const push_balance_req& _req, const std::string& token);
   bool recv_proc_push_balance();
+  bool proc_push_zone_change(const push_zone_change_req& _req, const std::string& token);
+  void send_proc_push_zone_change(const push_zone_change_req& _req, const std::string& token);
+  bool recv_proc_push_zone_change();
+  bool proc_push_manual_permit(const push_manual_permit_req& _req, const std::string& token);
+  void send_proc_push_manual_permit(const push_manual_permit_req& _req, const std::string& token);
+  bool recv_proc_push_manual_permit();
  protected:
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> piprot_;
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> poprot_;
@@ -1789,6 +2043,8 @@ class open_api_managementProcessor : public ::apache::thrift::TDispatchProcessor
   void process_proc_add_base_info(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
   void process_proc_del_base_info(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
   void process_proc_push_balance(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
+  void process_proc_push_zone_change(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
+  void process_proc_push_manual_permit(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
  public:
   open_api_managementProcessor(::std::shared_ptr<open_api_managementIf> iface) :
     iface_(iface) {
@@ -1805,6 +2061,8 @@ class open_api_managementProcessor : public ::apache::thrift::TDispatchProcessor
     processMap_["proc_add_base_info"] = &open_api_managementProcessor::process_proc_add_base_info;
     processMap_["proc_del_base_info"] = &open_api_managementProcessor::process_proc_del_base_info;
     processMap_["proc_push_balance"] = &open_api_managementProcessor::process_proc_push_balance;
+    processMap_["proc_push_zone_change"] = &open_api_managementProcessor::process_proc_push_zone_change;
+    processMap_["proc_push_manual_permit"] = &open_api_managementProcessor::process_proc_push_manual_permit;
   }
 
   virtual ~open_api_managementProcessor() {}
@@ -1953,6 +2211,24 @@ class open_api_managementMultiface : virtual public open_api_managementIf {
     return ifaces_[i]->proc_push_balance(_req, token);
   }
 
+  bool proc_push_zone_change(const push_zone_change_req& _req, const std::string& token) {
+    size_t sz = ifaces_.size();
+    size_t i = 0;
+    for (; i < (sz - 1); ++i) {
+      ifaces_[i]->proc_push_zone_change(_req, token);
+    }
+    return ifaces_[i]->proc_push_zone_change(_req, token);
+  }
+
+  bool proc_push_manual_permit(const push_manual_permit_req& _req, const std::string& token) {
+    size_t sz = ifaces_.size();
+    size_t i = 0;
+    for (; i < (sz - 1); ++i) {
+      ifaces_[i]->proc_push_manual_permit(_req, token);
+    }
+    return ifaces_[i]->proc_push_manual_permit(_req, token);
+  }
+
 };
 
 // The 'concurrent' client is a thread safe client that correctly handles
@@ -2024,6 +2300,12 @@ class open_api_managementConcurrentClient : virtual public open_api_managementIf
   bool proc_push_balance(const push_balance_req& _req, const std::string& token);
   int32_t send_proc_push_balance(const push_balance_req& _req, const std::string& token);
   bool recv_proc_push_balance(const int32_t seqid);
+  bool proc_push_zone_change(const push_zone_change_req& _req, const std::string& token);
+  int32_t send_proc_push_zone_change(const push_zone_change_req& _req, const std::string& token);
+  bool recv_proc_push_zone_change(const int32_t seqid);
+  bool proc_push_manual_permit(const push_manual_permit_req& _req, const std::string& token);
+  int32_t send_proc_push_manual_permit(const push_manual_permit_req& _req, const std::string& token);
+  bool recv_proc_push_manual_permit(const int32_t seqid);
  protected:
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> piprot_;
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> poprot_;

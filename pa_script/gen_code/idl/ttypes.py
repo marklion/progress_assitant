@@ -2657,11 +2657,12 @@ class today_driver_info(object):
      - can_enter
      - attach_url
      - count
+     - upload_permit
 
     """
 
 
-    def __init__(self, id=None, destination_company=None, destination_address=None, order_company=None, main_vichele=None, behind_vichele=None, stuff_name=None, register_timestamp=None, register_number=None, enter_location=None, is_registered=None, register_order=None, is_buy=None, company_for_select=None, need_tmd=None, tmd_no=None, date=None, can_enter=None, attach_url=None, count=None,):
+    def __init__(self, id=None, destination_company=None, destination_address=None, order_company=None, main_vichele=None, behind_vichele=None, stuff_name=None, register_timestamp=None, register_number=None, enter_location=None, is_registered=None, register_order=None, is_buy=None, company_for_select=None, need_tmd=None, tmd_no=None, date=None, can_enter=None, attach_url=None, count=None, upload_permit=None,):
         self.id = id
         self.destination_company = destination_company
         self.destination_address = destination_address
@@ -2682,6 +2683,7 @@ class today_driver_info(object):
         self.can_enter = can_enter
         self.attach_url = attach_url
         self.count = count
+        self.upload_permit = upload_permit
 
     def read(self, iprot):
         if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
@@ -2797,6 +2799,11 @@ class today_driver_info(object):
                     self.count = iprot.readDouble()
                 else:
                     iprot.skip(ftype)
+            elif fid == 21:
+                if ftype == TType.BOOL:
+                    self.upload_permit = iprot.readBool()
+                else:
+                    iprot.skip(ftype)
             else:
                 iprot.skip(ftype)
             iprot.readFieldEnd()
@@ -2889,6 +2896,10 @@ class today_driver_info(object):
         if self.count is not None:
             oprot.writeFieldBegin('count', TType.DOUBLE, 20)
             oprot.writeDouble(self.count)
+            oprot.writeFieldEnd()
+        if self.upload_permit is not None:
+            oprot.writeFieldBegin('upload_permit', TType.BOOL, 21)
+            oprot.writeBool(self.upload_permit)
             oprot.writeFieldEnd()
         oprot.writeFieldStop()
         oprot.writeStructEnd()
@@ -4025,6 +4036,164 @@ class push_balance_req(object):
         return not (self == other)
 
 
+class push_zone_change_req(object):
+    """
+    Attributes:
+     - plateNo
+     - eventType
+     - eventInfo
+     - eventCreateTime
+
+    """
+
+
+    def __init__(self, plateNo=None, eventType=None, eventInfo=None, eventCreateTime=None,):
+        self.plateNo = plateNo
+        self.eventType = eventType
+        self.eventInfo = eventInfo
+        self.eventCreateTime = eventCreateTime
+
+    def read(self, iprot):
+        if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
+            iprot._fast_decode(self, iprot, [self.__class__, self.thrift_spec])
+            return
+        iprot.readStructBegin()
+        while True:
+            (fname, ftype, fid) = iprot.readFieldBegin()
+            if ftype == TType.STOP:
+                break
+            if fid == 1:
+                if ftype == TType.STRING:
+                    self.plateNo = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 2:
+                if ftype == TType.I64:
+                    self.eventType = iprot.readI64()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 3:
+                if ftype == TType.STRING:
+                    self.eventInfo = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 4:
+                if ftype == TType.STRING:
+                    self.eventCreateTime = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
+            else:
+                iprot.skip(ftype)
+            iprot.readFieldEnd()
+        iprot.readStructEnd()
+
+    def write(self, oprot):
+        if oprot._fast_encode is not None and self.thrift_spec is not None:
+            oprot.trans.write(oprot._fast_encode(self, [self.__class__, self.thrift_spec]))
+            return
+        oprot.writeStructBegin('push_zone_change_req')
+        if self.plateNo is not None:
+            oprot.writeFieldBegin('plateNo', TType.STRING, 1)
+            oprot.writeString(self.plateNo.encode('utf-8') if sys.version_info[0] == 2 else self.plateNo)
+            oprot.writeFieldEnd()
+        if self.eventType is not None:
+            oprot.writeFieldBegin('eventType', TType.I64, 2)
+            oprot.writeI64(self.eventType)
+            oprot.writeFieldEnd()
+        if self.eventInfo is not None:
+            oprot.writeFieldBegin('eventInfo', TType.STRING, 3)
+            oprot.writeString(self.eventInfo.encode('utf-8') if sys.version_info[0] == 2 else self.eventInfo)
+            oprot.writeFieldEnd()
+        if self.eventCreateTime is not None:
+            oprot.writeFieldBegin('eventCreateTime', TType.STRING, 4)
+            oprot.writeString(self.eventCreateTime.encode('utf-8') if sys.version_info[0] == 2 else self.eventCreateTime)
+            oprot.writeFieldEnd()
+        oprot.writeFieldStop()
+        oprot.writeStructEnd()
+
+    def validate(self):
+        return
+
+    def __repr__(self):
+        L = ['%s=%r' % (key, value)
+             for key, value in self.__dict__.items()]
+        return '%s(%s)' % (self.__class__.__name__, ', '.join(L))
+
+    def __eq__(self, other):
+        return isinstance(other, self.__class__) and self.__dict__ == other.__dict__
+
+    def __ne__(self, other):
+        return not (self == other)
+
+
+class push_manual_permit_req(object):
+    """
+    Attributes:
+     - plateNo
+     - driverId
+
+    """
+
+
+    def __init__(self, plateNo=None, driverId=None,):
+        self.plateNo = plateNo
+        self.driverId = driverId
+
+    def read(self, iprot):
+        if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
+            iprot._fast_decode(self, iprot, [self.__class__, self.thrift_spec])
+            return
+        iprot.readStructBegin()
+        while True:
+            (fname, ftype, fid) = iprot.readFieldBegin()
+            if ftype == TType.STOP:
+                break
+            if fid == 1:
+                if ftype == TType.STRING:
+                    self.plateNo = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 2:
+                if ftype == TType.STRING:
+                    self.driverId = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
+            else:
+                iprot.skip(ftype)
+            iprot.readFieldEnd()
+        iprot.readStructEnd()
+
+    def write(self, oprot):
+        if oprot._fast_encode is not None and self.thrift_spec is not None:
+            oprot.trans.write(oprot._fast_encode(self, [self.__class__, self.thrift_spec]))
+            return
+        oprot.writeStructBegin('push_manual_permit_req')
+        if self.plateNo is not None:
+            oprot.writeFieldBegin('plateNo', TType.STRING, 1)
+            oprot.writeString(self.plateNo.encode('utf-8') if sys.version_info[0] == 2 else self.plateNo)
+            oprot.writeFieldEnd()
+        if self.driverId is not None:
+            oprot.writeFieldBegin('driverId', TType.STRING, 2)
+            oprot.writeString(self.driverId.encode('utf-8') if sys.version_info[0] == 2 else self.driverId)
+            oprot.writeFieldEnd()
+        oprot.writeFieldStop()
+        oprot.writeStructEnd()
+
+    def validate(self):
+        return
+
+    def __repr__(self):
+        L = ['%s=%r' % (key, value)
+             for key, value in self.__dict__.items()]
+        return '%s(%s)' % (self.__class__.__name__, ', '.join(L))
+
+    def __eq__(self, other):
+        return isinstance(other, self.__class__) and self.__dict__ == other.__dict__
+
+    def __ne__(self, other):
+        return not (self == other)
+
+
 class vichele_stay_alone(object):
     """
     Attributes:
@@ -4052,11 +4221,12 @@ class vichele_stay_alone(object):
      - j_weight
      - price
      - can_enter
+     - upload_permit
 
     """
 
 
-    def __init__(self, id=None, stuff_name=None, company_name=None, main_vichele_number=None, behind_vichele_number=None, count=None, comment=None, date=None, destination=None, status=None, creator_name=None, creator_phone=None, repeated=None, driver_name=None, driver_phone=None, driver_id=None, transfor_company=None, p_time=None, m_time=None, p_weight=None, m_weight=None, j_weight=None, price=None, can_enter=None,):
+    def __init__(self, id=None, stuff_name=None, company_name=None, main_vichele_number=None, behind_vichele_number=None, count=None, comment=None, date=None, destination=None, status=None, creator_name=None, creator_phone=None, repeated=None, driver_name=None, driver_phone=None, driver_id=None, transfor_company=None, p_time=None, m_time=None, p_weight=None, m_weight=None, j_weight=None, price=None, can_enter=None, upload_permit=None,):
         self.id = id
         self.stuff_name = stuff_name
         self.company_name = company_name
@@ -4081,6 +4251,7 @@ class vichele_stay_alone(object):
         self.j_weight = j_weight
         self.price = price
         self.can_enter = can_enter
+        self.upload_permit = upload_permit
 
     def read(self, iprot):
         if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
@@ -4211,6 +4382,11 @@ class vichele_stay_alone(object):
                     self.can_enter = iprot.readBool()
                 else:
                     iprot.skip(ftype)
+            elif fid == 25:
+                if ftype == TType.BOOL:
+                    self.upload_permit = iprot.readBool()
+                else:
+                    iprot.skip(ftype)
             else:
                 iprot.skip(ftype)
             iprot.readFieldEnd()
@@ -4316,6 +4492,10 @@ class vichele_stay_alone(object):
         if self.can_enter is not None:
             oprot.writeFieldBegin('can_enter', TType.BOOL, 24)
             oprot.writeBool(self.can_enter)
+            oprot.writeFieldEnd()
+        if self.upload_permit is not None:
+            oprot.writeFieldBegin('upload_permit', TType.BOOL, 25)
+            oprot.writeBool(self.upload_permit)
             oprot.writeFieldEnd()
         oprot.writeFieldStop()
         oprot.writeStructEnd()
@@ -5108,6 +5288,7 @@ today_driver_info.thrift_spec = (
     (18, TType.BOOL, 'can_enter', None, None, ),  # 18
     (19, TType.STRING, 'attach_url', 'UTF8', None, ),  # 19
     (20, TType.DOUBLE, 'count', None, None, ),  # 20
+    (21, TType.BOOL, 'upload_permit', None, None, ),  # 21
 )
 all_structs.append(driver_detail_info)
 driver_detail_info.thrift_spec = (
@@ -5208,6 +5389,20 @@ push_balance_req.thrift_spec = (
     (2, TType.STRING, 'customerName', 'UTF8', None, ),  # 2
     (3, TType.DOUBLE, 'balance', None, None, ),  # 3
 )
+all_structs.append(push_zone_change_req)
+push_zone_change_req.thrift_spec = (
+    None,  # 0
+    (1, TType.STRING, 'plateNo', 'UTF8', None, ),  # 1
+    (2, TType.I64, 'eventType', None, None, ),  # 2
+    (3, TType.STRING, 'eventInfo', 'UTF8', None, ),  # 3
+    (4, TType.STRING, 'eventCreateTime', 'UTF8', None, ),  # 4
+)
+all_structs.append(push_manual_permit_req)
+push_manual_permit_req.thrift_spec = (
+    None,  # 0
+    (1, TType.STRING, 'plateNo', 'UTF8', None, ),  # 1
+    (2, TType.STRING, 'driverId', 'UTF8', None, ),  # 2
+)
 all_structs.append(vichele_stay_alone)
 vichele_stay_alone.thrift_spec = (
     None,  # 0
@@ -5235,6 +5430,7 @@ vichele_stay_alone.thrift_spec = (
     (22, TType.DOUBLE, 'j_weight', None, None, ),  # 22
     (23, TType.DOUBLE, 'price', None, None, ),  # 23
     (24, TType.BOOL, 'can_enter', None, None, ),  # 24
+    (25, TType.BOOL, 'upload_permit', None, None, ),  # 25
 )
 all_structs.append(silent_user_info)
 silent_user_info.thrift_spec = (

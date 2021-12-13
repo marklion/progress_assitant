@@ -46,6 +46,24 @@ public:
     }
 };
 
+class pa_sql_gps_stuff:public sql_tree_base {
+public:
+    std::string stuff_name;
+    pa_sql_gps_stuff() {
+        add_parent_type<pa_sql_company>("belong_company");
+    }
+    virtual std::vector<sqlite_orm_column> self_columns_defined()
+    {
+        std::vector<sqlite_orm_column> ret;
+        ret.push_back(sqlite_orm_column("stuff_name", sqlite_orm_column::STRING, &stuff_name));
+        return ret;
+    }
+    virtual std::string table_name()
+    {
+        return "gps_stuff_table";
+    }
+};
+
 class pa_sql_company_attachment:public sql_tree_base {
 public:
     std::string res_path;
@@ -616,6 +634,7 @@ public:
     std::string tmd_no;
     int no_permission = 1;
     std::string attach_path;
+    int upload_no_permit = 1;
     pa_sql_vichele_stay_alone() {
         add_parent_type<pa_sql_silent_user>("created_by");
         add_parent_type<pa_sql_company>("destination");
@@ -648,6 +667,7 @@ public:
         ret.push_back(sqlite_orm_column("tmd_no", sqlite_orm_column::STRING, &tmd_no));
         ret.push_back(sqlite_orm_column("no_permission", sqlite_orm_column::INTEGER, &no_permission));
         ret.push_back(sqlite_orm_column("attach_path", sqlite_orm_column::STRING, &attach_path));
+        ret.push_back(sqlite_orm_column("upload_no_permit", sqlite_orm_column::INTEGER, &upload_no_permit));
 
         return ret;
     }
@@ -665,7 +685,7 @@ public:
         add_parent_type<pa_sql_stuff_info>("follow_stuff");
     }
 
-    virtual std::vector<sqlite_orm_column> self_columns_defined() { 
+    virtual std::vector<sqlite_orm_column> self_columns_defined() {
         return std::vector<sqlite_orm_column>();
     }
 
@@ -681,11 +701,11 @@ public:
     std::string enter_location;
     std::string number;
     std::string order_number;
-    pa_sql_driver_register() { 
+    pa_sql_driver_register() {
         add_parent_type<pa_sql_single_vichele>("belong_vichele");
     }
 
-    virtual std::vector<sqlite_orm_column> self_columns_defined() { 
+    virtual std::vector<sqlite_orm_column> self_columns_defined() {
         std::vector<sqlite_orm_column> ret;
         ret.push_back(sqlite_orm_column("timestamp", sqlite_orm_column::STRING, &timestamp));
         ret.push_back(sqlite_orm_column("enter_location", sqlite_orm_column::STRING, &enter_location));
@@ -709,7 +729,7 @@ public:
     pa_sql_blacklist() {
         add_parent_type<pa_sql_company>("belong_company");
     }
-    virtual std::vector<sqlite_orm_column> self_columns_defined() { 
+    virtual std::vector<sqlite_orm_column> self_columns_defined() {
         std::vector<sqlite_orm_column> ret;
         ret.push_back(sqlite_orm_column("reason", sqlite_orm_column::STRING, &reason));
         ret.push_back(sqlite_orm_column("expire_date", sqlite_orm_column::STRING, &expire_date));
@@ -754,7 +774,7 @@ public:
     pa_sql_base_info() {
         add_parent_type<pa_sql_company>("belong_company");
     }
-    virtual std::vector<sqlite_orm_column> self_columns_defined() { 
+    virtual std::vector<sqlite_orm_column> self_columns_defined() {
         std::vector<sqlite_orm_column> ret;
         ret.push_back(sqlite_orm_column("id", sqlite_orm_column::STRING, &id));
         ret.push_back(sqlite_orm_column("name", sqlite_orm_column::STRING, &name));
@@ -779,7 +799,7 @@ public:
     pa_sql_vichele_team() {
         add_parent_type<pa_sql_silent_user>("created_by");
     }
-    virtual std::vector<sqlite_orm_column> self_columns_defined() { 
+    virtual std::vector<sqlite_orm_column> self_columns_defined() {
         std::vector<sqlite_orm_column> ret;
         ret.push_back(sqlite_orm_column("name", sqlite_orm_column::STRING, &name));
         ret.push_back(sqlite_orm_column("team_member", sqlite_orm_column::STRING, &team_member));
@@ -801,7 +821,7 @@ public:
     pa_sql_supplier_basic_info() {
         add_parent_type<pa_sql_company>("belong_company");
     }
-    virtual std::vector<sqlite_orm_column> self_columns_defined() { 
+    virtual std::vector<sqlite_orm_column> self_columns_defined() {
         std::vector<sqlite_orm_column> ret;
         ret.push_back(sqlite_orm_column("name", sqlite_orm_column::STRING, &name));
         ret.push_back(sqlite_orm_column("reserves", sqlite_orm_column::REAL, &reserves));
@@ -822,7 +842,7 @@ public:
     pa_sql_except_stuff() {
         add_parent_type<pa_sql_company>("belong_company");
     }
-    virtual std::vector<sqlite_orm_column> self_columns_defined() { 
+    virtual std::vector<sqlite_orm_column> self_columns_defined() {
         std::vector<sqlite_orm_column> ret;
         ret.push_back(sqlite_orm_column("name", sqlite_orm_column::STRING, &name));
 

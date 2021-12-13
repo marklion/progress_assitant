@@ -2972,6 +2972,7 @@ today_driver_info = class {
     this.can_enter = null;
     this.attach_url = null;
     this.count = null;
+    this.upload_permit = null;
     if (args) {
       if (args.id !== undefined && args.id !== null) {
         this.id = args.id;
@@ -3032,6 +3033,9 @@ today_driver_info = class {
       }
       if (args.count !== undefined && args.count !== null) {
         this.count = args.count;
+      }
+      if (args.upload_permit !== undefined && args.upload_permit !== null) {
+        this.upload_permit = args.upload_permit;
       }
     }
   }
@@ -3194,6 +3198,13 @@ today_driver_info = class {
           input.skip(ftype);
         }
         break;
+        case 21:
+        if (ftype == Thrift.Type.BOOL) {
+          this.upload_permit = input.readBool().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
         default:
           input.skip(ftype);
       }
@@ -3310,6 +3321,11 @@ today_driver_info = class {
     if (this.count !== null && this.count !== undefined) {
       output.writeFieldBegin('count', Thrift.Type.DOUBLE, 20);
       output.writeDouble(this.count);
+      output.writeFieldEnd();
+    }
+    if (this.upload_permit !== null && this.upload_permit !== undefined) {
+      output.writeFieldBegin('upload_permit', Thrift.Type.BOOL, 21);
+      output.writeBool(this.upload_permit);
       output.writeFieldEnd();
     }
     output.writeFieldStop();
@@ -4640,6 +4656,168 @@ push_balance_req = class {
   }
 
 };
+push_zone_change_req = class {
+  constructor(args) {
+    this.plateNo = null;
+    this.eventType = null;
+    this.eventInfo = null;
+    this.eventCreateTime = null;
+    if (args) {
+      if (args.plateNo !== undefined && args.plateNo !== null) {
+        this.plateNo = args.plateNo;
+      }
+      if (args.eventType !== undefined && args.eventType !== null) {
+        this.eventType = args.eventType;
+      }
+      if (args.eventInfo !== undefined && args.eventInfo !== null) {
+        this.eventInfo = args.eventInfo;
+      }
+      if (args.eventCreateTime !== undefined && args.eventCreateTime !== null) {
+        this.eventCreateTime = args.eventCreateTime;
+      }
+    }
+  }
+
+  read (input) {
+    input.readStructBegin();
+    while (true) {
+      const ret = input.readFieldBegin();
+      const ftype = ret.ftype;
+      const fid = ret.fid;
+      if (ftype == Thrift.Type.STOP) {
+        break;
+      }
+      switch (fid) {
+        case 1:
+        if (ftype == Thrift.Type.STRING) {
+          this.plateNo = input.readString().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        case 2:
+        if (ftype == Thrift.Type.I64) {
+          this.eventType = input.readI64().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        case 3:
+        if (ftype == Thrift.Type.STRING) {
+          this.eventInfo = input.readString().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        case 4:
+        if (ftype == Thrift.Type.STRING) {
+          this.eventCreateTime = input.readString().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        default:
+          input.skip(ftype);
+      }
+      input.readFieldEnd();
+    }
+    input.readStructEnd();
+    return;
+  }
+
+  write (output) {
+    output.writeStructBegin('push_zone_change_req');
+    if (this.plateNo !== null && this.plateNo !== undefined) {
+      output.writeFieldBegin('plateNo', Thrift.Type.STRING, 1);
+      output.writeString(this.plateNo);
+      output.writeFieldEnd();
+    }
+    if (this.eventType !== null && this.eventType !== undefined) {
+      output.writeFieldBegin('eventType', Thrift.Type.I64, 2);
+      output.writeI64(this.eventType);
+      output.writeFieldEnd();
+    }
+    if (this.eventInfo !== null && this.eventInfo !== undefined) {
+      output.writeFieldBegin('eventInfo', Thrift.Type.STRING, 3);
+      output.writeString(this.eventInfo);
+      output.writeFieldEnd();
+    }
+    if (this.eventCreateTime !== null && this.eventCreateTime !== undefined) {
+      output.writeFieldBegin('eventCreateTime', Thrift.Type.STRING, 4);
+      output.writeString(this.eventCreateTime);
+      output.writeFieldEnd();
+    }
+    output.writeFieldStop();
+    output.writeStructEnd();
+    return;
+  }
+
+};
+push_manual_permit_req = class {
+  constructor(args) {
+    this.plateNo = null;
+    this.driverId = null;
+    if (args) {
+      if (args.plateNo !== undefined && args.plateNo !== null) {
+        this.plateNo = args.plateNo;
+      }
+      if (args.driverId !== undefined && args.driverId !== null) {
+        this.driverId = args.driverId;
+      }
+    }
+  }
+
+  read (input) {
+    input.readStructBegin();
+    while (true) {
+      const ret = input.readFieldBegin();
+      const ftype = ret.ftype;
+      const fid = ret.fid;
+      if (ftype == Thrift.Type.STOP) {
+        break;
+      }
+      switch (fid) {
+        case 1:
+        if (ftype == Thrift.Type.STRING) {
+          this.plateNo = input.readString().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        case 2:
+        if (ftype == Thrift.Type.STRING) {
+          this.driverId = input.readString().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        default:
+          input.skip(ftype);
+      }
+      input.readFieldEnd();
+    }
+    input.readStructEnd();
+    return;
+  }
+
+  write (output) {
+    output.writeStructBegin('push_manual_permit_req');
+    if (this.plateNo !== null && this.plateNo !== undefined) {
+      output.writeFieldBegin('plateNo', Thrift.Type.STRING, 1);
+      output.writeString(this.plateNo);
+      output.writeFieldEnd();
+    }
+    if (this.driverId !== null && this.driverId !== undefined) {
+      output.writeFieldBegin('driverId', Thrift.Type.STRING, 2);
+      output.writeString(this.driverId);
+      output.writeFieldEnd();
+    }
+    output.writeFieldStop();
+    output.writeStructEnd();
+    return;
+  }
+
+};
 vichele_stay_alone = class {
   constructor(args) {
     this.id = null;
@@ -4666,6 +4844,7 @@ vichele_stay_alone = class {
     this.j_weight = null;
     this.price = null;
     this.can_enter = null;
+    this.upload_permit = null;
     if (args) {
       if (args.id !== undefined && args.id !== null) {
         this.id = args.id;
@@ -4738,6 +4917,9 @@ vichele_stay_alone = class {
       }
       if (args.can_enter !== undefined && args.can_enter !== null) {
         this.can_enter = args.can_enter;
+      }
+      if (args.upload_permit !== undefined && args.upload_permit !== null) {
+        this.upload_permit = args.upload_permit;
       }
     }
   }
@@ -4920,6 +5102,13 @@ vichele_stay_alone = class {
           input.skip(ftype);
         }
         break;
+        case 25:
+        if (ftype == Thrift.Type.BOOL) {
+          this.upload_permit = input.readBool().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
         default:
           input.skip(ftype);
       }
@@ -5049,6 +5238,11 @@ vichele_stay_alone = class {
     if (this.can_enter !== null && this.can_enter !== undefined) {
       output.writeFieldBegin('can_enter', Thrift.Type.BOOL, 24);
       output.writeBool(this.can_enter);
+      output.writeFieldEnd();
+    }
+    if (this.upload_permit !== null && this.upload_permit !== undefined) {
+      output.writeFieldBegin('upload_permit', Thrift.Type.BOOL, 25);
+      output.writeBool(this.upload_permit);
       output.writeFieldEnd();
     }
     output.writeFieldStop();
