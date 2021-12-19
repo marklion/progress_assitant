@@ -35,6 +35,7 @@
                 </div>
                 <div v-else-if="!$store.state.userinfo.buyer">
                     <van-button type="primary" size="small" @click="open_change_driver(item.vichele_id)">换司机</van-button>
+                    <van-button v-if="item.driver_silent_id" type="danger" size="small" @click="reset_driver_info(item.driver_silent_id)">重置信息</van-button>
                 </div>
             </div>
         </van-cell-group>
@@ -180,6 +181,12 @@ export default {
         },
     },
     methods: {
+        reset_driver_info: function (_silent_id) {
+            var vue_this = this;
+            vue_this.$call_remote_process("stuff_plan_management", "driver_silent_reset", [vue_this.$cookies.get('pa_ssid'), _silent_id]).then(function(){
+                vue_this.$toast("重置成功");
+            });
+        },
         open_change_driver:function(_vichele_id) {
             this.focus_change_id = _vichele_id;
             this.focus_driver_change = true;

@@ -1072,7 +1072,7 @@ void swap(pay_confirm_info &a, pay_confirm_info &b);
 std::ostream& operator<<(std::ostream& out, const pay_confirm_info& obj);
 
 typedef struct _vichele_in_plan__isset {
-  _vichele_in_plan__isset() : main_vichele(false), behind_vichele(false), driver_name(false), driver_phone(false), count(false), drop_address(false), use_for(false), vichele_id(false), finish(false), deliver_timestamp(false), register_timestamp(false), register_number(false), enter_location(false), p_time(false), p_weight(false), m_weight(false), driver_id(false) {}
+  _vichele_in_plan__isset() : main_vichele(false), behind_vichele(false), driver_name(false), driver_phone(false), count(false), drop_address(false), use_for(false), vichele_id(false), finish(false), deliver_timestamp(false), register_timestamp(false), register_number(false), enter_location(false), p_time(false), p_weight(false), m_weight(false), driver_id(false), driver_silent_id(false) {}
   bool main_vichele :1;
   bool behind_vichele :1;
   bool driver_name :1;
@@ -1090,6 +1090,7 @@ typedef struct _vichele_in_plan__isset {
   bool p_weight :1;
   bool m_weight :1;
   bool driver_id :1;
+  bool driver_silent_id :1;
 } _vichele_in_plan__isset;
 
 class vichele_in_plan : public virtual ::apache::thrift::TBase {
@@ -1097,7 +1098,7 @@ class vichele_in_plan : public virtual ::apache::thrift::TBase {
 
   vichele_in_plan(const vichele_in_plan&);
   vichele_in_plan& operator=(const vichele_in_plan&);
-  vichele_in_plan() : main_vichele(), behind_vichele(), driver_name(), driver_phone(), count(0), drop_address(), use_for(), vichele_id(0), finish(0), deliver_timestamp(), register_timestamp(), register_number(), enter_location(), p_time(), p_weight(0), m_weight(0), driver_id() {
+  vichele_in_plan() : main_vichele(), behind_vichele(), driver_name(), driver_phone(), count(0), drop_address(), use_for(), vichele_id(0), finish(0), deliver_timestamp(), register_timestamp(), register_number(), enter_location(), p_time(), p_weight(0), m_weight(0), driver_id(), driver_silent_id() {
   }
 
   virtual ~vichele_in_plan() noexcept;
@@ -1118,6 +1119,7 @@ class vichele_in_plan : public virtual ::apache::thrift::TBase {
   double p_weight;
   double m_weight;
   std::string driver_id;
+  std::string driver_silent_id;
 
   _vichele_in_plan__isset __isset;
 
@@ -1155,6 +1157,8 @@ class vichele_in_plan : public virtual ::apache::thrift::TBase {
 
   void __set_driver_id(const std::string& val);
 
+  void __set_driver_silent_id(const std::string& val);
+
   bool operator == (const vichele_in_plan & rhs) const
   {
     if (!(main_vichele == rhs.main_vichele))
@@ -1190,6 +1194,8 @@ class vichele_in_plan : public virtual ::apache::thrift::TBase {
     if (!(m_weight == rhs.m_weight))
       return false;
     if (!(driver_id == rhs.driver_id))
+      return false;
+    if (!(driver_silent_id == rhs.driver_silent_id))
       return false;
     return true;
   }
@@ -2770,7 +2776,7 @@ void swap(push_manual_permit_req &a, push_manual_permit_req &b);
 std::ostream& operator<<(std::ostream& out, const push_manual_permit_req& obj);
 
 typedef struct _vichele_stay_alone__isset {
-  _vichele_stay_alone__isset() : id(false), stuff_name(false), company_name(false), main_vichele_number(false), behind_vichele_number(false), count(false), comment(false), date(false), destination(false), status(false), creator_name(false), creator_phone(false), repeated(false), driver_name(false), driver_phone(false), driver_id(false), transfor_company(false), p_time(false), m_time(false), p_weight(false), m_weight(false), j_weight(false), price(false), can_enter(false), upload_permit(false) {}
+  _vichele_stay_alone__isset() : id(false), stuff_name(false), company_name(false), main_vichele_number(false), behind_vichele_number(false), count(false), comment(false), date(false), destination(false), status(false), creator_name(false), creator_phone(false), repeated(false), driver_name(false), driver_phone(false), driver_id(false), transfor_company(false), p_time(false), m_time(false), p_weight(false), m_weight(false), j_weight(false), price(false), can_enter(false), upload_permit(false), driver_silent_id(false) {}
   bool id :1;
   bool stuff_name :1;
   bool company_name :1;
@@ -2796,6 +2802,7 @@ typedef struct _vichele_stay_alone__isset {
   bool price :1;
   bool can_enter :1;
   bool upload_permit :1;
+  bool driver_silent_id :1;
 } _vichele_stay_alone__isset;
 
 class vichele_stay_alone : public virtual ::apache::thrift::TBase {
@@ -2803,7 +2810,7 @@ class vichele_stay_alone : public virtual ::apache::thrift::TBase {
 
   vichele_stay_alone(const vichele_stay_alone&);
   vichele_stay_alone& operator=(const vichele_stay_alone&);
-  vichele_stay_alone() : id(0), stuff_name(), company_name(), main_vichele_number(), behind_vichele_number(), count(0), comment(), date(), destination(), status(0), creator_name(), creator_phone(), repeated(0), driver_name(), driver_phone(), driver_id(), transfor_company(), p_time(), m_time(), p_weight(0), m_weight(0), j_weight(0), price(0), can_enter(0), upload_permit(0) {
+  vichele_stay_alone() : id(0), stuff_name(), company_name(), main_vichele_number(), behind_vichele_number(), count(0), comment(), date(), destination(), status(0), creator_name(), creator_phone(), repeated(0), driver_name(), driver_phone(), driver_id(), transfor_company(), p_time(), m_time(), p_weight(0), m_weight(0), j_weight(0), price(0), can_enter(0), upload_permit(0), driver_silent_id() {
   }
 
   virtual ~vichele_stay_alone() noexcept;
@@ -2832,6 +2839,7 @@ class vichele_stay_alone : public virtual ::apache::thrift::TBase {
   double price;
   bool can_enter;
   bool upload_permit;
+  std::string driver_silent_id;
 
   _vichele_stay_alone__isset __isset;
 
@@ -2885,6 +2893,8 @@ class vichele_stay_alone : public virtual ::apache::thrift::TBase {
 
   void __set_upload_permit(const bool val);
 
+  void __set_driver_silent_id(const std::string& val);
+
   bool operator == (const vichele_stay_alone & rhs) const
   {
     if (!(id == rhs.id))
@@ -2936,6 +2946,8 @@ class vichele_stay_alone : public virtual ::apache::thrift::TBase {
     if (!(can_enter == rhs.can_enter))
       return false;
     if (!(upload_permit == rhs.upload_permit))
+      return false;
+    if (!(driver_silent_id == rhs.driver_silent_id))
       return false;
     return true;
   }

@@ -55,6 +55,7 @@ if len(sys.argv) <= 1 or sys.argv[1] == '--help':
     print('  bool driver_silent_send_sms(string driver_phone)')
     print('  string driver_silent_register(string code, string driver_id, string driver_phone, string verify_code)')
     print('  void driver_silent_unregister(string silent_id)')
+    print('  void driver_silent_reset(string ssid, string silent_id)')
     print('  bool verify_driver_silent_login(string silent_id)')
     print('   get_today_driver_info(string silent_id)')
     print('  driver_detail_info get_driver_info(string silent_id)')
@@ -327,6 +328,12 @@ elif cmd == 'driver_silent_unregister':
         print('driver_silent_unregister requires 1 args')
         sys.exit(1)
     pp.pprint(client.driver_silent_unregister(args[0],))
+
+elif cmd == 'driver_silent_reset':
+    if len(args) != 2:
+        print('driver_silent_reset requires 2 args')
+        sys.exit(1)
+    pp.pprint(client.driver_silent_reset(args[0], args[1],))
 
 elif cmd == 'verify_driver_silent_login':
     if len(args) != 1:

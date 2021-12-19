@@ -203,6 +203,7 @@ struct vichele_in_plan {
     15:double p_weight,
     16:double m_weight,
     17:string driver_id,
+    18:string driver_silent_id,
 }
 
 struct stuff_plan {
@@ -340,6 +341,7 @@ service stuff_plan_management {
     bool driver_silent_send_sms(1:string driver_phone) throws (1:gen_exp e),
     string driver_silent_register(1:string code, 2:string driver_id, 3:string driver_phone, 4:string verify_code) throws (1:gen_exp e),
     void driver_silent_unregister(1:string silent_id) throws (1:gen_exp e),
+    void driver_silent_reset(1:string ssid, 2:string silent_id ) throws (1:gen_exp e),
     bool verify_driver_silent_login(1:string silent_id) throws (1:gen_exp e),
     list<today_driver_info> get_today_driver_info(1:string silent_id) throws (1:gen_exp e),
     driver_detail_info get_driver_info(1:string silent_id) throws (1:gen_exp e),
@@ -491,6 +493,7 @@ struct vichele_stay_alone {
     23:double price,
     24:bool can_enter,
     25:bool upload_permit,
+    26:string driver_silent_id,
 }
 
 struct silent_user_info {

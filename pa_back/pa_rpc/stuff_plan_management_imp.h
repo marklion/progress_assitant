@@ -317,6 +317,11 @@ public:
                         {
                             tmp.driver_id = id_driver->driver_id;
                         }
+                        auto silent_id_driver = sqlite_orm::search_record<pa_sql_driver>("phone == '%s' AND silent_id != ''", driver->phone.c_str());
+                        if (silent_id_driver)
+                        {
+                            tmp.driver_silent_id = silent_id_driver->silent_id;
+                        }
                         _return.vichele_info.push_back(tmp);
                     }
                 }
@@ -2031,6 +2036,16 @@ public:
         }
 
         return true;
+    }
+
+    virtual void driver_silent_reset(const std::string &ssid, const std::string &silent_id)
+    {
+        auto user = PA_DATAOPT_get_online_user(ssid);
+        if (!user)
+        {
+            PA_RETURN_UNLOGIN_MSG();
+        }
+        driver_silent_unregister(silent_id);
     }
 };
 

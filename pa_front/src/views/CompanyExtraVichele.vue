@@ -51,7 +51,11 @@
                     </template>
                 </van-cell>
                 <van-divider>司机信息</van-divider>
-                <van-cell :title="single_vichele.driver_name" :value="single_vichele.driver_phone" :label="single_vichele.driver_id"></van-cell>
+                <van-cell :title="single_vichele.driver_name" :value="single_vichele.driver_phone" :label="single_vichele.driver_id" center>
+                    <template #right-icon>
+                        <van-button size="small" type="danger" v-if="single_vichele.driver_silent_id" @click="reset_driver_info(single_vichele.driver_silent_id)">重置信息</van-button>
+                    </template>
+                </van-cell>
                 <div class="extra_info_show">
                     <van-row type="flex" align="center" :gutter="10">
                         <van-col>
@@ -271,6 +275,12 @@ export default {
         },
     },
     methods: {
+        reset_driver_info: function (_silent_id) {
+            var vue_this = this;
+            vue_this.$call_remote_process("stuff_plan_management", "driver_silent_reset", [vue_this.$cookies.get('pa_ssid'), _silent_id]).then(function () {
+                vue_this.$toast("重置成功");
+            });
+        },
         show_change_price_diag: function () {
             this.change_price_diag_show = true;
             this.new_price = "";

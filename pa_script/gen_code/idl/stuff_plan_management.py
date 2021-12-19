@@ -301,6 +301,15 @@ class Iface(object):
         """
         pass
 
+    def driver_silent_reset(self, ssid, silent_id):
+        """
+        Parameters:
+         - ssid
+         - silent_id
+
+        """
+        pass
+
     def verify_driver_silent_login(self, silent_id):
         """
         Parameters:
@@ -1503,6 +1512,40 @@ class Client(Iface):
             raise result.e
         return
 
+    def driver_silent_reset(self, ssid, silent_id):
+        """
+        Parameters:
+         - ssid
+         - silent_id
+
+        """
+        self.send_driver_silent_reset(ssid, silent_id)
+        self.recv_driver_silent_reset()
+
+    def send_driver_silent_reset(self, ssid, silent_id):
+        self._oprot.writeMessageBegin('driver_silent_reset', TMessageType.CALL, self._seqid)
+        args = driver_silent_reset_args()
+        args.ssid = ssid
+        args.silent_id = silent_id
+        args.write(self._oprot)
+        self._oprot.writeMessageEnd()
+        self._oprot.trans.flush()
+
+    def recv_driver_silent_reset(self):
+        iprot = self._iprot
+        (fname, mtype, rseqid) = iprot.readMessageBegin()
+        if mtype == TMessageType.EXCEPTION:
+            x = TApplicationException()
+            x.read(iprot)
+            iprot.readMessageEnd()
+            raise x
+        result = driver_silent_reset_result()
+        result.read(iprot)
+        iprot.readMessageEnd()
+        if result.e is not None:
+            raise result.e
+        return
+
     def verify_driver_silent_login(self, silent_id):
         """
         Parameters:
@@ -1827,6 +1870,7 @@ class Processor(Iface, TProcessor):
         self._processMap["driver_silent_send_sms"] = Processor.process_driver_silent_send_sms
         self._processMap["driver_silent_register"] = Processor.process_driver_silent_register
         self._processMap["driver_silent_unregister"] = Processor.process_driver_silent_unregister
+        self._processMap["driver_silent_reset"] = Processor.process_driver_silent_reset
         self._processMap["verify_driver_silent_login"] = Processor.process_verify_driver_silent_login
         self._processMap["get_today_driver_info"] = Processor.process_get_today_driver_info
         self._processMap["get_driver_info"] = Processor.process_get_driver_info
@@ -2659,6 +2703,32 @@ class Processor(Iface, TProcessor):
             msg_type = TMessageType.EXCEPTION
             result = TApplicationException(TApplicationException.INTERNAL_ERROR, 'Internal error')
         oprot.writeMessageBegin("driver_silent_unregister", msg_type, seqid)
+        result.write(oprot)
+        oprot.writeMessageEnd()
+        oprot.trans.flush()
+
+    def process_driver_silent_reset(self, seqid, iprot, oprot):
+        args = driver_silent_reset_args()
+        args.read(iprot)
+        iprot.readMessageEnd()
+        result = driver_silent_reset_result()
+        try:
+            self._handler.driver_silent_reset(args.ssid, args.silent_id)
+            msg_type = TMessageType.REPLY
+        except TTransport.TTransportException:
+            raise
+        except gen_exp as e:
+            msg_type = TMessageType.REPLY
+            result.e = e
+        except TApplicationException as ex:
+            logging.exception('TApplication exception in handler')
+            msg_type = TMessageType.EXCEPTION
+            result = ex
+        except Exception:
+            logging.exception('Unexpected exception in handler')
+            msg_type = TMessageType.EXCEPTION
+            result = TApplicationException(TApplicationException.INTERNAL_ERROR, 'Internal error')
+        oprot.writeMessageBegin("driver_silent_reset", msg_type, seqid)
         result.write(oprot)
         oprot.writeMessageEnd()
         oprot.trans.flush()
@@ -7582,6 +7652,142 @@ class driver_silent_unregister_result(object):
         return not (self == other)
 all_structs.append(driver_silent_unregister_result)
 driver_silent_unregister_result.thrift_spec = (
+    None,  # 0
+    (1, TType.STRUCT, 'e', [gen_exp, None], None, ),  # 1
+)
+
+
+class driver_silent_reset_args(object):
+    """
+    Attributes:
+     - ssid
+     - silent_id
+
+    """
+
+
+    def __init__(self, ssid=None, silent_id=None,):
+        self.ssid = ssid
+        self.silent_id = silent_id
+
+    def read(self, iprot):
+        if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
+            iprot._fast_decode(self, iprot, [self.__class__, self.thrift_spec])
+            return
+        iprot.readStructBegin()
+        while True:
+            (fname, ftype, fid) = iprot.readFieldBegin()
+            if ftype == TType.STOP:
+                break
+            if fid == 1:
+                if ftype == TType.STRING:
+                    self.ssid = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 2:
+                if ftype == TType.STRING:
+                    self.silent_id = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
+            else:
+                iprot.skip(ftype)
+            iprot.readFieldEnd()
+        iprot.readStructEnd()
+
+    def write(self, oprot):
+        if oprot._fast_encode is not None and self.thrift_spec is not None:
+            oprot.trans.write(oprot._fast_encode(self, [self.__class__, self.thrift_spec]))
+            return
+        oprot.writeStructBegin('driver_silent_reset_args')
+        if self.ssid is not None:
+            oprot.writeFieldBegin('ssid', TType.STRING, 1)
+            oprot.writeString(self.ssid.encode('utf-8') if sys.version_info[0] == 2 else self.ssid)
+            oprot.writeFieldEnd()
+        if self.silent_id is not None:
+            oprot.writeFieldBegin('silent_id', TType.STRING, 2)
+            oprot.writeString(self.silent_id.encode('utf-8') if sys.version_info[0] == 2 else self.silent_id)
+            oprot.writeFieldEnd()
+        oprot.writeFieldStop()
+        oprot.writeStructEnd()
+
+    def validate(self):
+        return
+
+    def __repr__(self):
+        L = ['%s=%r' % (key, value)
+             for key, value in self.__dict__.items()]
+        return '%s(%s)' % (self.__class__.__name__, ', '.join(L))
+
+    def __eq__(self, other):
+        return isinstance(other, self.__class__) and self.__dict__ == other.__dict__
+
+    def __ne__(self, other):
+        return not (self == other)
+all_structs.append(driver_silent_reset_args)
+driver_silent_reset_args.thrift_spec = (
+    None,  # 0
+    (1, TType.STRING, 'ssid', 'UTF8', None, ),  # 1
+    (2, TType.STRING, 'silent_id', 'UTF8', None, ),  # 2
+)
+
+
+class driver_silent_reset_result(object):
+    """
+    Attributes:
+     - e
+
+    """
+
+
+    def __init__(self, e=None,):
+        self.e = e
+
+    def read(self, iprot):
+        if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
+            iprot._fast_decode(self, iprot, [self.__class__, self.thrift_spec])
+            return
+        iprot.readStructBegin()
+        while True:
+            (fname, ftype, fid) = iprot.readFieldBegin()
+            if ftype == TType.STOP:
+                break
+            if fid == 1:
+                if ftype == TType.STRUCT:
+                    self.e = gen_exp.read(iprot)
+                else:
+                    iprot.skip(ftype)
+            else:
+                iprot.skip(ftype)
+            iprot.readFieldEnd()
+        iprot.readStructEnd()
+
+    def write(self, oprot):
+        if oprot._fast_encode is not None and self.thrift_spec is not None:
+            oprot.trans.write(oprot._fast_encode(self, [self.__class__, self.thrift_spec]))
+            return
+        oprot.writeStructBegin('driver_silent_reset_result')
+        if self.e is not None:
+            oprot.writeFieldBegin('e', TType.STRUCT, 1)
+            self.e.write(oprot)
+            oprot.writeFieldEnd()
+        oprot.writeFieldStop()
+        oprot.writeStructEnd()
+
+    def validate(self):
+        return
+
+    def __repr__(self):
+        L = ['%s=%r' % (key, value)
+             for key, value in self.__dict__.items()]
+        return '%s(%s)' % (self.__class__.__name__, ', '.join(L))
+
+    def __eq__(self, other):
+        return isinstance(other, self.__class__) and self.__dict__ == other.__dict__
+
+    def __ne__(self, other):
+        return not (self == other)
+all_structs.append(driver_silent_reset_result)
+driver_silent_reset_result.thrift_spec = (
     None,  # 0
     (1, TType.STRUCT, 'e', [gen_exp, None], None, ),  # 1
 )

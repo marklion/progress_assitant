@@ -417,6 +417,11 @@ public:
             tmp.price = itr.price;
             tmp.can_enter = itr.no_permission == 0 ? true : false;
             tmp.upload_permit = itr.upload_no_permit == 0 ? true : false;
+            auto silent_id_driver = sqlite_orm::search_record<pa_sql_driver>("phone == '%s' AND silent_id != ''", itr.driver_phone.c_str());
+            if (silent_id_driver)
+            {
+                tmp.driver_silent_id = silent_id_driver->silent_id;
+            }
             _return.push_back(tmp);
         }
     }

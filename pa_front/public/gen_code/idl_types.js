@@ -1582,6 +1582,7 @@ vichele_in_plan = class {
     this.p_weight = null;
     this.m_weight = null;
     this.driver_id = null;
+    this.driver_silent_id = null;
     if (args) {
       if (args.main_vichele !== undefined && args.main_vichele !== null) {
         this.main_vichele = args.main_vichele;
@@ -1633,6 +1634,9 @@ vichele_in_plan = class {
       }
       if (args.driver_id !== undefined && args.driver_id !== null) {
         this.driver_id = args.driver_id;
+      }
+      if (args.driver_silent_id !== undefined && args.driver_silent_id !== null) {
+        this.driver_silent_id = args.driver_silent_id;
       }
     }
   }
@@ -1766,6 +1770,13 @@ vichele_in_plan = class {
           input.skip(ftype);
         }
         break;
+        case 18:
+        if (ftype == Thrift.Type.STRING) {
+          this.driver_silent_id = input.readString().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
         default:
           input.skip(ftype);
       }
@@ -1860,6 +1871,11 @@ vichele_in_plan = class {
     if (this.driver_id !== null && this.driver_id !== undefined) {
       output.writeFieldBegin('driver_id', Thrift.Type.STRING, 17);
       output.writeString(this.driver_id);
+      output.writeFieldEnd();
+    }
+    if (this.driver_silent_id !== null && this.driver_silent_id !== undefined) {
+      output.writeFieldBegin('driver_silent_id', Thrift.Type.STRING, 18);
+      output.writeString(this.driver_silent_id);
       output.writeFieldEnd();
     }
     output.writeFieldStop();
@@ -4845,6 +4861,7 @@ vichele_stay_alone = class {
     this.price = null;
     this.can_enter = null;
     this.upload_permit = null;
+    this.driver_silent_id = null;
     if (args) {
       if (args.id !== undefined && args.id !== null) {
         this.id = args.id;
@@ -4920,6 +4937,9 @@ vichele_stay_alone = class {
       }
       if (args.upload_permit !== undefined && args.upload_permit !== null) {
         this.upload_permit = args.upload_permit;
+      }
+      if (args.driver_silent_id !== undefined && args.driver_silent_id !== null) {
+        this.driver_silent_id = args.driver_silent_id;
       }
     }
   }
@@ -5109,6 +5129,13 @@ vichele_stay_alone = class {
           input.skip(ftype);
         }
         break;
+        case 26:
+        if (ftype == Thrift.Type.STRING) {
+          this.driver_silent_id = input.readString().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
         default:
           input.skip(ftype);
       }
@@ -5243,6 +5270,11 @@ vichele_stay_alone = class {
     if (this.upload_permit !== null && this.upload_permit !== undefined) {
       output.writeFieldBegin('upload_permit', Thrift.Type.BOOL, 25);
       output.writeBool(this.upload_permit);
+      output.writeFieldEnd();
+    }
+    if (this.driver_silent_id !== null && this.driver_silent_id !== undefined) {
+      output.writeFieldBegin('driver_silent_id', Thrift.Type.STRING, 26);
+      output.writeString(this.driver_silent_id);
       output.writeFieldEnd();
     }
     output.writeFieldStop();

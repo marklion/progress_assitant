@@ -1492,11 +1492,12 @@ class vichele_in_plan(object):
      - p_weight
      - m_weight
      - driver_id
+     - driver_silent_id
 
     """
 
 
-    def __init__(self, main_vichele=None, behind_vichele=None, driver_name=None, driver_phone=None, count=None, drop_address=None, use_for=None, vichele_id=None, finish=None, deliver_timestamp=None, register_timestamp=None, register_number=None, enter_location=None, p_time=None, p_weight=None, m_weight=None, driver_id=None,):
+    def __init__(self, main_vichele=None, behind_vichele=None, driver_name=None, driver_phone=None, count=None, drop_address=None, use_for=None, vichele_id=None, finish=None, deliver_timestamp=None, register_timestamp=None, register_number=None, enter_location=None, p_time=None, p_weight=None, m_weight=None, driver_id=None, driver_silent_id=None,):
         self.main_vichele = main_vichele
         self.behind_vichele = behind_vichele
         self.driver_name = driver_name
@@ -1514,6 +1515,7 @@ class vichele_in_plan(object):
         self.p_weight = p_weight
         self.m_weight = m_weight
         self.driver_id = driver_id
+        self.driver_silent_id = driver_silent_id
 
     def read(self, iprot):
         if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
@@ -1609,6 +1611,11 @@ class vichele_in_plan(object):
                     self.driver_id = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
                 else:
                     iprot.skip(ftype)
+            elif fid == 18:
+                if ftype == TType.STRING:
+                    self.driver_silent_id = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
             else:
                 iprot.skip(ftype)
             iprot.readFieldEnd()
@@ -1686,6 +1693,10 @@ class vichele_in_plan(object):
         if self.driver_id is not None:
             oprot.writeFieldBegin('driver_id', TType.STRING, 17)
             oprot.writeString(self.driver_id.encode('utf-8') if sys.version_info[0] == 2 else self.driver_id)
+            oprot.writeFieldEnd()
+        if self.driver_silent_id is not None:
+            oprot.writeFieldBegin('driver_silent_id', TType.STRING, 18)
+            oprot.writeString(self.driver_silent_id.encode('utf-8') if sys.version_info[0] == 2 else self.driver_silent_id)
             oprot.writeFieldEnd()
         oprot.writeFieldStop()
         oprot.writeStructEnd()
@@ -4222,11 +4233,12 @@ class vichele_stay_alone(object):
      - price
      - can_enter
      - upload_permit
+     - driver_silent_id
 
     """
 
 
-    def __init__(self, id=None, stuff_name=None, company_name=None, main_vichele_number=None, behind_vichele_number=None, count=None, comment=None, date=None, destination=None, status=None, creator_name=None, creator_phone=None, repeated=None, driver_name=None, driver_phone=None, driver_id=None, transfor_company=None, p_time=None, m_time=None, p_weight=None, m_weight=None, j_weight=None, price=None, can_enter=None, upload_permit=None,):
+    def __init__(self, id=None, stuff_name=None, company_name=None, main_vichele_number=None, behind_vichele_number=None, count=None, comment=None, date=None, destination=None, status=None, creator_name=None, creator_phone=None, repeated=None, driver_name=None, driver_phone=None, driver_id=None, transfor_company=None, p_time=None, m_time=None, p_weight=None, m_weight=None, j_weight=None, price=None, can_enter=None, upload_permit=None, driver_silent_id=None,):
         self.id = id
         self.stuff_name = stuff_name
         self.company_name = company_name
@@ -4252,6 +4264,7 @@ class vichele_stay_alone(object):
         self.price = price
         self.can_enter = can_enter
         self.upload_permit = upload_permit
+        self.driver_silent_id = driver_silent_id
 
     def read(self, iprot):
         if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
@@ -4387,6 +4400,11 @@ class vichele_stay_alone(object):
                     self.upload_permit = iprot.readBool()
                 else:
                     iprot.skip(ftype)
+            elif fid == 26:
+                if ftype == TType.STRING:
+                    self.driver_silent_id = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
             else:
                 iprot.skip(ftype)
             iprot.readFieldEnd()
@@ -4496,6 +4514,10 @@ class vichele_stay_alone(object):
         if self.upload_permit is not None:
             oprot.writeFieldBegin('upload_permit', TType.BOOL, 25)
             oprot.writeBool(self.upload_permit)
+            oprot.writeFieldEnd()
+        if self.driver_silent_id is not None:
+            oprot.writeFieldBegin('driver_silent_id', TType.STRING, 26)
+            oprot.writeString(self.driver_silent_id.encode('utf-8') if sys.version_info[0] == 2 else self.driver_silent_id)
             oprot.writeFieldEnd()
         oprot.writeFieldStop()
         oprot.writeStructEnd()
@@ -5182,6 +5204,7 @@ vichele_in_plan.thrift_spec = (
     (15, TType.DOUBLE, 'p_weight', None, None, ),  # 15
     (16, TType.DOUBLE, 'm_weight', None, None, ),  # 16
     (17, TType.STRING, 'driver_id', 'UTF8', None, ),  # 17
+    (18, TType.STRING, 'driver_silent_id', 'UTF8', None, ),  # 18
 )
 all_structs.append(stuff_plan)
 stuff_plan.thrift_spec = (
@@ -5431,6 +5454,7 @@ vichele_stay_alone.thrift_spec = (
     (23, TType.DOUBLE, 'price', None, None, ),  # 23
     (24, TType.BOOL, 'can_enter', None, None, ),  # 24
     (25, TType.BOOL, 'upload_permit', None, None, ),  # 25
+    (26, TType.STRING, 'driver_silent_id', 'UTF8', None, ),  # 26
 )
 all_structs.append(silent_user_info)
 silent_user_info.thrift_spec = (

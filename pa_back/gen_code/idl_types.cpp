@@ -2528,6 +2528,10 @@ void vichele_in_plan::__set_m_weight(const double val) {
 void vichele_in_plan::__set_driver_id(const std::string& val) {
   this->driver_id = val;
 }
+
+void vichele_in_plan::__set_driver_silent_id(const std::string& val) {
+  this->driver_silent_id = val;
+}
 std::ostream& operator<<(std::ostream& out, const vichele_in_plan& obj)
 {
   obj.printTo(out);
@@ -2692,6 +2696,14 @@ uint32_t vichele_in_plan::read(::apache::thrift::protocol::TProtocol* iprot) {
           xfer += iprot->skip(ftype);
         }
         break;
+      case 18:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->driver_silent_id);
+          this->__isset.driver_silent_id = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
       default:
         xfer += iprot->skip(ftype);
         break;
@@ -2777,6 +2789,10 @@ uint32_t vichele_in_plan::write(::apache::thrift::protocol::TProtocol* oprot) co
   xfer += oprot->writeString(this->driver_id);
   xfer += oprot->writeFieldEnd();
 
+  xfer += oprot->writeFieldBegin("driver_silent_id", ::apache::thrift::protocol::T_STRING, 18);
+  xfer += oprot->writeString(this->driver_silent_id);
+  xfer += oprot->writeFieldEnd();
+
   xfer += oprot->writeFieldStop();
   xfer += oprot->writeStructEnd();
   return xfer;
@@ -2801,6 +2817,7 @@ void swap(vichele_in_plan &a, vichele_in_plan &b) {
   swap(a.p_weight, b.p_weight);
   swap(a.m_weight, b.m_weight);
   swap(a.driver_id, b.driver_id);
+  swap(a.driver_silent_id, b.driver_silent_id);
   swap(a.__isset, b.__isset);
 }
 
@@ -2822,6 +2839,7 @@ vichele_in_plan::vichele_in_plan(const vichele_in_plan& other32) {
   p_weight = other32.p_weight;
   m_weight = other32.m_weight;
   driver_id = other32.driver_id;
+  driver_silent_id = other32.driver_silent_id;
   __isset = other32.__isset;
 }
 vichele_in_plan& vichele_in_plan::operator=(const vichele_in_plan& other33) {
@@ -2842,6 +2860,7 @@ vichele_in_plan& vichele_in_plan::operator=(const vichele_in_plan& other33) {
   p_weight = other33.p_weight;
   m_weight = other33.m_weight;
   driver_id = other33.driver_id;
+  driver_silent_id = other33.driver_silent_id;
   __isset = other33.__isset;
   return *this;
 }
@@ -2865,6 +2884,7 @@ void vichele_in_plan::printTo(std::ostream& out) const {
   out << ", " << "p_weight=" << to_string(p_weight);
   out << ", " << "m_weight=" << to_string(m_weight);
   out << ", " << "driver_id=" << to_string(driver_id);
+  out << ", " << "driver_silent_id=" << to_string(driver_silent_id);
   out << ")";
 }
 
@@ -7272,6 +7292,10 @@ void vichele_stay_alone::__set_can_enter(const bool val) {
 void vichele_stay_alone::__set_upload_permit(const bool val) {
   this->upload_permit = val;
 }
+
+void vichele_stay_alone::__set_driver_silent_id(const std::string& val) {
+  this->driver_silent_id = val;
+}
 std::ostream& operator<<(std::ostream& out, const vichele_stay_alone& obj)
 {
   obj.printTo(out);
@@ -7500,6 +7524,14 @@ uint32_t vichele_stay_alone::read(::apache::thrift::protocol::TProtocol* iprot) 
           xfer += iprot->skip(ftype);
         }
         break;
+      case 26:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->driver_silent_id);
+          this->__isset.driver_silent_id = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
       default:
         xfer += iprot->skip(ftype);
         break;
@@ -7617,6 +7649,10 @@ uint32_t vichele_stay_alone::write(::apache::thrift::protocol::TProtocol* oprot)
   xfer += oprot->writeBool(this->upload_permit);
   xfer += oprot->writeFieldEnd();
 
+  xfer += oprot->writeFieldBegin("driver_silent_id", ::apache::thrift::protocol::T_STRING, 26);
+  xfer += oprot->writeString(this->driver_silent_id);
+  xfer += oprot->writeFieldEnd();
+
   xfer += oprot->writeFieldStop();
   xfer += oprot->writeStructEnd();
   return xfer;
@@ -7649,6 +7685,7 @@ void swap(vichele_stay_alone &a, vichele_stay_alone &b) {
   swap(a.price, b.price);
   swap(a.can_enter, b.can_enter);
   swap(a.upload_permit, b.upload_permit);
+  swap(a.driver_silent_id, b.driver_silent_id);
   swap(a.__isset, b.__isset);
 }
 
@@ -7678,6 +7715,7 @@ vichele_stay_alone::vichele_stay_alone(const vichele_stay_alone& other92) {
   price = other92.price;
   can_enter = other92.can_enter;
   upload_permit = other92.upload_permit;
+  driver_silent_id = other92.driver_silent_id;
   __isset = other92.__isset;
 }
 vichele_stay_alone& vichele_stay_alone::operator=(const vichele_stay_alone& other93) {
@@ -7706,6 +7744,7 @@ vichele_stay_alone& vichele_stay_alone::operator=(const vichele_stay_alone& othe
   price = other93.price;
   can_enter = other93.can_enter;
   upload_permit = other93.upload_permit;
+  driver_silent_id = other93.driver_silent_id;
   __isset = other93.__isset;
   return *this;
 }
@@ -7737,6 +7776,7 @@ void vichele_stay_alone::printTo(std::ostream& out) const {
   out << ", " << "price=" << to_string(price);
   out << ", " << "can_enter=" << to_string(can_enter);
   out << ", " << "upload_permit=" << to_string(upload_permit);
+  out << ", " << "driver_silent_id=" << to_string(driver_silent_id);
   out << ")";
 }
 
