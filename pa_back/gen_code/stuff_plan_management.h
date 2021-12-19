@@ -53,6 +53,7 @@ class stuff_plan_managementIf {
   virtual bool driver_silent_send_sms(const std::string& driver_phone) = 0;
   virtual void driver_silent_register(std::string& _return, const std::string& code, const std::string& driver_id, const std::string& driver_phone, const std::string& verify_code) = 0;
   virtual void driver_silent_unregister(const std::string& silent_id) = 0;
+  virtual void driver_silent_reset(const std::string& ssid, const std::string& silent_id) = 0;
   virtual bool verify_driver_silent_login(const std::string& silent_id) = 0;
   virtual void get_today_driver_info(std::vector<today_driver_info> & _return, const std::string& silent_id) = 0;
   virtual void get_driver_info(driver_detail_info& _return, const std::string& silent_id) = 0;
@@ -194,6 +195,9 @@ class stuff_plan_managementNull : virtual public stuff_plan_managementIf {
     return;
   }
   void driver_silent_unregister(const std::string& /* silent_id */) {
+    return;
+  }
+  void driver_silent_reset(const std::string& /* ssid */, const std::string& /* silent_id */) {
     return;
   }
   bool verify_driver_silent_login(const std::string& /* silent_id */) {
@@ -3945,6 +3949,117 @@ class stuff_plan_management_driver_silent_unregister_presult {
 
 };
 
+typedef struct _stuff_plan_management_driver_silent_reset_args__isset {
+  _stuff_plan_management_driver_silent_reset_args__isset() : ssid(false), silent_id(false) {}
+  bool ssid :1;
+  bool silent_id :1;
+} _stuff_plan_management_driver_silent_reset_args__isset;
+
+class stuff_plan_management_driver_silent_reset_args {
+ public:
+
+  stuff_plan_management_driver_silent_reset_args(const stuff_plan_management_driver_silent_reset_args&);
+  stuff_plan_management_driver_silent_reset_args& operator=(const stuff_plan_management_driver_silent_reset_args&);
+  stuff_plan_management_driver_silent_reset_args() : ssid(), silent_id() {
+  }
+
+  virtual ~stuff_plan_management_driver_silent_reset_args() noexcept;
+  std::string ssid;
+  std::string silent_id;
+
+  _stuff_plan_management_driver_silent_reset_args__isset __isset;
+
+  void __set_ssid(const std::string& val);
+
+  void __set_silent_id(const std::string& val);
+
+  bool operator == (const stuff_plan_management_driver_silent_reset_args & rhs) const
+  {
+    if (!(ssid == rhs.ssid))
+      return false;
+    if (!(silent_id == rhs.silent_id))
+      return false;
+    return true;
+  }
+  bool operator != (const stuff_plan_management_driver_silent_reset_args &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const stuff_plan_management_driver_silent_reset_args & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+
+class stuff_plan_management_driver_silent_reset_pargs {
+ public:
+
+
+  virtual ~stuff_plan_management_driver_silent_reset_pargs() noexcept;
+  const std::string* ssid;
+  const std::string* silent_id;
+
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _stuff_plan_management_driver_silent_reset_result__isset {
+  _stuff_plan_management_driver_silent_reset_result__isset() : e(false) {}
+  bool e :1;
+} _stuff_plan_management_driver_silent_reset_result__isset;
+
+class stuff_plan_management_driver_silent_reset_result {
+ public:
+
+  stuff_plan_management_driver_silent_reset_result(const stuff_plan_management_driver_silent_reset_result&);
+  stuff_plan_management_driver_silent_reset_result& operator=(const stuff_plan_management_driver_silent_reset_result&);
+  stuff_plan_management_driver_silent_reset_result() {
+  }
+
+  virtual ~stuff_plan_management_driver_silent_reset_result() noexcept;
+  gen_exp e;
+
+  _stuff_plan_management_driver_silent_reset_result__isset __isset;
+
+  void __set_e(const gen_exp& val);
+
+  bool operator == (const stuff_plan_management_driver_silent_reset_result & rhs) const
+  {
+    if (!(e == rhs.e))
+      return false;
+    return true;
+  }
+  bool operator != (const stuff_plan_management_driver_silent_reset_result &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const stuff_plan_management_driver_silent_reset_result & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _stuff_plan_management_driver_silent_reset_presult__isset {
+  _stuff_plan_management_driver_silent_reset_presult__isset() : e(false) {}
+  bool e :1;
+} _stuff_plan_management_driver_silent_reset_presult__isset;
+
+class stuff_plan_management_driver_silent_reset_presult {
+ public:
+
+
+  virtual ~stuff_plan_management_driver_silent_reset_presult() noexcept;
+  gen_exp e;
+
+  _stuff_plan_management_driver_silent_reset_presult__isset __isset;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+
+};
+
 typedef struct _stuff_plan_management_verify_driver_silent_login_args__isset {
   _stuff_plan_management_verify_driver_silent_login_args__isset() : silent_id(false) {}
   bool silent_id :1;
@@ -5015,6 +5130,9 @@ class stuff_plan_managementClient : virtual public stuff_plan_managementIf {
   void driver_silent_unregister(const std::string& silent_id);
   void send_driver_silent_unregister(const std::string& silent_id);
   void recv_driver_silent_unregister();
+  void driver_silent_reset(const std::string& ssid, const std::string& silent_id);
+  void send_driver_silent_reset(const std::string& ssid, const std::string& silent_id);
+  void recv_driver_silent_reset();
   bool verify_driver_silent_login(const std::string& silent_id);
   void send_verify_driver_silent_login(const std::string& silent_id);
   bool recv_verify_driver_silent_login();
@@ -5085,6 +5203,7 @@ class stuff_plan_managementProcessor : public ::apache::thrift::TDispatchProcess
   void process_driver_silent_send_sms(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
   void process_driver_silent_register(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
   void process_driver_silent_unregister(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
+  void process_driver_silent_reset(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
   void process_verify_driver_silent_login(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
   void process_get_today_driver_info(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
   void process_get_driver_info(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
@@ -5127,6 +5246,7 @@ class stuff_plan_managementProcessor : public ::apache::thrift::TDispatchProcess
     processMap_["driver_silent_send_sms"] = &stuff_plan_managementProcessor::process_driver_silent_send_sms;
     processMap_["driver_silent_register"] = &stuff_plan_managementProcessor::process_driver_silent_register;
     processMap_["driver_silent_unregister"] = &stuff_plan_managementProcessor::process_driver_silent_unregister;
+    processMap_["driver_silent_reset"] = &stuff_plan_managementProcessor::process_driver_silent_reset;
     processMap_["verify_driver_silent_login"] = &stuff_plan_managementProcessor::process_verify_driver_silent_login;
     processMap_["get_today_driver_info"] = &stuff_plan_managementProcessor::process_get_today_driver_info;
     processMap_["get_driver_info"] = &stuff_plan_managementProcessor::process_get_driver_info;
@@ -5458,6 +5578,15 @@ class stuff_plan_managementMultiface : virtual public stuff_plan_managementIf {
     ifaces_[i]->driver_silent_unregister(silent_id);
   }
 
+  void driver_silent_reset(const std::string& ssid, const std::string& silent_id) {
+    size_t sz = ifaces_.size();
+    size_t i = 0;
+    for (; i < (sz - 1); ++i) {
+      ifaces_[i]->driver_silent_reset(ssid, silent_id);
+    }
+    ifaces_[i]->driver_silent_reset(ssid, silent_id);
+  }
+
   bool verify_driver_silent_login(const std::string& silent_id) {
     size_t sz = ifaces_.size();
     size_t i = 0;
@@ -5657,6 +5786,9 @@ class stuff_plan_managementConcurrentClient : virtual public stuff_plan_manageme
   void driver_silent_unregister(const std::string& silent_id);
   int32_t send_driver_silent_unregister(const std::string& silent_id);
   void recv_driver_silent_unregister(const int32_t seqid);
+  void driver_silent_reset(const std::string& ssid, const std::string& silent_id);
+  int32_t send_driver_silent_reset(const std::string& ssid, const std::string& silent_id);
+  void recv_driver_silent_reset(const int32_t seqid);
   bool verify_driver_silent_login(const std::string& silent_id);
   int32_t send_verify_driver_silent_login(const std::string& silent_id);
   bool recv_verify_driver_silent_login(const int32_t seqid);

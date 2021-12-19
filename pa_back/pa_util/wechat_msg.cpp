@@ -322,14 +322,7 @@ void PA_WECHAT_send_extra_vichele_msg(pa_sql_vichele_stay_alone &_vichele_info, 
     {
         url = "/driver_register";
     }
-    if ((silent_user && silent_user->open_id == _open_id) || driver)
-    {
-        send_pub_msg_to_wechat(_open_id, "sakeNcUuIkHlvhCyatN6Y_i6Ogaf82SrbZVqczw-FEE", "进厂车辆信息", keywords, _remark, url);
-    }
-    else
-    {
-        send_msg_to_wechat(_open_id, "sakeNcUuIkHlvhCyatN6Y_i6Ogaf82SrbZVqczw-FEE", "进厂车辆信息", keywords, _remark, url);
-    }
+    send_msg_to_wechat(_open_id, "sakeNcUuIkHlvhCyatN6Y_i6Ogaf82SrbZVqczw-FEE", "进厂车辆信息", keywords, _remark, url);
 }
 
 void PA_WECHAT_send_call_vichele_msg(const std::string &_to_user, const std::string &_main_vichele_number, const std::string &_station_name, const std::string &_index)
@@ -341,5 +334,5 @@ void PA_WECHAT_send_call_vichele_msg(const std::string &_to_user, const std::str
     keywords.push_back("暂无");
     keywords.push_back("暂无");
 
-    send_pub_msg_to_wechat(_to_user, "xyUoGYo_0e3X6_2UD-jQmicmKtNzdMHN6M-QyvV20rg", "您的车辆可以进场了", keywords, "", "/driver_register");
+    send_msg_to_wechat(_to_user, "xyUoGYo_0e3X6_2UD-jQmicmKtNzdMHN6M-QyvV20rg", "您的车辆可以进场了", keywords, "", "/driver_register");
 }

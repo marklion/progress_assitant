@@ -13,22 +13,15 @@ import os
 
 robot = werobot.WeRoBot(token='123456')
 
+trans_mini_path = '/pages/index/index?enter_url=/driver_register/'
+extra_vehicle_path = '/pages/index/index?enter_url=/extra_vichele/'
 
 @robot.text
 def plan_search(message):
-    transport = THttpClient('http://localhost:8123/pa_rpc')
-    protocol = TJSONProtocol(transport)
-    transport.open()
-    multi_protocol = TMultiplexedProtocol(protocol, "stuff_plan_management")
-    client = stuff_plan_management.Client(multi_protocol)
-    plan_id = client.search_plan_by_driver_phone(message.content)
-    transport.close()
-    ret = "当前没有手机号为{}的司机需要承运的计划".format(message.content)
-    if len(plan_id) != 0:
-        ret = '手机号为{}的司机需要承运的计划：\n'.format(message.content)
-        for i in plan_id:
-            ret += '<a href="https://www.d8sis.cn/pa_web/plan_detail/{}">计划{}</a>\n'.format(
-                i.id, i.number)
+    ret = "查看历史消息获取掌易助理操作文档。\n"
+    ret += "点击" + '<a href="http://www.qq.com" data-miniprogram-appid="wxfbf41c757510dc4c" data-miniprogram-path="/pages/index/index">进入掌易</a>可以报计划或审批计划\n'
+    ret += '司机点击<a href="http://www.qq.com" data-miniprogram-appid="wxfbf41c757510dc4c" data-miniprogram-path="' + trans_mini_path + '">承运信息</a>可以排号或上传磅单\n'
+    ret += '供应商点击<a href="http://www.qq.com" data-miniprogram-appid="wxfbf41c757510dc4c" data-miniprogram-path="' + extra_vehicle_path + '">送货进厂</a>可以申请车辆送货进厂\n'
 
     return ret
 
@@ -44,13 +37,17 @@ robot.config["APP_SECRET"] = os.getenv("WECHAT_SECRET")
 client = robot.client
 client.create_menu({
     "button": [{
-        "type": "view",
+        "type": "miniprogram",
         "name": "承运信息",
-        "url": "https://www.d8sis.cn/pa_web/driver_register/"
+        "appid":"wxfbf41c757510dc4c",
+        "url": "https://www.d8sis.cn/pa_web/driver_register/",
+        "pagepath": trans_mini_path
     }, {
-        "type": "view",
+        "type": "miniprogram",
         "name": "送货进厂",
-        "url": "https://www.d8sis.cn/pa_web/extra_vichele/"
+        "url": "https://www.d8sis.cn/pa_web/extra_vichele/",
+        "appid": "wxfbf41c757510dc4c",
+        "pagepath": extra_vehicle_path
     }]
 })
 
