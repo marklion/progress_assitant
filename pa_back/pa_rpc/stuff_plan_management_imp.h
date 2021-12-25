@@ -377,34 +377,54 @@ public:
         auto created_user = plan_in_sql->get_parent<pa_sql_userinfo>("created_by");
         if (created_user && created_user->get_pri_id() == opt_user->get_pri_id() && PA_STATUS_RULE_can_be_change(*plan_in_sql, *opt_user, 0))
         {
+            auto new_vehicle_in_plan = plan.vichele_info;
             plan_in_sql->plan_time = plan.plan_time;
             auto orig_vichele_info = plan_in_sql->get_all_children<pa_sql_single_vichele>("belong_plan");
             for (auto &itr : orig_vichele_info)
             {
-                if (itr.finish == 1)
+                try
                 {
-                    std::string main_vichele_number;
-                    auto main_vn = itr.get_parent<pa_sql_vichele>("main_vichele");
-                    if (main_vn)
+                    if (itr.finish == 1)
                     {
-                        main_vichele_number = main_vn->number;
+                        std::string main_vichele_number;
+                        auto main_vn = itr.get_parent<pa_sql_vichele>("main_vichele");
+                        if (main_vn)
+                        {
+                            main_vichele_number = main_vn->number;
+                        }
+                        PA_RETURN_CANNOT_CANCLE((main_vichele_number + "已经完成出货"));
                     }
-                    PA_RETURN_CANNOT_CANCLE((main_vichele_number + "已经完成出货"));
+                    auto update_ret = PA_DATAOPT_post_sync_change_register(itr);
+                    if (update_ret.length() > 0)
+                    {
+                        PA_RETURN_CANNOT_CANCLE(update_ret);
+                    }
+                    auto related_register_info = itr.get_children<pa_sql_driver_register>("belong_vichele");
+                    if (related_register_info)
+                    {
+                        related_register_info->remove_record();
+                    }
+                    itr.remove_record();
                 }
-                auto update_ret = PA_DATAOPT_post_sync_change_register(itr);
-                if (update_ret.length() > 0)
+                catch (...)
                 {
-                    PA_RETURN_CANNOT_CANCLE(update_ret);
+                    auto fail_vm = itr.get_parent<pa_sql_vichele>("main_vichele");
+                    auto fail_vb = itr.get_parent<pa_sql_vichele_behind>("behind_vichele");
+                    if (fail_vm && fail_vb)
+                    {
+                        for (auto vi_itr = new_vehicle_in_plan.begin(); vi_itr != new_vehicle_in_plan.end(); ++vi_itr)
+                        {
+                            if (vi_itr->main_vichele == fail_vm->number || vi_itr->behind_vichele == fail_vb->number)
+                            {
+                                new_vehicle_in_plan.erase(vi_itr);
+                                break;
+                            }
+                        }
+                    }
                 }
-                auto related_register_info = itr.get_children<pa_sql_driver_register>("belong_vichele");
-                if (related_register_info)
-                {
-                    related_register_info->remove_record();
-                }
-                itr.remove_record();
             }
             PA_STATUS_RULE_change_status(*plan_in_sql, 0, *opt_user);
-            for (auto &itr : plan.vichele_info)
+            for (auto &itr : new_vehicle_in_plan)
             {
                 auto main_vhichele = company->get_children<pa_sql_vichele>("belong_company", "number = '%s'", itr.main_vichele.c_str());
                 auto behind_vhichele = company->get_children<pa_sql_vichele_behind>("belong_company", "number = '%s'", itr.behind_vichele.c_str());
@@ -695,7 +715,7 @@ public:
             if (ret)
             {
                 std::string deliver_vichele_numbers = "";
-                for (auto &itr:deliver_infos)
+                for (auto &itr : deliver_infos)
                 {
                     auto delivered_vichele_info = plan->get_children<pa_sql_single_vichele>("belong_plan", "PRI_ID = %ld AND finish = 1", itr.id);
                     if (delivered_vichele_info)
@@ -707,7 +727,7 @@ public:
                         }
                     }
                 }
-                plan->send_wechat_msg(opt_user, deliver_vichele_numbers +  " 当前已出货" + std::to_string(deliver_count) + "车/共" + std::to_string(total_count) + "车");
+                plan->send_wechat_msg(opt_user, deliver_vichele_numbers + " 当前已出货" + std::to_string(deliver_count) + "车/共" + std::to_string(total_count) + "车");
             }
         }
         else
@@ -1026,10 +1046,10 @@ public:
         for (auto &itr : company_user)
         {
             auto related_plan = stuff_type->get_all_children<pa_sql_plan>("belong_stuff", "(created_by_ext_key == %ld OR proxy_company == '%s') AND status < 4", itr.get_pri_id(), company->name.c_str());
-            for (auto &itr_in_plan:related_plan)
+            for (auto &itr_in_plan : related_plan)
             {
                 auto all_vichele_in_plan = itr_in_plan.get_all_children<pa_sql_single_vichele>("belong_plan");
-                for (auto &itr_vichele:all_vichele_in_plan)
+                for (auto &itr_vichele : all_vichele_in_plan)
                 {
                     if (!itr_vichele.finish)
                     {
@@ -1806,7 +1826,7 @@ public:
             }
         }
         auto related_stay_alone_vichele = sqlite_orm::search_record_all<pa_sql_vichele_stay_alone>("status == 1 AND is_drop == 0 AND driver_phone == '%s'", sample_phone.c_str());
-        for (auto &itr:related_stay_alone_vichele)
+        for (auto &itr : related_stay_alone_vichele)
         {
             today_driver_info tmp;
             tmp.behind_vichele = itr.behind_vichele_number;
@@ -1821,10 +1841,10 @@ public:
             std::string dest_company;
             tmp.tmd_no = itr.tmd_no;
             tmp.date = itr.date;
-            tmp.can_enter = itr.no_permission == 0?true:false;
+            tmp.can_enter = itr.no_permission == 0 ? true : false;
             tmp.attach_url = itr.attach_path;
             tmp.count = itr.count;
-            tmp.upload_permit = itr.upload_no_permit == 0?true:false;
+            tmp.upload_permit = itr.upload_no_permit == 0 ? true : false;
             auto dest_company_p = itr.get_parent<pa_sql_company>("destination");
             if (dest_company_p)
             {
@@ -1840,7 +1860,8 @@ public:
             }
             int pos = 0;
             int found_pos = 0;
-            while ((found_pos = itr.company_for_select.find(';', pos)) != std::string::npos) {
+            while ((found_pos = itr.company_for_select.find(';', pos)) != std::string::npos)
+            {
                 auto company_name = itr.company_for_select.substr(pos, found_pos - pos);
                 auto today_company_info = sqlite_orm::search_record_all<pa_sql_vichele_stay_alone>("company_name == '%s' AND status > 0 AND is_drop == 0 AND date == '%s'", company_name.c_str(), PA_DATAOPT_current_time().substr(0, 10).c_str());
                 vichele_management_handler vmh;
@@ -2022,12 +2043,12 @@ public:
             PA_RETURN_UNLOGIN_MSG();
         }
         std::string query_cmd = "PRI_ID == 0";
-        for (auto &itr:plan_id)
+        for (auto &itr : plan_id)
         {
             query_cmd += " OR PRI_ID == " + std::to_string(itr);
         }
         auto plans = PA_RPC_get_all_plans_related_by_user(ssid, "(%s) AND status != 4", query_cmd.c_str());
-        for (auto &itr:plans)
+        for (auto &itr : plans)
         {
             std::string remark = "调整了该计划中的货品单价，原价" + std::to_string(itr.price) + "，现价" + std::to_string(new_price);
             itr.price = new_price;
