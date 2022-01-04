@@ -313,6 +313,14 @@ uint32_t stuff_plan_management_get_created_plan_args::read(::apache::thrift::pro
           xfer += iprot->skip(ftype);
         }
         break;
+      case 6:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->plan_date);
+          this->__isset.plan_date = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
       default:
         xfer += iprot->skip(ftype);
         break;
@@ -350,6 +358,10 @@ uint32_t stuff_plan_management_get_created_plan_args::write(::apache::thrift::pr
   xfer += oprot->writeString(this->company_name);
   xfer += oprot->writeFieldEnd();
 
+  xfer += oprot->writeFieldBegin("plan_date", ::apache::thrift::protocol::T_STRING, 6);
+  xfer += oprot->writeString(this->plan_date);
+  xfer += oprot->writeFieldEnd();
+
   xfer += oprot->writeFieldStop();
   xfer += oprot->writeStructEnd();
   return xfer;
@@ -383,6 +395,10 @@ uint32_t stuff_plan_management_get_created_plan_pargs::write(::apache::thrift::p
 
   xfer += oprot->writeFieldBegin("company_name", ::apache::thrift::protocol::T_STRING, 5);
   xfer += oprot->writeString((*(this->company_name)));
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("plan_date", ::apache::thrift::protocol::T_STRING, 6);
+  xfer += oprot->writeString((*(this->plan_date)));
   xfer += oprot->writeFieldEnd();
 
   xfer += oprot->writeFieldStop();
@@ -616,6 +632,14 @@ uint32_t stuff_plan_management_get_company_plan_args::read(::apache::thrift::pro
           xfer += iprot->skip(ftype);
         }
         break;
+      case 6:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->plan_date);
+          this->__isset.plan_date = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
       default:
         xfer += iprot->skip(ftype);
         break;
@@ -653,6 +677,10 @@ uint32_t stuff_plan_management_get_company_plan_args::write(::apache::thrift::pr
   xfer += oprot->writeString(this->company_name);
   xfer += oprot->writeFieldEnd();
 
+  xfer += oprot->writeFieldBegin("plan_date", ::apache::thrift::protocol::T_STRING, 6);
+  xfer += oprot->writeString(this->plan_date);
+  xfer += oprot->writeFieldEnd();
+
   xfer += oprot->writeFieldStop();
   xfer += oprot->writeStructEnd();
   return xfer;
@@ -686,6 +714,10 @@ uint32_t stuff_plan_management_get_company_plan_pargs::write(::apache::thrift::p
 
   xfer += oprot->writeFieldBegin("company_name", ::apache::thrift::protocol::T_STRING, 5);
   xfer += oprot->writeString((*(this->company_name)));
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("plan_date", ::apache::thrift::protocol::T_STRING, 6);
+  xfer += oprot->writeString((*(this->plan_date)));
   xfer += oprot->writeFieldEnd();
 
   xfer += oprot->writeFieldStop();
@@ -9466,13 +9498,13 @@ int64_t stuff_plan_managementClient::recv_create_plan()
   throw ::apache::thrift::TApplicationException(::apache::thrift::TApplicationException::MISSING_RESULT, "create_plan failed: unknown result");
 }
 
-void stuff_plan_managementClient::get_created_plan(std::vector<plan_status> & _return, const std::string& ssid, const int64_t anchor, const int64_t status, const std::string& stuff_name, const std::string& company_name)
+void stuff_plan_managementClient::get_created_plan(std::vector<plan_status> & _return, const std::string& ssid, const int64_t anchor, const int64_t status, const std::string& stuff_name, const std::string& company_name, const std::string& plan_date)
 {
-  send_get_created_plan(ssid, anchor, status, stuff_name, company_name);
+  send_get_created_plan(ssid, anchor, status, stuff_name, company_name, plan_date);
   recv_get_created_plan(_return);
 }
 
-void stuff_plan_managementClient::send_get_created_plan(const std::string& ssid, const int64_t anchor, const int64_t status, const std::string& stuff_name, const std::string& company_name)
+void stuff_plan_managementClient::send_get_created_plan(const std::string& ssid, const int64_t anchor, const int64_t status, const std::string& stuff_name, const std::string& company_name, const std::string& plan_date)
 {
   int32_t cseqid = 0;
   oprot_->writeMessageBegin("get_created_plan", ::apache::thrift::protocol::T_CALL, cseqid);
@@ -9483,6 +9515,7 @@ void stuff_plan_managementClient::send_get_created_plan(const std::string& ssid,
   args.status = &status;
   args.stuff_name = &stuff_name;
   args.company_name = &company_name;
+  args.plan_date = &plan_date;
   args.write(oprot_);
 
   oprot_->writeMessageEnd();
@@ -9531,13 +9564,13 @@ void stuff_plan_managementClient::recv_get_created_plan(std::vector<plan_status>
   throw ::apache::thrift::TApplicationException(::apache::thrift::TApplicationException::MISSING_RESULT, "get_created_plan failed: unknown result");
 }
 
-void stuff_plan_managementClient::get_company_plan(std::vector<plan_status> & _return, const std::string& ssid, const int64_t anchor, const int64_t status, const std::string& stuff_name, const std::string& company_name)
+void stuff_plan_managementClient::get_company_plan(std::vector<plan_status> & _return, const std::string& ssid, const int64_t anchor, const int64_t status, const std::string& stuff_name, const std::string& company_name, const std::string& plan_date)
 {
-  send_get_company_plan(ssid, anchor, status, stuff_name, company_name);
+  send_get_company_plan(ssid, anchor, status, stuff_name, company_name, plan_date);
   recv_get_company_plan(_return);
 }
 
-void stuff_plan_managementClient::send_get_company_plan(const std::string& ssid, const int64_t anchor, const int64_t status, const std::string& stuff_name, const std::string& company_name)
+void stuff_plan_managementClient::send_get_company_plan(const std::string& ssid, const int64_t anchor, const int64_t status, const std::string& stuff_name, const std::string& company_name, const std::string& plan_date)
 {
   int32_t cseqid = 0;
   oprot_->writeMessageBegin("get_company_plan", ::apache::thrift::protocol::T_CALL, cseqid);
@@ -9548,6 +9581,7 @@ void stuff_plan_managementClient::send_get_company_plan(const std::string& ssid,
   args.status = &status;
   args.stuff_name = &stuff_name;
   args.company_name = &company_name;
+  args.plan_date = &plan_date;
   args.write(oprot_);
 
   oprot_->writeMessageEnd();
@@ -11974,7 +12008,7 @@ void stuff_plan_managementProcessor::process_get_created_plan(int32_t seqid, ::a
 
   stuff_plan_management_get_created_plan_result result;
   try {
-    iface_->get_created_plan(result.success, args.ssid, args.anchor, args.status, args.stuff_name, args.company_name);
+    iface_->get_created_plan(result.success, args.ssid, args.anchor, args.status, args.stuff_name, args.company_name, args.plan_date);
     result.__isset.success = true;
   } catch (gen_exp &e) {
     result.e = e;
@@ -12031,7 +12065,7 @@ void stuff_plan_managementProcessor::process_get_company_plan(int32_t seqid, ::a
 
   stuff_plan_management_get_company_plan_result result;
   try {
-    iface_->get_company_plan(result.success, args.ssid, args.anchor, args.status, args.stuff_name, args.company_name);
+    iface_->get_company_plan(result.success, args.ssid, args.anchor, args.status, args.stuff_name, args.company_name, args.plan_date);
     result.__isset.success = true;
   } catch (gen_exp &e) {
     result.e = e;
@@ -14268,13 +14302,13 @@ int64_t stuff_plan_managementConcurrentClient::recv_create_plan(const int32_t se
   } // end while(true)
 }
 
-void stuff_plan_managementConcurrentClient::get_created_plan(std::vector<plan_status> & _return, const std::string& ssid, const int64_t anchor, const int64_t status, const std::string& stuff_name, const std::string& company_name)
+void stuff_plan_managementConcurrentClient::get_created_plan(std::vector<plan_status> & _return, const std::string& ssid, const int64_t anchor, const int64_t status, const std::string& stuff_name, const std::string& company_name, const std::string& plan_date)
 {
-  int32_t seqid = send_get_created_plan(ssid, anchor, status, stuff_name, company_name);
+  int32_t seqid = send_get_created_plan(ssid, anchor, status, stuff_name, company_name, plan_date);
   recv_get_created_plan(_return, seqid);
 }
 
-int32_t stuff_plan_managementConcurrentClient::send_get_created_plan(const std::string& ssid, const int64_t anchor, const int64_t status, const std::string& stuff_name, const std::string& company_name)
+int32_t stuff_plan_managementConcurrentClient::send_get_created_plan(const std::string& ssid, const int64_t anchor, const int64_t status, const std::string& stuff_name, const std::string& company_name, const std::string& plan_date)
 {
   int32_t cseqid = this->sync_->generateSeqId();
   ::apache::thrift::async::TConcurrentSendSentry sentry(this->sync_.get());
@@ -14286,6 +14320,7 @@ int32_t stuff_plan_managementConcurrentClient::send_get_created_plan(const std::
   args.status = &status;
   args.stuff_name = &stuff_name;
   args.company_name = &company_name;
+  args.plan_date = &plan_date;
   args.write(oprot_);
 
   oprot_->writeMessageEnd();
@@ -14360,13 +14395,13 @@ void stuff_plan_managementConcurrentClient::recv_get_created_plan(std::vector<pl
   } // end while(true)
 }
 
-void stuff_plan_managementConcurrentClient::get_company_plan(std::vector<plan_status> & _return, const std::string& ssid, const int64_t anchor, const int64_t status, const std::string& stuff_name, const std::string& company_name)
+void stuff_plan_managementConcurrentClient::get_company_plan(std::vector<plan_status> & _return, const std::string& ssid, const int64_t anchor, const int64_t status, const std::string& stuff_name, const std::string& company_name, const std::string& plan_date)
 {
-  int32_t seqid = send_get_company_plan(ssid, anchor, status, stuff_name, company_name);
+  int32_t seqid = send_get_company_plan(ssid, anchor, status, stuff_name, company_name, plan_date);
   recv_get_company_plan(_return, seqid);
 }
 
-int32_t stuff_plan_managementConcurrentClient::send_get_company_plan(const std::string& ssid, const int64_t anchor, const int64_t status, const std::string& stuff_name, const std::string& company_name)
+int32_t stuff_plan_managementConcurrentClient::send_get_company_plan(const std::string& ssid, const int64_t anchor, const int64_t status, const std::string& stuff_name, const std::string& company_name, const std::string& plan_date)
 {
   int32_t cseqid = this->sync_->generateSeqId();
   ::apache::thrift::async::TConcurrentSendSentry sentry(this->sync_.get());
@@ -14378,6 +14413,7 @@ int32_t stuff_plan_managementConcurrentClient::send_get_company_plan(const std::
   args.status = &status;
   args.stuff_name = &stuff_name;
   args.company_name = &company_name;
+  args.plan_date = &plan_date;
   args.write(oprot_);
 
   oprot_->writeMessageEnd();

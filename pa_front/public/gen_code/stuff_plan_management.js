@@ -169,6 +169,7 @@ stuff_plan_management_get_created_plan_args = class {
     this.status = null;
     this.stuff_name = null;
     this.company_name = null;
+    this.plan_date = null;
     if (args) {
       if (args.ssid !== undefined && args.ssid !== null) {
         this.ssid = args.ssid;
@@ -184,6 +185,9 @@ stuff_plan_management_get_created_plan_args = class {
       }
       if (args.company_name !== undefined && args.company_name !== null) {
         this.company_name = args.company_name;
+      }
+      if (args.plan_date !== undefined && args.plan_date !== null) {
+        this.plan_date = args.plan_date;
       }
     }
   }
@@ -233,6 +237,13 @@ stuff_plan_management_get_created_plan_args = class {
           input.skip(ftype);
         }
         break;
+        case 6:
+        if (ftype == Thrift.Type.STRING) {
+          this.plan_date = input.readString().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
         default:
           input.skip(ftype);
       }
@@ -267,6 +278,11 @@ stuff_plan_management_get_created_plan_args = class {
     if (this.company_name !== null && this.company_name !== undefined) {
       output.writeFieldBegin('company_name', Thrift.Type.STRING, 5);
       output.writeString(this.company_name);
+      output.writeFieldEnd();
+    }
+    if (this.plan_date !== null && this.plan_date !== undefined) {
+      output.writeFieldBegin('plan_date', Thrift.Type.STRING, 6);
+      output.writeString(this.plan_date);
       output.writeFieldEnd();
     }
     output.writeFieldStop();
@@ -368,6 +384,7 @@ stuff_plan_management_get_company_plan_args = class {
     this.status = null;
     this.stuff_name = null;
     this.company_name = null;
+    this.plan_date = null;
     if (args) {
       if (args.ssid !== undefined && args.ssid !== null) {
         this.ssid = args.ssid;
@@ -383,6 +400,9 @@ stuff_plan_management_get_company_plan_args = class {
       }
       if (args.company_name !== undefined && args.company_name !== null) {
         this.company_name = args.company_name;
+      }
+      if (args.plan_date !== undefined && args.plan_date !== null) {
+        this.plan_date = args.plan_date;
       }
     }
   }
@@ -432,6 +452,13 @@ stuff_plan_management_get_company_plan_args = class {
           input.skip(ftype);
         }
         break;
+        case 6:
+        if (ftype == Thrift.Type.STRING) {
+          this.plan_date = input.readString().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
         default:
           input.skip(ftype);
       }
@@ -466,6 +493,11 @@ stuff_plan_management_get_company_plan_args = class {
     if (this.company_name !== null && this.company_name !== undefined) {
       output.writeFieldBegin('company_name', Thrift.Type.STRING, 5);
       output.writeString(this.company_name);
+      output.writeFieldEnd();
+    }
+    if (this.plan_date !== null && this.plan_date !== undefined) {
+      output.writeFieldBegin('plan_date', Thrift.Type.STRING, 6);
+      output.writeString(this.plan_date);
       output.writeFieldEnd();
     }
     output.writeFieldStop();
@@ -5806,22 +5838,23 @@ stuff_plan_managementClient = class stuff_plan_managementClient {
     throw 'create_plan failed: unknown result';
   }
 
-  get_created_plan (ssid, anchor, status, stuff_name, company_name) {
+  get_created_plan (ssid, anchor, status, stuff_name, company_name, plan_date) {
     const self = this;
     return new Promise((resolve, reject) => {
-      self.send_get_created_plan(ssid, anchor, status, stuff_name, company_name, (error, result) => {
+      self.send_get_created_plan(ssid, anchor, status, stuff_name, company_name, plan_date, (error, result) => {
         return error ? reject(error) : resolve(result);
       });
     });
   }
 
-  send_get_created_plan (ssid, anchor, status, stuff_name, company_name, callback) {
+  send_get_created_plan (ssid, anchor, status, stuff_name, company_name, plan_date, callback) {
     const params = {
       ssid: ssid,
       anchor: anchor,
       status: status,
       stuff_name: stuff_name,
-      company_name: company_name
+      company_name: company_name,
+      plan_date: plan_date
     };
     const args = new stuff_plan_management_get_created_plan_args(params);
     try {
@@ -5869,22 +5902,23 @@ stuff_plan_managementClient = class stuff_plan_managementClient {
     throw 'get_created_plan failed: unknown result';
   }
 
-  get_company_plan (ssid, anchor, status, stuff_name, company_name) {
+  get_company_plan (ssid, anchor, status, stuff_name, company_name, plan_date) {
     const self = this;
     return new Promise((resolve, reject) => {
-      self.send_get_company_plan(ssid, anchor, status, stuff_name, company_name, (error, result) => {
+      self.send_get_company_plan(ssid, anchor, status, stuff_name, company_name, plan_date, (error, result) => {
         return error ? reject(error) : resolve(result);
       });
     });
   }
 
-  send_get_company_plan (ssid, anchor, status, stuff_name, company_name, callback) {
+  send_get_company_plan (ssid, anchor, status, stuff_name, company_name, plan_date, callback) {
     const params = {
       ssid: ssid,
       anchor: anchor,
       status: status,
       stuff_name: stuff_name,
-      company_name: company_name
+      company_name: company_name,
+      plan_date: plan_date
     };
     const args = new stuff_plan_management_get_company_plan_args(params);
     try {

@@ -23,8 +23,8 @@ class stuff_plan_managementIf {
  public:
   virtual ~stuff_plan_managementIf() {}
   virtual int64_t create_plan(const stuff_plan& plan, const std::string& ssid, const std::string& proxy_company) = 0;
-  virtual void get_created_plan(std::vector<plan_status> & _return, const std::string& ssid, const int64_t anchor, const int64_t status, const std::string& stuff_name, const std::string& company_name) = 0;
-  virtual void get_company_plan(std::vector<plan_status> & _return, const std::string& ssid, const int64_t anchor, const int64_t status, const std::string& stuff_name, const std::string& company_name) = 0;
+  virtual void get_created_plan(std::vector<plan_status> & _return, const std::string& ssid, const int64_t anchor, const int64_t status, const std::string& stuff_name, const std::string& company_name, const std::string& plan_date) = 0;
+  virtual void get_company_plan(std::vector<plan_status> & _return, const std::string& ssid, const int64_t anchor, const int64_t status, const std::string& stuff_name, const std::string& company_name, const std::string& plan_date) = 0;
   virtual void get_plan(stuff_plan& _return, const int64_t plan_id) = 0;
   virtual bool update_plan(const stuff_plan& plan, const std::string& ssid) = 0;
   virtual bool confirm_plan(const int64_t plan_id, const std::string& ssid, const std::string& comment) = 0;
@@ -95,10 +95,10 @@ class stuff_plan_managementNull : virtual public stuff_plan_managementIf {
     int64_t _return = 0;
     return _return;
   }
-  void get_created_plan(std::vector<plan_status> & /* _return */, const std::string& /* ssid */, const int64_t /* anchor */, const int64_t /* status */, const std::string& /* stuff_name */, const std::string& /* company_name */) {
+  void get_created_plan(std::vector<plan_status> & /* _return */, const std::string& /* ssid */, const int64_t /* anchor */, const int64_t /* status */, const std::string& /* stuff_name */, const std::string& /* company_name */, const std::string& /* plan_date */) {
     return;
   }
-  void get_company_plan(std::vector<plan_status> & /* _return */, const std::string& /* ssid */, const int64_t /* anchor */, const int64_t /* status */, const std::string& /* stuff_name */, const std::string& /* company_name */) {
+  void get_company_plan(std::vector<plan_status> & /* _return */, const std::string& /* ssid */, const int64_t /* anchor */, const int64_t /* status */, const std::string& /* stuff_name */, const std::string& /* company_name */, const std::string& /* plan_date */) {
     return;
   }
   void get_plan(stuff_plan& /* _return */, const int64_t /* plan_id */) {
@@ -359,12 +359,13 @@ class stuff_plan_management_create_plan_presult {
 };
 
 typedef struct _stuff_plan_management_get_created_plan_args__isset {
-  _stuff_plan_management_get_created_plan_args__isset() : ssid(false), anchor(false), status(false), stuff_name(false), company_name(false) {}
+  _stuff_plan_management_get_created_plan_args__isset() : ssid(false), anchor(false), status(false), stuff_name(false), company_name(false), plan_date(false) {}
   bool ssid :1;
   bool anchor :1;
   bool status :1;
   bool stuff_name :1;
   bool company_name :1;
+  bool plan_date :1;
 } _stuff_plan_management_get_created_plan_args__isset;
 
 class stuff_plan_management_get_created_plan_args {
@@ -372,7 +373,7 @@ class stuff_plan_management_get_created_plan_args {
 
   stuff_plan_management_get_created_plan_args(const stuff_plan_management_get_created_plan_args&);
   stuff_plan_management_get_created_plan_args& operator=(const stuff_plan_management_get_created_plan_args&);
-  stuff_plan_management_get_created_plan_args() : ssid(), anchor(0), status(0), stuff_name(), company_name() {
+  stuff_plan_management_get_created_plan_args() : ssid(), anchor(0), status(0), stuff_name(), company_name(), plan_date() {
   }
 
   virtual ~stuff_plan_management_get_created_plan_args() noexcept;
@@ -381,6 +382,7 @@ class stuff_plan_management_get_created_plan_args {
   int64_t status;
   std::string stuff_name;
   std::string company_name;
+  std::string plan_date;
 
   _stuff_plan_management_get_created_plan_args__isset __isset;
 
@@ -394,6 +396,8 @@ class stuff_plan_management_get_created_plan_args {
 
   void __set_company_name(const std::string& val);
 
+  void __set_plan_date(const std::string& val);
+
   bool operator == (const stuff_plan_management_get_created_plan_args & rhs) const
   {
     if (!(ssid == rhs.ssid))
@@ -405,6 +409,8 @@ class stuff_plan_management_get_created_plan_args {
     if (!(stuff_name == rhs.stuff_name))
       return false;
     if (!(company_name == rhs.company_name))
+      return false;
+    if (!(plan_date == rhs.plan_date))
       return false;
     return true;
   }
@@ -430,6 +436,7 @@ class stuff_plan_management_get_created_plan_pargs {
   const int64_t* status;
   const std::string* stuff_name;
   const std::string* company_name;
+  const std::string* plan_date;
 
   uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
 
@@ -499,12 +506,13 @@ class stuff_plan_management_get_created_plan_presult {
 };
 
 typedef struct _stuff_plan_management_get_company_plan_args__isset {
-  _stuff_plan_management_get_company_plan_args__isset() : ssid(false), anchor(false), status(false), stuff_name(false), company_name(false) {}
+  _stuff_plan_management_get_company_plan_args__isset() : ssid(false), anchor(false), status(false), stuff_name(false), company_name(false), plan_date(false) {}
   bool ssid :1;
   bool anchor :1;
   bool status :1;
   bool stuff_name :1;
   bool company_name :1;
+  bool plan_date :1;
 } _stuff_plan_management_get_company_plan_args__isset;
 
 class stuff_plan_management_get_company_plan_args {
@@ -512,7 +520,7 @@ class stuff_plan_management_get_company_plan_args {
 
   stuff_plan_management_get_company_plan_args(const stuff_plan_management_get_company_plan_args&);
   stuff_plan_management_get_company_plan_args& operator=(const stuff_plan_management_get_company_plan_args&);
-  stuff_plan_management_get_company_plan_args() : ssid(), anchor(0), status(0), stuff_name(), company_name() {
+  stuff_plan_management_get_company_plan_args() : ssid(), anchor(0), status(0), stuff_name(), company_name(), plan_date() {
   }
 
   virtual ~stuff_plan_management_get_company_plan_args() noexcept;
@@ -521,6 +529,7 @@ class stuff_plan_management_get_company_plan_args {
   int64_t status;
   std::string stuff_name;
   std::string company_name;
+  std::string plan_date;
 
   _stuff_plan_management_get_company_plan_args__isset __isset;
 
@@ -534,6 +543,8 @@ class stuff_plan_management_get_company_plan_args {
 
   void __set_company_name(const std::string& val);
 
+  void __set_plan_date(const std::string& val);
+
   bool operator == (const stuff_plan_management_get_company_plan_args & rhs) const
   {
     if (!(ssid == rhs.ssid))
@@ -545,6 +556,8 @@ class stuff_plan_management_get_company_plan_args {
     if (!(stuff_name == rhs.stuff_name))
       return false;
     if (!(company_name == rhs.company_name))
+      return false;
+    if (!(plan_date == rhs.plan_date))
       return false;
     return true;
   }
@@ -570,6 +583,7 @@ class stuff_plan_management_get_company_plan_pargs {
   const int64_t* status;
   const std::string* stuff_name;
   const std::string* company_name;
+  const std::string* plan_date;
 
   uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
 
@@ -5040,11 +5054,11 @@ class stuff_plan_managementClient : virtual public stuff_plan_managementIf {
   int64_t create_plan(const stuff_plan& plan, const std::string& ssid, const std::string& proxy_company);
   void send_create_plan(const stuff_plan& plan, const std::string& ssid, const std::string& proxy_company);
   int64_t recv_create_plan();
-  void get_created_plan(std::vector<plan_status> & _return, const std::string& ssid, const int64_t anchor, const int64_t status, const std::string& stuff_name, const std::string& company_name);
-  void send_get_created_plan(const std::string& ssid, const int64_t anchor, const int64_t status, const std::string& stuff_name, const std::string& company_name);
+  void get_created_plan(std::vector<plan_status> & _return, const std::string& ssid, const int64_t anchor, const int64_t status, const std::string& stuff_name, const std::string& company_name, const std::string& plan_date);
+  void send_get_created_plan(const std::string& ssid, const int64_t anchor, const int64_t status, const std::string& stuff_name, const std::string& company_name, const std::string& plan_date);
   void recv_get_created_plan(std::vector<plan_status> & _return);
-  void get_company_plan(std::vector<plan_status> & _return, const std::string& ssid, const int64_t anchor, const int64_t status, const std::string& stuff_name, const std::string& company_name);
-  void send_get_company_plan(const std::string& ssid, const int64_t anchor, const int64_t status, const std::string& stuff_name, const std::string& company_name);
+  void get_company_plan(std::vector<plan_status> & _return, const std::string& ssid, const int64_t anchor, const int64_t status, const std::string& stuff_name, const std::string& company_name, const std::string& plan_date);
+  void send_get_company_plan(const std::string& ssid, const int64_t anchor, const int64_t status, const std::string& stuff_name, const std::string& company_name, const std::string& plan_date);
   void recv_get_company_plan(std::vector<plan_status> & _return);
   void get_plan(stuff_plan& _return, const int64_t plan_id);
   void send_get_plan(const int64_t plan_id);
@@ -5292,23 +5306,23 @@ class stuff_plan_managementMultiface : virtual public stuff_plan_managementIf {
     return ifaces_[i]->create_plan(plan, ssid, proxy_company);
   }
 
-  void get_created_plan(std::vector<plan_status> & _return, const std::string& ssid, const int64_t anchor, const int64_t status, const std::string& stuff_name, const std::string& company_name) {
+  void get_created_plan(std::vector<plan_status> & _return, const std::string& ssid, const int64_t anchor, const int64_t status, const std::string& stuff_name, const std::string& company_name, const std::string& plan_date) {
     size_t sz = ifaces_.size();
     size_t i = 0;
     for (; i < (sz - 1); ++i) {
-      ifaces_[i]->get_created_plan(_return, ssid, anchor, status, stuff_name, company_name);
+      ifaces_[i]->get_created_plan(_return, ssid, anchor, status, stuff_name, company_name, plan_date);
     }
-    ifaces_[i]->get_created_plan(_return, ssid, anchor, status, stuff_name, company_name);
+    ifaces_[i]->get_created_plan(_return, ssid, anchor, status, stuff_name, company_name, plan_date);
     return;
   }
 
-  void get_company_plan(std::vector<plan_status> & _return, const std::string& ssid, const int64_t anchor, const int64_t status, const std::string& stuff_name, const std::string& company_name) {
+  void get_company_plan(std::vector<plan_status> & _return, const std::string& ssid, const int64_t anchor, const int64_t status, const std::string& stuff_name, const std::string& company_name, const std::string& plan_date) {
     size_t sz = ifaces_.size();
     size_t i = 0;
     for (; i < (sz - 1); ++i) {
-      ifaces_[i]->get_company_plan(_return, ssid, anchor, status, stuff_name, company_name);
+      ifaces_[i]->get_company_plan(_return, ssid, anchor, status, stuff_name, company_name, plan_date);
     }
-    ifaces_[i]->get_company_plan(_return, ssid, anchor, status, stuff_name, company_name);
+    ifaces_[i]->get_company_plan(_return, ssid, anchor, status, stuff_name, company_name, plan_date);
     return;
   }
 
@@ -5696,11 +5710,11 @@ class stuff_plan_managementConcurrentClient : virtual public stuff_plan_manageme
   int64_t create_plan(const stuff_plan& plan, const std::string& ssid, const std::string& proxy_company);
   int32_t send_create_plan(const stuff_plan& plan, const std::string& ssid, const std::string& proxy_company);
   int64_t recv_create_plan(const int32_t seqid);
-  void get_created_plan(std::vector<plan_status> & _return, const std::string& ssid, const int64_t anchor, const int64_t status, const std::string& stuff_name, const std::string& company_name);
-  int32_t send_get_created_plan(const std::string& ssid, const int64_t anchor, const int64_t status, const std::string& stuff_name, const std::string& company_name);
+  void get_created_plan(std::vector<plan_status> & _return, const std::string& ssid, const int64_t anchor, const int64_t status, const std::string& stuff_name, const std::string& company_name, const std::string& plan_date);
+  int32_t send_get_created_plan(const std::string& ssid, const int64_t anchor, const int64_t status, const std::string& stuff_name, const std::string& company_name, const std::string& plan_date);
   void recv_get_created_plan(std::vector<plan_status> & _return, const int32_t seqid);
-  void get_company_plan(std::vector<plan_status> & _return, const std::string& ssid, const int64_t anchor, const int64_t status, const std::string& stuff_name, const std::string& company_name);
-  int32_t send_get_company_plan(const std::string& ssid, const int64_t anchor, const int64_t status, const std::string& stuff_name, const std::string& company_name);
+  void get_company_plan(std::vector<plan_status> & _return, const std::string& ssid, const int64_t anchor, const int64_t status, const std::string& stuff_name, const std::string& company_name, const std::string& plan_date);
+  int32_t send_get_company_plan(const std::string& ssid, const int64_t anchor, const int64_t status, const std::string& stuff_name, const std::string& company_name, const std::string& plan_date);
   void recv_get_company_plan(std::vector<plan_status> & _return, const int32_t seqid);
   void get_plan(stuff_plan& _return, const int64_t plan_id);
   int32_t send_get_plan(const int64_t plan_id);
