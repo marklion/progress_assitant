@@ -127,7 +127,7 @@ public:
         }
         return ret;
     }
-    virtual void get_created_plan(std::vector<plan_status> &_return, const std::string &ssid, const int64_t anchor, const int64_t status, const std::string &stuff_name, const std::string &company_name)
+    virtual void get_created_plan(std::vector<plan_status> &_return, const std::string &ssid, const int64_t anchor, const int64_t status, const std::string &stuff_name, const std::string &company_name, const std::string &plan_date)
     {
         auto opt_user = PA_DATAOPT_get_online_user(ssid);
         if (opt_user)
@@ -141,6 +141,10 @@ public:
             {
                 qurey_cmd += " AND name == '" + stuff_name + "'";
             }
+            if (plan_date.length() > 0)
+            {
+                qurey_cmd += " AND plan_time LIKE '" + plan_date + "%'";
+            }
             if (company_name.length() > 0)
             {
                 auto search_company = sqlite_orm::search_record<pa_sql_company>("name == '%s'", company_name.c_str());
@@ -148,7 +152,7 @@ public:
                 {
                     std::string company_cmd = " AND (belong_stuff_ext_key == 0";
                     auto all_stuff = search_company->get_all_children<pa_sql_stuff_info>("belong_company");
-                    for (auto &itr:all_stuff)
+                    for (auto &itr : all_stuff)
                     {
                         company_cmd += " OR belong_stuff_ext_key == " + std::to_string(itr.get_pri_id());
                     }
@@ -382,46 +386,35 @@ public:
             auto orig_vichele_info = plan_in_sql->get_all_children<pa_sql_single_vichele>("belong_plan");
             for (auto &itr : orig_vichele_info)
             {
-                try
+                if (itr.finish == 1)
                 {
-                    if (itr.finish == 1)
+                    std::string main_vichele_number;
+                    auto main_vn = itr.get_parent<pa_sql_vichele>("main_vichele");
+                    if (main_vn)
                     {
-                        std::string main_vichele_number;
-                        auto main_vn = itr.get_parent<pa_sql_vichele>("main_vichele");
-                        if (main_vn)
-                        {
-                            main_vichele_number = main_vn->number;
-                        }
-                        PA_RETURN_CANNOT_CANCLE((main_vichele_number + "已经完成出货"));
+                        main_vichele_number = main_vn->number;
                     }
-                    auto update_ret = PA_DATAOPT_post_sync_change_register(itr);
-                    if (update_ret.length() > 0)
-                    {
-                        PA_RETURN_CANNOT_CANCLE(update_ret);
-                    }
-                    auto related_register_info = itr.get_children<pa_sql_driver_register>("belong_vichele");
-                    if (related_register_info)
-                    {
-                        related_register_info->remove_record();
-                    }
-                    itr.remove_record();
+                    PA_RETURN_CANNOT_CANCLE((main_vichele_number + "已经完成出货"));
                 }
-                catch (...)
+                auto update_ret = PA_DATAOPT_post_sync_change_register(itr);
+                if (update_ret.length() > 0)
                 {
-                    auto fail_vm = itr.get_parent<pa_sql_vichele>("main_vichele");
-                    auto fail_vb = itr.get_parent<pa_sql_vichele_behind>("behind_vichele");
-                    if (fail_vm && fail_vb)
-                    {
-                        for (auto vi_itr = new_vehicle_in_plan.begin(); vi_itr != new_vehicle_in_plan.end(); ++vi_itr)
-                        {
-                            if (vi_itr->main_vichele == fail_vm->number || vi_itr->behind_vichele == fail_vb->number)
-                            {
-                                new_vehicle_in_plan.erase(vi_itr);
-                                break;
-                            }
-                        }
-                    }
+                    PA_RETURN_CANNOT_CANCLE(update_ret);
                 }
+                else
+                {
+                    PA_DATAOPT_post_save_register(*plan_in_sql);
+                }
+            }
+
+            for (auto &itr : orig_vichele_info)
+            {
+                auto related_register_info = itr.get_children<pa_sql_driver_register>("belong_vichele");
+                if (related_register_info)
+                {
+                    related_register_info->remove_record();
+                }
+                itr.remove_record();
             }
             PA_STATUS_RULE_change_status(*plan_in_sql, 0, *opt_user);
             for (auto &itr : new_vehicle_in_plan)
@@ -460,7 +453,7 @@ public:
 
         return ret;
     }
-    virtual void get_company_plan(std::vector<plan_status> &_return, const std::string &ssid, const int64_t anchor, const int64_t status, const std::string &stuff_name, const std::string &company_name)
+    virtual void get_company_plan(std::vector<plan_status> &_return, const std::string &ssid, const int64_t anchor, const int64_t status, const std::string &stuff_name, const std::string &company_name, const std::string &plan_date)
     {
         auto opt_user = PA_DATAOPT_get_online_user(ssid);
         if (opt_user && opt_user->buyer == false)
@@ -482,6 +475,10 @@ public:
                 if (stuff_name.length() > 0)
                 {
                     connect_param += " AND name == '" + stuff_name + "'";
+                }
+                if (plan_date.length() > 0)
+                {
+                    connect_param += " AND plan_time LIKE '" + plan_date + "%'";
                 }
                 if (company_name.length() > 0)
                 {
@@ -978,7 +975,7 @@ public:
         auto all_related_plan = sqlite_orm::search_record_all<pa_sql_plan>("plan_time LIKE '%s%%' AND status != 4 AND PRI_ID != %ld", plan_time_day.c_str(), self_plan_id);
         for (auto &itr : all_related_plan)
         {
-            auto all_related_vichele_info = itr.get_all_children<pa_sql_single_vichele>("belong_plan");
+            auto all_related_vichele_info = itr.get_all_children<pa_sql_single_vichele>("belong_plan", "(main_vichele_ext_key = %ld OR behind_vichele_ext_key = %ld)", single_vichele.get_pri_id(), single_vichele.get_pri_id());
             for (auto &single_vhichele_info : all_related_vichele_info)
             {
                 auto main_vichele_in_info = single_vhichele_info.get_parent<pa_sql_vichele>("main_vichele");

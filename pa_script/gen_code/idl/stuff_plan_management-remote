@@ -25,8 +25,8 @@ if len(sys.argv) <= 1 or sys.argv[1] == '--help':
     print('')
     print('Functions:')
     print('  i64 create_plan(stuff_plan plan, string ssid, string proxy_company)')
-    print('   get_created_plan(string ssid, i64 anchor, i64 status, string stuff_name, string company_name)')
-    print('   get_company_plan(string ssid, i64 anchor, i64 status, string stuff_name, string company_name)')
+    print('   get_created_plan(string ssid, i64 anchor, i64 status, string stuff_name, string company_name, string plan_date)')
+    print('   get_company_plan(string ssid, i64 anchor, i64 status, string stuff_name, string company_name, string plan_date)')
     print('  stuff_plan get_plan(i64 plan_id)')
     print('  bool update_plan(stuff_plan plan, string ssid)')
     print('  bool confirm_plan(i64 plan_id, string ssid, string comment)')
@@ -150,16 +150,16 @@ if cmd == 'create_plan':
     pp.pprint(client.create_plan(eval(args[0]), args[1], args[2],))
 
 elif cmd == 'get_created_plan':
-    if len(args) != 5:
-        print('get_created_plan requires 5 args')
+    if len(args) != 6:
+        print('get_created_plan requires 6 args')
         sys.exit(1)
-    pp.pprint(client.get_created_plan(args[0], eval(args[1]), eval(args[2]), args[3], args[4],))
+    pp.pprint(client.get_created_plan(args[0], eval(args[1]), eval(args[2]), args[3], args[4], args[5],))
 
 elif cmd == 'get_company_plan':
-    if len(args) != 5:
-        print('get_company_plan requires 5 args')
+    if len(args) != 6:
+        print('get_company_plan requires 6 args')
         sys.exit(1)
-    pp.pprint(client.get_company_plan(args[0], eval(args[1]), eval(args[2]), args[3], args[4],))
+    pp.pprint(client.get_company_plan(args[0], eval(args[1]), eval(args[2]), args[3], args[4], args[5],))
 
 elif cmd == 'get_plan':
     if len(args) != 1:

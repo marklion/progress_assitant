@@ -29,7 +29,7 @@ class Iface(object):
         """
         pass
 
-    def get_created_plan(self, ssid, anchor, status, stuff_name, company_name):
+    def get_created_plan(self, ssid, anchor, status, stuff_name, company_name, plan_date):
         """
         Parameters:
          - ssid
@@ -37,11 +37,12 @@ class Iface(object):
          - status
          - stuff_name
          - company_name
+         - plan_date
 
         """
         pass
 
-    def get_company_plan(self, ssid, anchor, status, stuff_name, company_name):
+    def get_company_plan(self, ssid, anchor, status, stuff_name, company_name, plan_date):
         """
         Parameters:
          - ssid
@@ -49,6 +50,7 @@ class Iface(object):
          - status
          - stuff_name
          - company_name
+         - plan_date
 
         """
         pass
@@ -428,7 +430,7 @@ class Client(Iface):
             raise result.e
         raise TApplicationException(TApplicationException.MISSING_RESULT, "create_plan failed: unknown result")
 
-    def get_created_plan(self, ssid, anchor, status, stuff_name, company_name):
+    def get_created_plan(self, ssid, anchor, status, stuff_name, company_name, plan_date):
         """
         Parameters:
          - ssid
@@ -436,12 +438,13 @@ class Client(Iface):
          - status
          - stuff_name
          - company_name
+         - plan_date
 
         """
-        self.send_get_created_plan(ssid, anchor, status, stuff_name, company_name)
+        self.send_get_created_plan(ssid, anchor, status, stuff_name, company_name, plan_date)
         return self.recv_get_created_plan()
 
-    def send_get_created_plan(self, ssid, anchor, status, stuff_name, company_name):
+    def send_get_created_plan(self, ssid, anchor, status, stuff_name, company_name, plan_date):
         self._oprot.writeMessageBegin('get_created_plan', TMessageType.CALL, self._seqid)
         args = get_created_plan_args()
         args.ssid = ssid
@@ -449,6 +452,7 @@ class Client(Iface):
         args.status = status
         args.stuff_name = stuff_name
         args.company_name = company_name
+        args.plan_date = plan_date
         args.write(self._oprot)
         self._oprot.writeMessageEnd()
         self._oprot.trans.flush()
@@ -470,7 +474,7 @@ class Client(Iface):
             raise result.e
         raise TApplicationException(TApplicationException.MISSING_RESULT, "get_created_plan failed: unknown result")
 
-    def get_company_plan(self, ssid, anchor, status, stuff_name, company_name):
+    def get_company_plan(self, ssid, anchor, status, stuff_name, company_name, plan_date):
         """
         Parameters:
          - ssid
@@ -478,12 +482,13 @@ class Client(Iface):
          - status
          - stuff_name
          - company_name
+         - plan_date
 
         """
-        self.send_get_company_plan(ssid, anchor, status, stuff_name, company_name)
+        self.send_get_company_plan(ssid, anchor, status, stuff_name, company_name, plan_date)
         return self.recv_get_company_plan()
 
-    def send_get_company_plan(self, ssid, anchor, status, stuff_name, company_name):
+    def send_get_company_plan(self, ssid, anchor, status, stuff_name, company_name, plan_date):
         self._oprot.writeMessageBegin('get_company_plan', TMessageType.CALL, self._seqid)
         args = get_company_plan_args()
         args.ssid = ssid
@@ -491,6 +496,7 @@ class Client(Iface):
         args.status = status
         args.stuff_name = stuff_name
         args.company_name = company_name
+        args.plan_date = plan_date
         args.write(self._oprot)
         self._oprot.writeMessageEnd()
         self._oprot.trans.flush()
@@ -1933,7 +1939,7 @@ class Processor(Iface, TProcessor):
         iprot.readMessageEnd()
         result = get_created_plan_result()
         try:
-            result.success = self._handler.get_created_plan(args.ssid, args.anchor, args.status, args.stuff_name, args.company_name)
+            result.success = self._handler.get_created_plan(args.ssid, args.anchor, args.status, args.stuff_name, args.company_name, args.plan_date)
             msg_type = TMessageType.REPLY
         except TTransport.TTransportException:
             raise
@@ -1959,7 +1965,7 @@ class Processor(Iface, TProcessor):
         iprot.readMessageEnd()
         result = get_company_plan_result()
         try:
-            result.success = self._handler.get_company_plan(args.ssid, args.anchor, args.status, args.stuff_name, args.company_name)
+            result.success = self._handler.get_company_plan(args.ssid, args.anchor, args.status, args.stuff_name, args.company_name, args.plan_date)
             msg_type = TMessageType.REPLY
         except TTransport.TTransportException:
             raise
@@ -3112,16 +3118,18 @@ class get_created_plan_args(object):
      - status
      - stuff_name
      - company_name
+     - plan_date
 
     """
 
 
-    def __init__(self, ssid=None, anchor=None, status=None, stuff_name=None, company_name=None,):
+    def __init__(self, ssid=None, anchor=None, status=None, stuff_name=None, company_name=None, plan_date=None,):
         self.ssid = ssid
         self.anchor = anchor
         self.status = status
         self.stuff_name = stuff_name
         self.company_name = company_name
+        self.plan_date = plan_date
 
     def read(self, iprot):
         if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
@@ -3157,6 +3165,11 @@ class get_created_plan_args(object):
                     self.company_name = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
                 else:
                     iprot.skip(ftype)
+            elif fid == 6:
+                if ftype == TType.STRING:
+                    self.plan_date = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
             else:
                 iprot.skip(ftype)
             iprot.readFieldEnd()
@@ -3187,6 +3200,10 @@ class get_created_plan_args(object):
             oprot.writeFieldBegin('company_name', TType.STRING, 5)
             oprot.writeString(self.company_name.encode('utf-8') if sys.version_info[0] == 2 else self.company_name)
             oprot.writeFieldEnd()
+        if self.plan_date is not None:
+            oprot.writeFieldBegin('plan_date', TType.STRING, 6)
+            oprot.writeString(self.plan_date.encode('utf-8') if sys.version_info[0] == 2 else self.plan_date)
+            oprot.writeFieldEnd()
         oprot.writeFieldStop()
         oprot.writeStructEnd()
 
@@ -3211,6 +3228,7 @@ get_created_plan_args.thrift_spec = (
     (3, TType.I64, 'status', None, None, ),  # 3
     (4, TType.STRING, 'stuff_name', 'UTF8', None, ),  # 4
     (5, TType.STRING, 'company_name', 'UTF8', None, ),  # 5
+    (6, TType.STRING, 'plan_date', 'UTF8', None, ),  # 6
 )
 
 
@@ -3304,16 +3322,18 @@ class get_company_plan_args(object):
      - status
      - stuff_name
      - company_name
+     - plan_date
 
     """
 
 
-    def __init__(self, ssid=None, anchor=None, status=None, stuff_name=None, company_name=None,):
+    def __init__(self, ssid=None, anchor=None, status=None, stuff_name=None, company_name=None, plan_date=None,):
         self.ssid = ssid
         self.anchor = anchor
         self.status = status
         self.stuff_name = stuff_name
         self.company_name = company_name
+        self.plan_date = plan_date
 
     def read(self, iprot):
         if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
@@ -3349,6 +3369,11 @@ class get_company_plan_args(object):
                     self.company_name = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
                 else:
                     iprot.skip(ftype)
+            elif fid == 6:
+                if ftype == TType.STRING:
+                    self.plan_date = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
             else:
                 iprot.skip(ftype)
             iprot.readFieldEnd()
@@ -3379,6 +3404,10 @@ class get_company_plan_args(object):
             oprot.writeFieldBegin('company_name', TType.STRING, 5)
             oprot.writeString(self.company_name.encode('utf-8') if sys.version_info[0] == 2 else self.company_name)
             oprot.writeFieldEnd()
+        if self.plan_date is not None:
+            oprot.writeFieldBegin('plan_date', TType.STRING, 6)
+            oprot.writeString(self.plan_date.encode('utf-8') if sys.version_info[0] == 2 else self.plan_date)
+            oprot.writeFieldEnd()
         oprot.writeFieldStop()
         oprot.writeStructEnd()
 
@@ -3403,6 +3432,7 @@ get_company_plan_args.thrift_spec = (
     (3, TType.I64, 'status', None, None, ),  # 3
     (4, TType.STRING, 'stuff_name', 'UTF8', None, ),  # 4
     (5, TType.STRING, 'company_name', 'UTF8', None, ),  # 5
+    (6, TType.STRING, 'plan_date', 'UTF8', None, ),  # 6
 )
 
 

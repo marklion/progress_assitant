@@ -361,6 +361,14 @@ export default {
                 vue_this.show_search_result = true;
             });
         },
+        formatDateTime: function (date) {
+            var y = date.getFullYear();
+            var m = date.getMonth() + 1;
+            m = m < 10 ? ('0' + m) : m;
+            var d = date.getDate();
+            d = d < 10 ? ('0' + d) : d;
+            return y + '-' + m + '-' + d;
+        },
         get_orders_by_ancher: function (_init) {
             var vue_this = this;
             var func = "get_company_plan";
@@ -375,7 +383,16 @@ export default {
             if (vue_this.company_filter == 0) {
                 company_search = "";
             }
-            vue_this.$call_remote_process("stuff_plan_management", func, [vue_this.$cookies.get('pa_ssid'), vue_this.orders.length, vue_this.status_name_map[vue_this.active].status, stuff_name, company_search]).then(function (resp) {
+
+            var req_date = new Date();
+            req_date.setDate(req_date.getDate() + vue_this.date_filter - 1);
+            var req_date_string = vue_this.formatDateTime(req_date);
+            if (vue_this.date_filter == 0 || vue_this.date_filter == 3)
+            {
+                req_date_string = "";
+            }
+
+            vue_this.$call_remote_process("stuff_plan_management", func, [vue_this.$cookies.get('pa_ssid'), vue_this.orders.length, vue_this.status_name_map[vue_this.active].status, stuff_name, company_search, req_date_string]).then(function (resp) {
                 if (_init && _init == true) {
                     vue_this.orders = [];
                     vue_this.lazy_finished = false;

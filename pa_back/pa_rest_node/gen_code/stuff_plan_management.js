@@ -168,6 +168,7 @@ var stuff_plan_management_get_created_plan_args = function(args) {
   this.status = null;
   this.stuff_name = null;
   this.company_name = null;
+  this.plan_date = null;
   if (args) {
     if (args.ssid !== undefined && args.ssid !== null) {
       this.ssid = args.ssid;
@@ -183,6 +184,9 @@ var stuff_plan_management_get_created_plan_args = function(args) {
     }
     if (args.company_name !== undefined && args.company_name !== null) {
       this.company_name = args.company_name;
+    }
+    if (args.plan_date !== undefined && args.plan_date !== null) {
+      this.plan_date = args.plan_date;
     }
   }
 };
@@ -232,6 +236,13 @@ stuff_plan_management_get_created_plan_args.prototype.read = function(input) {
         input.skip(ftype);
       }
       break;
+      case 6:
+      if (ftype == Thrift.Type.STRING) {
+        this.plan_date = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
       default:
         input.skip(ftype);
     }
@@ -266,6 +277,11 @@ stuff_plan_management_get_created_plan_args.prototype.write = function(output) {
   if (this.company_name !== null && this.company_name !== undefined) {
     output.writeFieldBegin('company_name', Thrift.Type.STRING, 5);
     output.writeString(this.company_name);
+    output.writeFieldEnd();
+  }
+  if (this.plan_date !== null && this.plan_date !== undefined) {
+    output.writeFieldBegin('plan_date', Thrift.Type.STRING, 6);
+    output.writeString(this.plan_date);
     output.writeFieldEnd();
   }
   output.writeFieldStop();
@@ -363,6 +379,7 @@ var stuff_plan_management_get_company_plan_args = function(args) {
   this.status = null;
   this.stuff_name = null;
   this.company_name = null;
+  this.plan_date = null;
   if (args) {
     if (args.ssid !== undefined && args.ssid !== null) {
       this.ssid = args.ssid;
@@ -378,6 +395,9 @@ var stuff_plan_management_get_company_plan_args = function(args) {
     }
     if (args.company_name !== undefined && args.company_name !== null) {
       this.company_name = args.company_name;
+    }
+    if (args.plan_date !== undefined && args.plan_date !== null) {
+      this.plan_date = args.plan_date;
     }
   }
 };
@@ -427,6 +447,13 @@ stuff_plan_management_get_company_plan_args.prototype.read = function(input) {
         input.skip(ftype);
       }
       break;
+      case 6:
+      if (ftype == Thrift.Type.STRING) {
+        this.plan_date = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
       default:
         input.skip(ftype);
     }
@@ -461,6 +488,11 @@ stuff_plan_management_get_company_plan_args.prototype.write = function(output) {
   if (this.company_name !== null && this.company_name !== undefined) {
     output.writeFieldBegin('company_name', Thrift.Type.STRING, 5);
     output.writeString(this.company_name);
+    output.writeFieldEnd();
+  }
+  if (this.plan_date !== null && this.plan_date !== undefined) {
+    output.writeFieldBegin('plan_date', Thrift.Type.STRING, 6);
+    output.writeString(this.plan_date);
     output.writeFieldEnd();
   }
   output.writeFieldStop();
@@ -5656,7 +5688,7 @@ stuff_plan_managementClient.prototype.recv_create_plan = function(input,mtype,rs
   return callback('create_plan failed: unknown result');
 };
 
-stuff_plan_managementClient.prototype.get_created_plan = function(ssid, anchor, status, stuff_name, company_name, callback) {
+stuff_plan_managementClient.prototype.get_created_plan = function(ssid, anchor, status, stuff_name, company_name, plan_date, callback) {
   this._seqid = this.new_seqid();
   if (callback === undefined) {
     var _defer = Q.defer();
@@ -5667,22 +5699,23 @@ stuff_plan_managementClient.prototype.get_created_plan = function(ssid, anchor, 
         _defer.resolve(result);
       }
     };
-    this.send_get_created_plan(ssid, anchor, status, stuff_name, company_name);
+    this.send_get_created_plan(ssid, anchor, status, stuff_name, company_name, plan_date);
     return _defer.promise;
   } else {
     this._reqs[this.seqid()] = callback;
-    this.send_get_created_plan(ssid, anchor, status, stuff_name, company_name);
+    this.send_get_created_plan(ssid, anchor, status, stuff_name, company_name, plan_date);
   }
 };
 
-stuff_plan_managementClient.prototype.send_get_created_plan = function(ssid, anchor, status, stuff_name, company_name) {
+stuff_plan_managementClient.prototype.send_get_created_plan = function(ssid, anchor, status, stuff_name, company_name, plan_date) {
   var output = new this.pClass(this.output);
   var params = {
     ssid: ssid,
     anchor: anchor,
     status: status,
     stuff_name: stuff_name,
-    company_name: company_name
+    company_name: company_name,
+    plan_date: plan_date
   };
   var args = new stuff_plan_management_get_created_plan_args(params);
   try {
@@ -5722,7 +5755,7 @@ stuff_plan_managementClient.prototype.recv_get_created_plan = function(input,mty
   return callback('get_created_plan failed: unknown result');
 };
 
-stuff_plan_managementClient.prototype.get_company_plan = function(ssid, anchor, status, stuff_name, company_name, callback) {
+stuff_plan_managementClient.prototype.get_company_plan = function(ssid, anchor, status, stuff_name, company_name, plan_date, callback) {
   this._seqid = this.new_seqid();
   if (callback === undefined) {
     var _defer = Q.defer();
@@ -5733,22 +5766,23 @@ stuff_plan_managementClient.prototype.get_company_plan = function(ssid, anchor, 
         _defer.resolve(result);
       }
     };
-    this.send_get_company_plan(ssid, anchor, status, stuff_name, company_name);
+    this.send_get_company_plan(ssid, anchor, status, stuff_name, company_name, plan_date);
     return _defer.promise;
   } else {
     this._reqs[this.seqid()] = callback;
-    this.send_get_company_plan(ssid, anchor, status, stuff_name, company_name);
+    this.send_get_company_plan(ssid, anchor, status, stuff_name, company_name, plan_date);
   }
 };
 
-stuff_plan_managementClient.prototype.send_get_company_plan = function(ssid, anchor, status, stuff_name, company_name) {
+stuff_plan_managementClient.prototype.send_get_company_plan = function(ssid, anchor, status, stuff_name, company_name, plan_date) {
   var output = new this.pClass(this.output);
   var params = {
     ssid: ssid,
     anchor: anchor,
     status: status,
     stuff_name: stuff_name,
-    company_name: company_name
+    company_name: company_name,
+    plan_date: plan_date
   };
   var args = new stuff_plan_management_get_company_plan_args(params);
   try {
@@ -8172,13 +8206,14 @@ stuff_plan_managementProcessor.prototype.process_get_created_plan = function(seq
   var args = new stuff_plan_management_get_created_plan_args();
   args.read(input);
   input.readMessageEnd();
-  if (this._handler.get_created_plan.length === 5) {
+  if (this._handler.get_created_plan.length === 6) {
     Q.fcall(this._handler.get_created_plan.bind(this._handler),
       args.ssid,
       args.anchor,
       args.status,
       args.stuff_name,
-      args.company_name
+      args.company_name,
+      args.plan_date
     ).then(function(result) {
       var result_obj = new stuff_plan_management_get_created_plan_result({success: result});
       output.writeMessageBegin("get_created_plan", Thrift.MessageType.REPLY, seqid);
@@ -8199,7 +8234,7 @@ stuff_plan_managementProcessor.prototype.process_get_created_plan = function(seq
       output.flush();
     });
   } else {
-    this._handler.get_created_plan(args.ssid, args.anchor, args.status, args.stuff_name, args.company_name, function (err, result) {
+    this._handler.get_created_plan(args.ssid, args.anchor, args.status, args.stuff_name, args.company_name, args.plan_date, function (err, result) {
       var result_obj;
       if ((err === null || typeof err === 'undefined') || err instanceof ttypes.gen_exp) {
         result_obj = new stuff_plan_management_get_created_plan_result((err !== null || typeof err === 'undefined') ? err : {success: result});
@@ -8218,13 +8253,14 @@ stuff_plan_managementProcessor.prototype.process_get_company_plan = function(seq
   var args = new stuff_plan_management_get_company_plan_args();
   args.read(input);
   input.readMessageEnd();
-  if (this._handler.get_company_plan.length === 5) {
+  if (this._handler.get_company_plan.length === 6) {
     Q.fcall(this._handler.get_company_plan.bind(this._handler),
       args.ssid,
       args.anchor,
       args.status,
       args.stuff_name,
-      args.company_name
+      args.company_name,
+      args.plan_date
     ).then(function(result) {
       var result_obj = new stuff_plan_management_get_company_plan_result({success: result});
       output.writeMessageBegin("get_company_plan", Thrift.MessageType.REPLY, seqid);
@@ -8245,7 +8281,7 @@ stuff_plan_managementProcessor.prototype.process_get_company_plan = function(seq
       output.flush();
     });
   } else {
-    this._handler.get_company_plan(args.ssid, args.anchor, args.status, args.stuff_name, args.company_name, function (err, result) {
+    this._handler.get_company_plan(args.ssid, args.anchor, args.status, args.stuff_name, args.company_name, args.plan_date, function (err, result) {
       var result_obj;
       if ((err === null || typeof err === 'undefined') || err instanceof ttypes.gen_exp) {
         result_obj = new stuff_plan_management_get_company_plan_result((err !== null || typeof err === 'undefined') ? err : {success: result});

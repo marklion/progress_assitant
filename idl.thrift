@@ -311,8 +311,8 @@ struct driver_detail_info {
 
 service stuff_plan_management {
     i64 create_plan(1:stuff_plan plan, 2:string ssid, 3:string proxy_company) throws (1:gen_exp e),
-    list<plan_status> get_created_plan(1:string ssid, 2:i64 anchor, 3:i64 status, 4:string stuff_name, 5:string company_name) throws (1:gen_exp e),
-    list<plan_status> get_company_plan(1:string ssid, 2:i64 anchor, 3:i64 status, 4:string stuff_name, 5:string company_name) throws (1:gen_exp e),
+    list<plan_status> get_created_plan(1:string ssid, 2:i64 anchor, 3:i64 status, 4:string stuff_name, 5:string company_name, 6:string plan_date) throws (1:gen_exp e),
+    list<plan_status> get_company_plan(1:string ssid, 2:i64 anchor, 3:i64 status, 4:string stuff_name, 5:string company_name, 6:string plan_date) throws (1:gen_exp e),
     stuff_plan get_plan(1:i64 plan_id) throws (1:gen_exp e),
     bool update_plan(1:stuff_plan plan, 2:string ssid) throws (1:gen_exp e),
     bool confirm_plan(1:i64 plan_id, 2:string ssid, 3:string comment) throws (1:gen_exp e),
