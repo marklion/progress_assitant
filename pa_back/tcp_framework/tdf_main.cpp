@@ -50,15 +50,15 @@ static void work_thread_main_loop()
         }
         cur_thread_count++;
         std::thread wt(
-            [=]()
+            [=](tdf_async_data *_private)
             {
-                if (pcoming->m_proc)
+                if (_private->m_proc)
                 {
-                    pcoming->m_proc(pcoming->m_private, pcoming->m_chrct);
+                    _private->m_proc(_private->m_private, _private->m_chrct);
                 }
-                delete pcoming;
+                delete _private;
                 cur_thread_count--;
-            });
+            }, pcoming);
         wt.detach();
     }
 }
