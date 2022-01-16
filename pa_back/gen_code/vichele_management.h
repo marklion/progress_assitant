@@ -57,6 +57,8 @@ class vichele_managementIf {
   virtual void get_company_brief(single_vichele_brief& _return, const std::string& ssid) = 0;
   virtual void get_statistics(vichele_stay_alone_statistics& _return, const std::string& ssid) = 0;
   virtual bool change_price(const std::string& ssid, const std::vector<vichele_stay_alone> & info, const bool all_select, const std::string& enter_date, const std::string& stuff_name, const std::string& supplier_name, const double new_price) = 0;
+  virtual void get_vichele_in_queue(std::vector<vichele_stay_alone> & _return, const std::string& ssid, const std::string& stuff_name) = 0;
+  virtual bool manual_permit_vichele(const std::string& ssid, const int64_t order_id) = 0;
 };
 
 class vichele_managementIfFactory {
@@ -209,6 +211,13 @@ class vichele_managementNull : virtual public vichele_managementIf {
     return;
   }
   bool change_price(const std::string& /* ssid */, const std::vector<vichele_stay_alone> & /* info */, const bool /* all_select */, const std::string& /* enter_date */, const std::string& /* stuff_name */, const std::string& /* supplier_name */, const double /* new_price */) {
+    bool _return = false;
+    return _return;
+  }
+  void get_vichele_in_queue(std::vector<vichele_stay_alone> & /* _return */, const std::string& /* ssid */, const std::string& /* stuff_name */) {
+    return;
+  }
+  bool manual_permit_vichele(const std::string& /* ssid */, const int64_t /* order_id */) {
     bool _return = false;
     return _return;
   }
@@ -4483,6 +4492,244 @@ class vichele_management_change_price_presult {
 
 };
 
+typedef struct _vichele_management_get_vichele_in_queue_args__isset {
+  _vichele_management_get_vichele_in_queue_args__isset() : ssid(false), stuff_name(false) {}
+  bool ssid :1;
+  bool stuff_name :1;
+} _vichele_management_get_vichele_in_queue_args__isset;
+
+class vichele_management_get_vichele_in_queue_args {
+ public:
+
+  vichele_management_get_vichele_in_queue_args(const vichele_management_get_vichele_in_queue_args&);
+  vichele_management_get_vichele_in_queue_args& operator=(const vichele_management_get_vichele_in_queue_args&);
+  vichele_management_get_vichele_in_queue_args() : ssid(), stuff_name() {
+  }
+
+  virtual ~vichele_management_get_vichele_in_queue_args() noexcept;
+  std::string ssid;
+  std::string stuff_name;
+
+  _vichele_management_get_vichele_in_queue_args__isset __isset;
+
+  void __set_ssid(const std::string& val);
+
+  void __set_stuff_name(const std::string& val);
+
+  bool operator == (const vichele_management_get_vichele_in_queue_args & rhs) const
+  {
+    if (!(ssid == rhs.ssid))
+      return false;
+    if (!(stuff_name == rhs.stuff_name))
+      return false;
+    return true;
+  }
+  bool operator != (const vichele_management_get_vichele_in_queue_args &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const vichele_management_get_vichele_in_queue_args & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+
+class vichele_management_get_vichele_in_queue_pargs {
+ public:
+
+
+  virtual ~vichele_management_get_vichele_in_queue_pargs() noexcept;
+  const std::string* ssid;
+  const std::string* stuff_name;
+
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _vichele_management_get_vichele_in_queue_result__isset {
+  _vichele_management_get_vichele_in_queue_result__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _vichele_management_get_vichele_in_queue_result__isset;
+
+class vichele_management_get_vichele_in_queue_result {
+ public:
+
+  vichele_management_get_vichele_in_queue_result(const vichele_management_get_vichele_in_queue_result&);
+  vichele_management_get_vichele_in_queue_result& operator=(const vichele_management_get_vichele_in_queue_result&);
+  vichele_management_get_vichele_in_queue_result() {
+  }
+
+  virtual ~vichele_management_get_vichele_in_queue_result() noexcept;
+  std::vector<vichele_stay_alone>  success;
+  gen_exp e;
+
+  _vichele_management_get_vichele_in_queue_result__isset __isset;
+
+  void __set_success(const std::vector<vichele_stay_alone> & val);
+
+  void __set_e(const gen_exp& val);
+
+  bool operator == (const vichele_management_get_vichele_in_queue_result & rhs) const
+  {
+    if (!(success == rhs.success))
+      return false;
+    if (!(e == rhs.e))
+      return false;
+    return true;
+  }
+  bool operator != (const vichele_management_get_vichele_in_queue_result &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const vichele_management_get_vichele_in_queue_result & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _vichele_management_get_vichele_in_queue_presult__isset {
+  _vichele_management_get_vichele_in_queue_presult__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _vichele_management_get_vichele_in_queue_presult__isset;
+
+class vichele_management_get_vichele_in_queue_presult {
+ public:
+
+
+  virtual ~vichele_management_get_vichele_in_queue_presult() noexcept;
+  std::vector<vichele_stay_alone> * success;
+  gen_exp e;
+
+  _vichele_management_get_vichele_in_queue_presult__isset __isset;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+
+};
+
+typedef struct _vichele_management_manual_permit_vichele_args__isset {
+  _vichele_management_manual_permit_vichele_args__isset() : ssid(false), order_id(false) {}
+  bool ssid :1;
+  bool order_id :1;
+} _vichele_management_manual_permit_vichele_args__isset;
+
+class vichele_management_manual_permit_vichele_args {
+ public:
+
+  vichele_management_manual_permit_vichele_args(const vichele_management_manual_permit_vichele_args&);
+  vichele_management_manual_permit_vichele_args& operator=(const vichele_management_manual_permit_vichele_args&);
+  vichele_management_manual_permit_vichele_args() : ssid(), order_id(0) {
+  }
+
+  virtual ~vichele_management_manual_permit_vichele_args() noexcept;
+  std::string ssid;
+  int64_t order_id;
+
+  _vichele_management_manual_permit_vichele_args__isset __isset;
+
+  void __set_ssid(const std::string& val);
+
+  void __set_order_id(const int64_t val);
+
+  bool operator == (const vichele_management_manual_permit_vichele_args & rhs) const
+  {
+    if (!(ssid == rhs.ssid))
+      return false;
+    if (!(order_id == rhs.order_id))
+      return false;
+    return true;
+  }
+  bool operator != (const vichele_management_manual_permit_vichele_args &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const vichele_management_manual_permit_vichele_args & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+
+class vichele_management_manual_permit_vichele_pargs {
+ public:
+
+
+  virtual ~vichele_management_manual_permit_vichele_pargs() noexcept;
+  const std::string* ssid;
+  const int64_t* order_id;
+
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _vichele_management_manual_permit_vichele_result__isset {
+  _vichele_management_manual_permit_vichele_result__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _vichele_management_manual_permit_vichele_result__isset;
+
+class vichele_management_manual_permit_vichele_result {
+ public:
+
+  vichele_management_manual_permit_vichele_result(const vichele_management_manual_permit_vichele_result&);
+  vichele_management_manual_permit_vichele_result& operator=(const vichele_management_manual_permit_vichele_result&);
+  vichele_management_manual_permit_vichele_result() : success(0) {
+  }
+
+  virtual ~vichele_management_manual_permit_vichele_result() noexcept;
+  bool success;
+  gen_exp e;
+
+  _vichele_management_manual_permit_vichele_result__isset __isset;
+
+  void __set_success(const bool val);
+
+  void __set_e(const gen_exp& val);
+
+  bool operator == (const vichele_management_manual_permit_vichele_result & rhs) const
+  {
+    if (!(success == rhs.success))
+      return false;
+    if (!(e == rhs.e))
+      return false;
+    return true;
+  }
+  bool operator != (const vichele_management_manual_permit_vichele_result &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const vichele_management_manual_permit_vichele_result & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _vichele_management_manual_permit_vichele_presult__isset {
+  _vichele_management_manual_permit_vichele_presult__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _vichele_management_manual_permit_vichele_presult__isset;
+
+class vichele_management_manual_permit_vichele_presult {
+ public:
+
+
+  virtual ~vichele_management_manual_permit_vichele_presult() noexcept;
+  bool* success;
+  gen_exp e;
+
+  _vichele_management_manual_permit_vichele_presult__isset __isset;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+
+};
+
 class vichele_managementClient : virtual public vichele_managementIf {
  public:
   vichele_managementClient(std::shared_ptr< ::apache::thrift::protocol::TProtocol> prot) {
@@ -4613,6 +4860,12 @@ class vichele_managementClient : virtual public vichele_managementIf {
   bool change_price(const std::string& ssid, const std::vector<vichele_stay_alone> & info, const bool all_select, const std::string& enter_date, const std::string& stuff_name, const std::string& supplier_name, const double new_price);
   void send_change_price(const std::string& ssid, const std::vector<vichele_stay_alone> & info, const bool all_select, const std::string& enter_date, const std::string& stuff_name, const std::string& supplier_name, const double new_price);
   bool recv_change_price();
+  void get_vichele_in_queue(std::vector<vichele_stay_alone> & _return, const std::string& ssid, const std::string& stuff_name);
+  void send_get_vichele_in_queue(const std::string& ssid, const std::string& stuff_name);
+  void recv_get_vichele_in_queue(std::vector<vichele_stay_alone> & _return);
+  bool manual_permit_vichele(const std::string& ssid, const int64_t order_id);
+  void send_manual_permit_vichele(const std::string& ssid, const int64_t order_id);
+  bool recv_manual_permit_vichele();
  protected:
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> piprot_;
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> poprot_;
@@ -4663,6 +4916,8 @@ class vichele_managementProcessor : public ::apache::thrift::TDispatchProcessor 
   void process_get_company_brief(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
   void process_get_statistics(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
   void process_change_price(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
+  void process_get_vichele_in_queue(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
+  void process_manual_permit_vichele(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
  public:
   vichele_managementProcessor(::std::shared_ptr<vichele_managementIf> iface) :
     iface_(iface) {
@@ -4701,6 +4956,8 @@ class vichele_managementProcessor : public ::apache::thrift::TDispatchProcessor 
     processMap_["get_company_brief"] = &vichele_managementProcessor::process_get_company_brief;
     processMap_["get_statistics"] = &vichele_managementProcessor::process_get_statistics;
     processMap_["change_price"] = &vichele_managementProcessor::process_change_price;
+    processMap_["get_vichele_in_queue"] = &vichele_managementProcessor::process_get_vichele_in_queue;
+    processMap_["manual_permit_vichele"] = &vichele_managementProcessor::process_manual_permit_vichele;
   }
 
   virtual ~vichele_managementProcessor() {}
@@ -5057,6 +5314,25 @@ class vichele_managementMultiface : virtual public vichele_managementIf {
     return ifaces_[i]->change_price(ssid, info, all_select, enter_date, stuff_name, supplier_name, new_price);
   }
 
+  void get_vichele_in_queue(std::vector<vichele_stay_alone> & _return, const std::string& ssid, const std::string& stuff_name) {
+    size_t sz = ifaces_.size();
+    size_t i = 0;
+    for (; i < (sz - 1); ++i) {
+      ifaces_[i]->get_vichele_in_queue(_return, ssid, stuff_name);
+    }
+    ifaces_[i]->get_vichele_in_queue(_return, ssid, stuff_name);
+    return;
+  }
+
+  bool manual_permit_vichele(const std::string& ssid, const int64_t order_id) {
+    size_t sz = ifaces_.size();
+    size_t i = 0;
+    for (; i < (sz - 1); ++i) {
+      ifaces_[i]->manual_permit_vichele(ssid, order_id);
+    }
+    return ifaces_[i]->manual_permit_vichele(ssid, order_id);
+  }
+
 };
 
 // The 'concurrent' client is a thread safe client that correctly handles
@@ -5194,6 +5470,12 @@ class vichele_managementConcurrentClient : virtual public vichele_managementIf {
   bool change_price(const std::string& ssid, const std::vector<vichele_stay_alone> & info, const bool all_select, const std::string& enter_date, const std::string& stuff_name, const std::string& supplier_name, const double new_price);
   int32_t send_change_price(const std::string& ssid, const std::vector<vichele_stay_alone> & info, const bool all_select, const std::string& enter_date, const std::string& stuff_name, const std::string& supplier_name, const double new_price);
   bool recv_change_price(const int32_t seqid);
+  void get_vichele_in_queue(std::vector<vichele_stay_alone> & _return, const std::string& ssid, const std::string& stuff_name);
+  int32_t send_get_vichele_in_queue(const std::string& ssid, const std::string& stuff_name);
+  void recv_get_vichele_in_queue(std::vector<vichele_stay_alone> & _return, const int32_t seqid);
+  bool manual_permit_vichele(const std::string& ssid, const int64_t order_id);
+  int32_t send_manual_permit_vichele(const std::string& ssid, const int64_t order_id);
+  bool recv_manual_permit_vichele(const int32_t seqid);
  protected:
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> piprot_;
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> poprot_;

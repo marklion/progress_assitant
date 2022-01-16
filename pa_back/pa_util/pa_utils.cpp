@@ -1031,3 +1031,14 @@ std::unique_ptr<pa_sql_driver> PA_DATAOPT_link_driver(const std::string &_driver
     }
     return sqlite_orm::search_record<pa_sql_driver>("phone == '%s'", _driver_phone.c_str());
 }
+int PA_DATAOPT_post_get_cap(neb::CJsonObject &_req, const std::string &_url, const std::string _token, const std::string &_key)
+{
+    int ret = -1;
+    auto remote_ret = call_third_though_rest(_url, _key, _token, _req.ToString());
+    if (remote_ret("code") == "0")
+    {
+        remote_ret["data"].Get("surplus", ret);
+    }
+
+    return ret;
+}

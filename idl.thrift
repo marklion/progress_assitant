@@ -302,6 +302,7 @@ struct today_driver_info {
     19:string attach_url,
     20:double count,
     21:bool upload_permit,
+    22:i64 wait_last,
 }
 
 struct driver_detail_info {
@@ -494,6 +495,7 @@ struct vichele_stay_alone {
     24:bool can_enter,
     25:bool upload_permit,
     26:string driver_silent_id,
+    27:i64 wait_order,
 }
 
 struct silent_user_info {
@@ -570,4 +572,6 @@ service vichele_management {
     single_vichele_brief get_company_brief(1:string ssid) throws (1:gen_exp e),
     vichele_stay_alone_statistics get_statistics(1:string ssid) throws (1:gen_exp e),
     bool change_price(1:string ssid, 2:list<vichele_stay_alone> info, 3:bool all_select, 4:string enter_date, 5:string stuff_name, 6:string supplier_name, 7:double new_price) throws (1:gen_exp e),
+    list<vichele_stay_alone> get_vichele_in_queue(1:string ssid, 2:string stuff_name) throws (1:gen_exp e),
+    bool manual_permit_vichele(1:string ssid, 2:i64 order_id) throws (1:gen_exp e),
 }

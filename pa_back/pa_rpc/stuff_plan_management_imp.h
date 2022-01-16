@@ -1868,6 +1868,7 @@ public:
                 }
                 pos = found_pos + 1;
             }
+            tmp.wait_last = pa_rpc_cap_for_stuff::get_wait_order(itr);
             _return.push_back(tmp);
         }
     }

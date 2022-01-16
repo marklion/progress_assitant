@@ -4572,6 +4572,10 @@ void today_driver_info::__set_count(const double val) {
 void today_driver_info::__set_upload_permit(const bool val) {
   this->upload_permit = val;
 }
+
+void today_driver_info::__set_wait_last(const int64_t val) {
+  this->wait_last = val;
+}
 std::ostream& operator<<(std::ostream& out, const today_driver_info& obj)
 {
   obj.printTo(out);
@@ -4780,6 +4784,14 @@ uint32_t today_driver_info::read(::apache::thrift::protocol::TProtocol* iprot) {
           xfer += iprot->skip(ftype);
         }
         break;
+      case 22:
+        if (ftype == ::apache::thrift::protocol::T_I64) {
+          xfer += iprot->readI64(this->wait_last);
+          this->__isset.wait_last = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
       default:
         xfer += iprot->skip(ftype);
         break;
@@ -4889,6 +4901,10 @@ uint32_t today_driver_info::write(::apache::thrift::protocol::TProtocol* oprot) 
   xfer += oprot->writeBool(this->upload_permit);
   xfer += oprot->writeFieldEnd();
 
+  xfer += oprot->writeFieldBegin("wait_last", ::apache::thrift::protocol::T_I64, 22);
+  xfer += oprot->writeI64(this->wait_last);
+  xfer += oprot->writeFieldEnd();
+
   xfer += oprot->writeFieldStop();
   xfer += oprot->writeStructEnd();
   return xfer;
@@ -4917,6 +4933,7 @@ void swap(today_driver_info &a, today_driver_info &b) {
   swap(a.attach_url, b.attach_url);
   swap(a.count, b.count);
   swap(a.upload_permit, b.upload_permit);
+  swap(a.wait_last, b.wait_last);
   swap(a.__isset, b.__isset);
 }
 
@@ -4942,6 +4959,7 @@ today_driver_info::today_driver_info(const today_driver_info& other62) {
   attach_url = other62.attach_url;
   count = other62.count;
   upload_permit = other62.upload_permit;
+  wait_last = other62.wait_last;
   __isset = other62.__isset;
 }
 today_driver_info& today_driver_info::operator=(const today_driver_info& other63) {
@@ -4966,6 +4984,7 @@ today_driver_info& today_driver_info::operator=(const today_driver_info& other63
   attach_url = other63.attach_url;
   count = other63.count;
   upload_permit = other63.upload_permit;
+  wait_last = other63.wait_last;
   __isset = other63.__isset;
   return *this;
 }
@@ -4993,6 +5012,7 @@ void today_driver_info::printTo(std::ostream& out) const {
   out << ", " << "attach_url=" << to_string(attach_url);
   out << ", " << "count=" << to_string(count);
   out << ", " << "upload_permit=" << to_string(upload_permit);
+  out << ", " << "wait_last=" << to_string(wait_last);
   out << ")";
 }
 
@@ -7296,6 +7316,10 @@ void vichele_stay_alone::__set_upload_permit(const bool val) {
 void vichele_stay_alone::__set_driver_silent_id(const std::string& val) {
   this->driver_silent_id = val;
 }
+
+void vichele_stay_alone::__set_wait_order(const int64_t val) {
+  this->wait_order = val;
+}
 std::ostream& operator<<(std::ostream& out, const vichele_stay_alone& obj)
 {
   obj.printTo(out);
@@ -7532,6 +7556,14 @@ uint32_t vichele_stay_alone::read(::apache::thrift::protocol::TProtocol* iprot) 
           xfer += iprot->skip(ftype);
         }
         break;
+      case 27:
+        if (ftype == ::apache::thrift::protocol::T_I64) {
+          xfer += iprot->readI64(this->wait_order);
+          this->__isset.wait_order = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
       default:
         xfer += iprot->skip(ftype);
         break;
@@ -7653,6 +7685,10 @@ uint32_t vichele_stay_alone::write(::apache::thrift::protocol::TProtocol* oprot)
   xfer += oprot->writeString(this->driver_silent_id);
   xfer += oprot->writeFieldEnd();
 
+  xfer += oprot->writeFieldBegin("wait_order", ::apache::thrift::protocol::T_I64, 27);
+  xfer += oprot->writeI64(this->wait_order);
+  xfer += oprot->writeFieldEnd();
+
   xfer += oprot->writeFieldStop();
   xfer += oprot->writeStructEnd();
   return xfer;
@@ -7686,6 +7722,7 @@ void swap(vichele_stay_alone &a, vichele_stay_alone &b) {
   swap(a.can_enter, b.can_enter);
   swap(a.upload_permit, b.upload_permit);
   swap(a.driver_silent_id, b.driver_silent_id);
+  swap(a.wait_order, b.wait_order);
   swap(a.__isset, b.__isset);
 }
 
@@ -7716,6 +7753,7 @@ vichele_stay_alone::vichele_stay_alone(const vichele_stay_alone& other92) {
   can_enter = other92.can_enter;
   upload_permit = other92.upload_permit;
   driver_silent_id = other92.driver_silent_id;
+  wait_order = other92.wait_order;
   __isset = other92.__isset;
 }
 vichele_stay_alone& vichele_stay_alone::operator=(const vichele_stay_alone& other93) {
@@ -7745,6 +7783,7 @@ vichele_stay_alone& vichele_stay_alone::operator=(const vichele_stay_alone& othe
   can_enter = other93.can_enter;
   upload_permit = other93.upload_permit;
   driver_silent_id = other93.driver_silent_id;
+  wait_order = other93.wait_order;
   __isset = other93.__isset;
   return *this;
 }
@@ -7777,6 +7816,7 @@ void vichele_stay_alone::printTo(std::ostream& out) const {
   out << ", " << "can_enter=" << to_string(can_enter);
   out << ", " << "upload_permit=" << to_string(upload_permit);
   out << ", " << "driver_silent_id=" << to_string(driver_silent_id);
+  out << ", " << "wait_order=" << to_string(wait_order);
   out << ")";
 }
 

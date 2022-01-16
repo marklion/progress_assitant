@@ -34,6 +34,7 @@
                     </div>
                 </van-cell>
                 <div v-if="single_trans.is_buy">
+                    <van-cell v-if="!single_trans.can_enter" title="前方排队车辆数" :value="single_trans.wait_last == -1?'未排队':single_trans.wait_last"></van-cell>
                     <van-button v-if="!single_trans.order_company" type="info" size="small" @click="act_select_company = true;focus_vichele_index = index">指定拉货公司</van-button>
                     <div v-else>
                         <van-button v-if="single_trans.company_for_select.length > 0 && single_trans.is_buy" type="warning" size="small" @click="act_select_company = true;focus_vichele_index = index">修改拉货公司</van-button>

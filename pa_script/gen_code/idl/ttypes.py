@@ -2669,11 +2669,12 @@ class today_driver_info(object):
      - attach_url
      - count
      - upload_permit
+     - wait_last
 
     """
 
 
-    def __init__(self, id=None, destination_company=None, destination_address=None, order_company=None, main_vichele=None, behind_vichele=None, stuff_name=None, register_timestamp=None, register_number=None, enter_location=None, is_registered=None, register_order=None, is_buy=None, company_for_select=None, need_tmd=None, tmd_no=None, date=None, can_enter=None, attach_url=None, count=None, upload_permit=None,):
+    def __init__(self, id=None, destination_company=None, destination_address=None, order_company=None, main_vichele=None, behind_vichele=None, stuff_name=None, register_timestamp=None, register_number=None, enter_location=None, is_registered=None, register_order=None, is_buy=None, company_for_select=None, need_tmd=None, tmd_no=None, date=None, can_enter=None, attach_url=None, count=None, upload_permit=None, wait_last=None,):
         self.id = id
         self.destination_company = destination_company
         self.destination_address = destination_address
@@ -2695,6 +2696,7 @@ class today_driver_info(object):
         self.attach_url = attach_url
         self.count = count
         self.upload_permit = upload_permit
+        self.wait_last = wait_last
 
     def read(self, iprot):
         if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
@@ -2815,6 +2817,11 @@ class today_driver_info(object):
                     self.upload_permit = iprot.readBool()
                 else:
                     iprot.skip(ftype)
+            elif fid == 22:
+                if ftype == TType.I64:
+                    self.wait_last = iprot.readI64()
+                else:
+                    iprot.skip(ftype)
             else:
                 iprot.skip(ftype)
             iprot.readFieldEnd()
@@ -2911,6 +2918,10 @@ class today_driver_info(object):
         if self.upload_permit is not None:
             oprot.writeFieldBegin('upload_permit', TType.BOOL, 21)
             oprot.writeBool(self.upload_permit)
+            oprot.writeFieldEnd()
+        if self.wait_last is not None:
+            oprot.writeFieldBegin('wait_last', TType.I64, 22)
+            oprot.writeI64(self.wait_last)
             oprot.writeFieldEnd()
         oprot.writeFieldStop()
         oprot.writeStructEnd()
@@ -4234,11 +4245,12 @@ class vichele_stay_alone(object):
      - can_enter
      - upload_permit
      - driver_silent_id
+     - wait_order
 
     """
 
 
-    def __init__(self, id=None, stuff_name=None, company_name=None, main_vichele_number=None, behind_vichele_number=None, count=None, comment=None, date=None, destination=None, status=None, creator_name=None, creator_phone=None, repeated=None, driver_name=None, driver_phone=None, driver_id=None, transfor_company=None, p_time=None, m_time=None, p_weight=None, m_weight=None, j_weight=None, price=None, can_enter=None, upload_permit=None, driver_silent_id=None,):
+    def __init__(self, id=None, stuff_name=None, company_name=None, main_vichele_number=None, behind_vichele_number=None, count=None, comment=None, date=None, destination=None, status=None, creator_name=None, creator_phone=None, repeated=None, driver_name=None, driver_phone=None, driver_id=None, transfor_company=None, p_time=None, m_time=None, p_weight=None, m_weight=None, j_weight=None, price=None, can_enter=None, upload_permit=None, driver_silent_id=None, wait_order=None,):
         self.id = id
         self.stuff_name = stuff_name
         self.company_name = company_name
@@ -4265,6 +4277,7 @@ class vichele_stay_alone(object):
         self.can_enter = can_enter
         self.upload_permit = upload_permit
         self.driver_silent_id = driver_silent_id
+        self.wait_order = wait_order
 
     def read(self, iprot):
         if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
@@ -4405,6 +4418,11 @@ class vichele_stay_alone(object):
                     self.driver_silent_id = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
                 else:
                     iprot.skip(ftype)
+            elif fid == 27:
+                if ftype == TType.I64:
+                    self.wait_order = iprot.readI64()
+                else:
+                    iprot.skip(ftype)
             else:
                 iprot.skip(ftype)
             iprot.readFieldEnd()
@@ -4518,6 +4536,10 @@ class vichele_stay_alone(object):
         if self.driver_silent_id is not None:
             oprot.writeFieldBegin('driver_silent_id', TType.STRING, 26)
             oprot.writeString(self.driver_silent_id.encode('utf-8') if sys.version_info[0] == 2 else self.driver_silent_id)
+            oprot.writeFieldEnd()
+        if self.wait_order is not None:
+            oprot.writeFieldBegin('wait_order', TType.I64, 27)
+            oprot.writeI64(self.wait_order)
             oprot.writeFieldEnd()
         oprot.writeFieldStop()
         oprot.writeStructEnd()
@@ -5312,6 +5334,7 @@ today_driver_info.thrift_spec = (
     (19, TType.STRING, 'attach_url', 'UTF8', None, ),  # 19
     (20, TType.DOUBLE, 'count', None, None, ),  # 20
     (21, TType.BOOL, 'upload_permit', None, None, ),  # 21
+    (22, TType.I64, 'wait_last', None, None, ),  # 22
 )
 all_structs.append(driver_detail_info)
 driver_detail_info.thrift_spec = (
@@ -5455,6 +5478,7 @@ vichele_stay_alone.thrift_spec = (
     (24, TType.BOOL, 'can_enter', None, None, ),  # 24
     (25, TType.BOOL, 'upload_permit', None, None, ),  # 25
     (26, TType.STRING, 'driver_silent_id', 'UTF8', None, ),  # 26
+    (27, TType.I64, 'wait_order', None, None, ),  # 27
 )
 all_structs.append(silent_user_info)
 silent_user_info.thrift_spec = (
