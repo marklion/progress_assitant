@@ -169,7 +169,7 @@ void pa_rpc_cap_for_stuff::check_cap()
                 else
                 {
                     int permit_count = least_cap - m_inst.whole_map[itr].called_queue.size();
-                    while (permit_count > 0 && m_inst.whole_map[itr].wait_queue.size() > 0)
+                    while (permit_count > 0)
                     {
                         auto cur_member = m_inst.whole_map[itr].wait_queue.front();
                         auto driver_info = sqlite_orm::search_record<pa_sql_driver>("phone == '%s'", cur_member.driver_phone.c_str());
@@ -215,10 +215,7 @@ void pa_rpc_cap_for_stuff::vichele_out_queue(pa_sql_vichele_stay_alone &_vichele
     m_inst.whole_map[focus_vichele->stuff_name].called_queue.remove_if([&](pa_sql_vichele_stay_alone &element) {
         return element.get_pri_id() == focus_vichele->get_pri_id();
     });
-    m_inst.whole_map[focus_vichele->stuff_name].wait_queue.remove_if([&](pa_sql_vichele_stay_alone &element) {
-        return element.get_pri_id() == focus_vichele->get_pri_id();
-    });
-    if (focus_vichele->status != 2 || focus_vichele->is_drop == 0)
+    if (focus_vichele->status != 2)
     {
         vichele_in_queue(*focus_vichele);
         std::list<pa_sql_vichele_stay_alone> tmp;
@@ -233,6 +230,7 @@ int64_t pa_rpc_cap_for_stuff::get_wait_order(pa_sql_vichele_stay_alone &_vichele
 {
     int64_t ret = -1;
 
+    check_cap();
     pthread_mutex_lock(&(m_inst.mutex));
     auto found_ret = std::find_if(m_inst.whole_map[_vichele.stuff_name].wait_queue.begin(), m_inst.whole_map[_vichele.stuff_name].wait_queue.end(), [&](pa_sql_vichele_stay_alone &_element){
         return _vichele.get_pri_id() == _element.get_pri_id();
