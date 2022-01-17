@@ -67,7 +67,6 @@ std::unique_ptr<pa_sql_company> PA_DATAOPT_get_company_by_ssid(const std::string
 bool PA_DATAOPT_vichele_ready_to_post(pa_sql_vichele_stay_alone &_vichele, bool is_post = false);
 
 std::unique_ptr<pa_sql_driver> PA_DATAOPT_link_driver(const std::string &_driver_phone);
-int PA_DATAOPT_post_get_cap(neb::CJsonObject &_req, const std::string &_url, const std::string _token, const std::string &_key);
 
 
 #endif // _PA_UTILS_H_

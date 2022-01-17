@@ -422,7 +422,6 @@ public:
             {
                 tmp.driver_silent_id = silent_id_driver->silent_id;
             }
-            tmp.wait_order = pa_rpc_cap_for_stuff::get_wait_order(itr);
             _return.push_back(tmp);
         }
     }
@@ -1115,10 +1114,8 @@ public:
         {
             vichele_info->no_permission = 0;
         }
-        vichele_info->update_record();
 
-        pa_rpc_cap_for_stuff::vichele_in_queue(*vichele_info);
-        return true;
+        return vichele_info->update_record();
     }
     virtual bool fill_weight_attach(const std::string &open_id, const int64_t vichele_id, const std::string &weight_attach)
     {
@@ -1282,75 +1279,6 @@ public:
         }
 
         return true;
-    }
-
-    virtual void get_vichele_in_queue(std::vector<vichele_stay_alone> &_return, const std::string &ssid, const std::string &stuff_name)
-    {
-        auto user = PA_DATAOPT_get_online_user(ssid);
-        if (!user)
-        {
-            PA_RETURN_UNLOGIN_MSG();
-        }
-        auto wait_queue = pa_rpc_cap_for_stuff::get_queue_by_stuff(stuff_name);
-        int wait_last = 0;
-        for (auto &itr:wait_queue)
-        {
-            vichele_stay_alone tmp;
-            tmp.behind_vichele_number = itr.behind_vichele_number;
-            tmp.comment = itr.comment;
-            tmp.company_name = itr.company_name;
-            tmp.count = itr.count;
-            auto creator = itr.get_parent<pa_sql_silent_user>("created_by");
-            if (creator)
-            {
-                tmp.creator_name = creator->name;
-                tmp.creator_phone = creator->phone;
-            }
-            tmp.date = itr.date;
-            tmp.id = itr.get_pri_id();
-            tmp.main_vichele_number = itr.main_vichele_number;
-            tmp.status = itr.status;
-            tmp.stuff_name = itr.stuff_name;
-            tmp.repeated = itr.is_repeated != 0;
-            tmp.driver_id = itr.driver_id;
-            tmp.driver_name = itr.driver_name;
-            tmp.driver_phone = itr.driver_phone;
-            tmp.transfor_company = itr.transfor_company;
-
-            tmp.p_time = itr.p_time;
-            tmp.m_time = itr.m_time;
-            tmp.p_weight = itr.p_weight;
-            tmp.m_weight = itr.m_weight;
-            tmp.j_weight = itr.j_weight;
-            tmp.price = itr.price;
-            tmp.can_enter = itr.no_permission == 0 ? true : false;
-            tmp.upload_permit = itr.upload_no_permit == 0 ? true : false;
-            auto silent_id_driver = sqlite_orm::search_record<pa_sql_driver>("phone == '%s' AND silent_id != ''", itr.driver_phone.c_str());
-            if (silent_id_driver)
-            {
-                tmp.driver_silent_id = silent_id_driver->silent_id;
-            }
-            tmp.wait_order = wait_last++;
-            _return.push_back(tmp);
-        }
-    }
-
-    virtual bool manual_permit_vichele(const std::string &ssid, const int64_t order_id)
-    {
-        bool ret = false;
-        auto user = PA_DATAOPT_get_online_user(ssid);
-        if (!user)
-        {
-            PA_RETURN_UNLOGIN_MSG();
-        }
-        auto vichele = sqlite_orm::search_record<pa_sql_vichele_stay_alone>(order_id);
-        if (vichele)
-        {
-            pa_rpc_cap_for_stuff::manual_permit(*vichele);
-            ret = true;
-        }
-
-        return ret;
     }
 };
 

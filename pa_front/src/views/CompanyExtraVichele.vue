@@ -4,9 +4,6 @@
         <van-tab title="未确认"></van-tab>
         <van-tab title="已确认"></van-tab>
         <van-tab title="已完成"></van-tab>
-        <van-tab title="正在排队">
-
-        </van-tab>
     </van-tabs>
     <van-notice-bar left-icon="volume-o" :text="'昨日共派 ' + vichele_statistics.yestarday_total + '车， 未到 ' + vichele_statistics.yestarday_left + '车 今日共派 ' + vichele_statistics.today_total + '车，已到 ' + vichele_statistics.today_finish + '车'" />
     <van-dropdown-menu>
@@ -57,11 +54,6 @@
                 <van-cell :title="single_vichele.driver_name" :value="single_vichele.driver_phone" :label="single_vichele.driver_id" center>
                     <template #right-icon>
                         <van-button size="small" type="danger" v-if="single_vichele.driver_silent_id" @click="reset_driver_info(single_vichele.driver_silent_id)">重置信息</van-button>
-                    </template>
-                </van-cell>
-                <van-cell title="进厂还需等待人数" :value="single_vichele.wait_order==-1?'无需排队':single_vichele.wait_order">
-                    <template #right-icon>
-                        <van-button type="info" size="mini" v-if="single_vichele.wait_order != -1" @click="manual_permit(single_vichele.id)">插队</van-button>
                     </template>
                 </van-cell>
                 <div class="extra_info_show">
@@ -215,7 +207,6 @@ export default {
     },
     data: function () {
         return {
-            vichele_in_queue: [],
             vichele_statistics: {
                 today_finish: 0,
                 today_total: 0,
@@ -268,11 +259,8 @@ export default {
         items_need_show: function () {
             var ret = [];
             var vue_this = this;
-            var all_need_show = this.items;
-            if (this.active == 3) {
-                all_need_show = this.vichele_in_queue;
-            }
-            all_need_show.forEach(element => {
+
+            this.items.forEach(element => {
                 if (vue_this.vichele_search_filter.length == 0) {
                     ret.push(element);
                 } else {
@@ -287,26 +275,6 @@ export default {
         },
     },
     methods: {
-        manual_permit: function (_id) {
-            var vue_this = this;
-            vue_this.$call_remote_process("vichele_management", "manual_permit_vichele", [vue_this.$cookies.get('pa_ssid'), _id]).then(function (resp) {
-                if (resp) {
-                    vue_this.refresh_all_records();
-                }
-            });
-        },
-        fetch_vichele_in_queue: function () {
-            var vue_this = this;
-            var stuff_name = vue_this.stuff_condition.find(value => {
-                return value.value == vue_this.stuff_filter;
-            }).text;
-            vue_this.$call_remote_process("vichele_management", "get_vichele_in_queue", [vue_this.$cookies.get('pa_ssid'), stuff_name]).then(function (resp) {
-                vue_this.vichele_in_queue = [];
-                resp.forEach((element, index) => {
-                    vue_this.$set(vue_this.vichele_in_queue, index, element);
-                });
-            });
-        },
         reset_driver_info: function (_silent_id) {
             var vue_this = this;
             vue_this.$call_remote_process("stuff_plan_management", "driver_silent_reset", [vue_this.$cookies.get('pa_ssid'), _silent_id]).then(function () {
@@ -376,12 +344,9 @@ export default {
             this.$refs.all_record.check();
         },
         refresh_all_records: function () {
-            if (this.active != 3) {
-                this.finished = false;
-                this.items = [];
-                this.$refs.all_record.check();
-            }
-            this.fetch_vichele_in_queue();
+            this.finished = false;
+            this.items = [];
+            this.$refs.all_record.check();
         },
         formatDateTime: function (date) {
             var y = date.getFullYear();

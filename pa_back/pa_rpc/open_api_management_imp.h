@@ -542,7 +542,6 @@ public:
                     PA_WECHAT_send_extra_vichele_msg(*real_vichele_stay_alone, itr.openid, "称重完成\n皮重:" + std::to_string(_req.pWeight) + "\n毛重:" + std::to_string(_req.mWeight) + "\n净重:" + std::to_string(_req.jWeight));
                 }
             }
-            pa_rpc_cap_for_stuff::vichele_out_queue(*real_vichele_stay_alone);
         }
 
         return ret;

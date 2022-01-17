@@ -2989,7 +2989,6 @@ today_driver_info = class {
     this.attach_url = null;
     this.count = null;
     this.upload_permit = null;
-    this.wait_last = null;
     if (args) {
       if (args.id !== undefined && args.id !== null) {
         this.id = args.id;
@@ -3053,9 +3052,6 @@ today_driver_info = class {
       }
       if (args.upload_permit !== undefined && args.upload_permit !== null) {
         this.upload_permit = args.upload_permit;
-      }
-      if (args.wait_last !== undefined && args.wait_last !== null) {
-        this.wait_last = args.wait_last;
       }
     }
   }
@@ -3225,13 +3221,6 @@ today_driver_info = class {
           input.skip(ftype);
         }
         break;
-        case 22:
-        if (ftype == Thrift.Type.I64) {
-          this.wait_last = input.readI64().value;
-        } else {
-          input.skip(ftype);
-        }
-        break;
         default:
           input.skip(ftype);
       }
@@ -3353,11 +3342,6 @@ today_driver_info = class {
     if (this.upload_permit !== null && this.upload_permit !== undefined) {
       output.writeFieldBegin('upload_permit', Thrift.Type.BOOL, 21);
       output.writeBool(this.upload_permit);
-      output.writeFieldEnd();
-    }
-    if (this.wait_last !== null && this.wait_last !== undefined) {
-      output.writeFieldBegin('wait_last', Thrift.Type.I64, 22);
-      output.writeI64(this.wait_last);
       output.writeFieldEnd();
     }
     output.writeFieldStop();
@@ -4878,7 +4862,6 @@ vichele_stay_alone = class {
     this.can_enter = null;
     this.upload_permit = null;
     this.driver_silent_id = null;
-    this.wait_order = null;
     if (args) {
       if (args.id !== undefined && args.id !== null) {
         this.id = args.id;
@@ -4957,9 +4940,6 @@ vichele_stay_alone = class {
       }
       if (args.driver_silent_id !== undefined && args.driver_silent_id !== null) {
         this.driver_silent_id = args.driver_silent_id;
-      }
-      if (args.wait_order !== undefined && args.wait_order !== null) {
-        this.wait_order = args.wait_order;
       }
     }
   }
@@ -5156,13 +5136,6 @@ vichele_stay_alone = class {
           input.skip(ftype);
         }
         break;
-        case 27:
-        if (ftype == Thrift.Type.I64) {
-          this.wait_order = input.readI64().value;
-        } else {
-          input.skip(ftype);
-        }
-        break;
         default:
           input.skip(ftype);
       }
@@ -5302,11 +5275,6 @@ vichele_stay_alone = class {
     if (this.driver_silent_id !== null && this.driver_silent_id !== undefined) {
       output.writeFieldBegin('driver_silent_id', Thrift.Type.STRING, 26);
       output.writeString(this.driver_silent_id);
-      output.writeFieldEnd();
-    }
-    if (this.wait_order !== null && this.wait_order !== undefined) {
-      output.writeFieldBegin('wait_order', Thrift.Type.I64, 27);
-      output.writeI64(this.wait_order);
       output.writeFieldEnd();
     }
     output.writeFieldStop();

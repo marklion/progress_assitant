@@ -59,8 +59,6 @@ if len(sys.argv) <= 1 or sys.argv[1] == '--help':
     print('  single_vichele_brief get_company_brief(string ssid)')
     print('  vichele_stay_alone_statistics get_statistics(string ssid)')
     print('  bool change_price(string ssid,  info, bool all_select, string enter_date, string stuff_name, string supplier_name, double new_price)')
-    print('   get_vichele_in_queue(string ssid, string stuff_name)')
-    print('  bool manual_permit_vichele(string ssid, i64 order_id)')
     print('')
     sys.exit(0)
 
@@ -349,18 +347,6 @@ elif cmd == 'change_price':
         print('change_price requires 7 args')
         sys.exit(1)
     pp.pprint(client.change_price(args[0], eval(args[1]), eval(args[2]), args[3], args[4], args[5], eval(args[6]),))
-
-elif cmd == 'get_vichele_in_queue':
-    if len(args) != 2:
-        print('get_vichele_in_queue requires 2 args')
-        sys.exit(1)
-    pp.pprint(client.get_vichele_in_queue(args[0], args[1],))
-
-elif cmd == 'manual_permit_vichele':
-    if len(args) != 2:
-        print('manual_permit_vichele requires 2 args')
-        sys.exit(1)
-    pp.pprint(client.manual_permit_vichele(args[0], eval(args[1]),))
 
 else:
     print('Unrecognized method %s' % cmd)

@@ -108,7 +108,6 @@ int main(int argc, char **argv)
                                     PA_DATAOPT_post_get_queue(*related_vichele);
                                 }
                             }
-                            pa_rpc_cap_for_stuff::check_cap();
                         }
                         if (st_time->tm_min == 1 && st_time->tm_hour == 0)
                         {
