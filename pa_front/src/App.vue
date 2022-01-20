@@ -1,6 +1,6 @@
 <template>
 <div id="app">
-    <van-nav-bar class="nav_bar_show" :left-arrow="has_go_back" :left-text="get_left_text" :title="bar_title" @click-left="onClickLeft" @click-right="onClickRight">
+    <van-nav-bar v-if="!$route.meta.no_title" class="nav_bar_show" :left-arrow="has_go_back" :left-text="get_left_text" :title="bar_title" @click-left="onClickLeft" @click-right="onClickRight">
         <template #right>
             <van-icon name="share" size="20"></van-icon>
         </template>

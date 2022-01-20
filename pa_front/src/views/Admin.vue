@@ -52,6 +52,19 @@
                 <van-datetime-picker type="time" @confirm="on_end_Confirm" @cancel="show_end_Picker = false" />
             </van-popup>
         </van-tab>
+        <van-tab title="磅单印章">
+            <van-image width="300" height="300" :src="$remote_url + stamp_pic">
+                <template v-slot:error>
+                    <div>无印章</div>
+                    <div>
+                        <van-uploader :after-read="upload_stamp" accept="image/*">
+                            <van-button icon="plus" size="small" type="primary">上传</van-button>
+                        </van-uploader>
+                    </div>
+                </template>
+            </van-image>
+            <van-button v-if="stamp_pic" type="danger" block size="small" @click="del_stamp">删除</van-button>
+        </van-tab>
     </van-tabs>
 
 </div>
@@ -92,7 +105,14 @@ import {
 import {
     Popover
 } from 'vant';
+import {
+    Uploader
+} from 'vant';
+import {
+    compressAccurately
+} from 'image-conversion';
 
+Vue.use(Uploader);
 Vue.use(Popover);
 Vue.use(DatetimePicker);
 Vue.use(Popup);
@@ -109,6 +129,7 @@ export default {
     name: 'Admin',
     data: function () {
         return {
+            stamp_pic: '',
             all_apply: [],
             active: 0,
             all_user: [],
@@ -146,6 +167,42 @@ export default {
         };
     },
     methods: {
+        del_stamp: function () {
+            var vue_this = this;
+            vue_this.$call_remote_process("company_management", "del_stamp_pic", [vue_this.$cookies.get('pa_ssid')]).then(function (resp) {
+                if (resp) {
+                    vue_this.init_stamp();
+                }
+            });
+        },
+        init_stamp: function () {
+            var vue_this = this;
+            vue_this.$call_remote_process("company_management", "get_stamp_pic", [vue_this.$store.state.userinfo.company]).then(function (resp) {
+                vue_this.stamp_pic = resp;
+            });
+        },
+        convert_2_base64_send: function (_file) {
+            var vue_this = this;
+            var reader = new FileReader();
+            reader.readAsDataURL(_file);
+            reader.onloadend = function () {
+                var result = this.result;
+                var file_content = result.split(';base64,')[1];
+                vue_this.$call_remote_process("company_management", "add_stamp_pic", [vue_this.$cookies.get('pa_ssid'), file_content]).then(function (resp) {
+                    if (resp) {
+                        vue_this.init_stamp();
+                    }
+                });
+            };
+        },
+        upload_stamp: function (_file) {
+            var vue_this = this;
+
+            compressAccurately(_file.file, 400).then(function (res) {
+                vue_this.convert_2_base64_send(res, false);
+            });
+
+        },
         onSelect: function (_item) {
             var vue_this = this;
             vue_this.$call_remote_process("company_management", "set_user_group", [vue_this.$cookies.get('pa_ssid'), vue_this.focus_user, _item.groupid]).then(function (resp) {
@@ -228,6 +285,7 @@ export default {
         this.init_apply_info();
         this.init_all_user();
         this.init_work_time();
+        this.init_stamp();
     },
 }
 </script>

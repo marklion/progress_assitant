@@ -1063,5 +1063,59 @@ public:
             _return.push_back(itr.stuff_name);
         }
     }
+
+    virtual bool add_stamp_pic(const std::string &ssid, const std::string &pic_base64)
+    {
+        auto user = PA_DATAOPT_get_online_user(ssid);
+        if (!user)
+        {
+            PA_RETURN_UNLOGIN_MSG();
+        }
+        auto company = PA_DATAOPT_get_company_by_ssid(ssid);
+        if (!company)
+        {
+            PA_RETURN_NOPRIVA_MSG();
+        }
+        if (!PA_DATAOPT_is_admin(user->phone, company->name))
+        {
+            PA_RETURN_NOPRIVA_MSG();
+        }
+        std::string file_content;
+        Base64::Decode(pic_base64, &file_content);
+        company->stamp_pic = PA_DATAOPT_store_attach_file(file_content, false, company->name + "stamp" + std::to_string(time(nullptr)));
+        return company->update_record();
+    }
+    virtual bool del_stamp_pic(const std::string &ssid)
+    {
+        auto user = PA_DATAOPT_get_online_user(ssid);
+        if (!user)
+        {
+            PA_RETURN_UNLOGIN_MSG();
+        }
+        auto company = PA_DATAOPT_get_company_by_ssid(ssid);
+        if (!company)
+        {
+            PA_RETURN_NOPRIVA_MSG();
+        }
+        if (!PA_DATAOPT_is_admin(user->phone, company->name))
+        {
+            PA_RETURN_NOPRIVA_MSG();
+        }
+        if (company->stamp_pic.length() > 0)
+        {
+            std::string rm_cmd = "rm " + company->stamp_pic;
+            system(rm_cmd.c_str());
+        }
+        company->stamp_pic = "";
+        return company->update_record();
+    }
+    virtual void get_stamp_pic(std::string &_return, const std::string &company_name)
+    {
+        auto company = sqlite_orm::search_record<pa_sql_company>("name = '%s'", company_name.c_str());
+        if (company)
+        {
+            _return = company->stamp_pic;
+        }
+    }
 };
 #endif // _COMPANY_MANAGEMENT_IMP_H_

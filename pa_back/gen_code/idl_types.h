@@ -95,6 +95,8 @@ class push_zone_change_req;
 
 class push_manual_permit_req;
 
+class ticket_detail;
+
 class vichele_stay_alone;
 
 class silent_user_info;
@@ -1474,13 +1476,15 @@ void swap(plan_number_id &a, plan_number_id &b);
 std::ostream& operator<<(std::ostream& out, const plan_number_id& obj);
 
 typedef struct _deliver_info__isset {
-  _deliver_info__isset() : id(false), count(false), p_weight(false), m_weight(false), p_time(false), m_time(false) {}
+  _deliver_info__isset() : id(false), count(false), p_weight(false), m_weight(false), p_time(false), m_time(false), seal_no(false), ticket_no(false) {}
   bool id :1;
   bool count :1;
   bool p_weight :1;
   bool m_weight :1;
   bool p_time :1;
   bool m_time :1;
+  bool seal_no :1;
+  bool ticket_no :1;
 } _deliver_info__isset;
 
 class deliver_info : public virtual ::apache::thrift::TBase {
@@ -1488,7 +1492,7 @@ class deliver_info : public virtual ::apache::thrift::TBase {
 
   deliver_info(const deliver_info&);
   deliver_info& operator=(const deliver_info&);
-  deliver_info() : id(0), count(0), p_weight(0), m_weight(0), p_time(), m_time() {
+  deliver_info() : id(0), count(0), p_weight(0), m_weight(0), p_time(), m_time(), seal_no(), ticket_no() {
   }
 
   virtual ~deliver_info() noexcept;
@@ -1498,6 +1502,8 @@ class deliver_info : public virtual ::apache::thrift::TBase {
   double m_weight;
   std::string p_time;
   std::string m_time;
+  std::string seal_no;
+  std::string ticket_no;
 
   _deliver_info__isset __isset;
 
@@ -1513,6 +1519,10 @@ class deliver_info : public virtual ::apache::thrift::TBase {
 
   void __set_m_time(const std::string& val);
 
+  void __set_seal_no(const std::string& val);
+
+  void __set_ticket_no(const std::string& val);
+
   bool operator == (const deliver_info & rhs) const
   {
     if (!(id == rhs.id))
@@ -1526,6 +1536,10 @@ class deliver_info : public virtual ::apache::thrift::TBase {
     if (!(p_time == rhs.p_time))
       return false;
     if (!(m_time == rhs.m_time))
+      return false;
+    if (!(seal_no == rhs.seal_no))
+      return false;
+    if (!(ticket_no == rhs.ticket_no))
       return false;
     return true;
   }
@@ -2446,7 +2460,7 @@ void swap(vehicle_info_resp &a, vehicle_info_resp &b);
 std::ostream& operator<<(std::ostream& out, const vehicle_info_resp& obj);
 
 typedef struct _push_weight_req__isset {
-  _push_weight_req__isset() : id(false), plateNo(false), customerId(false), customerName(false), stuffName(false), pWeight(false), mWeight(false), pTime(false), mTime(false), jWeight(false) {}
+  _push_weight_req__isset() : id(false), plateNo(false), customerId(false), customerName(false), stuffName(false), pWeight(false), mWeight(false), pTime(false), mTime(false), jWeight(false), sealNo(false), ticketNo(false) {}
   bool id :1;
   bool plateNo :1;
   bool customerId :1;
@@ -2457,6 +2471,8 @@ typedef struct _push_weight_req__isset {
   bool pTime :1;
   bool mTime :1;
   bool jWeight :1;
+  bool sealNo :1;
+  bool ticketNo :1;
 } _push_weight_req__isset;
 
 class push_weight_req : public virtual ::apache::thrift::TBase {
@@ -2464,7 +2480,7 @@ class push_weight_req : public virtual ::apache::thrift::TBase {
 
   push_weight_req(const push_weight_req&);
   push_weight_req& operator=(const push_weight_req&);
-  push_weight_req() : id(), plateNo(), customerId(), customerName(), stuffName(), pWeight(0), mWeight(0), pTime(), mTime(), jWeight(0) {
+  push_weight_req() : id(), plateNo(), customerId(), customerName(), stuffName(), pWeight(0), mWeight(0), pTime(), mTime(), jWeight(0), sealNo(), ticketNo() {
   }
 
   virtual ~push_weight_req() noexcept;
@@ -2478,6 +2494,8 @@ class push_weight_req : public virtual ::apache::thrift::TBase {
   std::string pTime;
   std::string mTime;
   double jWeight;
+  std::string sealNo;
+  std::string ticketNo;
 
   _push_weight_req__isset __isset;
 
@@ -2501,6 +2519,10 @@ class push_weight_req : public virtual ::apache::thrift::TBase {
 
   void __set_jWeight(const double val);
 
+  void __set_sealNo(const std::string& val);
+
+  void __set_ticketNo(const std::string& val);
+
   bool operator == (const push_weight_req & rhs) const
   {
     if (!(id == rhs.id))
@@ -2522,6 +2544,10 @@ class push_weight_req : public virtual ::apache::thrift::TBase {
     if (!(mTime == rhs.mTime))
       return false;
     if (!(jWeight == rhs.jWeight))
+      return false;
+    if (!(sealNo == rhs.sealNo))
+      return false;
+    if (!(ticketNo == rhs.ticketNo))
       return false;
     return true;
   }
@@ -2774,6 +2800,126 @@ class push_manual_permit_req : public virtual ::apache::thrift::TBase {
 void swap(push_manual_permit_req &a, push_manual_permit_req &b);
 
 std::ostream& operator<<(std::ostream& out, const push_manual_permit_req& obj);
+
+typedef struct _ticket_detail__isset {
+  _ticket_detail__isset() : ticket_no(false), customer_name(false), supplier_name(false), main_vichele_number(false), behind_vichele_number(false), seal_no(false), stuff_name(false), p_weight(false), m_weight(false), j_weight(false), m_date(false), p_date(false), title(false), transfor_company(false) {}
+  bool ticket_no :1;
+  bool customer_name :1;
+  bool supplier_name :1;
+  bool main_vichele_number :1;
+  bool behind_vichele_number :1;
+  bool seal_no :1;
+  bool stuff_name :1;
+  bool p_weight :1;
+  bool m_weight :1;
+  bool j_weight :1;
+  bool m_date :1;
+  bool p_date :1;
+  bool title :1;
+  bool transfor_company :1;
+} _ticket_detail__isset;
+
+class ticket_detail : public virtual ::apache::thrift::TBase {
+ public:
+
+  ticket_detail(const ticket_detail&);
+  ticket_detail& operator=(const ticket_detail&);
+  ticket_detail() : ticket_no(), customer_name(), supplier_name(), main_vichele_number(), behind_vichele_number(), seal_no(), stuff_name(), p_weight(), m_weight(), j_weight(), m_date(), p_date(), title(), transfor_company() {
+  }
+
+  virtual ~ticket_detail() noexcept;
+  std::string ticket_no;
+  std::string customer_name;
+  std::string supplier_name;
+  std::string main_vichele_number;
+  std::string behind_vichele_number;
+  std::string seal_no;
+  std::string stuff_name;
+  std::string p_weight;
+  std::string m_weight;
+  std::string j_weight;
+  std::string m_date;
+  std::string p_date;
+  std::string title;
+  std::string transfor_company;
+
+  _ticket_detail__isset __isset;
+
+  void __set_ticket_no(const std::string& val);
+
+  void __set_customer_name(const std::string& val);
+
+  void __set_supplier_name(const std::string& val);
+
+  void __set_main_vichele_number(const std::string& val);
+
+  void __set_behind_vichele_number(const std::string& val);
+
+  void __set_seal_no(const std::string& val);
+
+  void __set_stuff_name(const std::string& val);
+
+  void __set_p_weight(const std::string& val);
+
+  void __set_m_weight(const std::string& val);
+
+  void __set_j_weight(const std::string& val);
+
+  void __set_m_date(const std::string& val);
+
+  void __set_p_date(const std::string& val);
+
+  void __set_title(const std::string& val);
+
+  void __set_transfor_company(const std::string& val);
+
+  bool operator == (const ticket_detail & rhs) const
+  {
+    if (!(ticket_no == rhs.ticket_no))
+      return false;
+    if (!(customer_name == rhs.customer_name))
+      return false;
+    if (!(supplier_name == rhs.supplier_name))
+      return false;
+    if (!(main_vichele_number == rhs.main_vichele_number))
+      return false;
+    if (!(behind_vichele_number == rhs.behind_vichele_number))
+      return false;
+    if (!(seal_no == rhs.seal_no))
+      return false;
+    if (!(stuff_name == rhs.stuff_name))
+      return false;
+    if (!(p_weight == rhs.p_weight))
+      return false;
+    if (!(m_weight == rhs.m_weight))
+      return false;
+    if (!(j_weight == rhs.j_weight))
+      return false;
+    if (!(m_date == rhs.m_date))
+      return false;
+    if (!(p_date == rhs.p_date))
+      return false;
+    if (!(title == rhs.title))
+      return false;
+    if (!(transfor_company == rhs.transfor_company))
+      return false;
+    return true;
+  }
+  bool operator != (const ticket_detail &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const ticket_detail & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+  virtual void printTo(std::ostream& out) const;
+};
+
+void swap(ticket_detail &a, ticket_detail &b);
+
+std::ostream& operator<<(std::ostream& out, const ticket_detail& obj);
 
 typedef struct _vichele_stay_alone__isset {
   _vichele_stay_alone__isset() : id(false), stuff_name(false), company_name(false), main_vichele_number(false), behind_vichele_number(false), count(false), comment(false), date(false), destination(false), status(false), creator_name(false), creator_phone(false), repeated(false), driver_name(false), driver_phone(false), driver_id(false), transfor_company(false), p_time(false), m_time(false), p_weight(false), m_weight(false), j_weight(false), price(false), can_enter(false), upload_permit(false), driver_silent_id(false) {}

@@ -39,6 +39,7 @@ if len(sys.argv) <= 1 or sys.argv[1] == '--help':
     print('  bool proc_push_balance(push_balance_req _req, string token)')
     print('  bool proc_push_zone_change(push_zone_change_req _req, string token)')
     print('  bool proc_push_manual_permit(push_manual_permit_req _req, string token)')
+    print('  ticket_detail get_vehicle_info_by_id(string id)')
     print('')
     sys.exit(0)
 
@@ -207,6 +208,12 @@ elif cmd == 'proc_push_manual_permit':
         print('proc_push_manual_permit requires 2 args')
         sys.exit(1)
     pp.pprint(client.proc_push_manual_permit(eval(args[0]), args[1],))
+
+elif cmd == 'get_vehicle_info_by_id':
+    if len(args) != 1:
+        print('get_vehicle_info_by_id requires 1 args')
+        sys.exit(1)
+    pp.pprint(client.get_vehicle_info_by_id(args[0],))
 
 else:
     print('Unrecognized method %s' % cmd)

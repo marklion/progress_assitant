@@ -66,6 +66,7 @@
             <van-collapse-item name="1" v-for="(item, index) in delivered_vichele" center :value="item.count + '吨'" :key="index" :title="item.main_vichele + '-' + item.behind_vichele" :label="item.driver_name + '-' + item.driver_phone">
                 <van-cell :title="'皮重：' + item.p_weight" :value="item.p_time"></van-cell>
                 <van-cell :title="'毛重：' + item.m_weight" :value="item.deliver_timestamp"></van-cell>
+                <van-cell title="查看磅单" is-link :to="{name:'Ticket', params:{id:item.vichele_id + 'S'}}"></van-cell>
             </van-collapse-item>
         </van-collapse>
     </van-cell-group>

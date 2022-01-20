@@ -62,6 +62,9 @@ class company_managementIf {
   virtual bool add_gps_stuff(const std::string& ssid, const std::string& stuff_name) = 0;
   virtual bool del_gps_stuff(const std::string& ssid, const std::string& stuff_name) = 0;
   virtual void get_gps_stuff(std::vector<std::string> & _return, const std::string& ssid) = 0;
+  virtual bool add_stamp_pic(const std::string& ssid, const std::string& pic_base64) = 0;
+  virtual bool del_stamp_pic(const std::string& ssid) = 0;
+  virtual void get_stamp_pic(std::string& _return, const std::string& company_name) = 0;
 };
 
 class company_managementIfFactory {
@@ -225,6 +228,17 @@ class company_managementNull : virtual public company_managementIf {
     return _return;
   }
   void get_gps_stuff(std::vector<std::string> & /* _return */, const std::string& /* ssid */) {
+    return;
+  }
+  bool add_stamp_pic(const std::string& /* ssid */, const std::string& /* pic_base64 */) {
+    bool _return = false;
+    return _return;
+  }
+  bool del_stamp_pic(const std::string& /* ssid */) {
+    bool _return = false;
+    return _return;
+  }
+  void get_stamp_pic(std::string& /* _return */, const std::string& /* company_name */) {
     return;
   }
 };
@@ -4873,6 +4887,349 @@ class company_management_get_gps_stuff_presult {
 
 };
 
+typedef struct _company_management_add_stamp_pic_args__isset {
+  _company_management_add_stamp_pic_args__isset() : ssid(false), pic_base64(false) {}
+  bool ssid :1;
+  bool pic_base64 :1;
+} _company_management_add_stamp_pic_args__isset;
+
+class company_management_add_stamp_pic_args {
+ public:
+
+  company_management_add_stamp_pic_args(const company_management_add_stamp_pic_args&);
+  company_management_add_stamp_pic_args& operator=(const company_management_add_stamp_pic_args&);
+  company_management_add_stamp_pic_args() : ssid(), pic_base64() {
+  }
+
+  virtual ~company_management_add_stamp_pic_args() noexcept;
+  std::string ssid;
+  std::string pic_base64;
+
+  _company_management_add_stamp_pic_args__isset __isset;
+
+  void __set_ssid(const std::string& val);
+
+  void __set_pic_base64(const std::string& val);
+
+  bool operator == (const company_management_add_stamp_pic_args & rhs) const
+  {
+    if (!(ssid == rhs.ssid))
+      return false;
+    if (!(pic_base64 == rhs.pic_base64))
+      return false;
+    return true;
+  }
+  bool operator != (const company_management_add_stamp_pic_args &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const company_management_add_stamp_pic_args & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+
+class company_management_add_stamp_pic_pargs {
+ public:
+
+
+  virtual ~company_management_add_stamp_pic_pargs() noexcept;
+  const std::string* ssid;
+  const std::string* pic_base64;
+
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _company_management_add_stamp_pic_result__isset {
+  _company_management_add_stamp_pic_result__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _company_management_add_stamp_pic_result__isset;
+
+class company_management_add_stamp_pic_result {
+ public:
+
+  company_management_add_stamp_pic_result(const company_management_add_stamp_pic_result&);
+  company_management_add_stamp_pic_result& operator=(const company_management_add_stamp_pic_result&);
+  company_management_add_stamp_pic_result() : success(0) {
+  }
+
+  virtual ~company_management_add_stamp_pic_result() noexcept;
+  bool success;
+  gen_exp e;
+
+  _company_management_add_stamp_pic_result__isset __isset;
+
+  void __set_success(const bool val);
+
+  void __set_e(const gen_exp& val);
+
+  bool operator == (const company_management_add_stamp_pic_result & rhs) const
+  {
+    if (!(success == rhs.success))
+      return false;
+    if (!(e == rhs.e))
+      return false;
+    return true;
+  }
+  bool operator != (const company_management_add_stamp_pic_result &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const company_management_add_stamp_pic_result & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _company_management_add_stamp_pic_presult__isset {
+  _company_management_add_stamp_pic_presult__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _company_management_add_stamp_pic_presult__isset;
+
+class company_management_add_stamp_pic_presult {
+ public:
+
+
+  virtual ~company_management_add_stamp_pic_presult() noexcept;
+  bool* success;
+  gen_exp e;
+
+  _company_management_add_stamp_pic_presult__isset __isset;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+
+};
+
+typedef struct _company_management_del_stamp_pic_args__isset {
+  _company_management_del_stamp_pic_args__isset() : ssid(false) {}
+  bool ssid :1;
+} _company_management_del_stamp_pic_args__isset;
+
+class company_management_del_stamp_pic_args {
+ public:
+
+  company_management_del_stamp_pic_args(const company_management_del_stamp_pic_args&);
+  company_management_del_stamp_pic_args& operator=(const company_management_del_stamp_pic_args&);
+  company_management_del_stamp_pic_args() : ssid() {
+  }
+
+  virtual ~company_management_del_stamp_pic_args() noexcept;
+  std::string ssid;
+
+  _company_management_del_stamp_pic_args__isset __isset;
+
+  void __set_ssid(const std::string& val);
+
+  bool operator == (const company_management_del_stamp_pic_args & rhs) const
+  {
+    if (!(ssid == rhs.ssid))
+      return false;
+    return true;
+  }
+  bool operator != (const company_management_del_stamp_pic_args &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const company_management_del_stamp_pic_args & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+
+class company_management_del_stamp_pic_pargs {
+ public:
+
+
+  virtual ~company_management_del_stamp_pic_pargs() noexcept;
+  const std::string* ssid;
+
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _company_management_del_stamp_pic_result__isset {
+  _company_management_del_stamp_pic_result__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _company_management_del_stamp_pic_result__isset;
+
+class company_management_del_stamp_pic_result {
+ public:
+
+  company_management_del_stamp_pic_result(const company_management_del_stamp_pic_result&);
+  company_management_del_stamp_pic_result& operator=(const company_management_del_stamp_pic_result&);
+  company_management_del_stamp_pic_result() : success(0) {
+  }
+
+  virtual ~company_management_del_stamp_pic_result() noexcept;
+  bool success;
+  gen_exp e;
+
+  _company_management_del_stamp_pic_result__isset __isset;
+
+  void __set_success(const bool val);
+
+  void __set_e(const gen_exp& val);
+
+  bool operator == (const company_management_del_stamp_pic_result & rhs) const
+  {
+    if (!(success == rhs.success))
+      return false;
+    if (!(e == rhs.e))
+      return false;
+    return true;
+  }
+  bool operator != (const company_management_del_stamp_pic_result &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const company_management_del_stamp_pic_result & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _company_management_del_stamp_pic_presult__isset {
+  _company_management_del_stamp_pic_presult__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _company_management_del_stamp_pic_presult__isset;
+
+class company_management_del_stamp_pic_presult {
+ public:
+
+
+  virtual ~company_management_del_stamp_pic_presult() noexcept;
+  bool* success;
+  gen_exp e;
+
+  _company_management_del_stamp_pic_presult__isset __isset;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+
+};
+
+typedef struct _company_management_get_stamp_pic_args__isset {
+  _company_management_get_stamp_pic_args__isset() : company_name(false) {}
+  bool company_name :1;
+} _company_management_get_stamp_pic_args__isset;
+
+class company_management_get_stamp_pic_args {
+ public:
+
+  company_management_get_stamp_pic_args(const company_management_get_stamp_pic_args&);
+  company_management_get_stamp_pic_args& operator=(const company_management_get_stamp_pic_args&);
+  company_management_get_stamp_pic_args() : company_name() {
+  }
+
+  virtual ~company_management_get_stamp_pic_args() noexcept;
+  std::string company_name;
+
+  _company_management_get_stamp_pic_args__isset __isset;
+
+  void __set_company_name(const std::string& val);
+
+  bool operator == (const company_management_get_stamp_pic_args & rhs) const
+  {
+    if (!(company_name == rhs.company_name))
+      return false;
+    return true;
+  }
+  bool operator != (const company_management_get_stamp_pic_args &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const company_management_get_stamp_pic_args & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+
+class company_management_get_stamp_pic_pargs {
+ public:
+
+
+  virtual ~company_management_get_stamp_pic_pargs() noexcept;
+  const std::string* company_name;
+
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _company_management_get_stamp_pic_result__isset {
+  _company_management_get_stamp_pic_result__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _company_management_get_stamp_pic_result__isset;
+
+class company_management_get_stamp_pic_result {
+ public:
+
+  company_management_get_stamp_pic_result(const company_management_get_stamp_pic_result&);
+  company_management_get_stamp_pic_result& operator=(const company_management_get_stamp_pic_result&);
+  company_management_get_stamp_pic_result() : success() {
+  }
+
+  virtual ~company_management_get_stamp_pic_result() noexcept;
+  std::string success;
+  gen_exp e;
+
+  _company_management_get_stamp_pic_result__isset __isset;
+
+  void __set_success(const std::string& val);
+
+  void __set_e(const gen_exp& val);
+
+  bool operator == (const company_management_get_stamp_pic_result & rhs) const
+  {
+    if (!(success == rhs.success))
+      return false;
+    if (!(e == rhs.e))
+      return false;
+    return true;
+  }
+  bool operator != (const company_management_get_stamp_pic_result &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const company_management_get_stamp_pic_result & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _company_management_get_stamp_pic_presult__isset {
+  _company_management_get_stamp_pic_presult__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _company_management_get_stamp_pic_presult__isset;
+
+class company_management_get_stamp_pic_presult {
+ public:
+
+
+  virtual ~company_management_get_stamp_pic_presult() noexcept;
+  std::string* success;
+  gen_exp e;
+
+  _company_management_get_stamp_pic_presult__isset __isset;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+
+};
+
 class company_managementClient : virtual public company_managementIf {
  public:
   company_managementClient(std::shared_ptr< ::apache::thrift::protocol::TProtocol> prot) {
@@ -5018,6 +5375,15 @@ class company_managementClient : virtual public company_managementIf {
   void get_gps_stuff(std::vector<std::string> & _return, const std::string& ssid);
   void send_get_gps_stuff(const std::string& ssid);
   void recv_get_gps_stuff(std::vector<std::string> & _return);
+  bool add_stamp_pic(const std::string& ssid, const std::string& pic_base64);
+  void send_add_stamp_pic(const std::string& ssid, const std::string& pic_base64);
+  bool recv_add_stamp_pic();
+  bool del_stamp_pic(const std::string& ssid);
+  void send_del_stamp_pic(const std::string& ssid);
+  bool recv_del_stamp_pic();
+  void get_stamp_pic(std::string& _return, const std::string& company_name);
+  void send_get_stamp_pic(const std::string& company_name);
+  void recv_get_stamp_pic(std::string& _return);
  protected:
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> piprot_;
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> poprot_;
@@ -5073,6 +5439,9 @@ class company_managementProcessor : public ::apache::thrift::TDispatchProcessor 
   void process_add_gps_stuff(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
   void process_del_gps_stuff(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
   void process_get_gps_stuff(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
+  void process_add_stamp_pic(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
+  void process_del_stamp_pic(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
+  void process_get_stamp_pic(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
  public:
   company_managementProcessor(::std::shared_ptr<company_managementIf> iface) :
     iface_(iface) {
@@ -5116,6 +5485,9 @@ class company_managementProcessor : public ::apache::thrift::TDispatchProcessor 
     processMap_["add_gps_stuff"] = &company_managementProcessor::process_add_gps_stuff;
     processMap_["del_gps_stuff"] = &company_managementProcessor::process_del_gps_stuff;
     processMap_["get_gps_stuff"] = &company_managementProcessor::process_get_gps_stuff;
+    processMap_["add_stamp_pic"] = &company_managementProcessor::process_add_stamp_pic;
+    processMap_["del_stamp_pic"] = &company_managementProcessor::process_del_stamp_pic;
+    processMap_["get_stamp_pic"] = &company_managementProcessor::process_get_stamp_pic;
   }
 
   virtual ~company_managementProcessor() {}
@@ -5524,6 +5896,34 @@ class company_managementMultiface : virtual public company_managementIf {
     return;
   }
 
+  bool add_stamp_pic(const std::string& ssid, const std::string& pic_base64) {
+    size_t sz = ifaces_.size();
+    size_t i = 0;
+    for (; i < (sz - 1); ++i) {
+      ifaces_[i]->add_stamp_pic(ssid, pic_base64);
+    }
+    return ifaces_[i]->add_stamp_pic(ssid, pic_base64);
+  }
+
+  bool del_stamp_pic(const std::string& ssid) {
+    size_t sz = ifaces_.size();
+    size_t i = 0;
+    for (; i < (sz - 1); ++i) {
+      ifaces_[i]->del_stamp_pic(ssid);
+    }
+    return ifaces_[i]->del_stamp_pic(ssid);
+  }
+
+  void get_stamp_pic(std::string& _return, const std::string& company_name) {
+    size_t sz = ifaces_.size();
+    size_t i = 0;
+    for (; i < (sz - 1); ++i) {
+      ifaces_[i]->get_stamp_pic(_return, company_name);
+    }
+    ifaces_[i]->get_stamp_pic(_return, company_name);
+    return;
+  }
+
 };
 
 // The 'concurrent' client is a thread safe client that correctly handles
@@ -5676,6 +6076,15 @@ class company_managementConcurrentClient : virtual public company_managementIf {
   void get_gps_stuff(std::vector<std::string> & _return, const std::string& ssid);
   int32_t send_get_gps_stuff(const std::string& ssid);
   void recv_get_gps_stuff(std::vector<std::string> & _return, const int32_t seqid);
+  bool add_stamp_pic(const std::string& ssid, const std::string& pic_base64);
+  int32_t send_add_stamp_pic(const std::string& ssid, const std::string& pic_base64);
+  bool recv_add_stamp_pic(const int32_t seqid);
+  bool del_stamp_pic(const std::string& ssid);
+  int32_t send_del_stamp_pic(const std::string& ssid);
+  bool recv_del_stamp_pic(const int32_t seqid);
+  void get_stamp_pic(std::string& _return, const std::string& company_name);
+  int32_t send_get_stamp_pic(const std::string& company_name);
+  void recv_get_stamp_pic(std::string& _return, const int32_t seqid);
  protected:
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> piprot_;
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> poprot_;

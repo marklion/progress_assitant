@@ -118,6 +118,7 @@
                             <van-col>{{item.m_weight}}吨</van-col>
                         </van-row>
                     </div>
+                    <van-cell title="查看磅单" is-link :to="{name:'Ticket', params:{id:item.id + 'B'}}"></van-cell>
                 </div>
             </van-list>
             <van-dialog v-model="change_show" title="修改车辆信息" :showConfirmButton="false" closeOnClickOverlay>

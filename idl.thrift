@@ -162,6 +162,9 @@ service company_management {
     bool add_gps_stuff(1:string ssid, 2:string stuff_name) throws (1:gen_exp e),
     bool del_gps_stuff(1:string ssid, 2:string stuff_name) throws (1:gen_exp e),
     list<string> get_gps_stuff(1: string ssid) throws (1:gen_exp e),
+    bool add_stamp_pic(1:string ssid, 2:string pic_base64) throws (1:gen_exp e),
+    bool del_stamp_pic(1:string ssid) throws (1:gen_exp e),
+    string get_stamp_pic(1:string company_name) throws (1:gen_exp e),
 }
 
 service stuff_info {
@@ -247,6 +250,8 @@ struct deliver_info {
     4:double m_weight,
     5:string p_time,
     6:string m_time,
+    7:string seal_no,
+    8:string ticket_no,
 }
 
 struct vichele_statistics {
@@ -420,6 +425,8 @@ struct push_weight_req {
     8:string pTime,
     9:string mTime,
     10:double jWeight,
+    11:string sealNo,
+    12:string ticketNo,
 }
 
 struct push_base_req {
@@ -449,6 +456,23 @@ struct push_manual_permit_req {
     2:string driverId,
 }
 
+struct ticket_detail {
+    1:string ticket_no,
+    2:string customer_name,
+    3:string supplier_name,
+    4:string main_vichele_number,
+    5:string behind_vichele_number,
+    6:string seal_no,
+    7:string stuff_name,
+    8:string p_weight,
+    9:string m_weight,
+    10:string j_weight,
+    11:string m_date,
+    12:string p_date,
+    13:string title,
+    14:string transfor_company,
+}
+
 service open_api_management {
     bool register_api_user(1:string company_name, 2:string email, 3:string password) throws (1:gen_exp e),
     bool verify_email_code(1:string email, 2:string code) throws (1:gen_exp e),
@@ -465,6 +489,7 @@ service open_api_management {
     bool proc_push_balance(1:push_balance_req _req, 2:string token) throws (1:gen_exp e),
     bool proc_push_zone_change(1:push_zone_change_req _req, 2:string token) throws (1:gen_exp e),
     bool proc_push_manual_permit(1:push_manual_permit_req _req, 2:string token) throws (1:gen_exp e),
+    ticket_detail get_vehicle_info_by_id(1:string id) throws (1:gen_exp e),
 }
 
 struct vichele_stay_alone {

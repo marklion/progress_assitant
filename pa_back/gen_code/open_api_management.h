@@ -37,6 +37,7 @@ class open_api_managementIf {
   virtual bool proc_push_balance(const push_balance_req& _req, const std::string& token) = 0;
   virtual bool proc_push_zone_change(const push_zone_change_req& _req, const std::string& token) = 0;
   virtual bool proc_push_manual_permit(const push_manual_permit_req& _req, const std::string& token) = 0;
+  virtual void get_vehicle_info_by_id(ticket_detail& _return, const std::string& id) = 0;
 };
 
 class open_api_managementIfFactory {
@@ -122,6 +123,9 @@ class open_api_managementNull : virtual public open_api_managementIf {
   bool proc_push_manual_permit(const push_manual_permit_req& /* _req */, const std::string& /* token */) {
     bool _return = false;
     return _return;
+  }
+  void get_vehicle_info_by_id(ticket_detail& /* _return */, const std::string& /* id */) {
+    return;
   }
 };
 
@@ -1945,6 +1949,118 @@ class open_api_management_proc_push_manual_permit_presult {
 
 };
 
+typedef struct _open_api_management_get_vehicle_info_by_id_args__isset {
+  _open_api_management_get_vehicle_info_by_id_args__isset() : id(false) {}
+  bool id :1;
+} _open_api_management_get_vehicle_info_by_id_args__isset;
+
+class open_api_management_get_vehicle_info_by_id_args {
+ public:
+
+  open_api_management_get_vehicle_info_by_id_args(const open_api_management_get_vehicle_info_by_id_args&);
+  open_api_management_get_vehicle_info_by_id_args& operator=(const open_api_management_get_vehicle_info_by_id_args&);
+  open_api_management_get_vehicle_info_by_id_args() : id() {
+  }
+
+  virtual ~open_api_management_get_vehicle_info_by_id_args() noexcept;
+  std::string id;
+
+  _open_api_management_get_vehicle_info_by_id_args__isset __isset;
+
+  void __set_id(const std::string& val);
+
+  bool operator == (const open_api_management_get_vehicle_info_by_id_args & rhs) const
+  {
+    if (!(id == rhs.id))
+      return false;
+    return true;
+  }
+  bool operator != (const open_api_management_get_vehicle_info_by_id_args &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const open_api_management_get_vehicle_info_by_id_args & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+
+class open_api_management_get_vehicle_info_by_id_pargs {
+ public:
+
+
+  virtual ~open_api_management_get_vehicle_info_by_id_pargs() noexcept;
+  const std::string* id;
+
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _open_api_management_get_vehicle_info_by_id_result__isset {
+  _open_api_management_get_vehicle_info_by_id_result__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _open_api_management_get_vehicle_info_by_id_result__isset;
+
+class open_api_management_get_vehicle_info_by_id_result {
+ public:
+
+  open_api_management_get_vehicle_info_by_id_result(const open_api_management_get_vehicle_info_by_id_result&);
+  open_api_management_get_vehicle_info_by_id_result& operator=(const open_api_management_get_vehicle_info_by_id_result&);
+  open_api_management_get_vehicle_info_by_id_result() {
+  }
+
+  virtual ~open_api_management_get_vehicle_info_by_id_result() noexcept;
+  ticket_detail success;
+  gen_exp e;
+
+  _open_api_management_get_vehicle_info_by_id_result__isset __isset;
+
+  void __set_success(const ticket_detail& val);
+
+  void __set_e(const gen_exp& val);
+
+  bool operator == (const open_api_management_get_vehicle_info_by_id_result & rhs) const
+  {
+    if (!(success == rhs.success))
+      return false;
+    if (!(e == rhs.e))
+      return false;
+    return true;
+  }
+  bool operator != (const open_api_management_get_vehicle_info_by_id_result &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const open_api_management_get_vehicle_info_by_id_result & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _open_api_management_get_vehicle_info_by_id_presult__isset {
+  _open_api_management_get_vehicle_info_by_id_presult__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _open_api_management_get_vehicle_info_by_id_presult__isset;
+
+class open_api_management_get_vehicle_info_by_id_presult {
+ public:
+
+
+  virtual ~open_api_management_get_vehicle_info_by_id_presult() noexcept;
+  ticket_detail* success;
+  gen_exp e;
+
+  _open_api_management_get_vehicle_info_by_id_presult__isset __isset;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+
+};
+
 class open_api_managementClient : virtual public open_api_managementIf {
  public:
   open_api_managementClient(std::shared_ptr< ::apache::thrift::protocol::TProtocol> prot) {
@@ -2015,6 +2131,9 @@ class open_api_managementClient : virtual public open_api_managementIf {
   bool proc_push_manual_permit(const push_manual_permit_req& _req, const std::string& token);
   void send_proc_push_manual_permit(const push_manual_permit_req& _req, const std::string& token);
   bool recv_proc_push_manual_permit();
+  void get_vehicle_info_by_id(ticket_detail& _return, const std::string& id);
+  void send_get_vehicle_info_by_id(const std::string& id);
+  void recv_get_vehicle_info_by_id(ticket_detail& _return);
  protected:
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> piprot_;
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> poprot_;
@@ -2045,6 +2164,7 @@ class open_api_managementProcessor : public ::apache::thrift::TDispatchProcessor
   void process_proc_push_balance(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
   void process_proc_push_zone_change(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
   void process_proc_push_manual_permit(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
+  void process_get_vehicle_info_by_id(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
  public:
   open_api_managementProcessor(::std::shared_ptr<open_api_managementIf> iface) :
     iface_(iface) {
@@ -2063,6 +2183,7 @@ class open_api_managementProcessor : public ::apache::thrift::TDispatchProcessor
     processMap_["proc_push_balance"] = &open_api_managementProcessor::process_proc_push_balance;
     processMap_["proc_push_zone_change"] = &open_api_managementProcessor::process_proc_push_zone_change;
     processMap_["proc_push_manual_permit"] = &open_api_managementProcessor::process_proc_push_manual_permit;
+    processMap_["get_vehicle_info_by_id"] = &open_api_managementProcessor::process_get_vehicle_info_by_id;
   }
 
   virtual ~open_api_managementProcessor() {}
@@ -2229,6 +2350,16 @@ class open_api_managementMultiface : virtual public open_api_managementIf {
     return ifaces_[i]->proc_push_manual_permit(_req, token);
   }
 
+  void get_vehicle_info_by_id(ticket_detail& _return, const std::string& id) {
+    size_t sz = ifaces_.size();
+    size_t i = 0;
+    for (; i < (sz - 1); ++i) {
+      ifaces_[i]->get_vehicle_info_by_id(_return, id);
+    }
+    ifaces_[i]->get_vehicle_info_by_id(_return, id);
+    return;
+  }
+
 };
 
 // The 'concurrent' client is a thread safe client that correctly handles
@@ -2306,6 +2437,9 @@ class open_api_managementConcurrentClient : virtual public open_api_managementIf
   bool proc_push_manual_permit(const push_manual_permit_req& _req, const std::string& token);
   int32_t send_proc_push_manual_permit(const push_manual_permit_req& _req, const std::string& token);
   bool recv_proc_push_manual_permit(const int32_t seqid);
+  void get_vehicle_info_by_id(ticket_detail& _return, const std::string& id);
+  int32_t send_get_vehicle_info_by_id(const std::string& id);
+  void recv_get_vehicle_info_by_id(ticket_detail& _return, const int32_t seqid);
  protected:
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> piprot_;
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> poprot_;

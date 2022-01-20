@@ -244,6 +244,7 @@ public:
                         tmp.p_time = itr.deliver_p_timestamp;
                         tmp.m_weight = itr.m_weight;
                         tmp.p_weight = itr.p_weight;
+                        tmp.vichele_id = itr.get_pri_id();
                         _return.vichele_info.push_back(tmp);
                     }
                 }
@@ -326,6 +327,7 @@ public:
                         {
                             tmp.driver_silent_id = silent_id_driver->silent_id;
                         }
+                        tmp.vichele_id = itr.get_pri_id();
                         _return.vichele_info.push_back(tmp);
                     }
                 }

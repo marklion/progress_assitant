@@ -20,6 +20,7 @@ public:
     std::string third_url;
     std::string third_dms_url;
     std::string third_token;
+    std::string stamp_pic;
 
     virtual std::vector<sqlite_orm_column> self_columns_defined()
     {
@@ -37,6 +38,7 @@ public:
         ret.push_back(sqlite_orm_column("third_url", sqlite_orm_column::STRING, &third_url));
         ret.push_back(sqlite_orm_column("third_dms_url", sqlite_orm_column::STRING, &third_dms_url));
         ret.push_back(sqlite_orm_column("third_token", sqlite_orm_column::STRING, &third_token));
+        ret.push_back(sqlite_orm_column("stamp_pic", sqlite_orm_column::STRING, &stamp_pic));
 
         return ret;
     }
@@ -308,6 +310,8 @@ public:
     double p_weight = 0;
     double m_weight = 0;
     int req_register = 0;
+    std::string ticket_no;
+    std::string seal_no;
     pa_sql_single_vichele()
     {
         add_parent_type<pa_sql_vichele>("main_vichele");
@@ -327,6 +331,8 @@ public:
         ret.push_back(sqlite_orm_column("deliver_timestamp", sqlite_orm_column::STRING, &deliver_timestamp));
         ret.push_back(sqlite_orm_column("deliver_p_timestamp", sqlite_orm_column::STRING, &deliver_p_timestamp));
         ret.push_back(sqlite_orm_column("req_register", sqlite_orm_column::INTEGER, &req_register));
+        ret.push_back(sqlite_orm_column("ticket_no", sqlite_orm_column::STRING, &ticket_no));
+        ret.push_back(sqlite_orm_column("seal_no", sqlite_orm_column::STRING, &seal_no));
 
         return ret;
     }
@@ -470,6 +476,8 @@ public:
     std::string deliver_p_timestamp;
     double p_weight = 0;
     double m_weight = 0;
+    std::string ticket_no;
+    std::string seal_no;
     pa_sql_archive_vichele_plan()
     {
         add_parent_type<pa_sql_archive_plan>("belong_plan");
@@ -489,6 +497,8 @@ public:
         ret.push_back(sqlite_orm_column("p_weight", sqlite_orm_column::REAL, &p_weight));
         ret.push_back(sqlite_orm_column("m_weight", sqlite_orm_column::REAL, &m_weight));
         ret.push_back(sqlite_orm_column("deliver_p_timestamp", sqlite_orm_column::STRING, &deliver_p_timestamp));
+        ret.push_back(sqlite_orm_column("ticket_no", sqlite_orm_column::STRING, &ticket_no));
+        ret.push_back(sqlite_orm_column("seal_no", sqlite_orm_column::STRING, &seal_no));
 
         return ret;
     }
@@ -635,6 +645,7 @@ public:
     int no_permission = 1;
     std::string attach_path;
     int upload_no_permit = 1;
+    std::string ticket_no;
     pa_sql_vichele_stay_alone() {
         add_parent_type<pa_sql_silent_user>("created_by");
         add_parent_type<pa_sql_company>("destination");
@@ -668,6 +679,7 @@ public:
         ret.push_back(sqlite_orm_column("no_permission", sqlite_orm_column::INTEGER, &no_permission));
         ret.push_back(sqlite_orm_column("attach_path", sqlite_orm_column::STRING, &attach_path));
         ret.push_back(sqlite_orm_column("upload_no_permit", sqlite_orm_column::INTEGER, &upload_no_permit));
+        ret.push_back(sqlite_orm_column("ticket_no", sqlite_orm_column::STRING, &ticket_no));
 
         return ret;
     }
