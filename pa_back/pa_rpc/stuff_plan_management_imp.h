@@ -682,6 +682,8 @@ public:
                 {
                     found_vichele_info->deliver_timestamp = itr.m_time;
                 }
+                found_vichele_info->ticket_no = itr.ticket_no;
+                found_vichele_info->seal_no = itr.seal_no;
                 found_vichele_info->update_record();
                 auto driver_register = found_vichele_info->get_children<pa_sql_driver_register>("belong_vichele");
                 if (driver_register)
