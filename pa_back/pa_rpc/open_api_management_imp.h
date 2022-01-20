@@ -471,7 +471,7 @@ public:
                 tmp.p_weight = _req.pWeight;
                 tmp.count = _req.jWeight;
                 tmp.seal_no = _req.sealNo;
-                tmp.ticket_no = _req.sealNo;
+                tmp.ticket_no = _req.ticketNo;
 
                 std::vector<deliver_info> tmp_list;
                 tmp_list.push_back(tmp);
