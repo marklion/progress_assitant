@@ -5375,6 +5375,385 @@ company_management_get_gps_stuff_result = class {
   }
 
 };
+company_management_add_stamp_pic_args = class {
+  constructor(args) {
+    this.ssid = null;
+    this.pic_base64 = null;
+    if (args) {
+      if (args.ssid !== undefined && args.ssid !== null) {
+        this.ssid = args.ssid;
+      }
+      if (args.pic_base64 !== undefined && args.pic_base64 !== null) {
+        this.pic_base64 = args.pic_base64;
+      }
+    }
+  }
+
+  read (input) {
+    input.readStructBegin();
+    while (true) {
+      const ret = input.readFieldBegin();
+      const ftype = ret.ftype;
+      const fid = ret.fid;
+      if (ftype == Thrift.Type.STOP) {
+        break;
+      }
+      switch (fid) {
+        case 1:
+        if (ftype == Thrift.Type.STRING) {
+          this.ssid = input.readString().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        case 2:
+        if (ftype == Thrift.Type.STRING) {
+          this.pic_base64 = input.readString().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        default:
+          input.skip(ftype);
+      }
+      input.readFieldEnd();
+    }
+    input.readStructEnd();
+    return;
+  }
+
+  write (output) {
+    output.writeStructBegin('company_management_add_stamp_pic_args');
+    if (this.ssid !== null && this.ssid !== undefined) {
+      output.writeFieldBegin('ssid', Thrift.Type.STRING, 1);
+      output.writeString(this.ssid);
+      output.writeFieldEnd();
+    }
+    if (this.pic_base64 !== null && this.pic_base64 !== undefined) {
+      output.writeFieldBegin('pic_base64', Thrift.Type.STRING, 2);
+      output.writeString(this.pic_base64);
+      output.writeFieldEnd();
+    }
+    output.writeFieldStop();
+    output.writeStructEnd();
+    return;
+  }
+
+};
+company_management_add_stamp_pic_result = class {
+  constructor(args) {
+    this.success = null;
+    this.e = null;
+    if (args instanceof gen_exp) {
+        this.e = args;
+        return;
+    }
+    if (args) {
+      if (args.success !== undefined && args.success !== null) {
+        this.success = args.success;
+      }
+      if (args.e !== undefined && args.e !== null) {
+        this.e = args.e;
+      }
+    }
+  }
+
+  read (input) {
+    input.readStructBegin();
+    while (true) {
+      const ret = input.readFieldBegin();
+      const ftype = ret.ftype;
+      const fid = ret.fid;
+      if (ftype == Thrift.Type.STOP) {
+        break;
+      }
+      switch (fid) {
+        case 0:
+        if (ftype == Thrift.Type.BOOL) {
+          this.success = input.readBool().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        case 1:
+        if (ftype == Thrift.Type.STRUCT) {
+          this.e = new gen_exp();
+          this.e.read(input);
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        default:
+          input.skip(ftype);
+      }
+      input.readFieldEnd();
+    }
+    input.readStructEnd();
+    return;
+  }
+
+  write (output) {
+    output.writeStructBegin('company_management_add_stamp_pic_result');
+    if (this.success !== null && this.success !== undefined) {
+      output.writeFieldBegin('success', Thrift.Type.BOOL, 0);
+      output.writeBool(this.success);
+      output.writeFieldEnd();
+    }
+    if (this.e !== null && this.e !== undefined) {
+      output.writeFieldBegin('e', Thrift.Type.STRUCT, 1);
+      this.e.write(output);
+      output.writeFieldEnd();
+    }
+    output.writeFieldStop();
+    output.writeStructEnd();
+    return;
+  }
+
+};
+company_management_del_stamp_pic_args = class {
+  constructor(args) {
+    this.ssid = null;
+    if (args) {
+      if (args.ssid !== undefined && args.ssid !== null) {
+        this.ssid = args.ssid;
+      }
+    }
+  }
+
+  read (input) {
+    input.readStructBegin();
+    while (true) {
+      const ret = input.readFieldBegin();
+      const ftype = ret.ftype;
+      const fid = ret.fid;
+      if (ftype == Thrift.Type.STOP) {
+        break;
+      }
+      switch (fid) {
+        case 1:
+        if (ftype == Thrift.Type.STRING) {
+          this.ssid = input.readString().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        case 0:
+          input.skip(ftype);
+          break;
+        default:
+          input.skip(ftype);
+      }
+      input.readFieldEnd();
+    }
+    input.readStructEnd();
+    return;
+  }
+
+  write (output) {
+    output.writeStructBegin('company_management_del_stamp_pic_args');
+    if (this.ssid !== null && this.ssid !== undefined) {
+      output.writeFieldBegin('ssid', Thrift.Type.STRING, 1);
+      output.writeString(this.ssid);
+      output.writeFieldEnd();
+    }
+    output.writeFieldStop();
+    output.writeStructEnd();
+    return;
+  }
+
+};
+company_management_del_stamp_pic_result = class {
+  constructor(args) {
+    this.success = null;
+    this.e = null;
+    if (args instanceof gen_exp) {
+        this.e = args;
+        return;
+    }
+    if (args) {
+      if (args.success !== undefined && args.success !== null) {
+        this.success = args.success;
+      }
+      if (args.e !== undefined && args.e !== null) {
+        this.e = args.e;
+      }
+    }
+  }
+
+  read (input) {
+    input.readStructBegin();
+    while (true) {
+      const ret = input.readFieldBegin();
+      const ftype = ret.ftype;
+      const fid = ret.fid;
+      if (ftype == Thrift.Type.STOP) {
+        break;
+      }
+      switch (fid) {
+        case 0:
+        if (ftype == Thrift.Type.BOOL) {
+          this.success = input.readBool().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        case 1:
+        if (ftype == Thrift.Type.STRUCT) {
+          this.e = new gen_exp();
+          this.e.read(input);
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        default:
+          input.skip(ftype);
+      }
+      input.readFieldEnd();
+    }
+    input.readStructEnd();
+    return;
+  }
+
+  write (output) {
+    output.writeStructBegin('company_management_del_stamp_pic_result');
+    if (this.success !== null && this.success !== undefined) {
+      output.writeFieldBegin('success', Thrift.Type.BOOL, 0);
+      output.writeBool(this.success);
+      output.writeFieldEnd();
+    }
+    if (this.e !== null && this.e !== undefined) {
+      output.writeFieldBegin('e', Thrift.Type.STRUCT, 1);
+      this.e.write(output);
+      output.writeFieldEnd();
+    }
+    output.writeFieldStop();
+    output.writeStructEnd();
+    return;
+  }
+
+};
+company_management_get_stamp_pic_args = class {
+  constructor(args) {
+    this.company_name = null;
+    if (args) {
+      if (args.company_name !== undefined && args.company_name !== null) {
+        this.company_name = args.company_name;
+      }
+    }
+  }
+
+  read (input) {
+    input.readStructBegin();
+    while (true) {
+      const ret = input.readFieldBegin();
+      const ftype = ret.ftype;
+      const fid = ret.fid;
+      if (ftype == Thrift.Type.STOP) {
+        break;
+      }
+      switch (fid) {
+        case 1:
+        if (ftype == Thrift.Type.STRING) {
+          this.company_name = input.readString().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        case 0:
+          input.skip(ftype);
+          break;
+        default:
+          input.skip(ftype);
+      }
+      input.readFieldEnd();
+    }
+    input.readStructEnd();
+    return;
+  }
+
+  write (output) {
+    output.writeStructBegin('company_management_get_stamp_pic_args');
+    if (this.company_name !== null && this.company_name !== undefined) {
+      output.writeFieldBegin('company_name', Thrift.Type.STRING, 1);
+      output.writeString(this.company_name);
+      output.writeFieldEnd();
+    }
+    output.writeFieldStop();
+    output.writeStructEnd();
+    return;
+  }
+
+};
+company_management_get_stamp_pic_result = class {
+  constructor(args) {
+    this.success = null;
+    this.e = null;
+    if (args instanceof gen_exp) {
+        this.e = args;
+        return;
+    }
+    if (args) {
+      if (args.success !== undefined && args.success !== null) {
+        this.success = args.success;
+      }
+      if (args.e !== undefined && args.e !== null) {
+        this.e = args.e;
+      }
+    }
+  }
+
+  read (input) {
+    input.readStructBegin();
+    while (true) {
+      const ret = input.readFieldBegin();
+      const ftype = ret.ftype;
+      const fid = ret.fid;
+      if (ftype == Thrift.Type.STOP) {
+        break;
+      }
+      switch (fid) {
+        case 0:
+        if (ftype == Thrift.Type.STRING) {
+          this.success = input.readString().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        case 1:
+        if (ftype == Thrift.Type.STRUCT) {
+          this.e = new gen_exp();
+          this.e.read(input);
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        default:
+          input.skip(ftype);
+      }
+      input.readFieldEnd();
+    }
+    input.readStructEnd();
+    return;
+  }
+
+  write (output) {
+    output.writeStructBegin('company_management_get_stamp_pic_result');
+    if (this.success !== null && this.success !== undefined) {
+      output.writeFieldBegin('success', Thrift.Type.STRING, 0);
+      output.writeString(this.success);
+      output.writeFieldEnd();
+    }
+    if (this.e !== null && this.e !== undefined) {
+      output.writeFieldBegin('e', Thrift.Type.STRUCT, 1);
+      this.e.write(output);
+      output.writeFieldEnd();
+    }
+    output.writeFieldStop();
+    output.writeStructEnd();
+    return;
+  }
+
+};
 company_managementClient = class company_managementClient {
   constructor(input, output) {
     this.input = input;
@@ -7756,5 +8135,183 @@ company_managementClient = class company_managementClient {
       return result.success;
     }
     throw 'get_gps_stuff failed: unknown result';
+  }
+
+  add_stamp_pic (ssid, pic_base64) {
+    const self = this;
+    return new Promise((resolve, reject) => {
+      self.send_add_stamp_pic(ssid, pic_base64, (error, result) => {
+        return error ? reject(error) : resolve(result);
+      });
+    });
+  }
+
+  send_add_stamp_pic (ssid, pic_base64, callback) {
+    const params = {
+      ssid: ssid,
+      pic_base64: pic_base64
+    };
+    const args = new company_management_add_stamp_pic_args(params);
+    try {
+      this.output.writeMessageBegin('add_stamp_pic', Thrift.MessageType.CALL, this.seqid);
+      args.write(this.output);
+      this.output.writeMessageEnd();
+      const self = this;
+      this.output.getTransport().flush(true, () => {
+        let error = null, result = null;
+        try {
+          result = self.recv_add_stamp_pic();
+        } catch (e) {
+          error = e;
+        }
+        callback(error, result);
+      });
+    }
+    catch (e) {
+      if (typeof this.output.getTransport().reset === 'function') {
+        this.output.getTransport().reset();
+      }
+      throw e;
+    }
+  }
+
+  recv_add_stamp_pic () {
+    const ret = this.input.readMessageBegin();
+    const mtype = ret.mtype;
+    if (mtype == Thrift.MessageType.EXCEPTION) {
+      const x = new Thrift.TApplicationException();
+      x.read(this.input);
+      this.input.readMessageEnd();
+      throw x;
+    }
+    const result = new company_management_add_stamp_pic_result();
+    result.read(this.input);
+    this.input.readMessageEnd();
+
+    if (null !== result.e) {
+      throw result.e;
+    }
+    if (null !== result.success) {
+      return result.success;
+    }
+    throw 'add_stamp_pic failed: unknown result';
+  }
+
+  del_stamp_pic (ssid) {
+    const self = this;
+    return new Promise((resolve, reject) => {
+      self.send_del_stamp_pic(ssid, (error, result) => {
+        return error ? reject(error) : resolve(result);
+      });
+    });
+  }
+
+  send_del_stamp_pic (ssid, callback) {
+    const params = {
+      ssid: ssid
+    };
+    const args = new company_management_del_stamp_pic_args(params);
+    try {
+      this.output.writeMessageBegin('del_stamp_pic', Thrift.MessageType.CALL, this.seqid);
+      args.write(this.output);
+      this.output.writeMessageEnd();
+      const self = this;
+      this.output.getTransport().flush(true, () => {
+        let error = null, result = null;
+        try {
+          result = self.recv_del_stamp_pic();
+        } catch (e) {
+          error = e;
+        }
+        callback(error, result);
+      });
+    }
+    catch (e) {
+      if (typeof this.output.getTransport().reset === 'function') {
+        this.output.getTransport().reset();
+      }
+      throw e;
+    }
+  }
+
+  recv_del_stamp_pic () {
+    const ret = this.input.readMessageBegin();
+    const mtype = ret.mtype;
+    if (mtype == Thrift.MessageType.EXCEPTION) {
+      const x = new Thrift.TApplicationException();
+      x.read(this.input);
+      this.input.readMessageEnd();
+      throw x;
+    }
+    const result = new company_management_del_stamp_pic_result();
+    result.read(this.input);
+    this.input.readMessageEnd();
+
+    if (null !== result.e) {
+      throw result.e;
+    }
+    if (null !== result.success) {
+      return result.success;
+    }
+    throw 'del_stamp_pic failed: unknown result';
+  }
+
+  get_stamp_pic (company_name) {
+    const self = this;
+    return new Promise((resolve, reject) => {
+      self.send_get_stamp_pic(company_name, (error, result) => {
+        return error ? reject(error) : resolve(result);
+      });
+    });
+  }
+
+  send_get_stamp_pic (company_name, callback) {
+    const params = {
+      company_name: company_name
+    };
+    const args = new company_management_get_stamp_pic_args(params);
+    try {
+      this.output.writeMessageBegin('get_stamp_pic', Thrift.MessageType.CALL, this.seqid);
+      args.write(this.output);
+      this.output.writeMessageEnd();
+      const self = this;
+      this.output.getTransport().flush(true, () => {
+        let error = null, result = null;
+        try {
+          result = self.recv_get_stamp_pic();
+        } catch (e) {
+          error = e;
+        }
+        callback(error, result);
+      });
+    }
+    catch (e) {
+      if (typeof this.output.getTransport().reset === 'function') {
+        this.output.getTransport().reset();
+      }
+      throw e;
+    }
+  }
+
+  recv_get_stamp_pic () {
+    const ret = this.input.readMessageBegin();
+    const mtype = ret.mtype;
+    if (mtype == Thrift.MessageType.EXCEPTION) {
+      const x = new Thrift.TApplicationException();
+      x.read(this.input);
+      this.input.readMessageEnd();
+      throw x;
+    }
+    const result = new company_management_get_stamp_pic_result();
+    result.read(this.input);
+    this.input.readMessageEnd();
+
+    if (null !== result.e) {
+      throw result.e;
+    }
+    if (null !== result.success) {
+      return result.success;
+    }
+    throw 'get_stamp_pic failed: unknown result';
   }
 };

@@ -80,6 +80,7 @@
                         <van-col>{{single_vichele.m_weight}}吨</van-col>
                     </van-row>
                 </div>
+                <van-cell v-if="single_vichele.status == 2" title="查看磅单" :to="{name:'Ticket', params:{id:single_vichele.id + 'B'}}"></van-cell>
             </div>
         </van-list>
     </van-checkbox-group>

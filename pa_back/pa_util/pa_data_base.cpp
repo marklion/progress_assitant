@@ -168,6 +168,8 @@ void pa_sql_archive_plan::translate_from_plan(pa_sql_plan &_plan)
         tmp.deliver_p_timestamp = itr.deliver_p_timestamp;
         tmp.p_weight = itr.p_weight;
         tmp.m_weight = itr.m_weight;
+        tmp.ticket_no = itr.ticket_no;
+        tmp.seal_no = itr.seal_no;
         tmp.insert_record();
     }
     this->update_record();

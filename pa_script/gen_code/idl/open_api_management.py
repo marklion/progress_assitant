@@ -159,6 +159,14 @@ class Iface(object):
         """
         pass
 
+    def get_vehicle_info_by_id(self, id):
+        """
+        Parameters:
+         - id
+
+        """
+        pass
+
 
 class Client(Iface):
     def __init__(self, iprot, oprot=None):
@@ -717,6 +725,40 @@ class Client(Iface):
             raise result.e
         raise TApplicationException(TApplicationException.MISSING_RESULT, "proc_push_manual_permit failed: unknown result")
 
+    def get_vehicle_info_by_id(self, id):
+        """
+        Parameters:
+         - id
+
+        """
+        self.send_get_vehicle_info_by_id(id)
+        return self.recv_get_vehicle_info_by_id()
+
+    def send_get_vehicle_info_by_id(self, id):
+        self._oprot.writeMessageBegin('get_vehicle_info_by_id', TMessageType.CALL, self._seqid)
+        args = get_vehicle_info_by_id_args()
+        args.id = id
+        args.write(self._oprot)
+        self._oprot.writeMessageEnd()
+        self._oprot.trans.flush()
+
+    def recv_get_vehicle_info_by_id(self):
+        iprot = self._iprot
+        (fname, mtype, rseqid) = iprot.readMessageBegin()
+        if mtype == TMessageType.EXCEPTION:
+            x = TApplicationException()
+            x.read(iprot)
+            iprot.readMessageEnd()
+            raise x
+        result = get_vehicle_info_by_id_result()
+        result.read(iprot)
+        iprot.readMessageEnd()
+        if result.success is not None:
+            return result.success
+        if result.e is not None:
+            raise result.e
+        raise TApplicationException(TApplicationException.MISSING_RESULT, "get_vehicle_info_by_id failed: unknown result")
+
 
 class Processor(Iface, TProcessor):
     def __init__(self, handler):
@@ -737,6 +779,7 @@ class Processor(Iface, TProcessor):
         self._processMap["proc_push_balance"] = Processor.process_proc_push_balance
         self._processMap["proc_push_zone_change"] = Processor.process_proc_push_zone_change
         self._processMap["proc_push_manual_permit"] = Processor.process_proc_push_manual_permit
+        self._processMap["get_vehicle_info_by_id"] = Processor.process_get_vehicle_info_by_id
         self._on_message_begin = None
 
     def on_message_begin(self, func):
@@ -1145,6 +1188,32 @@ class Processor(Iface, TProcessor):
             msg_type = TMessageType.EXCEPTION
             result = TApplicationException(TApplicationException.INTERNAL_ERROR, 'Internal error')
         oprot.writeMessageBegin("proc_push_manual_permit", msg_type, seqid)
+        result.write(oprot)
+        oprot.writeMessageEnd()
+        oprot.trans.flush()
+
+    def process_get_vehicle_info_by_id(self, seqid, iprot, oprot):
+        args = get_vehicle_info_by_id_args()
+        args.read(iprot)
+        iprot.readMessageEnd()
+        result = get_vehicle_info_by_id_result()
+        try:
+            result.success = self._handler.get_vehicle_info_by_id(args.id)
+            msg_type = TMessageType.REPLY
+        except TTransport.TTransportException:
+            raise
+        except gen_exp as e:
+            msg_type = TMessageType.REPLY
+            result.e = e
+        except TApplicationException as ex:
+            logging.exception('TApplication exception in handler')
+            msg_type = TMessageType.EXCEPTION
+            result = ex
+        except Exception:
+            logging.exception('Unexpected exception in handler')
+            msg_type = TMessageType.EXCEPTION
+            result = TApplicationException(TApplicationException.INTERNAL_ERROR, 'Internal error')
+        oprot.writeMessageBegin("get_vehicle_info_by_id", msg_type, seqid)
         result.write(oprot)
         oprot.writeMessageEnd()
         oprot.trans.flush()
@@ -3430,6 +3499,142 @@ class proc_push_manual_permit_result(object):
 all_structs.append(proc_push_manual_permit_result)
 proc_push_manual_permit_result.thrift_spec = (
     (0, TType.BOOL, 'success', None, None, ),  # 0
+    (1, TType.STRUCT, 'e', [gen_exp, None], None, ),  # 1
+)
+
+
+class get_vehicle_info_by_id_args(object):
+    """
+    Attributes:
+     - id
+
+    """
+
+
+    def __init__(self, id=None,):
+        self.id = id
+
+    def read(self, iprot):
+        if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
+            iprot._fast_decode(self, iprot, [self.__class__, self.thrift_spec])
+            return
+        iprot.readStructBegin()
+        while True:
+            (fname, ftype, fid) = iprot.readFieldBegin()
+            if ftype == TType.STOP:
+                break
+            if fid == 1:
+                if ftype == TType.STRING:
+                    self.id = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
+            else:
+                iprot.skip(ftype)
+            iprot.readFieldEnd()
+        iprot.readStructEnd()
+
+    def write(self, oprot):
+        if oprot._fast_encode is not None and self.thrift_spec is not None:
+            oprot.trans.write(oprot._fast_encode(self, [self.__class__, self.thrift_spec]))
+            return
+        oprot.writeStructBegin('get_vehicle_info_by_id_args')
+        if self.id is not None:
+            oprot.writeFieldBegin('id', TType.STRING, 1)
+            oprot.writeString(self.id.encode('utf-8') if sys.version_info[0] == 2 else self.id)
+            oprot.writeFieldEnd()
+        oprot.writeFieldStop()
+        oprot.writeStructEnd()
+
+    def validate(self):
+        return
+
+    def __repr__(self):
+        L = ['%s=%r' % (key, value)
+             for key, value in self.__dict__.items()]
+        return '%s(%s)' % (self.__class__.__name__, ', '.join(L))
+
+    def __eq__(self, other):
+        return isinstance(other, self.__class__) and self.__dict__ == other.__dict__
+
+    def __ne__(self, other):
+        return not (self == other)
+all_structs.append(get_vehicle_info_by_id_args)
+get_vehicle_info_by_id_args.thrift_spec = (
+    None,  # 0
+    (1, TType.STRING, 'id', 'UTF8', None, ),  # 1
+)
+
+
+class get_vehicle_info_by_id_result(object):
+    """
+    Attributes:
+     - success
+     - e
+
+    """
+
+
+    def __init__(self, success=None, e=None,):
+        self.success = success
+        self.e = e
+
+    def read(self, iprot):
+        if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
+            iprot._fast_decode(self, iprot, [self.__class__, self.thrift_spec])
+            return
+        iprot.readStructBegin()
+        while True:
+            (fname, ftype, fid) = iprot.readFieldBegin()
+            if ftype == TType.STOP:
+                break
+            if fid == 0:
+                if ftype == TType.STRUCT:
+                    self.success = ticket_detail()
+                    self.success.read(iprot)
+                else:
+                    iprot.skip(ftype)
+            elif fid == 1:
+                if ftype == TType.STRUCT:
+                    self.e = gen_exp.read(iprot)
+                else:
+                    iprot.skip(ftype)
+            else:
+                iprot.skip(ftype)
+            iprot.readFieldEnd()
+        iprot.readStructEnd()
+
+    def write(self, oprot):
+        if oprot._fast_encode is not None and self.thrift_spec is not None:
+            oprot.trans.write(oprot._fast_encode(self, [self.__class__, self.thrift_spec]))
+            return
+        oprot.writeStructBegin('get_vehicle_info_by_id_result')
+        if self.success is not None:
+            oprot.writeFieldBegin('success', TType.STRUCT, 0)
+            self.success.write(oprot)
+            oprot.writeFieldEnd()
+        if self.e is not None:
+            oprot.writeFieldBegin('e', TType.STRUCT, 1)
+            self.e.write(oprot)
+            oprot.writeFieldEnd()
+        oprot.writeFieldStop()
+        oprot.writeStructEnd()
+
+    def validate(self):
+        return
+
+    def __repr__(self):
+        L = ['%s=%r' % (key, value)
+             for key, value in self.__dict__.items()]
+        return '%s(%s)' % (self.__class__.__name__, ', '.join(L))
+
+    def __eq__(self, other):
+        return isinstance(other, self.__class__) and self.__dict__ == other.__dict__
+
+    def __ne__(self, other):
+        return not (self == other)
+all_structs.append(get_vehicle_info_by_id_result)
+get_vehicle_info_by_id_result.thrift_spec = (
+    (0, TType.STRUCT, 'success', [ticket_detail, None], None, ),  # 0
     (1, TType.STRUCT, 'e', [gen_exp, None], None, ),  # 1
 )
 fix_spec(all_structs)

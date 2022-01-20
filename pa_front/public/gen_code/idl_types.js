@@ -2407,6 +2407,8 @@ deliver_info = class {
     this.m_weight = null;
     this.p_time = null;
     this.m_time = null;
+    this.seal_no = null;
+    this.ticket_no = null;
     if (args) {
       if (args.id !== undefined && args.id !== null) {
         this.id = args.id;
@@ -2425,6 +2427,12 @@ deliver_info = class {
       }
       if (args.m_time !== undefined && args.m_time !== null) {
         this.m_time = args.m_time;
+      }
+      if (args.seal_no !== undefined && args.seal_no !== null) {
+        this.seal_no = args.seal_no;
+      }
+      if (args.ticket_no !== undefined && args.ticket_no !== null) {
+        this.ticket_no = args.ticket_no;
       }
     }
   }
@@ -2481,6 +2489,20 @@ deliver_info = class {
           input.skip(ftype);
         }
         break;
+        case 7:
+        if (ftype == Thrift.Type.STRING) {
+          this.seal_no = input.readString().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        case 8:
+        if (ftype == Thrift.Type.STRING) {
+          this.ticket_no = input.readString().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
         default:
           input.skip(ftype);
       }
@@ -2520,6 +2542,16 @@ deliver_info = class {
     if (this.m_time !== null && this.m_time !== undefined) {
       output.writeFieldBegin('m_time', Thrift.Type.STRING, 6);
       output.writeString(this.m_time);
+      output.writeFieldEnd();
+    }
+    if (this.seal_no !== null && this.seal_no !== undefined) {
+      output.writeFieldBegin('seal_no', Thrift.Type.STRING, 7);
+      output.writeString(this.seal_no);
+      output.writeFieldEnd();
+    }
+    if (this.ticket_no !== null && this.ticket_no !== undefined) {
+      output.writeFieldBegin('ticket_no', Thrift.Type.STRING, 8);
+      output.writeString(this.ticket_no);
       output.writeFieldEnd();
     }
     output.writeFieldStop();
@@ -4281,6 +4313,8 @@ push_weight_req = class {
     this.pTime = null;
     this.mTime = null;
     this.jWeight = null;
+    this.sealNo = null;
+    this.ticketNo = null;
     if (args) {
       if (args.id !== undefined && args.id !== null) {
         this.id = args.id;
@@ -4311,6 +4345,12 @@ push_weight_req = class {
       }
       if (args.jWeight !== undefined && args.jWeight !== null) {
         this.jWeight = args.jWeight;
+      }
+      if (args.sealNo !== undefined && args.sealNo !== null) {
+        this.sealNo = args.sealNo;
+      }
+      if (args.ticketNo !== undefined && args.ticketNo !== null) {
+        this.ticketNo = args.ticketNo;
       }
     }
   }
@@ -4395,6 +4435,20 @@ push_weight_req = class {
           input.skip(ftype);
         }
         break;
+        case 11:
+        if (ftype == Thrift.Type.STRING) {
+          this.sealNo = input.readString().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        case 12:
+        if (ftype == Thrift.Type.STRING) {
+          this.ticketNo = input.readString().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
         default:
           input.skip(ftype);
       }
@@ -4454,6 +4508,16 @@ push_weight_req = class {
     if (this.jWeight !== null && this.jWeight !== undefined) {
       output.writeFieldBegin('jWeight', Thrift.Type.DOUBLE, 10);
       output.writeDouble(this.jWeight);
+      output.writeFieldEnd();
+    }
+    if (this.sealNo !== null && this.sealNo !== undefined) {
+      output.writeFieldBegin('sealNo', Thrift.Type.STRING, 11);
+      output.writeString(this.sealNo);
+      output.writeFieldEnd();
+    }
+    if (this.ticketNo !== null && this.ticketNo !== undefined) {
+      output.writeFieldBegin('ticketNo', Thrift.Type.STRING, 12);
+      output.writeString(this.ticketNo);
       output.writeFieldEnd();
     }
     output.writeFieldStop();
@@ -4826,6 +4890,263 @@ push_manual_permit_req = class {
     if (this.driverId !== null && this.driverId !== undefined) {
       output.writeFieldBegin('driverId', Thrift.Type.STRING, 2);
       output.writeString(this.driverId);
+      output.writeFieldEnd();
+    }
+    output.writeFieldStop();
+    output.writeStructEnd();
+    return;
+  }
+
+};
+ticket_detail = class {
+  constructor(args) {
+    this.ticket_no = null;
+    this.customer_name = null;
+    this.supplier_name = null;
+    this.main_vichele_number = null;
+    this.behind_vichele_number = null;
+    this.seal_no = null;
+    this.stuff_name = null;
+    this.p_weight = null;
+    this.m_weight = null;
+    this.j_weight = null;
+    this.m_date = null;
+    this.p_date = null;
+    this.title = null;
+    this.transfor_company = null;
+    if (args) {
+      if (args.ticket_no !== undefined && args.ticket_no !== null) {
+        this.ticket_no = args.ticket_no;
+      }
+      if (args.customer_name !== undefined && args.customer_name !== null) {
+        this.customer_name = args.customer_name;
+      }
+      if (args.supplier_name !== undefined && args.supplier_name !== null) {
+        this.supplier_name = args.supplier_name;
+      }
+      if (args.main_vichele_number !== undefined && args.main_vichele_number !== null) {
+        this.main_vichele_number = args.main_vichele_number;
+      }
+      if (args.behind_vichele_number !== undefined && args.behind_vichele_number !== null) {
+        this.behind_vichele_number = args.behind_vichele_number;
+      }
+      if (args.seal_no !== undefined && args.seal_no !== null) {
+        this.seal_no = args.seal_no;
+      }
+      if (args.stuff_name !== undefined && args.stuff_name !== null) {
+        this.stuff_name = args.stuff_name;
+      }
+      if (args.p_weight !== undefined && args.p_weight !== null) {
+        this.p_weight = args.p_weight;
+      }
+      if (args.m_weight !== undefined && args.m_weight !== null) {
+        this.m_weight = args.m_weight;
+      }
+      if (args.j_weight !== undefined && args.j_weight !== null) {
+        this.j_weight = args.j_weight;
+      }
+      if (args.m_date !== undefined && args.m_date !== null) {
+        this.m_date = args.m_date;
+      }
+      if (args.p_date !== undefined && args.p_date !== null) {
+        this.p_date = args.p_date;
+      }
+      if (args.title !== undefined && args.title !== null) {
+        this.title = args.title;
+      }
+      if (args.transfor_company !== undefined && args.transfor_company !== null) {
+        this.transfor_company = args.transfor_company;
+      }
+    }
+  }
+
+  read (input) {
+    input.readStructBegin();
+    while (true) {
+      const ret = input.readFieldBegin();
+      const ftype = ret.ftype;
+      const fid = ret.fid;
+      if (ftype == Thrift.Type.STOP) {
+        break;
+      }
+      switch (fid) {
+        case 1:
+        if (ftype == Thrift.Type.STRING) {
+          this.ticket_no = input.readString().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        case 2:
+        if (ftype == Thrift.Type.STRING) {
+          this.customer_name = input.readString().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        case 3:
+        if (ftype == Thrift.Type.STRING) {
+          this.supplier_name = input.readString().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        case 4:
+        if (ftype == Thrift.Type.STRING) {
+          this.main_vichele_number = input.readString().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        case 5:
+        if (ftype == Thrift.Type.STRING) {
+          this.behind_vichele_number = input.readString().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        case 6:
+        if (ftype == Thrift.Type.STRING) {
+          this.seal_no = input.readString().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        case 7:
+        if (ftype == Thrift.Type.STRING) {
+          this.stuff_name = input.readString().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        case 8:
+        if (ftype == Thrift.Type.STRING) {
+          this.p_weight = input.readString().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        case 9:
+        if (ftype == Thrift.Type.STRING) {
+          this.m_weight = input.readString().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        case 10:
+        if (ftype == Thrift.Type.STRING) {
+          this.j_weight = input.readString().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        case 11:
+        if (ftype == Thrift.Type.STRING) {
+          this.m_date = input.readString().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        case 12:
+        if (ftype == Thrift.Type.STRING) {
+          this.p_date = input.readString().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        case 13:
+        if (ftype == Thrift.Type.STRING) {
+          this.title = input.readString().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        case 14:
+        if (ftype == Thrift.Type.STRING) {
+          this.transfor_company = input.readString().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        default:
+          input.skip(ftype);
+      }
+      input.readFieldEnd();
+    }
+    input.readStructEnd();
+    return;
+  }
+
+  write (output) {
+    output.writeStructBegin('ticket_detail');
+    if (this.ticket_no !== null && this.ticket_no !== undefined) {
+      output.writeFieldBegin('ticket_no', Thrift.Type.STRING, 1);
+      output.writeString(this.ticket_no);
+      output.writeFieldEnd();
+    }
+    if (this.customer_name !== null && this.customer_name !== undefined) {
+      output.writeFieldBegin('customer_name', Thrift.Type.STRING, 2);
+      output.writeString(this.customer_name);
+      output.writeFieldEnd();
+    }
+    if (this.supplier_name !== null && this.supplier_name !== undefined) {
+      output.writeFieldBegin('supplier_name', Thrift.Type.STRING, 3);
+      output.writeString(this.supplier_name);
+      output.writeFieldEnd();
+    }
+    if (this.main_vichele_number !== null && this.main_vichele_number !== undefined) {
+      output.writeFieldBegin('main_vichele_number', Thrift.Type.STRING, 4);
+      output.writeString(this.main_vichele_number);
+      output.writeFieldEnd();
+    }
+    if (this.behind_vichele_number !== null && this.behind_vichele_number !== undefined) {
+      output.writeFieldBegin('behind_vichele_number', Thrift.Type.STRING, 5);
+      output.writeString(this.behind_vichele_number);
+      output.writeFieldEnd();
+    }
+    if (this.seal_no !== null && this.seal_no !== undefined) {
+      output.writeFieldBegin('seal_no', Thrift.Type.STRING, 6);
+      output.writeString(this.seal_no);
+      output.writeFieldEnd();
+    }
+    if (this.stuff_name !== null && this.stuff_name !== undefined) {
+      output.writeFieldBegin('stuff_name', Thrift.Type.STRING, 7);
+      output.writeString(this.stuff_name);
+      output.writeFieldEnd();
+    }
+    if (this.p_weight !== null && this.p_weight !== undefined) {
+      output.writeFieldBegin('p_weight', Thrift.Type.STRING, 8);
+      output.writeString(this.p_weight);
+      output.writeFieldEnd();
+    }
+    if (this.m_weight !== null && this.m_weight !== undefined) {
+      output.writeFieldBegin('m_weight', Thrift.Type.STRING, 9);
+      output.writeString(this.m_weight);
+      output.writeFieldEnd();
+    }
+    if (this.j_weight !== null && this.j_weight !== undefined) {
+      output.writeFieldBegin('j_weight', Thrift.Type.STRING, 10);
+      output.writeString(this.j_weight);
+      output.writeFieldEnd();
+    }
+    if (this.m_date !== null && this.m_date !== undefined) {
+      output.writeFieldBegin('m_date', Thrift.Type.STRING, 11);
+      output.writeString(this.m_date);
+      output.writeFieldEnd();
+    }
+    if (this.p_date !== null && this.p_date !== undefined) {
+      output.writeFieldBegin('p_date', Thrift.Type.STRING, 12);
+      output.writeString(this.p_date);
+      output.writeFieldEnd();
+    }
+    if (this.title !== null && this.title !== undefined) {
+      output.writeFieldBegin('title', Thrift.Type.STRING, 13);
+      output.writeString(this.title);
+      output.writeFieldEnd();
+    }
+    if (this.transfor_company !== null && this.transfor_company !== undefined) {
+      output.writeFieldBegin('transfor_company', Thrift.Type.STRING, 14);
+      output.writeString(this.transfor_company);
       output.writeFieldEnd();
     }
     output.writeFieldStop();

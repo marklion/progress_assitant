@@ -2147,17 +2147,21 @@ class deliver_info(object):
      - m_weight
      - p_time
      - m_time
+     - seal_no
+     - ticket_no
 
     """
 
 
-    def __init__(self, id=None, count=None, p_weight=None, m_weight=None, p_time=None, m_time=None,):
+    def __init__(self, id=None, count=None, p_weight=None, m_weight=None, p_time=None, m_time=None, seal_no=None, ticket_no=None,):
         self.id = id
         self.count = count
         self.p_weight = p_weight
         self.m_weight = m_weight
         self.p_time = p_time
         self.m_time = m_time
+        self.seal_no = seal_no
+        self.ticket_no = ticket_no
 
     def read(self, iprot):
         if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
@@ -2198,6 +2202,16 @@ class deliver_info(object):
                     self.m_time = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
                 else:
                     iprot.skip(ftype)
+            elif fid == 7:
+                if ftype == TType.STRING:
+                    self.seal_no = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 8:
+                if ftype == TType.STRING:
+                    self.ticket_no = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
             else:
                 iprot.skip(ftype)
             iprot.readFieldEnd()
@@ -2231,6 +2245,14 @@ class deliver_info(object):
         if self.m_time is not None:
             oprot.writeFieldBegin('m_time', TType.STRING, 6)
             oprot.writeString(self.m_time.encode('utf-8') if sys.version_info[0] == 2 else self.m_time)
+            oprot.writeFieldEnd()
+        if self.seal_no is not None:
+            oprot.writeFieldBegin('seal_no', TType.STRING, 7)
+            oprot.writeString(self.seal_no.encode('utf-8') if sys.version_info[0] == 2 else self.seal_no)
+            oprot.writeFieldEnd()
+        if self.ticket_no is not None:
+            oprot.writeFieldBegin('ticket_no', TType.STRING, 8)
+            oprot.writeString(self.ticket_no.encode('utf-8') if sys.version_info[0] == 2 else self.ticket_no)
             oprot.writeFieldEnd()
         oprot.writeFieldStop()
         oprot.writeStructEnd()
@@ -3713,11 +3735,13 @@ class push_weight_req(object):
      - pTime
      - mTime
      - jWeight
+     - sealNo
+     - ticketNo
 
     """
 
 
-    def __init__(self, id=None, plateNo=None, customerId=None, customerName=None, stuffName=None, pWeight=None, mWeight=None, pTime=None, mTime=None, jWeight=None,):
+    def __init__(self, id=None, plateNo=None, customerId=None, customerName=None, stuffName=None, pWeight=None, mWeight=None, pTime=None, mTime=None, jWeight=None, sealNo=None, ticketNo=None,):
         self.id = id
         self.plateNo = plateNo
         self.customerId = customerId
@@ -3728,6 +3752,8 @@ class push_weight_req(object):
         self.pTime = pTime
         self.mTime = mTime
         self.jWeight = jWeight
+        self.sealNo = sealNo
+        self.ticketNo = ticketNo
 
     def read(self, iprot):
         if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
@@ -3788,6 +3814,16 @@ class push_weight_req(object):
                     self.jWeight = iprot.readDouble()
                 else:
                     iprot.skip(ftype)
+            elif fid == 11:
+                if ftype == TType.STRING:
+                    self.sealNo = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 12:
+                if ftype == TType.STRING:
+                    self.ticketNo = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
             else:
                 iprot.skip(ftype)
             iprot.readFieldEnd()
@@ -3837,6 +3873,14 @@ class push_weight_req(object):
         if self.jWeight is not None:
             oprot.writeFieldBegin('jWeight', TType.DOUBLE, 10)
             oprot.writeDouble(self.jWeight)
+            oprot.writeFieldEnd()
+        if self.sealNo is not None:
+            oprot.writeFieldBegin('sealNo', TType.STRING, 11)
+            oprot.writeString(self.sealNo.encode('utf-8') if sys.version_info[0] == 2 else self.sealNo)
+            oprot.writeFieldEnd()
+        if self.ticketNo is not None:
+            oprot.writeFieldBegin('ticketNo', TType.STRING, 12)
+            oprot.writeString(self.ticketNo.encode('utf-8') if sys.version_info[0] == 2 else self.ticketNo)
             oprot.writeFieldEnd()
         oprot.writeFieldStop()
         oprot.writeStructEnd()
@@ -4186,6 +4230,206 @@ class push_manual_permit_req(object):
         if self.driverId is not None:
             oprot.writeFieldBegin('driverId', TType.STRING, 2)
             oprot.writeString(self.driverId.encode('utf-8') if sys.version_info[0] == 2 else self.driverId)
+            oprot.writeFieldEnd()
+        oprot.writeFieldStop()
+        oprot.writeStructEnd()
+
+    def validate(self):
+        return
+
+    def __repr__(self):
+        L = ['%s=%r' % (key, value)
+             for key, value in self.__dict__.items()]
+        return '%s(%s)' % (self.__class__.__name__, ', '.join(L))
+
+    def __eq__(self, other):
+        return isinstance(other, self.__class__) and self.__dict__ == other.__dict__
+
+    def __ne__(self, other):
+        return not (self == other)
+
+
+class ticket_detail(object):
+    """
+    Attributes:
+     - ticket_no
+     - customer_name
+     - supplier_name
+     - main_vichele_number
+     - behind_vichele_number
+     - seal_no
+     - stuff_name
+     - p_weight
+     - m_weight
+     - j_weight
+     - m_date
+     - p_date
+     - title
+     - transfor_company
+
+    """
+
+
+    def __init__(self, ticket_no=None, customer_name=None, supplier_name=None, main_vichele_number=None, behind_vichele_number=None, seal_no=None, stuff_name=None, p_weight=None, m_weight=None, j_weight=None, m_date=None, p_date=None, title=None, transfor_company=None,):
+        self.ticket_no = ticket_no
+        self.customer_name = customer_name
+        self.supplier_name = supplier_name
+        self.main_vichele_number = main_vichele_number
+        self.behind_vichele_number = behind_vichele_number
+        self.seal_no = seal_no
+        self.stuff_name = stuff_name
+        self.p_weight = p_weight
+        self.m_weight = m_weight
+        self.j_weight = j_weight
+        self.m_date = m_date
+        self.p_date = p_date
+        self.title = title
+        self.transfor_company = transfor_company
+
+    def read(self, iprot):
+        if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
+            iprot._fast_decode(self, iprot, [self.__class__, self.thrift_spec])
+            return
+        iprot.readStructBegin()
+        while True:
+            (fname, ftype, fid) = iprot.readFieldBegin()
+            if ftype == TType.STOP:
+                break
+            if fid == 1:
+                if ftype == TType.STRING:
+                    self.ticket_no = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 2:
+                if ftype == TType.STRING:
+                    self.customer_name = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 3:
+                if ftype == TType.STRING:
+                    self.supplier_name = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 4:
+                if ftype == TType.STRING:
+                    self.main_vichele_number = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 5:
+                if ftype == TType.STRING:
+                    self.behind_vichele_number = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 6:
+                if ftype == TType.STRING:
+                    self.seal_no = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 7:
+                if ftype == TType.STRING:
+                    self.stuff_name = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 8:
+                if ftype == TType.STRING:
+                    self.p_weight = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 9:
+                if ftype == TType.STRING:
+                    self.m_weight = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 10:
+                if ftype == TType.STRING:
+                    self.j_weight = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 11:
+                if ftype == TType.STRING:
+                    self.m_date = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 12:
+                if ftype == TType.STRING:
+                    self.p_date = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 13:
+                if ftype == TType.STRING:
+                    self.title = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 14:
+                if ftype == TType.STRING:
+                    self.transfor_company = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
+            else:
+                iprot.skip(ftype)
+            iprot.readFieldEnd()
+        iprot.readStructEnd()
+
+    def write(self, oprot):
+        if oprot._fast_encode is not None and self.thrift_spec is not None:
+            oprot.trans.write(oprot._fast_encode(self, [self.__class__, self.thrift_spec]))
+            return
+        oprot.writeStructBegin('ticket_detail')
+        if self.ticket_no is not None:
+            oprot.writeFieldBegin('ticket_no', TType.STRING, 1)
+            oprot.writeString(self.ticket_no.encode('utf-8') if sys.version_info[0] == 2 else self.ticket_no)
+            oprot.writeFieldEnd()
+        if self.customer_name is not None:
+            oprot.writeFieldBegin('customer_name', TType.STRING, 2)
+            oprot.writeString(self.customer_name.encode('utf-8') if sys.version_info[0] == 2 else self.customer_name)
+            oprot.writeFieldEnd()
+        if self.supplier_name is not None:
+            oprot.writeFieldBegin('supplier_name', TType.STRING, 3)
+            oprot.writeString(self.supplier_name.encode('utf-8') if sys.version_info[0] == 2 else self.supplier_name)
+            oprot.writeFieldEnd()
+        if self.main_vichele_number is not None:
+            oprot.writeFieldBegin('main_vichele_number', TType.STRING, 4)
+            oprot.writeString(self.main_vichele_number.encode('utf-8') if sys.version_info[0] == 2 else self.main_vichele_number)
+            oprot.writeFieldEnd()
+        if self.behind_vichele_number is not None:
+            oprot.writeFieldBegin('behind_vichele_number', TType.STRING, 5)
+            oprot.writeString(self.behind_vichele_number.encode('utf-8') if sys.version_info[0] == 2 else self.behind_vichele_number)
+            oprot.writeFieldEnd()
+        if self.seal_no is not None:
+            oprot.writeFieldBegin('seal_no', TType.STRING, 6)
+            oprot.writeString(self.seal_no.encode('utf-8') if sys.version_info[0] == 2 else self.seal_no)
+            oprot.writeFieldEnd()
+        if self.stuff_name is not None:
+            oprot.writeFieldBegin('stuff_name', TType.STRING, 7)
+            oprot.writeString(self.stuff_name.encode('utf-8') if sys.version_info[0] == 2 else self.stuff_name)
+            oprot.writeFieldEnd()
+        if self.p_weight is not None:
+            oprot.writeFieldBegin('p_weight', TType.STRING, 8)
+            oprot.writeString(self.p_weight.encode('utf-8') if sys.version_info[0] == 2 else self.p_weight)
+            oprot.writeFieldEnd()
+        if self.m_weight is not None:
+            oprot.writeFieldBegin('m_weight', TType.STRING, 9)
+            oprot.writeString(self.m_weight.encode('utf-8') if sys.version_info[0] == 2 else self.m_weight)
+            oprot.writeFieldEnd()
+        if self.j_weight is not None:
+            oprot.writeFieldBegin('j_weight', TType.STRING, 10)
+            oprot.writeString(self.j_weight.encode('utf-8') if sys.version_info[0] == 2 else self.j_weight)
+            oprot.writeFieldEnd()
+        if self.m_date is not None:
+            oprot.writeFieldBegin('m_date', TType.STRING, 11)
+            oprot.writeString(self.m_date.encode('utf-8') if sys.version_info[0] == 2 else self.m_date)
+            oprot.writeFieldEnd()
+        if self.p_date is not None:
+            oprot.writeFieldBegin('p_date', TType.STRING, 12)
+            oprot.writeString(self.p_date.encode('utf-8') if sys.version_info[0] == 2 else self.p_date)
+            oprot.writeFieldEnd()
+        if self.title is not None:
+            oprot.writeFieldBegin('title', TType.STRING, 13)
+            oprot.writeString(self.title.encode('utf-8') if sys.version_info[0] == 2 else self.title)
+            oprot.writeFieldEnd()
+        if self.transfor_company is not None:
+            oprot.writeFieldBegin('transfor_company', TType.STRING, 14)
+            oprot.writeString(self.transfor_company.encode('utf-8') if sys.version_info[0] == 2 else self.transfor_company)
             oprot.writeFieldEnd()
         oprot.writeFieldStop()
         oprot.writeStructEnd()
@@ -5252,6 +5496,8 @@ deliver_info.thrift_spec = (
     (4, TType.DOUBLE, 'm_weight', None, None, ),  # 4
     (5, TType.STRING, 'p_time', 'UTF8', None, ),  # 5
     (6, TType.STRING, 'm_time', 'UTF8', None, ),  # 6
+    (7, TType.STRING, 'seal_no', 'UTF8', None, ),  # 7
+    (8, TType.STRING, 'ticket_no', 'UTF8', None, ),  # 8
 )
 all_structs.append(vichele_statistics)
 vichele_statistics.thrift_spec = (
@@ -5394,6 +5640,8 @@ push_weight_req.thrift_spec = (
     (8, TType.STRING, 'pTime', 'UTF8', None, ),  # 8
     (9, TType.STRING, 'mTime', 'UTF8', None, ),  # 9
     (10, TType.DOUBLE, 'jWeight', None, None, ),  # 10
+    (11, TType.STRING, 'sealNo', 'UTF8', None, ),  # 11
+    (12, TType.STRING, 'ticketNo', 'UTF8', None, ),  # 12
 )
 all_structs.append(push_base_req)
 push_base_req.thrift_spec = (
@@ -5425,6 +5673,24 @@ push_manual_permit_req.thrift_spec = (
     None,  # 0
     (1, TType.STRING, 'plateNo', 'UTF8', None, ),  # 1
     (2, TType.STRING, 'driverId', 'UTF8', None, ),  # 2
+)
+all_structs.append(ticket_detail)
+ticket_detail.thrift_spec = (
+    None,  # 0
+    (1, TType.STRING, 'ticket_no', 'UTF8', None, ),  # 1
+    (2, TType.STRING, 'customer_name', 'UTF8', None, ),  # 2
+    (3, TType.STRING, 'supplier_name', 'UTF8', None, ),  # 3
+    (4, TType.STRING, 'main_vichele_number', 'UTF8', None, ),  # 4
+    (5, TType.STRING, 'behind_vichele_number', 'UTF8', None, ),  # 5
+    (6, TType.STRING, 'seal_no', 'UTF8', None, ),  # 6
+    (7, TType.STRING, 'stuff_name', 'UTF8', None, ),  # 7
+    (8, TType.STRING, 'p_weight', 'UTF8', None, ),  # 8
+    (9, TType.STRING, 'm_weight', 'UTF8', None, ),  # 9
+    (10, TType.STRING, 'j_weight', 'UTF8', None, ),  # 10
+    (11, TType.STRING, 'm_date', 'UTF8', None, ),  # 11
+    (12, TType.STRING, 'p_date', 'UTF8', None, ),  # 12
+    (13, TType.STRING, 'title', 'UTF8', None, ),  # 13
+    (14, TType.STRING, 'transfor_company', 'UTF8', None, ),  # 14
 )
 all_structs.append(vichele_stay_alone)
 vichele_stay_alone.thrift_spec = (

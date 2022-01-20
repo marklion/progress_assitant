@@ -6,6 +6,7 @@
 #include "../pa_util/pa_utils.h"
 #include "stuff_plan_management_imp.h"
 #include "company_management_imp.h"
+#include <sstream>
 
 #define OPEN_API_MSG_NOCOMPANY "company does not exist"
 #define OPEN_API_MSG_USER_ALREADY_EXIST "user already exists"
@@ -469,12 +470,31 @@ public:
                 tmp.p_time = _req.pTime;
                 tmp.p_weight = _req.pWeight;
                 tmp.count = _req.jWeight;
+                tmp.seal_no = _req.sealNo;
+                tmp.ticket_no = _req.sealNo;
 
                 std::vector<deliver_info> tmp_list;
                 tmp_list.push_back(tmp);
 
                 stuff_plan_management_handler sp_handler;
                 ret = sp_handler.pri_confirm_deliver(plan->get_pri_id(), *get_sysadmin_user(), tmp_list, "");
+                if (ret)
+                {
+                    auto driver = single_vichele->get_parent<pa_sql_driver>("driver");
+                    if (driver)
+                    {
+                        auto real_driver = sqlite_orm::search_record<pa_sql_driver>("phone == '%s' AND silent_id != ''", driver->phone.c_str());
+                        if (real_driver)
+                        {
+                            PA_WECHAT_send_finish_ticket_msg(real_driver->silent_id, std::to_string(single_vichele->get_pri_id()) + "S");
+                        }
+                    }
+                    auto creator = plan->get_parent<pa_sql_userinfo>("created_by");
+                    if (creator)
+                    {
+                        PA_WECHAT_send_finish_ticket_msg(creator->openid, std::to_string(single_vichele->get_pri_id()) + "S");
+                    }
+                }
             }
             else
             {
@@ -526,6 +546,7 @@ public:
             real_vichele_stay_alone->p_weight = _req.pWeight;
             real_vichele_stay_alone->m_weight = _req.mWeight;
             real_vichele_stay_alone->j_weight = _req.jWeight;
+            real_vichele_stay_alone->ticket_no = _req.ticketNo;
             real_vichele_stay_alone->status = 2;
             ret = real_vichele_stay_alone->update_record();
             auto created_user = real_vichele_stay_alone->get_parent<pa_sql_silent_user>("created_by");
@@ -541,6 +562,11 @@ public:
                 {
                     PA_WECHAT_send_extra_vichele_msg(*real_vichele_stay_alone, itr.openid, "称重完成\n皮重:" + std::to_string(_req.pWeight) + "\n毛重:" + std::to_string(_req.mWeight) + "\n净重:" + std::to_string(_req.jWeight));
                 }
+            }
+            auto driver = sqlite_orm::search_record<pa_sql_driver>("phone == '%s' AND silent_id != ''", real_vichele_stay_alone->driver_phone.c_str());
+            if (driver)
+            {
+                PA_WECHAT_send_finish_ticket_msg(driver->silent_id, std::to_string(real_vichele_stay_alone->get_pri_id()) + "B");
             }
         }
 
@@ -731,7 +757,7 @@ public:
         {
             PA_RETURN_MSG(OPEN_API_MSG_VICHELE_NOT_EXIST);
         }
-        if (!company->get_children<pa_sql_gps_stuff>("belong_company","stuff_name == '%s'", extra_vichele->stuff_name.c_str()))
+        if (!company->get_children<pa_sql_gps_stuff>("belong_company", "stuff_name == '%s'", extra_vichele->stuff_name.c_str()))
         {
             PA_RETURN_MSG(OPEN_API_MSG_NOT_SUPPORTED_GPS);
         }
@@ -775,7 +801,7 @@ public:
         {
             PA_RETURN_MSG(OPEN_API_MSG_VICHELE_NOT_EXIST);
         }
-        if (!company->get_children<pa_sql_gps_stuff>("belong_company","stuff_name == '%s'", extra_vichele->stuff_name.c_str()))
+        if (!company->get_children<pa_sql_gps_stuff>("belong_company", "stuff_name == '%s'", extra_vichele->stuff_name.c_str()))
         {
             PA_RETURN_MSG(OPEN_API_MSG_NOT_SUPPORTED_GPS);
         }
@@ -784,6 +810,116 @@ public:
         ret = extra_vichele->update_record();
 
         return ret;
+    }
+
+    std::string pa_double2string_reserve2(double _value)
+    {
+        std::stringstream ss;
+        ss.setf(std::ios::fixed);
+        ss.precision(2);
+        ss << _value;
+        return ss.str();
+    }
+    virtual void get_vehicle_info_by_id(ticket_detail &_return, const std::string &id)
+    {
+        auto last_tag = id.substr(id.length() - 1, 1);
+        auto ticket_id = id.substr(0, id.length() - 1);
+        if (last_tag == "B")
+        {
+            auto vsa = sqlite_orm::search_record<pa_sql_vichele_stay_alone>(atoi(ticket_id.c_str()));
+            if (vsa)
+            {
+                std::string title;
+                auto company = vsa->get_parent<pa_sql_company>("destination");
+                if (company)
+                {
+                    title = company->name;
+                }
+                _return.behind_vichele_number = vsa->behind_vichele_number;
+                _return.supplier_name = vsa->company_name;
+                _return.transfor_company = vsa->transfor_company;
+                _return.j_weight = pa_double2string_reserve2(vsa->j_weight);
+                _return.m_weight = pa_double2string_reserve2(vsa->m_weight);
+                _return.p_weight = pa_double2string_reserve2(vsa->p_weight);
+                _return.m_date = vsa->m_time;
+                _return.p_date = vsa->p_time;
+                _return.stuff_name = vsa->stuff_name;
+                _return.main_vichele_number = vsa->main_vichele_number;
+                _return.ticket_no = vsa->ticket_no;
+                title += "\n采购入厂称重单";
+                _return.title = title;
+            }
+        }
+        else
+        {
+            auto asv = sqlite_orm::search_record<pa_sql_archive_vichele_plan>(atoi(ticket_id.c_str()));
+            if (asv)
+            {
+                auto aplan = asv->get_parent<pa_sql_archive_plan>("belong_plan");
+                _return.behind_vichele_number = asv->main_vichele;
+                _return.main_vichele_number = asv->behind_vichele;
+                _return.customer_name = aplan->buy_company;
+                _return.j_weight = pa_double2string_reserve2(asv->m_weight - asv->p_weight);
+                _return.m_weight = pa_double2string_reserve2(asv->m_weight);
+                _return.p_weight = pa_double2string_reserve2(asv->p_weight);
+                _return.m_date = asv->deliver_timestamp;
+                _return.p_date = asv->deliver_p_timestamp;
+                _return.stuff_name = aplan->stuff_name;
+                _return.seal_no = asv->seal_no;
+                _return.ticket_no = asv->ticket_no;
+                _return.title = aplan->sale_company + "\n产品出厂称重单";
+            }
+            else
+            {
+                auto sv = sqlite_orm::search_record<pa_sql_single_vichele>(atoi(ticket_id.c_str()));
+                if (sv)
+                {
+                    auto mv = sv->get_parent<pa_sql_vichele>("main_vichele");
+                    auto bv = sv->get_parent<pa_sql_vichele_behind>("behind_vichele");
+                    auto plan = sv->get_parent<pa_sql_plan>("belong_plan");
+                    if (mv && bv && plan)
+                    {
+                        std::string company_name = plan->proxy_company;
+                        if (company_name.length() <= 0)
+                        {
+                            auto creator = plan->get_parent<pa_sql_userinfo>("created_by");
+                            if (creator)
+                            {
+                                auto company = creator->get_parent<pa_sql_company>("belong_company");
+                                if (company)
+                                {
+                                    company_name = company->name;
+                                }
+                            }
+                        }
+                        std::string stuff_name;
+                        std::string title_comapny;
+                        auto stuff = plan->get_parent<pa_sql_stuff_info>("belong_stuff");
+                        if (stuff)
+                        {
+                            stuff_name = stuff->name;
+                            auto comapny = stuff->get_parent<pa_sql_company>("belong_company");
+                            if (comapny)
+                            {
+                                title_comapny = comapny->name;
+                            }
+                        }
+                        _return.behind_vichele_number = bv->number;
+                        _return.main_vichele_number = mv->number;
+                        _return.customer_name = company_name;
+                        _return.j_weight = pa_double2string_reserve2(sv->m_weight - sv->p_weight);
+                        _return.m_weight = pa_double2string_reserve2(sv->m_weight);
+                        _return.p_weight = pa_double2string_reserve2(sv->p_weight);
+                        _return.m_date = sv->deliver_timestamp;
+                        _return.p_date = sv->deliver_p_timestamp;
+                        _return.stuff_name = stuff_name;
+                        _return.seal_no = sv->seal_no;
+                        _return.ticket_no = sv->ticket_no;
+                        _return.title = title_comapny + "\n产品出厂称重单";
+                    }
+                }
+            }
+        }
     }
 };
 

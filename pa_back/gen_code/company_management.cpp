@@ -117,14 +117,14 @@ uint32_t company_management_get_all_type_result::read(::apache::thrift::protocol
         if (ftype == ::apache::thrift::protocol::T_LIST) {
           {
             this->success.clear();
-            uint32_t _size146;
-            ::apache::thrift::protocol::TType _etype149;
-            xfer += iprot->readListBegin(_etype149, _size146);
-            this->success.resize(_size146);
-            uint32_t _i150;
-            for (_i150 = 0; _i150 < _size146; ++_i150)
+            uint32_t _size148;
+            ::apache::thrift::protocol::TType _etype151;
+            xfer += iprot->readListBegin(_etype151, _size148);
+            this->success.resize(_size148);
+            uint32_t _i152;
+            for (_i152 = 0; _i152 < _size148; ++_i152)
             {
-              xfer += iprot->readI64(this->success[_i150]);
+              xfer += iprot->readI64(this->success[_i152]);
             }
             xfer += iprot->readListEnd();
           }
@@ -163,10 +163,10 @@ uint32_t company_management_get_all_type_result::write(::apache::thrift::protoco
     xfer += oprot->writeFieldBegin("success", ::apache::thrift::protocol::T_LIST, 0);
     {
       xfer += oprot->writeListBegin(::apache::thrift::protocol::T_I64, static_cast<uint32_t>(this->success.size()));
-      std::vector<int64_t> ::const_iterator _iter151;
-      for (_iter151 = this->success.begin(); _iter151 != this->success.end(); ++_iter151)
+      std::vector<int64_t> ::const_iterator _iter153;
+      for (_iter153 = this->success.begin(); _iter153 != this->success.end(); ++_iter153)
       {
-        xfer += oprot->writeI64((*_iter151));
+        xfer += oprot->writeI64((*_iter153));
       }
       xfer += oprot->writeListEnd();
     }
@@ -211,14 +211,14 @@ uint32_t company_management_get_all_type_presult::read(::apache::thrift::protoco
         if (ftype == ::apache::thrift::protocol::T_LIST) {
           {
             (*(this->success)).clear();
-            uint32_t _size152;
-            ::apache::thrift::protocol::TType _etype155;
-            xfer += iprot->readListBegin(_etype155, _size152);
-            (*(this->success)).resize(_size152);
-            uint32_t _i156;
-            for (_i156 = 0; _i156 < _size152; ++_i156)
+            uint32_t _size154;
+            ::apache::thrift::protocol::TType _etype157;
+            xfer += iprot->readListBegin(_etype157, _size154);
+            (*(this->success)).resize(_size154);
+            uint32_t _i158;
+            for (_i158 = 0; _i158 < _size154; ++_i158)
             {
-              xfer += iprot->readI64((*(this->success))[_i156]);
+              xfer += iprot->readI64((*(this->success))[_i158]);
             }
             xfer += iprot->readListEnd();
           }
@@ -1260,14 +1260,14 @@ uint32_t company_management_get_all_apply_result::read(::apache::thrift::protoco
         if (ftype == ::apache::thrift::protocol::T_LIST) {
           {
             this->success.clear();
-            uint32_t _size157;
-            ::apache::thrift::protocol::TType _etype160;
-            xfer += iprot->readListBegin(_etype160, _size157);
-            this->success.resize(_size157);
-            uint32_t _i161;
-            for (_i161 = 0; _i161 < _size157; ++_i161)
+            uint32_t _size159;
+            ::apache::thrift::protocol::TType _etype162;
+            xfer += iprot->readListBegin(_etype162, _size159);
+            this->success.resize(_size159);
+            uint32_t _i163;
+            for (_i163 = 0; _i163 < _size159; ++_i163)
             {
-              xfer += this->success[_i161].read(iprot);
+              xfer += this->success[_i163].read(iprot);
             }
             xfer += iprot->readListEnd();
           }
@@ -1306,10 +1306,10 @@ uint32_t company_management_get_all_apply_result::write(::apache::thrift::protoc
     xfer += oprot->writeFieldBegin("success", ::apache::thrift::protocol::T_LIST, 0);
     {
       xfer += oprot->writeListBegin(::apache::thrift::protocol::T_STRUCT, static_cast<uint32_t>(this->success.size()));
-      std::vector<user_apply> ::const_iterator _iter162;
-      for (_iter162 = this->success.begin(); _iter162 != this->success.end(); ++_iter162)
+      std::vector<user_apply> ::const_iterator _iter164;
+      for (_iter164 = this->success.begin(); _iter164 != this->success.end(); ++_iter164)
       {
-        xfer += (*_iter162).write(oprot);
+        xfer += (*_iter164).write(oprot);
       }
       xfer += oprot->writeListEnd();
     }
@@ -1354,14 +1354,14 @@ uint32_t company_management_get_all_apply_presult::read(::apache::thrift::protoc
         if (ftype == ::apache::thrift::protocol::T_LIST) {
           {
             (*(this->success)).clear();
-            uint32_t _size163;
-            ::apache::thrift::protocol::TType _etype166;
-            xfer += iprot->readListBegin(_etype166, _size163);
-            (*(this->success)).resize(_size163);
-            uint32_t _i167;
-            for (_i167 = 0; _i167 < _size163; ++_i167)
+            uint32_t _size165;
+            ::apache::thrift::protocol::TType _etype168;
+            xfer += iprot->readListBegin(_etype168, _size165);
+            (*(this->success)).resize(_size165);
+            uint32_t _i169;
+            for (_i169 = 0; _i169 < _size165; ++_i169)
             {
-              xfer += (*(this->success))[_i167].read(iprot);
+              xfer += (*(this->success))[_i169].read(iprot);
             }
             xfer += iprot->readListEnd();
           }
@@ -2594,14 +2594,14 @@ uint32_t company_management_get_all_compay_user_result::read(::apache::thrift::p
         if (ftype == ::apache::thrift::protocol::T_LIST) {
           {
             this->success.clear();
-            uint32_t _size168;
-            ::apache::thrift::protocol::TType _etype171;
-            xfer += iprot->readListBegin(_etype171, _size168);
-            this->success.resize(_size168);
-            uint32_t _i172;
-            for (_i172 = 0; _i172 < _size168; ++_i172)
+            uint32_t _size170;
+            ::apache::thrift::protocol::TType _etype173;
+            xfer += iprot->readListBegin(_etype173, _size170);
+            this->success.resize(_size170);
+            uint32_t _i174;
+            for (_i174 = 0; _i174 < _size170; ++_i174)
             {
-              xfer += this->success[_i172].read(iprot);
+              xfer += this->success[_i174].read(iprot);
             }
             xfer += iprot->readListEnd();
           }
@@ -2640,10 +2640,10 @@ uint32_t company_management_get_all_compay_user_result::write(::apache::thrift::
     xfer += oprot->writeFieldBegin("success", ::apache::thrift::protocol::T_LIST, 0);
     {
       xfer += oprot->writeListBegin(::apache::thrift::protocol::T_STRUCT, static_cast<uint32_t>(this->success.size()));
-      std::vector<user_info> ::const_iterator _iter173;
-      for (_iter173 = this->success.begin(); _iter173 != this->success.end(); ++_iter173)
+      std::vector<user_info> ::const_iterator _iter175;
+      for (_iter175 = this->success.begin(); _iter175 != this->success.end(); ++_iter175)
       {
-        xfer += (*_iter173).write(oprot);
+        xfer += (*_iter175).write(oprot);
       }
       xfer += oprot->writeListEnd();
     }
@@ -2688,14 +2688,14 @@ uint32_t company_management_get_all_compay_user_presult::read(::apache::thrift::
         if (ftype == ::apache::thrift::protocol::T_LIST) {
           {
             (*(this->success)).clear();
-            uint32_t _size174;
-            ::apache::thrift::protocol::TType _etype177;
-            xfer += iprot->readListBegin(_etype177, _size174);
-            (*(this->success)).resize(_size174);
-            uint32_t _i178;
-            for (_i178 = 0; _i178 < _size174; ++_i178)
+            uint32_t _size176;
+            ::apache::thrift::protocol::TType _etype179;
+            xfer += iprot->readListBegin(_etype179, _size176);
+            (*(this->success)).resize(_size176);
+            uint32_t _i180;
+            for (_i180 = 0; _i180 < _size176; ++_i180)
             {
-              xfer += (*(this->success))[_i178].read(iprot);
+              xfer += (*(this->success))[_i180].read(iprot);
             }
             xfer += iprot->readListEnd();
           }
@@ -4772,14 +4772,14 @@ uint32_t company_management_get_all_attachment_result::read(::apache::thrift::pr
         if (ftype == ::apache::thrift::protocol::T_LIST) {
           {
             this->success.clear();
-            uint32_t _size179;
-            ::apache::thrift::protocol::TType _etype182;
-            xfer += iprot->readListBegin(_etype182, _size179);
-            this->success.resize(_size179);
-            uint32_t _i183;
-            for (_i183 = 0; _i183 < _size179; ++_i183)
+            uint32_t _size181;
+            ::apache::thrift::protocol::TType _etype184;
+            xfer += iprot->readListBegin(_etype184, _size181);
+            this->success.resize(_size181);
+            uint32_t _i185;
+            for (_i185 = 0; _i185 < _size181; ++_i185)
             {
-              xfer += this->success[_i183].read(iprot);
+              xfer += this->success[_i185].read(iprot);
             }
             xfer += iprot->readListEnd();
           }
@@ -4818,10 +4818,10 @@ uint32_t company_management_get_all_attachment_result::write(::apache::thrift::p
     xfer += oprot->writeFieldBegin("success", ::apache::thrift::protocol::T_LIST, 0);
     {
       xfer += oprot->writeListBegin(::apache::thrift::protocol::T_STRUCT, static_cast<uint32_t>(this->success.size()));
-      std::vector<company_attachment> ::const_iterator _iter184;
-      for (_iter184 = this->success.begin(); _iter184 != this->success.end(); ++_iter184)
+      std::vector<company_attachment> ::const_iterator _iter186;
+      for (_iter186 = this->success.begin(); _iter186 != this->success.end(); ++_iter186)
       {
-        xfer += (*_iter184).write(oprot);
+        xfer += (*_iter186).write(oprot);
       }
       xfer += oprot->writeListEnd();
     }
@@ -4866,14 +4866,14 @@ uint32_t company_management_get_all_attachment_presult::read(::apache::thrift::p
         if (ftype == ::apache::thrift::protocol::T_LIST) {
           {
             (*(this->success)).clear();
-            uint32_t _size185;
-            ::apache::thrift::protocol::TType _etype188;
-            xfer += iprot->readListBegin(_etype188, _size185);
-            (*(this->success)).resize(_size185);
-            uint32_t _i189;
-            for (_i189 = 0; _i189 < _size185; ++_i189)
+            uint32_t _size187;
+            ::apache::thrift::protocol::TType _etype190;
+            xfer += iprot->readListBegin(_etype190, _size187);
+            (*(this->success)).resize(_size187);
+            uint32_t _i191;
+            for (_i191 = 0; _i191 < _size187; ++_i191)
             {
-              xfer += (*(this->success))[_i189].read(iprot);
+              xfer += (*(this->success))[_i191].read(iprot);
             }
             xfer += iprot->readListEnd();
           }
@@ -5218,14 +5218,14 @@ uint32_t company_management_get_real_access_result::read(::apache::thrift::proto
         if (ftype == ::apache::thrift::protocol::T_LIST) {
           {
             this->success.clear();
-            uint32_t _size190;
-            ::apache::thrift::protocol::TType _etype193;
-            xfer += iprot->readListBegin(_etype193, _size190);
-            this->success.resize(_size190);
-            uint32_t _i194;
-            for (_i194 = 0; _i194 < _size190; ++_i194)
+            uint32_t _size192;
+            ::apache::thrift::protocol::TType _etype195;
+            xfer += iprot->readListBegin(_etype195, _size192);
+            this->success.resize(_size192);
+            uint32_t _i196;
+            for (_i196 = 0; _i196 < _size192; ++_i196)
             {
-              xfer += this->success[_i194].read(iprot);
+              xfer += this->success[_i196].read(iprot);
             }
             xfer += iprot->readListEnd();
           }
@@ -5264,10 +5264,10 @@ uint32_t company_management_get_real_access_result::write(::apache::thrift::prot
     xfer += oprot->writeFieldBegin("success", ::apache::thrift::protocol::T_LIST, 0);
     {
       xfer += oprot->writeListBegin(::apache::thrift::protocol::T_STRUCT, static_cast<uint32_t>(this->success.size()));
-      std::vector<real_access_record> ::const_iterator _iter195;
-      for (_iter195 = this->success.begin(); _iter195 != this->success.end(); ++_iter195)
+      std::vector<real_access_record> ::const_iterator _iter197;
+      for (_iter197 = this->success.begin(); _iter197 != this->success.end(); ++_iter197)
       {
-        xfer += (*_iter195).write(oprot);
+        xfer += (*_iter197).write(oprot);
       }
       xfer += oprot->writeListEnd();
     }
@@ -5312,14 +5312,14 @@ uint32_t company_management_get_real_access_presult::read(::apache::thrift::prot
         if (ftype == ::apache::thrift::protocol::T_LIST) {
           {
             (*(this->success)).clear();
-            uint32_t _size196;
-            ::apache::thrift::protocol::TType _etype199;
-            xfer += iprot->readListBegin(_etype199, _size196);
-            (*(this->success)).resize(_size196);
-            uint32_t _i200;
-            for (_i200 = 0; _i200 < _size196; ++_i200)
+            uint32_t _size198;
+            ::apache::thrift::protocol::TType _etype201;
+            xfer += iprot->readListBegin(_etype201, _size198);
+            (*(this->success)).resize(_size198);
+            uint32_t _i202;
+            for (_i202 = 0; _i202 < _size198; ++_i202)
             {
-              xfer += (*(this->success))[_i200].read(iprot);
+              xfer += (*(this->success))[_i202].read(iprot);
             }
             xfer += iprot->readListEnd();
           }
@@ -5457,14 +5457,14 @@ uint32_t company_management_get_all_access_result::read(::apache::thrift::protoc
         if (ftype == ::apache::thrift::protocol::T_LIST) {
           {
             this->success.clear();
-            uint32_t _size201;
-            ::apache::thrift::protocol::TType _etype204;
-            xfer += iprot->readListBegin(_etype204, _size201);
-            this->success.resize(_size201);
-            uint32_t _i205;
-            for (_i205 = 0; _i205 < _size201; ++_i205)
+            uint32_t _size203;
+            ::apache::thrift::protocol::TType _etype206;
+            xfer += iprot->readListBegin(_etype206, _size203);
+            this->success.resize(_size203);
+            uint32_t _i207;
+            for (_i207 = 0; _i207 < _size203; ++_i207)
             {
-              xfer += this->success[_i205].read(iprot);
+              xfer += this->success[_i207].read(iprot);
             }
             xfer += iprot->readListEnd();
           }
@@ -5503,10 +5503,10 @@ uint32_t company_management_get_all_access_result::write(::apache::thrift::proto
     xfer += oprot->writeFieldBegin("success", ::apache::thrift::protocol::T_LIST, 0);
     {
       xfer += oprot->writeListBegin(::apache::thrift::protocol::T_STRUCT, static_cast<uint32_t>(this->success.size()));
-      std::vector<real_access_record> ::const_iterator _iter206;
-      for (_iter206 = this->success.begin(); _iter206 != this->success.end(); ++_iter206)
+      std::vector<real_access_record> ::const_iterator _iter208;
+      for (_iter208 = this->success.begin(); _iter208 != this->success.end(); ++_iter208)
       {
-        xfer += (*_iter206).write(oprot);
+        xfer += (*_iter208).write(oprot);
       }
       xfer += oprot->writeListEnd();
     }
@@ -5551,14 +5551,14 @@ uint32_t company_management_get_all_access_presult::read(::apache::thrift::proto
         if (ftype == ::apache::thrift::protocol::T_LIST) {
           {
             (*(this->success)).clear();
-            uint32_t _size207;
-            ::apache::thrift::protocol::TType _etype210;
-            xfer += iprot->readListBegin(_etype210, _size207);
-            (*(this->success)).resize(_size207);
-            uint32_t _i211;
-            for (_i211 = 0; _i211 < _size207; ++_i211)
+            uint32_t _size209;
+            ::apache::thrift::protocol::TType _etype212;
+            xfer += iprot->readListBegin(_etype212, _size209);
+            (*(this->success)).resize(_size209);
+            uint32_t _i213;
+            for (_i213 = 0; _i213 < _size209; ++_i213)
             {
-              xfer += (*(this->success))[_i211].read(iprot);
+              xfer += (*(this->success))[_i213].read(iprot);
             }
             xfer += iprot->readListEnd();
           }
@@ -6345,14 +6345,14 @@ uint32_t company_management_get_all_contract_result::read(::apache::thrift::prot
         if (ftype == ::apache::thrift::protocol::T_LIST) {
           {
             this->success.clear();
-            uint32_t _size212;
-            ::apache::thrift::protocol::TType _etype215;
-            xfer += iprot->readListBegin(_etype215, _size212);
-            this->success.resize(_size212);
-            uint32_t _i216;
-            for (_i216 = 0; _i216 < _size212; ++_i216)
+            uint32_t _size214;
+            ::apache::thrift::protocol::TType _etype217;
+            xfer += iprot->readListBegin(_etype217, _size214);
+            this->success.resize(_size214);
+            uint32_t _i218;
+            for (_i218 = 0; _i218 < _size214; ++_i218)
             {
-              xfer += this->success[_i216].read(iprot);
+              xfer += this->success[_i218].read(iprot);
             }
             xfer += iprot->readListEnd();
           }
@@ -6391,10 +6391,10 @@ uint32_t company_management_get_all_contract_result::write(::apache::thrift::pro
     xfer += oprot->writeFieldBegin("success", ::apache::thrift::protocol::T_LIST, 0);
     {
       xfer += oprot->writeListBegin(::apache::thrift::protocol::T_STRUCT, static_cast<uint32_t>(this->success.size()));
-      std::vector<common_contract> ::const_iterator _iter217;
-      for (_iter217 = this->success.begin(); _iter217 != this->success.end(); ++_iter217)
+      std::vector<common_contract> ::const_iterator _iter219;
+      for (_iter219 = this->success.begin(); _iter219 != this->success.end(); ++_iter219)
       {
-        xfer += (*_iter217).write(oprot);
+        xfer += (*_iter219).write(oprot);
       }
       xfer += oprot->writeListEnd();
     }
@@ -6439,14 +6439,14 @@ uint32_t company_management_get_all_contract_presult::read(::apache::thrift::pro
         if (ftype == ::apache::thrift::protocol::T_LIST) {
           {
             (*(this->success)).clear();
-            uint32_t _size218;
-            ::apache::thrift::protocol::TType _etype221;
-            xfer += iprot->readListBegin(_etype221, _size218);
-            (*(this->success)).resize(_size218);
-            uint32_t _i222;
-            for (_i222 = 0; _i222 < _size218; ++_i222)
+            uint32_t _size220;
+            ::apache::thrift::protocol::TType _etype223;
+            xfer += iprot->readListBegin(_etype223, _size220);
+            (*(this->success)).resize(_size220);
+            uint32_t _i224;
+            for (_i224 = 0; _i224 < _size220; ++_i224)
             {
-              xfer += (*(this->success))[_i222].read(iprot);
+              xfer += (*(this->success))[_i224].read(iprot);
             }
             xfer += iprot->readListEnd();
           }
@@ -7890,14 +7890,14 @@ uint32_t company_management_get_related_company_result::read(::apache::thrift::p
         if (ftype == ::apache::thrift::protocol::T_LIST) {
           {
             this->success.clear();
-            uint32_t _size223;
-            ::apache::thrift::protocol::TType _etype226;
-            xfer += iprot->readListBegin(_etype226, _size223);
-            this->success.resize(_size223);
-            uint32_t _i227;
-            for (_i227 = 0; _i227 < _size223; ++_i227)
+            uint32_t _size225;
+            ::apache::thrift::protocol::TType _etype228;
+            xfer += iprot->readListBegin(_etype228, _size225);
+            this->success.resize(_size225);
+            uint32_t _i229;
+            for (_i229 = 0; _i229 < _size225; ++_i229)
             {
-              xfer += iprot->readString(this->success[_i227]);
+              xfer += iprot->readString(this->success[_i229]);
             }
             xfer += iprot->readListEnd();
           }
@@ -7936,10 +7936,10 @@ uint32_t company_management_get_related_company_result::write(::apache::thrift::
     xfer += oprot->writeFieldBegin("success", ::apache::thrift::protocol::T_LIST, 0);
     {
       xfer += oprot->writeListBegin(::apache::thrift::protocol::T_STRING, static_cast<uint32_t>(this->success.size()));
-      std::vector<std::string> ::const_iterator _iter228;
-      for (_iter228 = this->success.begin(); _iter228 != this->success.end(); ++_iter228)
+      std::vector<std::string> ::const_iterator _iter230;
+      for (_iter230 = this->success.begin(); _iter230 != this->success.end(); ++_iter230)
       {
-        xfer += oprot->writeString((*_iter228));
+        xfer += oprot->writeString((*_iter230));
       }
       xfer += oprot->writeListEnd();
     }
@@ -7984,14 +7984,14 @@ uint32_t company_management_get_related_company_presult::read(::apache::thrift::
         if (ftype == ::apache::thrift::protocol::T_LIST) {
           {
             (*(this->success)).clear();
-            uint32_t _size229;
-            ::apache::thrift::protocol::TType _etype232;
-            xfer += iprot->readListBegin(_etype232, _size229);
-            (*(this->success)).resize(_size229);
-            uint32_t _i233;
-            for (_i233 = 0; _i233 < _size229; ++_i233)
+            uint32_t _size231;
+            ::apache::thrift::protocol::TType _etype234;
+            xfer += iprot->readListBegin(_etype234, _size231);
+            (*(this->success)).resize(_size231);
+            uint32_t _i235;
+            for (_i235 = 0; _i235 < _size231; ++_i235)
             {
-              xfer += iprot->readString((*(this->success))[_i233]);
+              xfer += iprot->readString((*(this->success))[_i235]);
             }
             xfer += iprot->readListEnd();
           }
@@ -8814,14 +8814,14 @@ uint32_t company_management_get_gps_stuff_result::read(::apache::thrift::protoco
         if (ftype == ::apache::thrift::protocol::T_LIST) {
           {
             this->success.clear();
-            uint32_t _size234;
-            ::apache::thrift::protocol::TType _etype237;
-            xfer += iprot->readListBegin(_etype237, _size234);
-            this->success.resize(_size234);
-            uint32_t _i238;
-            for (_i238 = 0; _i238 < _size234; ++_i238)
+            uint32_t _size236;
+            ::apache::thrift::protocol::TType _etype239;
+            xfer += iprot->readListBegin(_etype239, _size236);
+            this->success.resize(_size236);
+            uint32_t _i240;
+            for (_i240 = 0; _i240 < _size236; ++_i240)
             {
-              xfer += iprot->readString(this->success[_i238]);
+              xfer += iprot->readString(this->success[_i240]);
             }
             xfer += iprot->readListEnd();
           }
@@ -8860,10 +8860,10 @@ uint32_t company_management_get_gps_stuff_result::write(::apache::thrift::protoc
     xfer += oprot->writeFieldBegin("success", ::apache::thrift::protocol::T_LIST, 0);
     {
       xfer += oprot->writeListBegin(::apache::thrift::protocol::T_STRING, static_cast<uint32_t>(this->success.size()));
-      std::vector<std::string> ::const_iterator _iter239;
-      for (_iter239 = this->success.begin(); _iter239 != this->success.end(); ++_iter239)
+      std::vector<std::string> ::const_iterator _iter241;
+      for (_iter241 = this->success.begin(); _iter241 != this->success.end(); ++_iter241)
       {
-        xfer += oprot->writeString((*_iter239));
+        xfer += oprot->writeString((*_iter241));
       }
       xfer += oprot->writeListEnd();
     }
@@ -8908,17 +8908,654 @@ uint32_t company_management_get_gps_stuff_presult::read(::apache::thrift::protoc
         if (ftype == ::apache::thrift::protocol::T_LIST) {
           {
             (*(this->success)).clear();
-            uint32_t _size240;
-            ::apache::thrift::protocol::TType _etype243;
-            xfer += iprot->readListBegin(_etype243, _size240);
-            (*(this->success)).resize(_size240);
-            uint32_t _i244;
-            for (_i244 = 0; _i244 < _size240; ++_i244)
+            uint32_t _size242;
+            ::apache::thrift::protocol::TType _etype245;
+            xfer += iprot->readListBegin(_etype245, _size242);
+            (*(this->success)).resize(_size242);
+            uint32_t _i246;
+            for (_i246 = 0; _i246 < _size242; ++_i246)
             {
-              xfer += iprot->readString((*(this->success))[_i244]);
+              xfer += iprot->readString((*(this->success))[_i246]);
             }
             xfer += iprot->readListEnd();
           }
+          this->__isset.success = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 1:
+        if (ftype == ::apache::thrift::protocol::T_STRUCT) {
+          xfer += this->e.read(iprot);
+          this->__isset.e = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      default:
+        xfer += iprot->skip(ftype);
+        break;
+    }
+    xfer += iprot->readFieldEnd();
+  }
+
+  xfer += iprot->readStructEnd();
+
+  return xfer;
+}
+
+
+company_management_add_stamp_pic_args::~company_management_add_stamp_pic_args() noexcept {
+}
+
+
+uint32_t company_management_add_stamp_pic_args::read(::apache::thrift::protocol::TProtocol* iprot) {
+
+  ::apache::thrift::protocol::TInputRecursionTracker tracker(*iprot);
+  uint32_t xfer = 0;
+  std::string fname;
+  ::apache::thrift::protocol::TType ftype;
+  int16_t fid;
+
+  xfer += iprot->readStructBegin(fname);
+
+  using ::apache::thrift::protocol::TProtocolException;
+
+
+  while (true)
+  {
+    xfer += iprot->readFieldBegin(fname, ftype, fid);
+    if (ftype == ::apache::thrift::protocol::T_STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 1:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->ssid);
+          this->__isset.ssid = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 2:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->pic_base64);
+          this->__isset.pic_base64 = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      default:
+        xfer += iprot->skip(ftype);
+        break;
+    }
+    xfer += iprot->readFieldEnd();
+  }
+
+  xfer += iprot->readStructEnd();
+
+  return xfer;
+}
+
+uint32_t company_management_add_stamp_pic_args::write(::apache::thrift::protocol::TProtocol* oprot) const {
+  uint32_t xfer = 0;
+  ::apache::thrift::protocol::TOutputRecursionTracker tracker(*oprot);
+  xfer += oprot->writeStructBegin("company_management_add_stamp_pic_args");
+
+  xfer += oprot->writeFieldBegin("ssid", ::apache::thrift::protocol::T_STRING, 1);
+  xfer += oprot->writeString(this->ssid);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("pic_base64", ::apache::thrift::protocol::T_STRING, 2);
+  xfer += oprot->writeString(this->pic_base64);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldStop();
+  xfer += oprot->writeStructEnd();
+  return xfer;
+}
+
+
+company_management_add_stamp_pic_pargs::~company_management_add_stamp_pic_pargs() noexcept {
+}
+
+
+uint32_t company_management_add_stamp_pic_pargs::write(::apache::thrift::protocol::TProtocol* oprot) const {
+  uint32_t xfer = 0;
+  ::apache::thrift::protocol::TOutputRecursionTracker tracker(*oprot);
+  xfer += oprot->writeStructBegin("company_management_add_stamp_pic_pargs");
+
+  xfer += oprot->writeFieldBegin("ssid", ::apache::thrift::protocol::T_STRING, 1);
+  xfer += oprot->writeString((*(this->ssid)));
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("pic_base64", ::apache::thrift::protocol::T_STRING, 2);
+  xfer += oprot->writeString((*(this->pic_base64)));
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldStop();
+  xfer += oprot->writeStructEnd();
+  return xfer;
+}
+
+
+company_management_add_stamp_pic_result::~company_management_add_stamp_pic_result() noexcept {
+}
+
+
+uint32_t company_management_add_stamp_pic_result::read(::apache::thrift::protocol::TProtocol* iprot) {
+
+  ::apache::thrift::protocol::TInputRecursionTracker tracker(*iprot);
+  uint32_t xfer = 0;
+  std::string fname;
+  ::apache::thrift::protocol::TType ftype;
+  int16_t fid;
+
+  xfer += iprot->readStructBegin(fname);
+
+  using ::apache::thrift::protocol::TProtocolException;
+
+
+  while (true)
+  {
+    xfer += iprot->readFieldBegin(fname, ftype, fid);
+    if (ftype == ::apache::thrift::protocol::T_STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 0:
+        if (ftype == ::apache::thrift::protocol::T_BOOL) {
+          xfer += iprot->readBool(this->success);
+          this->__isset.success = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 1:
+        if (ftype == ::apache::thrift::protocol::T_STRUCT) {
+          xfer += this->e.read(iprot);
+          this->__isset.e = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      default:
+        xfer += iprot->skip(ftype);
+        break;
+    }
+    xfer += iprot->readFieldEnd();
+  }
+
+  xfer += iprot->readStructEnd();
+
+  return xfer;
+}
+
+uint32_t company_management_add_stamp_pic_result::write(::apache::thrift::protocol::TProtocol* oprot) const {
+
+  uint32_t xfer = 0;
+
+  xfer += oprot->writeStructBegin("company_management_add_stamp_pic_result");
+
+  if (this->__isset.success) {
+    xfer += oprot->writeFieldBegin("success", ::apache::thrift::protocol::T_BOOL, 0);
+    xfer += oprot->writeBool(this->success);
+    xfer += oprot->writeFieldEnd();
+  } else if (this->__isset.e) {
+    xfer += oprot->writeFieldBegin("e", ::apache::thrift::protocol::T_STRUCT, 1);
+    xfer += this->e.write(oprot);
+    xfer += oprot->writeFieldEnd();
+  }
+  xfer += oprot->writeFieldStop();
+  xfer += oprot->writeStructEnd();
+  return xfer;
+}
+
+
+company_management_add_stamp_pic_presult::~company_management_add_stamp_pic_presult() noexcept {
+}
+
+
+uint32_t company_management_add_stamp_pic_presult::read(::apache::thrift::protocol::TProtocol* iprot) {
+
+  ::apache::thrift::protocol::TInputRecursionTracker tracker(*iprot);
+  uint32_t xfer = 0;
+  std::string fname;
+  ::apache::thrift::protocol::TType ftype;
+  int16_t fid;
+
+  xfer += iprot->readStructBegin(fname);
+
+  using ::apache::thrift::protocol::TProtocolException;
+
+
+  while (true)
+  {
+    xfer += iprot->readFieldBegin(fname, ftype, fid);
+    if (ftype == ::apache::thrift::protocol::T_STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 0:
+        if (ftype == ::apache::thrift::protocol::T_BOOL) {
+          xfer += iprot->readBool((*(this->success)));
+          this->__isset.success = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 1:
+        if (ftype == ::apache::thrift::protocol::T_STRUCT) {
+          xfer += this->e.read(iprot);
+          this->__isset.e = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      default:
+        xfer += iprot->skip(ftype);
+        break;
+    }
+    xfer += iprot->readFieldEnd();
+  }
+
+  xfer += iprot->readStructEnd();
+
+  return xfer;
+}
+
+
+company_management_del_stamp_pic_args::~company_management_del_stamp_pic_args() noexcept {
+}
+
+
+uint32_t company_management_del_stamp_pic_args::read(::apache::thrift::protocol::TProtocol* iprot) {
+
+  ::apache::thrift::protocol::TInputRecursionTracker tracker(*iprot);
+  uint32_t xfer = 0;
+  std::string fname;
+  ::apache::thrift::protocol::TType ftype;
+  int16_t fid;
+
+  xfer += iprot->readStructBegin(fname);
+
+  using ::apache::thrift::protocol::TProtocolException;
+
+
+  while (true)
+  {
+    xfer += iprot->readFieldBegin(fname, ftype, fid);
+    if (ftype == ::apache::thrift::protocol::T_STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 1:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->ssid);
+          this->__isset.ssid = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      default:
+        xfer += iprot->skip(ftype);
+        break;
+    }
+    xfer += iprot->readFieldEnd();
+  }
+
+  xfer += iprot->readStructEnd();
+
+  return xfer;
+}
+
+uint32_t company_management_del_stamp_pic_args::write(::apache::thrift::protocol::TProtocol* oprot) const {
+  uint32_t xfer = 0;
+  ::apache::thrift::protocol::TOutputRecursionTracker tracker(*oprot);
+  xfer += oprot->writeStructBegin("company_management_del_stamp_pic_args");
+
+  xfer += oprot->writeFieldBegin("ssid", ::apache::thrift::protocol::T_STRING, 1);
+  xfer += oprot->writeString(this->ssid);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldStop();
+  xfer += oprot->writeStructEnd();
+  return xfer;
+}
+
+
+company_management_del_stamp_pic_pargs::~company_management_del_stamp_pic_pargs() noexcept {
+}
+
+
+uint32_t company_management_del_stamp_pic_pargs::write(::apache::thrift::protocol::TProtocol* oprot) const {
+  uint32_t xfer = 0;
+  ::apache::thrift::protocol::TOutputRecursionTracker tracker(*oprot);
+  xfer += oprot->writeStructBegin("company_management_del_stamp_pic_pargs");
+
+  xfer += oprot->writeFieldBegin("ssid", ::apache::thrift::protocol::T_STRING, 1);
+  xfer += oprot->writeString((*(this->ssid)));
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldStop();
+  xfer += oprot->writeStructEnd();
+  return xfer;
+}
+
+
+company_management_del_stamp_pic_result::~company_management_del_stamp_pic_result() noexcept {
+}
+
+
+uint32_t company_management_del_stamp_pic_result::read(::apache::thrift::protocol::TProtocol* iprot) {
+
+  ::apache::thrift::protocol::TInputRecursionTracker tracker(*iprot);
+  uint32_t xfer = 0;
+  std::string fname;
+  ::apache::thrift::protocol::TType ftype;
+  int16_t fid;
+
+  xfer += iprot->readStructBegin(fname);
+
+  using ::apache::thrift::protocol::TProtocolException;
+
+
+  while (true)
+  {
+    xfer += iprot->readFieldBegin(fname, ftype, fid);
+    if (ftype == ::apache::thrift::protocol::T_STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 0:
+        if (ftype == ::apache::thrift::protocol::T_BOOL) {
+          xfer += iprot->readBool(this->success);
+          this->__isset.success = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 1:
+        if (ftype == ::apache::thrift::protocol::T_STRUCT) {
+          xfer += this->e.read(iprot);
+          this->__isset.e = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      default:
+        xfer += iprot->skip(ftype);
+        break;
+    }
+    xfer += iprot->readFieldEnd();
+  }
+
+  xfer += iprot->readStructEnd();
+
+  return xfer;
+}
+
+uint32_t company_management_del_stamp_pic_result::write(::apache::thrift::protocol::TProtocol* oprot) const {
+
+  uint32_t xfer = 0;
+
+  xfer += oprot->writeStructBegin("company_management_del_stamp_pic_result");
+
+  if (this->__isset.success) {
+    xfer += oprot->writeFieldBegin("success", ::apache::thrift::protocol::T_BOOL, 0);
+    xfer += oprot->writeBool(this->success);
+    xfer += oprot->writeFieldEnd();
+  } else if (this->__isset.e) {
+    xfer += oprot->writeFieldBegin("e", ::apache::thrift::protocol::T_STRUCT, 1);
+    xfer += this->e.write(oprot);
+    xfer += oprot->writeFieldEnd();
+  }
+  xfer += oprot->writeFieldStop();
+  xfer += oprot->writeStructEnd();
+  return xfer;
+}
+
+
+company_management_del_stamp_pic_presult::~company_management_del_stamp_pic_presult() noexcept {
+}
+
+
+uint32_t company_management_del_stamp_pic_presult::read(::apache::thrift::protocol::TProtocol* iprot) {
+
+  ::apache::thrift::protocol::TInputRecursionTracker tracker(*iprot);
+  uint32_t xfer = 0;
+  std::string fname;
+  ::apache::thrift::protocol::TType ftype;
+  int16_t fid;
+
+  xfer += iprot->readStructBegin(fname);
+
+  using ::apache::thrift::protocol::TProtocolException;
+
+
+  while (true)
+  {
+    xfer += iprot->readFieldBegin(fname, ftype, fid);
+    if (ftype == ::apache::thrift::protocol::T_STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 0:
+        if (ftype == ::apache::thrift::protocol::T_BOOL) {
+          xfer += iprot->readBool((*(this->success)));
+          this->__isset.success = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 1:
+        if (ftype == ::apache::thrift::protocol::T_STRUCT) {
+          xfer += this->e.read(iprot);
+          this->__isset.e = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      default:
+        xfer += iprot->skip(ftype);
+        break;
+    }
+    xfer += iprot->readFieldEnd();
+  }
+
+  xfer += iprot->readStructEnd();
+
+  return xfer;
+}
+
+
+company_management_get_stamp_pic_args::~company_management_get_stamp_pic_args() noexcept {
+}
+
+
+uint32_t company_management_get_stamp_pic_args::read(::apache::thrift::protocol::TProtocol* iprot) {
+
+  ::apache::thrift::protocol::TInputRecursionTracker tracker(*iprot);
+  uint32_t xfer = 0;
+  std::string fname;
+  ::apache::thrift::protocol::TType ftype;
+  int16_t fid;
+
+  xfer += iprot->readStructBegin(fname);
+
+  using ::apache::thrift::protocol::TProtocolException;
+
+
+  while (true)
+  {
+    xfer += iprot->readFieldBegin(fname, ftype, fid);
+    if (ftype == ::apache::thrift::protocol::T_STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 1:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->company_name);
+          this->__isset.company_name = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      default:
+        xfer += iprot->skip(ftype);
+        break;
+    }
+    xfer += iprot->readFieldEnd();
+  }
+
+  xfer += iprot->readStructEnd();
+
+  return xfer;
+}
+
+uint32_t company_management_get_stamp_pic_args::write(::apache::thrift::protocol::TProtocol* oprot) const {
+  uint32_t xfer = 0;
+  ::apache::thrift::protocol::TOutputRecursionTracker tracker(*oprot);
+  xfer += oprot->writeStructBegin("company_management_get_stamp_pic_args");
+
+  xfer += oprot->writeFieldBegin("company_name", ::apache::thrift::protocol::T_STRING, 1);
+  xfer += oprot->writeString(this->company_name);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldStop();
+  xfer += oprot->writeStructEnd();
+  return xfer;
+}
+
+
+company_management_get_stamp_pic_pargs::~company_management_get_stamp_pic_pargs() noexcept {
+}
+
+
+uint32_t company_management_get_stamp_pic_pargs::write(::apache::thrift::protocol::TProtocol* oprot) const {
+  uint32_t xfer = 0;
+  ::apache::thrift::protocol::TOutputRecursionTracker tracker(*oprot);
+  xfer += oprot->writeStructBegin("company_management_get_stamp_pic_pargs");
+
+  xfer += oprot->writeFieldBegin("company_name", ::apache::thrift::protocol::T_STRING, 1);
+  xfer += oprot->writeString((*(this->company_name)));
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldStop();
+  xfer += oprot->writeStructEnd();
+  return xfer;
+}
+
+
+company_management_get_stamp_pic_result::~company_management_get_stamp_pic_result() noexcept {
+}
+
+
+uint32_t company_management_get_stamp_pic_result::read(::apache::thrift::protocol::TProtocol* iprot) {
+
+  ::apache::thrift::protocol::TInputRecursionTracker tracker(*iprot);
+  uint32_t xfer = 0;
+  std::string fname;
+  ::apache::thrift::protocol::TType ftype;
+  int16_t fid;
+
+  xfer += iprot->readStructBegin(fname);
+
+  using ::apache::thrift::protocol::TProtocolException;
+
+
+  while (true)
+  {
+    xfer += iprot->readFieldBegin(fname, ftype, fid);
+    if (ftype == ::apache::thrift::protocol::T_STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 0:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->success);
+          this->__isset.success = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 1:
+        if (ftype == ::apache::thrift::protocol::T_STRUCT) {
+          xfer += this->e.read(iprot);
+          this->__isset.e = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      default:
+        xfer += iprot->skip(ftype);
+        break;
+    }
+    xfer += iprot->readFieldEnd();
+  }
+
+  xfer += iprot->readStructEnd();
+
+  return xfer;
+}
+
+uint32_t company_management_get_stamp_pic_result::write(::apache::thrift::protocol::TProtocol* oprot) const {
+
+  uint32_t xfer = 0;
+
+  xfer += oprot->writeStructBegin("company_management_get_stamp_pic_result");
+
+  if (this->__isset.success) {
+    xfer += oprot->writeFieldBegin("success", ::apache::thrift::protocol::T_STRING, 0);
+    xfer += oprot->writeString(this->success);
+    xfer += oprot->writeFieldEnd();
+  } else if (this->__isset.e) {
+    xfer += oprot->writeFieldBegin("e", ::apache::thrift::protocol::T_STRUCT, 1);
+    xfer += this->e.write(oprot);
+    xfer += oprot->writeFieldEnd();
+  }
+  xfer += oprot->writeFieldStop();
+  xfer += oprot->writeStructEnd();
+  return xfer;
+}
+
+
+company_management_get_stamp_pic_presult::~company_management_get_stamp_pic_presult() noexcept {
+}
+
+
+uint32_t company_management_get_stamp_pic_presult::read(::apache::thrift::protocol::TProtocol* iprot) {
+
+  ::apache::thrift::protocol::TInputRecursionTracker tracker(*iprot);
+  uint32_t xfer = 0;
+  std::string fname;
+  ::apache::thrift::protocol::TType ftype;
+  int16_t fid;
+
+  xfer += iprot->readStructBegin(fname);
+
+  using ::apache::thrift::protocol::TProtocolException;
+
+
+  while (true)
+  {
+    xfer += iprot->readFieldBegin(fname, ftype, fid);
+    if (ftype == ::apache::thrift::protocol::T_STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 0:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString((*(this->success)));
           this->__isset.success = true;
         } else {
           xfer += iprot->skip(ftype);
@@ -11392,6 +12029,190 @@ void company_managementClient::recv_get_gps_stuff(std::vector<std::string> & _re
   throw ::apache::thrift::TApplicationException(::apache::thrift::TApplicationException::MISSING_RESULT, "get_gps_stuff failed: unknown result");
 }
 
+bool company_managementClient::add_stamp_pic(const std::string& ssid, const std::string& pic_base64)
+{
+  send_add_stamp_pic(ssid, pic_base64);
+  return recv_add_stamp_pic();
+}
+
+void company_managementClient::send_add_stamp_pic(const std::string& ssid, const std::string& pic_base64)
+{
+  int32_t cseqid = 0;
+  oprot_->writeMessageBegin("add_stamp_pic", ::apache::thrift::protocol::T_CALL, cseqid);
+
+  company_management_add_stamp_pic_pargs args;
+  args.ssid = &ssid;
+  args.pic_base64 = &pic_base64;
+  args.write(oprot_);
+
+  oprot_->writeMessageEnd();
+  oprot_->getTransport()->writeEnd();
+  oprot_->getTransport()->flush();
+}
+
+bool company_managementClient::recv_add_stamp_pic()
+{
+
+  int32_t rseqid = 0;
+  std::string fname;
+  ::apache::thrift::protocol::TMessageType mtype;
+
+  iprot_->readMessageBegin(fname, mtype, rseqid);
+  if (mtype == ::apache::thrift::protocol::T_EXCEPTION) {
+    ::apache::thrift::TApplicationException x;
+    x.read(iprot_);
+    iprot_->readMessageEnd();
+    iprot_->getTransport()->readEnd();
+    throw x;
+  }
+  if (mtype != ::apache::thrift::protocol::T_REPLY) {
+    iprot_->skip(::apache::thrift::protocol::T_STRUCT);
+    iprot_->readMessageEnd();
+    iprot_->getTransport()->readEnd();
+  }
+  if (fname.compare("add_stamp_pic") != 0) {
+    iprot_->skip(::apache::thrift::protocol::T_STRUCT);
+    iprot_->readMessageEnd();
+    iprot_->getTransport()->readEnd();
+  }
+  bool _return;
+  company_management_add_stamp_pic_presult result;
+  result.success = &_return;
+  result.read(iprot_);
+  iprot_->readMessageEnd();
+  iprot_->getTransport()->readEnd();
+
+  if (result.__isset.success) {
+    return _return;
+  }
+  if (result.__isset.e) {
+    throw result.e;
+  }
+  throw ::apache::thrift::TApplicationException(::apache::thrift::TApplicationException::MISSING_RESULT, "add_stamp_pic failed: unknown result");
+}
+
+bool company_managementClient::del_stamp_pic(const std::string& ssid)
+{
+  send_del_stamp_pic(ssid);
+  return recv_del_stamp_pic();
+}
+
+void company_managementClient::send_del_stamp_pic(const std::string& ssid)
+{
+  int32_t cseqid = 0;
+  oprot_->writeMessageBegin("del_stamp_pic", ::apache::thrift::protocol::T_CALL, cseqid);
+
+  company_management_del_stamp_pic_pargs args;
+  args.ssid = &ssid;
+  args.write(oprot_);
+
+  oprot_->writeMessageEnd();
+  oprot_->getTransport()->writeEnd();
+  oprot_->getTransport()->flush();
+}
+
+bool company_managementClient::recv_del_stamp_pic()
+{
+
+  int32_t rseqid = 0;
+  std::string fname;
+  ::apache::thrift::protocol::TMessageType mtype;
+
+  iprot_->readMessageBegin(fname, mtype, rseqid);
+  if (mtype == ::apache::thrift::protocol::T_EXCEPTION) {
+    ::apache::thrift::TApplicationException x;
+    x.read(iprot_);
+    iprot_->readMessageEnd();
+    iprot_->getTransport()->readEnd();
+    throw x;
+  }
+  if (mtype != ::apache::thrift::protocol::T_REPLY) {
+    iprot_->skip(::apache::thrift::protocol::T_STRUCT);
+    iprot_->readMessageEnd();
+    iprot_->getTransport()->readEnd();
+  }
+  if (fname.compare("del_stamp_pic") != 0) {
+    iprot_->skip(::apache::thrift::protocol::T_STRUCT);
+    iprot_->readMessageEnd();
+    iprot_->getTransport()->readEnd();
+  }
+  bool _return;
+  company_management_del_stamp_pic_presult result;
+  result.success = &_return;
+  result.read(iprot_);
+  iprot_->readMessageEnd();
+  iprot_->getTransport()->readEnd();
+
+  if (result.__isset.success) {
+    return _return;
+  }
+  if (result.__isset.e) {
+    throw result.e;
+  }
+  throw ::apache::thrift::TApplicationException(::apache::thrift::TApplicationException::MISSING_RESULT, "del_stamp_pic failed: unknown result");
+}
+
+void company_managementClient::get_stamp_pic(std::string& _return, const std::string& company_name)
+{
+  send_get_stamp_pic(company_name);
+  recv_get_stamp_pic(_return);
+}
+
+void company_managementClient::send_get_stamp_pic(const std::string& company_name)
+{
+  int32_t cseqid = 0;
+  oprot_->writeMessageBegin("get_stamp_pic", ::apache::thrift::protocol::T_CALL, cseqid);
+
+  company_management_get_stamp_pic_pargs args;
+  args.company_name = &company_name;
+  args.write(oprot_);
+
+  oprot_->writeMessageEnd();
+  oprot_->getTransport()->writeEnd();
+  oprot_->getTransport()->flush();
+}
+
+void company_managementClient::recv_get_stamp_pic(std::string& _return)
+{
+
+  int32_t rseqid = 0;
+  std::string fname;
+  ::apache::thrift::protocol::TMessageType mtype;
+
+  iprot_->readMessageBegin(fname, mtype, rseqid);
+  if (mtype == ::apache::thrift::protocol::T_EXCEPTION) {
+    ::apache::thrift::TApplicationException x;
+    x.read(iprot_);
+    iprot_->readMessageEnd();
+    iprot_->getTransport()->readEnd();
+    throw x;
+  }
+  if (mtype != ::apache::thrift::protocol::T_REPLY) {
+    iprot_->skip(::apache::thrift::protocol::T_STRUCT);
+    iprot_->readMessageEnd();
+    iprot_->getTransport()->readEnd();
+  }
+  if (fname.compare("get_stamp_pic") != 0) {
+    iprot_->skip(::apache::thrift::protocol::T_STRUCT);
+    iprot_->readMessageEnd();
+    iprot_->getTransport()->readEnd();
+  }
+  company_management_get_stamp_pic_presult result;
+  result.success = &_return;
+  result.read(iprot_);
+  iprot_->readMessageEnd();
+  iprot_->getTransport()->readEnd();
+
+  if (result.__isset.success) {
+    // _return pointer has now been filled
+    return;
+  }
+  if (result.__isset.e) {
+    throw result.e;
+  }
+  throw ::apache::thrift::TApplicationException(::apache::thrift::TApplicationException::MISSING_RESULT, "get_stamp_pic failed: unknown result");
+}
+
 bool company_managementProcessor::dispatchCall(::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, const std::string& fname, int32_t seqid, void* callContext) {
   ProcessMap::iterator pfn;
   pfn = processMap_.find(fname);
@@ -13684,6 +14505,177 @@ void company_managementProcessor::process_get_gps_stuff(int32_t seqid, ::apache:
 
   if (this->eventHandler_.get() != nullptr) {
     this->eventHandler_->postWrite(ctx, "company_management.get_gps_stuff", bytes);
+  }
+}
+
+void company_managementProcessor::process_add_stamp_pic(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext)
+{
+  void* ctx = nullptr;
+  if (this->eventHandler_.get() != nullptr) {
+    ctx = this->eventHandler_->getContext("company_management.add_stamp_pic", callContext);
+  }
+  ::apache::thrift::TProcessorContextFreer freer(this->eventHandler_.get(), ctx, "company_management.add_stamp_pic");
+
+  if (this->eventHandler_.get() != nullptr) {
+    this->eventHandler_->preRead(ctx, "company_management.add_stamp_pic");
+  }
+
+  company_management_add_stamp_pic_args args;
+  args.read(iprot);
+  iprot->readMessageEnd();
+  uint32_t bytes = iprot->getTransport()->readEnd();
+
+  if (this->eventHandler_.get() != nullptr) {
+    this->eventHandler_->postRead(ctx, "company_management.add_stamp_pic", bytes);
+  }
+
+  company_management_add_stamp_pic_result result;
+  try {
+    result.success = iface_->add_stamp_pic(args.ssid, args.pic_base64);
+    result.__isset.success = true;
+  } catch (gen_exp &e) {
+    result.e = e;
+    result.__isset.e = true;
+  } catch (const std::exception& e) {
+    if (this->eventHandler_.get() != nullptr) {
+      this->eventHandler_->handlerError(ctx, "company_management.add_stamp_pic");
+    }
+
+    ::apache::thrift::TApplicationException x(e.what());
+    oprot->writeMessageBegin("add_stamp_pic", ::apache::thrift::protocol::T_EXCEPTION, seqid);
+    x.write(oprot);
+    oprot->writeMessageEnd();
+    oprot->getTransport()->writeEnd();
+    oprot->getTransport()->flush();
+    return;
+  }
+
+  if (this->eventHandler_.get() != nullptr) {
+    this->eventHandler_->preWrite(ctx, "company_management.add_stamp_pic");
+  }
+
+  oprot->writeMessageBegin("add_stamp_pic", ::apache::thrift::protocol::T_REPLY, seqid);
+  result.write(oprot);
+  oprot->writeMessageEnd();
+  bytes = oprot->getTransport()->writeEnd();
+  oprot->getTransport()->flush();
+
+  if (this->eventHandler_.get() != nullptr) {
+    this->eventHandler_->postWrite(ctx, "company_management.add_stamp_pic", bytes);
+  }
+}
+
+void company_managementProcessor::process_del_stamp_pic(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext)
+{
+  void* ctx = nullptr;
+  if (this->eventHandler_.get() != nullptr) {
+    ctx = this->eventHandler_->getContext("company_management.del_stamp_pic", callContext);
+  }
+  ::apache::thrift::TProcessorContextFreer freer(this->eventHandler_.get(), ctx, "company_management.del_stamp_pic");
+
+  if (this->eventHandler_.get() != nullptr) {
+    this->eventHandler_->preRead(ctx, "company_management.del_stamp_pic");
+  }
+
+  company_management_del_stamp_pic_args args;
+  args.read(iprot);
+  iprot->readMessageEnd();
+  uint32_t bytes = iprot->getTransport()->readEnd();
+
+  if (this->eventHandler_.get() != nullptr) {
+    this->eventHandler_->postRead(ctx, "company_management.del_stamp_pic", bytes);
+  }
+
+  company_management_del_stamp_pic_result result;
+  try {
+    result.success = iface_->del_stamp_pic(args.ssid);
+    result.__isset.success = true;
+  } catch (gen_exp &e) {
+    result.e = e;
+    result.__isset.e = true;
+  } catch (const std::exception& e) {
+    if (this->eventHandler_.get() != nullptr) {
+      this->eventHandler_->handlerError(ctx, "company_management.del_stamp_pic");
+    }
+
+    ::apache::thrift::TApplicationException x(e.what());
+    oprot->writeMessageBegin("del_stamp_pic", ::apache::thrift::protocol::T_EXCEPTION, seqid);
+    x.write(oprot);
+    oprot->writeMessageEnd();
+    oprot->getTransport()->writeEnd();
+    oprot->getTransport()->flush();
+    return;
+  }
+
+  if (this->eventHandler_.get() != nullptr) {
+    this->eventHandler_->preWrite(ctx, "company_management.del_stamp_pic");
+  }
+
+  oprot->writeMessageBegin("del_stamp_pic", ::apache::thrift::protocol::T_REPLY, seqid);
+  result.write(oprot);
+  oprot->writeMessageEnd();
+  bytes = oprot->getTransport()->writeEnd();
+  oprot->getTransport()->flush();
+
+  if (this->eventHandler_.get() != nullptr) {
+    this->eventHandler_->postWrite(ctx, "company_management.del_stamp_pic", bytes);
+  }
+}
+
+void company_managementProcessor::process_get_stamp_pic(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext)
+{
+  void* ctx = nullptr;
+  if (this->eventHandler_.get() != nullptr) {
+    ctx = this->eventHandler_->getContext("company_management.get_stamp_pic", callContext);
+  }
+  ::apache::thrift::TProcessorContextFreer freer(this->eventHandler_.get(), ctx, "company_management.get_stamp_pic");
+
+  if (this->eventHandler_.get() != nullptr) {
+    this->eventHandler_->preRead(ctx, "company_management.get_stamp_pic");
+  }
+
+  company_management_get_stamp_pic_args args;
+  args.read(iprot);
+  iprot->readMessageEnd();
+  uint32_t bytes = iprot->getTransport()->readEnd();
+
+  if (this->eventHandler_.get() != nullptr) {
+    this->eventHandler_->postRead(ctx, "company_management.get_stamp_pic", bytes);
+  }
+
+  company_management_get_stamp_pic_result result;
+  try {
+    iface_->get_stamp_pic(result.success, args.company_name);
+    result.__isset.success = true;
+  } catch (gen_exp &e) {
+    result.e = e;
+    result.__isset.e = true;
+  } catch (const std::exception& e) {
+    if (this->eventHandler_.get() != nullptr) {
+      this->eventHandler_->handlerError(ctx, "company_management.get_stamp_pic");
+    }
+
+    ::apache::thrift::TApplicationException x(e.what());
+    oprot->writeMessageBegin("get_stamp_pic", ::apache::thrift::protocol::T_EXCEPTION, seqid);
+    x.write(oprot);
+    oprot->writeMessageEnd();
+    oprot->getTransport()->writeEnd();
+    oprot->getTransport()->flush();
+    return;
+  }
+
+  if (this->eventHandler_.get() != nullptr) {
+    this->eventHandler_->preWrite(ctx, "company_management.get_stamp_pic");
+  }
+
+  oprot->writeMessageBegin("get_stamp_pic", ::apache::thrift::protocol::T_REPLY, seqid);
+  result.write(oprot);
+  oprot->writeMessageEnd();
+  bytes = oprot->getTransport()->writeEnd();
+  oprot->getTransport()->flush();
+
+  if (this->eventHandler_.get() != nullptr) {
+    this->eventHandler_->postWrite(ctx, "company_management.get_stamp_pic", bytes);
   }
 }
 
@@ -17209,6 +18201,271 @@ void company_managementConcurrentClient::recv_get_gps_stuff(std::vector<std::str
       }
       // in a bad state, don't commit
       throw ::apache::thrift::TApplicationException(::apache::thrift::TApplicationException::MISSING_RESULT, "get_gps_stuff failed: unknown result");
+    }
+    // seqid != rseqid
+    this->sync_->updatePending(fname, mtype, rseqid);
+
+    // this will temporarily unlock the readMutex, and let other clients get work done
+    this->sync_->waitForWork(seqid);
+  } // end while(true)
+}
+
+bool company_managementConcurrentClient::add_stamp_pic(const std::string& ssid, const std::string& pic_base64)
+{
+  int32_t seqid = send_add_stamp_pic(ssid, pic_base64);
+  return recv_add_stamp_pic(seqid);
+}
+
+int32_t company_managementConcurrentClient::send_add_stamp_pic(const std::string& ssid, const std::string& pic_base64)
+{
+  int32_t cseqid = this->sync_->generateSeqId();
+  ::apache::thrift::async::TConcurrentSendSentry sentry(this->sync_.get());
+  oprot_->writeMessageBegin("add_stamp_pic", ::apache::thrift::protocol::T_CALL, cseqid);
+
+  company_management_add_stamp_pic_pargs args;
+  args.ssid = &ssid;
+  args.pic_base64 = &pic_base64;
+  args.write(oprot_);
+
+  oprot_->writeMessageEnd();
+  oprot_->getTransport()->writeEnd();
+  oprot_->getTransport()->flush();
+
+  sentry.commit();
+  return cseqid;
+}
+
+bool company_managementConcurrentClient::recv_add_stamp_pic(const int32_t seqid)
+{
+
+  int32_t rseqid = 0;
+  std::string fname;
+  ::apache::thrift::protocol::TMessageType mtype;
+
+  // the read mutex gets dropped and reacquired as part of waitForWork()
+  // The destructor of this sentry wakes up other clients
+  ::apache::thrift::async::TConcurrentRecvSentry sentry(this->sync_.get(), seqid);
+
+  while(true) {
+    if(!this->sync_->getPending(fname, mtype, rseqid)) {
+      iprot_->readMessageBegin(fname, mtype, rseqid);
+    }
+    if(seqid == rseqid) {
+      if (mtype == ::apache::thrift::protocol::T_EXCEPTION) {
+        ::apache::thrift::TApplicationException x;
+        x.read(iprot_);
+        iprot_->readMessageEnd();
+        iprot_->getTransport()->readEnd();
+        sentry.commit();
+        throw x;
+      }
+      if (mtype != ::apache::thrift::protocol::T_REPLY) {
+        iprot_->skip(::apache::thrift::protocol::T_STRUCT);
+        iprot_->readMessageEnd();
+        iprot_->getTransport()->readEnd();
+      }
+      if (fname.compare("add_stamp_pic") != 0) {
+        iprot_->skip(::apache::thrift::protocol::T_STRUCT);
+        iprot_->readMessageEnd();
+        iprot_->getTransport()->readEnd();
+
+        // in a bad state, don't commit
+        using ::apache::thrift::protocol::TProtocolException;
+        throw TProtocolException(TProtocolException::INVALID_DATA);
+      }
+      bool _return;
+      company_management_add_stamp_pic_presult result;
+      result.success = &_return;
+      result.read(iprot_);
+      iprot_->readMessageEnd();
+      iprot_->getTransport()->readEnd();
+
+      if (result.__isset.success) {
+        sentry.commit();
+        return _return;
+      }
+      if (result.__isset.e) {
+        sentry.commit();
+        throw result.e;
+      }
+      // in a bad state, don't commit
+      throw ::apache::thrift::TApplicationException(::apache::thrift::TApplicationException::MISSING_RESULT, "add_stamp_pic failed: unknown result");
+    }
+    // seqid != rseqid
+    this->sync_->updatePending(fname, mtype, rseqid);
+
+    // this will temporarily unlock the readMutex, and let other clients get work done
+    this->sync_->waitForWork(seqid);
+  } // end while(true)
+}
+
+bool company_managementConcurrentClient::del_stamp_pic(const std::string& ssid)
+{
+  int32_t seqid = send_del_stamp_pic(ssid);
+  return recv_del_stamp_pic(seqid);
+}
+
+int32_t company_managementConcurrentClient::send_del_stamp_pic(const std::string& ssid)
+{
+  int32_t cseqid = this->sync_->generateSeqId();
+  ::apache::thrift::async::TConcurrentSendSentry sentry(this->sync_.get());
+  oprot_->writeMessageBegin("del_stamp_pic", ::apache::thrift::protocol::T_CALL, cseqid);
+
+  company_management_del_stamp_pic_pargs args;
+  args.ssid = &ssid;
+  args.write(oprot_);
+
+  oprot_->writeMessageEnd();
+  oprot_->getTransport()->writeEnd();
+  oprot_->getTransport()->flush();
+
+  sentry.commit();
+  return cseqid;
+}
+
+bool company_managementConcurrentClient::recv_del_stamp_pic(const int32_t seqid)
+{
+
+  int32_t rseqid = 0;
+  std::string fname;
+  ::apache::thrift::protocol::TMessageType mtype;
+
+  // the read mutex gets dropped and reacquired as part of waitForWork()
+  // The destructor of this sentry wakes up other clients
+  ::apache::thrift::async::TConcurrentRecvSentry sentry(this->sync_.get(), seqid);
+
+  while(true) {
+    if(!this->sync_->getPending(fname, mtype, rseqid)) {
+      iprot_->readMessageBegin(fname, mtype, rseqid);
+    }
+    if(seqid == rseqid) {
+      if (mtype == ::apache::thrift::protocol::T_EXCEPTION) {
+        ::apache::thrift::TApplicationException x;
+        x.read(iprot_);
+        iprot_->readMessageEnd();
+        iprot_->getTransport()->readEnd();
+        sentry.commit();
+        throw x;
+      }
+      if (mtype != ::apache::thrift::protocol::T_REPLY) {
+        iprot_->skip(::apache::thrift::protocol::T_STRUCT);
+        iprot_->readMessageEnd();
+        iprot_->getTransport()->readEnd();
+      }
+      if (fname.compare("del_stamp_pic") != 0) {
+        iprot_->skip(::apache::thrift::protocol::T_STRUCT);
+        iprot_->readMessageEnd();
+        iprot_->getTransport()->readEnd();
+
+        // in a bad state, don't commit
+        using ::apache::thrift::protocol::TProtocolException;
+        throw TProtocolException(TProtocolException::INVALID_DATA);
+      }
+      bool _return;
+      company_management_del_stamp_pic_presult result;
+      result.success = &_return;
+      result.read(iprot_);
+      iprot_->readMessageEnd();
+      iprot_->getTransport()->readEnd();
+
+      if (result.__isset.success) {
+        sentry.commit();
+        return _return;
+      }
+      if (result.__isset.e) {
+        sentry.commit();
+        throw result.e;
+      }
+      // in a bad state, don't commit
+      throw ::apache::thrift::TApplicationException(::apache::thrift::TApplicationException::MISSING_RESULT, "del_stamp_pic failed: unknown result");
+    }
+    // seqid != rseqid
+    this->sync_->updatePending(fname, mtype, rseqid);
+
+    // this will temporarily unlock the readMutex, and let other clients get work done
+    this->sync_->waitForWork(seqid);
+  } // end while(true)
+}
+
+void company_managementConcurrentClient::get_stamp_pic(std::string& _return, const std::string& company_name)
+{
+  int32_t seqid = send_get_stamp_pic(company_name);
+  recv_get_stamp_pic(_return, seqid);
+}
+
+int32_t company_managementConcurrentClient::send_get_stamp_pic(const std::string& company_name)
+{
+  int32_t cseqid = this->sync_->generateSeqId();
+  ::apache::thrift::async::TConcurrentSendSentry sentry(this->sync_.get());
+  oprot_->writeMessageBegin("get_stamp_pic", ::apache::thrift::protocol::T_CALL, cseqid);
+
+  company_management_get_stamp_pic_pargs args;
+  args.company_name = &company_name;
+  args.write(oprot_);
+
+  oprot_->writeMessageEnd();
+  oprot_->getTransport()->writeEnd();
+  oprot_->getTransport()->flush();
+
+  sentry.commit();
+  return cseqid;
+}
+
+void company_managementConcurrentClient::recv_get_stamp_pic(std::string& _return, const int32_t seqid)
+{
+
+  int32_t rseqid = 0;
+  std::string fname;
+  ::apache::thrift::protocol::TMessageType mtype;
+
+  // the read mutex gets dropped and reacquired as part of waitForWork()
+  // The destructor of this sentry wakes up other clients
+  ::apache::thrift::async::TConcurrentRecvSentry sentry(this->sync_.get(), seqid);
+
+  while(true) {
+    if(!this->sync_->getPending(fname, mtype, rseqid)) {
+      iprot_->readMessageBegin(fname, mtype, rseqid);
+    }
+    if(seqid == rseqid) {
+      if (mtype == ::apache::thrift::protocol::T_EXCEPTION) {
+        ::apache::thrift::TApplicationException x;
+        x.read(iprot_);
+        iprot_->readMessageEnd();
+        iprot_->getTransport()->readEnd();
+        sentry.commit();
+        throw x;
+      }
+      if (mtype != ::apache::thrift::protocol::T_REPLY) {
+        iprot_->skip(::apache::thrift::protocol::T_STRUCT);
+        iprot_->readMessageEnd();
+        iprot_->getTransport()->readEnd();
+      }
+      if (fname.compare("get_stamp_pic") != 0) {
+        iprot_->skip(::apache::thrift::protocol::T_STRUCT);
+        iprot_->readMessageEnd();
+        iprot_->getTransport()->readEnd();
+
+        // in a bad state, don't commit
+        using ::apache::thrift::protocol::TProtocolException;
+        throw TProtocolException(TProtocolException::INVALID_DATA);
+      }
+      company_management_get_stamp_pic_presult result;
+      result.success = &_return;
+      result.read(iprot_);
+      iprot_->readMessageEnd();
+      iprot_->getTransport()->readEnd();
+
+      if (result.__isset.success) {
+        // _return pointer has now been filled
+        sentry.commit();
+        return;
+      }
+      if (result.__isset.e) {
+        sentry.commit();
+        throw result.e;
+      }
+      // in a bad state, don't commit
+      throw ::apache::thrift::TApplicationException(::apache::thrift::TApplicationException::MISSING_RESULT, "get_stamp_pic failed: unknown result");
     }
     // seqid != rseqid
     this->sync_->updatePending(fname, mtype, rseqid);

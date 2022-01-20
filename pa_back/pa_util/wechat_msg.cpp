@@ -336,3 +336,16 @@ void PA_WECHAT_send_call_vichele_msg(const std::string &_to_user, const std::str
 
     send_msg_to_wechat(_to_user, "xyUoGYo_0e3X6_2UD-jQmicmKtNzdMHN6M-QyvV20rg", "您的车辆可以进场了", keywords, "", "/driver_register");
 }
+
+void PA_WECHAT_send_finish_ticket_msg(const std::string &_to_user, const std::string &_id)
+{
+    std::vector<std::string> keywords;
+    std::string name = "销售提货";
+    if (_id.substr(_id.length() - 1, 1) == "B")
+    {
+        name = "采购送货";
+    }
+    keywords.push_back(name);
+    keywords.push_back(PA_DATAOPT_current_time());
+    send_msg_to_wechat(_to_user, "edrOmkbApJ7s3LPGSKr5a5hjBZVDW9qNAyDcuoZqJFU", "车辆过磅完成", keywords, "点击查看电子磅单", "/ticket/" + _id);
+}
