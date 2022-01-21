@@ -872,6 +872,7 @@ public:
         tmp.name = supplier_info.name;
         tmp.max_vichele = supplier_info.max_vichele;
         tmp.reserves = supplier_info.reserves;
+        tmp.bound_stuff = supplier_info.bound_stuff_name;
         tmp.set_parent(*company, "belong_company");
 
         ret = tmp.insert_record();
@@ -896,6 +897,7 @@ public:
         exist_record->max_vichele = supplier_info.max_vichele;
         exist_record->name = supplier_info.name;
         exist_record->reserves = supplier_info.reserves;
+        exist_record->bound_stuff = supplier_info.bound_stuff_name;
 
         ret = exist_record->update_record();
 
@@ -934,6 +936,7 @@ public:
             tmp.max_vichele = itr.max_vichele;
             tmp.name = itr.name;
             tmp.reserves = itr.reserves;
+            tmp.bound_stuff_name = itr.bound_stuff;
             _return.push_back(tmp);
         }
     }
@@ -1082,6 +1085,7 @@ public:
         auto need_clean = sqlite_orm::search_record_all<pa_sql_vichele_stay_alone>("is_drop == 0 AND status <= 1 AND date == '%s'", the_day_before_yestardey_str.c_str());
         for (auto &itr : need_clean)
         {
+            usleep(200000);
             try
             {
                 if (PA_DATAOPT_post_sync_change_register(itr, true).length() == 0)
@@ -1279,6 +1283,19 @@ public:
         }
 
         return true;
+    }
+
+    virtual void get_bound_stuff(std::string &_return, const std::string &company_name, const std::string &destination_company)
+    {
+        auto company = sqlite_orm::search_record<pa_sql_company>("name = '%s'", destination_company.c_str());
+        if (company)
+        {
+            auto supplier = company->get_children<pa_sql_supplier_basic_info>("belong_company", "name == '%s'", company_name.c_str());
+            if (supplier)
+            {
+                _return = supplier->bound_stuff;
+            }
+        }
     }
 };
 

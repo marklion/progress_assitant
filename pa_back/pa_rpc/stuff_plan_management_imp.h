@@ -1278,6 +1278,7 @@ public:
         auto plans_need_close = sqlite_orm::search_record_all<pa_sql_plan>("status != 4 AND plan_time NOT LIKE '%s%%'", today_str.c_str());
         for (auto &itr : plans_need_close)
         {
+            usleep(200000);
             auto delivered_vichele = itr.get_all_children<pa_sql_single_vichele>("belong_plan", "finish = 1");
             if (delivered_vichele.size() == 0)
             {

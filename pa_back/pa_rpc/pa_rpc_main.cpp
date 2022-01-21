@@ -109,7 +109,7 @@ int main(int argc, char **argv)
                                 }
                             }
                         }
-                        if (st_time->tm_min == 1 && st_time->tm_hour == 0)
+                        if (st_time->tm_min == 1 && (st_time->tm_hour == 0 || st_time->tm_hour == 1))
                         {
                             auto all_contract = sqlite_orm::search_record_all<pa_sql_contract>();
                             for (auto &itr : all_contract)
@@ -117,8 +117,11 @@ int main(int argc, char **argv)
                                 itr.update_status();
                             }
                             stuff_plan_management_handler spm;
-                            vichele_management_handler vm;
                             spm.clean_unclose_plan();
+                        }
+                        if (st_time->tm_min == 1 && st_time->tm_hour == 9)
+                        {
+                            vichele_management_handler vm;
                             vm.clean_unclose_vichele();
                         }
                         auto sale_companys = sqlite_orm::search_record_all<pa_sql_company>("is_sale == 1");

@@ -8668,6 +8668,10 @@ void supplier_basic_info::__set_max_vichele(const int64_t val) {
 void supplier_basic_info::__set_id(const int64_t val) {
   this->id = val;
 }
+
+void supplier_basic_info::__set_bound_stuff_name(const std::string& val) {
+  this->bound_stuff_name = val;
+}
 std::ostream& operator<<(std::ostream& out, const supplier_basic_info& obj)
 {
   obj.printTo(out);
@@ -8728,6 +8732,14 @@ uint32_t supplier_basic_info::read(::apache::thrift::protocol::TProtocol* iprot)
           xfer += iprot->skip(ftype);
         }
         break;
+      case 5:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->bound_stuff_name);
+          this->__isset.bound_stuff_name = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
       default:
         xfer += iprot->skip(ftype);
         break;
@@ -8761,6 +8773,10 @@ uint32_t supplier_basic_info::write(::apache::thrift::protocol::TProtocol* oprot
   xfer += oprot->writeI64(this->id);
   xfer += oprot->writeFieldEnd();
 
+  xfer += oprot->writeFieldBegin("bound_stuff_name", ::apache::thrift::protocol::T_STRING, 5);
+  xfer += oprot->writeString(this->bound_stuff_name);
+  xfer += oprot->writeFieldEnd();
+
   xfer += oprot->writeFieldStop();
   xfer += oprot->writeStructEnd();
   return xfer;
@@ -8772,6 +8788,7 @@ void swap(supplier_basic_info &a, supplier_basic_info &b) {
   swap(a.reserves, b.reserves);
   swap(a.max_vichele, b.max_vichele);
   swap(a.id, b.id);
+  swap(a.bound_stuff_name, b.bound_stuff_name);
   swap(a.__isset, b.__isset);
 }
 
@@ -8780,6 +8797,7 @@ supplier_basic_info::supplier_basic_info(const supplier_basic_info& other108) {
   reserves = other108.reserves;
   max_vichele = other108.max_vichele;
   id = other108.id;
+  bound_stuff_name = other108.bound_stuff_name;
   __isset = other108.__isset;
 }
 supplier_basic_info& supplier_basic_info::operator=(const supplier_basic_info& other109) {
@@ -8787,6 +8805,7 @@ supplier_basic_info& supplier_basic_info::operator=(const supplier_basic_info& o
   reserves = other109.reserves;
   max_vichele = other109.max_vichele;
   id = other109.id;
+  bound_stuff_name = other109.bound_stuff_name;
   __isset = other109.__isset;
   return *this;
 }
@@ -8797,6 +8816,7 @@ void supplier_basic_info::printTo(std::ostream& out) const {
   out << ", " << "reserves=" << to_string(reserves);
   out << ", " << "max_vichele=" << to_string(max_vichele);
   out << ", " << "id=" << to_string(id);
+  out << ", " << "bound_stuff_name=" << to_string(bound_stuff_name);
   out << ")";
 }
 

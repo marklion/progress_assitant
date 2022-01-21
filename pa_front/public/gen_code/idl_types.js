@@ -5885,6 +5885,7 @@ supplier_basic_info = class {
     this.reserves = null;
     this.max_vichele = null;
     this.id = null;
+    this.bound_stuff_name = null;
     if (args) {
       if (args.name !== undefined && args.name !== null) {
         this.name = args.name;
@@ -5897,6 +5898,9 @@ supplier_basic_info = class {
       }
       if (args.id !== undefined && args.id !== null) {
         this.id = args.id;
+      }
+      if (args.bound_stuff_name !== undefined && args.bound_stuff_name !== null) {
+        this.bound_stuff_name = args.bound_stuff_name;
       }
     }
   }
@@ -5939,6 +5943,13 @@ supplier_basic_info = class {
           input.skip(ftype);
         }
         break;
+        case 5:
+        if (ftype == Thrift.Type.STRING) {
+          this.bound_stuff_name = input.readString().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
         default:
           input.skip(ftype);
       }
@@ -5968,6 +5979,11 @@ supplier_basic_info = class {
     if (this.id !== null && this.id !== undefined) {
       output.writeFieldBegin('id', Thrift.Type.I64, 4);
       output.writeI64(this.id);
+      output.writeFieldEnd();
+    }
+    if (this.bound_stuff_name !== null && this.bound_stuff_name !== undefined) {
+      output.writeFieldBegin('bound_stuff_name', Thrift.Type.STRING, 5);
+      output.writeString(this.bound_stuff_name);
       output.writeFieldEnd();
     }
     output.writeFieldStop();

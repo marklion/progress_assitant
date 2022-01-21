@@ -3282,11 +3282,12 @@ void swap(vichele_team &a, vichele_team &b);
 std::ostream& operator<<(std::ostream& out, const vichele_team& obj);
 
 typedef struct _supplier_basic_info__isset {
-  _supplier_basic_info__isset() : name(false), reserves(false), max_vichele(false), id(false) {}
+  _supplier_basic_info__isset() : name(false), reserves(false), max_vichele(false), id(false), bound_stuff_name(false) {}
   bool name :1;
   bool reserves :1;
   bool max_vichele :1;
   bool id :1;
+  bool bound_stuff_name :1;
 } _supplier_basic_info__isset;
 
 class supplier_basic_info : public virtual ::apache::thrift::TBase {
@@ -3294,7 +3295,7 @@ class supplier_basic_info : public virtual ::apache::thrift::TBase {
 
   supplier_basic_info(const supplier_basic_info&);
   supplier_basic_info& operator=(const supplier_basic_info&);
-  supplier_basic_info() : name(), reserves(0), max_vichele(0), id(0) {
+  supplier_basic_info() : name(), reserves(0), max_vichele(0), id(0), bound_stuff_name() {
   }
 
   virtual ~supplier_basic_info() noexcept;
@@ -3302,6 +3303,7 @@ class supplier_basic_info : public virtual ::apache::thrift::TBase {
   double reserves;
   int64_t max_vichele;
   int64_t id;
+  std::string bound_stuff_name;
 
   _supplier_basic_info__isset __isset;
 
@@ -3313,6 +3315,8 @@ class supplier_basic_info : public virtual ::apache::thrift::TBase {
 
   void __set_id(const int64_t val);
 
+  void __set_bound_stuff_name(const std::string& val);
+
   bool operator == (const supplier_basic_info & rhs) const
   {
     if (!(name == rhs.name))
@@ -3322,6 +3326,8 @@ class supplier_basic_info : public virtual ::apache::thrift::TBase {
     if (!(max_vichele == rhs.max_vichele))
       return false;
     if (!(id == rhs.id))
+      return false;
+    if (!(bound_stuff_name == rhs.bound_stuff_name))
       return false;
     return true;
   }
