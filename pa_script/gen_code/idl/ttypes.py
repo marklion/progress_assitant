@@ -5045,15 +5045,17 @@ class supplier_basic_info(object):
      - reserves
      - max_vichele
      - id
+     - bound_stuff_name
 
     """
 
 
-    def __init__(self, name=None, reserves=None, max_vichele=None, id=None,):
+    def __init__(self, name=None, reserves=None, max_vichele=None, id=None, bound_stuff_name=None,):
         self.name = name
         self.reserves = reserves
         self.max_vichele = max_vichele
         self.id = id
+        self.bound_stuff_name = bound_stuff_name
 
     def read(self, iprot):
         if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
@@ -5084,6 +5086,11 @@ class supplier_basic_info(object):
                     self.id = iprot.readI64()
                 else:
                     iprot.skip(ftype)
+            elif fid == 5:
+                if ftype == TType.STRING:
+                    self.bound_stuff_name = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
             else:
                 iprot.skip(ftype)
             iprot.readFieldEnd()
@@ -5109,6 +5116,10 @@ class supplier_basic_info(object):
         if self.id is not None:
             oprot.writeFieldBegin('id', TType.I64, 4)
             oprot.writeI64(self.id)
+            oprot.writeFieldEnd()
+        if self.bound_stuff_name is not None:
+            oprot.writeFieldBegin('bound_stuff_name', TType.STRING, 5)
+            oprot.writeString(self.bound_stuff_name.encode('utf-8') if sys.version_info[0] == 2 else self.bound_stuff_name)
             oprot.writeFieldEnd()
         oprot.writeFieldStop()
         oprot.writeStructEnd()
@@ -5751,6 +5762,7 @@ supplier_basic_info.thrift_spec = (
     (2, TType.DOUBLE, 'reserves', None, None, ),  # 2
     (3, TType.I64, 'max_vichele', None, None, ),  # 3
     (4, TType.I64, 'id', None, None, ),  # 4
+    (5, TType.STRING, 'bound_stuff_name', 'UTF8', None, ),  # 5
 )
 all_structs.append(single_vichele_brief)
 single_vichele_brief.thrift_spec = (

@@ -410,6 +410,18 @@ export default {
 
             }
         },
+        "new_form.company_name": function (_company_name) {
+            var vue_this = this;
+            vue_this.$call_remote_process("vichele_management", "get_bound_stuff", [_company_name, vue_this.new_form.destination]).then(function (resp) {
+                vue_this.new_form.stuff_name = resp;
+            });
+        },
+        "new_form.destination": function (_destination) {
+            var vue_this = this;
+            vue_this.$call_remote_process("vichele_management", "get_bound_stuff", [vue_this.new_form.company_name, _destination]).then(function (resp) {
+                vue_this.new_form.stuff_name = resp;
+            });
+        },
     },
     methods: {
         add_single_vichele: function (_vichele) {

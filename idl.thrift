@@ -545,6 +545,7 @@ struct supplier_basic_info {
     2:double reserves,
     3:i64 max_vichele,
     4:i64 id,
+    5:string bound_stuff_name,
 }
 
 struct single_vichele_brief {
@@ -595,4 +596,5 @@ service vichele_management {
     single_vichele_brief get_company_brief(1:string ssid) throws (1:gen_exp e),
     vichele_stay_alone_statistics get_statistics(1:string ssid) throws (1:gen_exp e),
     bool change_price(1:string ssid, 2:list<vichele_stay_alone> info, 3:bool all_select, 4:string enter_date, 5:string stuff_name, 6:string supplier_name, 7:double new_price) throws (1:gen_exp e),
+    string get_bound_stuff(1:string company_name, 2:string destination_company) throws (1:gen_exp e),
 }

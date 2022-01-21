@@ -9,7 +9,7 @@
                 </van-col>
             </van-row>
         </template>
-        <van-cell v-for="(single_supplier, index) in all_suppliers" :key="index" center :title="single_supplier.name" :value="'最多派车:' + single_supplier.max_vichele" :label="'储量' + single_supplier.reserves">
+        <van-cell v-for="(single_supplier, index) in all_suppliers" :key="index" center :title="single_supplier.name" :value="'最多派车:' + single_supplier.max_vichele" :label="'储量' + single_supplier.reserves + (single_supplier.bound_stuff_name?(' 绑定货物:' + single_supplier.bound_stuff_name):'')">
             <template #right-icon>
                 <div style="margin-left:5px;">
                     <van-button type="warning" size="small" @click="trigger_update(single_supplier)">修改</van-button>
@@ -47,6 +47,7 @@
             <van-field v-model="focus_supplier.name" :disabled="!cur_opt_add" label="公司名称" placeholder="请输入公司名" :rules="[{ required: true, message: '请填写公司名' }]" />
             <van-field v-model="focus_supplier.reserves" label="预计储量" placeholder="请输入预计储量" :rules="[{ required: true, message: '请填写预计储量' }]" />
             <van-field v-model="focus_supplier.max_vichele" label="最多派车数" placeholder="请输入最多派车数" :rules="[{ required: true, message: '请填写最多派车数' }]" />
+            <van-field v-model="focus_supplier.bound_stuff_name" label="绑定物料名" placeholder="请输入绑定物料名" />
             <div style="margin: 16px;">
                 <van-button round block type="info" native-type="submit">提交</van-button>
             </div>
@@ -95,6 +96,7 @@ export default {
                 name: '',
                 reserves: '',
                 max_vichele: '',
+                bound_stuff_name:''
             },
             edit_supplier_show: false,
             all_suppliers: [],
@@ -179,6 +181,7 @@ export default {
                         name: '',
                         reserves: '',
                         max_vichele: '',
+                        bound_stuff_name: '',
                     };
                 }
             });

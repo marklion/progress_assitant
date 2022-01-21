@@ -830,6 +830,7 @@ public:
     std::string name;
     double reserves = 0;
     long max_vichele = 0;
+    std::string bound_stuff;
     pa_sql_supplier_basic_info() {
         add_parent_type<pa_sql_company>("belong_company");
     }
@@ -838,6 +839,7 @@ public:
         ret.push_back(sqlite_orm_column("name", sqlite_orm_column::STRING, &name));
         ret.push_back(sqlite_orm_column("reserves", sqlite_orm_column::REAL, &reserves));
         ret.push_back(sqlite_orm_column("max_vichele", sqlite_orm_column::INTEGER, &max_vichele));
+        ret.push_back(sqlite_orm_column("bound_stuff", sqlite_orm_column::STRING, &bound_stuff));
 
         return ret;
     }

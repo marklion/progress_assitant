@@ -5220,6 +5220,141 @@ vichele_management_change_price_result = class {
   }
 
 };
+vichele_management_get_bound_stuff_args = class {
+  constructor(args) {
+    this.company_name = null;
+    this.destination_company = null;
+    if (args) {
+      if (args.company_name !== undefined && args.company_name !== null) {
+        this.company_name = args.company_name;
+      }
+      if (args.destination_company !== undefined && args.destination_company !== null) {
+        this.destination_company = args.destination_company;
+      }
+    }
+  }
+
+  read (input) {
+    input.readStructBegin();
+    while (true) {
+      const ret = input.readFieldBegin();
+      const ftype = ret.ftype;
+      const fid = ret.fid;
+      if (ftype == Thrift.Type.STOP) {
+        break;
+      }
+      switch (fid) {
+        case 1:
+        if (ftype == Thrift.Type.STRING) {
+          this.company_name = input.readString().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        case 2:
+        if (ftype == Thrift.Type.STRING) {
+          this.destination_company = input.readString().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        default:
+          input.skip(ftype);
+      }
+      input.readFieldEnd();
+    }
+    input.readStructEnd();
+    return;
+  }
+
+  write (output) {
+    output.writeStructBegin('vichele_management_get_bound_stuff_args');
+    if (this.company_name !== null && this.company_name !== undefined) {
+      output.writeFieldBegin('company_name', Thrift.Type.STRING, 1);
+      output.writeString(this.company_name);
+      output.writeFieldEnd();
+    }
+    if (this.destination_company !== null && this.destination_company !== undefined) {
+      output.writeFieldBegin('destination_company', Thrift.Type.STRING, 2);
+      output.writeString(this.destination_company);
+      output.writeFieldEnd();
+    }
+    output.writeFieldStop();
+    output.writeStructEnd();
+    return;
+  }
+
+};
+vichele_management_get_bound_stuff_result = class {
+  constructor(args) {
+    this.success = null;
+    this.e = null;
+    if (args instanceof gen_exp) {
+        this.e = args;
+        return;
+    }
+    if (args) {
+      if (args.success !== undefined && args.success !== null) {
+        this.success = args.success;
+      }
+      if (args.e !== undefined && args.e !== null) {
+        this.e = args.e;
+      }
+    }
+  }
+
+  read (input) {
+    input.readStructBegin();
+    while (true) {
+      const ret = input.readFieldBegin();
+      const ftype = ret.ftype;
+      const fid = ret.fid;
+      if (ftype == Thrift.Type.STOP) {
+        break;
+      }
+      switch (fid) {
+        case 0:
+        if (ftype == Thrift.Type.STRING) {
+          this.success = input.readString().value;
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        case 1:
+        if (ftype == Thrift.Type.STRUCT) {
+          this.e = new gen_exp();
+          this.e.read(input);
+        } else {
+          input.skip(ftype);
+        }
+        break;
+        default:
+          input.skip(ftype);
+      }
+      input.readFieldEnd();
+    }
+    input.readStructEnd();
+    return;
+  }
+
+  write (output) {
+    output.writeStructBegin('vichele_management_get_bound_stuff_result');
+    if (this.success !== null && this.success !== undefined) {
+      output.writeFieldBegin('success', Thrift.Type.STRING, 0);
+      output.writeString(this.success);
+      output.writeFieldEnd();
+    }
+    if (this.e !== null && this.e !== undefined) {
+      output.writeFieldBegin('e', Thrift.Type.STRUCT, 1);
+      this.e.write(output);
+      output.writeFieldEnd();
+    }
+    output.writeFieldStop();
+    output.writeStructEnd();
+    return;
+  }
+
+};
 vichele_managementClient = class vichele_managementClient {
   constructor(input, output) {
     this.input = input;
@@ -7338,5 +7473,65 @@ vichele_managementClient = class vichele_managementClient {
       return result.success;
     }
     throw 'change_price failed: unknown result';
+  }
+
+  get_bound_stuff (company_name, destination_company) {
+    const self = this;
+    return new Promise((resolve, reject) => {
+      self.send_get_bound_stuff(company_name, destination_company, (error, result) => {
+        return error ? reject(error) : resolve(result);
+      });
+    });
+  }
+
+  send_get_bound_stuff (company_name, destination_company, callback) {
+    const params = {
+      company_name: company_name,
+      destination_company: destination_company
+    };
+    const args = new vichele_management_get_bound_stuff_args(params);
+    try {
+      this.output.writeMessageBegin('get_bound_stuff', Thrift.MessageType.CALL, this.seqid);
+      args.write(this.output);
+      this.output.writeMessageEnd();
+      const self = this;
+      this.output.getTransport().flush(true, () => {
+        let error = null, result = null;
+        try {
+          result = self.recv_get_bound_stuff();
+        } catch (e) {
+          error = e;
+        }
+        callback(error, result);
+      });
+    }
+    catch (e) {
+      if (typeof this.output.getTransport().reset === 'function') {
+        this.output.getTransport().reset();
+      }
+      throw e;
+    }
+  }
+
+  recv_get_bound_stuff () {
+    const ret = this.input.readMessageBegin();
+    const mtype = ret.mtype;
+    if (mtype == Thrift.MessageType.EXCEPTION) {
+      const x = new Thrift.TApplicationException();
+      x.read(this.input);
+      this.input.readMessageEnd();
+      throw x;
+    }
+    const result = new vichele_management_get_bound_stuff_result();
+    result.read(this.input);
+    this.input.readMessageEnd();
+
+    if (null !== result.e) {
+      throw result.e;
+    }
+    if (null !== result.success) {
+      return result.success;
+    }
+    throw 'get_bound_stuff failed: unknown result';
   }
 };

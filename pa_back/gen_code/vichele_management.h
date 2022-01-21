@@ -57,6 +57,7 @@ class vichele_managementIf {
   virtual void get_company_brief(single_vichele_brief& _return, const std::string& ssid) = 0;
   virtual void get_statistics(vichele_stay_alone_statistics& _return, const std::string& ssid) = 0;
   virtual bool change_price(const std::string& ssid, const std::vector<vichele_stay_alone> & info, const bool all_select, const std::string& enter_date, const std::string& stuff_name, const std::string& supplier_name, const double new_price) = 0;
+  virtual void get_bound_stuff(std::string& _return, const std::string& company_name, const std::string& destination_company) = 0;
 };
 
 class vichele_managementIfFactory {
@@ -211,6 +212,9 @@ class vichele_managementNull : virtual public vichele_managementIf {
   bool change_price(const std::string& /* ssid */, const std::vector<vichele_stay_alone> & /* info */, const bool /* all_select */, const std::string& /* enter_date */, const std::string& /* stuff_name */, const std::string& /* supplier_name */, const double /* new_price */) {
     bool _return = false;
     return _return;
+  }
+  void get_bound_stuff(std::string& /* _return */, const std::string& /* company_name */, const std::string& /* destination_company */) {
+    return;
   }
 };
 
@@ -4483,6 +4487,125 @@ class vichele_management_change_price_presult {
 
 };
 
+typedef struct _vichele_management_get_bound_stuff_args__isset {
+  _vichele_management_get_bound_stuff_args__isset() : company_name(false), destination_company(false) {}
+  bool company_name :1;
+  bool destination_company :1;
+} _vichele_management_get_bound_stuff_args__isset;
+
+class vichele_management_get_bound_stuff_args {
+ public:
+
+  vichele_management_get_bound_stuff_args(const vichele_management_get_bound_stuff_args&);
+  vichele_management_get_bound_stuff_args& operator=(const vichele_management_get_bound_stuff_args&);
+  vichele_management_get_bound_stuff_args() : company_name(), destination_company() {
+  }
+
+  virtual ~vichele_management_get_bound_stuff_args() noexcept;
+  std::string company_name;
+  std::string destination_company;
+
+  _vichele_management_get_bound_stuff_args__isset __isset;
+
+  void __set_company_name(const std::string& val);
+
+  void __set_destination_company(const std::string& val);
+
+  bool operator == (const vichele_management_get_bound_stuff_args & rhs) const
+  {
+    if (!(company_name == rhs.company_name))
+      return false;
+    if (!(destination_company == rhs.destination_company))
+      return false;
+    return true;
+  }
+  bool operator != (const vichele_management_get_bound_stuff_args &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const vichele_management_get_bound_stuff_args & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+
+class vichele_management_get_bound_stuff_pargs {
+ public:
+
+
+  virtual ~vichele_management_get_bound_stuff_pargs() noexcept;
+  const std::string* company_name;
+  const std::string* destination_company;
+
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _vichele_management_get_bound_stuff_result__isset {
+  _vichele_management_get_bound_stuff_result__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _vichele_management_get_bound_stuff_result__isset;
+
+class vichele_management_get_bound_stuff_result {
+ public:
+
+  vichele_management_get_bound_stuff_result(const vichele_management_get_bound_stuff_result&);
+  vichele_management_get_bound_stuff_result& operator=(const vichele_management_get_bound_stuff_result&);
+  vichele_management_get_bound_stuff_result() : success() {
+  }
+
+  virtual ~vichele_management_get_bound_stuff_result() noexcept;
+  std::string success;
+  gen_exp e;
+
+  _vichele_management_get_bound_stuff_result__isset __isset;
+
+  void __set_success(const std::string& val);
+
+  void __set_e(const gen_exp& val);
+
+  bool operator == (const vichele_management_get_bound_stuff_result & rhs) const
+  {
+    if (!(success == rhs.success))
+      return false;
+    if (!(e == rhs.e))
+      return false;
+    return true;
+  }
+  bool operator != (const vichele_management_get_bound_stuff_result &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const vichele_management_get_bound_stuff_result & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _vichele_management_get_bound_stuff_presult__isset {
+  _vichele_management_get_bound_stuff_presult__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _vichele_management_get_bound_stuff_presult__isset;
+
+class vichele_management_get_bound_stuff_presult {
+ public:
+
+
+  virtual ~vichele_management_get_bound_stuff_presult() noexcept;
+  std::string* success;
+  gen_exp e;
+
+  _vichele_management_get_bound_stuff_presult__isset __isset;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+
+};
+
 class vichele_managementClient : virtual public vichele_managementIf {
  public:
   vichele_managementClient(std::shared_ptr< ::apache::thrift::protocol::TProtocol> prot) {
@@ -4613,6 +4736,9 @@ class vichele_managementClient : virtual public vichele_managementIf {
   bool change_price(const std::string& ssid, const std::vector<vichele_stay_alone> & info, const bool all_select, const std::string& enter_date, const std::string& stuff_name, const std::string& supplier_name, const double new_price);
   void send_change_price(const std::string& ssid, const std::vector<vichele_stay_alone> & info, const bool all_select, const std::string& enter_date, const std::string& stuff_name, const std::string& supplier_name, const double new_price);
   bool recv_change_price();
+  void get_bound_stuff(std::string& _return, const std::string& company_name, const std::string& destination_company);
+  void send_get_bound_stuff(const std::string& company_name, const std::string& destination_company);
+  void recv_get_bound_stuff(std::string& _return);
  protected:
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> piprot_;
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> poprot_;
@@ -4663,6 +4789,7 @@ class vichele_managementProcessor : public ::apache::thrift::TDispatchProcessor 
   void process_get_company_brief(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
   void process_get_statistics(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
   void process_change_price(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
+  void process_get_bound_stuff(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
  public:
   vichele_managementProcessor(::std::shared_ptr<vichele_managementIf> iface) :
     iface_(iface) {
@@ -4701,6 +4828,7 @@ class vichele_managementProcessor : public ::apache::thrift::TDispatchProcessor 
     processMap_["get_company_brief"] = &vichele_managementProcessor::process_get_company_brief;
     processMap_["get_statistics"] = &vichele_managementProcessor::process_get_statistics;
     processMap_["change_price"] = &vichele_managementProcessor::process_change_price;
+    processMap_["get_bound_stuff"] = &vichele_managementProcessor::process_get_bound_stuff;
   }
 
   virtual ~vichele_managementProcessor() {}
@@ -5057,6 +5185,16 @@ class vichele_managementMultiface : virtual public vichele_managementIf {
     return ifaces_[i]->change_price(ssid, info, all_select, enter_date, stuff_name, supplier_name, new_price);
   }
 
+  void get_bound_stuff(std::string& _return, const std::string& company_name, const std::string& destination_company) {
+    size_t sz = ifaces_.size();
+    size_t i = 0;
+    for (; i < (sz - 1); ++i) {
+      ifaces_[i]->get_bound_stuff(_return, company_name, destination_company);
+    }
+    ifaces_[i]->get_bound_stuff(_return, company_name, destination_company);
+    return;
+  }
+
 };
 
 // The 'concurrent' client is a thread safe client that correctly handles
@@ -5194,6 +5332,9 @@ class vichele_managementConcurrentClient : virtual public vichele_managementIf {
   bool change_price(const std::string& ssid, const std::vector<vichele_stay_alone> & info, const bool all_select, const std::string& enter_date, const std::string& stuff_name, const std::string& supplier_name, const double new_price);
   int32_t send_change_price(const std::string& ssid, const std::vector<vichele_stay_alone> & info, const bool all_select, const std::string& enter_date, const std::string& stuff_name, const std::string& supplier_name, const double new_price);
   bool recv_change_price(const int32_t seqid);
+  void get_bound_stuff(std::string& _return, const std::string& company_name, const std::string& destination_company);
+  int32_t send_get_bound_stuff(const std::string& company_name, const std::string& destination_company);
+  void recv_get_bound_stuff(std::string& _return, const int32_t seqid);
  protected:
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> piprot_;
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> poprot_;
