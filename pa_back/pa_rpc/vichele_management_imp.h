@@ -823,13 +823,23 @@ public:
             PA_RETURN_NOPRIVA_MSG();
         }
 
+        std::string bound_stuff;
+        auto dest_company = vichele_info->get_parent<pa_sql_company>("destination");
+        if (dest_company)
+        {
+            this->get_bound_stuff(bound_stuff, company_name, dest_company->name);
+        }
+
         vichele_info->company_name = company_name;
+        if (bound_stuff.length() > 0)
+        {
+            vichele_info->stuff_name = bound_stuff;
+        }
         vichele_info->update_record();
         std::list<pa_sql_vichele_stay_alone> tmp;
         tmp.push_back(*vichele_info);
         PA_DATAOPT_post_save_register(tmp);
         PA_DATAOPT_post_save_register(tmp, true);
-        auto dest_company = vichele_info->get_parent<pa_sql_company>("destination");
         if (dest_company)
         {
             auto company_staff = dest_company->get_all_children<pa_sql_userinfo>("belong_company", "(groupid == 0 OR groupid == 2)");
