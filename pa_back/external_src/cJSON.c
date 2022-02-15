@@ -413,7 +413,7 @@ static const char *skip(const char *in)
 cJSON *cJSON_Parse(const char *value)
 {
     cJSON *c = cJSON_New_Item();
-    ep = 0;
+    ep = "";
     if (!c)
         return 0; /* memory fail */
 
