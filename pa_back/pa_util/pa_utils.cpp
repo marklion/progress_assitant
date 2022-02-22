@@ -770,14 +770,21 @@ std::string PA_DATAOPT_post_sync_change_register(pa_sql_single_vichele &_vichele
             }
         }
 
-        auto j_ret = call_third_though_rest(ctrl_url, key, token, fin_req.ToString());
-        if (j_ret("code") == "-1")
+        if (is_auto)
         {
-            ret = j_ret("message");
+            post_json_to_third(ctrl_url, fin_req.ToString(), key, token);
         }
-        else if (j_ret("code") == "")
+        else
         {
-            ret = "场内系统无响应";
+            auto j_ret = call_third_though_rest(ctrl_url, key, token, fin_req.ToString());
+            if (j_ret("code") == "-1")
+            {
+                ret = j_ret("message");
+            }
+            else if (j_ret("code") == "")
+            {
+                ret = "场内系统无响应";
+            }
         }
     }
 
