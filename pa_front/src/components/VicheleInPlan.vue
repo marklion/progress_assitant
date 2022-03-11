@@ -1,7 +1,7 @@
 <template>
 <div class="vichele_in_plan_show">
     <van-field readonly clickable :value="my_vichele_info.main_vichele" label="主车" placeholder="点击选择车牌" @click="show_main_vichele_picker = true" :rules="[{ required: true, message: '请指定主车' }]" />
-    <van-popup v-model="show_main_vichele_picker" position="bottom">
+    <van-popup v-model="show_main_vichele_picker" position="bottom" @click="main_vichele_search_input = ''">
         <van-field v-model="main_vichele_search_input" clearable placeholder="输入车牌号过滤或新增(支持模糊查找)">
             <template #button>
                 <van-button size="small" type="primary" native-type="button" @click="submit_new_vichele(main_vichele_search_input, true)">新增</van-button>
@@ -12,7 +12,7 @@
     </van-popup>
 
     <van-field readonly clickable :value="my_vichele_info.behind_vichele" label="挂车" placeholder="点击选择车牌" @click="show_behind_vichele_picker = true" :rules="[{ required: true, message: '请指定挂车' }]" />
-    <van-popup v-model="show_behind_vichele_picker" position="bottom">
+    <van-popup v-model="show_behind_vichele_picker" position="bottom" @click="behind_vichele_search_input = ''">
         <van-field v-model="behind_vichele_search_input" clearable placeholder="输入车牌号过滤或新增(支持模糊查找)">
             <template #button>
                 <van-button size="small" type="primary" native-type="button" @click="submit_new_vichele(behind_vichele_search_input, false)">新增</van-button>
@@ -24,7 +24,7 @@
 
     <van-field readonly clickable :value="my_vichele_info.driver_name" label="司机姓名" placeholder="点击选择司机" @click="show_driver_picker = true" :rules="[{ required: true, message: '请指定司机' }]" />
     <van-field readonly :value="my_vichele_info.driver_phone" label="司机电话" :rules="[{ required: true, message: '请指定司机'}]" />
-    <van-popup v-model="show_driver_picker" position="bottom">
+    <van-popup v-model="show_driver_picker" position="bottom" @click="driver_search_input = ''">
         <van-field v-model="driver_search_input" clearable placeholder="过滤电话/司机姓名/拼音首字母">
         </van-field>
         <van-picker show-toolbar :columns="driver_pool_filtered" @confirm="confirm_driver" @cancel="show_driver_picker = false">
