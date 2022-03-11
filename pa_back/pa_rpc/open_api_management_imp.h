@@ -856,8 +856,8 @@ public:
             if (asv)
             {
                 auto aplan = asv->get_parent<pa_sql_archive_plan>("belong_plan");
-                _return.behind_vichele_number = asv->main_vichele;
-                _return.main_vichele_number = asv->behind_vichele;
+                _return.behind_vichele_number = asv->behind_vichele;
+                _return.main_vichele_number = asv->main_vichele;
                 _return.customer_name = aplan->buy_company;
                 _return.j_weight = pa_double2string_reserve2(asv->m_weight - asv->p_weight);
                 _return.m_weight = pa_double2string_reserve2(asv->m_weight);
