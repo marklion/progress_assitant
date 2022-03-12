@@ -38,6 +38,7 @@ class open_api_managementIf {
   virtual bool proc_push_zone_change(const push_zone_change_req& _req, const std::string& token) = 0;
   virtual bool proc_push_manual_permit(const push_manual_permit_req& _req, const std::string& token) = 0;
   virtual void get_vehicle_info_by_id(ticket_detail& _return, const std::string& id) = 0;
+  virtual bool modify_vehicle_info_from_ticket(const std::string& ssid, const ticket_detail& ticket) = 0;
 };
 
 class open_api_managementIfFactory {
@@ -126,6 +127,10 @@ class open_api_managementNull : virtual public open_api_managementIf {
   }
   void get_vehicle_info_by_id(ticket_detail& /* _return */, const std::string& /* id */) {
     return;
+  }
+  bool modify_vehicle_info_from_ticket(const std::string& /* ssid */, const ticket_detail& /* ticket */) {
+    bool _return = false;
+    return _return;
   }
 };
 
@@ -2061,6 +2066,125 @@ class open_api_management_get_vehicle_info_by_id_presult {
 
 };
 
+typedef struct _open_api_management_modify_vehicle_info_from_ticket_args__isset {
+  _open_api_management_modify_vehicle_info_from_ticket_args__isset() : ssid(false), ticket(false) {}
+  bool ssid :1;
+  bool ticket :1;
+} _open_api_management_modify_vehicle_info_from_ticket_args__isset;
+
+class open_api_management_modify_vehicle_info_from_ticket_args {
+ public:
+
+  open_api_management_modify_vehicle_info_from_ticket_args(const open_api_management_modify_vehicle_info_from_ticket_args&);
+  open_api_management_modify_vehicle_info_from_ticket_args& operator=(const open_api_management_modify_vehicle_info_from_ticket_args&);
+  open_api_management_modify_vehicle_info_from_ticket_args() : ssid() {
+  }
+
+  virtual ~open_api_management_modify_vehicle_info_from_ticket_args() noexcept;
+  std::string ssid;
+  ticket_detail ticket;
+
+  _open_api_management_modify_vehicle_info_from_ticket_args__isset __isset;
+
+  void __set_ssid(const std::string& val);
+
+  void __set_ticket(const ticket_detail& val);
+
+  bool operator == (const open_api_management_modify_vehicle_info_from_ticket_args & rhs) const
+  {
+    if (!(ssid == rhs.ssid))
+      return false;
+    if (!(ticket == rhs.ticket))
+      return false;
+    return true;
+  }
+  bool operator != (const open_api_management_modify_vehicle_info_from_ticket_args &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const open_api_management_modify_vehicle_info_from_ticket_args & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+
+class open_api_management_modify_vehicle_info_from_ticket_pargs {
+ public:
+
+
+  virtual ~open_api_management_modify_vehicle_info_from_ticket_pargs() noexcept;
+  const std::string* ssid;
+  const ticket_detail* ticket;
+
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _open_api_management_modify_vehicle_info_from_ticket_result__isset {
+  _open_api_management_modify_vehicle_info_from_ticket_result__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _open_api_management_modify_vehicle_info_from_ticket_result__isset;
+
+class open_api_management_modify_vehicle_info_from_ticket_result {
+ public:
+
+  open_api_management_modify_vehicle_info_from_ticket_result(const open_api_management_modify_vehicle_info_from_ticket_result&);
+  open_api_management_modify_vehicle_info_from_ticket_result& operator=(const open_api_management_modify_vehicle_info_from_ticket_result&);
+  open_api_management_modify_vehicle_info_from_ticket_result() : success(0) {
+  }
+
+  virtual ~open_api_management_modify_vehicle_info_from_ticket_result() noexcept;
+  bool success;
+  gen_exp e;
+
+  _open_api_management_modify_vehicle_info_from_ticket_result__isset __isset;
+
+  void __set_success(const bool val);
+
+  void __set_e(const gen_exp& val);
+
+  bool operator == (const open_api_management_modify_vehicle_info_from_ticket_result & rhs) const
+  {
+    if (!(success == rhs.success))
+      return false;
+    if (!(e == rhs.e))
+      return false;
+    return true;
+  }
+  bool operator != (const open_api_management_modify_vehicle_info_from_ticket_result &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const open_api_management_modify_vehicle_info_from_ticket_result & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _open_api_management_modify_vehicle_info_from_ticket_presult__isset {
+  _open_api_management_modify_vehicle_info_from_ticket_presult__isset() : success(false), e(false) {}
+  bool success :1;
+  bool e :1;
+} _open_api_management_modify_vehicle_info_from_ticket_presult__isset;
+
+class open_api_management_modify_vehicle_info_from_ticket_presult {
+ public:
+
+
+  virtual ~open_api_management_modify_vehicle_info_from_ticket_presult() noexcept;
+  bool* success;
+  gen_exp e;
+
+  _open_api_management_modify_vehicle_info_from_ticket_presult__isset __isset;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+
+};
+
 class open_api_managementClient : virtual public open_api_managementIf {
  public:
   open_api_managementClient(std::shared_ptr< ::apache::thrift::protocol::TProtocol> prot) {
@@ -2134,6 +2258,9 @@ class open_api_managementClient : virtual public open_api_managementIf {
   void get_vehicle_info_by_id(ticket_detail& _return, const std::string& id);
   void send_get_vehicle_info_by_id(const std::string& id);
   void recv_get_vehicle_info_by_id(ticket_detail& _return);
+  bool modify_vehicle_info_from_ticket(const std::string& ssid, const ticket_detail& ticket);
+  void send_modify_vehicle_info_from_ticket(const std::string& ssid, const ticket_detail& ticket);
+  bool recv_modify_vehicle_info_from_ticket();
  protected:
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> piprot_;
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> poprot_;
@@ -2165,6 +2292,7 @@ class open_api_managementProcessor : public ::apache::thrift::TDispatchProcessor
   void process_proc_push_zone_change(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
   void process_proc_push_manual_permit(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
   void process_get_vehicle_info_by_id(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
+  void process_modify_vehicle_info_from_ticket(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
  public:
   open_api_managementProcessor(::std::shared_ptr<open_api_managementIf> iface) :
     iface_(iface) {
@@ -2184,6 +2312,7 @@ class open_api_managementProcessor : public ::apache::thrift::TDispatchProcessor
     processMap_["proc_push_zone_change"] = &open_api_managementProcessor::process_proc_push_zone_change;
     processMap_["proc_push_manual_permit"] = &open_api_managementProcessor::process_proc_push_manual_permit;
     processMap_["get_vehicle_info_by_id"] = &open_api_managementProcessor::process_get_vehicle_info_by_id;
+    processMap_["modify_vehicle_info_from_ticket"] = &open_api_managementProcessor::process_modify_vehicle_info_from_ticket;
   }
 
   virtual ~open_api_managementProcessor() {}
@@ -2360,6 +2489,15 @@ class open_api_managementMultiface : virtual public open_api_managementIf {
     return;
   }
 
+  bool modify_vehicle_info_from_ticket(const std::string& ssid, const ticket_detail& ticket) {
+    size_t sz = ifaces_.size();
+    size_t i = 0;
+    for (; i < (sz - 1); ++i) {
+      ifaces_[i]->modify_vehicle_info_from_ticket(ssid, ticket);
+    }
+    return ifaces_[i]->modify_vehicle_info_from_ticket(ssid, ticket);
+  }
+
 };
 
 // The 'concurrent' client is a thread safe client that correctly handles
@@ -2440,6 +2578,9 @@ class open_api_managementConcurrentClient : virtual public open_api_managementIf
   void get_vehicle_info_by_id(ticket_detail& _return, const std::string& id);
   int32_t send_get_vehicle_info_by_id(const std::string& id);
   void recv_get_vehicle_info_by_id(ticket_detail& _return, const int32_t seqid);
+  bool modify_vehicle_info_from_ticket(const std::string& ssid, const ticket_detail& ticket);
+  int32_t send_modify_vehicle_info_from_ticket(const std::string& ssid, const ticket_detail& ticket);
+  bool recv_modify_vehicle_info_from_ticket(const int32_t seqid);
  protected:
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> piprot_;
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> poprot_;

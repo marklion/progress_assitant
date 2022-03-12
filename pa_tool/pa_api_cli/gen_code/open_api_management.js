@@ -2205,6 +2205,138 @@ open_api_management_get_vehicle_info_by_id_result.prototype.write = function(out
   return;
 };
 
+var open_api_management_modify_vehicle_info_from_ticket_args = function(args) {
+  this.ssid = null;
+  this.ticket = null;
+  if (args) {
+    if (args.ssid !== undefined && args.ssid !== null) {
+      this.ssid = args.ssid;
+    }
+    if (args.ticket !== undefined && args.ticket !== null) {
+      this.ticket = new ttypes.ticket_detail(args.ticket);
+    }
+  }
+};
+open_api_management_modify_vehicle_info_from_ticket_args.prototype = {};
+open_api_management_modify_vehicle_info_from_ticket_args.prototype.read = function(input) {
+  input.readStructBegin();
+  while (true) {
+    var ret = input.readFieldBegin();
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    switch (fid) {
+      case 1:
+      if (ftype == Thrift.Type.STRING) {
+        this.ssid = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 2:
+      if (ftype == Thrift.Type.STRUCT) {
+        this.ticket = new ttypes.ticket_detail();
+        this.ticket.read(input);
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      default:
+        input.skip(ftype);
+    }
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+open_api_management_modify_vehicle_info_from_ticket_args.prototype.write = function(output) {
+  output.writeStructBegin('open_api_management_modify_vehicle_info_from_ticket_args');
+  if (this.ssid !== null && this.ssid !== undefined) {
+    output.writeFieldBegin('ssid', Thrift.Type.STRING, 1);
+    output.writeString(this.ssid);
+    output.writeFieldEnd();
+  }
+  if (this.ticket !== null && this.ticket !== undefined) {
+    output.writeFieldBegin('ticket', Thrift.Type.STRUCT, 2);
+    this.ticket.write(output);
+    output.writeFieldEnd();
+  }
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+
+var open_api_management_modify_vehicle_info_from_ticket_result = function(args) {
+  this.success = null;
+  this.e = null;
+  if (args instanceof ttypes.gen_exp) {
+    this.e = args;
+    return;
+  }
+  if (args) {
+    if (args.success !== undefined && args.success !== null) {
+      this.success = args.success;
+    }
+    if (args.e !== undefined && args.e !== null) {
+      this.e = args.e;
+    }
+  }
+};
+open_api_management_modify_vehicle_info_from_ticket_result.prototype = {};
+open_api_management_modify_vehicle_info_from_ticket_result.prototype.read = function(input) {
+  input.readStructBegin();
+  while (true) {
+    var ret = input.readFieldBegin();
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    switch (fid) {
+      case 0:
+      if (ftype == Thrift.Type.BOOL) {
+        this.success = input.readBool();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 1:
+      if (ftype == Thrift.Type.STRUCT) {
+        this.e = new ttypes.gen_exp();
+        this.e.read(input);
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      default:
+        input.skip(ftype);
+    }
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+open_api_management_modify_vehicle_info_from_ticket_result.prototype.write = function(output) {
+  output.writeStructBegin('open_api_management_modify_vehicle_info_from_ticket_result');
+  if (this.success !== null && this.success !== undefined) {
+    output.writeFieldBegin('success', Thrift.Type.BOOL, 0);
+    output.writeBool(this.success);
+    output.writeFieldEnd();
+  }
+  if (this.e !== null && this.e !== undefined) {
+    output.writeFieldBegin('e', Thrift.Type.STRUCT, 1);
+    this.e.write(output);
+    output.writeFieldEnd();
+  }
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+
 var open_api_managementClient = exports.Client = function(output, pClass) {
   this.output = output;
   this.pClass = pClass;
@@ -3226,6 +3358,69 @@ open_api_managementClient.prototype.recv_get_vehicle_info_by_id = function(input
   }
   return callback('get_vehicle_info_by_id failed: unknown result');
 };
+
+open_api_managementClient.prototype.modify_vehicle_info_from_ticket = function(ssid, ticket, callback) {
+  this._seqid = this.new_seqid();
+  if (callback === undefined) {
+    var _defer = Q.defer();
+    this._reqs[this.seqid()] = function(error, result) {
+      if (error) {
+        _defer.reject(error);
+      } else {
+        _defer.resolve(result);
+      }
+    };
+    this.send_modify_vehicle_info_from_ticket(ssid, ticket);
+    return _defer.promise;
+  } else {
+    this._reqs[this.seqid()] = callback;
+    this.send_modify_vehicle_info_from_ticket(ssid, ticket);
+  }
+};
+
+open_api_managementClient.prototype.send_modify_vehicle_info_from_ticket = function(ssid, ticket) {
+  var output = new this.pClass(this.output);
+  var params = {
+    ssid: ssid,
+    ticket: ticket
+  };
+  var args = new open_api_management_modify_vehicle_info_from_ticket_args(params);
+  try {
+    output.writeMessageBegin('modify_vehicle_info_from_ticket', Thrift.MessageType.CALL, this.seqid());
+    args.write(output);
+    output.writeMessageEnd();
+    return this.output.flush();
+  }
+  catch (e) {
+    delete this._reqs[this.seqid()];
+    if (typeof output.reset === 'function') {
+      output.reset();
+    }
+    throw e;
+  }
+};
+
+open_api_managementClient.prototype.recv_modify_vehicle_info_from_ticket = function(input,mtype,rseqid) {
+  var callback = this._reqs[rseqid] || function() {};
+  delete this._reqs[rseqid];
+  if (mtype == Thrift.MessageType.EXCEPTION) {
+    var x = new Thrift.TApplicationException();
+    x.read(input);
+    input.readMessageEnd();
+    return callback(x);
+  }
+  var result = new open_api_management_modify_vehicle_info_from_ticket_result();
+  result.read(input);
+  input.readMessageEnd();
+
+  if (null !== result.e) {
+    return callback(result.e);
+  }
+  if (null !== result.success) {
+    return callback(null, result.success);
+  }
+  return callback('modify_vehicle_info_from_ticket failed: unknown result');
+};
 var open_api_managementProcessor = exports.Processor = function(handler) {
   this._handler = handler;
 };
@@ -3928,6 +4123,49 @@ open_api_managementProcessor.prototype.process_get_vehicle_info_by_id = function
       } else {
         result_obj = new Thrift.TApplicationException(Thrift.TApplicationExceptionType.UNKNOWN, err.message);
         output.writeMessageBegin("get_vehicle_info_by_id", Thrift.MessageType.EXCEPTION, seqid);
+      }
+      result_obj.write(output);
+      output.writeMessageEnd();
+      output.flush();
+    });
+  }
+};
+open_api_managementProcessor.prototype.process_modify_vehicle_info_from_ticket = function(seqid, input, output) {
+  var args = new open_api_management_modify_vehicle_info_from_ticket_args();
+  args.read(input);
+  input.readMessageEnd();
+  if (this._handler.modify_vehicle_info_from_ticket.length === 2) {
+    Q.fcall(this._handler.modify_vehicle_info_from_ticket.bind(this._handler),
+      args.ssid,
+      args.ticket
+    ).then(function(result) {
+      var result_obj = new open_api_management_modify_vehicle_info_from_ticket_result({success: result});
+      output.writeMessageBegin("modify_vehicle_info_from_ticket", Thrift.MessageType.REPLY, seqid);
+      result_obj.write(output);
+      output.writeMessageEnd();
+      output.flush();
+    }).catch(function (err) {
+      var result;
+      if (err instanceof ttypes.gen_exp) {
+        result = new open_api_management_modify_vehicle_info_from_ticket_result(err);
+        output.writeMessageBegin("modify_vehicle_info_from_ticket", Thrift.MessageType.REPLY, seqid);
+      } else {
+        result = new Thrift.TApplicationException(Thrift.TApplicationExceptionType.UNKNOWN, err.message);
+        output.writeMessageBegin("modify_vehicle_info_from_ticket", Thrift.MessageType.EXCEPTION, seqid);
+      }
+      result.write(output);
+      output.writeMessageEnd();
+      output.flush();
+    });
+  } else {
+    this._handler.modify_vehicle_info_from_ticket(args.ssid, args.ticket, function (err, result) {
+      var result_obj;
+      if ((err === null || typeof err === 'undefined') || err instanceof ttypes.gen_exp) {
+        result_obj = new open_api_management_modify_vehicle_info_from_ticket_result((err !== null || typeof err === 'undefined') ? err : {success: result});
+        output.writeMessageBegin("modify_vehicle_info_from_ticket", Thrift.MessageType.REPLY, seqid);
+      } else {
+        result_obj = new Thrift.TApplicationException(Thrift.TApplicationExceptionType.UNKNOWN, err.message);
+        output.writeMessageBegin("modify_vehicle_info_from_ticket", Thrift.MessageType.EXCEPTION, seqid);
       }
       result_obj.write(output);
       output.writeMessageEnd();

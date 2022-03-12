@@ -490,6 +490,7 @@ service open_api_management {
     bool proc_push_zone_change(1:push_zone_change_req _req, 2:string token) throws (1:gen_exp e),
     bool proc_push_manual_permit(1:push_manual_permit_req _req, 2:string token) throws (1:gen_exp e),
     ticket_detail get_vehicle_info_by_id(1:string id) throws (1:gen_exp e),
+    bool modify_vehicle_info_from_ticket(1:string ssid, 2:ticket_detail ticket) throws (1:gen_exp e),
 }
 
 struct vichele_stay_alone {
