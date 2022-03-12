@@ -202,6 +202,7 @@ const routes = [
       private_title: '磅单',
       has_go_back: true,
       extra_page: true,
+      permit_change:true,
     },
   },
 ]

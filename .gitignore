@@ -1,4 +1,5 @@
 .DS_Store
+**/gen_code/
 node_modules/
 unpackage/
 dist/
@@ -6,6 +7,7 @@ build/
 install.sh
 logo_res/
 
+.travis.yml
 # local env files
 .env.local
 .env.*.local

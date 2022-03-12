@@ -110,7 +110,7 @@ export default {
             this.$router.back(-1);
         },
         get_userinfo() {
-            if (this.$route.meta.extra_page) {
+            if (this.$route.meta.extra_page && !this.$route.meta.permit_change) {
                 return;
             }
             var vue_this = this;

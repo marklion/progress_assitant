@@ -33,6 +33,21 @@
         <van-divider>长按磅单，保存到手机相册</van-divider>
         <van-image :src="whole_pic"></van-image>
     </div>
+    <div v-if="$store.state.is_login && !$store.state.userinfo.buyer && $store.state.userinfo.company == ticket_detail.title.split('\n')[0]">
+        <van-button round block type="warning" @click="modify_ticket_show = true">修改</van-button>
+    </div>
+    <van-dialog v-model="modify_ticket_show" title="修改磅单" :showConfirmButton="false" closeOnClickOverlay>
+        <van-form @submit="update_ticket">
+            <van-field v-model="submit_ticket.supplier_name" name="供应商" label="供应商" placeholder="请输入供应商名称" :rules="[{ required:true, message:'请输入供应商名称'}]" />
+            <van-field v-model="submit_ticket.transfor_company" name="承运商" label="承运商" placeholder="请输入承运商名称" :rules="[{ required:true, message:'请输入承运商名称'}]" />
+            <van-field v-model="submit_ticket.stuff_name" name="货种" label="货种" placeholder="请输入货种" :rules="[{ required:true, message:'请输入货种'}]" />
+            <van-field v-model="submit_ticket.p_weight" name="皮重" label="皮重" placeholder="请输入皮重" :rules="[{ required:true, message:'请输入皮重'}]" />
+            <van-field v-model="submit_ticket.m_weight" name="毛重" label="毛重" placeholder="请输入毛重" :rules="[{ required:true, message:'请输入毛重'}]" />
+            <div style="margin: 16px;">
+                <van-button round block type="info" native-type="submit">提交</van-button>
+            </div>
+        </van-form>
+    </van-dialog>
 </div>
 </template>
 
@@ -49,6 +64,20 @@ import html2canvas from 'html2canvas'
 import {
     Divider
 } from 'vant';
+import {
+    Dialog
+} from 'vant';
+import {
+    Form
+} from 'vant';
+import {
+    Field
+} from 'vant';
+
+Vue.use(Form);
+Vue.use(Field);
+// 全局注册
+Vue.use(Dialog);
 
 Vue.use(Divider);
 Vue.use(Button);
@@ -65,6 +94,8 @@ export default {
             qr_url: function () {
                 return window.location.href;
             },
+            modify_ticket_show: false,
+            submit_ticket: {},
             whole_pic: '',
             ticket_stamp: '',
             ticket_detail: {
@@ -72,7 +103,7 @@ export default {
                 ticket_no: '',
                 customer_name: '',
                 supplier_name: '',
-                transfor_company:'',
+                transfor_company: '',
                 main_vichele_number: '',
                 behind_vichele_number: '',
                 seal_no: '',
@@ -86,6 +117,15 @@ export default {
         };
     },
     methods: {
+        update_ticket: function () {
+            var vue_this = this;
+            vue_this.$call_remote_process("open_api_management", "modify_vehicle_info_from_ticket", [vue_this.$cookies.get('pa_ssid'), vue_this.submit_ticket]).then(function (resp) {
+                if (resp) {
+                    vue_this.$router.go(0);
+                    vue_this.modify_ticket_show = false;
+                }
+            });
+        },
         make_pic: function () {
             var vue_this = this;
             var ticket_pic = document.querySelector('#ticket_content');
@@ -104,6 +144,9 @@ export default {
                     vue_this.ticket_stamp = stamp_path;
                 }).finally(function () {
                     vue_this.make_pic();
+                    vue_this.submit_ticket = {
+                        ...vue_this.ticket_detail
+                    };
                 });
             });
         },

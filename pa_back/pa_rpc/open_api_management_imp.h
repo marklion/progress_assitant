@@ -921,6 +921,34 @@ public:
             }
         }
     }
+
+    virtual bool modify_vehicle_info_from_ticket(const std::string &ssid, const ticket_detail &ticket)
+    {
+        bool ret = false;
+
+        auto company = PA_DATAOPT_get_company_by_ssid(ssid);
+        if (!company || !company->is_sale)
+        {
+            PA_RETURN_NOPRIVA_MSG();
+        }
+
+        auto vsa = company->get_children<pa_sql_vichele_stay_alone>("destination", "ticket_no = '%s'", ticket.ticket_no.c_str());
+        if (!vsa)
+        {
+            PA_RETURN_NOPRIVA_MSG();
+        }
+
+        vsa->company_name = ticket.supplier_name;
+        vsa->stuff_name = ticket.stuff_name;
+        vsa->transfor_company = ticket.transfor_company;
+        vsa->p_weight = std::stod(ticket.p_weight);
+        vsa->m_weight = std::stod(ticket.m_weight);
+        vsa->j_weight = std::abs(vsa->p_weight - vsa->m_weight);
+
+        ret = vsa->update_record();
+
+        return ret;
+    }
 };
 
 #endif // _OPEN_API_MANAGEMENT_H_
