@@ -5,26 +5,25 @@
 
 ## 编码环境搭建
 ```
-# 进入源码目录
-$ ls
-LICENSE             build               depend_docker       gen_thrift.makefile pa_back             pa_front            pa_tool
-README.md           build.sh            deploy.sh           idl.thrift          pa_conf             pa_script
+# 拉取开发环境和运行环境
+$ docker pull marklion/pa_dev:v1.0
+$ docker pull marklion/pa_deploy:v1.0
 
-# 进入容器目录
-$ cd .devcontainer/
-$ ls
-Dockerfile           devcontainer.json    thrift-0.14.1.tar.gz
+# 重新tag镜像
+$ docker tag marklion/pa_dev:v1.0 pa_dev:v1.0
+$ docker tag marklion/pa_deploy:v1.0 pa_deploy:v1.0
 
-# 构建镜像
-$ docker build -t pa_deploy:v1.0 .
 
 # 挂载源码目录到容器中并启动shell
-$ docker run -ti -v /Users/liuyang/work/progress_assitant:/work pa_deploy:v1.0 bash
+$ docker run -ti -v /Users/liuyang/work/progress_assitant:/work pa_dev:v1.0 bash
 
 # 在源码目录执行build,
 # 参数:-b 只构建后端 -f 只构建前端
 root@838f41a52599:/# cd /work/
 root@838f41a52599:/work# ./build.sh -bf
+
+# 在容器外执行install.sh启动项目
+$ ./install.sh -p xxx
 ```
 
 或者直接用vscode打开源码目录，然后安装docker插件并执行在docker容器中打开源码目录，然后即可编码并使用shell构建
