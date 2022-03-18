@@ -5,7 +5,7 @@
             <van-icon name="share" size="20"></van-icon>
         </template>
     </van-nav-bar>
-    <!-- <van-pull-refresh v-model="isLoading" @refresh="onRefresh">
+    <van-pull-refresh v-model="isLoading" @refresh="onRefresh">
         <keep-alive>
             <router-view v-if='$route.meta.keepAlive' />
         </keep-alive>
@@ -22,7 +22,7 @@
         <van-row type="flex" justify="center" align="center">
             <img src="https://www.d8sis.cn/pa_web/logo_res/sub_qr.jpg" />
         </van-row>
-    </van-dialog> -->
+    </van-dialog>
 </div>
 </template>
 
