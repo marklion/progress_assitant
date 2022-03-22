@@ -2070,6 +2070,22 @@ public:
         }
         driver_silent_unregister(silent_id);
     }
+
+    virtual void add_driver_license(driver_license_info &_return, const std::string &silent_id, const std::string &license_attachment_base64, const std::string &expire_date)
+    {
+    }
+    virtual bool del_driver_license(const std::string &silent_id, const int64_t license_data_id)
+    {
+    }
+    virtual bool update_driver_license(const std::string &silent_id, const std::string &ssid, const driver_license_info &license_data)
+    {
+    }
+    virtual void get_all_license_info_by_driver_phone(std::vector<driver_license_info> &_return, const std::string &ssid, const std::string &phone)
+    {
+    }
+    virtual void get_self_all_license_info(std::vector<driver_license_info> &_return, const std::string &silent_id)
+    {
+    }
 };
 
 #endif // _STUFF_PLAN_MANAGEMENT_H_

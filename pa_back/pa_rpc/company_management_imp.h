@@ -1117,5 +1117,9 @@ public:
             _return = company->stamp_pic;
         }
     }
+
+    virtual void get_customize(company_customize &_return, const std::string &company_name)
+    {
+    }
 };
 #endif // _COMPANY_MANAGEMENT_IMP_H_

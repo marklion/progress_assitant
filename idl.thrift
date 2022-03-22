@@ -121,6 +121,10 @@ struct third_dev_info {
     4:string token,
 }
 
+struct company_customize {
+    1:bool need_driver_license,
+}
+
 service company_management {
     list<i64> get_all_type(1:string ssid) throws (1:gen_exp e),
     i64 add_type(1:string name, 2:i64 price, 3:string last,  4:string ssid) throws (1:gen_exp e),
@@ -165,6 +169,7 @@ service company_management {
     bool add_stamp_pic(1:string ssid, 2:string pic_base64) throws (1:gen_exp e),
     bool del_stamp_pic(1:string ssid) throws (1:gen_exp e),
     string get_stamp_pic(1:string company_name) throws (1:gen_exp e),
+    company_customize get_customize(1:string company_name) throws (1:gen_exp e),
 }
 
 service stuff_info {
@@ -314,6 +319,12 @@ struct driver_detail_info {
     2:string id,
 }
 
+struct driver_license_info {
+    1:i64 id,
+    2:string expire_date,
+    3:string attachment_path,
+}
+
 service stuff_plan_management {
     i64 create_plan(1:stuff_plan plan, 2:string ssid, 3:string proxy_company) throws (1:gen_exp e),
     list<plan_status> get_created_plan(1:string ssid, 2:i64 anchor, 3:i64 status, 4:string stuff_name, 5:string company_name, 6:string plan_date) throws (1:gen_exp e),
@@ -355,6 +366,11 @@ service stuff_plan_management {
     bool multi_confirm_plan(1:string ssid, 2:list<i64> plan_ids) throws (1:gen_exp e),
     bool change_driver(1:string ssid, 2:i64 vichele_id, 3:string driver_name, 4:string driver_phone) throws (1:gen_exp e),
     bool change_plan_price(1:string ssid, 2:list<i64> plan_id, 3:double new_price) throws (1:gen_exp e),
+    driver_license_info add_driver_license(1:string silent_id, 2:string license_attachment_base64, 3:string expire_date) throws (1:gen_exp e),
+    bool del_driver_license(1:string silent_id, 2:i64 license_data_id) throws (1:gen_exp e),
+    bool update_driver_license(1:string silent_id, 2:string ssid, 3:driver_license_info license_data) throws (1:gen_exp e),
+    list<driver_license_info> get_all_license_info_by_driver_phone(1:string ssid, 2:string phone) throws (1:gen_exp e),
+    list<driver_license_info> get_self_all_license_info(1:string silent_id) throws (1:gen_exp e),
 }
 
 struct api_extra_transformation {
