@@ -4,7 +4,7 @@ COMPS=("tcp_framework" "sqlite_orm" "external_src" "pa_util" "pa_rpc" "pa_automa
 SRC_DIR=`dirname $(realpath $0)`
 BACK_SRC_DIR="${SRC_DIR}/pa_back"
 
-BUILD_DIR="build"
+BUILD_DIR="${SRC_DIR}/build"
 
 BUILD_MODE='test-build'
 BUILD_BACK_END='n'
