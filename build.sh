@@ -66,7 +66,7 @@ chmod +x ${BUILD_DIR}/script/*
 if [ ${BUILD_FRONT_END} == 'y' ]
 then
     pushd ${SRC_DIR}/pa_front
-    [ -d node_modules ] || npm install 
+    [ -d node_modules ] || npm install
     npm run ${BUILD_MODE}
     mkdir ./dist/logo_res
     mkdir ./dist/company_logo
@@ -82,7 +82,7 @@ pkg --out-path ${BUILD_DIR}/dist/tools pa_api_cli.js
 popd
 
 tar zcf pa_deliver.tar.gz -C ${BUILD_DIR} bin lib conf dist script pa_rest_node
-cat deploy.sh pa_deliver.tar.gz > ${BUILD_DIR}/install.sh
+cat ${SRC_DIR}/deploy.sh pa_deliver.tar.gz > ${BUILD_DIR}/install.sh
 chmod +x ${BUILD_DIR}/install.sh
 rm pa_deliver.tar.gz
 
