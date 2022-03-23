@@ -11,6 +11,9 @@ import less from 'less'
 import 'xe-utils'
 import VXETable from 'vxe-table'
 import 'vxe-table/lib/style.css'
+import Vant from 'vant'
+import 'vant/lib/index.css'
+Vue.use(Vant)
 
 Vue.use(VXETable)
 
