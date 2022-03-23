@@ -1,16 +1,28 @@
 <template>
 <div class="driver_register_show">
     <div v-if="is_login">
-        <van-row type="flex" align="center">
-            <van-col :span="20">
-                <van-divider>司机信息</van-divider>
-            </van-col>
-            <van-col>
-                <van-button size="small" type="danger" @click="reset_user">重置</van-button>
-            </van-col>
-        </van-row>
-        <van-cell title="电话号" :value="driver_phone"></van-cell>
-        <van-cell title="身份证号" :value="driver_id"></van-cell>
+        <van-cell-group>
+          <van-cell class="driver-title-cell" title="司机基本信息" value="" >
+            <template #right-icon>
+              <van-button plain icon="replay" size="mini" type="warning" @click="reset_user">重置</van-button>
+            </template>
+          </van-cell>
+          <van-cell icon="phone-o" title="电话号" :value="driver_phone"></van-cell>
+          <van-cell icon="idcard" title="身份证号" :value="driver_id"></van-cell>
+
+          <van-collapse v-model="activeNames">
+            <van-collapse-item icon="setting-o" title="其他" name="1">
+                <van-cell class="driver-title-cell" title="证件图片" value="" >
+                  <van-uploader :after-read="uploadDriverLicense" accept="image/*">
+                    <van-button plain icon="plus" size="small" type="primary">上传文件</van-button>
+                  </van-uploader>
+                </van-cell>
+            </van-collapse-item>
+          </van-collapse>
+
+        </van-cell-group>
+
+
         <van-divider>今日承运信息</van-divider>
         <van-empty v-if="trans_info.length <= 0" description="当前无承运任务，请联系所属单位派车后点击刷新">
         </van-empty>
@@ -81,72 +93,17 @@
 </template>
 
 <script>
-import Vue from 'vue';
-import {
-    Form
-} from 'vant';
-import {
-    Field
-} from 'vant';
-import {
-    Button
-} from 'vant';
-import {
-    Divider
-} from 'vant';
-import {
-    Card
-} from 'vant';
-import {
-    Col,
-    Row
-} from 'vant';
-import {
-    Cell,
-    CellGroup
-} from 'vant';
-import {
-    CountDown
-} from 'vant';
-import {
-    ActionSheet
-} from 'vant';
-import {
-    Uploader
-} from 'vant';
 import {
     compressAccurately
 } from 'image-conversion';
-import {
-    ImagePreview
-} from 'vant';
-import {
-    Notify
-} from 'vant';
-import {
-    Empty
-} from 'vant';
-import {
-    Dialog
-} from 'vant';
+import {ImagePreview} from 'vant';
+import _ from 'lodash'
 
-Vue.use(Empty);
-Vue.use(Uploader);
-Vue.use(ActionSheet);
-Vue.use(CountDown);
-Vue.use(Cell);
-Vue.use(CellGroup);
-Vue.use(Col);
-Vue.use(Row);
-Vue.use(Card);
-Vue.use(Divider);
-Vue.use(Button);
-Vue.use(Form);
-Vue.use(Field);
 export default {
     name: 'DriverRegister',
     data: function () {
         return {
+            activeNames: [],
             is_login: false,
             need_bind_info: false,
             bind_info: {
@@ -157,6 +114,7 @@ export default {
             trans_info: [],
             driver_id: '',
             driver_phone: '',
+            driver_license: [],
             current_count_down: 0,
             act_select_company: false,
             focus_vichele_index: 0,
@@ -209,16 +167,16 @@ export default {
         fill_enter_weight: function (_id, index) {
             var vue_this = this;
             if (vue_this.input_enter_weight[index].length <= 0 || vue_this.input_enter_weight_confirm[index].length <= 0) {
-                Notify("出厂重量填写错误");
+                vue_this.$notify("出厂重量填写错误");
                 return;
             }
             if (vue_this.input_enter_weight[index] != vue_this.input_enter_weight_confirm[index]) {
-                Notify("出厂重量填写错误");
+              vue_this.$notify("出厂重量填写错误");
                 return;
             }
             vue_this.$call_remote_process("vichele_management", "fill_enter_weight", [vue_this.$cookies.get('driver_silent_id'), _id, parseFloat(vue_this.input_enter_weight[index])]).then(function (resp) {
                 if (resp) {
-                    Dialog.confirm({
+                  vue_this.$dialog.confirm({
                         title: '提交成功'
                     }).finally(function () {
                         vue_this.$router.go(0);
@@ -240,6 +198,23 @@ export default {
                 });
             };
         },
+
+        async addDriverLicense(file_content){
+            let expire_date = '2022-03-04';//TODO 在上传照片的时候默认给定一个过期时间，比如当前时间后5天
+            let driverLiscenseInfo = await this.$call_remote_process("stuff_plan_management", "add_driver_license", [this.$cookies.get('driver_silent_id'), file_content, expire_date]);
+            this.driver_license.push(driverLiscenseInfo);
+        },
+      async compressAndSend (_file, sendFn){
+        let res = await compressAccurately(_file.file, 400);
+        this.convert_2_base64_send(res, false);
+        let reader = new FileReader();
+        reader.onloadend = function(){
+          let file_content = this.result.split(';base64,')[1]
+          sendFn(file_content)
+        }
+      },
+        curried :  _.curryRight(this.compressAndSend),
+        uploadDriverLicense : this.compressAndSend(this.addDriverLicense),
         upload_attachment: function (_file) {
             var vue_this = this;
 
@@ -250,8 +225,8 @@ export default {
         },
         pre_view_attach: function (_remote_path) {
             ImagePreview({
-                images: [this.$remote_url + _remote_path],
-                closeable: true
+              images: [this.$remote_url + _remote_path],
+              closeable: true
             });
         },
         tmd_upper: function (_value) {
@@ -275,11 +250,11 @@ export default {
             });
         },
         reset_user: function () {
-            Dialog.confirm({
+          this.$dialog.confirm({
                 title: '重置确认',
                 message: '只有电话或身份证等信息输入错误时才需要重置，确认重置吗？',
             }).then(() => {
-                Dialog.alert({message:"请联系送货或收货公司负责人操作重置"});
+                this.$dialog.alert({message:"请联系送货或收货公司负责人操作重置"});
             });
         },
         send_sms: function () {
@@ -396,7 +371,7 @@ export default {
                 vue_this.driver_id = resp.id;
                 vue_this.driver_phone = resp.phone;
             });
-        },
+        }
     },
     beforeMount: function () {
         var vue_this = this;
@@ -420,6 +395,9 @@ export default {
 </script>
 
 <style scoped>
+.driver-title-cell{
+    color : #969799
+}
 .single_record_show {
     margin-bottom: 5px;
     margin-right: 10px;
