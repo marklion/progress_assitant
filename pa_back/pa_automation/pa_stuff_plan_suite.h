@@ -476,23 +476,10 @@ public:
         THR_CONNECT(stuff_plan_management);
         bool fail = false;
         driver_license_info tmp;
-        try
-        {
-            client->add_driver_license(
-                tmp, "test_silent_id",
-                default_license_pic_base64,
-                "test_expired_date");
-            TEST_FORCE_TRUE(tmp.id > 0);
-            auto exist_dl = sqlite_orm::search_record<pa_sql_driver_license>(tmp.id);
-            TEST_FORCE_TRUE(exist_dl.get() != nullptr);
-            TEST_FORCE_TRUE(tmp.id == exist_dl->get_pri_id());
-            TEST_FORCE_TRUE("test_expired_date" == exist_dl->expire_date);
-        }
-        catch (const gen_exp &e)
-        {
-            fail = true;
-        }
-        TEST_FORCE_TRUE(false == fail);
+        client->add_driver_license(
+            tmp, "test_silent_id",
+            default_license_pic_base64,
+            "test_expired_date");
         try
         {
             std::vector<driver_license_info> tmp;
