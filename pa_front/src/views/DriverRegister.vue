@@ -4,7 +4,7 @@
         <van-cell-group>
           <van-cell class="driver-title-cell" title="司机基本信息" value="" >
             <template #right-icon>
-              <van-button plain icon="replay" size="mini" type="warning" @click="reset_user">重置</van-button>
+              <van-button icon="replay" size="mini" type="warning" @click="reset_user">重置</van-button>
             </template>
           </van-cell>
           <van-cell icon="phone-o" title="电话号" :value="driver_phone"></van-cell>
@@ -13,10 +13,55 @@
           <van-collapse v-model="activeNames">
             <van-collapse-item icon="setting-o" title="其他" name="1">
                 <van-cell class="driver-title-cell" title="证件图片" value="" >
-                  <van-uploader :after-read="uploadDriverLicense" accept="image/*">
+                    <template #right-icon>
+                        <van-button icon="plus" size="mini" type="primary" @click="add_license_item">新增</van-button>
+                       
+                    </template>
+                  <!-- <van-uploader :after-read="uploadDriverLicense" accept="image/*">
                     <van-button plain icon="plus" size="small" type="primary">上传文件</van-button>
-                  </van-uploader>
+                  </van-uploader> -->
                 </van-cell>
+                <van-form @submit="onConfirm">
+                    <van-field name="uploader" label="证件照片">
+    <template #input>
+    <van-uploader v-model="fileList" :max-count="1"/>
+  </template>
+  <template #right-icon><van-icon name="info-o">点击选择图片</van-icon></template>
+</van-field>
+
+<van-field
+  readonly
+  clickable
+  name="datetimePicker"
+ :value="value"
+  label="有效期"
+  placeholder="请选择有效期截止日期"
+  @click="showPicker = true"
+/>
+<van-popup v-model="showPicker" position="bottom">
+  <van-datetime-picker
+    type="date"
+    :min-date="current_date"
+    @confirm="onConfirm"
+    @cancel="showPicker = false"
+  />
+</van-popup>
+<div style="margin: 16px;">
+    <van-button round block type="info" native-type="submit">提交</van-button>
+  </div>
+                </van-form>
+                
+                <!-- <van-cell v-if="showAddLicenseForm" title="" label="点击选择图片">
+                    <template #title>
+                        <van-uploader :after-read="afterRead" v-model="fileList" :max-count="1"/>
+                    </template>
+                    
+                    <template #right-icon>
+                        <br/>
+                       <van-button plain icon="plus" size="mini" type="primary" @click="add_license_item">新增</van-button>
+                       <van-button plain block icon="plus" size="mini" type="primary" @click="add_license_item">新增</van-button>
+                    </template>
+                </van-cell> -->
             </van-collapse-item>
           </van-collapse>
 
@@ -89,6 +134,7 @@
             </div>
         </van-form>
     </div>
+    
 </div>
 </template>
 
@@ -97,13 +143,17 @@ import {
     compressAccurately
 } from 'image-conversion';
 import {ImagePreview} from 'vant';
-import _ from 'lodash'
+// import _ from 'lodash'
 
 export default {
     name: 'DriverRegister',
     data: function () {
         return {
             activeNames: [],
+            fileList: [],
+            value:this.formatDateTime(),
+            showPicker: false,
+            showAddLicenseForm : false,
             is_login: false,
             need_bind_info: false,
             bind_info: {
@@ -122,14 +172,7 @@ export default {
             input_enter_weight: [],
             input_enter_weight_confirm: [],
             current_date: new Date(),
-            formatDateTime: function (date) {
-                var y = date.getFullYear();
-                var m = date.getMonth() + 1;
-                m = m < 10 ? ('0' + m) : m;
-                var d = date.getDate();
-                d = d < 10 ? ('0' + d) : d;
-                return y + '-' + m + '-' + d;
-            },
+           
             should_checkin: function (_date) {
                 var ret = false;
                 var cur_date = this.formatDateTime(this.current_date);
@@ -157,6 +200,26 @@ export default {
         },
     },
     methods: {
+         formatDateTime: function (date = new Date()) {
+                var y = date.getFullYear();
+                var m = date.getMonth() + 1;
+                m = m < 10 ? ('0' + m) : m;
+                var d = date.getDate();
+                d = d < 10 ? ('0' + d) : d;
+                return y + '-' + m + '-' + d;
+            },
+        add_license_item : function(){
+            this.showAddLicenseForm = true;
+            console.log(this.showAddLicenseForm);
+            return 
+        },
+        onConfirm (date){
+            this.showPicker = false;
+            this.value = this.formatDateTime(date);
+        },
+        afterRead : function(file){
+            console.log(file);
+        },
         refresh_cur_page: function () {
             this.$router.go(0);
         },
@@ -199,6 +262,7 @@ export default {
             };
         },
 
+
         async addDriverLicense(file_content){
             let expire_date = '2022-03-04';//TODO 在上传照片的时候默认给定一个过期时间，比如当前时间后5天
             let driverLiscenseInfo = await this.$call_remote_process("stuff_plan_management", "add_driver_license", [this.$cookies.get('driver_silent_id'), file_content, expire_date]);
@@ -213,8 +277,8 @@ export default {
           sendFn(file_content)
         }
       },
-        curried :  _.curryRight(this.compressAndSend),
-        uploadDriverLicense : this.compressAndSend(this.addDriverLicense),
+        // curried :  _.curryRight(methods.compressAndSend),
+        // uploadDriverLicense : this.compressAndSend(this.addDriverLicense),
         upload_attachment: function (_file) {
             var vue_this = this;
 
