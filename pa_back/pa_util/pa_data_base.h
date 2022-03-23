@@ -869,4 +869,25 @@ public:
     }
 };
 
+class pa_sql_driver_license : public sql_tree_base {
+public:
+    std::string attachment_path;
+    std::string expire_date;
+    pa_sql_driver_license() {
+        add_parent_type<pa_sql_driver>("belong_driver");
+    }
+    virtual std::vector<sqlite_orm_column> self_columns_defined() {
+        std::vector<sqlite_orm_column> ret;
+        ret.push_back(sqlite_orm_column("attachment_path", sqlite_orm_column::STRING, &attachment_path));
+        ret.push_back(sqlite_orm_column("expire_date", sqlite_orm_column::STRING, &expire_date));
+
+        return ret;
+    }
+
+    virtual std::string table_name()
+    {
+        return "driver_license_table";
+    }
+};
+
 #endif // _PA_DATABSE_H_

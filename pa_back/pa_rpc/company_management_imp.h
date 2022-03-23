@@ -11,6 +11,8 @@
 #include "../external_src/writer.hpp"
 #include "pa_rpc_util.h"
 #include "../pa_util/pa_advance.h"
+
+#define SALE_CONFIG_FILE "/conf/data_config.json"
 class company_management_handler : virtual public company_managementIf
 {
 public:
@@ -1118,8 +1120,25 @@ public:
         }
     }
 
-    virtual void get_customize(company_customize &_return, const std::string &company_name)
+    virtual void get_customize(company_customize &_return, const std::string &_company_name)
     {
+        bool ret = false;
+        std::ifstream config_file(SALE_CONFIG_FILE, std::ios::in);
+        std::istreambuf_iterator<char> beg(config_file), end;
+        std::string config_string(beg, end);
+        neb::CJsonObject config(config_string);
+
+        for (size_t i = 0; i < config.GetArraySize(); i++)
+        {
+            auto company_config = config[i];
+            auto company_name = company_config("name");
+            auto company_customize_config = company_config["customize"];
+            if (company_name == _company_name)
+            {
+                company_customize_config.Get("need_license", _return.need_driver_license);
+                break;
+            }
+        }
     }
 };
 #endif // _COMPANY_MANAGEMENT_IMP_H_

@@ -2073,18 +2073,110 @@ public:
 
     virtual void add_driver_license(driver_license_info &_return, const std::string &silent_id, const std::string &license_attachment_base64, const std::string &expire_date)
     {
+        auto driver = sqlite_orm::search_record<pa_sql_driver>("silent_id = '%s'", silent_id.c_str());
+        if (!driver)
+        {
+            PA_RETURN_NOPRIVA_MSG();
+        }
+        std::string file_content;
+        Base64::Decode(license_attachment_base64, &file_content);
+        pa_sql_driver_license tmp;
+        tmp.expire_date = expire_date;
+        tmp.set_parent(*driver, "belong_driver");
+        if (tmp.insert_record())
+        {
+            auto attachment_path = PA_DATAOPT_store_attach_file(file_content, false, "driver_license" + silent_id + "__" + std::to_string(tmp.get_pri_id()));
+            tmp.attachment_path = attachment_path;
+            if (tmp.update_record())
+            {
+                _return.id = tmp.get_pri_id();
+                _return.attachment_path = tmp.attachment_path;
+                _return.expire_date = tmp.expire_date;
+            }
+        }
     }
     virtual bool del_driver_license(const std::string &silent_id, const int64_t license_data_id)
     {
+        auto driver = sqlite_orm::search_record<pa_sql_driver>("silent_id = '%s'", silent_id.c_str());
+        if (!driver)
+        {
+            PA_RETURN_NOPRIVA_MSG();
+        }
+        auto dl = driver->get_children<pa_sql_driver_license>("belong_driver", "PRI_ID == %ld", license_data_id);
+        if (!dl)
+        {
+            PA_RETURN_NOPRIVA_MSG();
+        }
+        dl->remove_record();
+
+        return true;
     }
     virtual bool update_driver_license(const std::string &silent_id, const std::string &ssid, const driver_license_info &license_data)
     {
+        auto driver = sqlite_orm::search_record<pa_sql_driver>("silent_id = '%s'", silent_id.c_str());
+        auto company = PA_DATAOPT_get_company_by_ssid(ssid);
+
+        bool permit_opt = false;
+        if (driver)
+        {
+            permit_opt = true;
+        }
+        else if (company && company->is_sale)
+        {
+            permit_opt = true;
+
+        }
+        if (!permit_opt)
+        {
+            PA_RETURN_NOPRIVA_MSG();
+        }
+
+        auto dl = sqlite_orm::search_record<pa_sql_driver_license>(license_data.id);
+        if (!dl)
+        {
+            PA_RETURN_NOPRIVA_MSG();
+        }
+        dl->expire_date = license_data.expire_date;
+        return dl->update_record();
     }
     virtual void get_all_license_info_by_driver_phone(std::vector<driver_license_info> &_return, const std::string &ssid, const std::string &phone)
     {
+        auto company = PA_DATAOPT_get_company_by_ssid(ssid);
+        if (!company || !company->is_sale)
+        {
+            PA_RETURN_NOPRIVA_MSG();
+        }
+        auto driver = sqlite_orm::search_record<pa_sql_driver>("phone == '%s' AND silent_id != ''", phone.c_str());
+        if (!driver)
+        {
+            PA_RETURN_NOPRIVA_MSG();
+        }
+        auto all_dl = driver->get_all_children<pa_sql_driver_license>("belong_driver");
+        for (auto &itr : all_dl)
+        {
+            driver_license_info tmp;
+            tmp.attachment_path = itr.attachment_path;
+            tmp.expire_date = itr.expire_date;
+            tmp.id = itr.get_pri_id();
+            _return.push_back(tmp);
+        }
     }
     virtual void get_self_all_license_info(std::vector<driver_license_info> &_return, const std::string &silent_id)
     {
+        auto driver = sqlite_orm::search_record<pa_sql_driver>("silent_id = '%s'", silent_id.c_str());
+        if (!driver)
+        {
+            PA_RETURN_NOPRIVA_MSG();
+        }
+        auto all_dl = driver->get_all_children<pa_sql_driver_license>("belong_driver");
+        for (auto &itr : all_dl)
+        {
+            driver_license_info tmp;
+            tmp.attachment_path = itr.attachment_path;
+            tmp.expire_date = itr.expire_date;
+            tmp.id = itr.get_pri_id();
+            _return.push_back(tmp);
+        }
     }
 };
 
