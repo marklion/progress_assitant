@@ -33,3 +33,8 @@ export async function addDriverLicense(file, silent_id, expire_date){
         [silent_id, base64File, expire_date]);
     return driverLicenseInfo;
 }
+
+export async function getLicenseBySilentId(silent_id){
+    return await call_remote_process("stuff_plan_management", "get_self_all_license_info",
+        [silent_id]);
+}
