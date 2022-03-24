@@ -10,11 +10,12 @@
             <van-cell icon="phone-o" title="电话号" :value="driver_phone"></van-cell>
             <van-cell icon="idcard" title="身份证号" :value="driver_id"></van-cell>
 
-            <van-collapse v-model="activeNames" @change="loadDriverLicense">
+            <van-collapse v-model="activeNames" @change="!activeNames.includes('1') ? loadDriverLicense() : ''">
                 <van-collapse-item icon="setting-o" title="其他" name="1">
                     <van-cell class="driver-title-cell" title="证件图片" value="">
                         <template #right-icon>
                             <van-button v-if="!showLicenseForm" icon="plus" size="mini" type="primary" @click="add_license_item">新增</van-button>
+                            <van-button v-if="showLicenseForm" icon="cross" size="mini" type="default" @click="showLicenseForm = false">取消</van-button>
                         </template>
                     </van-cell>
 
@@ -49,6 +50,26 @@
                             <van-button round block type="info" native-type="submit">提交</van-button>
                         </div>
                     </van-form>
+
+                    <van-cell v-for="item in driverLicenseList" :key="item.i64" :title="item.expire_date" :label="'有效期'" center>
+                        <template #icon>
+                            <van-image style="margin-right:10px"
+  width="50"
+  height="50"
+  :src="getFullImgPath(item.attachment_path)"/>
+  <!-- <div style="display : block; float : right">
+      过期时间
+<van-tag type="danger">标签</van-tag> -->
+  <!-- </div> -->
+  
+                        </template>
+                        <!-- <template #label>有效期至：{{item.expire_date}}</template> -->
+                        <template #right-icon>
+                            <van-button plain hairline icon="edit" size="small" type="default" @click="add_license_item">有效期</van-button>
+                            <van-button plain hairline icon="delete-o" size="small" type="default" @click="add_license_item"></van-button>
+                        </template>
+                    
+                    </van-cell>
                 </van-collapse-item>
             </van-collapse>
         </van-cell-group>
@@ -191,6 +212,9 @@ export default {
              d = d < 10 ? ('0' + d) : d;
              return y + '-' + m + '-' + d;
          },
+         getFullImgPath: function(path){
+            return this.$remote_url + path;
+         },
         add_license_item : function(){
             return this.showLicenseForm = true;
         },
@@ -204,6 +228,7 @@ export default {
                 let file = formData.licenseFile[0];
                 let result = await addDriverLicense(file.file, silent_id, formData.expireDate);
                 console.log(result)
+                await this.loadDriverLicense();
                 this.showLicenseForm = false;
             } catch (err) {
                 console.log(err);
