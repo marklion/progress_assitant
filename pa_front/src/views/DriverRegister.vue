@@ -10,7 +10,7 @@
             <van-cell icon="phone-o" title="电话号" :value="driver_phone"></van-cell>
             <van-cell icon="idcard" title="身份证号" :value="driver_id"></van-cell>
 
-            <van-collapse v-model="activeNames">
+            <van-collapse v-model="activeNames" @change="loadDriverLicense">
                 <van-collapse-item icon="setting-o" title="其他" name="1">
                     <van-cell class="driver-title-cell" title="证件图片" value="">
                         <template #right-icon>
@@ -42,7 +42,7 @@
                             <van-datetime-picker
                                 type="date"
                                 :min-date="current_date"
-                                @confirm="onConfirm"
+                                @confirm="onConfirmLicenseDate"
                                 @cancel="showLicenseDatePicker = false"/>
                         </van-popup>
                         <div style="margin: 16px;">
@@ -126,7 +126,7 @@
 import {
     compressAccurately
 } from 'image-conversion';
-import { addDriverLicense } from '@/api/driver';
+import { addDriverLicense, getLicenseBySilentId } from '@/api/driver';
 import {ImagePreview} from 'vant';
 
 export default {
@@ -138,6 +138,7 @@ export default {
             value:this.formatDateTime(),
             showLicenseForm: false,
             showLicenseDatePicker: false,
+            driverLicenseList : [],
             is_login: false,
             need_bind_info: false,
             bind_info: {
@@ -178,7 +179,6 @@ export default {
                     });
                 });
             }
-
             return ret;
         },
     },
@@ -194,19 +194,23 @@ export default {
         add_license_item : function(){
             return this.showLicenseForm = true;
         },
+        async loadDriverLicense(){
+            let silent_id = this.$cookies.get('driver_silent_id');
+            this.driverLicenseList = await getLicenseBySilentId(silent_id);
+        },
         async onSubmitLicense(formData) {
             try {
                 let silent_id = this.$cookies.get('driver_silent_id');
                 let file = formData.licenseFile[0];
-                let result = await addDriverLicense(file.file, silent_id, formData.expire_date);
+                let result = await addDriverLicense(file.file, silent_id, formData.expireDate);
                 console.log(result)
                 this.showLicenseForm = false;
             } catch (err) {
                 console.log(err);
             }
         },
-        onConfirm (date){
-            this.showPicker = false;
+        onConfirmLicenseDate (date){
+            this.showLicenseDatePicker = false;
             this.value = this.formatDateTime(date);
         },
         refresh_cur_page: function () {
