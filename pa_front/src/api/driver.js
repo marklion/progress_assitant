@@ -43,6 +43,16 @@ export async function getLicenseBySilentId(silent_id){
 }
 
 /**
+ * @param {String} ssid
+ * @param {String} phone
+ * @return {Promise<Array<DriverLicenseInfo>>}
+ */
+export async function getAllLicenseInfoByDriverPhone(ssid, phone){
+    return await call_remote_process("stuff_plan_management", "get_all_license_info_by_driver_phone",
+        [ssid, phone]);
+}
+
+/**
  * @param {String} silent_id
  * @param {DriverLicenseInfo} driver_license_info
  * @return {Promise<Boolean>}
