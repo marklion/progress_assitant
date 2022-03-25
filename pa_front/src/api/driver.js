@@ -54,12 +54,13 @@ export async function getAllLicenseInfoByDriverPhone(ssid, phone){
 
 /**
  * @param {String} silent_id
+ * @param {String} ssid
  * @param {DriverLicenseInfo} driver_license_info
  * @return {Promise<Boolean>}
  */
-export async function updateLicenseExpireDate(silent_id, driver_license_info){
+export async function updateLicenseExpireDate(silent_id, ssid, driver_license_info){
     return await call_remote_process('stuff_plan_management', 'update_driver_license',
-        [silent_id, '', driver_license_info]);
+        [silent_id, ssid, driver_license_info]);
 }
 
 /**

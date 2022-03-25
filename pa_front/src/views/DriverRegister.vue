@@ -56,8 +56,14 @@
                             </div>
                         </van-form>
 
-                        <van-cell v-for="(item, i) in driverLicenseList" :key="item.i64" :title="item.expire_date"
+                        <van-cell v-for="(item, i) in driverLicenseList" :key="item.i64" 
                                   :label="'有效期'" center>
+                                  <template #title>
+                                      <span>{{item.expire_date}}  
+                                          <van-tag v-if="item.expire_date < formatDateTime()" type="danger">已过期</van-tag>
+                                          </span>
+
+                                  </template>
                             <template #icon>
                                 <van-image style="margin-right:10px" @click="previewLicense(i)"
                                            width="50"
@@ -282,7 +288,7 @@ export default {
         async doLicenseUpdate(date){
             this.showEditDatePicker = false;
             this.operatingLicense.expire_date = this.formatDateTime(date);
-            await updateLicenseExpireDate(this.silent_id, this.operatingLicense);
+            await updateLicenseExpireDate(this.silent_id, '', this.operatingLicense);
             await this.loadDriverLicense();
             this.operatingLicense = null;
         },
