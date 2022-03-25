@@ -82,51 +82,9 @@
 </template>
 
 <script>
-import Vue from 'vue';
-import {
-    Button
-} from 'vant';
-import {
-    Cell,
-    CellGroup
-} from 'vant';
-import {
-    Checkbox,
-    CheckboxGroup
-} from 'vant';
-import {
-    Col,
-    Row
-} from 'vant';
-import {
-    Dialog
-} from 'vant';
-import {
-    Form
-} from 'vant';
-import {
-    Stepper
-} from 'vant';
-import {
-    Collapse,
-    CollapseItem
-} from 'vant';
-import { Field } from 'vant';
 
-Vue.use(Field);
-Vue.use(Collapse);
-Vue.use(CollapseItem);
-Vue.use(Stepper);
-Vue.use(Form);
+import {getPlanInfo} from '@/api/plan';
 
-Vue.use(Dialog);
-Vue.use(Col);
-Vue.use(Row);
-Vue.use(Checkbox);
-Vue.use(CheckboxGroup);
-Vue.use(Cell);
-Vue.use(CellGroup);
-Vue.use(Button);
 export default {
     name: 'DeliverPlan',
     data: function () {
@@ -262,23 +220,22 @@ export default {
             });
         },
     },
-    beforeMount: function () {
-        var vue_this = this;
-        vue_this.$call_remote_process("stuff_plan_management", 'get_plan', [parseInt(vue_this.$route.params.plan_id)]).then(function (resp) {
-            vue_this.status = resp.status;
-            vue_this.plan_id = resp.plan_id;
-            vue_this.count = resp.count;
-            vue_this.name = resp.name;
-            vue_this.user_name = resp.created_user_name;
-            resp.vichele_info.forEach((element, index) => {
-                if (!element.finish) {
-                    element.count = 20;
-                }
-                vue_this.$set(vue_this.vichele_info, index, element);
-            });
-            vue_this.buy_company = resp.buy_company;
-            vue_this.get_change_rule(vue_this.plan_id);
+    beforeMount: async function () {
+        this.plan_id = parseInt(this.$route.params.plan_id)
+        let planInfo = await getPlanInfo(this.plan_id);
+
+        this.status = planInfo.status;
+        this.count = planInfo.count;
+        this.name = planInfo.name;
+        this.user_name = planInfo.created_user_name;
+        planInfo.vichele_info.forEach((element, index) => {
+            if (!element.finish) {
+                element.count = 20;
+            }
+            this.$set(this.vichele_info, index, element);
         });
+        this.buy_company = planInfo.buy_company;
+        this.get_change_rule(this.plan_id);
     },
 }
 </script>
@@ -294,3 +251,21 @@ export default {
     padding-left: 5px;
 }
 </style>
+<!--behind_vichele:"晋FH051挂"-->
+<!--count:25-->
+<!--deliver_timestamp:""-->
+<!--driver_id:""-->
+<!--driver_name:"赵贵德"-->
+<!--driver_phone:"17803460765"-->
+<!--driver_silent_id:""-->
+<!--drop_address:"北京市/北京市"-->
+<!--enter_location:""-->
+<!--finish:false-->
+<!--m_weight:0-->
+<!--main_vichele:"蒙KH5583"-->
+<!--p_time:""-->
+<!--p_weight:0-->
+<!--register_number:""-->
+<!--register_timestamp:""-->
+<!--use_for:"气化"-->
+<!--vichele_id:34980-->
