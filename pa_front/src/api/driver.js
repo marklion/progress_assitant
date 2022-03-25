@@ -20,7 +20,6 @@ function convert2Base64(_file){
 }
 
 /**
- *
  * @param {File} file
  * @param {String} silent_id
  * @param {String} expire_date
@@ -34,7 +33,32 @@ export async function addDriverLicense(file, silent_id, expire_date){
     return driverLicenseInfo;
 }
 
+/**
+ * @param {String} silent_id
+ * @return {Promise<Array<DriverLicenseInfo>>}
+ */
 export async function getLicenseBySilentId(silent_id){
     return await call_remote_process("stuff_plan_management", "get_self_all_license_info",
         [silent_id]);
+}
+
+/**
+ * @param {String} silent_id
+ * @param {DriverLicenseInfo} driver_license_info
+ * @return {Promise<Boolean>}
+ */
+export async function updateLicenseExpireDate(silent_id, driver_license_info){
+    return await call_remote_process('stuff_plan_management', 'update_driver_license',
+        [silent_id, '', driver_license_info]);
+}
+
+/**
+ *
+ * @param {String} silent_id
+ * @param {String} license_id
+ * @return {Promise<Boolean>}
+ */
+export async function delLicense(silent_id, license_id){
+    return await call_remote_process('stuff_plan_management', 'del_driver_license',
+        [silent_id, license_id]);
 }
