@@ -56,35 +56,11 @@
                             </div>
                         </van-form>
 
-                        <van-cell v-for="(item, i) in driverLicenseList" :key="item.i64" 
-                                  :label="'有效期'" center>
-                                  <template #title>
-                                      <span>{{item.expire_date}}  
-                                          <van-tag v-if="item.expire_date < formatDateTime()" type="danger">已过期</van-tag>
-                                          </span>
-
-                                  </template>
-                            <template #icon>
-                                <van-image style="margin-right:10px" @click="previewLicense(i)"
-                                           width="50"
-                                           height="50"
-                                           :src="getFullImgPath(item.attachment_path)"/>
-                            </template>
-                            <template #right-icon>
-                                <van-button plain hairline icon="edit" size="small" type="default"
-                                            @click="doLicenseOperation('update', item)">有效期
-                                </van-button>
-                                <van-button plain hairline icon="delete-o" size="small" type="default"
-                                            @click="doLicenseOperation('del', item)"></van-button>
-                            </template>
-                        </van-cell>
-                        <van-popup v-model="showEditDatePicker" position="bottom">
-                            <van-datetime-picker
-                                type="date"
-                                :min-date="current_date"
-                                @confirm="doLicenseUpdate"
-                                @cancel="showEditDatePicker = false"/>
-                        </van-popup>
+                        <driverLicensesView
+                            :driver-license-list="driverLicenseList"
+                            @update="doLicenseUpdate"
+                            @del="doLicenseDelete"
+                        />
                     </van-collapse-item>
                 </van-collapse>
             </van-cell-group>
@@ -192,9 +168,11 @@ import {
 } from 'image-conversion';
 import {addDriverLicense, getLicenseBySilentId, updateLicenseExpireDate, delLicense} from '@/api/driver';
 import {ImagePreview} from 'vant';
+import driverLicensesView from '@/components/DriverLicensesView'
 
 export default {
     name: 'DriverRegister',
+    components: {  driverLicensesView  },
     data: function () {
         return {
             activeNames: [],
@@ -204,7 +182,6 @@ export default {
             showLicenseDatePicker: false,
             showEditDatePicker : false,
             driverLicenseList: [],
-            operatingLicense : null,
             is_login: false,
             need_bind_info: false,
             bind_info: {
@@ -259,9 +236,6 @@ export default {
             d = d < 10 ? ('0' + d) : d;
             return y + '-' + m + '-' + d;
         },
-        getFullImgPath: function (path) {
-            return this.$remote_url + path;
-        },
         add_license_item: function () {
             return this.showLicenseForm = true;
         },
@@ -285,36 +259,20 @@ export default {
             this.showLicenseDatePicker = false;
             this.value = this.formatDateTime(date);
         },
-        async doLicenseUpdate(date){
-            this.showEditDatePicker = false;
-            this.operatingLicense.expire_date = this.formatDateTime(date);
-            await updateLicenseExpireDate(this.silent_id, '', this.operatingLicense);
+        async doLicenseUpdate(license){
+            await updateLicenseExpireDate(this.silent_id, '', license);
             await this.loadDriverLicense();
-            this.operatingLicense = null;
         },
-        async doLicenseOperation(op, license){
-            this.operatingLicense = license;
-            if(op === 'update'){
-                this.showEditDatePicker = true;
+        async doLicenseDelete(license) {
+            try {
+                await this.$dialog.confirm({
+                    title: '确认删除证件记录吗？'
+                })
+                await delLicense(this.silent_id, license.id);
+                await this.loadDriverLicense();
+            } catch (err) {
+                console.log(err);
             }
-            if(op === 'del'){
-                try{
-                    await this.$dialog.confirm({
-                        title: '确认删除证件记录吗？'
-                    })
-                    await delLicense(this.silent_id, license.id);
-                    await this.loadDriverLicense();
-                }catch(err){
-                    console.log(err);
-                }
-            }
-        },
-        previewLicense(startIndex){
-            ImagePreview({
-                images: this.driverLicenseList.map(item => this.getFullImgPath(item.attachment_path)),
-                closeable: true,
-                startPosition: startIndex
-            });
         },
         refresh_cur_page: function () {
             this.$router.go(0);
