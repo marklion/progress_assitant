@@ -22,6 +22,11 @@
                             </van-col>
                         </van-row>
                     </van-cell>
+                    <driverLicensesView v-if="showDriverLicense"
+                                        :show-delete="false"
+                                        :driver-license-list="driverLicenseList"
+                                        @update="doLicenseUpdate"
+                    />
                     <div v-if="item.register_number" class="register_info_show">
                         <van-row type="flex" align="center" justify="space-between">
                             <van-col :span="8">
@@ -44,8 +49,13 @@
                                     @click="reset_driver_info(item.driver_silent_id)">重置信息
                         </van-button>
                     </div>
-                    <van-button v-if="sale_company_config.need_driver_license" icon="eye" type="primary" size="small"
-                                @click="open_driver_license_dialog(item.driver_phone)">查证件
+                    <van-button v-if="sale_company_config.need_driver_license && !showDriverLicense"
+                                icon="eye" type="primary" size="small"
+                                @click="open_driver_license_list(item.driver_phone)">查证件
+                    </van-button>
+                    <van-button v-if="sale_company_config.need_driver_license && showDriverLicense"
+                                icon="arrow-up" type="primary" size="small"
+                                @click="showDriverLicense = false">收起
                     </van-button>
                 </div>
             </van-cell-group>
@@ -60,36 +70,6 @@
                     <van-button round block type="info" native-type="submit">提交</van-button>
                 </div>
             </van-form>
-        </van-dialog>
-        <van-dialog v-model="showDriverLicense" title="查看证件" close-on-click-overlay :show-confirm-button="false">
-            <van-cell v-for="(item, i) in driverLicenseList" :key="item.i64"
-                      :label="'有效期'" center>
-                <template #title>
-                    <span>{{ item.expire_date }}
-                        <van-tag v-if="item.expire_date < formatDateTime()"
-                                 type="danger">已过期</van-tag>
-                    </span>
-                </template>
-                <template #icon>
-                    <van-image style="margin-right:10px" @click="previewLicense(i)"
-                               width="50"
-                               height="50"
-                               :src="getFullImgPath(item.attachment_path)"/>
-                </template>
-                <template #right-icon>
-                    <van-button plain hairline icon="edit" size="small" type="default"
-                                @click="doLicenseOperation('update', item)">有效期
-                    </van-button>
-                </template>
-            </van-cell>
-
-            <van-popup v-model="showEditDatePicker" position="bottom">
-                <van-datetime-picker
-                    type="date"
-                    :min-date="new Date()"
-                    @confirm="doLicenseUpdate"
-                    @cancel="showEditDatePicker = false"/>
-            </van-popup>
         </van-dialog>
         <van-row :gutter="10" type="flex" justify="center" align="center" v-if="can_change_to(4)">
             <van-col :span="8">
@@ -133,16 +113,16 @@
 import {getPlanInfo} from '@/api/plan';
 import {getCompanyConfig} from '@/api/company'
 import {getAllLicenseInfoByDriverPhone, updateLicenseExpireDate} from '@/api/driver'
-import {ImagePreview} from "vant";
+import driverLicensesView from '@/components/DriverLicensesView'
 
 export default {
     name: 'DeliverPlan',
+    components : { driverLicensesView },
+
     data: function () {
         return {
             driverLicenseList: [],
             showDriverLicense: false,
-            showEditDatePicker: false,
-            operatingLicense: null,
             checkingDriverPhone: '',
             focus_driver_change: false,
             status: 0,
@@ -196,17 +176,6 @@ export default {
         },
     },
     methods: {
-        formatDateTime: function (date = new Date()) {
-            let y = date.getFullYear();
-            let m = date.getMonth() + 1;
-            m = m < 10 ? ('0' + m) : m;
-            let d = date.getDate();
-            d = d < 10 ? ('0' + d) : d;
-            return y + '-' + m + '-' + d;
-        },
-        getFullImgPath: function (path) {
-            return this.$remote_url + path;
-        },
         can_change_to: function (_index) {
             var ret = false;
             if (_index >= 0 && _index < this.status_change_rule.length) {
@@ -227,34 +196,17 @@ export default {
             this.new_driver_name = "";
             this.new_driver_phone = "";
         },
-        async open_driver_license_dialog(driver_phone) {
-            this.showDriverLicense = true;
+        async open_driver_license_list(driver_phone) {
             this.checkingDriverPhone = driver_phone;
-            this.loadDriverLicense();
+            await this.loadDriverLicense();
+            this.showDriverLicense = true;
         },
         async loadDriverLicense() {
             this.driverLicenseList = await getAllLicenseInfoByDriverPhone(this.ssid, this.checkingDriverPhone);
         },
-        async doLicenseUpdate(date) {
-            this.showEditDatePicker = false;
-            this.operatingLicense.expire_date = this.formatDateTime(date);
-            console.log(this.ssid);
-            await updateLicenseExpireDate('', this.ssid, this.operatingLicense);
+        async doLicenseUpdate(license) {
+            await updateLicenseExpireDate('', this.ssid, license);
             await this.loadDriverLicense();
-            this.operatingLicense = null;
-        },
-        async doLicenseOperation(op, license) {
-            this.operatingLicense = license;
-            if (op === 'update') {
-                this.showEditDatePicker = true;
-            }
-        },
-        previewLicense(startIndex){
-            ImagePreview({
-                images: this.driverLicenseList.map(item => this.getFullImgPath(item.attachment_path)),
-                closeable: true,
-                startPosition: startIndex
-            });
         },
         change_driver: function () {
             var vue_this = this;
@@ -343,6 +295,7 @@ export default {
 
         this.sale_company = planInfo.sale_company;
         this.sale_company_config = await getCompanyConfig(planInfo.sale_company);
+        this.sale_company_config.need_driver_license = true;
     },
 }
 </script>
