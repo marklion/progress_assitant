@@ -20,7 +20,6 @@
                         </van-col>
                     </van-row>
                 </van-cell>
-                <driverLicensesView v-if="showDriverLicense" :show-delete="false" :driver-license-list="driverLicenseList" @update="doLicenseUpdate" />
                 <div v-if="item.register_number" class="register_info_show">
                     <van-row type="flex" align="center" justify="space-between">
                         <van-col :span="8">
@@ -41,9 +40,7 @@
                     <van-button icon="replay" v-if="item.driver_silent_id" type="danger" size="small" @click="reset_driver_info(item.driver_silent_id)">重置信息
                     </van-button>
                 </div>
-                <van-button v-if="sale_company_config.need_driver_license && !showDriverLicense" icon="eye" type="primary" size="small" @click="open_driver_license_list(item.driver_phone)">查证件
-                </van-button>
-                <van-button v-if="sale_company_config.need_driver_license && showDriverLicense" icon="arrow-up" type="primary" size="small" @click="showDriverLicense = false">收起
+                <van-button v-if="sale_company_config.need_driver_license && !showDriverLicense" icon="eye" type="info" size="small" @click="open_driver_license_list(item.driver_phone)">查证件
                 </van-button>
             </div>
         </van-cell-group>
@@ -76,6 +73,7 @@
                 <van-cell :title="'皮重：' + item.p_weight" :value="item.p_time"></van-cell>
                 <van-cell :title="'毛重：' + item.m_weight" :value="item.deliver_timestamp"></van-cell>
                 <van-cell title="查看磅单" is-link :to="{name:'Ticket', params:{id:item.vichele_id + 'S'}}"></van-cell>
+                <van-cell v-if="sale_company_config.need_driver_license" is-link title="查看证件" @click="open_driver_license_list(item.driver_phone)"></van-cell>
             </van-collapse-item>
         </van-collapse>
     </van-cell-group>
@@ -87,6 +85,8 @@
             </div>
         </van-form>
     </van-dialog>
+    <driverLicenseDialog v-model="showDriverLicense" :phone="checkingDriverPhone">
+    </driverLicenseDialog>
 </div>
 </template>
 
@@ -97,16 +97,13 @@ import {
 import {
     getCompanyConfig
 } from '@/api/company'
-import {
-    getAllLicenseInfoByDriverPhone,
-    updateLicenseExpireDate
-} from '@/api/driver'
-import driverLicensesView from '@/components/DriverLicensesView'
+
+import driverLicenseDialog from '@/components/DriverLicenseDialog'
 
 export default {
     name: 'DeliverPlan',
     components: {
-        driverLicensesView
+        driverLicenseDialog
     },
 
     data: function () {
@@ -186,17 +183,9 @@ export default {
             this.new_driver_name = "";
             this.new_driver_phone = "";
         },
-        async open_driver_license_list(driver_phone) {
+        open_driver_license_list(driver_phone) {
             this.checkingDriverPhone = driver_phone;
-            await this.loadDriverLicense();
             this.showDriverLicense = true;
-        },
-        async loadDriverLicense() {
-            this.driverLicenseList = await getAllLicenseInfoByDriverPhone(this.ssid, this.checkingDriverPhone);
-        },
-        async doLicenseUpdate(license) {
-            await updateLicenseExpireDate('', this.ssid, license);
-            await this.loadDriverLicense();
         },
         change_driver: function () {
             var vue_this = this;
@@ -285,7 +274,6 @@ export default {
 
         this.sale_company = planInfo.sale_company;
         this.sale_company_config = await getCompanyConfig(planInfo.sale_company);
-        this.sale_company_config.need_driver_license = true;
     },
 }
 </script>
