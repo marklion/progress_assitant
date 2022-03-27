@@ -1,123 +1,113 @@
 <template>
-    <div class="deliver_show">
-        <van-cell-group title="计划内容">
-            <van-cell :title="buy_company" :label="name" :value="'已提货' + count + '吨'"/>
-            <van-cell title="提货人" :value="user_name"></van-cell>
-        </van-cell-group>
-        <van-checkbox-group v-model="pre_deliver_vichele_index">
-            <van-cell-group title="未出货车辆">
-                <div class="single_vichele_show" v-for="(item, index) in undelivered_vichele" :key="index">
-                    <van-cell center :title="item.main_vichele + '-' + item.behind_vichele"
-                              :label="item.driver_name + '-' + item.driver_phone">
-                        <template #icon>
-                            <van-checkbox style="margin-right:10px" :name="index" ref="checkboxes"
-                                          v-if="can_change_to(4)"/>
-                        </template>
-                        <van-row type="flex" align="center" justify="end" v-if="can_change_to(4)">
-                            <van-col>
-                                <van-stepper v-model="item.count"/>
-                            </van-col>
-                            <van-col>
-                                吨
-                            </van-col>
-                        </van-row>
-                    </van-cell>
-                    <driverLicensesView v-if="showDriverLicense"
-                                        :show-delete="false"
-                                        :driver-license-list="driverLicenseList"
-                                        @update="doLicenseUpdate"
-                    />
-                    <div v-if="item.register_number" class="register_info_show">
-                        <van-row type="flex" align="center" justify="space-between">
-                            <van-col :span="8">
-                                进厂序号：{{ item.register_number }}
-                            </van-col>
-                            <van-col :span="8">
-                                进厂位置：{{ item.enter_location }}
-                            </van-col>
-                            <van-col :span="8">
-                                {{ item.register_timestamp }}
-                            </van-col>
-                        </van-row>
-                    </div>
-                    <div v-else-if="!$store.state.userinfo.buyer" style="display : inline-block">
-                        <van-button icon="exchange" type="primary" size="small"
-                                    @click="open_change_driver(item.vichele_id)">换司机
-                        </van-button>
+<div class="deliver_show">
+    <van-cell-group title="计划内容">
+        <van-cell :title="buy_company" :label="name" :value="'已提货' + count + '吨'" />
+        <van-cell title="提货人" :value="user_name"></van-cell>
+    </van-cell-group>
+    <van-checkbox-group v-model="pre_deliver_vichele_index">
+        <van-cell-group title="未出货车辆">
+            <div class="single_vichele_show" v-for="(item, index) in undelivered_vichele" :key="index">
+                <van-cell center :title="item.main_vichele + '-' + item.behind_vichele" :label="item.driver_name + '-' + item.driver_phone">
+                    <template #icon>
+                        <van-checkbox style="margin-right:10px" :name="index" ref="checkboxes" v-if="can_change_to(4)" />
+                    </template>
+                    <van-row type="flex" align="center" justify="end" v-if="can_change_to(4)">
+                        <van-col>
+                            <van-stepper v-model="item.count" />
+                        </van-col>
+                        <van-col>
+                            吨
+                        </van-col>
+                    </van-row>
+                </van-cell>
+                <driverLicensesView v-if="showDriverLicense" :show-delete="false" :driver-license-list="driverLicenseList" @update="doLicenseUpdate" />
+                <div v-if="item.register_number" class="register_info_show">
+                    <van-row type="flex" align="center" justify="space-between">
+                        <van-col :span="8">
+                            进厂序号：{{ item.register_number }}
+                        </van-col>
+                        <van-col :span="8">
+                            进厂位置：{{ item.enter_location }}
+                        </van-col>
+                        <van-col :span="8">
+                            {{ item.register_timestamp }}
+                        </van-col>
+                    </van-row>
+                </div>
+                <div v-else-if="!$store.state.userinfo.buyer" style="display : inline-block">
+                    <van-button icon="exchange" type="primary" size="small" @click="open_change_driver(item.vichele_id)">换司机
+                    </van-button>
 
-                        <van-button icon="replay" v-if="item.driver_silent_id" type="danger" size="small"
-                                    @click="reset_driver_info(item.driver_silent_id)">重置信息
-                        </van-button>
-                    </div>
-                    <van-button v-if="sale_company_config.need_driver_license && !showDriverLicense"
-                                icon="eye" type="primary" size="small"
-                                @click="open_driver_license_list(item.driver_phone)">查证件
-                    </van-button>
-                    <van-button v-if="sale_company_config.need_driver_license && showDriverLicense"
-                                icon="arrow-up" type="primary" size="small"
-                                @click="showDriverLicense = false">收起
+                    <van-button icon="replay" v-if="item.driver_silent_id" type="danger" size="small" @click="reset_driver_info(item.driver_silent_id)">重置信息
                     </van-button>
                 </div>
-            </van-cell-group>
-        </van-checkbox-group>
-        <van-dialog v-model="focus_driver_change" title="更换司机" close-on-click-overlay :show-confirm-button="false">
-            <van-form @submit="change_driver">
-                <van-field v-model="new_driver_name" name="姓名" label="姓名" placeholder="请输入司机姓名"
-                           :rules="[{ required: true, message: '请输入司机姓名' }]"/>
-                <van-field v-model="new_driver_phone" name="电话" label="电话" placeholder="请输入司机电话"
-                           :rules="[{ required: true, message: '请输入司机电话' , pattern: phone_pattern}]"/>
-                <div style="margin: 16px;">
-                    <van-button round block type="info" native-type="submit">提交</van-button>
-                </div>
-            </van-form>
-        </van-dialog>
-        <van-row :gutter="10" type="flex" justify="center" align="center" v-if="can_change_to(4)">
-            <van-col :span="8">
-                <van-button block type="info" size="small" :disabled="pre_deliver_vichele_index.length == 0"
-                            @click="submit_confirm_deliver">确认出货选中车辆
+                <van-button v-if="sale_company_config.need_driver_license && !showDriverLicense" icon="eye" type="primary" size="small" @click="open_driver_license_list(item.driver_phone)">查证件
                 </van-button>
-            </van-col>
-            <van-col :span="8">
-                <van-button block type="primary" size="small" @click="deliver_all">出货所有车辆</van-button>
-            </van-col>
-            <van-col :span="8">
-                <van-button block type="danger" size="small" @click="fource_reason_diag = true;">完成出货</van-button>
-            </van-col>
-        </van-row>
-
-        <van-cell-group title="已出货车辆">
-            <van-collapse v-model="expend_weight">
-                <van-collapse-item name="1" v-for="(item, index) in delivered_vichele" center :value="item.count + '吨'"
-                                   :key="index" :title="item.main_vichele + '-' + item.behind_vichele"
-                                   :label="item.driver_name + '-' + item.driver_phone">
-                    <van-cell :title="'皮重：' + item.p_weight" :value="item.p_time"></van-cell>
-                    <van-cell :title="'毛重：' + item.m_weight" :value="item.deliver_timestamp"></van-cell>
-                    <van-cell title="查看磅单" is-link :to="{name:'Ticket', params:{id:item.vichele_id + 'S'}}"></van-cell>
-                </van-collapse-item>
-            </van-collapse>
+                <van-button v-if="sale_company_config.need_driver_license && showDriverLicense" icon="arrow-up" type="primary" size="small" @click="showDriverLicense = false">收起
+                </van-button>
+            </div>
         </van-cell-group>
-        <van-dialog v-model="fource_reason_diag" title="有未出货车辆" close-on-click-overlay :show-confirm-button="false">
-            <van-form @submit="fource_close">
-                <van-field v-model="close_reason" name="原因" label="原因" placeholder="请输入未出货全部车辆的原因"
-                           :rules="[{ required: true, message: '请输入未出货全部车辆的原因' }]"/>
-                <div style="margin: 16px;">
-                    <van-button round block type="info" native-type="submit">提交</van-button>
-                </div>
-            </van-form>
-        </van-dialog>
-    </div>
+    </van-checkbox-group>
+    <van-dialog v-model="focus_driver_change" title="更换司机" close-on-click-overlay :show-confirm-button="false">
+        <van-form @submit="change_driver">
+            <van-field v-model="new_driver_name" name="姓名" label="姓名" placeholder="请输入司机姓名" :rules="[{ required: true, message: '请输入司机姓名' }]" />
+            <van-field v-model="new_driver_phone" name="电话" label="电话" placeholder="请输入司机电话" :rules="[{ required: true, message: '请输入司机电话' , pattern: phone_pattern}]" />
+            <div style="margin: 16px;">
+                <van-button round block type="info" native-type="submit">提交</van-button>
+            </div>
+        </van-form>
+    </van-dialog>
+    <van-row :gutter="10" type="flex" justify="center" align="center" v-if="can_change_to(4)">
+        <van-col :span="8">
+            <van-button block type="info" size="small" :disabled="pre_deliver_vichele_index.length == 0" @click="submit_confirm_deliver">确认出货选中车辆
+            </van-button>
+        </van-col>
+        <van-col :span="8">
+            <van-button block type="primary" size="small" @click="deliver_all">出货所有车辆</van-button>
+        </van-col>
+        <van-col :span="8">
+            <van-button block type="danger" size="small" @click="fource_reason_diag = true;">完成出货</van-button>
+        </van-col>
+    </van-row>
+
+    <van-cell-group title="已出货车辆">
+        <van-collapse v-model="expend_weight">
+            <van-collapse-item name="1" v-for="(item, index) in delivered_vichele" center :value="item.count + '吨'" :key="index" :title="item.main_vichele + '-' + item.behind_vichele" :label="item.driver_name + '-' + item.driver_phone">
+                <van-cell :title="'皮重：' + item.p_weight" :value="item.p_time"></van-cell>
+                <van-cell :title="'毛重：' + item.m_weight" :value="item.deliver_timestamp"></van-cell>
+                <van-cell title="查看磅单" is-link :to="{name:'Ticket', params:{id:item.vichele_id + 'S'}}"></van-cell>
+            </van-collapse-item>
+        </van-collapse>
+    </van-cell-group>
+    <van-dialog v-model="fource_reason_diag" title="有未出货车辆" close-on-click-overlay :show-confirm-button="false">
+        <van-form @submit="fource_close">
+            <van-field v-model="close_reason" name="原因" label="原因" placeholder="请输入未出货全部车辆的原因" :rules="[{ required: true, message: '请输入未出货全部车辆的原因' }]" />
+            <div style="margin: 16px;">
+                <van-button round block type="info" native-type="submit">提交</van-button>
+            </div>
+        </van-form>
+    </van-dialog>
+</div>
 </template>
 
 <script>
-
-import {getPlanInfo} from '@/api/plan';
-import {getCompanyConfig} from '@/api/company'
-import {getAllLicenseInfoByDriverPhone, updateLicenseExpireDate} from '@/api/driver'
+import {
+    getPlanInfo
+} from '@/api/plan';
+import {
+    getCompanyConfig
+} from '@/api/company'
+import {
+    getAllLicenseInfoByDriverPhone,
+    updateLicenseExpireDate
+} from '@/api/driver'
 import driverLicensesView from '@/components/DriverLicensesView'
 
 export default {
     name: 'DeliverPlan',
-    components : { driverLicensesView },
+    components: {
+        driverLicensesView
+    },
 
     data: function () {
         return {
