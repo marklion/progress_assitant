@@ -1152,13 +1152,13 @@ public:
         get_customize(tmp, _company_name);
         switch (_need)
         {
-        need_driver_license:
+        case need_driver_license:
             if (tmp.need_driver_license)
             {
                 ret = true;
             }
             break;
-        need_driver_register:
+        case need_driver_register:
             if (tmp.need_driver_register)
             {
                 ret = true;
