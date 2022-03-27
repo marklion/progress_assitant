@@ -16,7 +16,7 @@
         </template>
     </van-cell>
     <van-popup v-model="showEditDatePicker" position="bottom">
-        <van-datetime-picker type="date" :min-date="new Date()" @confirm="onConfirm" @cancel="showEditDatePicker = false" />
+        <van-datetime-picker ref="datePicker" type="date"  @confirm="onConfirm" @cancel="showEditDatePicker = false" />
     </van-popup>
 </div>
 </template>
@@ -64,9 +64,17 @@ export default {
                 startPosition: startIndex
             });
         },
-        callDateTimePicker(license) {
-            this.editingItem = license;
+        async callDateTimePicker(license) {
             this.showEditDatePicker = true;
+            this.editingItem = license;
+            let startDate = this.formatDateTime();
+            if(license.expire_date && license.expire_date.match(/^\d{4}-\d{2}-\d{2}$/)){
+                startDate = license.expire_date.split('-');
+            }
+            await this.$nextTick();
+            let picker = this.$refs.datePicker;
+            await this.$nextTick();    
+            picker.getPicker().setValues(startDate);
         },
         onConfirm(date) {
             this.showEditDatePicker = false;

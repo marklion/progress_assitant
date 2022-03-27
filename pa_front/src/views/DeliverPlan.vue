@@ -20,7 +20,7 @@
                         </van-col>
                     </van-row>
                 </van-cell>
-                <driverLicensesView v-if="showDriverLicense" :show-delete="false" :driver-license-list="driverLicenseList" @update="doLicenseUpdate" />
+                <driverLicensesView v-if="item.showDriverLicense" :show-delete="false" :driver-license-list="item.driverLicenseList" @update="doLicenseUpdate" />
                 <div v-if="item.register_number" class="register_info_show">
                     <van-row type="flex" align="center" justify="space-between">
                         <van-col :span="8">
@@ -41,9 +41,9 @@
                     <van-button icon="replay" v-if="item.driver_silent_id" type="danger" size="small" @click="reset_driver_info(item.driver_silent_id)">重置信息
                     </van-button>
                 </div>
-                <van-button v-if="sale_company_config.need_driver_license && !showDriverLicense" icon="eye" type="primary" size="small" @click="open_driver_license_list(item.driver_phone)">查证件
+                <van-button v-if="sale_company_config.need_driver_license && !item.showDriverLicense" icon="eye" type="primary" size="small" @click="open_driver_license_list(item)">查证件
                 </van-button>
-                <van-button v-if="sale_company_config.need_driver_license && showDriverLicense" icon="arrow-up" type="primary" size="small" @click="showDriverLicense = false">收起
+                <van-button v-if="sale_company_config.need_driver_license && item.showDriverLicense" icon="arrow-up" type="primary" size="small" @click="item.showDriverLicense = false">收起
                 </van-button>
             </div>
         </van-cell-group>
@@ -92,6 +92,9 @@
 
 <script>
 import {
+    Toast
+} from 'vant'
+import {
     getPlanInfo
 } from '@/api/plan';
 import {
@@ -111,8 +114,6 @@ export default {
 
     data: function () {
         return {
-            driverLicenseList: [],
-            showDriverLicense: false,
             checkingDriverPhone: '',
             focus_driver_change: false,
             status: 0,
@@ -144,25 +145,11 @@ export default {
             return this.$cookies.get('pa_ssid')
         },
 
-        delivered_vichele: function () {
-            var ret = [];
-            this.vichele_info.forEach((element) => {
-                if (element.finish) {
-                    ret.push(element);
-                }
-            });
-
-            return ret;
+        delivered_vichele(){
+            return this.vichele_info.filter(el => el.finish)
         },
         undelivered_vichele: function () {
-            var ret = [];
-            this.vichele_info.forEach((element) => {
-                if (!element.finish) {
-                    ret.push(element);
-                }
-            });
-
-            return ret;
+            return this.vichele_info.filter(el => !el.finish)
         },
     },
     methods: {
@@ -186,13 +173,21 @@ export default {
             this.new_driver_name = "";
             this.new_driver_phone = "";
         },
-        async open_driver_license_list(driver_phone) {
-            this.checkingDriverPhone = driver_phone;
-            await this.loadDriverLicense();
-            this.showDriverLicense = true;
+        async open_driver_license_list(vichele) {
+            this.checkingVichele = vichele;
+            let licenseCount = await this.loadDriverLicense();
+            if(licenseCount > 0){
+                this.$set(vichele, 'showDriverLicense', true);
+            }else{
+                Toast('无数据');
+            }
+            
+            // vichele.showDriverLicense = true;
         },
         async loadDriverLicense() {
-            this.driverLicenseList = await getAllLicenseInfoByDriverPhone(this.ssid, this.checkingDriverPhone);
+            let licenses = await getAllLicenseInfoByDriverPhone(this.ssid, this.checkingVichele.driver_phone);
+            this.$set(this.checkingVichele, 'driverLicenseList', licenses);
+            return licenses.length
         },
         async doLicenseUpdate(license) {
             await updateLicenseExpireDate('', this.ssid, license);
@@ -279,6 +274,7 @@ export default {
                 element.count = 20;
             }
             this.$set(this.vichele_info, index, element);
+            console.log(element.driver_silent_id)
         });
         this.buy_company = planInfo.buy_company;
         this.get_change_rule(this.plan_id);
