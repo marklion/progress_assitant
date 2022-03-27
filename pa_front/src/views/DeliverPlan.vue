@@ -20,7 +20,6 @@
                         </van-col>
                     </van-row>
                 </van-cell>
-                <driverLicensesView v-if="showDriverLicense" :show-delete="false" :driver-license-list="driverLicenseList" @update="doLicenseUpdate" />
                 <div v-if="item.register_number" class="register_info_show">
                     <van-row type="flex" align="center" justify="space-between">
                         <van-col :span="8">
