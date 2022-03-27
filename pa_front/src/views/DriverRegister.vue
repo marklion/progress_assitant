@@ -216,10 +216,10 @@ export default {
             try {
                 let silent_id = this.silent_id;
                 let file = formData.licenseFile[0];
-                let result = await addDriverLicense(file.file, silent_id, formData.expireDate);
-                console.log(result)
+                await addDriverLicense(file.file, silent_id, formData.expireDate);
                 await this.loadDriverLicense();
                 this.showLicenseForm = false;
+                this.fileList = [];
             } catch (err) {
                 console.log(err);
             }
