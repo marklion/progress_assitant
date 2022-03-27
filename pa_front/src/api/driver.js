@@ -29,9 +29,8 @@ function convert2Base64(_file) {
 export async function addDriverLicense(file, silent_id, expire_date) {
     let compressFile = await compressAccurately(file, 400);
     let base64File = await convert2Base64(compressFile);
-    let driverLicenseInfo = await call_remote_process("stuff_plan_management", "add_driver_license",
+    return await call_remote_process("stuff_plan_management", "add_driver_license",
         [silent_id, base64File, expire_date]);
-    return driverLicenseInfo;
 }
 
 /**
