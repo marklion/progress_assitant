@@ -9,6 +9,7 @@
 #include "../gen_code/stuff_plan_management.h"
 #include "../gen_code/idl_types.h"
 #include "../pa_util/pa_data_base.h"
+#include "../external_src/CJsonObject.hpp"
 
 using namespace ::apache::thrift;
 using namespace ::apache::thrift::protocol;
@@ -469,17 +470,33 @@ public:
 class pa_stuff_plan_get_update_license : public pa_test_case
 {
 public:
+    driver_license_info pre_add;
     pa_stuff_plan_get_update_license() : pa_test_case("get updatae license") {}
-    void do_test()
+    void pre_do()
     {
         THR_DEF_CIENT(stuff_plan_management);
         THR_CONNECT(stuff_plan_management);
-        bool fail = false;
         driver_license_info tmp;
         client->add_driver_license(
             tmp, "test_silent_id",
             default_license_pic_base64,
             "test_expired_date");
+        pre_add = tmp;
+
+        TRH_CLOSE();
+    }
+    void teardown()
+    {
+        THR_DEF_CIENT(stuff_plan_management);
+        THR_CONNECT(stuff_plan_management);
+        client->del_driver_license("test_silent_id", pre_add.id);
+        TRH_CLOSE();
+    }
+    void do_test()
+    {
+        THR_DEF_CIENT(stuff_plan_management);
+        THR_CONNECT(stuff_plan_management);
+        bool fail = false;
         try
         {
             std::vector<driver_license_info> tmp;
@@ -530,13 +547,60 @@ public:
     }
 };
 
+struct driver_license_add_del_data_meta :public pa_test_ddt_data_meta{
+    std::string opt_drvier_silent_id;
+    std::string attachment;
+    std::string expire_date;
+    driver_license_add_del_data_meta(const std::string &_silent_id, const std::string &_attachment, const std::string &_expire_date, bool _expected_result)
+    :opt_drvier_silent_id(_silent_id), attachment(_attachment), expire_date(_expire_date), pa_test_ddt_data_meta(_expected_result){}
+};
+
+class pa_stuff_plan_add_del_license_ddt : public pa_test_ddt_case {
+public:
+    using pa_test_ddt_case::pa_test_ddt_case;
+    bool test_ddt(const pa_test_ddt_data_meta &_data_meta)
+    {
+        bool ret = false;
+        auto data_meta = dynamic_cast<const driver_license_add_del_data_meta &>(_data_meta);
+
+        THR_DEF_CIENT(stuff_plan_management);
+        THR_CONNECT(stuff_plan_management);
+        driver_license_info tmp;
+        try
+        {
+            client->add_driver_license(tmp, data_meta.opt_drvier_silent_id, data_meta.attachment, data_meta.expire_date);
+            auto data_from_sql = sqlite_orm::search_record<pa_sql_driver_license>(tmp.id);
+            if (data_from_sql && data_from_sql->expire_date == data_meta.expire_date)
+            {
+                if (client->del_driver_license(data_meta.opt_drvier_silent_id, tmp.id))
+                {
+                    ret = true;
+                }
+            }
+        }
+        catch (const gen_exp &e)
+        {
+            ret = false;
+        }
+
+        TRH_CLOSE();
+
+        return ret;
+    }
+};
+
 class pa_stuff_plan_suite : public pa_test_suite
 {
 public:
     pa_stuff_plan_suite()
     {
+        pa_test_ddt_dataset data_set;
         all_cases.push_back(new pa_stuff_plan_add_del_license());
         all_cases.push_back(new pa_stuff_plan_get_update_license());
+
+        data_set.m_all_meta.push_back(std::shared_ptr<driver_license_add_del_data_meta>(new driver_license_add_del_data_meta("test_silent_id", default_license_pic_base64, "2022-03-24", true)));
+        data_set.m_all_meta.push_back(std::shared_ptr<driver_license_add_del_data_meta>(new driver_license_add_del_data_meta("test_silent_no_id", default_license_pic_base64, "2022-03-24", false)));
+        all_cases.push_back(new pa_stuff_plan_add_del_license_ddt("ddt_add_del", data_set));
     }
 
     virtual void pre_do()
@@ -568,6 +632,15 @@ public:
         stub_login.timestamp = time(NULL) / 3600;
         stub_login.set_parent(stub_user, "online_user");
         stub_login.insert_record();
+        neb::CJsonObject data_config;
+        neb::CJsonObject company_config;
+        neb::CJsonObject customize_config;
+        customize_config.Add("need_license", true, true);
+        company_config.Add("name", "test_company");
+        company_config.Add("customize", customize_config);
+        data_config.AddAsFirst(company_config);
+        std::string cmd = "echo '" + data_config.ToString() + "' > /conf/data_config.json";
+        system(cmd.c_str());
     }
     virtual void teardown()
     {
@@ -581,6 +654,7 @@ public:
         tmp_l.remove_table();
         pa_sql_driver_license tmp_d;
         tmp_d.remove_table();
+        system("rm -f /conf/data_config.json");
     }
 };
 #endif // _PA_STUFF_PLAN_SUITE_H_

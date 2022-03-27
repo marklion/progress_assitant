@@ -1788,7 +1788,6 @@ public:
                 auto related_single_vicheles = single_plan.get_all_children<pa_sql_single_vichele>("belong_plan", "finish == 0 AND driver_ext_key == %ld", itr.get_pri_id());
                 for (auto &info : related_single_vicheles)
                 {
-                    today_driver_info tmp;
                     auto main_vichele = info.get_parent<pa_sql_vichele>("main_vichele");
                     auto behind_vichele = info.get_parent<pa_sql_vichele_behind>("behind_vichele");
                     auto stuff_info = single_plan.get_parent<pa_sql_stuff_info>("belong_stuff");
@@ -1802,6 +1801,7 @@ public:
                         auto sale_company = stuff_info->get_parent<pa_sql_company>("belong_company");
                         if (create_company && sale_company)
                         {
+                            today_driver_info tmp;
                             tmp.date = single_plan.plan_time;
                             tmp.behind_vichele = behind_vichele->number;
                             tmp.destination_address = sale_company->address;
@@ -1819,7 +1819,30 @@ public:
                                 tmp.enter_location = register_info->enter_location;
                                 tmp.is_registered = true;
                                 tmp.register_order = register_info->order_number;
-                                tmp.can_enter = true;
+                            }
+                            tmp.can_enter = true;
+                            company_management_handler ch;
+                            if (ch.company_customize_need(sale_company->name, company_management_handler::need_driver_register))
+                            {
+                                if (register_info)
+                                {
+                                    tmp.can_enter &= true;
+                                }
+                                else
+                                {
+                                    tmp.can_enter &= false;
+                                }
+                            }
+                            if (ch.company_customize_need(sale_company->name, company_management_handler::need_driver_license))
+                            {
+                                if (itr.license_is_valid())
+                                {
+                                    tmp.can_enter &= true;
+                                }
+                                else
+                                {
+                                    tmp.can_enter &= false;
+                                }
                             }
                             _return.push_back(tmp);
                         }
@@ -2123,8 +2146,13 @@ public:
         }
         else if (company && company->is_sale)
         {
-            permit_opt = true;
-
+            company_management_handler ch;
+            company_customize tmp;
+            ch.get_customize(tmp, company->name);
+            if (tmp.need_driver_license)
+            {
+                permit_opt = true;
+            }
         }
         if (!permit_opt)
         {

@@ -230,6 +230,7 @@ public:
     {
         return "driver_table";
     }
+    bool license_is_valid();
 };
 
 class pa_sql_archive_plan;

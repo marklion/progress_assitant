@@ -72,6 +72,35 @@ public:
     }
 };
 
+struct pa_test_ddt_data_meta{
+    bool expected_result = true;
+    pa_test_ddt_data_meta(bool _expected_result):expected_result(_expected_result) {}
+    virtual ~pa_test_ddt_data_meta() {
+
+    }
+};
+
+struct pa_test_ddt_dataset {
+    std::list<std::shared_ptr<pa_test_ddt_data_meta>> m_all_meta;
+    void clear_set() {
+        m_all_meta.clear();
+    }
+};
+
+class pa_test_ddt_case:public pa_test_case{
+public:
+    pa_test_ddt_dataset m_data_set;
+    pa_test_ddt_case(const std::string &_name, const pa_test_ddt_dataset &_data_set):m_data_set(_data_set), pa_test_case(_name){
+    }
+    virtual bool test_ddt(const pa_test_ddt_data_meta &_data_meta) = 0;
+    void do_test() {
+        for (auto &itr:m_data_set.m_all_meta)
+        {
+            TEST_FORCE_TRUE(test_ddt(*itr)==itr->expected_result);
+        }
+    }
+};
+
 class pa_test_framework: public pa_test_base {
 public:
     std::map<std::string, pa_test_base *> m_all;
@@ -85,10 +114,10 @@ public:
             itr->second->run_test();
         }
     }
-    virtual void teardown() 
+    virtual void teardown()
     {
         std::cout << "test end" << std::endl;
     }
 };
 
-#endif 
+#endif

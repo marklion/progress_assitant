@@ -300,7 +300,7 @@ public:
                     {
                         if (main_vichele->number == plateNo)
                         {
-                            if (!itr.has_been_register())
+                            if (should_add_to_resp(itr, company->name))
                             {
                                 PA_RETURN_MSG("driver has not registered");
                             }
@@ -313,6 +313,10 @@ public:
                         auto has_id_driver = sqlite_orm::search_record<pa_sql_driver>("silent_id IS NOT NULL AND silent_id != '' AND phone == '%s'", driver->phone.c_str());
                         if (has_id_driver && has_id_driver->driver_id == driverId)
                         {
+                            if (should_add_to_resp(itr, company->name))
+                            {
+                                PA_RETURN_MSG("driver has not registered");
+                            }
                             _return = make_resp_from_single_vichele(itr);
                             return;
                         }
@@ -364,6 +368,37 @@ public:
         }
     }
 
+    bool should_add_to_resp(pa_sql_single_vichele &_single_vehicle, const std::string &_company_name)
+    {
+        bool should_add = true;
+        company_management_handler ch;
+        if (ch.company_customize_need(_company_name, company_management_handler::need_driver_register))
+        {
+            if (_single_vehicle.has_been_register())
+            {
+                should_add &= true;
+            }
+            else
+            {
+                should_add &= false;
+            }
+        }
+        if (ch.company_customize_need(_company_name, company_management_handler::need_driver_license))
+        {
+            auto driver = _single_vehicle.get_parent<pa_sql_driver>("driver");
+            if (driver && driver->license_is_valid())
+            {
+                should_add &= true;
+            }
+            else
+            {
+                should_add &= false;
+            }
+        }
+
+        return should_add;
+    }
+
     virtual void proc_all_vehicle_info(std::vector<vehicle_info_resp> &_return, const std::string &token)
     {
         log_audit_basedon_token(token, __FUNCTION__);
@@ -379,9 +414,9 @@ public:
             auto all_vichele_info = plan.get_all_children<pa_sql_single_vichele>("belong_plan", "finish == 0");
             for (auto &itr : all_vichele_info)
             {
-                vehicle_info_resp tmp;
-                if (itr.has_been_register())
+                if (should_add_to_resp(itr, company->name))
                 {
+                    vehicle_info_resp tmp;
                     tmp = make_resp_from_single_vichele(itr);
                     _return.push_back(tmp);
                 }
