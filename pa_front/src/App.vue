@@ -27,45 +27,6 @@
 </template>
 
 <script>
-import Vue from 'vue';
-import {
-    NavBar,
-    Tabbar,
-    TabbarItem
-} from 'vant';
-
-import {
-    Icon
-} from 'vant';
-import {
-    Image as VanImage
-} from 'vant';
-import {
-    Toast
-} from 'vant';
-import {
-    Dialog
-} from 'vant';
-
-import {
-    Col,
-    Row
-} from 'vant';
-import {
-    PullRefresh
-} from 'vant';
-
-Vue.use(PullRefresh);
-Vue.use(Col);
-Vue.use(Row);
-Vue.use(Dialog);
-Vue.use(Toast);
-Vue.use(VanImage);
-Vue.use(Icon);
-Vue.use(Tabbar);
-Vue.use(TabbarItem);
-
-Vue.use(NavBar);
 export default {
     data: function () {
         return {

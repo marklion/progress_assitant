@@ -21,13 +21,18 @@ export function call_remote_process(_service_interface,process,args) {
         duration: 0
     });
     return new Promise(function (resolve, reject) {
+        if(!client[process]){
+            let errMsg = `${process} not exist`;
+            toast1.clear()
+            Toast(errMsg);
+            reject(errMsg);
+        }
         client[process].apply(client, args).then(function (resp) {
             toast1.clear()
             resolve(resp);
         }).catch(function (err) {
             toast1.clear()
             Toast(err.msg);
-            console.log(err);
             reject(err);
         });
     });

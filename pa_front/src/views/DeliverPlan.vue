@@ -23,20 +23,25 @@
                 <div v-if="item.register_number" class="register_info_show">
                     <van-row type="flex" align="center" justify="space-between">
                         <van-col :span="8">
-                            进厂序号：{{item.register_number}}
+                            进厂序号：{{ item.register_number }}
                         </van-col>
                         <van-col :span="8">
-                            进厂位置：{{item.enter_location}}
+                            进厂位置：{{ item.enter_location }}
                         </van-col>
                         <van-col :span="8">
-                            {{item.register_timestamp}}
+                            {{ item.register_timestamp }}
                         </van-col>
                     </van-row>
                 </div>
-                <div v-else-if="!$store.state.userinfo.buyer">
-                    <van-button type="primary" size="small" @click="open_change_driver(item.vichele_id)">换司机</van-button>
-                    <van-button v-if="item.driver_silent_id" type="danger" size="small" @click="reset_driver_info(item.driver_silent_id)">重置信息</van-button>
+                <div v-else-if="!$store.state.userinfo.buyer" style="display : inline-block">
+                    <van-button icon="exchange" type="primary" size="small" @click="open_change_driver(item.vichele_id)">换司机
+                    </van-button>
+
+                    <van-button icon="replay" v-if="item.driver_silent_id" type="danger" size="small" @click="reset_driver_info(item.driver_silent_id)">重置信息
+                    </van-button>
                 </div>
+                <van-button v-if="sale_company_config.need_driver_license && !showDriverLicense" icon="eye" type="info" size="small" @click="open_driver_license_list(item.driver_phone)">查证件
+                </van-button>
             </div>
         </van-cell-group>
     </van-checkbox-group>
@@ -51,7 +56,8 @@
     </van-dialog>
     <van-row :gutter="10" type="flex" justify="center" align="center" v-if="can_change_to(4)">
         <van-col :span="8">
-            <van-button block type="info" size="small" :disabled="pre_deliver_vichele_index.length == 0" @click="submit_confirm_deliver">确认出货选中车辆</van-button>
+            <van-button block type="info" size="small" :disabled="pre_deliver_vichele_index.length == 0" @click="submit_confirm_deliver">确认出货选中车辆
+            </van-button>
         </van-col>
         <van-col :span="8">
             <van-button block type="primary" size="small" @click="deliver_all">出货所有车辆</van-button>
@@ -67,6 +73,7 @@
                 <van-cell :title="'皮重：' + item.p_weight" :value="item.p_time"></van-cell>
                 <van-cell :title="'毛重：' + item.m_weight" :value="item.deliver_timestamp"></van-cell>
                 <van-cell title="查看磅单" is-link :to="{name:'Ticket', params:{id:item.vichele_id + 'S'}}"></van-cell>
+                <van-cell v-if="sale_company_config.need_driver_license" is-link title="查看证件" @click="open_driver_license_list(item.driver_phone)"></van-cell>
             </van-collapse-item>
         </van-collapse>
     </van-cell-group>
@@ -78,59 +85,32 @@
             </div>
         </van-form>
     </van-dialog>
+    <driverLicenseDialog v-model="showDriverLicense" :phone="checkingDriverPhone">
+    </driverLicenseDialog>
 </div>
 </template>
 
 <script>
-import Vue from 'vue';
 import {
-    Button
-} from 'vant';
+    getPlanInfo
+} from '@/api/plan';
 import {
-    Cell,
-    CellGroup
-} from 'vant';
-import {
-    Checkbox,
-    CheckboxGroup
-} from 'vant';
-import {
-    Col,
-    Row
-} from 'vant';
-import {
-    Dialog
-} from 'vant';
-import {
-    Form
-} from 'vant';
-import {
-    Stepper
-} from 'vant';
-import {
-    Collapse,
-    CollapseItem
-} from 'vant';
-import { Field } from 'vant';
+    getCompanyConfig
+} from '@/api/company'
 
-Vue.use(Field);
-Vue.use(Collapse);
-Vue.use(CollapseItem);
-Vue.use(Stepper);
-Vue.use(Form);
+import driverLicenseDialog from '@/components/DriverLicenseDialog'
 
-Vue.use(Dialog);
-Vue.use(Col);
-Vue.use(Row);
-Vue.use(Checkbox);
-Vue.use(CheckboxGroup);
-Vue.use(Cell);
-Vue.use(CellGroup);
-Vue.use(Button);
 export default {
     name: 'DeliverPlan',
+    components: {
+        driverLicenseDialog
+    },
+
     data: function () {
         return {
+            driverLicenseList: [],
+            showDriverLicense: false,
+            checkingDriverPhone: '',
             focus_driver_change: false,
             status: 0,
             plan_id: 0,
@@ -139,27 +119,28 @@ export default {
             name: '',
             vichele_info: [],
             buy_company: '',
+            sale_company: '',
+            sale_company_config: {
+                need_driver_license: false
+            },
             pre_deliver_vichele_index: [],
 
             status_change_rule: [],
-            can_change_to: function (_index) {
-                var ret = false;
-                if (_index >= 0 && _index < this.status_change_rule.length) {
-                    ret = this.status_change_rule[_index];
-                }
 
-                return ret;
-            },
             close_reason: '',
             fource_reason_diag: false,
             expend_weight: ['1'],
             phone_pattern: /^(13[0-9]|14[01456879]|15[0-35-9]|16[2567]|17[0-8]|18[0-9]|19[0-35-9])\d{8}$/,
             focus_change_id: 0,
-            new_driver_name:'',
-            new_driver_phone:'',
+            new_driver_name: '',
+            new_driver_phone: '',
         };
     },
     computed: {
+        ssid: function () {
+            return this.$cookies.get('pa_ssid')
+        },
+
         delivered_vichele: function () {
             var ret = [];
             this.vichele_info.forEach((element) => {
@@ -182,17 +163,29 @@ export default {
         },
     },
     methods: {
+        can_change_to: function (_index) {
+            var ret = false;
+            if (_index >= 0 && _index < this.status_change_rule.length) {
+                ret = this.status_change_rule[_index];
+            }
+
+            return ret;
+        },
         reset_driver_info: function (_silent_id) {
             var vue_this = this;
-            vue_this.$call_remote_process("stuff_plan_management", "driver_silent_reset", [vue_this.$cookies.get('pa_ssid'), _silent_id]).then(function(){
+            vue_this.$call_remote_process("stuff_plan_management", "driver_silent_reset", [vue_this.$cookies.get('pa_ssid'), _silent_id]).then(function () {
                 vue_this.$toast("重置成功");
             });
         },
-        open_change_driver:function(_vichele_id) {
+        open_change_driver: function (_vichele_id) {
             this.focus_change_id = _vichele_id;
             this.focus_driver_change = true;
             this.new_driver_name = "";
             this.new_driver_phone = "";
+        },
+        open_driver_license_list(driver_phone) {
+            this.checkingDriverPhone = driver_phone;
+            this.showDriverLicense = true;
         },
         change_driver: function () {
             var vue_this = this;
@@ -262,23 +255,25 @@ export default {
             });
         },
     },
-    beforeMount: function () {
-        var vue_this = this;
-        vue_this.$call_remote_process("stuff_plan_management", 'get_plan', [parseInt(vue_this.$route.params.plan_id)]).then(function (resp) {
-            vue_this.status = resp.status;
-            vue_this.plan_id = resp.plan_id;
-            vue_this.count = resp.count;
-            vue_this.name = resp.name;
-            vue_this.user_name = resp.created_user_name;
-            resp.vichele_info.forEach((element, index) => {
-                if (!element.finish) {
-                    element.count = 20;
-                }
-                vue_this.$set(vue_this.vichele_info, index, element);
-            });
-            vue_this.buy_company = resp.buy_company;
-            vue_this.get_change_rule(vue_this.plan_id);
+    async beforeMount() {
+        this.plan_id = parseInt(this.$route.params.plan_id)
+        let planInfo = await getPlanInfo(this.plan_id);
+
+        this.status = planInfo.status;
+        this.count = planInfo.count;
+        this.name = planInfo.name;
+        this.user_name = planInfo.created_user_name;
+        planInfo.vichele_info.forEach((element, index) => {
+            if (!element.finish) {
+                element.count = 20;
+            }
+            this.$set(this.vichele_info, index, element);
         });
+        this.buy_company = planInfo.buy_company;
+        this.get_change_rule(this.plan_id);
+
+        this.sale_company = planInfo.sale_company;
+        this.sale_company_config = await getCompanyConfig(planInfo.sale_company);
     },
 }
 </script>
