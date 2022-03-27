@@ -52,7 +52,11 @@
                         <vxe-table size="small" stripe align="center" max-height="500" :data="plan_detail.vichele_info">
                             <vxe-table-column field="main_vichele" title="主车" width="22%"></vxe-table-column>
                             <vxe-table-column field="behind_vichele" title="挂车" width="23%"></vxe-table-column>
-                            <vxe-table-column field="driver_name" title="司机" width="25%"></vxe-table-column>
+                            <vxe-table-column title="司机" width="25%">
+                                <template #default="{ row }">
+                                    <van-button plain hairline type="info" size="mini" @click="show_driver_license = true;focus_driver_license_phone=row.driver_phone">{{row.driver_name}}</van-button>
+                                </template>
+                            </vxe-table-column>
                             <vxe-table-column field="driver_phone" title="电话" width="30%"></vxe-table-column>
                         </vxe-table>
                     </van-popup>
@@ -96,12 +100,14 @@
             <van-button plain block>确认</van-button>
         </van-form>
     </van-dialog>
+    <driver-license-dialog :phone="focus_driver_license_phone" v-model="show_driver_license"></driver-license-dialog>
 </div>
 </template>
 
 <script>
 import Vue from 'vue';
 import PlanOperate from '../components/PlanOperate.vue'
+import DriverLicenseDialog from '../components/DriverLicenseDialog.vue'
 import {
     Cell,
     CellGroup
@@ -163,9 +169,12 @@ export default {
     components: {
         "plan-operate": PlanOperate,
         "contract-cell": ContractCell,
+        "driver-license-dialog": DriverLicenseDialog,
     },
     data: function () {
         return {
+            show_driver_license: false,
+            focus_driver_license_phone: '',
             change_price_diag: false,
             new_price: "",
             show_vichele_table: false,

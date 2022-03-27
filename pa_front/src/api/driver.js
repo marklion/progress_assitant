@@ -29,17 +29,18 @@ function convert2Base64(_file) {
 export async function addDriverLicense(file, silent_id, expire_date) {
     let compressFile = await compressAccurately(file, 400);
     let base64File = await convert2Base64(compressFile);
-    let driverLicenseInfo = await call_remote_process("stuff_plan_management", "add_driver_license",
+
+    return await call_remote_process("stuff_plan_management", "add_driver_license",
         [silent_id, base64File, expire_date]);
-    return driverLicenseInfo;
 }
 
 /**
  * @param {String} silent_id
  * @return {Promise<Array<DriverLicenseInfo>>}
  */
-export async function getLicenseBySilentId(silent_id) {
-    return await call_remote_process("stuff_plan_management", "get_self_all_license_info",
+
+export function getLicenseBySilentId(silent_id) {
+    return call_remote_process("stuff_plan_management", "get_self_all_license_info",
         [silent_id]);
 }
 
@@ -48,8 +49,8 @@ export async function getLicenseBySilentId(silent_id) {
  * @param {String} phone
  * @return {Promise<Array<DriverLicenseInfo>>}
  */
-export async function getAllLicenseInfoByDriverPhone(ssid, phone) {
-    return await call_remote_process("stuff_plan_management", "get_all_license_info_by_driver_phone",
+export function getAllLicenseInfoByDriverPhone(ssid, phone) {
+    return call_remote_process("stuff_plan_management", "get_all_license_info_by_driver_phone",
         [ssid, phone]);
 }
 
@@ -59,8 +60,8 @@ export async function getAllLicenseInfoByDriverPhone(ssid, phone) {
  * @param {DriverLicenseInfo} driver_license_info
  * @return {Promise<Boolean>}
  */
-export async function updateLicenseExpireDate(silent_id, ssid, driver_license_info) {
-    return await call_remote_process('stuff_plan_management', 'update_driver_license',
+export function updateLicenseExpireDate(silent_id, ssid, driver_license_info) {
+    return call_remote_process('stuff_plan_management', 'update_driver_license',
         [silent_id, ssid, driver_license_info]);
 }
 
@@ -70,7 +71,7 @@ export async function updateLicenseExpireDate(silent_id, ssid, driver_license_in
  * @param {String} license_id
  * @return {Promise<Boolean>}
  */
-export async function delLicense(silent_id, license_id) {
-    return await call_remote_process('stuff_plan_management', 'del_driver_license',
+export function delLicense(silent_id, license_id) {
+    return call_remote_process('stuff_plan_management', 'del_driver_license',
         [silent_id, license_id]);
 }
