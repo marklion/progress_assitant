@@ -14,7 +14,7 @@
                 <van-collapse-item icon="setting-o" title="其他" name="1">
                     <van-cell class="driver-title-cell" title="证件图片" value="">
                         <template #right-icon>
-                            <van-button v-if="!showLicenseForm" icon="plus" size="mini" type="primary" @click="add_license_item">新增
+                            <van-button v-if="!showLicenseForm" icon="plus" size="mini" type="primary" @click="showLicenseForm = true">新增
                             </van-button>
                             <van-button v-if="showLicenseForm" icon="cross" size="mini" type="default" @click="showLicenseForm = false">取消
                             </van-button>
@@ -31,7 +31,7 @@
                             </template>
                         </van-field>
 
-                        <van-field readonly clickable name="expireDate" :value="value" label="有效期" placeholder="请选择有效期截止日期" :rules="[{ required: true, message: '请选择过期时间' }]" @click="showLicenseDatePicker = true" />
+                        <van-field readonly clickable name="expireDate" :value="value" label="有效期至" placeholder="请选择有效期截止日期" :rules="[{ required: true, message: '请选择过期时间' }]" @click="showLicenseDatePicker = true" />
 
                         <van-popup v-model="showLicenseDatePicker" position="bottom">
                             <van-datetime-picker type="date" :min-date="current_date" @confirm="onConfirmLicenseDate" @cancel="showLicenseDatePicker = false" />
@@ -204,9 +204,6 @@ export default {
             let d = date.getDate();
             d = d < 10 ? ('0' + d) : d;
             return y + '-' + m + '-' + d;
-        },
-        add_license_item: function () {
-            return this.showLicenseForm = true;
         },
         async loadDriverLicense() {
             let silent_id = this.silent_id;

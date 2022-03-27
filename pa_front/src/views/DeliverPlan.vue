@@ -178,11 +178,10 @@ export default {
             let licenseCount = await this.loadDriverLicense();
             if(licenseCount > 0){
                 this.$set(vichele, 'showDriverLicense', true);
+                vichele.showDriverLicense = true;
             }else{
                 Toast('无数据');
             }
-            
-            // vichele.showDriverLicense = true;
         },
         async loadDriverLicense() {
             let licenses = await getAllLicenseInfoByDriverPhone(this.ssid, this.checkingVichele.driver_phone);
@@ -274,7 +273,6 @@ export default {
                 element.count = 20;
             }
             this.$set(this.vichele_info, index, element);
-            console.log(element.driver_silent_id)
         });
         this.buy_company = planInfo.buy_company;
         this.get_change_rule(this.plan_id);
