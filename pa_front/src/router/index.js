@@ -5,6 +5,15 @@ Vue.use(VueRouter)
 
 const routes = [
   {
+    path: '/pc/customers',
+    name: 'customers',
+    component: () => import('../views/pc/CustomerInfo.vue'),
+    meta: {
+      isPC : true,
+      extra_page : true,
+    },
+  },
+  {
     path: '/home',
     name: 'Home',
     component: () => import('../views/Home.vue'),
