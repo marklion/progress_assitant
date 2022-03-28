@@ -721,8 +721,6 @@ public:
         }
 
         auto id_ins_sql = PA_DATAOPT_search_base_id_info_by_name(_req.customerName, "customer", *company);
-        if (id_ins_sql == _req.customerId)
-        {
             auto customer_company = PA_DATAOPT_fetch_company(_req.customerName);
             if (customer_company)
             {
@@ -734,11 +732,6 @@ public:
                 contract->balance = _req.balance;
                 return contract->update_record();
             }
-        }
-        else
-        {
-            PA_RETURN_MSG(OPEN_API_MSG_NO_DATA_FOUND);
-        }
 
         return ret;
     }
@@ -948,6 +941,28 @@ public:
         ret = vsa->update_record();
 
         return ret;
+    }
+
+    virtual void get_all_customer_balance(std::vector<push_balance_req> &_return, const std::string &token)
+    {
+        log_audit_basedon_token(token, __FUNCTION__);
+        auto company = _get_token_company(token);
+        if (!company)
+        {
+            PA_RETURN_MSG(OPEN_API_MSG_NO_PERMISSION);
+        }
+        auto contracts = company->get_all_children<pa_sql_contract>("b_side");
+        for (auto &itr : contracts)
+        {
+            auto a_company = itr.get_parent<pa_sql_company>("a_side");
+            if (a_company)
+            {
+                push_balance_req tmp;
+                tmp.customerName = a_company->name;
+                tmp.balance = itr.balance;
+                _return.push_back(tmp);
+            }
+        }
     }
 };
 
