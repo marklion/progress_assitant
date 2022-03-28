@@ -1137,6 +1137,7 @@ public:
                 auto company_customize_config = company_config["customize"];
                 company_customize_config.Get("need_license", _return.need_driver_license);
                 company_customize_config.Get("need_register", _return.need_driver_register);
+                company_customize_config.Get("need_balance_auto_change", _return.need_balance_auto_change);
                 break;
             }
         }
@@ -1144,6 +1145,7 @@ public:
     enum company_customize_need_en {
         need_driver_register,
         need_driver_license,
+        need_balance_auto_change,
     };
     bool company_customize_need(const std::string &_company_name, company_customize_need_en _need) {
         bool ret = false;
@@ -1153,16 +1155,13 @@ public:
         switch (_need)
         {
         case need_driver_license:
-            if (tmp.need_driver_license)
-            {
-                ret = true;
-            }
+            ret = tmp.need_driver_license;
             break;
         case need_driver_register:
-            if (tmp.need_driver_register)
-            {
-                ret = true;
-            }
+            ret = tmp.need_driver_register;
+            break;
+        case need_balance_auto_change:
+            ret = tmp.need_balance_auto_change;
             break;
         default:
             break;

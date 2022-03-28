@@ -891,4 +891,29 @@ public:
     }
 };
 
+class pa_sql_balance_history:public sql_tree_base {
+public:
+    std::string account;
+    std::string timestamp;
+    std::string reason;
+    double balance_before_change = 0;
+    pa_sql_balance_history() {
+        add_parent_type<pa_sql_contract>("belong_contract");
+    }
+    virtual std::vector<sqlite_orm_column> self_columns_defined() {
+        std::vector<sqlite_orm_column> ret;
+        ret.push_back(sqlite_orm_column("account", sqlite_orm_column::STRING, &account));
+        ret.push_back(sqlite_orm_column("timestamp", sqlite_orm_column::STRING, &timestamp));
+        ret.push_back(sqlite_orm_column("reason", sqlite_orm_column::STRING, &reason));
+        ret.push_back(sqlite_orm_column("balance_before_change", sqlite_orm_column::REAL, &balance_before_change));
+
+        return ret;
+    }
+
+    virtual std::string table_name()
+    {
+        return "balance_history_table";
+    }
+};
+
 #endif // _PA_DATABSE_H_

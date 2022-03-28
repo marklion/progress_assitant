@@ -124,6 +124,7 @@ struct third_dev_info {
 struct company_customize {
     1:bool need_driver_license,
     2:bool need_driver_register,
+    3:bool need_balance_auto_change,
 }
 
 service company_management {
@@ -459,6 +460,7 @@ struct push_balance_req {
     1:string customerId,
     2:string customerName,
     3:double balance,
+    4:string reason,
 }
 
 struct push_zone_change_req {
@@ -509,6 +511,7 @@ service open_api_management {
     ticket_detail get_vehicle_info_by_id(1:string id) throws (1:gen_exp e),
     bool modify_vehicle_info_from_ticket(1:string ssid, 2:ticket_detail ticket) throws (1:gen_exp e),
     list<push_balance_req> get_all_customer_balance(1:string token) throws (1:gen_exp e),
+    string export_balance_audit_log(1:string token, 2:string company_name) throws (1:gen_exp e),
 }
 
 struct vichele_stay_alone {
