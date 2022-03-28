@@ -309,3 +309,34 @@ bool pa_sql_single_vichele::has_been_register()
 
     return ret;
 }
+
+
+bool pa_sql_driver::license_is_valid()
+{
+    bool ret = false;
+    auto driver_has_silent_id = sqlite_orm::search_record<pa_sql_driver>("phone == '%s' AND silent_id != ''", phone.c_str());
+    if (driver_has_silent_id)
+    {
+        auto all_license = driver_has_silent_id->get_all_children<pa_sql_driver_license>("belong_driver");
+        if (all_license.size() > 0)
+        {
+            bool all_not_expired = true;
+            for (auto &itr:all_license)
+            {
+                auto cur_sec = time(nullptr);
+                auto expired_sec = PA_DATAOPT_timestring_2_date(itr.expire_date + " 0:");
+                if (cur_sec > expired_sec)
+                {
+                    all_not_expired = false;
+                    break;
+                }
+            }
+            if (all_not_expired)
+            {
+                ret = true;
+            }
+        }
+    }
+
+    return ret;
+}

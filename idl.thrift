@@ -123,6 +123,7 @@ struct third_dev_info {
 
 struct company_customize {
     1:bool need_driver_license,
+    2:bool need_driver_register,
 }
 
 service company_management {

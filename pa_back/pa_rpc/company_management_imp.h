@@ -1132,13 +1132,42 @@ public:
         {
             auto company_config = config[i];
             auto company_name = company_config("name");
-            auto company_customize_config = company_config["customize"];
-            if (company_name == _company_name)
+            if (company_name == _company_name && company_config.KeyExist("customize"))
             {
+                auto company_customize_config = company_config["customize"];
                 company_customize_config.Get("need_license", _return.need_driver_license);
+                company_customize_config.Get("need_register", _return.need_driver_register);
                 break;
             }
         }
+    }
+    enum company_customize_need_en {
+        need_driver_register,
+        need_driver_license,
+    };
+    bool company_customize_need(const std::string &_company_name, company_customize_need_en _need) {
+        bool ret = false;
+
+        company_customize tmp;
+        get_customize(tmp, _company_name);
+        switch (_need)
+        {
+        case need_driver_license:
+            if (tmp.need_driver_license)
+            {
+                ret = true;
+            }
+            break;
+        case need_driver_register:
+            if (tmp.need_driver_register)
+            {
+                ret = true;
+            }
+            break;
+        default:
+            break;
+        }
+        return ret;
     }
 };
 #endif // _COMPANY_MANAGEMENT_IMP_H_
