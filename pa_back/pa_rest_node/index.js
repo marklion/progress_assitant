@@ -197,7 +197,21 @@ app.post('/pa_rest/push_manual_permit', async (req, res)=>{
 
     res.send(ret);
 });
+app.get('/pa_rest/get_all_balance', async (req, res) => {
+    var token = req.query.token;
+    var ret = { err_msg: '无权限' };
+    try {
+        var resp = await request_rpc("open_api_management", 'get_all_customer_balance', [token]);
+        if (resp) {
+            ret.err_msg = "";
+            ret.result = resp;
+        }
+    } catch (error) {
+        ret = { err_msg: error.msg };
+    }
 
+    res.send(ret);
+});
 app.listen(port, () => {
     console.log('rest is runing');
 });
