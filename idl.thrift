@@ -259,6 +259,7 @@ struct stuff_plan {
     13:string sale_company,
     14:string comment,
     15:bool is_cancel,
+    16:bool from_bidding,
 }
 
 struct plan_status {
