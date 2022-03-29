@@ -237,5 +237,27 @@ public:
             }
         }
     }
+
+    virtual bool create_bidding(const std::string &ssid, const bidding_params &bp)
+    {
+        bool ret = false;
+
+        return ret;
+    }
+    virtual void get_all_bidding(std::vector<bidding_params> &_return, const std::string &ssid, const int64_t status_condition)
+    {
+    }
+    virtual bool close_bidding(const std::string &ssid, const int64_t bidding_id)
+    {
+        bool ret = false;
+
+        return ret;
+    }
+    virtual bool call_bidding(const std::string &ssid, const int64_t bidding_id, const double price)
+    {
+        bool ret = false;
+
+        return ret;
+    }
 };
 #endif // _STUFF_INFO_IMP_H_
