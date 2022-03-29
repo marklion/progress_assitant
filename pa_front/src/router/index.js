@@ -7,7 +7,7 @@ const routes = [
   {
     path: '/pc/customers',
     name: 'customers',
-    component: () => import('../views/pc/CustomerInfo.vue'),
+    component: () => import('../views/pc/CustomerInfo'),
     meta: {
       isPC : true,
       extra_page : true,
