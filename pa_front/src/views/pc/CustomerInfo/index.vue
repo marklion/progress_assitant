@@ -2,7 +2,7 @@
 <div class="container">
     <div class=nav-bar>
         <div class="logo-container">
-            <img :src="logoUrl" class="sidebar-logo">
+            <img :src="logoUrl" alt="平台logo" class="sidebar-logo">
             <h1 class="sidebar-title">掌易助理管理平台</h1>
         </div>
         <div class="menu-container">
