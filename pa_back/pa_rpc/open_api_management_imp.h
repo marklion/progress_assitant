@@ -26,6 +26,14 @@ class open_api_management_handler : public open_api_managementIf
 {
     tdf_log m_log;
 public:
+    std::string pa_double2string_reserve2(double _value)
+    {
+        std::stringstream ss;
+        ss.setf(std::ios::fixed);
+        ss.precision(2);
+        ss << _value;
+        return ss.str();
+    }
     open_api_management_handler():m_log("api_audit", "/log/audit.log", "/log/audit.log") {}
     virtual bool register_api_user(const std::string &company_name, const std::string &email, const std::string &password)
     {
@@ -754,19 +762,32 @@ public:
         {
             PA_RETURN_MSG(OPEN_API_MSG_NO_PERMISSION);
         }
+        auto api_user = sqlite_orm::search_record<pa_sql_api_user>("token == '%s'", token.c_str());
+        if (!api_user)
+        {
+            PA_RETURN_MSG(OPEN_API_MSG_USER_NOT_EXIST);
+        }
 
         auto id_ins_sql = PA_DATAOPT_search_base_id_info_by_name(_req.customerName, "customer", *company);
-            auto customer_company = PA_DATAOPT_fetch_company(_req.customerName);
-            if (customer_company)
+        auto customer_company = PA_DATAOPT_fetch_company(_req.customerName);
+        if (customer_company)
+        {
+            auto contract = customer_company->get_children<pa_sql_contract>("a_side", "b_side_ext_key == %ld", company->get_pri_id());
+            if (!contract)
             {
-                auto contract = customer_company->get_children<pa_sql_contract>("a_side", "b_side_ext_key == %ld", company->get_pri_id());
-                if (!contract)
-                {
-                    PA_RETURN_MSG(OPEN_API_MSG_NO_CONTRACT);
-                }
-                contract->balance = _req.balance;
-                return contract->update_record();
+                PA_RETURN_MSG(OPEN_API_MSG_NO_CONTRACT);
             }
+            auto orig_balance = contract->balance;
+            contract->balance = _req.balance;
+            pa_sql_balance_history tmp;
+            tmp.reason = _req.reason;
+            tmp.timestamp = PA_DATAOPT_current_time();
+            tmp.account = api_user->email;
+            tmp.balance_before_change = orig_balance;
+            tmp.set_parent(*contract, "belong_contract");
+            tmp.insert_record();
+            return contract->update_record();
+        }
 
         return ret;
     }
@@ -840,14 +861,7 @@ public:
         return ret;
     }
 
-    std::string pa_double2string_reserve2(double _value)
-    {
-        std::stringstream ss;
-        ss.setf(std::ios::fixed);
-        ss.precision(2);
-        ss << _value;
-        return ss.str();
-    }
+
     virtual void get_vehicle_info_by_id(ticket_detail &_return, const std::string &id)
     {
         auto last_tag = id.substr(id.length() - 1, 1);
@@ -997,6 +1011,61 @@ public:
                 tmp.balance = itr.balance;
                 _return.push_back(tmp);
             }
+        }
+    }
+
+    virtual void export_balance_audit_log(std::string &_return, const std::string &token, const std::string &company_name)
+    {
+        log_audit_basedon_token(token, __FUNCTION__);
+        auto company = _get_token_company(token);
+        if (!company)
+        {
+            PA_RETURN_MSG(OPEN_API_MSG_NO_PERMISSION);
+        }
+        auto a_company = sqlite_orm::search_record<pa_sql_company>("name == '%s'", company_name.c_str());
+        if (!a_company)
+        {
+            PA_RETURN_MSG(OPEN_API_MSG_NO_PERMISSION);
+        }
+        auto contract = a_company->get_children<pa_sql_contract>("a_side", "b_side_ext_key == %ld", company->get_pri_id());
+        if (!contract)
+        {
+            PA_RETURN_MSG(OPEN_API_MSG_NO_PERMISSION);
+        }
+        auto all_history = contract->get_all_children<pa_sql_balance_history>("belong_contract");
+        std::string file_name_no_ext = "balance_autdig_export" + std::to_string(time(NULL)) + token;
+        std::string file_name = "/dist/logo_res/" + file_name_no_ext + ".csv";
+        std::ofstream stream(file_name);
+        std::string csv_bom = {
+            (char)0xef, (char)0xbb, (char)0xbf};
+        stream << csv_bom;
+        csv2::Writer<csv2::delimiter<','>> writer(stream);
+        std::vector<std::string> table_header = {
+            "时间", "修改人", "修改原因", "修改前金额"};
+
+        writer.write_row(table_header);
+        for (auto &itr : all_history)
+        {
+            std::vector<std::string> single_rec = {itr.timestamp, itr.account, itr.reason, pa_double2string_reserve2(itr.balance_before_change)};
+            writer.write_row(single_rec);
+        }
+        stream.close();
+        std::string py_converter =
+            "import pandas as pd\n"
+            "import sys\n"
+            "csv = pd.read_csv('" +
+            file_name + "', encoding='utf-8')\n"
+                        "csv.to_excel('/dist/logo_res/" +
+            file_name_no_ext + ".xlsx', sheet_name='data')\n";
+
+        if (Py_IsInitialized())
+        {
+            PyRun_SimpleString(py_converter.c_str());
+            _return = "/logo_res/" + file_name_no_ext + ".xlsx";
+        }
+        else
+        {
+            PA_RETURN_MSG("导出失败");
         }
     }
 };

@@ -653,6 +653,27 @@ public:
         return pri_confirm_deliver(plan_id, *opt_user, deliver_infos, reason);
     }
 
+    void change_balance_by_deliver(pa_sql_company &a_company,pa_sql_company &b_company, double minus_balance)
+    {
+        company_management_handler ch;
+        if (ch.company_customize_need(b_company.name, company_management_handler::need_balance_auto_change))
+        {
+            auto contract = a_company.get_children<pa_sql_contract>("a_side", "b_side_ext_key == %ld", b_company.get_pri_id());
+            if (contract)
+            {
+                contract->balance -= minus_balance;
+                contract->update_record();
+                pa_sql_balance_history tmp;
+                tmp.account = "系统自动";
+                tmp.reason = "交易触发";
+                tmp.balance_before_change = contract->balance + minus_balance;
+                tmp.timestamp = PA_DATAOPT_current_time();
+                tmp.set_parent(*contract, "belong_contract");
+                tmp.insert_record();
+            }
+        }
+    }
+
     bool pri_confirm_deliver(const int64_t plan_id, pa_sql_userinfo &opt_user, const std::vector<deliver_info> &deliver_infos, const std::string &reason)
     {
         bool ret = false;
@@ -662,6 +683,10 @@ public:
         auto current_time = PA_DATAOPT_current_time();
         if (plan && plan->status == 3 && PA_STATUS_RULE_can_be_change(*plan, opt_user, 4))
         {
+            stuff_plan plan_orig_info;
+            get_plan(plan_orig_info, plan_id);
+            auto b_comapny_info = sqlite_orm::search_record<pa_sql_company>("name == '%s'", plan_orig_info.sale_company.c_str());
+            auto a_comapny_info = sqlite_orm::search_record<pa_sql_company>("name == '%s'", plan_orig_info.buy_company.c_str());
             for (auto &itr : deliver_infos)
             {
                 auto found_vichele_info = plan->get_children<pa_sql_single_vichele>("belong_plan", "PRI_ID = %ld AND finish = 0", itr.id);
@@ -685,6 +710,10 @@ public:
                 found_vichele_info->ticket_no = itr.ticket_no;
                 found_vichele_info->seal_no = itr.seal_no;
                 found_vichele_info->update_record();
+                if (a_comapny_info && b_comapny_info)
+                {
+                    change_balance_by_deliver(*a_comapny_info, *b_comapny_info, found_vichele_info->count * plan->price);
+                }
                 auto driver_register = found_vichele_info->get_children<pa_sql_driver_register>("belong_vichele");
                 if (driver_register)
                 {
