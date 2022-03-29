@@ -174,6 +174,27 @@ service company_management {
     company_customize get_customize(1:string company_name) throws (1:gen_exp e),
 }
 
+struct bidding_status {
+    1:string cur_top_customer,
+    2:double cur_top_price,
+    3:i64 bidding_turn,
+    # 0--active 1--finish 2--exception_close
+    4:i64 status,
+}
+
+struct bidding_params {
+    1:i64 id,
+    2:string stuff_name,
+    3:double max_price,
+    4:double min_price,
+    5:i64 bidding_times,
+    6:list<string> customers,
+    7:string end_time,
+    8:double deposit,
+    9:double total_count,
+    10:bidding_status cur_status,
+}
+
 service stuff_info {
     list<stuff_detail> get_today(1:string ssid) throws (1:gen_exp e),
     list<stuff_detail> get_today_unfollow(1:string ssid) throws (1:gen_exp e),
@@ -183,6 +204,12 @@ service stuff_info {
     list<stuff_detail> get_follow_stuff_by_company(1:string company_name) throws (1:gen_exp e),
     list<string> get_follow_company_by_stuff(1:i64 type_id, 2:string ssid) throws (1:gen_exp e),
     list<string> get_related_stuff(1:string ssid) throws (1:gen_exp e),
+    bool create_bidding(1:string ssid, 2:bidding_params bp) throws (1:gen_exp e),
+    # status_condition == -1 --> all_status
+    list<bidding_params> get_all_bidding(1:string ssid, 2:i64 status_condition) throws (1:gen_exp e),
+    bool close_bidding(1:string ssid, 2:i64 bidding_id) throws (1:gen_exp e),
+    bool call_bidding(1:string ssid, 2:i64 bidding_id, 3:double price) throws (1:gen_exp e),
+
 }
 
 struct plan_confirm_info {
