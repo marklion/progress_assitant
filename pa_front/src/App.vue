@@ -1,28 +1,31 @@
 <template>
 <div id="app">
-    <van-nav-bar v-if="!$route.meta.no_title" class="nav_bar_show" :left-arrow="has_go_back" :left-text="get_left_text" :title="bar_title" @click-left="onClickLeft" @click-right="onClickRight">
-        <template #right>
-            <van-icon name="share" size="20"></van-icon>
-        </template>
-    </van-nav-bar>
-    <van-pull-refresh v-model="isLoading" @refresh="onRefresh">
-        <keep-alive>
-            <router-view v-if='$route.meta.keepAlive' />
-        </keep-alive>
-        <router-view v-if='!$route.meta.keepAlive' />
-    </van-pull-refresh>
-    <div style="height: 6rem;"></div>
-    <van-tabbar route fixed v-if="!$route.meta.extra_page">
-        <van-tabbar-item v-if="$store.state.userinfo.buyer" replace :to="{name:'Home'}" icon="home-o">主页</van-tabbar-item>
-        <van-tabbar-item v-else replace :to="{name:'CompanyHome'}" icon="home-o">主页</van-tabbar-item>
-        <van-tabbar-item replace :to="{name:'CompanyOrder'}" icon="orders-o">订单</van-tabbar-item>
-        <van-tabbar-item replace :to="{name:'Myself'}" icon="user-o">我的</van-tabbar-item>
-    </van-tabbar>
-    <van-dialog v-model="show_share" title="长按图片发送给联系人">
-        <van-row type="flex" justify="center" align="center">
-            <img src="https://www.d8sis.cn/pa_web/logo_res/sub_qr.jpg" />
-        </van-row>
-    </van-dialog>
+    <router-view v-if="route_in && $route.meta.isPC" />
+    <div v-if="route_in && !$route.meta.isPC">
+        <van-nav-bar v-if="!$route.meta.no_title" class="nav_bar_show" :left-arrow="has_go_back" :left-text="get_left_text" :title="bar_title" @click-left="onClickLeft" @click-right="onClickRight">
+            <template #right>
+                <van-icon name="share" size="20"></van-icon>
+            </template>
+        </van-nav-bar>
+        <van-pull-refresh v-model="isLoading" @refresh="onRefresh">
+            <keep-alive>
+                <router-view v-if='$route.meta.keepAlive' />
+            </keep-alive>
+            <router-view v-if='!$route.meta.keepAlive' />
+        </van-pull-refresh>
+        <div style="height: 6rem;"></div>
+        <van-tabbar route fixed v-if="!$route.meta.extra_page">
+            <van-tabbar-item v-if="$store.state.userinfo.buyer" replace :to="{name:'Home'}" icon="home-o">主页</van-tabbar-item>
+            <van-tabbar-item v-else replace :to="{name:'CompanyHome'}" icon="home-o">主页</van-tabbar-item>
+            <van-tabbar-item replace :to="{name:'CompanyOrder'}" icon="orders-o">订单</van-tabbar-item>
+            <van-tabbar-item replace :to="{name:'Myself'}" icon="user-o">我的</van-tabbar-item>
+        </van-tabbar>
+        <van-dialog v-model="show_share" title="长按图片发送给联系人">
+            <van-row type="flex" justify="center" align="center">
+                <img src="https://www.d8sis.cn/pa_web/logo_res/sub_qr.jpg" />
+            </van-row>
+        </van-dialog>
+    </div>
 </div>
 </template>
 
@@ -36,6 +39,7 @@ export default {
             need_info: false,
             show_share: false,
             isLoading: false,
+            route_in: false
         }
     },
     computed: {
@@ -49,9 +53,9 @@ export default {
         },
     },
     beforeMount: function () {
-        var vue_this = this;
-        this.$router.onReady(function () {
-            vue_this.get_userinfo();
+        this.$router.onReady(() => {
+            this.route_in = true;
+            this.get_userinfo();
         });
     },
     watch: {
