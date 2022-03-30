@@ -14,7 +14,7 @@ CONF_FILE_INPUT="data_config.json"
 DOCKER_IMG_NAME="pa_deploy:v1.0"
 SRC_DIR=`dirname $(realpath $0)`/../
 is_in_container() {
-    cat /proc/1/cgroup | grep pids | grep docker 2>&1>/dev/null
+    test -f /.dockerenv
 }
 
 make_docker_img_from_dockerfile() {
