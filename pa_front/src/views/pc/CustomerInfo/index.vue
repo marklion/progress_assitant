@@ -113,8 +113,11 @@ export default {
         }
     },
     async mounted() {
-        if (this.isLogin) {
+        try {
             await this.loadData(this.token)
+        } catch (err) {
+            console.log(err);
+            this.isLogin = false;
         }
     },
     methods: {
@@ -165,12 +168,12 @@ export default {
                     spinner: 'el-icon-loading',
                     background: 'rgba(0, 0, 0, 0.7)'
                 });
-                try{
+                try {
                     await this.$call_remote_process_no_toast('open_api_management', 'proc_push_balance', [this.balanceForm, this.token])
                     await this.loadData(this.token)
                     this.showBalanceDialog = false
                     this.balanceForm = {}
-                }catch(err){
+                } catch (err) {
                     console.log(err)
                 }
                 loading.close()
