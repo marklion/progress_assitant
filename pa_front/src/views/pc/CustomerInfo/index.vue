@@ -86,15 +86,7 @@ export default {
             form: {
                 token: ''
             },
-            tableData: [{
-                "customerId": "",
-                "customerName": "山西汽运集团天然气利用有限公司",
-                "balance": 100000
-            }, {
-                "customerId": "",
-                "customerName": "山西汽运集团天然气利用有限公司",
-                "balance": 100000
-            }],
+            tableData: [],
             showBalanceDialog: false,
             balanceForm: {
                 customerName: '',
@@ -122,12 +114,12 @@ export default {
     },
     async mounted() {
         if (this.isLogin) {
-            this.loadData(this.token)
+            await this.loadData(this.token)
         }
     },
     methods: {
         async loadData(token) {
-            this.tableData = await this.call_remote_process_no_toast('open_api_management', 'get_all_customer_balance', [token])
+            this.tableData = await this.$call_remote_process_no_toast('open_api_management', 'get_all_customer_balance', [token])
         },
         async onLogin() {
             try {
@@ -167,8 +159,21 @@ export default {
         async submitBalanceEdit() {
             let valid = await this.$refs.balanceForm.validate()
             if (valid) {
-                await this.$call_remote_process_no_toast('open_api_management', 'proc_push_balance', [this.balanceForm, this.token])
-                await this.loadData()
+                let loading = this.$loading({
+                    lock: true,
+                    text: '提交更新中',
+                    spinner: 'el-icon-loading',
+                    background: 'rgba(0, 0, 0, 0.7)'
+                });
+                try{
+                    await this.$call_remote_process_no_toast('open_api_management', 'proc_push_balance', [this.balanceForm, this.token])
+                    await this.loadData(this.token)
+                    this.showBalanceDialog = false
+                    this.balanceForm = {}
+                }catch(err){
+                    console.log(err)
+                }
+                loading.close()
             }
         },
         async doExport(row, index) {

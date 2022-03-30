@@ -3,7 +3,7 @@
     <el-button plain @click="onClick" type="primary" size="medium" :loading="loading" :disabled="disabled" icon="el-icon-download">
         {{title}}
     </el-button>
-    <a :id="id" :href="exportUrl" hidden="hidden">保存文件</a>
+    <a :id="id" :href="exportUrl" download hidden="hidden" ref="downloadLink">保存文件</a>
 </div>
 </template>
 
@@ -57,15 +57,20 @@ export default {
                 let downloadPath = await this.$call_remote_process_no_toast('open_api_management', 'export_balance_audit_log', [this.token, this.rowData.customerName])
 
                 this.exportUrl = this.$remote_url + downloadPath
-                document.getElementById(this.id).click();
+
+                this.$nextTick(() => {
+                    this.$refs.downloadLink.click();
+                    this.loading = false;
+                })
             } catch (err) {
                 console.log(err)
                 this.$message({
                     type: 'error',
                     message: '获取下载地址失败'
                 })
+                this.loading = false;
             }
-            this.loading = false;
+
         }
     }
 
