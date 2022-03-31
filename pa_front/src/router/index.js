@@ -14,6 +14,15 @@ const routes = [
     },
   },
   {
+    path: '/biddingForm',
+    name: 'BiddingForm',
+    component: () => import('../views/BiddingForm'),
+    meta: {
+      private_title: '创建竞价',
+      has_go_back: true,
+    },
+  },
+  {
     path: '/home',
     name: 'Home',
     component: () => import('../views/Home.vue'),
