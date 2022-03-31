@@ -916,4 +916,89 @@ public:
     }
 };
 
+class pa_sql_bidding : public sql_tree_base
+{
+public:
+    double max_price;
+    double min_price;
+    long bidding_times = 0;
+    std::string end_time;
+    double deposit;
+    double total_count;
+    long status = 0;
+    pa_sql_bidding()
+    {
+        add_parent_type<pa_sql_stuff_info>("belong_stuff");
+    }
+    virtual std::vector<sqlite_orm_column> self_columns_defined()
+    {
+        std::vector<sqlite_orm_column> ret;
+        ret.push_back(sqlite_orm_column("max_price", sqlite_orm_column::REAL, &max_price));
+        ret.push_back(sqlite_orm_column("min_price", sqlite_orm_column::REAL, &min_price));
+        ret.push_back(sqlite_orm_column("bidding_times", sqlite_orm_column::INTEGER, &bidding_times));
+        ret.push_back(sqlite_orm_column("end_time", sqlite_orm_column::STRING, &end_time));
+        ret.push_back(sqlite_orm_column("deposit", sqlite_orm_column::REAL, &deposit));
+        ret.push_back(sqlite_orm_column("total_count", sqlite_orm_column::REAL, &total_count));
+        ret.push_back(sqlite_orm_column("status", sqlite_orm_column::INTEGER, &status));
+
+        return ret;
+    }
+
+    virtual std::string table_name()
+    {
+        return "bidding_table";
+    }
+};
+
+class pa_sql_bidding_turn : public sql_tree_base
+{
+public:
+    long turn = 0;
+    long status = 0;
+    pa_sql_bidding_turn()
+    {
+        add_parent_type<pa_sql_bidding>("belong_bidding");
+    }
+    virtual std::vector<sqlite_orm_column> self_columns_defined()
+    {
+        std::vector<sqlite_orm_column> ret;
+        ret.push_back(sqlite_orm_column("turn", sqlite_orm_column::INTEGER, &turn));
+        ret.push_back(sqlite_orm_column("status", sqlite_orm_column::INTEGER, &status));
+
+        return ret;
+    }
+
+    virtual std::string table_name()
+    {
+        return "bidding_turn_table";
+    }
+};
+
+class pa_sql_bidding_customer : public sql_tree_base
+{
+public:
+    double price = 0;
+    long has_call = 0;
+    std::string timestamp;
+    pa_sql_bidding_customer()
+    {
+        add_parent_type<pa_sql_bidding_turn>("belong_bidding_turn");
+        add_parent_type<pa_sql_company>("call_company");
+    }
+    virtual std::vector<sqlite_orm_column> self_columns_defined()
+    {
+        std::vector<sqlite_orm_column> ret;
+        ret.push_back(sqlite_orm_column("price", sqlite_orm_column::REAL, &price));
+        ret.push_back(sqlite_orm_column("has_call", sqlite_orm_column::INTEGER, &has_call));
+        ret.push_back(sqlite_orm_column("timestamp", sqlite_orm_column::STRING, &timestamp));
+
+        return ret;
+    }
+
+    virtual std::string table_name()
+    {
+        return "bidding_customer_table";
+    }
+};
+
 #endif // _PA_DATABSE_H_

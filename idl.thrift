@@ -174,12 +174,19 @@ service company_management {
     company_customize get_customize(1:string company_name) throws (1:gen_exp e),
 }
 
+struct bidding_customer{
+    1:string company_name,
+    2:double price,
+    3:string timestamp,
+}
+
 struct bidding_status {
     1:string cur_top_customer,
     2:double cur_top_price,
     3:i64 bidding_turn,
     # 0--active 1--finish 2--exception_close
     4:i64 status,
+    5:list<bidding_customer> all_customers_price,
 }
 
 struct bidding_params {
@@ -192,7 +199,8 @@ struct bidding_params {
     7:string end_time,
     8:double deposit,
     9:double total_count,
-    10:bidding_status cur_status,
+    10:i64 cur_status,
+    11:list<bidding_status> all_status,
 }
 
 service stuff_info {
