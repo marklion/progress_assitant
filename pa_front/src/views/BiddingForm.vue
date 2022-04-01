@@ -115,7 +115,7 @@ export default {
         async onSubmit() {
             let isDone = await createBidding(this.ssid, this.submitForm)
             if(isDone){
-                await this.$router.push({name : 'home'})
+                await this.$router.push({name : 'BiddingList'})
             }
         },
         onFailed() {
@@ -152,7 +152,6 @@ export default {
             this.filteredCustomers = this.allCustomers.filter(item => {
                 return PinyinMatch.match(item.name, keyword) || item.name.match(new RegExp(keyword))
             })
-
         }
     }
 }

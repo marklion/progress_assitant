@@ -23,6 +23,15 @@ const routes = [
     },
   },
   {
+    path: '/biddingList',
+    name: 'BiddingList',
+    component: () => import('../views/BiddingList'),
+    meta: {
+      private_title: '竞价列表',
+      has_go_back: true,
+    },
+  },
+  {
     path: '/home',
     name: 'Home',
     component: () => import('../views/Home.vue'),
