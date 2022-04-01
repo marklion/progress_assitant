@@ -92,14 +92,14 @@ export default {
     computed:{
         submitForm(){
             return {
-                stuff_name : this.stuff_name,
-                min_price: +this.min_price,
-                max_price: +this.max_price,
-                bidding_times: +this.bidding_times,
-                customers: this.customers,
-                end_time: this.end_time,
-                deposit: +this.deposit,
-                total_count: +this.total_count
+                stuff_name : this.formData.stuff_name,
+                min_price: +this.formData.min_price,
+                max_price: +this.formData.max_price,
+                bidding_times: +this.formData.bidding_times,
+                customers: this.formData.customers,
+                end_time: this.formData.end_time,
+                deposit: +this.formData.deposit,
+                total_count: +this.formData.total_count
             }
         }
     },
