@@ -380,19 +380,28 @@ std::string PA_DATAOPT_current_time()
     return PA_DATAOPT_date_2_timestring(time(NULL));
 }
 
-int64_t PA_DATAOPT_timestring_2_date(const std::string &_str)
+int64_t PA_DATAOPT_timestring_2_date(const std::string &_str, bool _has_min_sec)
 {
-    const char *cha = _str.data();                           // 将string转换成char*。
-    tm tm_ = {0};                                            // 定义tm结构体。
-    int year, month, day, hour;                              // 定义时间的各个int临时变量。
-    sscanf(cha, "%d-%d-%d %d:", &year, &month, &day, &hour); // 将string存储的日期时间，转换为int临时变量。
-    tm_.tm_year = year - 1900;                               // 年，由于tm结构体存储的是从1900年开始的时间，所以tm_year为int临时变量减去1900。
-    tm_.tm_mon = month - 1;                                  // 月，由于tm结构体的月份存储范围为0-11，所以tm_mon为int临时变量减去1。
-    tm_.tm_mday = day;                                       // 日。
-    tm_.tm_hour = hour;                                      // 时。
-    tm_.tm_isdst = 0;                                        // 非夏令时。
-    time_t t_ = mktime(&tm_);                                // 将tm结构体转换成time_t格式。
-    return t_;                                               // 返回值。
+    const char *cha = _str.data();        // 将string转换成char*。
+    tm tm_ = {0};                         // 定义tm结构体。
+    int year, month, day, hour, min, sec; // 定义时间的各个int临时变量。
+    if (_has_min_sec)
+    {
+        sscanf(cha, "%d-%d-%d %d:%d:%d", &year, &month, &day, &hour, &min, &sec); // 将string存储的日期时间，转换为int临时变量。
+    }
+    else
+    {
+        sscanf(cha, "%d-%d-%d %d:", &year, &month, &day, &hour); // 将string存储的日期时间，转换为int临时变量。
+    }
+    tm_.tm_year = year - 1900; // 年，由于tm结构体存储的是从1900年开始的时间，所以tm_year为int临时变量减去1900。
+    tm_.tm_mon = month - 1;    // 月，由于tm结构体的月份存储范围为0-11，所以tm_mon为int临时变量减去1。
+    tm_.tm_mday = day;         // 日。
+    tm_.tm_hour = hour;        // 时。
+    tm_.tm_min = min;          // 时。
+    tm_.tm_sec = sec;          // 时。
+    tm_.tm_isdst = 0;          // 非夏令时。
+    time_t t_ = mktime(&tm_);  // 将tm结构体转换成time_t格式。
+    return t_;                 // 返回值。
 }
 
 std::string PA_DATAOPT_date_2_timestring(int64_t _date)
@@ -402,7 +411,7 @@ std::string PA_DATAOPT_date_2_timestring(int64_t _date)
     auto st_time = localtime(&cur_time);
     char buff[512] = "";
 
-    sprintf(buff,"%d-%02d-%02d %02d:%02d:%02d", st_time->tm_year + 1900, st_time->tm_mon + 1, st_time->tm_mday, st_time->tm_hour, st_time->tm_min, st_time->tm_sec);
+    sprintf(buff, "%d-%02d-%02d %02d:%02d:%02d", st_time->tm_year + 1900, st_time->tm_mon + 1, st_time->tm_mday, st_time->tm_hour, st_time->tm_min, st_time->tm_sec);
 
     return std::string(buff);
 }
@@ -412,7 +421,7 @@ void PA_DATAOPT_notify_pay(pa_sql_company &_company)
     auto current_date = PA_DATAOPT_current_time();
     auto current_day = current_date.substr(0, 10);
     auto all_stuff = _company.get_all_children<pa_sql_stuff_info>("belong_company");
-    for (auto &single_stuff:all_stuff)
+    for (auto &single_stuff : all_stuff)
     {
         auto plans = single_stuff.get_all_children<pa_sql_plan>("belong_stuff", "status == 2 AND plan_time LIKE '%s%%'", current_day.c_str());
         for (auto &itr : plans)
@@ -576,7 +585,7 @@ void PA_DATAOPT_post_save_register(pa_sql_plan &_plan)
             sub_req.Add("driverId", itr.driver_id);
             sub_req.Add("isSale", true, true);
             sub_req.Add("price", tmp.price);
-            sub_req.Add("createTime", tmp.plan_time.substr(0,13) + ":00:00");
+            sub_req.Add("createTime", tmp.plan_time.substr(0, 13) + ":00:00");
             sub_req.Add("orderNo", std::to_string(tmp.created_time) + std::to_string(tmp.plan_id));
             sub_req.AddEmptySubArray("multiStuff");
             sub_req.Add("isMulti", false, false);

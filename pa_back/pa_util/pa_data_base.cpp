@@ -90,7 +90,8 @@ bool pa_sql_driver_sms_verify::code_is_valid(const std::string &_code)
             remove_record();
         }
     }
-    else {
+    else
+    {
         remove_record();
     }
 
@@ -310,7 +311,6 @@ bool pa_sql_single_vichele::has_been_register()
     return ret;
 }
 
-
 bool pa_sql_driver::license_is_valid()
 {
     bool ret = false;
@@ -321,7 +321,7 @@ bool pa_sql_driver::license_is_valid()
         if (all_license.size() > 0)
         {
             bool all_not_expired = true;
-            for (auto &itr:all_license)
+            for (auto &itr : all_license)
             {
                 auto cur_sec = time(nullptr);
                 auto expired_sec = PA_DATAOPT_timestring_2_date(itr.expire_date + " 0:");
@@ -339,4 +339,292 @@ bool pa_sql_driver::license_is_valid()
     }
 
     return ret;
+}
+
+std::list<pa_sql_bidding_customer> pa_sql_bidding_turn::get_bidding_customer(int _flag)
+{
+    std::string query_cmd = "PRI_ID != 0";
+    switch (_flag)
+    {
+    case -1:
+        query_cmd += " AND price == 0";
+        break;
+    case 1:
+        query_cmd += " AND price != 0";
+        break;
+    default:
+        break;
+    }
+
+    return get_all_children<pa_sql_bidding_customer>("belong_bidding_turn", "%s ORDER BY price DESC", query_cmd.c_str());
+}
+
+void pa_sql_bidding_turn::return_deposit()
+{
+    auto bidding = get_parent<pa_sql_bidding>("belong_bidding");
+    if (!bidding)
+    {
+        return;
+    }
+    auto stuff = bidding->get_parent<pa_sql_stuff_info>("belong_stuff");
+    if (!stuff)
+    {
+        return;
+    }
+    auto sale_company = stuff->get_parent<pa_sql_company>("belong_company");
+    if (!sale_company)
+    {
+        return;
+    }
+    std::list<pa_sql_bidding_customer> wait_for_return;
+    if (turn == 1)
+    {
+        wait_for_return = get_all_children<pa_sql_bidding_customer>("belong_bidding_turn", "has_call == 1");
+    }
+    else if (turn == 2)
+    {
+        wait_for_return = get_all_children<pa_sql_bidding_customer>("belong_bidding_turn", "PRI_ID != 0 ORDER BY price DESC OFFSET 1");
+    }
+    for (auto &itr : wait_for_return)
+    {
+        auto company = itr.get_parent<pa_sql_company>("call_company");
+        if (company)
+        {
+            auto contract = company->get_children<pa_sql_contract>("a_side", "b_side_ext_key == %ld", sale_company->get_pri_id());
+            if (contract)
+            {
+                contract->balance += bidding->deposit;
+                contract->update_record();
+                pa_sql_balance_history tmp;
+                tmp.account = "系统自动";
+                tmp.reason = "保证金返还";
+                tmp.balance_before_change = contract->balance - bidding->deposit;
+                tmp.timestamp = PA_DATAOPT_current_time();
+                tmp.set_parent(*contract, "belong_contract");
+                tmp.insert_record();
+            }
+        }
+    }
+}
+bool pa_sql_bidding_turn::finish_turn()
+{
+    bool ret = false;
+    if (status == 1)
+    {
+        ret = true;
+    }
+    else
+    {
+        auto bidding = get_parent<pa_sql_bidding>("belong_bidding");
+        if (bidding)
+        {
+            auto all_customers = get_all_children<pa_sql_bidding_customer>("belong_bidding_turn", "PRI_ID != 0 ORDER BY price DESC");
+            bool called_count = 0;
+            for (auto &itr : all_customers)
+            {
+                if (itr.has_call)
+                {
+                    called_count += 1;
+                }
+            }
+            auto expect_end_time_sec = PA_DATAOPT_timestring_2_date(end_time, true);
+            auto cur_sec = time(nullptr);
+            if (cur_sec >= expect_end_time_sec || all_customers.size() == called_count)
+            {
+                status = 1;
+                if (update_record())
+                {
+                    ret = true;
+                    return_deposit();
+                }
+            }
+        }
+    }
+
+    return ret;
+}
+
+bool pa_sql_bidding::pay_deposit(pa_sql_company &_company)
+{
+    bool ret = false;
+    auto stuff = get_parent<pa_sql_stuff_info>("belong_stuff");
+    if (!stuff)
+    {
+        return ret;
+    }
+    auto sale_company = stuff->get_parent<pa_sql_company>("belong_company");
+    if (!sale_company)
+    {
+        return ret;
+    }
+    auto contract = _company.get_children<pa_sql_contract>("a_side", "b_side_ext_key == %ld", sale_company->get_pri_id());
+    if (contract)
+    {
+        if (contract->balance >= deposit)
+        {
+            contract->balance -= deposit;
+            contract->update_record();
+            pa_sql_balance_history tmp;
+            tmp.account = "系统自动";
+            tmp.reason = "保证金扣除";
+            tmp.balance_before_change = contract->balance + deposit;
+            tmp.timestamp = PA_DATAOPT_current_time();
+            tmp.set_parent(*contract, "belong_contract");
+            tmp.insert_record();
+            ret = true;
+        }
+    }
+
+    return ret;
+}
+void pa_sql_bidding::update_bidding_status()
+{
+    //只有正在进行的竞价需要更新
+    if (status != 0)
+    {
+        return;
+    }
+    // 1. 找到正在进行的轮次
+    auto current_turn = get_children<pa_sql_bidding_turn>("belong_bidding", "status == 0");
+    if (!current_turn)
+    {
+        status = 1;
+        update_record();
+        return;
+    }
+    // 2. 尝试关闭轮次
+    auto turn_is_finished = current_turn->finish_turn();
+    // 3. 若轮次已关闭，则无人竞价->关闭竞价，关闭的是第一轮->开启第二轮，关闭的是第二轮->创建计划并关闭竞价
+    if (turn_is_finished)
+    {
+        auto called_customer = current_turn->get_bidding_customer(1);
+        if (called_customer.size() == 0)
+        {
+            status = 1;
+        }
+        else if (current_turn->turn == 1)
+        {
+            pa_sql_bidding_turn tmp;
+            tmp.status = 0;
+            tmp.turn = 2;
+            tmp.set_parent(*this, "belong_bidding");
+            tmp.insert_record();
+            auto last_customer = 3;
+            for (auto &itr : called_customer)
+            {
+                auto prev_company = itr.get_parent<pa_sql_company>("call_company");
+                if (prev_company && pay_deposit(*prev_company))
+                {
+                    pa_sql_bidding_customer bc_tmp;
+                    bc_tmp.has_call = 0;
+                    bc_tmp.price = itr.price;
+                    bc_tmp.set_parent(tmp, "belong_bidding");
+                    bc_tmp.set_parent(*prev_company, "call_company");
+                    bc_tmp.insert_record();
+                    last_customer--;
+                }
+                if (last_customer <= 0)
+                {
+                    break;
+                }
+            }
+        }
+        else if (current_turn->turn == 2)
+        {
+            auto aimed_company = called_customer.front().get_parent<pa_sql_company>("call_company");
+            auto user = called_customer.front().get_parent<pa_sql_userinfo>("call_user");
+            if (aimed_company && user)
+            {
+                create_bidding_plan(*aimed_company, called_customer.front().price, *user);
+                status = 1;
+            }
+        }
+        update_record();
+        send_out_wechat_msg(3);
+    }
+}
+
+bool pa_sql_bidding::create_bidding_plan(pa_sql_company &_aimed_customer, double _price, pa_sql_userinfo &_user)
+{
+    bool ret = false;
+    auto opt_user = _user;
+    auto stuff_type = get_parent<pa_sql_stuff_info>("belong_stuff");
+    if (!stuff_type)
+    {
+        PA_RETURN_NOSTUFF_MSG();
+    }
+    auto sale_company = stuff_type->get_parent<pa_sql_company>("belong_company");
+    if (!sale_company)
+    {
+        PA_RETURN_NOPRIVA_MSG();
+    }
+
+    auto company = &_aimed_customer;
+    pa_sql_plan tmp;
+    tmp.create_time = time(NULL);
+    tmp.name = stuff_type->name;
+    tmp.plan_time = (PA_DATAOPT_date_2_timestring(time(nullptr) + 3600 * 24)).substr(0, 13) + "点";
+    tmp.price = _price;
+    tmp.proxy_company = "";
+    tmp.status = 0;
+    tmp.set_parent(opt_user, "created_by");
+    tmp.set_parent(*stuff_type, "belong_stuff");
+    tmp.from_bidding = 1;
+    tmp.insert_record();
+    ret = PA_STATUS_RULE_action(tmp, opt_user, PA_DATAOPT_date_2_timestring(tmp.create_time), "竞价成功");
+
+    return ret;
+}
+
+void pa_sql_bidding::send_out_wechat_msg(int _flag, const std::string &_company_name)
+{
+    auto stuff = get_parent<pa_sql_stuff_info>("belong_stuff");
+    if (!stuff)
+    {
+        return;
+    }
+    auto sale_company = stuff->get_parent<pa_sql_company>("belong_company");
+    if (!sale_company)
+    {
+        return;
+    }
+    auto cur_turn = get_children<pa_sql_bidding_turn>("belong_bidding", "PRI_ID != 0 ORDER BY PRI_ID DESC");
+    if (cur_turn)
+    {
+        std::list<pa_sql_userinfo> recver_list;
+        auto sale_users = sale_company->get_all_children<pa_sql_userinfo>("belong_company");
+        recver_list.insert(recver_list.end(), sale_users.begin(), sale_users.end());
+        switch (_flag)
+        {
+        case 0:
+        case 2:
+        case 3:
+        {
+            auto all_company = cur_turn->get_bidding_customer(0);
+            for (auto &itr : all_company)
+            {
+                auto all_user = itr.get_all_children<pa_sql_userinfo>("belong_company");
+                recver_list.insert(recver_list.end(), all_user.begin(), all_user.end());
+            }
+
+            break;
+        }
+        case 1:
+        {
+            auto call_company = sqlite_orm::search_record<pa_sql_company>("name == '%s'", _company_name.c_str());
+            if (call_company)
+            {
+                auto all_user = call_company->get_all_children<pa_sql_userinfo>("belong_company");
+                recver_list.insert(recver_list.end(), all_user.begin(), all_user.end());
+            }
+            break;
+        }
+        default:
+            break;
+        }
+        for (auto &itr : recver_list)
+        {
+            PA_WECHAT_send_bidding_msg(itr, *this, _flag > 2 ? 2 : _flag);
+        }
+    }
 }

@@ -223,6 +223,7 @@ public:
                     _return.sale_company = archive_plan->sale_company;
                     _return.status = plan->status;
                     _return.is_cancel = plan->is_cancel == 0 ? false : true;
+                    _return.from_bidding = plan->from_bidding;
                     auto belong_type = plan->get_parent<pa_sql_stuff_info>("belong_stuff");
                     if (belong_type)
                     {

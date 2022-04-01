@@ -2,7 +2,7 @@
 #define _TDF_INCLUDE_H_
 #include <string>
 #include <stdarg.h>
-#include <sys/types.h>          
+#include <sys/types.h>
 #include <sys/socket.h>
 #include <unistd.h>
 #include <netdb.h>
@@ -173,7 +173,7 @@ public:
     void send_data(const std::string &_conn_chrct, const std::string &_data);
     void close_data(const std::string &_charct);
     void stop();
-    int start_timer(int _sec, tdf_timer_proc _proc, void *_private);
+    int start_timer(int _sec, tdf_timer_proc _proc, void *_private, bool _one_time = false);
     void stop_timer(int _timer_handle);
     static tdf_main &get_inst();
     void Async_to_workthread(tdf_async_proc _func, void *_private, const std::string &_chrct);
