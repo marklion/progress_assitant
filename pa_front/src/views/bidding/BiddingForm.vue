@@ -6,21 +6,27 @@
         <van-divider content-position="left">竞价区间</van-divider>
         <van-field v-model="formData.max_price" type="number" name="max_price" label="最高价" placeholder="设置竞价上限" :rules="[{ required: true, message: '请填写接受的最高报价' }]" />
         <van-field v-model="formData.min_price" type="number" name="min_price" label="最低价" placeholder="设置竞价下限" :rules="[{ required: true, message: '请填写接受的最低报价' }]" />
+<!--        <van-field name="bidding_times" label="竞价轮次">-->
+<!--            <template #input>-->
+<!--                <van-radio-group v-model="formData.bidding_times" direction="horizontal">-->
+<!--                    <van-radio name="1" value="1">1轮</van-radio>-->
+<!--                    <van-radio name="2" value="2">2轮</van-radio>-->
+<!--                </van-radio-group>-->
+<!--            </template>-->
+<!--        </van-field>-->
         <van-field name="bidding_times" label="竞价轮次">
             <template #input>
-                <van-radio-group v-model="formData.bidding_times" direction="horizontal">
-                    <van-radio name="1" value="1">1轮</van-radio>
-                    <van-radio name="2" value="2">2轮</van-radio>
-                </van-radio-group>
+                <van-stepper v-model="formData.bidding_times" integer min="1" max="2" @change="onChangeBiddingTime"/>
             </template>
         </van-field>
-        <van-field v-model="formData.deposit" type="number" name="deposit" label="保证金" placeholder="请设置参标保证金" :rules="[{ required: true, message: '不设置可填0' }]" />
-        <van-field readonly clickable name="end_time" :value="formData.end_time" label="截止时间" placeholder="点击选择截止时间" @click="showPicker = true" />
+        <van-field v-for="count in formData.bidding_times" v-bind:key="count" readonly clickable :name="'all_status['+ (count - 1) + '].end_time'"
+                   :value="formData.all_status[count - 1].end_time" :label="count+' 轮截止时间'" placeholder="点击选择截止时间" @click="onClickTimePicker(count)" />
         <van-popup v-model="showPicker" position="bottom">
-            <van-datetime-picker type="datetime" title="选择截止时间" :min-date="new Date()" :filter="timeFilter" @confirm="onConfirmEndTime" @cancel="showPicker = false" />
+            <van-datetime-picker type="datetime" ref="Picker" title="选择截止时间" :min-date="new Date()" :filter="timeFilter" @confirm="onConfirmEndTime" @cancel="showPicker = false" />
         </van-popup>
+        <van-field v-model="formData.deposit" type="number" name="deposit" label="保证金" placeholder="请设置参标保证金" :rules="[{ required: true, message: '不设置可填0' }]" />
         <van-field type=""
-                   :value="formData.customers && formData.customers.length"
+                   :value="formData.customers && formData.customers.length + ' 个'"
                    readonly is-link clickable
                    label="参与客户"
                    name="customers"
@@ -69,6 +75,7 @@ import {getAllContract} from '@/api/company'
 import {createBidding} from '@/api/stuff'
 
 export default {
+    name : 'BiddingForm',
     data() {
         return {
             ssid : '',
@@ -78,9 +85,12 @@ export default {
                 max_price: undefined,
                 bidding_times: '1',
                 customers: [],
-                end_time: moment().format('YYYY-MM-DD HH:mm:00'),
+                // end_time: moment().format('YYYY-MM-DD HH:mm:00'),
                 deposit: 0,
                 total_count: undefined,
+                all_status: [{
+                    end_time: moment().format('YYYY-MM-DD HH:mm:00'),
+                }]
             },
             showPicker: false,
             showCustomerPicker: false,
@@ -97,9 +107,10 @@ export default {
                 max_price: +this.formData.max_price,
                 bidding_times: +this.formData.bidding_times,
                 customers: this.formData.customers,
-                end_time: this.formData.end_time,
+                // end_time: this.formData.end_time,
                 deposit: +this.formData.deposit,
-                total_count: +this.formData.total_count
+                total_count: +this.formData.total_count,
+                all_status : this.all_status
             }
         }
     },
@@ -121,10 +132,6 @@ export default {
         onFailed() {
             Notify({ type: 'danger', message: '请按照页面提示修改表单' });
         },
-        onConfirmEndTime(endTime) {
-            this.formData.end_time = moment(endTime).format('YYYY-MM-DD HH:mm:00')
-            this.showPicker = false
-        },
         timeFilter(type, opt) {
             if (type === 'minute') {
                 return opt.filter(option =>
@@ -145,14 +152,38 @@ export default {
         onClickToggleAll(){
             this.$refs.checkboxGroup.toggleAll();
         },
-        validCustomer(val){
-            return val >= 2
+        validCustomer(){
+            return this.formData.customers.length >= 2
         },
         customerFilter(keyword){
             this.filteredCustomers = this.allCustomers.filter(item => {
                 return PinyinMatch.match(item.name, keyword) || item.name.match(new RegExp(keyword))
             })
-        }
+        },
+        onChangeBiddingTime(value){
+            if(this.formData.all_status.length < value){
+                let fillIn = Array(value - this.formData.all_status.length).fill({
+                    end_time : moment().format('YYYY-MM-DD HH:mm:00')
+                })
+                this.formData.all_status = this.formData.all_status.concat(fillIn)
+            }else{
+                this.formData.all_status.splice(value)
+            }
+        },
+        async onClickTimePicker(index) {
+            this.editingTurn = index - 1
+            this.showPicker = true
+            let startValue = this.formData.all_status[index - 1].end_time
+            startValue = startValue.split(/[- :]/)
+            await this.$nextTick();
+            let picker = this.$refs.Picker;
+            await this.$nextTick();
+            picker.getPicker().setValues(startValue);
+        },
+        onConfirmEndTime(endTime) {
+            this.formData.all_status[this.editingTurn].end_time = moment(endTime).format('YYYY-MM-DD HH:mm:00')
+            this.showPicker = false
+        },
     }
 }
 </script>

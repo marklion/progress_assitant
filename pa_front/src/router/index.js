@@ -16,7 +16,7 @@ const routes = [
   {
     path: '/biddingForm',
     name: 'BiddingForm',
-    component: () => import('../views/BiddingForm'),
+    component: () => import('../views/bidding/BiddingForm'),
     meta: {
       private_title: '创建竞价',
       has_go_back: true,
@@ -25,9 +25,18 @@ const routes = [
   {
     path: '/biddingList',
     name: 'BiddingList',
-    component: () => import('../views/BiddingList'),
+    component: () => import('../views/bidding/BiddingList'),
     meta: {
       private_title: '竞价列表',
+      has_go_back: true,
+    },
+  },
+  {
+    path: '/bidding_info/:id',
+    name: 'BiddingInfo',
+    component: () => import('../views/bidding/BiddingInfo'),
+    meta: {
+      private_title: '竞价详情',
       has_go_back: true,
     },
   },
