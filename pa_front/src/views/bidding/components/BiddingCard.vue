@@ -20,33 +20,12 @@ import BiddingStatus from "@/views/bidding/components/BiddingStatus";
 import moment from "moment";
 
 export default {
-    name: "BiddingStat",
+    name: "BiddingCard",
     components : {
         BiddingStatus
     },
-    props:['biddingInfo'],
+    props:['biddingInfo', 'curTurn'],
     computed: {
-        /**
-         *  return {
-         *   bidding_turn, status, all_customers_price : [], cur_top_customer, cur_top_price, end_time
-         *  }
-         */
-        curTurn(){
-            switch(this.biddingInfo.cur_status){
-                case 0: {
-                    return this.biddingInfo.all_status.find(bs => bs.status === 0)
-                }
-                case 1: {
-                    return this.biddingInfo.all_status[this.biddingInfo.all_status.length - 1]
-                }
-                case 2: {
-                    return this.biddingInfo.all_status.find(bs => bs.status === 2)
-                }
-                default : {
-                    return undefined
-                }
-            }
-        },
         biddingRange(){
             return this.biddingInfo.min_price + ' ~ ' + this.biddingInfo.max_price
         },

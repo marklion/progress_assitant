@@ -37,3 +37,26 @@ export async function getBiddingById(ssid, biddingId){
         [ssid, -1]);
     return list.find(item => item.id == biddingId)
 }
+
+/**
+ * 商家报价
+ * @param ssid
+ * @param biddingId
+ * @param price
+ * @return {Promise<Boolean>}
+ */
+export async function callBidding(ssid, biddingId, price){
+    return call_remote_process("stuff_info", "call_bidding",
+        [ssid, biddingId, price]);
+}
+
+/**
+ * 异常终止竞价
+ * @param ssid
+ * @param biddingId
+ * @return {Promise<Boolean>}
+ */
+export async function closeBidding(ssid, biddingId){
+    return call_remote_process("stuff_info", "close_bidding",
+        [ssid, biddingId]);
+}
