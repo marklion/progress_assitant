@@ -349,3 +349,55 @@ void PA_WECHAT_send_finish_ticket_msg(const std::string &_to_user, const std::st
     keywords.push_back(PA_DATAOPT_current_time());
     send_msg_to_wechat(_to_user, "edrOmkbApJ7s3LPGSKr5a5hjBZVDW9qNAyDcuoZqJFU", "车辆过磅完成", keywords, "点击查看电子磅单", "/ticket/" + _id);
 }
+
+void PA_WECHAT_send_bidding_msg(pa_sql_userinfo &_to_user, pa_sql_bidding &_bidding, int _flag)
+{
+    auto stuff = _bidding.get_parent<pa_sql_stuff_info>("belong_stuff");
+    if (!stuff)
+    {
+        return;
+    }
+    auto sale_company = stuff->get_parent<pa_sql_company>("belong_company");
+    if (!sale_company)
+    {
+        return;
+    }
+
+    std::string title = "";
+    switch (_flag)
+    {
+    case 0:
+        if (sale_company->get_children<pa_sql_userinfo>("belong_company", "PRI_ID == %ld", _to_user.get_pri_id()))
+        {
+            title = "发起竞价成功";
+        }
+        else
+        {
+            title = "邀请您参与竞价";
+        }
+        break;
+    case 1:
+        title = "竞价更新";
+        break;
+    case 2:
+        title = "竞价结束";
+        break;
+    default:
+        break;
+    }
+
+    std::vector<std::string> keywords;
+    std::string cur_status = "正在竞价";
+    if (_bidding.status == 1)
+    {
+        cur_status = "已结束";
+    }
+    else
+    {
+        cur_status = "已取消";
+    }
+    keywords.push_back(stuff->name + " " + std::to_string(_bidding.total_count) + "吨");
+    keywords.push_back(cur_status);
+
+    send_msg_to_wechat(_to_user.openid, "NlG21tpsDBdefio1qwDsvNwsAA3LWL4PSkQpRnQU0-g", title, keywords, "", "/bidding_info/" + std::to_string(_bidding.get_pri_id()));
+}

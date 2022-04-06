@@ -50,7 +50,7 @@ std::string PA_DATAOPT_get_company_by_assignee(const std::string &_assignee);
 bool PA_DATAOPT_create_user_apply(const std::string &_assignee, const std::string &_assigner);
 std::unique_ptr<pa_sql_company> PA_DATAOPT_fetch_company(const std::string &_company);
 std::string PA_DATAOPT_current_time();
-int64_t PA_DATAOPT_timestring_2_date(const std::string &_str);
+int64_t PA_DATAOPT_timestring_2_date(const std::string &_str, bool _has_min_sec = false);
 std::string PA_DATAOPT_date_2_timestring(int64_t _date);
 void PA_DATAOPT_notify_pay(pa_sql_company &_company);
 bool PA_DATAOPT_valid_email(const std::string &_email, pa_sql_company &_company);

@@ -187,6 +187,7 @@ struct bidding_status {
     # 0--active 1--finish 2--exception_close
     4:i64 status,
     5:list<bidding_customer> all_customers_price,
+    6:string end_time,
 }
 
 struct bidding_params {
@@ -196,11 +197,10 @@ struct bidding_params {
     4:double min_price,
     5:i64 bidding_times,
     6:list<string> customers,
-    7:string end_time,
-    8:double deposit,
-    9:double total_count,
-    10:i64 cur_status,
-    11:list<bidding_status> all_status,
+    7:double deposit,
+    8:double total_count,
+    9:i64 cur_status,
+    10:list<bidding_status> all_status,
 }
 
 service stuff_info {
@@ -217,7 +217,7 @@ service stuff_info {
     list<bidding_params> get_all_bidding(1:string ssid, 2:i64 status_condition) throws (1:gen_exp e),
     bool close_bidding(1:string ssid, 2:i64 bidding_id) throws (1:gen_exp e),
     bool call_bidding(1:string ssid, 2:i64 bidding_id, 3:double price) throws (1:gen_exp e),
-
+    bidding_params get_bidding(1:string ssid, 2:i64 bidding_id) throws (1:gen_exp e),
 }
 
 struct plan_confirm_info {
