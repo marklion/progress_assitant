@@ -392,7 +392,7 @@ void PA_WECHAT_send_bidding_msg(pa_sql_userinfo &_to_user, pa_sql_bidding &_bidd
     {
         cur_status = "已结束";
     }
-    else
+    else if (_bidding.status == 2)
     {
         cur_status = "已取消";
     }

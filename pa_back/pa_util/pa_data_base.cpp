@@ -377,14 +377,7 @@ void pa_sql_bidding_turn::return_deposit()
         return;
     }
     std::list<pa_sql_bidding_customer> wait_for_return;
-    if (turn == 1)
-    {
-        wait_for_return = get_all_children<pa_sql_bidding_customer>("belong_bidding_turn", "has_call == 1");
-    }
-    else if (turn == 2)
-    {
-        wait_for_return = get_all_children<pa_sql_bidding_customer>("belong_bidding_turn", "PRI_ID != 0 ORDER BY price DESC OFFSET 1");
-    }
+    wait_for_return = get_all_children<pa_sql_bidding_customer>("belong_bidding_turn", "price != 0");
     for (auto &itr : wait_for_return)
     {
         auto company = itr.get_parent<pa_sql_company>("call_company");
@@ -409,7 +402,7 @@ void pa_sql_bidding_turn::return_deposit()
 bool pa_sql_bidding_turn::finish_turn()
 {
     bool ret = false;
-    if (status == 1)
+    if (status >= 1)
     {
         ret = true;
     }
@@ -419,7 +412,7 @@ bool pa_sql_bidding_turn::finish_turn()
         if (bidding)
         {
             auto all_customers = get_all_children<pa_sql_bidding_customer>("belong_bidding_turn", "PRI_ID != 0 ORDER BY price DESC");
-            bool called_count = 0;
+            long called_count = 0;
             for (auto &itr : all_customers)
             {
                 if (itr.has_call)
@@ -504,28 +497,62 @@ void pa_sql_bidding::update_bidding_status()
         }
         else if (current_turn->turn == 1)
         {
-            pa_sql_bidding_turn tmp;
-            tmp.status = 0;
-            tmp.turn = 2;
-            tmp.set_parent(*this, "belong_bidding");
-            tmp.insert_record();
-            auto last_customer = 3;
-            for (auto &itr : called_customer)
+            if (bidding_times == 2)
             {
-                auto prev_company = itr.get_parent<pa_sql_company>("call_company");
-                if (prev_company && pay_deposit(*prev_company))
+                pa_sql_bidding_turn tmp;
+                tmp.status = 0;
+                tmp.turn = 2;
+                tmp.end_time = second_end_time;
+                tmp.set_parent(*this, "belong_bidding");
+                tmp.insert_record();
+                auto last_customer = 3;
+                for (auto &itr : called_customer)
                 {
-                    pa_sql_bidding_customer bc_tmp;
-                    bc_tmp.has_call = 0;
-                    bc_tmp.price = itr.price;
-                    bc_tmp.set_parent(tmp, "belong_bidding");
-                    bc_tmp.set_parent(*prev_company, "call_company");
-                    bc_tmp.insert_record();
-                    last_customer--;
+                    auto prev_company = itr.get_parent<pa_sql_company>("call_company");
+                    if (prev_company && pay_deposit(*prev_company))
+                    {
+                        pa_sql_bidding_customer bc_tmp(itr);
+                        bc_tmp.has_call = 0;
+                        bc_tmp.timestamp = "";
+                        bc_tmp.set_parent(tmp, "belong_bidding_turn");
+                        bc_tmp.insert_record();
+                        last_customer--;
+                    }
+                    if (last_customer <= 0)
+                    {
+                        break;
+                    }
                 }
-                if (last_customer <= 0)
+                auto expect_end_time = PA_DATAOPT_timestring_2_date(tmp.end_time, true);
+                if (expect_end_time > time(nullptr))
                 {
-                    break;
+                    tdf_main::get_inst().start_timer(
+                        expect_end_time - time(nullptr) + 3,
+                        [](void *_private)
+                        {
+                            auto bd_id = (int *)(_private);
+                            auto bd = sqlite_orm::search_record<pa_sql_bidding>(*bd_id);
+                            if (bd)
+                            {
+                                if (bd->status == 0)
+                                {
+                                    bd->update_bidding_status();
+                                    bd->send_out_wechat_msg(2);
+                                }
+                            }
+                            delete bd_id;
+                        },
+                        new int(get_pri_id()), true);
+                }
+            }
+            else
+            {
+                auto aimed_company = called_customer.front().get_parent<pa_sql_company>("call_company");
+                auto user = called_customer.front().get_parent<pa_sql_userinfo>("call_user");
+                if (aimed_company && user)
+                {
+                    create_bidding_plan(*aimed_company, called_customer.front().price, *user);
+                    status = 1;
                 }
             }
         }
@@ -603,8 +630,12 @@ void pa_sql_bidding::send_out_wechat_msg(int _flag, const std::string &_company_
             auto all_company = cur_turn->get_bidding_customer(0);
             for (auto &itr : all_company)
             {
-                auto all_user = itr.get_all_children<pa_sql_userinfo>("belong_company");
-                recver_list.insert(recver_list.end(), all_user.begin(), all_user.end());
+                auto called_company = itr.get_parent<pa_sql_company>("call_company");
+                if (called_company)
+                {
+                    auto all_user = called_company->get_all_children<pa_sql_userinfo>("belong_company");
+                    recver_list.insert(recver_list.end(), all_user.begin(), all_user.end());
+                }
             }
 
             break;

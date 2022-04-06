@@ -927,6 +927,8 @@ public:
     double deposit;
     double total_count;
     long status = 0;
+    std::string first_end_time;
+    std::string second_end_time;
     pa_sql_bidding()
     {
         add_parent_type<pa_sql_stuff_info>("belong_stuff");
@@ -940,6 +942,8 @@ public:
         ret.push_back(sqlite_orm_column("deposit", sqlite_orm_column::REAL, &deposit));
         ret.push_back(sqlite_orm_column("total_count", sqlite_orm_column::REAL, &total_count));
         ret.push_back(sqlite_orm_column("status", sqlite_orm_column::INTEGER, &status));
+        ret.push_back(sqlite_orm_column("first_end_time", sqlite_orm_column::STRING, &first_end_time));
+        ret.push_back(sqlite_orm_column("second_end_time", sqlite_orm_column::STRING, &second_end_time));
 
         return ret;
     }

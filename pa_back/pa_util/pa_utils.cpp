@@ -388,6 +388,8 @@ int64_t PA_DATAOPT_timestring_2_date(const std::string &_str, bool _has_min_sec)
     if (_has_min_sec)
     {
         sscanf(cha, "%d-%d-%d %d:%d:%d", &year, &month, &day, &hour, &min, &sec); // 将string存储的日期时间，转换为int临时变量。
+        tm_.tm_min = min;                                        // 时。
+        tm_.tm_sec = sec;                                        // 时。
     }
     else
     {
@@ -397,8 +399,6 @@ int64_t PA_DATAOPT_timestring_2_date(const std::string &_str, bool _has_min_sec)
     tm_.tm_mon = month - 1;    // 月，由于tm结构体的月份存储范围为0-11，所以tm_mon为int临时变量减去1。
     tm_.tm_mday = day;         // 日。
     tm_.tm_hour = hour;        // 时。
-    tm_.tm_min = min;          // 时。
-    tm_.tm_sec = sec;          // 时。
     tm_.tm_isdst = 0;          // 非夏令时。
     time_t t_ = mktime(&tm_);  // 将tm结构体转换成time_t格式。
     return t_;                 // 返回值。

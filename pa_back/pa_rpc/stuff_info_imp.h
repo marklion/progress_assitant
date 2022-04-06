@@ -258,6 +258,11 @@ public:
         bd_tmp.min_price = bp.min_price;
         bd_tmp.total_count = bp.total_count;
         bd_tmp.status = 0;
+        bd_tmp.first_end_time = bp.all_status[0].end_time;
+        if (bd_tmp.bidding_times == 2)
+        {
+            bd_tmp.second_end_time = bp.all_status[1].end_time;
+        }
         bd_tmp.set_parent(*stuff, "belong_stuff");
         if (bd_tmp.insert_record())
         {
@@ -278,7 +283,6 @@ public:
                     bc_tmp.set_parent(bt_tmp, "belong_bidding_turn");
                     bc_tmp.set_parent(*cc, "call_company");
                     bc_tmp.insert_record();
-
                 }
             }
 
@@ -295,8 +299,11 @@ public:
                     auto bd = sqlite_orm::search_record<pa_sql_bidding>(*bd_id);
                     if (bd)
                     {
-                        bd->update_bidding_status();
-                        bd->send_out_wechat_msg(2);
+                        if (bd->status == 0)
+                        {
+                            bd->update_bidding_status();
+                            bd->send_out_wechat_msg(2);
+                        }
                     }
                     delete bd_id;
                 },
@@ -360,7 +367,7 @@ public:
                     ret->customers.push_back(customer->name);
                 }
             }
-            if (_to_company.is_sale)
+            if (_to_company.is_sale || _to_company.name == top_customer)
             {
                 bs_tmp.cur_top_customer = top_customer;
                 bs_tmp.cur_top_price = top_price;
@@ -427,8 +434,17 @@ public:
             PA_RETURN_NOPRIVA_MSG();
         }
 
-        auto bidding = company->get_children<pa_sql_bidding>("belong_company", "PRI_ID = %ld", bidding_id);
+        auto bidding = sqlite_orm::search_record<pa_sql_bidding>(bidding_id);
         if (!bidding)
+        {
+            PA_RETURN_NOPRIVA_MSG();
+        }
+        auto stuff = bidding->get_parent<pa_sql_stuff_info>("belong_stuff");
+        if (!stuff)
+        {
+            PA_RETURN_NOPRIVA_MSG();
+        }
+        if (!company->get_children<pa_sql_stuff_info>("belong_company", "PRI_ID == %ld", stuff->get_pri_id()))
         {
             PA_RETURN_NOPRIVA_MSG();
         }
@@ -436,6 +452,10 @@ public:
         auto bt = bidding->get_all_children<pa_sql_bidding_turn>("belong_bidding");
         for (auto &itr : bt)
         {
+            if (itr.status == 0)
+            {
+                itr.return_deposit();
+            }
             itr.status = 2;
             itr.update_record();
         }
@@ -474,22 +494,19 @@ public:
                 {
                     PA_RETURN_NOPRIVA_MSG();
                 }
-                if (bc->price == 0 && bc->has_call == 0)
+                if (bc->price == 0)
                 {
-                    if (bidding->pay_deposit(*company))
-                    {
-                        bc->price = price;
-                        bc->has_call = 1;
-                        bc->set_parent(*user, "call_user");
-                        bc->timestamp = PA_DATAOPT_current_time();
-                        ret = bc->update_record();
-                        bidding->send_out_wechat_msg(1, company->name);
-                    }
-                    else
+                    if (!bidding->pay_deposit(*company))
                     {
                         PA_RETURN_MSG("余额不足付保证金");
                     }
                 }
+                bc->price = price;
+                bc->has_call = 1;
+                bc->set_parent(*user, "call_user");
+                bc->timestamp = PA_DATAOPT_current_time();
+                ret = bc->update_record();
+                bidding->send_out_wechat_msg(1, company->name);
             }
             bidding->update_bidding_status();
         }
