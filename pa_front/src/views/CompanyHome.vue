@@ -30,7 +30,7 @@
             </template>
             <van-cell v-for="(single_type, index) in all_type" center :key="index" :value="'¥' + single_type.price" :title="single_type.name">
                 <template #extra>
-                    <van-popover v-model="show_operate[index]" trigger="click" :actions="support_operate" @select="do_operate" @open="open_operate(single_type)" @close="focus_type = 0">
+                    <van-popover v-model="show_operate[index]" trigger="click" placement="bottom-end" :actions="support_operate" @select="do_operate" @open="open_operate(single_type)" @close="focus_type = 0">
                         <template #reference>
                             <van-button size="small" round plain type="primary" class="opt_btn_show">操作</van-button>
                         </template>
@@ -370,10 +370,17 @@ export default {
                 text: '手工导入',
                 operate: this.submit_proxy_import,
             });
+            ret.push({
+                text: '创建竞价',
+                operate: this.go_create_bidding
+            })
             return ret;
         }
     },
     methods: {
+        go_create_bidding(type){
+            this.$router.push({name : 'BiddingForm', query: {name : type.name}})
+        },
         cancel_vichele_from_plan: function (vichele_info) {
             var vue_this = this;
             Dialog.confirm({
