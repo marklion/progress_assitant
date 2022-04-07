@@ -30,8 +30,12 @@ export default {
             return this.biddingInfo.min_price + ' ~ ' + this.biddingInfo.max_price
         },
         restTime(){
-            // this.curTurn.end_time
-            return moment(this.curTurn.end_time) - moment();
+            if(this.biddingInfo.cur_status !== 2){
+                return moment(this.curTurn.end_time) - moment();
+            }else{
+                return 0
+            }
+
         }
     },
 }

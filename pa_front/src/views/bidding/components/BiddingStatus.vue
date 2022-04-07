@@ -15,7 +15,7 @@ export default {
                 name : '已结束',
                 color : '#666666'
             },{
-                name : '异常',
+                name : '取消',
                 color : '#ee0a24'
             }]
         }

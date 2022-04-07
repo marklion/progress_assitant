@@ -18,7 +18,7 @@
                 >
                     <template #title>
                         <span>{{customers.company_name}}</span>
-                        <van-icon v-if="customers.company_name == turn.cur_top_customer"
+                        <van-icon v-if="customers.company_name === turn.cur_top_customer"
                                   color="#ee0a24"
                                   size="20"
                                   name="award" />
@@ -26,7 +26,7 @@
                 </van-cell>
             </van-collapse-item>
             <div style="margin: 10px;">
-                <van-button round block type="danger" @click="onCloseBidding">终止竞价</van-button>
+                <van-button round block type="danger" @click="onCloseBidding" :disabled="biddingInfo.cur_status !== 0">终止竞价</van-button>
             </div>
         </van-collapse>
         <div v-else class="bidding-turns-ctn">
@@ -167,7 +167,7 @@ export default {
     margin-top: 10px;
 }
 .price-hint{
-    padding: 0px 10px;
+    padding: 0 10px;
     color: #b6b6b9;
     font-size: 14px;
     line-height: 20px;
