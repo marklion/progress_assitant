@@ -6,14 +6,6 @@
         <van-divider content-position="left">竞价区间</van-divider>
         <van-field v-model="formData.max_price" type="number" name="max_price" label="最高价" placeholder="设置竞价上限" :rules="[{ required: true, message: '请填写接受的最高报价' }]" />
         <van-field v-model="formData.min_price" type="number" name="min_price" label="最低价" placeholder="设置竞价下限" :rules="[{ required: true, message: '请填写接受的最低报价' }]" />
-<!--        <van-field name="bidding_times" label="竞价轮次">-->
-<!--            <template #input>-->
-<!--                <van-radio-group v-model="formData.bidding_times" direction="horizontal">-->
-<!--                    <van-radio name="1" value="1">1轮</van-radio>-->
-<!--                    <van-radio name="2" value="2">2轮</van-radio>-->
-<!--                </van-radio-group>-->
-<!--            </template>-->
-<!--        </van-field>-->
         <van-field name="bidding_times" label="竞价轮次">
             <template #input>
                 <van-stepper v-model="formData.bidding_times" integer min="1" max="2" @change="onChangeBiddingTime"/>
@@ -85,7 +77,6 @@ export default {
                 max_price: undefined,
                 bidding_times: '1',
                 customers: [],
-                // end_time: moment().format('YYYY-MM-DD HH:mm:00'),
                 deposit: 0,
                 total_count: undefined,
                 all_status: [{
@@ -107,10 +98,9 @@ export default {
                 max_price: +this.formData.max_price,
                 bidding_times: +this.formData.bidding_times,
                 customers: this.formData.customers,
-                // end_time: this.formData.end_time,
                 deposit: +this.formData.deposit,
                 total_count: +this.formData.total_count,
-                all_status : this.all_status
+                all_status : this.formData.all_status
             }
         }
     },
