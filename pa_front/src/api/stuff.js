@@ -15,9 +15,9 @@ export function createBidding(ssid, bidding){
 
 /**
  * 获取所有竞价单
- * @param ssid
- * @param status_condition
- * @return {Promise<bidding_params>}
+ * @param {String} ssid
+ * @param {Number} status_condition
+ * @return {Promise<Array[{bidding_params}]>}
  */
 export function getAllBidding(ssid, status_condition = -1){
     return call_remote_process("stuff_info", "get_all_bidding",
@@ -31,11 +31,8 @@ export function getAllBidding(ssid, status_condition = -1){
  * @return {Promise<bidding_params>}
  */
 export async function getBiddingById(ssid, biddingId){
-    // return call_remote_process("stuff_info", "get_bidding",
-    //     [ssid, biddingId]);
-    let list = await call_remote_process("stuff_info", "get_all_bidding",
-        [ssid, -1]);
-    return list.find(item => item.id == biddingId)
+    return call_remote_process("stuff_info", "get_bidding",
+        [ssid, +biddingId]);
 }
 
 /**
