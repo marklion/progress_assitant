@@ -30,7 +30,7 @@ export default {
             return this.biddingInfo.min_price + ' ~ ' + this.biddingInfo.max_price
         },
         restTime(){
-            if(this.biddingInfo.cur_status !== 2){
+            if(this.biddingInfo.cur_status === 0 ){
                 return moment(this.curTurn.end_time) - moment();
             }else{
                 return 0

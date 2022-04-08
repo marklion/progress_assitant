@@ -44,7 +44,7 @@
                     </template>
                 </van-cell>
             </van-cell-group>
-            <div v-if="biddingInfo === 1">
+            <div v-if="biddingInfo.cur_status === 1">
                 <van-notice-bar v-if="isWinBidding()"
                                 left-icon="volume-o"
                                 text="恭喜您中标本次竞价"
