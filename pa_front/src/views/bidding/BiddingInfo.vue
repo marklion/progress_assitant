@@ -1,6 +1,6 @@
 <template>
 <div>
-    <div class="bidding-ctn" v-if="biddingInfo">
+    <div class="bidding-ctn" v-if="showInfo">
         <BiddingCard :biddingInfo="biddingInfo" :curTurn="curTurn"></BiddingCard>
 
         <van-collapse v-if="!user.buyer" v-model="activeNames" class="bidding-turns-ctn">
@@ -12,13 +12,13 @@
                 </template>
 
                 <van-cell
-                    v-for="customers in turn.all_customers_price" v-bind:key="customers.company_name"
-                    :value="customers.price"
-                    :label="customers.timestamp"
+                    v-for="customer in turn.all_customers_price" v-bind:key="customer.company_name"
+                    :value="customer.price"
+                    :label="customer.timestamp"
                 >
                     <template #title>
-                        <span>{{customers.company_name}}</span>
-                        <van-icon v-if="customers.company_name === turn.cur_top_customer"
+                        <span>{{customer.company_name}}</span>
+                        <van-icon v-if="customer.company_name === turn.cur_top_customer"
                                   color="#ee0a24"
                                   size="20"
                                   name="award" />
@@ -33,11 +33,30 @@
             <van-cell-group inset style="margin-bottom: 10px">
                 <van-cell v-for="turn in biddingInfo.all_status" v-bind:key="turn.bidding_turn"
                           :title="turn.bidding_turn + ' 轮报价'"
-                          :value="biddingRecord(turn).price"
-                          :label="'报价时间：' + biddingRecord(turn).timestamp"
-                ></van-cell>
+                          :label="'报价时间：' + (biddingRecord(turn).timestamp || '尚未报价')"
+                >
+                    <template #default>
+                        <van-icon v-if="isWinBidding(turn)"
+                                  color="#ee0a24"
+                                  size="20"
+                                  name="award" />
+                        <span>{{biddingRecord(turn).price}}</span>
+                    </template>
+                </van-cell>
             </van-cell-group>
-            <van-form validate-first @submit="onSubmitPrice">
+            <div v-if="biddingInfo === 1">
+                <van-notice-bar v-if="isWinBidding()"
+                                left-icon="volume-o"
+                                text="恭喜您中标本次竞价"
+                />
+                <van-notice-bar v-else
+                                left-icon="volume-o"
+                                text="抱歉，本次竞价您未中标"
+                />
+            </div>
+
+
+            <van-form validate-first @submit="onSubmitPrice" v-if="canSubmit()">
                 <van-field v-model="formData.price" name="price" label="报价" placeholder="请填写您本轮报价金额"
                            required :rules="[{ required: true},{validator: validPrice, message: '请在报价区间内进行报价'}]" />
                 <p class="price-hint"><van-icon name="info-o" /> 参与竞价将从公司账户扣除 {{biddingInfo.deposit}} 元保证金，竞价单结束后自动退还</p>
@@ -69,6 +88,7 @@ export default {
     },
     data(){
         return {
+            showInfo : false,
             emptyImage : 'network',
             emptyHint : '数据加载中',
             ssid : '',
@@ -115,13 +135,13 @@ export default {
 
     methods: {
         async loadInitData(){
-            let biddingInfo = await getBiddingById(this.ssid, this.biddingId)
-            if(this.user.buyer && !this.curTurn.all_customers_price.includes(this.user.company)){
+            this.biddingInfo = await getBiddingById(this.ssid, this.biddingId)
+            if(this.user.buyer && !this.biddingRecord(this.curTurn)){
                 this.emptyImage = 'error'
                 this.emptyHint = '抱歉，您不能参与本轮竞价'
                 return
             }
-            this.biddingInfo = biddingInfo
+            this.showInfo = true
             let defaultOpenTurn = this.curTurn
             this.activeNames.push(defaultOpenTurn && defaultOpenTurn.bidding_turn)
         },
@@ -138,7 +158,6 @@ export default {
                     message: '出价后不可更改，请慎重报价，确认提交吗？',
                 })
                 // on confirm
-                console.log(this.ssid, this.biddingId, this.formData.price)
                 await callBidding(this.ssid, +this.biddingId, +this.formData.price)
                 await this.loadInitData()
                 this.formData.price = 0
@@ -153,6 +172,25 @@ export default {
             })
             await closeBidding(this.ssid, +this.biddingId)
             await this.loadInitData()
+        },
+        canSubmit(){
+            //竞价结束，不再报价
+            if(this.biddingInfo.cur_status !== 0){
+                return false
+            }
+            //当前轮已报过价，不再报价
+            let yourPrice = this.curTurn.all_customers_price.find(customer => customer.company_name === this.user.company)
+            return !yourPrice.timestamp
+        },
+        lastTurn(){
+            let index = this.biddingInfo.all_status.length - 1;
+            return this.biddingInfo.all_status[index]
+        },
+        isWinBidding(turn){
+            if(!turn){
+                turn = this.lastTurn()
+            }
+            return this.user.company === turn.cur_top_customer && turn.status === 1
         }
     }
 }
@@ -160,7 +198,7 @@ export default {
 
 <style scoped>
 .bidding-ctn{
-    padding-top: 10px;
+    padding: 10px 0;
     background-color: #f7f8fa;
 }
 .bidding-turns-ctn{

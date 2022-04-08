@@ -15,9 +15,9 @@ export function createBidding(ssid, bidding){
 
 /**
  * 获取所有竞价单
- * @param ssid
- * @param status_condition
- * @return {Promise<bidding_params>}
+ * @param {String} ssid
+ * @param {Number} status_condition
+ * @return {Promise<Array[{bidding_params}]>}
  */
 export function getAllBidding(ssid, status_condition = -1){
     return call_remote_process("stuff_info", "get_all_bidding",

@@ -28,8 +28,9 @@ export default {
     },
     async mounted(){
         this.ssid = this.$cookies.get('pa_ssid')
-        this.biddingList = await getAllBidding(this.ssid)
-        console.log(this.biddingList)
+        let list = await getAllBidding(this.ssid)
+        this.biddingList = list.sort((a,b) => b.id - a.id)
+
     },
     methods: {
         getEndTime(bidding){

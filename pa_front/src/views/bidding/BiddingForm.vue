@@ -4,8 +4,10 @@
         <van-field v-model="formData.stuff_name" name="stuff_name" label="竞价商品" placeholder="竞价商品名称" readonly :rules="[{ required: true, message: '请填写竞价商品名称' }]" />
         <van-field v-model="formData.total_count" type="number" name="total_count" label="商品总量" placeholder="竞价商品总供给量" :rules="[{ required: true, message: '请填写竞价商品供给总量' }]" />
         <van-divider content-position="left">竞价区间</van-divider>
-        <van-field v-model="formData.max_price" type="number" name="max_price" label="最高价" placeholder="设置竞价上限" :rules="[{ required: true, message: '请填写接受的最高报价' }]" />
-        <van-field v-model="formData.min_price" type="number" name="min_price" label="最低价" placeholder="设置竞价下限" :rules="[{ required: true, message: '请填写接受的最低报价' }]" />
+        <van-field v-model="formData.min_price" type="number" name="min_price" label="最低价" placeholder="设置竞价下限"
+                   :rules="[{ required: true, message: '请填写接受的最低报价' }]" />
+        <van-field v-model="formData.max_price" type="number" name="max_price" label="最高价" placeholder="设置竞价上限"
+                   :rules="[{ required: true, message: '请填写接受的最高报价' },{validator: validMaxPrice, message: '最高价应高于最低价'}]" />
         <van-field name="bidding_times" label="竞价轮次">
             <template #input>
                 <van-stepper v-model="formData.bidding_times" integer min="1" max="2" @change="onChangeBiddingTime"/>
@@ -144,6 +146,9 @@ export default {
         },
         validCustomer(){
             return this.formData.customers.length >= 2
+        },
+        validMaxPrice(){
+            return this.formData.max_price > this.formData.min_price
         },
         customerFilter(keyword){
             this.filteredCustomers = this.allCustomers.filter(item => {
