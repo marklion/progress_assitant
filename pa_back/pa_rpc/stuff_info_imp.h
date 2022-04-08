@@ -337,9 +337,6 @@ public:
             bs_tmp.end_time = single_turn.end_time;
             double top_price = 0;
             std::string top_customer;
-            if (!_to_company.is_sale)
-            {
-            }
             auto all_bc = single_turn.get_all_children<pa_sql_bidding_customer>("belong_bidding_turn");
             for (auto &single_customer : all_bc)
             {
