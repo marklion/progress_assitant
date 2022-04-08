@@ -337,12 +337,10 @@ public:
             bs_tmp.end_time = single_turn.end_time;
             double top_price = 0;
             std::string top_customer;
-            std::string company_condition = "PRI_ID != 0";
             if (!_to_company.is_sale)
             {
-                company_condition = "call_company_ext_key == " + std::to_string(_to_company.get_pri_id());
             }
-            auto all_bc = single_turn.get_all_children<pa_sql_bidding_customer>("belong_bidding_turn", "%s", company_condition.c_str());
+            auto all_bc = single_turn.get_all_children<pa_sql_bidding_customer>("belong_bidding_turn");
             for (auto &single_customer : all_bc)
             {
                 bidding_customer bc_tmp;
@@ -361,7 +359,10 @@ public:
                         }
                     }
                 }
-                bs_tmp.all_customers_price.push_back(bc_tmp);
+                if (bc_tmp.company_name == _to_company.name || _to_company.is_sale)
+                {
+                    bs_tmp.all_customers_price.push_back(bc_tmp);
+                }
                 if (single_turn.turn == 1)
                 {
                     ret->customers.push_back(customer->name);
