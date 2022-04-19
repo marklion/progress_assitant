@@ -308,7 +308,7 @@ public:
                     {
                         if (main_vichele->number == plateNo)
                         {
-                            if (should_add_to_resp(itr, company->name))
+                            if (!should_add_to_resp(itr, company->name))
                             {
                                 PA_RETURN_MSG("driver has not registered");
                             }
@@ -321,7 +321,7 @@ public:
                         auto has_id_driver = sqlite_orm::search_record<pa_sql_driver>("silent_id IS NOT NULL AND silent_id != '' AND phone == '%s'", driver->phone.c_str());
                         if (has_id_driver && has_id_driver->driver_id == driverId)
                         {
-                            if (should_add_to_resp(itr, company->name))
+                            if (!should_add_to_resp(itr, company->name))
                             {
                                 PA_RETURN_MSG("driver has not registered");
                             }
@@ -573,6 +573,7 @@ public:
                     new_one.upload_no_permit = 1;
                 }
                 new_one.attach_path = "";
+                new_one.count = 0;
                 new_one.date = PA_DATAOPT_current_time().substr(0, 10);
                 new_one.insert_record();
                 if (new_one.company_for_select.length() > 0)
