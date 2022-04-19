@@ -1324,7 +1324,7 @@ public:
         }
     }
 
-    virtual void get_today_statistics(std::vector<vichele_statistics> &_return, const std::string &ssid)
+    virtual void get_today_statistics(std::vector<vichele_stuff_statistics> &_return, const std::string &ssid)
     {
         sqlite_orm_lock a;
         auto user = PA_DATAOPT_get_online_user(ssid);
@@ -1381,7 +1381,10 @@ public:
                         tmp.plan_id = single_plan.get_pri_id();
                         tmp.plan_order = std::to_string(single_plan.create_time) + std::to_string(single_plan.get_pri_id());
                         tmp.vichele_id = vichele.get_pri_id();
-                        _return.push_back(tmp);
+                        vichele_stuff_statistics one_item;
+                        one_item.vichele = tmp;
+                        one_item.stuff_name = itr.name;
+                        _return.push_back(one_item);
                     }
                 }
             }
@@ -1522,7 +1525,7 @@ public:
         }
     }
 
-    virtual void get_tomorrow_statistics(std::vector<vichele_statistics> &_return, const std::string &ssid)
+    virtual void get_tomorrow_statistics(std::vector<vichele_stuff_statistics> &_return, const std::string &ssid)
     {
         auto current_time_date = time(nullptr);
         current_time_date += 3600 * 24;
@@ -1567,34 +1570,53 @@ public:
                     tmp.plan_id = single_plan.get_pri_id();
                     tmp.plan_order = std::to_string(single_plan.create_time) + std::to_string(single_plan.get_pri_id());
                     tmp.vichele_id = vichele.get_pri_id();
-                    _return.push_back(tmp);
+                    auto stuff = single_plan.get_parent<pa_sql_stuff_info>("belong_stuff");
+                    if (stuff)
+                    {
+                        vichele_stuff_statistics one_item;
+                        one_item.vichele = tmp;
+                        one_item.stuff_name = stuff->name;
+                        _return.push_back(one_item);
+                    }
                 }
             }
         }
     }
 
-    virtual void get_company_brief(company_plan_brief &_return, const std::string &ssid)
+    virtual void get_company_brief(std::vector<company_stuff_plan_brief> &_return, const std::string &ssid)
     {
         auto current_time_date = time(nullptr);
         current_time_date += 3600 * 24;
-        auto tomorrow = PA_DATAOPT_date_2_timestring(current_time_date);
-        auto date_only = tomorrow.substr(0, 10);
-        auto tomorrow_plans = PA_RPC_get_all_plans_related_by_user(ssid, "plan_time LIKE '%s%%' AND status > 1 AND is_cancel == 0", date_only.c_str());
-        auto current_time = PA_DATAOPT_current_time();
-        date_only = current_time.substr(0, 10);
-        auto today_plans = PA_RPC_get_all_plans_related_by_user(ssid, "plan_time LIKE '%s%%' AND status > 1 AND is_cancel == 0", date_only.c_str());
-
-        _return.today_plan_count = today_plans.size();
-        _return.tomorrow_plan_count = tomorrow_plans.size();
-        for (auto &itr : today_plans)
+        auto company = PA_DATAOPT_get_company_by_ssid(ssid);
+        if (!company || !company->is_sale)
         {
-            auto single_vichele = itr.get_all_children<pa_sql_single_vichele>("belong_plan");
-            _return.today_vichele_count += single_vichele.size();
+            PA_RETURN_NOPRIVA_MSG();
         }
-        for (auto &itr : tomorrow_plans)
+        auto stuffs = company->get_all_children<pa_sql_stuff_info>("belong_company");
+        for (auto &itr:stuffs)
         {
-            auto single_vichele = itr.get_all_children<pa_sql_single_vichele>("belong_plan");
-            _return.tomorrow_vichele_count += single_vichele.size();
+            auto current_time = PA_DATAOPT_current_time();
+            auto date_only = current_time.substr(0, 10);
+            auto related_today_plan = itr.get_all_children<pa_sql_plan>("belong_stuff", "plan_time LIKE '%s%%' AND status > 1 AND is_cancel == 0", date_only.c_str());
+            auto tomorrow = PA_DATAOPT_date_2_timestring(current_time_date);
+            date_only = tomorrow.substr(0, 10);
+            auto related_tomorrow_plan = itr.get_all_children<pa_sql_plan>("belong_stuff", "plan_time LIKE '%s%%' AND status > 1 AND is_cancel == 0", date_only.c_str());
+            if (related_today_plan.size() > 0 || related_tomorrow_plan.size() > 0)
+            {
+                company_stuff_plan_brief tmp;
+                tmp.brief.today_plan_count = related_today_plan.size();
+                tmp.brief.tomorrow_plan_count = related_tomorrow_plan.size();
+                tmp.stuff_name = itr.name;
+                for (auto &single_plan:related_today_plan)
+                {
+                    tmp.brief.today_vichele_count += single_plan.get_all_children<pa_sql_single_vichele>("belong_plan").size();
+                }
+                for (auto &single_plan:related_tomorrow_plan)
+                {
+                    tmp.brief.tomorrow_vichele_count += single_plan.get_all_children<pa_sql_single_vichele>("belong_plan").size();
+                }
+                _return.push_back(tmp);
+            }
         }
     }
 
