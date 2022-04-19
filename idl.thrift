@@ -328,6 +328,11 @@ struct company_plan_brief {
     4:i64 tomorrow_vichele_count,
 }
 
+struct company_stuff_plan_brief {
+    1:company_plan_brief brief,
+    2:string stuff_name,
+}
+
 struct today_driver_info {
     1:i64 id,
     2:string destination_company,
@@ -381,13 +386,13 @@ service stuff_plan_management {
     list<plan_status_rule> get_status_rule(1:i64 plan_id) throws (1:gen_exp e),
     list<bool> get_change_rule(1:string ssid, 2:i64 plan_id) throws (1:gen_exp e),
     void clean_unclose_plan() throws (1:gen_exp e),
-    list<vichele_statistics> get_today_statistics(1:string ssid) throws (1:gen_exp e),
+    list<vichele_stuff_statistics> get_today_statistics(1:string ssid) throws (1:gen_exp e),
     bool plan_created_by_user(1:string ssid, 2:i64 plan_id) throws (1:gen_exp e),
     string export_plan_by_plan_date(1:string ssid, 2:string plan_date, 3:string create_date) throws (1:gen_exp e),
     string export_plan_by_create_date(1:string ssid, 2:i64 begin_date, 3:i64 end_date) throws (1:gen_exp e),
     list<vichele_search_result> search_plan_by_vichele_number(1:string ssid, 2:string vichele_number) throws (1:gen_exp e),
-    list<vichele_statistics> get_tomorrow_statistics(1:string ssid) throws (1:gen_exp e),
-    company_plan_brief get_company_brief(1:string ssid) throws (1:gen_exp e),
+    list<vichele_stuff_statistics> get_tomorrow_statistics(1:string ssid) throws (1:gen_exp e),
+    list<company_stuff_plan_brief> get_company_brief(1:string ssid) throws (1:gen_exp e),
     bool push_user_pay(1:string ssid, 2:i64 plan_id) throws (1:gen_exp e),
     i64 get_count_by_status(1:string ssid, 2:i64 status) throws (1:gen_exp e),
     bool cancel_vichele_from_plan(1:string ssid, 2:list<i64> ids) throws (1:gen_exp e),

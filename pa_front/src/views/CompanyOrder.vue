@@ -17,7 +17,7 @@
                     <van-button type="primary" block :to="{name:'Statistics'}">导出</van-button>
                 </van-col>
             </van-row>
-            <van-notice-bar left-icon="info-o" :text="'今日计划 ' + company_plan_brief.today_plan_count + '单 ' + company_plan_brief.today_vichele_count + '辆车  明日计划 ' + company_plan_brief.tomorrow_plan_count + '单 ' + company_plan_brief.tomorrow_vichele_count + '辆车'" />
+            <van-notice-bar left-icon="info-o" :text="notice_info" />
             <van-search v-model="vichele_number_search" label="车牌号" placeholder="请输入车牌号搜索当天计划" @search="search_plan_by_vichele_number" />
             <div v-if="show_export">
                 <van-row v-if="$store.state.userinfo.buyer">
@@ -129,12 +129,7 @@ export default {
             download_url: '',
             show_export_file: false,
             show_export: false,
-            company_plan_brief: {
-                today_plan_count: 0,
-                tomorrow_plan_count: 0,
-                today_vichele_count: 0,
-                tomorrow_vichele_count: 0,
-            },
+            company_plan_brief: [],
             show_search_result: false,
             vichele_number_search: '',
             lazy_loading: false,
@@ -213,6 +208,15 @@ export default {
         }
     },
     computed: {
+        notice_info:function () {
+            var ret = "";
+            this.company_plan_brief.forEach((element)=>{
+                ret += element.stuff_name + ":";
+                ret += "今日计划 " + element.brief.today_plan_count + " 单,共 " + element.brief.today_vichele_count + ' 车 ';
+                ret += "明日计划 " + element.brief.tomorrow_plan_count + " 单,共 " + element.brief.tomorrow_vichele_count + ' 车<-->';
+            });
+            return ret;
+        },
         order_need_show: function () {
             var ret = [];
             var vue_this = this;
