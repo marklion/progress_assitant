@@ -369,6 +369,12 @@ struct driver_license_info {
     3:string attachment_path,
 }
 
+struct vehicle_license_info {
+    1:i64 id,
+    2:string expire_date,
+    3:string attachment_path,
+}
+
 service stuff_plan_management {
     i64 create_plan(1:stuff_plan plan, 2:string ssid, 3:string proxy_company) throws (1:gen_exp e),
     list<plan_status> get_created_plan(1:string ssid, 2:i64 anchor, 3:i64 status, 4:string stuff_name, 5:string company_name, 6:string plan_date) throws (1:gen_exp e),
@@ -415,6 +421,9 @@ service stuff_plan_management {
     bool update_driver_license(1:string silent_id, 2:string ssid, 3:driver_license_info license_data) throws (1:gen_exp e),
     list<driver_license_info> get_all_license_info_by_driver_phone(1:string ssid, 2:string phone) throws (1:gen_exp e),
     list<driver_license_info> get_self_all_license_info(1:string silent_id) throws (1:gen_exp e),
+    vehicle_license_info add_vehicle_license(1:string silent_id, 2:string license_attachment_base64, 3:string expire_date, 4:string plate_no) throws (1:gen_exp e)
+    void del_vehicle_license(1:string silent_id, 2:i64 data_id) throws (1:gen_exp e),
+    list<vehicle_license_info> get_license_by_vehicle_number(1:string plate_no) throws (1:gen_exp e),
 }
 
 struct api_extra_transformation {
