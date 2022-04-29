@@ -2268,12 +2268,79 @@ public:
 
     virtual void add_vehicle_license(vehicle_license_info &_return, const std::string &silent_id, const std::string &license_attachment_base64, const std::string &expire_date, const std::string &plate_no)
     {
+        auto driver = sqlite_orm::search_record<pa_sql_driver>("silent_id = '%s'", silent_id.c_str());
+        if (!driver)
+        {
+            PA_RETURN_NOPRIVA_MSG();
+        }
+        std::string file_content;
+        Base64::Decode(license_attachment_base64, &file_content);
+        pa_sql_driver_license tmp;
+        tmp.expire_date = expire_date;
+
+        auto vehicle = sqlite_orm::search_record<pa_sql_vichele>("number == '%s'", plate_no.c_str());
+        if (vehicle)
+        {
+            tmp.set_parent(*vehicle, "belong_main_vehicle");
+        }
+        auto behind_vehicle = sqlite_orm::search_record<pa_sql_vichele_behind>("number == '%s'", plate_no.c_str());
+        if (behind_vehicle)
+        {
+            tmp.set_parent(*behind_vehicle, "belong_behind_vehicle");
+        }
+        if (tmp.insert_record())
+        {
+            auto attachment_path = PA_DATAOPT_store_attach_file(file_content, false, "vehicle_license" + plate_no + "__" + std::to_string(tmp.get_pri_id()));
+            tmp.attachment_path = attachment_path;
+            if (tmp.update_record())
+            {
+                _return.id = tmp.get_pri_id();
+                _return.attachment_path = tmp.attachment_path;
+                _return.expire_date = tmp.expire_date;
+            }
+        }
     }
     virtual void del_vehicle_license(const std::string &silent_id, const int64_t data_id)
     {
+        auto driver = sqlite_orm::search_record<pa_sql_driver>("silent_id = '%s'", silent_id.c_str());
+        if (!driver)
+        {
+            PA_RETURN_NOPRIVA_MSG();
+        }
+        auto vl = sqlite_orm::search_record<pa_sql_vehicle_license>(data_id);
+        if (vl)
+        {
+            vl->remove_record();
+        }
     }
     virtual void get_license_by_vehicle_number(std::vector<vehicle_license_info> &_return, const std::string &plate_no)
     {
+        auto vehicles = sqlite_orm::search_record_all<pa_sql_vichele>("number == '%s'", plate_no.c_str());
+        auto behind_vehicles = sqlite_orm::search_record_all<pa_sql_vichele_behind>("number == '%s'", plate_no.c_str());
+        for (auto &itr:vehicles)
+        {
+            auto vls = itr.get_all_children<pa_sql_vehicle_license>("belong_main_vehicle");
+            for (auto &single_vl:vls)
+            {
+                vehicle_license_info tmp;
+                tmp.attachment_path = single_vl.attachment_path;
+                tmp.expire_date = single_vl.expire_date;
+                tmp.id = single_vl.get_pri_id();
+                _return.push_back(tmp);
+            }
+        }
+        for (auto &itr:behind_vehicles)
+        {
+            auto vls = itr.get_all_children<pa_sql_vehicle_license>("belong_behind_vehicle");
+            for (auto &single_vl:vls)
+            {
+                vehicle_license_info tmp;
+                tmp.attachment_path = single_vl.attachment_path;
+                tmp.expire_date = single_vl.expire_date;
+                tmp.id = single_vl.get_pri_id();
+                _return.push_back(tmp);
+            }
+        }
     }
 };
 
