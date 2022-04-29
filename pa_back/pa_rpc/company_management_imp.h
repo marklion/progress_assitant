@@ -729,6 +729,7 @@ public:
         tmp.set_parent(*a_side_company, "a_side");
         tmp.set_parent(*b_side_company, "b_side");
         tmp.customer_code = contract.customer_code;
+        tmp.max_vehicle_limit = contract.max_vehicle_limit;
 
         ret = tmp.insert_record();
         if (ret)
@@ -800,6 +801,7 @@ public:
                 tmp.status = itr.status;
                 tmp.customer_code = itr.customer_code;
                 tmp.balance = itr.balance;
+                tmp.max_vehicle_limit = itr.max_vehicle_limit;
                 _return.push_back(tmp);
             }
         }
@@ -829,6 +831,7 @@ public:
         _return.status = contract->status;
         _return.customer_code = contract->customer_code;
         _return.balance = contract->balance;
+        _return.max_vehicle_limit = contract->max_vehicle_limit;
     }
 
     virtual bool set_work_time(const std::string &ssid, const int64_t start_work_time, const int64_t end_work_time)
@@ -874,6 +877,7 @@ public:
         contract_from_sql->number = contract.number;
         contract_from_sql->start_time = contract.start_time;
         contract_from_sql->customer_code = contract.customer_code;
+        contract_from_sql->max_vehicle_limit = contract.max_vehicle_limit;
 
         contract_from_sql->update_status();
         ret = contract_from_sql->update_record();

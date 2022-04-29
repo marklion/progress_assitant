@@ -93,6 +93,7 @@ struct common_contract {
     7:i64 status,
     8:string customer_code,
     9:double balance,
+    10:i64 max_vehicle_limit,
 }
 
 struct real_access_record {

@@ -33,6 +33,7 @@
                 <div>开始日期：{{single_contract.start_time}}</div>
                 <div>到期日期：{{single_contract.end_time}}</div>
                 <div v-if="!$store.state.userinfo.buyer">余额：{{single_contract.balance}}</div>
+                <div>最大装车量：{{max_vehicle_limit_formater(single_contract.max_vehicle_limit)}}</div>
             </van-cell>
             <div class="follow_status_show">
                 <van-row type="flex" :gutter="5" align="center">
@@ -57,6 +58,7 @@
         <van-form @submit="add_contract">
             <van-field v-model="submit_contract.a_side_company" name="客户" label="客户" placeholder="请输入客户公司名" :rules="[{ required:true, message:'请输入客户公司'}]" />
             <van-field v-model="submit_contract.number" name="编号" label="合同编号" placeholder="请输入合同编号" :rules="[{ required:true, message:'请输入合同编号'}]" />
+            <van-field v-model="submit_contract.max_vehicle_limit" type="digit" name="最大派车数" label="最大派车数" placeholder="请输入最大派车数(0代表不限制)" />
             <van-field name="calendar1" v-model="submit_contract.start_time" label="开始日期" placeholder="请输入开始日期yyyy/mm/dd" format-trigger="onBlur" :formatter="formatter_input_date" :rules="[{ required:true, message:'请输入开始日期'}]" />
             <van-field name="calendar2" v-model="submit_contract.end_time" label="到期日期" placeholder="请输入到期日期yyyy/mm/dd" format-trigger="onBlur" :formatter="formatter_input_date" :rules="[{ required:true, message:'请输入到期日期'}]" />
             <van-field v-model="submit_contract.customer_code" name="客户编码" label="客户编码(可选)" placeholder="请输入客户编码" />
@@ -69,6 +71,7 @@
         <van-form @submit="update_contract">
             <van-field v-model="submit_contract.a_side_company" name="客户" label="客户" placeholder="请输入客户公司名" :rules="[{ required:true, message:'请输入客户公司'}]" />
             <van-field v-model="submit_contract.number" name="编号" label="合同编号" placeholder="请输入合同编号" :rules="[{ required:true, message:'请输入合同编号'}]" />
+            <van-field v-model="submit_contract.max_vehicle_limit" type="digit" name="最大派车数(0代表不限制)" label="最大派车数" placeholder="请输入最大派车数(0代表不限制)" />
             <van-field name="calendar1" v-model="submit_contract.start_time" label="开始日期" placeholder="请输入开始日期yyyy/mm/dd" format-trigger="onBlur" :formatter="formatter_input_date" :rules="[{ required:true, message:'请输入开始日期'}]" />
             <van-field name="calendar2" v-model="submit_contract.end_time" label="到期日期" placeholder="请输入到期日期yyyy/mm/dd" format-trigger="onBlur" :formatter="formatter_input_date" :rules="[{ required:true, message:'请输入到期日期'}]" />
             <van-field v-model="submit_contract.customer_code" name="客户编码" label="客户编码(可选)" placeholder="请输入客户编码" />
@@ -153,6 +156,15 @@ export default {
     },
     data: function () {
         return {
+            max_vehicle_limit_formater: function (_count) {
+                var ret = "不限制";
+
+                if (_count != 0) {
+                    ret = _count;
+                }
+
+                return ret;
+            },
             access_search_key: '',
             actions: [],
             popover_switch: false,
@@ -163,6 +175,7 @@ export default {
                 start_time: '',
                 end_time: '',
                 customer_code: '',
+                max_vehicle_limit: 0,
             },
             add_contract_show: false,
             update_contract_show: false,
@@ -209,6 +222,7 @@ export default {
         },
         update_contract: function () {
             var vue_this = this;
+            vue_this.submit_contract.max_vehicle_limit = parseInt(vue_this.submit_contract.max_vehicle_limit);
             vue_this.$call_remote_process("company_management", "update_contract", [vue_this.$cookies.get('pa_ssid'), vue_this.submit_contract]).then(function (resp) {
                 if (resp) {
                     vue_this.init_contract_data();
@@ -238,6 +252,7 @@ export default {
         },
         add_contract: function () {
             var vue_this = this;
+            vue_this.submit_contract.max_vehicle_limit = parseInt(vue_this.submit_contract.max_vehicle_limit);
             vue_this.$call_remote_process("company_management", "add_contract", [vue_this.$cookies.get('pa_ssid'), vue_this.submit_contract]).then(function (resp) {
                 if (resp) {
                     vue_this.init_contract_data();

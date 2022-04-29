@@ -1092,9 +1092,11 @@ public:
         double requie_cash = stuff_type->price * total_vichele * 22;
         auto contract = company->get_children<pa_sql_contract>("a_side", "b_side_ext_key == %ld", sale_company->get_pri_id());
         double has_balance = 0;
+        int max_vehicle_limit = 0;
         if (contract)
         {
             has_balance = contract->balance;
+            max_vehicle_limit = contract->max_vehicle_limit;
         }
         if (sale_company->third_url.length() > 0 && false)
         {
@@ -1107,6 +1109,11 @@ public:
                 _return.append("所有未完成的计划总金额（" + req_cash + "）可能超过公司余额(" + has_cash + ")");
             }
         }
+        if (max_vehicle_limit > 0 && total_vichele > max_vehicle_limit)
+        {
+            PA_RETURN_MSG("超过最大车辆限制，请联系商家管理员");
+        }
+
 
         auto plan_time_day = plan.plan_time.substr(0, 10);
         for (auto &itr : plan.vichele_info)
