@@ -2265,6 +2265,16 @@ public:
             _return.push_back(tmp);
         }
     }
+
+    virtual void add_vehicle_license(vehicle_license_info &_return, const std::string &silent_id, const std::string &license_attachment_base64, const std::string &expire_date, const std::string &plate_no)
+    {
+    }
+    virtual void del_vehicle_license(const std::string &silent_id, const int64_t data_id)
+    {
+    }
+    virtual void get_license_by_vehicle_number(std::vector<vehicle_license_info> &_return, const std::string &plate_no)
+    {
+    }
 };
 
 #endif // _STUFF_PLAN_MANAGEMENT_H_
