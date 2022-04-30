@@ -2275,7 +2275,7 @@ public:
         }
         std::string file_content;
         Base64::Decode(license_attachment_base64, &file_content);
-        pa_sql_driver_license tmp;
+        pa_sql_vehicle_license tmp;
         tmp.expire_date = expire_date;
 
         auto vehicle = sqlite_orm::search_record<pa_sql_vichele>("number == '%s'", plate_no.c_str());
