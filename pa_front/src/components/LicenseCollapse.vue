@@ -96,9 +96,15 @@ export default {
             this.value = moment(date).format('YYYY-MM-DD');
         },
         doLicenseUpdate(license){
+            if(this.belong){
+                license.belong = this.belong
+            }
             this.$emit('update', license)
         },
         doLicenseDelete(license){
+            if(this.belong){
+                license.belong = this.belong
+            }
             this.$emit('delete', license)
         }
     }

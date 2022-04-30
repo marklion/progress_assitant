@@ -40,7 +40,7 @@
                     :licenseList="vehicleLicense[single_trans.main_vichele]"
                     @open="loadVehicleLicense(single_trans.main_vichele)"
                     @submit="onSubmitVehicleLicense"
-                    @delete="doDeleteVehicleLicense(single_trans.main_vichele)"
+                    @delete="doDeleteVehicleLicense"
                 ></licenseCollapse>
                 <licenseCollapse
                     title="挂车证件"
@@ -50,7 +50,7 @@
                     :licenseList="vehicleLicense[single_trans.behind_vichele]"
                     @open="loadVehicleLicense(single_trans.behind_vichele)"
                     @submit="onSubmitVehicleLicense"
-                    @delete="doDeleteVehicleLicense(single_trans.behind_vichele)"
+                    @delete="doDeleteVehicleLicense"
                 ></licenseCollapse>
 
                 <van-cell v-if="!single_trans.is_buy" :title="single_trans.destination_company" center>
@@ -232,9 +232,9 @@ export default {
             }
         },
         async loadVehicleLicense(plate_no){
-            let tmp = await getVehicleLicenseByPlateNo(plate_no);
-            console.log(tmp)
-            this.vehicleLicense[plate_no] = await getVehicleLicenseByPlateNo(plate_no);
+            let list = await getVehicleLicenseByPlateNo(plate_no);
+            console.log(list)
+            this.$set(this.vehicleLicense, plate_no, list)
         },
         async onSubmitVehicleLicense(formData, callback){
             try {
@@ -247,8 +247,9 @@ export default {
                 console.log(err);
             }
         },
-        async doDeleteVehicleLicense(plate_no){
-            await delVehicleLicense(this.silent_id, plate_no)
+        async doDeleteVehicleLicense(license){
+            await delVehicleLicense(this.silent_id, license.id)
+            await this.loadVehicleLicense(license.belong)
         },
         refresh_cur_page: function () {
             this.$router.go(0);
