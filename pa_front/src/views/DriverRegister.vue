@@ -233,7 +233,6 @@ export default {
         },
         async loadVehicleLicense(plate_no){
             let list = await getVehicleLicenseByPlateNo(plate_no);
-            console.log(list)
             this.$set(this.vehicleLicense, plate_no, list)
         },
         async onSubmitVehicleLicense(formData, callback){
