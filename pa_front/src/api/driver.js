@@ -75,3 +75,21 @@ export function delLicense(silent_id, license_id) {
     return call_remote_process('stuff_plan_management', 'del_driver_license',
         [silent_id, license_id]);
 }
+
+export async function addVehicleLicense(file, silent_id, expire_date, plate_no) {
+    let compressFile = await compressAccurately(file, 400);
+    let base64File = await convert2Base64(compressFile);
+
+    return await call_remote_process("stuff_plan_management", "add_vehicle_license",
+        [silent_id, base64File, expire_date, plate_no]);
+}
+
+export function delVehicleLicense(silent_id, license_id) {
+    return call_remote_process('stuff_plan_management', 'del_vehicle_license',
+        [silent_id, license_id]);
+}
+
+export function getVehicleLicenseByPlateNo(plate_no) {
+    return call_remote_process("stuff_plan_management", "get_license_by_vehicle_number",
+        [plate_no]);
+}

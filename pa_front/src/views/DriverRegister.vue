@@ -10,40 +10,16 @@
             <van-cell icon="phone-o" title="电话号" :value="driver_phone"></van-cell>
             <van-cell icon="idcard" title="身份证号" :value="driver_id"></van-cell>
 
-            <van-collapse v-model="activeNames" @change="!activeNames.includes('1') ? loadDriverLicense() : ''">
-                <van-collapse-item icon="setting-o" title="其他" name="1">
-                    <van-cell class="driver-title-cell" title="证件图片" value="">
-                        <template #right-icon>
-                            <van-button v-if="!showLicenseForm" icon="plus" size="mini" type="primary" @click="add_license_item">新增
-                            </van-button>
-                            <van-button v-if="showLicenseForm" icon="cross" size="mini" type="default" @click="showLicenseForm = false">取消
-                            </van-button>
-                        </template>
-                    </van-cell>
+            <licenseCollapse
+                title="证件"
+                icon="passed"
+                :licenseList="driverLicenseList"
+                @open="loadDriverLicense"
+                @submit="onSubmitLicense"
+                @update="doLicenseUpdate"
+                @delete="doLicenseDelete"
+            ></licenseCollapse>
 
-                    <van-form v-if="showLicenseForm" @submit="onSubmitLicense">
-                        <van-field name="licenseFile" label="证件照片" :rules="[{ required: true, message: '请选择要上传的图片' }]">
-                            <template #input>
-                                <van-uploader v-model="fileList" :max-count="1" />
-                            </template>
-                            <template #right-icon>
-                                <van-icon name="info-o">点击选择图片</van-icon>
-                            </template>
-                        </van-field>
-
-                        <van-field readonly clickable name="expireDate" :value="value" label="有效期" placeholder="请选择有效期截止日期" :rules="[{ required: true, message: '请选择过期时间' }]" @click="showLicenseDatePicker = true" />
-
-                        <van-popup v-model="showLicenseDatePicker" position="bottom">
-                            <van-datetime-picker type="date" :min-date="current_date" @confirm="onConfirmLicenseDate" @cancel="showLicenseDatePicker = false" />
-                        </van-popup>
-                        <div style="margin: 16px;">
-                            <van-button round block type="info" native-type="submit">提交</van-button>
-                        </div>
-                    </van-form>
-
-                    <driverLicensesView :driver-license-list="driverLicenseList" @update="doLicenseUpdate" @del="doLicenseDelete" />
-                </van-collapse-item>
-            </van-collapse>
         </van-cell-group>
 
         <van-divider>今日承运信息</van-divider>
@@ -55,6 +31,28 @@
                 <div v-else style="color:green;">可进</div>
                 <van-cell title="进厂时间" :value="single_trans.date"></van-cell>
                 <van-cell :title="single_trans.main_vichele + '-' + single_trans.behind_vichele" :value="single_trans.stuff_name" :label="single_trans.order_company?single_trans.order_company:'(未指定拉货公司)'" />
+
+                <licenseCollapse
+                    title="主车证件"
+                    icon="logistics"
+                    :belong="single_trans.main_vichele"
+                    :show-expire-date-edit="false"
+                    :licenseList="vehicleLicense[single_trans.main_vichele]"
+                    @open="loadVehicleLicense(single_trans.main_vichele)"
+                    @submit="onSubmitVehicleLicense"
+                    @delete="doDeleteVehicleLicense"
+                ></licenseCollapse>
+                <licenseCollapse
+                    title="挂车证件"
+                    icon="cart-o"
+                    :belong="single_trans.behind_vichele"
+                    :show-expire-date-edit="false"
+                    :licenseList="vehicleLicense[single_trans.behind_vichele]"
+                    @open="loadVehicleLicense(single_trans.behind_vichele)"
+                    @submit="onSubmitVehicleLicense"
+                    @delete="doDeleteVehicleLicense"
+                ></licenseCollapse>
+
                 <van-cell v-if="!single_trans.is_buy" :title="single_trans.destination_company" center>
                     <template #right-icon>
                         <div style="margin-left:8px;">
@@ -130,27 +128,25 @@ import {
     addDriverLicense,
     getLicenseBySilentId,
     updateLicenseExpireDate,
-    delLicense
+    delLicense,
+    addVehicleLicense,
+    delVehicleLicense,
+    getVehicleLicenseByPlateNo
 } from '@/api/driver';
 import {
     ImagePreview
 } from 'vant';
-import driverLicensesView from '@/components/DriverLicensesView'
+import licenseCollapse from '@/components/LicenseCollapse'
 
 export default {
     name: 'DriverRegister',
     components: {
-        driverLicensesView
+        licenseCollapse
     },
     data: function () {
         return {
-            activeNames: [],
-            fileList: [],
-            value: this.formatDateTime(),
-            showLicenseForm: false,
-            showLicenseDatePicker: false,
-            showEditDatePicker: false,
             driverLicenseList: [],
+            vehicleLicense:{},
             is_login: false,
             need_bind_info: false,
             bind_info: {
@@ -205,28 +201,20 @@ export default {
             d = d < 10 ? ('0' + d) : d;
             return y + '-' + m + '-' + d;
         },
-        add_license_item: function () {
-            return this.showLicenseForm = true;
-        },
         async loadDriverLicense() {
             let silent_id = this.silent_id;
             this.driverLicenseList = await getLicenseBySilentId(silent_id);
         },
-        async onSubmitLicense(formData) {
+        async onSubmitLicense(formData, callback) {
             try {
                 let silent_id = this.silent_id;
                 let file = formData.licenseFile[0];
                 await addDriverLicense(file.file, silent_id, formData.expireDate);
                 await this.loadDriverLicense();
-                this.showLicenseForm = false;
-                this.fileList = [];
+                callback();
             } catch (err) {
                 console.log(err);
             }
-        },
-        onConfirmLicenseDate(date) {
-            this.showLicenseDatePicker = false;
-            this.value = this.formatDateTime(date);
         },
         async doLicenseUpdate(license) {
             await updateLicenseExpireDate(this.silent_id, '', license);
@@ -242,6 +230,25 @@ export default {
             } catch (err) {
                 console.log(err);
             }
+        },
+        async loadVehicleLicense(plate_no){
+            let list = await getVehicleLicenseByPlateNo(plate_no);
+            this.$set(this.vehicleLicense, plate_no, list)
+        },
+        async onSubmitVehicleLicense(formData, callback){
+            try {
+                let silent_id = this.silent_id;
+                let file = formData.licenseFile[0];
+                await addVehicleLicense(file.file, silent_id, formData.expireDate, formData.belong);
+                await this.loadVehicleLicense(formData.belong);
+                callback();
+            } catch (err) {
+                console.log(err);
+            }
+        },
+        async doDeleteVehicleLicense(license){
+            await delVehicleLicense(this.silent_id, license.id)
+            await this.loadVehicleLicense(license.belong)
         },
         refresh_cur_page: function () {
             this.$router.go(0);
