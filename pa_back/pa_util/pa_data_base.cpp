@@ -311,6 +311,17 @@ bool pa_sql_single_vichele::has_been_register()
     return ret;
 }
 
+bool license_data_abs::is_valid()
+{
+    bool ret = false;
+    auto cur_sec = time(nullptr);
+    auto expired_sec = PA_DATAOPT_timestring_2_date(expire_date + " 0:");
+    if (cur_sec <= expired_sec)
+    {
+        ret = true;
+    }
+    return ret;
+}
 bool pa_sql_driver::license_is_valid()
 {
     bool ret = false;
@@ -323,9 +334,7 @@ bool pa_sql_driver::license_is_valid()
             bool all_not_expired = true;
             for (auto &itr : all_license)
             {
-                auto cur_sec = time(nullptr);
-                auto expired_sec = PA_DATAOPT_timestring_2_date(itr.expire_date + " 0:");
-                if (cur_sec > expired_sec)
+                if (!itr.is_valid())
                 {
                     all_not_expired = false;
                     break;
@@ -658,4 +667,46 @@ void pa_sql_bidding::send_out_wechat_msg(int _flag, const std::string &_company_
             PA_WECHAT_send_bidding_msg(itr, *this, _flag > 2 ? 2 : _flag);
         }
     }
+}
+
+bool pa_sql_vichele::license_is_valid()
+{
+    bool ret = false;
+
+    auto vl = get_all_children<pa_sql_vehicle_license>("belong_main_vehicle");
+    if (vl.size() > 0)
+    {
+        ret = true;
+        for (auto &itr : vl)
+        {
+            if (!itr.is_valid())
+            {
+                ret = false;
+                break;
+            }
+        }
+    }
+
+    return ret;
+}
+
+bool pa_sql_vichele_behind:: license_is_valid()
+{
+    bool ret = false;
+
+    auto vl = get_all_children<pa_sql_vehicle_license>("belong_behind_vehicle");
+    if (vl.size() > 0)
+    {
+        ret = true;
+        for (auto &itr : vl)
+        {
+            if (!itr.is_valid())
+            {
+                ret = false;
+                break;
+            }
+        }
+    }
+
+    return ret;
 }

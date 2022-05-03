@@ -356,6 +356,7 @@ struct today_driver_info {
     19:string attach_url,
     20:double count,
     21:bool upload_permit,
+    22:bool need_license,
 }
 
 struct driver_detail_info {

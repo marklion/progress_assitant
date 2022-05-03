@@ -1894,7 +1894,8 @@ public:
                             }
                             if (ch.company_customize_need(sale_company->name, company_management_handler::need_driver_license))
                             {
-                                if (itr.license_is_valid())
+                                tmp.need_license = true;
+                                if (itr.license_is_valid() && main_vichele->license_is_valid() && behind_vichele->license_is_valid())
                                 {
                                     tmp.can_enter &= true;
                                 }

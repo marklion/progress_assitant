@@ -147,6 +147,9 @@ public:
     }
 };
 
+struct has_license_interface {
+    virtual bool license_is_valid() = 0;
+};
 class pa_sql_stuff_info:public sql_tree_base {
 public:
     std::string name;
@@ -174,7 +177,7 @@ public:
     }
 };
 
-class pa_sql_vichele:public sql_tree_base {
+class pa_sql_vichele:public sql_tree_base , virtual public has_license_interface{
 public:
     std::string number;
     int is_drop = 0;
@@ -194,6 +197,8 @@ public:
     {
         return "vichele_table";
     }
+
+    bool license_is_valid();
 };
 
 class pa_sql_vichele_behind:public pa_sql_vichele {
@@ -202,9 +207,10 @@ public:
     {
         return "vichele_behind_table";
     }
+    bool license_is_valid();
 };
 
-class pa_sql_driver:public sql_tree_base {
+class pa_sql_driver:public sql_tree_base, virtual public has_license_interface {
 public:
     std::string name;
     std::string phone;
@@ -874,13 +880,9 @@ public:
     }
 };
 
-class pa_sql_driver_license : public sql_tree_base {
-public:
+struct license_data_abs : public sql_tree_base{
     std::string attachment_path;
     std::string expire_date;
-    pa_sql_driver_license() {
-        add_parent_type<pa_sql_driver>("belong_driver");
-    }
     virtual std::vector<sqlite_orm_column> self_columns_defined() {
         std::vector<sqlite_orm_column> ret;
         ret.push_back(sqlite_orm_column("attachment_path", sqlite_orm_column::STRING, &attachment_path));
@@ -888,7 +890,13 @@ public:
 
         return ret;
     }
-
+    bool is_valid();
+};
+class pa_sql_driver_license : public license_data_abs{
+public:
+    pa_sql_driver_license() {
+        add_parent_type<pa_sql_driver>("belong_driver");
+    }
     virtual std::string table_name()
     {
         return "driver_license_table";
@@ -1024,21 +1032,11 @@ public:
     }
 };
 
-class pa_sql_vehicle_license:public sql_tree_base {
+class pa_sql_vehicle_license:public license_data_abs {
 public:
-    std::string attachment_path;
-    std::string expire_date;
     pa_sql_vehicle_license() {
         add_parent_type<pa_sql_vichele>("belong_main_vehicle");
         add_parent_type<pa_sql_vichele_behind>("belong_behind_vehicle");
-    }
-    virtual std::vector<sqlite_orm_column> self_columns_defined()
-    {
-        std::vector<sqlite_orm_column> ret;
-        ret.push_back(sqlite_orm_column("attachment_path", sqlite_orm_column::STRING, &attachment_path));
-        ret.push_back(sqlite_orm_column("expire_date", sqlite_orm_column::STRING, &expire_date));
-
-        return ret;
     }
 
     virtual std::string table_name()
