@@ -230,6 +230,10 @@ public:
 
     vehicle_info_resp make_resp_from_single_vichele(pa_sql_single_vichele &_vichele)
     {
+        stuff_plan_management_handler sph;
+        std::vector<driver_license_info> dli;
+        std::vector<vehicle_license_info> vli_main;
+        std::vector<vehicle_license_info> vli_behind;
         vehicle_info_resp ret;
         auto sale_company = PA_DATAOPT_get_sale_company(_vichele);
         if (!sale_company)
@@ -248,9 +252,12 @@ public:
             if (driver)
             {
                 ret.driverId = driver->driver_id;
+                sph.get_self_all_license_info(dli, driver->silent_id);
             }
             ret.plateNo = main_vichele->number;
             ret.backPlateNo = behind_vichele->number;
+            sph.get_license_by_vehicle_number(vli_main, main_vichele->number);
+            sph.get_license_by_vehicle_number(vli_behind, behind_vichele->number);
         }
         auto plan = _vichele.get_parent<pa_sql_plan>("belong_plan");
         if (plan)
@@ -282,6 +289,17 @@ public:
         ret.isMulti = false;
         ret.vehicleTeamName = ret.companyName;
         ret.vehicleTeamId = ret.customerId;
+        for (auto &itr:dli)
+        {
+            vehicle_license_info tmp;
+            tmp.attachment_path = itr.attachment_path;
+            tmp.expire_date = itr.expire_date;
+            tmp.id = itr.id;
+            ret.allLicenseInfo.push_back(tmp);
+        }
+        ret.allLicenseInfo.insert(ret.allLicenseInfo.end(), vli_main.begin(), vli_main.end());
+        ret.allLicenseInfo.insert(ret.allLicenseInfo.end(), vli_behind.begin(), vli_behind.end());
+
         return ret;
     }
 
@@ -394,7 +412,9 @@ public:
         if (ch.company_customize_need(_company_name, company_management_handler::need_driver_license))
         {
             auto driver = _single_vehicle.get_parent<pa_sql_driver>("driver");
-            if (driver && driver->license_is_valid())
+            auto main_vehicle = _single_vehicle.get_parent<pa_sql_vichele>("main_vichele");
+            auto behind_vehicle = _single_vehicle.get_parent<pa_sql_vichele_behind>("behind_vichele");
+            if (driver && driver->license_is_valid() && main_vehicle && main_vehicle->license_is_valid() && behind_vehicle && behind_vehicle->license_is_valid())
             {
                 should_add &= true;
             }

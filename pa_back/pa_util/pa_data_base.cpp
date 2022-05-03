@@ -673,39 +673,49 @@ bool pa_sql_vichele::license_is_valid()
 {
     bool ret = false;
 
-    auto vl = get_all_children<pa_sql_vehicle_license>("belong_main_vehicle");
-    if (vl.size() > 0)
+    auto vehicles = sqlite_orm::search_record_all<pa_sql_vichele>("number == '%s'", number.c_str());
+    for (auto &single_vehicle : vehicles)
     {
-        ret = true;
-        for (auto &itr : vl)
+        auto vl = single_vehicle.get_all_children<pa_sql_vehicle_license>("belong_main_vehicle");
+        if (vl.size() > 0)
         {
-            if (!itr.is_valid())
+            ret = true;
+            for (auto &itr : vl)
             {
-                ret = false;
-                break;
+                if (!itr.is_valid())
+                {
+                    ret = false;
+                    break;
+                }
             }
+            break;
         }
     }
 
     return ret;
 }
 
-bool pa_sql_vichele_behind:: license_is_valid()
+bool pa_sql_vichele_behind::license_is_valid()
 {
     bool ret = false;
 
-    auto vl = get_all_children<pa_sql_vehicle_license>("belong_behind_vehicle");
-    if (vl.size() > 0)
+    auto vehicles = sqlite_orm::search_record_all<pa_sql_vichele_behind>("number == '%s'", number.c_str());
+    for (auto &single_vehicle : vehicles)
     {
-        ret = true;
-        for (auto &itr : vl)
+        auto vl = single_vehicle.get_all_children<pa_sql_vehicle_license>("belong_behind_vehicle");
+        if (vl.size() > 0)
         {
-            if (!itr.is_valid())
+            ret = true;
+            for (auto &itr : vl)
             {
-                ret = false;
-                break;
+                if (!itr.is_valid())
+                {
+                    ret = false;
+                    break;
+                }
             }
         }
+        break;
     }
 
     return ret;

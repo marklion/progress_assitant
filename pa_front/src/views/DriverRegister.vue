@@ -10,15 +10,7 @@
             <van-cell icon="phone-o" title="电话号" :value="driver_phone"></van-cell>
             <van-cell icon="idcard" title="身份证号" :value="driver_id"></van-cell>
 
-            <licenseCollapse
-                title="证件"
-                icon="passed"
-                :licenseList="driverLicenseList"
-                @open="loadDriverLicense"
-                @submit="onSubmitLicense"
-                @update="doLicenseUpdate"
-                @delete="doLicenseDelete"
-            ></licenseCollapse>
+            <licenseCollapse title="证件" icon="passed" :licenseList="driverLicenseList" @open="loadDriverLicense" @submit="onSubmitLicense" @update="doLicenseUpdate" @delete="doLicenseDelete"></licenseCollapse>
 
         </van-cell-group>
 
@@ -32,29 +24,13 @@
                 <van-cell title="进厂时间" :value="single_trans.date"></van-cell>
                 <van-cell :title="single_trans.main_vichele + '-' + single_trans.behind_vichele" :value="single_trans.stuff_name" :label="single_trans.order_company?single_trans.order_company:'(未指定拉货公司)'" />
 
-                <licenseCollapse
-                    title="主车证件"
-                    icon="logistics"
-                    :belong="single_trans.main_vichele"
-                    :show-expire-date-edit="false"
-                    :licenseList="vehicleLicense[single_trans.main_vichele]"
-                    @open="loadVehicleLicense(single_trans.main_vichele)"
-                    @submit="onSubmitVehicleLicense"
-                    @delete="doDeleteVehicleLicense"
-                ></licenseCollapse>
-                <licenseCollapse
-                    title="挂车证件"
-                    icon="cart-o"
-                    :belong="single_trans.behind_vichele"
-                    :show-expire-date-edit="false"
-                    :licenseList="vehicleLicense[single_trans.behind_vichele]"
-                    @open="loadVehicleLicense(single_trans.behind_vichele)"
-                    @submit="onSubmitVehicleLicense"
-                    @delete="doDeleteVehicleLicense"
-                ></licenseCollapse>
+                <div v-if="single_trans.need_license">
+                <licenseCollapse title="主车证件" icon="logistics" :belong="single_trans.main_vichele" :show-expire-date-edit="false" :licenseList="vehicleLicense[single_trans.main_vichele]" @open="loadVehicleLicense(single_trans.main_vichele)" @submit="onSubmitVehicleLicense" @delete="doDeleteVehicleLicense"></licenseCollapse>
+                <licenseCollapse title="挂车证件" icon="cart-o" :belong="single_trans.behind_vichele" :show-expire-date-edit="false" :licenseList="vehicleLicense[single_trans.behind_vichele]" @open="loadVehicleLicense(single_trans.behind_vichele)" @submit="onSubmitVehicleLicense" @delete="doDeleteVehicleLicense"></licenseCollapse>
+                </div>
 
                 <van-cell v-if="!single_trans.is_buy" :title="single_trans.destination_company" center>
-                    <template #right-icon>
+                    <template #right-icon v-if="single_trans.need_checkin">
                         <div style="margin-left:8px;">
                             <van-button v-if="should_checkin(single_trans.date) && !single_trans.is_registered && single_trans.destination_company" type="info" size="small" @click="register_vichele(single_trans.destination_company, single_trans.id)">排号
                             </van-button>
@@ -146,7 +122,7 @@ export default {
     data: function () {
         return {
             driverLicenseList: [],
-            vehicleLicense:{},
+            vehicleLicense: {},
             is_login: false,
             need_bind_info: false,
             bind_info: {
@@ -231,11 +207,11 @@ export default {
                 console.log(err);
             }
         },
-        async loadVehicleLicense(plate_no){
+        async loadVehicleLicense(plate_no) {
             let list = await getVehicleLicenseByPlateNo(plate_no);
             this.$set(this.vehicleLicense, plate_no, list)
         },
-        async onSubmitVehicleLicense(formData, callback){
+        async onSubmitVehicleLicense(formData, callback) {
             try {
                 let silent_id = this.silent_id;
                 let file = formData.licenseFile[0];
@@ -246,7 +222,7 @@ export default {
                 console.log(err);
             }
         },
-        async doDeleteVehicleLicense(license){
+        async doDeleteVehicleLicense(license) {
             await delVehicleLicense(this.silent_id, license.id)
             await this.loadVehicleLicense(license.belong)
         },

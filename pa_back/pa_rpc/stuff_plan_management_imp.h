@@ -1883,6 +1883,7 @@ public:
                             company_management_handler ch;
                             if (ch.company_customize_need(sale_company->name, company_management_handler::need_driver_register))
                             {
+                                tmp.need_checkin = true;
                                 if (register_info)
                                 {
                                     tmp.can_enter &= true;
@@ -2284,11 +2285,15 @@ public:
         {
             tmp.set_parent(*vehicle, "belong_main_vehicle");
         }
-        auto behind_vehicle = sqlite_orm::search_record<pa_sql_vichele_behind>("number == '%s'", plate_no.c_str());
-        if (behind_vehicle)
+        else
         {
-            tmp.set_parent(*behind_vehicle, "belong_behind_vehicle");
+            auto behind_vehicle = sqlite_orm::search_record<pa_sql_vichele_behind>("number == '%s'", plate_no.c_str());
+            if (behind_vehicle)
+            {
+                tmp.set_parent(*behind_vehicle, "belong_behind_vehicle");
+            }
         }
+
         if (tmp.insert_record())
         {
             auto attachment_path = PA_DATAOPT_store_attach_file(file_content, false, "vehicle_license" + plate_no + "__" + std::to_string(tmp.get_pri_id()));
@@ -2318,10 +2323,10 @@ public:
     {
         auto vehicles = sqlite_orm::search_record_all<pa_sql_vichele>("number == '%s'", plate_no.c_str());
         auto behind_vehicles = sqlite_orm::search_record_all<pa_sql_vichele_behind>("number == '%s'", plate_no.c_str());
-        for (auto &itr:vehicles)
+        for (auto &itr : vehicles)
         {
             auto vls = itr.get_all_children<pa_sql_vehicle_license>("belong_main_vehicle");
-            for (auto &single_vl:vls)
+            for (auto &single_vl : vls)
             {
                 vehicle_license_info tmp;
                 tmp.attachment_path = single_vl.attachment_path;
@@ -2330,16 +2335,19 @@ public:
                 _return.push_back(tmp);
             }
         }
-        for (auto &itr:behind_vehicles)
+        if (_return.size() == 0)
         {
-            auto vls = itr.get_all_children<pa_sql_vehicle_license>("belong_behind_vehicle");
-            for (auto &single_vl:vls)
+            for (auto &itr : behind_vehicles)
             {
-                vehicle_license_info tmp;
-                tmp.attachment_path = single_vl.attachment_path;
-                tmp.expire_date = single_vl.expire_date;
-                tmp.id = single_vl.get_pri_id();
-                _return.push_back(tmp);
+                auto vls = itr.get_all_children<pa_sql_vehicle_license>("belong_behind_vehicle");
+                for (auto &single_vl : vls)
+                {
+                    vehicle_license_info tmp;
+                    tmp.attachment_path = single_vl.attachment_path;
+                    tmp.expire_date = single_vl.expire_date;
+                    tmp.id = single_vl.get_pri_id();
+                    _return.push_back(tmp);
+                }
             }
         }
     }

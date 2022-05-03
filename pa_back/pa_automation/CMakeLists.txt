@@ -9,7 +9,7 @@ include_directories(${PROJECT_SOURCE_DIR} /usr/include/python3.8)
 aux_source_directory(. AUTOMATION_SRC)
 aux_source_directory(../gen_code RPC_IMP_SRC)
 
-add_executable(pa_automation ${AUTOMATION_SRC} ${RPC_IMP_SRC})
+add_executable(pa_automation ${AUTOMATION_SRC} ${RPC_IMP_SRC} ../pa_rpc/pa_rpc_util.cpp)
 
 find_library(SQLITE_ORM_LIB libsqlite_orm.so ${PRJ_INTERNAL_BUILD}/lib)
 find_library(TCP_FRAMEWORK_LIB libtcp_framework.so ${PRJ_INTERNAL_BUILD}/lib)
