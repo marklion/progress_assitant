@@ -484,6 +484,7 @@ struct vehicle_info_resp {
     22:string tmd_no,
     23:string attachUrl,
     24:list<vehicle_license_info> allLicenseInfo,
+    25:string sale_address,
 }
 
 struct push_weight_req {
