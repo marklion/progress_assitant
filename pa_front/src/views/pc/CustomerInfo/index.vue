@@ -51,8 +51,8 @@
             <el-form-item label="客户名称" prop="customerName">
                 <el-input v-model="balanceForm.customerName" disabled></el-input>
             </el-form-item>
-            <el-form-item label="余额" prop="balance">
-                <el-input type="number" v-model="balanceForm.balance"></el-input>
+            <el-form-item label="余额增量" prop="plus_value">
+                <el-input type="number" v-model="balanceForm.plus_value"></el-input>
             </el-form-item>
             <el-form-item label="备注" prop="reason">
                 <el-input type="textarea" v-model="balanceForm.reason"></el-input>
@@ -91,12 +91,13 @@ export default {
             balanceForm: {
                 customerName: '',
                 balance: '',
-                reason: ''
+                reason: '',
+                plus_value: 0,
             },
             rules: {
-                balance: [{
+                plus_value: [{
                     required: true,
-                    message: '请输入余额',
+                    message: '请输入余额增量',
                     trigger: 'blur'
                 }],
                 reason: [{
@@ -155,7 +156,8 @@ export default {
             this.balanceForm = {
                 customerName: '',
                 balance: '',
-                reason: ''
+                reason: '',
+                plus_value: 0,
             }
             this.showBalanceDialog = false
         },
@@ -169,6 +171,7 @@ export default {
                     background: 'rgba(0, 0, 0, 0.7)'
                 });
                 try {
+                    this.balanceForm.balance = parseFloat(this.balanceForm.balance) + parseFloat(this.balanceForm.plus_value);
                     await this.$call_remote_process_no_toast('open_api_management', 'proc_push_balance', [this.balanceForm, this.token])
                     await this.loadData(this.token)
                     this.showBalanceDialog = false

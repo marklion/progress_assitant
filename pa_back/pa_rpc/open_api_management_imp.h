@@ -1063,12 +1063,36 @@ public:
         stream << csv_bom;
         csv2::Writer<csv2::delimiter<','>> writer(stream);
         std::vector<std::string> table_header = {
-            "时间", "修改人", "修改原因", "修改前金额"};
+            "时间", "修改人", "修改原因", "期初余额", "本期应收", "本期收款", "期末余额"};
 
         writer.write_row(table_header);
-        for (auto &itr : all_history)
+        for (auto itr = all_history.begin(); itr != all_history.end(); itr++)
         {
-            std::vector<std::string> single_rec = {itr.timestamp, itr.account, itr.reason, pa_double2string_reserve2(itr.balance_before_change)};
+            std::vector<std::string> single_rec = {itr->timestamp, itr->account, itr->reason, pa_double2string_reserve2(itr->balance_before_change)};
+            auto next_itr = itr;
+            next_itr++;
+            double plus_value = 0;
+            double minus_value = 0;
+            double abs_plus_value = 0;
+            if (next_itr != all_history.end())
+            {
+                abs_plus_value = next_itr->balance_before_change - itr->balance_before_change;
+            }
+            else
+            {
+                abs_plus_value = contract->balance - itr->balance_before_change;
+            }
+            if (itr->account == "系统自动")
+            {
+                minus_value = -abs_plus_value;
+            }
+            else
+            {
+                plus_value = abs_plus_value;
+            }
+            single_rec.push_back(pa_double2string_reserve2(minus_value));
+            single_rec.push_back(pa_double2string_reserve2(plus_value));
+            single_rec.push_back(pa_double2string_reserve2(itr->balance_before_change - minus_value + plus_value));
             writer.write_row(single_rec);
         }
         stream.close();
