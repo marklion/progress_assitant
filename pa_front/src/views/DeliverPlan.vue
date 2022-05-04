@@ -40,8 +40,6 @@
                     <van-button icon="replay" v-if="item.driver_silent_id" type="danger" size="small" @click="reset_driver_info(item.driver_silent_id)">重置信息
                     </van-button>
                 </div>
-                <van-button v-if="sale_company_config.need_driver_license && !showDriverLicense" icon="eye" type="info" size="small" @click="open_driver_license_list(item.driver_phone)">查证件
-                </van-button>
             </div>
         </van-cell-group>
     </van-checkbox-group>
@@ -73,7 +71,7 @@
                 <van-cell :title="'皮重：' + item.p_weight" :value="item.p_time"></van-cell>
                 <van-cell :title="'毛重：' + item.m_weight" :value="item.deliver_timestamp"></van-cell>
                 <van-cell title="查看磅单" is-link :to="{name:'Ticket', params:{id:item.vichele_id + 'S'}}"></van-cell>
-                <van-cell v-if="sale_company_config.need_driver_license" is-link title="查看证件" @click="open_driver_license_list(item.driver_phone)"></van-cell>
+                <van-cell v-if="sale_company_config.need_driver_license && plan_status == 4" is-link title="查看证件" @click="open_driver_license_list(index)"></van-cell>
             </van-collapse-item>
         </van-collapse>
     </van-cell-group>
@@ -85,8 +83,7 @@
             </div>
         </van-form>
     </van-dialog>
-    <driverLicenseDialog v-model="showDriverLicense" :phone="checkingDriverPhone">
-    </driverLicenseDialog>
+
 </div>
 </template>
 
@@ -98,16 +95,15 @@ import {
     getCompanyConfig
 } from '@/api/company'
 
-import driverLicenseDialog from '@/components/DriverLicenseDialog'
+import {
+    ImagePreview
+} from 'vant';
 
 export default {
     name: 'DeliverPlan',
-    components: {
-        driverLicenseDialog
-    },
-
     data: function () {
         return {
+            plan_status: 0,
             driverLicenseList: [],
             showDriverLicense: false,
             checkingDriverPhone: '',
@@ -183,9 +179,18 @@ export default {
             this.new_driver_name = "";
             this.new_driver_phone = "";
         },
-        open_driver_license_list(driver_phone) {
-            this.checkingDriverPhone = driver_phone;
-            this.showDriverLicense = true;
+        open_driver_license_list(_index) {
+            var license_list = [];
+            var license_path = this.delivered_vichele[_index].archive_license;
+            license_path = license_path.substr(0, license_path.length - 1);
+            license_path.split('|').forEach(element => {
+                license_list.push(this.$remote_url + element);
+            });
+
+            ImagePreview({
+                images: license_list,
+                closeable: true,
+            });
         },
         change_driver: function () {
             var vue_this = this;
@@ -263,6 +268,7 @@ export default {
         this.count = planInfo.count;
         this.name = planInfo.name;
         this.user_name = planInfo.created_user_name;
+        this.plan_status = planInfo.status;
         planInfo.vichele_info.forEach((element, index) => {
             if (!element.finish) {
                 element.count = 20;

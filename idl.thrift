@@ -250,6 +250,7 @@ struct vichele_in_plan {
     16:double m_weight,
     17:string driver_id,
     18:string driver_silent_id,
+    19:string archive_license,
 }
 
 struct stuff_plan {
