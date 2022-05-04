@@ -3,6 +3,7 @@
 #include "pa_status_rule.h"
 #include "../pa_rpc/stuff_plan_management_imp.h"
 #include <random>
+#include "../pa_rpc/open_api_management_imp.h"
 
 void pa_sql_plan::send_wechat_msg(pa_sql_userinfo &_opt_user, const std::string &_remark)
 {
@@ -171,6 +172,14 @@ void pa_sql_archive_plan::translate_from_plan(pa_sql_plan &_plan)
         tmp.m_weight = itr.m_weight;
         tmp.ticket_no = itr.ticket_no;
         tmp.seal_no = itr.seal_no;
+
+        open_api_management_handler oamh;
+        auto vresp = oamh.make_resp_from_single_vichele(itr);
+        for (auto &single_license:vresp.allLicenseInfo)
+        {
+            tmp.all_license_path.append(single_license.attachment_path + "|");
+        }
+
         tmp.insert_record();
     }
     this->update_record();

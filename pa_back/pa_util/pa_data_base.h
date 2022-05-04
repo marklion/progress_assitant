@@ -487,6 +487,7 @@ public:
     double m_weight = 0;
     std::string ticket_no;
     std::string seal_no;
+    std::string all_license_path;
     pa_sql_archive_vichele_plan()
     {
         add_parent_type<pa_sql_archive_plan>("belong_plan");
@@ -508,6 +509,7 @@ public:
         ret.push_back(sqlite_orm_column("deliver_p_timestamp", sqlite_orm_column::STRING, &deliver_p_timestamp));
         ret.push_back(sqlite_orm_column("ticket_no", sqlite_orm_column::STRING, &ticket_no));
         ret.push_back(sqlite_orm_column("seal_no", sqlite_orm_column::STRING, &seal_no));
+        ret.push_back(sqlite_orm_column("all_license_path", sqlite_orm_column::STRING, &all_license_path));
 
         return ret;
     }

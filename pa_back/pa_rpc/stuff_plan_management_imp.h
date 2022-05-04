@@ -246,6 +246,7 @@ public:
                         tmp.m_weight = itr.m_weight;
                         tmp.p_weight = itr.p_weight;
                         tmp.vichele_id = itr.get_pri_id();
+                        tmp.archive_license = itr.all_license_path;
                         _return.vichele_info.push_back(tmp);
                     }
                 }
