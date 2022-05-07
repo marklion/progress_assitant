@@ -783,7 +783,7 @@ public:
             stream << csv_bom;
             csv2::Writer<csv2::delimiter<','>> writer(stream);
             std::vector<std::string> table_header = {
-                "装液日期", "客户名称", "货名", "车牌", "车挂", "司机姓名", "司机电话", "当前状态", "卸车地点", "用途"};
+                "装液日期", "客户名称", "货名", "车牌", "车挂", "司机姓名", "司机电话", "当前状态", "卸车地点", "用途", "净重", "单价", "金额"};
             if (!user->buyer)
             {
                 table_header.insert(table_header.begin() + 1, "客户编码");
@@ -866,6 +866,9 @@ public:
                             single_rec.push_back(status_string);
                             single_rec.push_back(itr.drop_address);
                             single_rec.push_back(itr.use_for);
+                            single_rec.push_back(itr.count);
+                            single_rec.push_back(archive_plan->unit_price);
+                            single_rec.push_back(pa_double2string_reserve2(std::stod( archive_plan->unit_price) * std::stod(itr.count)));
 
                             writer.write_row(single_rec);
                         }
@@ -899,6 +902,9 @@ public:
                             single_rec.push_back(status_str);
                             single_rec.push_back(vichele_itr.drop_address);
                             single_rec.push_back(vichele_itr.use_for);
+                            single_rec.push_back(pa_double2string_reserve2(vichele_itr.count));
+                            single_rec.push_back(pa_double2string_reserve2(plan->price));
+                            single_rec.push_back(pa_double2string_reserve2(vichele_itr.count * plan->price));
                             writer.write_row(single_rec);
                         }
                     }
@@ -1114,7 +1120,6 @@ public:
         {
             PA_RETURN_MSG("超过最大车辆限制，请联系商家管理员");
         }
-
 
         auto plan_time_day = plan.plan_time.substr(0, 10);
         for (auto &itr : plan.vichele_info)
@@ -1601,7 +1606,7 @@ public:
             PA_RETURN_NOPRIVA_MSG();
         }
         auto stuffs = company->get_all_children<pa_sql_stuff_info>("belong_company");
-        for (auto &itr:stuffs)
+        for (auto &itr : stuffs)
         {
             auto current_time = PA_DATAOPT_current_time();
             auto date_only = current_time.substr(0, 10);
@@ -1615,11 +1620,11 @@ public:
                 tmp.brief.today_plan_count = related_today_plan.size();
                 tmp.brief.tomorrow_plan_count = related_tomorrow_plan.size();
                 tmp.stuff_name = itr.name;
-                for (auto &single_plan:related_today_plan)
+                for (auto &single_plan : related_today_plan)
                 {
                     tmp.brief.today_vichele_count += single_plan.get_all_children<pa_sql_single_vichele>("belong_plan").size();
                 }
-                for (auto &single_plan:related_tomorrow_plan)
+                for (auto &single_plan : related_tomorrow_plan)
                 {
                     tmp.brief.tomorrow_vichele_count += single_plan.get_all_children<pa_sql_single_vichele>("belong_plan").size();
                 }

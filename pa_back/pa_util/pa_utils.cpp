@@ -1,6 +1,7 @@
 #include "pa_utils.h"
 #include "wechat_msg.h"
 #include "../pa_rpc/stuff_plan_management_imp.h"
+#include <sstream>
 
 #define SALE_CONFIG_FILE "/conf/data_config.json"
 
@@ -11,6 +12,14 @@ static size_t pa_proc_curl(void *ptr, size_t size, size_t nmemb, void *user_data
     in_buff->append((char *)ptr, size * nmemb);
 
     return size * nmemb;
+}
+std::string pa_double2string_reserve2(double _value)
+{
+    std::stringstream ss;
+    ss.setf(std::ios::fixed);
+    ss.precision(2);
+    ss << _value;
+    return ss.str();
 }
 std::string PA_DATAOPT_rest_post(const std::string &_url, const std::string &_json)
 {
@@ -388,8 +397,8 @@ int64_t PA_DATAOPT_timestring_2_date(const std::string &_str, bool _has_min_sec)
     if (_has_min_sec)
     {
         sscanf(cha, "%d-%d-%d %d:%d:%d", &year, &month, &day, &hour, &min, &sec); // 将string存储的日期时间，转换为int临时变量。
-        tm_.tm_min = min;                                        // 时。
-        tm_.tm_sec = sec;                                        // 时。
+        tm_.tm_min = min;                                                         // 时。
+        tm_.tm_sec = sec;                                                         // 时。
     }
     else
     {
