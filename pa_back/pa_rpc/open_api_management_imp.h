@@ -26,14 +26,7 @@ class open_api_management_handler : public open_api_managementIf
 {
     tdf_log m_log;
 public:
-    std::string pa_double2string_reserve2(double _value)
-    {
-        std::stringstream ss;
-        ss.setf(std::ios::fixed);
-        ss.precision(2);
-        ss << _value;
-        return ss.str();
-    }
+
     open_api_management_handler():m_log("api_audit", "/log/audit.log", "/log/audit.log") {}
     virtual bool register_api_user(const std::string &company_name, const std::string &email, const std::string &password)
     {

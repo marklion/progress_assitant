@@ -67,6 +67,6 @@ std::unique_ptr<pa_sql_company> PA_DATAOPT_get_company_by_ssid(const std::string
 bool PA_DATAOPT_vichele_ready_to_post(pa_sql_vichele_stay_alone &_vichele, bool is_post = false);
 
 std::unique_ptr<pa_sql_driver> PA_DATAOPT_link_driver(const std::string &_driver_phone);
-
+std::string pa_double2string_reserve2(double _value);
 
 #endif // _PA_UTILS_H_
