@@ -8,7 +8,7 @@
 #include <functional>
 #include <string>
 #include <stdarg.h>
-#include <sys/types.h>          
+#include <sys/types.h>
 #include <sys/socket.h>
 #include <unistd.h>
 #include <netdb.h>
@@ -63,14 +63,6 @@ struct sqlite_orm_column {
     }
 };
 
-class sqlite_orm_lock {
-    static pthread_mutex_t lock;
-public:
-    static void init_lock() ;
-    sqlite_orm_lock();
-    ~sqlite_orm_lock();
-};
-
 class sqlite_orm
 {
 public:
@@ -89,14 +81,14 @@ private:
 
         sql_cmd.append("PRI_ID INTEGER PRIMARY KEY AUTOINCREMENT,");
         for (auto &single_column:columns_defined())
-        {                
+        {
             sql_cmd.append(single_column.m_name + " ");
             switch (single_column.m_type)
             {
             case sqlite_orm_column::INTEGER:
                 sql_cmd.append("INTEGER ");
                 break;
-            
+
             case sqlite_orm_column::STRING:
                 sql_cmd.append("TEXT ");
                 break;
@@ -201,12 +193,12 @@ public:
         sql_cmd.append(table_name() + ";");
         (void)execute_sql_cmd(sql_cmd, m_sqlite_file);
     };
-    virtual bool insert_record() { 
+    virtual bool insert_record() {
         bool ret = false;
         // refresh table structure
         fetch_table();
         // make sql cmd
-        
+
         std::string column_names = " (PRI_ID,";
         for (auto &itr:columns_defined())
         {
@@ -331,7 +323,7 @@ public:
     }
     template <typename sql_record>
     static std::list<sql_record> search_record_all() {
-        return search_record_all<sql_record>(""); 
+        return search_record_all<sql_record>("");
     }
     template <typename sql_record>
     static std::list<sql_record> search_record_all(const char *_query, ...)

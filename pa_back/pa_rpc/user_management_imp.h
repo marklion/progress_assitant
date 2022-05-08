@@ -44,7 +44,6 @@ public:
     }
     virtual void user_login(std::string &_return, const std::string &code)
     {
-        sqlite_orm_lock a;
         _return = "";
         std::string wechat_secret(getenv("WECHAT_SECRET"));
         std::string req = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=wxa390f8b6f68e9c6d&secret=" + wechat_secret + "&code=" + code + "&grant_type=authorization_code";
@@ -91,7 +90,6 @@ public:
     virtual bool update_user_info(const user_info &info, const std::string &ssid, const std::string &verify_code)
     {
         bool ret = false;
-        sqlite_orm_lock a;
 
         auto opt_user = PA_DATAOPT_get_online_user(ssid);
         if (opt_user && opt_user->get_pri_id() == info.user_id)
@@ -136,7 +134,7 @@ public:
                         opt_user->buyer = 0;
                         opt_user->set_parent(*company, "belong_company");
                     }
-                    else 
+                    else
                     {
                         auto all_admin = PA_DATAOPT_get_admin(info.company);
                         for (auto &itr : all_admin)
@@ -162,7 +160,6 @@ public:
     }
     virtual void logff_user(const std::string &ssid)
     {
-        sqlite_orm_lock a;
         auto login_user = sqlite_orm::search_record<pa_sql_userlogin>("ssid = '%s'", ssid.c_str());
         if (login_user)
         {
@@ -206,7 +203,6 @@ public:
     virtual bool bind_new_vichele(const std::string &ssid, const std::string &vichele, const bool main_vichele)
     {
         bool ret = false;
-        sqlite_orm_lock a;
 
         auto opt_user = PA_DATAOPT_get_online_user(ssid);
         if (opt_user)
@@ -251,7 +247,6 @@ public:
     }
     virtual void remove_vichele(const std::string &ssid, const int64_t id, const bool main_vichele)
     {
-        sqlite_orm_lock a;
         auto opt_user = PA_DATAOPT_get_online_user(ssid);
         if (!opt_user)
         {
@@ -286,7 +281,6 @@ public:
     virtual bool update_logo(const std::string &content, const std::string &ssid)
     {
         bool ret = false;
-        sqlite_orm_lock a;
 
         auto opt_user = PA_DATAOPT_get_online_user(ssid);
         if (opt_user)
@@ -300,7 +294,7 @@ public:
         return ret;
     }
 
-    virtual void get_customer_info(std::string &_return, const int64_t user_id) 
+    virtual void get_customer_info(std::string &_return, const int64_t user_id)
     {
         auto user = sqlite_orm::search_record<pa_sql_userinfo>(user_id);
         if (user)
@@ -366,7 +360,6 @@ public:
     virtual bool bind_new_driver(const std::string &ssid, const driver_info &driver)
     {
         bool ret = false;
-        sqlite_orm_lock a;
         auto user = PA_DATAOPT_get_online_user(ssid);
         if (user)
         {
@@ -400,9 +393,8 @@ public:
         return ret;
     }
 
-    virtual void remove_driver(const std::string &ssid, const int64_t id) 
+    virtual void remove_driver(const std::string &ssid, const int64_t id)
     {
-        sqlite_orm_lock a;
         auto opt_user = PA_DATAOPT_get_online_user(ssid);
         if (!opt_user)
         {
@@ -423,7 +415,6 @@ public:
     }
     virtual bool send_sms_verify(const std::string &ssid, const std::string &phone)
     {
-        sqlite_orm_lock a;
         bool ret = false;
         auto user = PA_DATAOPT_get_online_user(ssid);
         if (user)

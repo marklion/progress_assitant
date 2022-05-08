@@ -52,8 +52,6 @@ public:
     }
     virtual int64_t create_plan(const stuff_plan &plan, const std::string &ssid, const std::string &proxy_company)
     {
-        sqlite_orm_lock a;
-
         int64_t ret = 0;
         auto opt_user = PA_DATAOPT_get_online_user(ssid);
         if (!opt_user)
@@ -343,7 +341,6 @@ public:
     virtual bool update_plan(const stuff_plan &plan, const std::string &ssid)
     {
         bool ret = false;
-        sqlite_orm_lock a;
 
         auto opt_user = PA_DATAOPT_get_online_user(ssid);
         if (!opt_user)
@@ -581,7 +578,6 @@ public:
     virtual bool confirm_plan(const int64_t plan_id, const std::string &ssid, const std::string &comment)
     {
         bool ret = false;
-        sqlite_orm_lock a;
         auto opt_user = PA_DATAOPT_get_online_user(ssid);
         if (!opt_user)
         {
@@ -621,7 +617,6 @@ public:
     virtual bool confirm_pay(const int64_t plan_id, const std::string &ssid, const std::string &comment)
     {
         bool ret = false;
-        sqlite_orm_lock a;
 
         auto opt_user = PA_DATAOPT_get_online_user(ssid);
         std::string status_comment = "已确认";
@@ -679,7 +674,6 @@ public:
     bool pri_confirm_deliver(const int64_t plan_id, pa_sql_userinfo &opt_user, const std::vector<deliver_info> &deliver_infos, const std::string &reason)
     {
         bool ret = false;
-        sqlite_orm_lock a;
 
         auto plan = sqlite_orm::search_record<pa_sql_plan>(plan_id);
         auto current_time = PA_DATAOPT_current_time();
@@ -985,7 +979,6 @@ public:
     virtual bool except_close(const int64_t plan_id, const std::string &ssid, const std::string &reason)
     {
         bool ret = false;
-        sqlite_orm_lock a;
 
         auto opt_user = PA_DATAOPT_get_online_user(ssid);
         if (!opt_user)
@@ -1054,7 +1047,6 @@ public:
 
     virtual void verify_plan(std::string &_return, const stuff_plan &plan, const std::string &ssid)
     {
-        sqlite_orm_lock a;
         auto user = PA_DATAOPT_get_online_user(ssid);
         if (!user)
         {
@@ -1162,7 +1154,6 @@ public:
 
     virtual bool send_file_via_email(const std::string &ssid, const std::string &filepath, const std::string &email)
     {
-        sqlite_orm_lock a;
         bool ret = false;
         auto file_name_begin = filepath.find("/logo_res/");
         auto file_name = "/dist" + filepath.substr(file_name_begin, filepath.length() - file_name_begin);
@@ -1189,7 +1180,6 @@ public:
     virtual bool reject_plan(const int64_t plan_id, const std::string &ssid, const std::string &reject_reason)
     {
         bool ret = false;
-        sqlite_orm_lock a;
         auto user = PA_DATAOPT_get_online_user(ssid);
         if (!user)
         {
@@ -1316,7 +1306,6 @@ public:
 
     virtual void clean_unclose_plan()
     {
-        sqlite_orm_lock a;
         auto today_str = PA_DATAOPT_date_2_timestring(time(nullptr)).substr(0, 10);
         auto plans_need_close = sqlite_orm::search_record_all<pa_sql_plan>("status != 4 AND plan_time NOT LIKE '%s%%'", today_str.c_str());
         for (auto &itr : plans_need_close)
@@ -1339,7 +1328,6 @@ public:
 
     virtual void get_today_statistics(std::vector<vichele_stuff_statistics> &_return, const std::string &ssid)
     {
-        sqlite_orm_lock a;
         auto user = PA_DATAOPT_get_online_user(ssid);
         if (!user)
         {
@@ -1431,7 +1419,6 @@ public:
 
     virtual void export_plan_by_plan_date(std::string &_return, const std::string &ssid, const std::string &plan_date, const std::string &create_date)
     {
-        sqlite_orm_lock a;
         auto plans = PA_RPC_get_all_plans_related_by_user(ssid, "plan_time LIKE '%s%%' AND is_cancel = 0", plan_date.c_str());
 
         std::vector<int64_t> plan_ids;
@@ -1454,7 +1441,6 @@ public:
     }
     virtual void export_plan_by_create_date(std::string &_return, const std::string &ssid, const int64_t begin_date, const int64_t end_date)
     {
-        sqlite_orm_lock a;
         auto opt_user = PA_DATAOPT_get_online_user(ssid);
         if (!opt_user)
         {
@@ -1733,7 +1719,6 @@ public:
     }
     virtual bool driver_silent_send_sms(const std::string &driver_phone)
     {
-        sqlite_orm_lock a;
         bool ret = false;
         auto user = PA_DATAOPT_link_driver(driver_phone);
         if (user)
@@ -1771,7 +1756,6 @@ public:
     }
     virtual void driver_silent_register(std::string &_return, const std::string &code, const std::string &driver_id, const std::string &driver_phone, const std::string &verify_code)
     {
-        sqlite_orm_lock a;
         auto driver = sqlite_orm::search_record<pa_sql_driver>("phone == '%s'", driver_phone.c_str());
         if (!driver)
         {

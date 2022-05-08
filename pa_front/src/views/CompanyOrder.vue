@@ -17,7 +17,7 @@
                     <van-button type="primary" block :to="{name:'Statistics'}">导出</van-button>
                 </van-col>
             </van-row>
-            <van-notice-bar left-icon="info-o" :text="notice_info" />
+            <van-notice-bar v-if="!$store.state.userinfo.buyer" left-icon="info-o" :text="notice_info" />
             <van-search v-model="vichele_number_search" label="车牌号" placeholder="请输入车牌号搜索当天计划" @search="search_plan_by_vichele_number" />
             <div v-if="show_export">
                 <van-row v-if="$store.state.userinfo.buyer">
@@ -208,9 +208,9 @@ export default {
         }
     },
     computed: {
-        notice_info:function () {
+        notice_info: function () {
             var ret = "";
-            this.company_plan_brief.forEach((element)=>{
+            this.company_plan_brief.forEach((element) => {
                 ret += element.stuff_name + ":";
                 ret += "今日计划 " + element.brief.today_plan_count + " 单,共 " + element.brief.today_vichele_count + ' 车 ';
                 ret += "明日计划 " + element.brief.tomorrow_plan_count + " 单,共 " + element.brief.tomorrow_vichele_count + ' 车<-->';
@@ -391,8 +391,7 @@ export default {
             var req_date = new Date();
             req_date.setDate(req_date.getDate() + vue_this.date_filter - 1);
             var req_date_string = vue_this.formatDateTime(req_date);
-            if (vue_this.date_filter == 0 || vue_this.date_filter == 3)
-            {
+            if (vue_this.date_filter == 0 || vue_this.date_filter == 3) {
                 req_date_string = "";
             }
 
@@ -436,7 +435,7 @@ export default {
                 });
             });
 
-            vue_this.$call_remote_process("stuff_plan_management", "get_company_brief", [vue_this.$cookies.get('pa_ssid')]).then(function (resp) {
+            vue_this.$call_remote_process_no_toast("stuff_plan_management", "get_company_brief", [vue_this.$cookies.get('pa_ssid')]).then(function (resp) {
                 vue_this.company_plan_brief = resp;
             });
         },

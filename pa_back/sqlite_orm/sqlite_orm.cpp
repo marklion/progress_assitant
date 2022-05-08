@@ -5,13 +5,23 @@
 static tdf_log g_log("sql_execute");
 extern bool execute_sql_cmd(const std::string& _sql_cmd, const std::string& _sql_file, std::vector<std::map<std::string, std::string>> *_ret)
 {
-    sqlite3 *db = nullptr;
+    static sqlite3 *db = nullptr;
     bool ret = false;
+    int sql_ret = -1;
 
-    auto sql_ret = sqlite3_open(_sql_file.c_str(), &db);
+    if (db)
+    {
+        sql_ret = 0;
+    }
+    else
+    {
+        sql_ret = sqlite3_open(_sql_file.c_str(), &db);
+    }
     if (sql_ret == 0 && nullptr != db)
     {
-        sqlite3_busy_handler(db, [](void *_priv, int _count)->int{
+        sqlite3_busy_handler(
+            db, [](void *_priv, int _count) -> int
+            {
             usleep(100000);
             if (_count>40)
             {
@@ -19,10 +29,12 @@ extern bool execute_sql_cmd(const std::string& _sql_cmd, const std::string& _sql
                 return 0;
             }
             g_log.log("retry sql :%s for %d times", (char *)_priv, _count);
-            return 1;
-        }, (void*)(_sql_cmd.c_str()));
+            return 1; },
+            (void *)(_sql_cmd.c_str()));
         char *errmsg = nullptr;
-        if (0 == sqlite3_exec(db, _sql_cmd.c_str(), [](void *_pQA, int argc, char **argv, char **_col) -> int {
+        if (0 == sqlite3_exec(
+                     db, _sql_cmd.c_str(), [](void *_pQA, int argc, char **argv, char **_col) -> int
+                     {
             auto pOut = static_cast<std::vector<std::map<std::string, std::string>> *>(_pQA);
             if (pOut != nullptr)
             {
@@ -40,9 +52,8 @@ extern bool execute_sql_cmd(const std::string& _sql_cmd, const std::string& _sql
                 }
                 pOut->push_back(tmp_map);
             }
-            return 0;
-        },
-        _ret, &errmsg))
+            return 0; },
+                     _ret, &errmsg))
         {
             ret = true;
             std::string output_log = "result of " + _sql_cmd + " is ";
@@ -52,7 +63,7 @@ extern bool execute_sql_cmd(const std::string& _sql_cmd, const std::string& _sql
                 {
                     output_log.append("\n");
                     bool header = true;
-                    for (auto &itr:*(_ret))
+                    for (auto &itr : *(_ret))
                     {
                         if (header)
                         {
@@ -88,41 +99,12 @@ extern bool execute_sql_cmd(const std::string& _sql_cmd, const std::string& _sql
             g_log.err("meet error: %s when excute: %s", errmsg, _sql_cmd.c_str());
             sqlite3_free(errmsg);
         }
-        sqlite3_close(db);
     }
     else
     {
         g_log.err("failed to open database: %s", _sql_file.c_str());
+        db = nullptr;
     }
-    
+
     return ret;
 }
-
-pthread_mutex_t sqlite_orm_lock::lock;
-
-void sqlite_orm_lock::init_lock()
-{
-    pthread_mutexattr_t attr;
-    pthread_mutexattr_init(&attr);
-    pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_RECURSIVE);
-    pthread_mutex_init(&sqlite_orm_lock::lock, &attr);
-}
-
-sqlite_orm_lock::sqlite_orm_lock()
-{
-    auto ret = pthread_mutex_lock(&sqlite_orm_lock::lock);
-    if (0 == ret)
-    {
-        g_log.log("lock sql");
-    }
-    else
-    {
-        g_log.err("failed to lock sql");
-    }
-}
-sqlite_orm_lock::~sqlite_orm_lock()
-{
-    pthread_mutex_unlock(&sqlite_orm_lock::lock);
-    g_log.log("unlock sql");
-}
-

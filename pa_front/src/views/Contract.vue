@@ -32,7 +32,7 @@
                 </template>
                 <div>开始日期：{{single_contract.start_time}}</div>
                 <div>到期日期：{{single_contract.end_time}}</div>
-                <div v-if="!$store.state.userinfo.buyer">余额：{{single_contract.balance}}</div>
+                <div>余额：{{single_contract.balance}}</div>
                 <div>最大装车量：{{max_vehicle_limit_formater(single_contract.max_vehicle_limit)}}</div>
             </van-cell>
             <div class="follow_status_show">
