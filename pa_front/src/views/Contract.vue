@@ -269,7 +269,9 @@ export default {
                     single_contract.follow_stuff = [];
                     vue_this.$call_remote_process("stuff_info", "get_follow_stuff_by_company", [element.a_side_company]).then(function (resp) {
                         resp.forEach(element => {
-                            single_contract.follow_stuff.push(element.name);
+                            if (element.company == single_contract.b_side_company) {
+                                single_contract.follow_stuff.push(element.name);
+                            }
                         });
                         vue_this.$set(vue_this.contract, index, single_contract);
                     });
