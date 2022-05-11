@@ -1107,6 +1107,25 @@ public:
             PA_RETURN_MSG("导出失败");
         }
     }
+
+    virtual void get_today_brief_info(today_plan_brief_info &_return, const std::string &token)
+    {
+        log_audit_basedon_token(token, __FUNCTION__);
+        auto company = _get_token_company(token);
+        if (!company)
+        {
+            PA_RETURN_MSG(OPEN_API_MSG_NO_PERMISSION);
+        }
+        stuff_plan_management_handler spmh;
+        auto tmp_ret = spmh.pri_get_company_brief(*company);
+        auto tmp_count = 0;
+        for (auto &itr : tmp_ret)
+        {
+            tmp_count += itr.brief.today_vichele_count;
+        }
+
+        _return.total_vehicle = std::to_string(tmp_count);
+    }
 };
 
 #endif // _OPEN_API_MANAGEMENT_H_

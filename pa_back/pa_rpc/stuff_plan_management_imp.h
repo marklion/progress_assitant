@@ -1582,15 +1582,16 @@ public:
         }
     }
 
-    virtual void get_company_brief(std::vector<company_stuff_plan_brief> &_return, const std::string &ssid)
+    std::vector<company_stuff_plan_brief> pri_get_company_brief(pa_sql_company &_company)
     {
-        auto current_time_date = time(nullptr);
-        current_time_date += 3600 * 24;
-        auto company = PA_DATAOPT_get_company_by_ssid(ssid);
+        std::vector<company_stuff_plan_brief> _return;
+        auto company = &_company;
         if (!company || !company->is_sale)
         {
             PA_RETURN_NOPRIVA_MSG();
         }
+        auto current_time_date = time(nullptr);
+        current_time_date += 3600 * 24;
         auto stuffs = company->get_all_children<pa_sql_stuff_info>("belong_company");
         for (auto &itr : stuffs)
         {
@@ -1616,6 +1617,16 @@ public:
                 }
                 _return.push_back(tmp);
             }
+        }
+        return _return;
+    }
+
+    virtual void get_company_brief(std::vector<company_stuff_plan_brief> &_return, const std::string &ssid)
+    {
+        auto company = PA_DATAOPT_get_company_by_ssid(ssid);
+        if (company)
+        {
+            _return = pri_get_company_brief(*company);
         }
     }
 

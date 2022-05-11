@@ -548,6 +548,10 @@ struct ticket_detail {
     14:string transfor_company,
 }
 
+struct today_plan_brief_info{
+    1:string total_vehicle;
+}
+
 service open_api_management {
     bool register_api_user(1:string company_name, 2:string email, 3:string password) throws (1:gen_exp e),
     bool verify_email_code(1:string email, 2:string code) throws (1:gen_exp e),
@@ -568,6 +572,7 @@ service open_api_management {
     bool modify_vehicle_info_from_ticket(1:string ssid, 2:ticket_detail ticket) throws (1:gen_exp e),
     list<push_balance_req> get_all_customer_balance(1:string token) throws (1:gen_exp e),
     string export_balance_audit_log(1:string token, 2:string company_name) throws (1:gen_exp e),
+    today_plan_brief_info get_today_brief_info(1:string token) throws (1:gen_exp e),
 }
 
 struct vichele_stay_alone {
