@@ -242,6 +242,21 @@ app.get('/pa_rest/company_brief', async (req, res) => {
 
     res.send(ret);
 });
+app.post('/pa_rest/undo_vehicle', async (req, res) => {
+    var token = req.query.token;
+    var ret = { err_msg: '无权限' };
+    try {
+        var resp = await request_rpc("open_api_management", 'undo_vehicle_weight', [token, req.body.id]);
+        if (resp) {
+            ret.err_msg = "";
+            ret.result = resp;
+        }
+    } catch (error) {
+        ret = { err_msg: error.msg };
+    }
+
+    res.send(ret);
+});
 app.listen(port, () => {
     console.log('rest is runing');
 });

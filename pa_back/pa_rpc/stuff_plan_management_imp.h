@@ -663,6 +663,10 @@ public:
                 pa_sql_balance_history tmp;
                 tmp.account = "系统自动";
                 tmp.reason = "交易触发";
+                if (minus_balance < 0)
+                {
+                    tmp.reason = "交易退回";
+                }
                 tmp.balance_before_change = contract->balance + minus_balance;
                 tmp.timestamp = PA_DATAOPT_current_time();
                 tmp.set_parent(*contract, "belong_contract");
@@ -670,7 +674,59 @@ public:
             }
         }
     }
+    bool pri_undo_vehicle_weight(long vehicle_id)
+    {
+        bool ret = false;
 
+        auto vehicle = sqlite_orm::search_record<pa_sql_single_vichele>(vehicle_id);
+        if (vehicle)
+        {
+            auto plan = vehicle->get_parent<pa_sql_plan>("belong_plan");
+            if (plan)
+            {
+                stuff_plan plan_orig_info;
+                get_plan(plan_orig_info, plan->get_pri_id());
+                auto b_comapny_info = sqlite_orm::search_record<pa_sql_company>("name == '%s'", plan_orig_info.sale_company.c_str());
+                auto a_comapny_info = sqlite_orm::search_record<pa_sql_company>("name == '%s'", plan_orig_info.buy_company.c_str());
+
+                if (a_comapny_info && b_comapny_info)
+                {
+                    change_balance_by_deliver(*a_comapny_info, *b_comapny_info, -(vehicle->count * plan->price));
+                }
+                vehicle->finish = 0;
+                vehicle->p_weight = 0;
+                vehicle->m_weight = 0;
+                vehicle->deliver_p_timestamp = "";
+                vehicle->count = 0;
+                vehicle->deliver_timestamp = "";
+                vehicle->ticket_no = "";
+                vehicle->seal_no = "";
+                vehicle->update_record();
+                if (plan->status == 4 && PA_STATUS_RULE_can_be_change(*plan, *get_sysadmin_user(), 3))
+                {
+                    PA_STATUS_RULE_action(*plan, *get_sysadmin_user(), PA_DATAOPT_current_time(), "撤销称重");
+                    PA_STATUS_RULE_change_status(*plan, 3, *get_sysadmin_user());
+                    auto arch_plan = plan->get_parent<pa_sql_archive_plan>("archived");
+                    if (arch_plan)
+                    {
+                        for (auto &itr:arch_plan->get_all_children<pa_sql_archive_status_in_plan>("belong_plan"))
+                        {
+                            itr.remove_record();
+                        }
+                        for (auto &itr:arch_plan->get_all_children<pa_sql_archive_vichele_plan>("belong_plan"))
+                        {
+                            itr.remove_record();
+                        }
+                        arch_plan->remove_record();
+                    }
+                }
+                PA_STATUS_RULE_action(*plan, *get_sysadmin_user(), PA_DATAOPT_current_time(), "撤销称重");
+                ret = true;
+            }
+        }
+
+        return ret;
+    }
     bool pri_confirm_deliver(const int64_t plan_id, pa_sql_userinfo &opt_user, const std::vector<deliver_info> &deliver_infos, const std::string &reason)
     {
         bool ret = false;
@@ -862,7 +918,7 @@ public:
                             single_rec.push_back(itr.use_for);
                             single_rec.push_back(itr.count);
                             single_rec.push_back(archive_plan->unit_price);
-                            single_rec.push_back(pa_double2string_reserve2(std::stod( archive_plan->unit_price) * std::stod(itr.count)));
+                            single_rec.push_back(pa_double2string_reserve2(std::stod(archive_plan->unit_price) * std::stod(itr.count)));
 
                             writer.write_row(single_rec);
                         }

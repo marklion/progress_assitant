@@ -1126,6 +1126,25 @@ public:
 
         _return.total_vehicle = std::to_string(tmp_count);
     }
+    virtual bool undo_vehicle_weight(const std::string &token, const std::string &id)
+    {
+        bool ret = false;
+        log_audit_basedon_token(token, __FUNCTION__);
+
+        auto company = _get_token_company(token);
+        if (!company)
+        {
+            PA_RETURN_MSG(OPEN_API_MSG_NO_PERMISSION);
+        }
+        char last_tag = 'S';
+        last_tag = id[id.length() - 1];
+        std::string real_id = id.substr(0,id.length() - 1);
+
+        stuff_plan_management_handler sp_handler;
+        ret = sp_handler.pri_undo_vehicle_weight(std::stol(real_id));
+
+        return ret;
+    }
 };
 
 #endif // _OPEN_API_MANAGEMENT_H_
