@@ -1,6 +1,6 @@
 <template>
 <div>
-    <el-button plain @click="onClick" type="primary" size="medium" :loading="loading" :disabled="disabled" icon="el-icon-download">
+    <el-button class="op-btn op-export" plain @click="onClick" type="primary" size="medium" :loading="loading" :disabled="disabled" icon="el-icon-download">
         {{title}}
     </el-button>
     <a :id="id" :href="exportUrl" download hidden="hidden" ref="downloadLink">保存文件</a>
@@ -82,4 +82,15 @@ div {
     display: inline-block;
     margin-left: 5px;
 }
+@media screen and (max-width: 420px){
+    .op-btn{
+        font-size: 12px;
+        padding: 6px;
+    }
+    div {
+        display: block;
+        margin-left: 0;
+    }
+}
+
 </style>

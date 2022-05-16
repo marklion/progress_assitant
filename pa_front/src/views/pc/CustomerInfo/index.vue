@@ -29,8 +29,16 @@
             <el-button type="primary" @click="onLogin" style="width: 100%">登 录</el-button>
         </el-card>
         <el-card class="info-panel" v-if="isLogin">
+            <el-input class="search-input" placeholder="输入公司名或拼音首字母查询" v-model="search" @input="doFilter">
+                <i v-if="search"
+                    class="el-icon-circle-close el-input__icon"
+                    slot="suffix"
+                    @click="search = '';tableData = allCustomers">
+                </i>
+                <el-button slot="append" icon="el-icon-search" @click="doFilter"></el-button>
+            </el-input>
             <el-table :data="tableData" stripe style="width: 100%">
-                <el-table-column type="index" width="50">
+                <el-table-column type="index">
                 </el-table-column>
                 <el-table-column prop="customerName" label="客户名称">
                 </el-table-column>
@@ -38,7 +46,7 @@
                 </el-table-column>
                 <el-table-column fixed="right" label="操作">
                     <template slot-scope="scope">
-                        <el-button plain @click="doEditBalance(scope.row)" type="primary" size="medium" icon="el-icon-edit">设置余额</el-button>
+                        <el-button class="op-btn op-edit" plain @click="doEditBalance(scope.row)" type="primary" size="medium" icon="el-icon-edit">设置余额</el-button>
                         <exportButton :index="scope.$index" :rowData="scope.row" title="导出审计" :token="token"></exportButton>
                     </template>
                 </el-table-column>
@@ -46,7 +54,7 @@
         </el-card>
     </div>
 
-    <el-dialog title="设置余额" :visible.sync="showBalanceDialog" width="30%" :before-close="handleClose">
+    <el-dialog class="setting-dialog" title="设置余额" :visible.sync="showBalanceDialog" :before-close="handleClose">
         <el-form ref="balanceForm" :rules="rules" :model="balanceForm" label-width="80px">
             <el-form-item label="客户名称" prop="customerName">
                 <el-input v-model="balanceForm.customerName" disabled></el-input>
@@ -73,6 +81,7 @@ import 'element-ui/lib/theme-chalk/index.css';
 Vue.use(ElementUI);
 import logoUrl from '@/assets/img.png'
 import exportButton from './exportButton'
+import PinyinMatch from "pinyin-match";
 
 export default {
     components: {
@@ -86,6 +95,8 @@ export default {
             form: {
                 token: ''
             },
+            search : '',
+            allCustomers : [],
             tableData: [],
             showBalanceDialog: false,
             balanceForm: {
@@ -123,7 +134,8 @@ export default {
     },
     methods: {
         async loadData(token) {
-            this.tableData = await this.$call_remote_process_no_toast('open_api_management', 'get_all_customer_balance', [token])
+            this.allCustomers = await this.$call_remote_process_no_toast('open_api_management', 'get_all_customer_balance', [token])
+            this.doFilter();
         },
         async onLogin() {
             try {
@@ -184,12 +196,17 @@ export default {
         async doExport(row, index) {
             console.log(this.$refs['exportBtn' + index].disabled = true)
             console.log(row)
+        },
+        doFilter(){
+            this.tableData = this.allCustomers.filter(item => {
+                return PinyinMatch.match(item.customerName, this.search) || item.customerName.match(new RegExp(this.search))
+            })
         }
     }
 }
 </script>
 
-<style scoped>
+<style>
 html,
 body {
     height: 100vh;
@@ -211,6 +228,81 @@ body {
 .nav-bar .logo-container {
     display: inline-block;
     width: 210px;
+}
+.sidebar-title {
+    display: inline-block;
+    margin: 0;
+    color: #fff;
+    font-weight: 600;
+    line-height: 50px;
+    font-size: 14px;
+    font-family: Avenir, Helvetica Neue, Arial, Helvetica, sans-serif;
+    vertical-align: middle;
+}
+.main-content {
+    width: 70%;
+    margin: 0 auto;
+}
+.main-content .login-panel {
+    width: 500px;
+    margin: 50px auto 0 auto;
+}
+.main-content .info-panel {
+    margin: 20px 0;
+}
+.search-input{
+    float: right;
+    width: 35%;
+}
+
+@media screen and (max-width: 420px){
+    .sidebar-title {
+        display: none;
+        margin: 0;
+        color: #fff;
+        font-weight: 600;
+        line-height: 50px;
+        font-size: 14px;
+        font-family: Avenir, Helvetica Neue, Arial, Helvetica, sans-serif;
+        vertical-align: middle;
+    }
+
+    .main-content .login-panel {
+        width: 90%;
+        margin: 150px auto 0 auto;
+    }
+    .nav-bar .logo-container {
+        display: inline-block;
+        width: 50px;
+    }
+    .main-content {
+        width: 100%;
+        margin: 0;
+    }
+    .search-input{
+        float: none;
+        width: 100%;
+    }
+    .main-content .op-btn{
+        font-size: 12px;
+        padding: 6px;
+    }
+    .nav-bar .menu-container li {
+        line-height: 50px;
+        padding: 0 8px;
+        font-size: 12px;
+    }
+    .nav-bar .logout {
+        float: right;
+        color: #FFFFFF;
+        line-height: 50px;
+        padding: 0 10px;
+        cursor: pointer;
+        font-size: 12px;
+    }
+    .setting-dialog .el-dialog{
+        width : 90%
+    }
 }
 
 .nav-bar .menu-container {
@@ -250,28 +342,6 @@ body {
     top: -2px
 }
 
-.sidebar-title {
-    display: inline-block;
-    margin: 0;
-    color: #fff;
-    font-weight: 600;
-    line-height: 50px;
-    font-size: 14px;
-    font-family: Avenir, Helvetica Neue, Arial, Helvetica, sans-serif;
-    vertical-align: middle;
-}
 
-.main-content {
-    width: 1280px;
-    margin: 0 auto;
-}
 
-.main-content .login-panel {
-    width: 500px;
-    margin: 50px auto 0 auto;
-}
-
-.main-content .info-panel {
-    margin: 20px 0;
-}
 </style>
