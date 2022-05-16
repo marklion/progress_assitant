@@ -271,6 +271,14 @@ public:
                     }
                 }
             }
+            if (plan->status == 3)
+            {
+                ret.has_payed = true;
+            }
+            else
+            {
+                ret.has_payed = false;
+            }
 
             ret.price = plan->price;
 
@@ -278,12 +286,28 @@ public:
             ret.orderNo = std::to_string(plan->create_time) + std::to_string(plan->get_pri_id());
         }
 
+        company_management_handler ch;
+        if (ch.company_customize_need(sale_company->name, company_management_handler::need_driver_license))
+        {
+            auto driver = _vichele.get_parent<pa_sql_driver>("driver");
+            auto main_vehicle = _vichele.get_parent<pa_sql_vichele>("main_vichele");
+            auto behind_vehicle = _vichele.get_parent<pa_sql_vichele_behind>("behind_vichele");
+            if (driver && driver->license_is_valid() && main_vehicle && main_vehicle->license_is_valid() && behind_vehicle && behind_vehicle->license_is_valid())
+            {
+                ret.has_license = true;
+            }
+            else
+            {
+                ret.has_license = false;
+            }
+        }
+
         ret.isSale = true;
         ret.customerId = PA_DATAOPT_search_base_id_info_by_name(ret.companyName, "customer", *sale_company);
         ret.isMulti = false;
         ret.vehicleTeamName = ret.companyName;
         ret.vehicleTeamId = ret.customerId;
-        for (auto &itr:dli)
+        for (auto &itr : dli)
         {
             vehicle_license_info tmp;
             tmp.attachment_path = itr.attachment_path;
@@ -402,19 +426,17 @@ public:
             {
                 should_add &= false;
             }
-        }
-        if (ch.company_customize_need(_company_name, company_management_handler::need_driver_license))
-        {
-            auto driver = _single_vehicle.get_parent<pa_sql_driver>("driver");
-            auto main_vehicle = _single_vehicle.get_parent<pa_sql_vichele>("main_vichele");
-            auto behind_vehicle = _single_vehicle.get_parent<pa_sql_vichele_behind>("behind_vichele");
-            if (driver && driver->license_is_valid() && main_vehicle && main_vehicle->license_is_valid() && behind_vehicle && behind_vehicle->license_is_valid())
+            if (should_add)
             {
-                should_add &= true;
-            }
-            else
-            {
-                should_add &= false;
+                auto plan = _single_vehicle.get_parent<pa_sql_plan>("belong_plan");
+                if (plan && plan->status == 3)
+                {
+                    should_add = true;
+                }
+                else
+                {
+                    should_add = false;
+                }
             }
         }
 
@@ -430,7 +452,7 @@ public:
         {
             PA_RETURN_MSG(OPEN_API_MSG_NO_PERMISSION);
         }
-        auto all_active_plan = PA_RPC_get_all_plans_related_by_company(*company, "status == 3");
+        auto all_active_plan = PA_RPC_get_all_plans_related_by_company(*company, "(status == 3 OR status == 2)");
         for (auto &plan : all_active_plan)
         {
             auto all_vichele_info = plan.get_all_children<pa_sql_single_vichele>("belong_plan", "finish == 0");
@@ -801,7 +823,21 @@ public:
             tmp.balance_before_change = orig_balance;
             tmp.set_parent(*contract, "belong_contract");
             tmp.insert_record();
-            return contract->update_record();
+            contract->update_record();
+
+            company_management_handler ch;
+            if (ch.company_customize_need(company->name, company_management_handler::need_balance_auto_change))
+            {
+                stuff_plan_management_handler spmh;
+                auto need_confirm_pay_plan = PA_RPC_get_all_plans_related_by_company(*company, "status == 2");
+                for (auto &itr : need_confirm_pay_plan)
+                {
+                    if (spmh.plan_cash_enough(itr))
+                    {
+                        spmh.pri_confirm_pay(itr.get_pri_id(), *get_sysadmin_user(), "补充余额，自动确认收款");
+                    }
+                }
+            }
         }
 
         return ret;
@@ -875,7 +911,6 @@ public:
 
         return ret;
     }
-
 
     virtual void get_vehicle_info_by_id(ticket_detail &_return, const std::string &id)
     {
@@ -1138,7 +1173,7 @@ public:
         }
         char last_tag = 'S';
         last_tag = id[id.length() - 1];
-        std::string real_id = id.substr(0,id.length() - 1);
+        std::string real_id = id.substr(0, id.length() - 1);
 
         stuff_plan_management_handler sp_handler;
         ret = sp_handler.pri_undo_vehicle_weight(std::stol(real_id));

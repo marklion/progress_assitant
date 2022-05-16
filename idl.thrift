@@ -486,6 +486,8 @@ struct vehicle_info_resp {
     23:string attachUrl,
     24:list<vehicle_license_info> allLicenseInfo,
     25:string sale_address,
+    26:bool has_license,
+    27:bool has_payed,
 }
 
 struct push_weight_req {
