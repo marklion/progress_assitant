@@ -145,16 +145,21 @@
                 <van-grid-item v-for="(single_vichele_team, index) in all_vichele_team" :key="index" icon="logistics" :text="single_vichele_team.name" @click="current_vichele_team = single_vichele_team" />
                 <van-grid-item v-if="all_vichele_team.length < 32" @click="add_vichele_team_show = true" icon="plus" />
             </van-grid>
+            <van-search v-model="search_mem_in_team" show-action placeholder="搜索车牌号/手机号/司机姓名" @search="search_mem">
+                <template #action>
+                    <div @click="search_mem">搜索</div>
+                </template>
+            </van-search>
             <div v-if="current_vichele_team.id != 0">
                 <van-field v-model="current_vichele_team.name" label="车队名">
                     <template #button>
-                        <van-button size="small" type="info" @click="update_vichele_team">改名</van-button>
+                        <van-button size="small" type="info" @click="update_vichele_button_proc">改名</van-button>
                         <van-button size="small" type="danger" @click="remove_vichele_team">删除</van-button>
                     </template>
                 </van-field>
                 <van-divider>车队成员</van-divider>
                 <van-button type="primary" block round icon="plus" @click="add_team_member_show = true">新增车辆</van-button>
-                <div class="team_member_show" v-for="(single_member, index) in current_vichele_team.members" :key="index">
+                <div class="team_member_show" ref="member_in_team" v-for="(single_member, index) in current_vichele_team.members" :key="index">
                     <van-field v-model="single_member.main_vichele_number" name="主车牌" label="主车牌" :formatter="convert_bigger" placeholder="请输入主车牌" :rules="[{ required: true, message: '请填写车牌号' }, {pattern: vichele_number_patten, message: '请填写正确的车牌号'}]" />
                     <van-field v-model="single_member.behind_vichele_number" name="挂车牌" label="挂车牌" :formatter="convert_bigger" placeholder="请输入挂车牌" :rules="[{validator:have_to_have_gua, message: '请输入正确挂车'}]" />
                     <van-field v-model="single_member.driver_name" name="司机姓名" label="司机姓名" placeholder="请输入司机姓名" :rules="[{ required: true, message: '请填写司机姓名' }]" />
@@ -162,7 +167,7 @@
                     <van-field v-model="single_member.driver_id" name="司机身份证" label="司机身份证" placeholder="请输入司机身份证" :rules="[{ required: true, message: '请填写司机身份证'}, {pattern:/^[1-9]\d{5}(18|19|20|(3\d))\d{2}((0[1-9])|(1[0-2]))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$/, message:'请输入正确的身份证'}]" />
                     <van-row type="flex" align="center" justify="space-between">
                         <van-col :span="12">
-                            <van-button size="small" round block type="warning" @click="update_vichele_team">更新</van-button>
+                            <van-button size="small" round block type="warning" @click="update_vichele_button_proc">更新</van-button>
                         </van-col>
                         <van-col :span="12">
                             <van-button size="small" round block type="danger" @click="remove_team_member(index)">删除</van-button>
@@ -192,6 +197,9 @@
             </van-dialog>
         </van-tab>
     </van-tabs>
+    <van-dialog v-model="change_one_vehicle_show" title="选择车辆" :showConfirmButton="false" closeOnClickOverlay>
+        <van-cell v-for="(single_vehicle, index) in vehicle_need_change" :key="index" :title="single_vehicle.main_vichele_number" :label="single_vehicle.team_name" value="修改" is-link @click="focus_team(single_vehicle)"></van-cell>
+    </van-dialog>
 </div>
 </template>
 
@@ -337,6 +345,7 @@ export default {
     },
     data: function () {
         return {
+            search_mem_in_team: '',
             create_search_key: '',
             single_search_key: '',
             add_single_vichele_show: false,
@@ -398,6 +407,8 @@ export default {
                 driver_name: '',
             }],
             created_apply: [],
+            vehicle_need_change: [],
+            change_one_vehicle_show: false,
         };
     },
     watch: {
@@ -424,6 +435,41 @@ export default {
         },
     },
     methods: {
+        focus_team: function (single_vhicle) {
+            var vue_this = this;
+            vue_this.current_vichele_team = vue_this.all_vichele_team.find(element => {
+                return element.name == single_vhicle.team_name;
+            });
+            vue_this.change_one_vehicle_show = false;
+            this.$nextTick(function () {
+                var scroll_index = vue_this.current_vichele_team.members.findIndex(element => {
+                    return element.main_vichele_number == single_vhicle.main_vichele_number;
+                })
+                vue_this.$refs.member_in_team[scroll_index].scrollIntoView();
+            });
+        },
+        search_mem: function () {
+            var vue_this = this;
+            var _value = this.search_mem_in_team;
+            var all_vicheles = [];
+            vue_this.all_vichele_team.forEach(team_ele => {
+                team_ele.members.forEach(element => {
+                    var tmp_v = {
+                        ...element
+                    };
+                    tmp_v.team_name = team_ele.name;
+                    all_vicheles.push(tmp_v);
+                });
+            });
+            var ret = [];
+            all_vicheles.forEach(element => {
+                if (PinyinMatch.match(element.main_vichele_number, _value)) {
+                    ret.push(element);
+                }
+            });
+            vue_this.vehicle_need_change = ret;
+            vue_this.change_one_vehicle_show = true;
+        },
         add_single_vichele: function (_vichele) {
             this.new_vichele.push(_vichele);
             this.add_single_vichele_show = false;
@@ -475,14 +521,29 @@ export default {
         },
         remove_team_member: function (_index) {
             var vue_this = this;
-            vue_this.current_vichele_team.members.splice(_index, 1);
-            vue_this.update_vichele_team();
+
+            this.$dialog.confirm({
+                title: '删除确认',
+                message: '确定要删除吗',
+            }).then(() => {
+                vue_this.current_vichele_team.members.splice(_index, 1);
+                vue_this.update_vichele_team();
+            });
         },
         add_team_member: function () {
             var vue_this = this;
             vue_this.current_vichele_team.members.push(vue_this.new_team_member);
             vue_this.update_vichele_team();
             vue_this.add_team_member_show = false;
+        },
+        update_vichele_button_proc: function () {
+            var vue_this = this;
+            this.$dialog.confirm({
+                title: '更新确认',
+                message: '确定要更新吗',
+            }).then(() => {
+                vue_this.update_vichele_team();
+            });
         },
         update_vichele_team: function () {
             var vue_this = this;
