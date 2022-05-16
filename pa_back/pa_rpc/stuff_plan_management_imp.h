@@ -620,11 +620,11 @@ public:
         return ret;
     }
 
-    virtual bool confirm_pay(const int64_t plan_id, const std::string &ssid, const std::string &comment)
+    bool pri_confirm_pay(const int64_t plan_id, pa_sql_userinfo &_user, const std::string &comment)
     {
         bool ret = false;
 
-        auto opt_user = PA_DATAOPT_get_online_user(ssid);
+        auto opt_user = &_user;
         std::string status_comment = "已确认";
         if (comment.length() > 0)
         {
@@ -648,6 +648,17 @@ public:
         }
 
         return ret;
+
+    }
+
+    virtual bool confirm_pay(const int64_t plan_id, const std::string &ssid, const std::string &comment)
+    {
+        auto user = PA_DATAOPT_get_online_user(ssid);
+        if (!user)
+        {
+            PA_RETURN_NOPRIVA_MSG();
+        }
+        return pri_confirm_pay(plan_id, *user, comment);
     }
 
     virtual bool confirm_deliver(const int64_t plan_id, const std::string &ssid, const std::vector<deliver_info> &deliver_infos, const std::string &reason)

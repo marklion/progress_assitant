@@ -175,7 +175,6 @@ export default {
                     await this.$call_remote_process_no_toast('open_api_management', 'proc_push_balance', [this.balanceForm, this.token])
                     await this.loadData(this.token)
                     this.showBalanceDialog = false
-                    this.balanceForm = {}
                 } catch (err) {
                     console.log(err)
                 }

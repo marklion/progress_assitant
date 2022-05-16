@@ -635,7 +635,7 @@ public:
 
     virtual void get_real_access(std::vector<real_access_record> &_return, const std::string &ssid)
     {
-        auto plans = PA_RPC_get_all_plans_related_by_user(ssid, "proxy_company == '' OR proxy_company IS NULL GROUP BY created_by_ext_key");
+        auto plans = PA_RPC_get_all_plans_related_by_user(ssid, "(proxy_company == '' OR proxy_company IS NULL) GROUP BY created_by_ext_key");
         for (auto &itr : plans)
         {
             auto created_user = itr.get_parent<pa_sql_userinfo>("created_by");
