@@ -3,7 +3,7 @@
 #include <iostream>
 #include <sqlite3.h>
 static tdf_log g_log("sql_execute");
-extern bool execute_sql_cmd(const std::string& _sql_cmd, const std::string& _sql_file, std::vector<std::map<std::string, std::string>> *_ret)
+extern bool execute_sql_cmd(const std::string &_sql_cmd, const std::string &_sql_file, std::vector<std::map<std::string, std::string>> *_ret)
 {
     static sqlite3 *db = nullptr;
     bool ret = false;
@@ -33,27 +33,29 @@ extern bool execute_sql_cmd(const std::string& _sql_cmd, const std::string& _sql
             (void *)(_sql_cmd.c_str()));
         char *errmsg = nullptr;
         if (0 == sqlite3_exec(
-                     db, _sql_cmd.c_str(), [](void *_pQA, int argc, char **argv, char **_col) -> int
-                     {
-            auto pOut = static_cast<std::vector<std::map<std::string, std::string>> *>(_pQA);
-            if (pOut != nullptr)
+            db, _sql_cmd.c_str(),
+            [](void *_pQA, int argc, char **argv, char **_col) -> int
             {
-                std::map<std::string, std::string> tmp_map;
-                for (size_t i = 0; i < argc; i++)
+                auto pOut = static_cast<std::vector<std::map<std::string, std::string>> *>(_pQA);
+                if (pOut != nullptr)
                 {
-                    if (argv[i] == nullptr)
+                    std::map<std::string, std::string> tmp_map;
+                    for (size_t i = 0; i < argc; i++)
                     {
-                        tmp_map[_col[i]] = "";
+                        if (argv[i] == nullptr)
+                        {
+                            tmp_map[_col[i]] = "";
+                        }
+                        else
+                        {
+                            tmp_map[_col[i]] = argv[i];
+                        }
                     }
-                    else
-                    {
-                        tmp_map[_col[i]] = argv[i];
-                    }
+                    pOut->push_back(tmp_map);
                 }
-                pOut->push_back(tmp_map);
-            }
-            return 0; },
-                     _ret, &errmsg))
+                return 0;
+            },
+            _ret, &errmsg))
         {
             ret = true;
             std::string output_log = "result of " + _sql_cmd + " is ";
