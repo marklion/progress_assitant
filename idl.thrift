@@ -574,6 +574,7 @@ service open_api_management {
     string export_balance_audit_log(1:string token, 2:string company_name) throws (1:gen_exp e),
     today_plan_brief_info get_today_brief_info(1:string token) throws (1:gen_exp e),
     bool undo_vehicle_weight(1:string token, 2:string id) throws (1:gen_exp e),
+    bool record_p_weight(1:string token, 2:string id) throws (1:gen_exp e),
 }
 
 struct vichele_stay_alone {

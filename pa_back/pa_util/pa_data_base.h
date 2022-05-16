@@ -321,6 +321,7 @@ public:
     int req_register = 0;
     std::string ticket_no;
     std::string seal_no;
+    int has_p = 0;
     pa_sql_single_vichele()
     {
         add_parent_type<pa_sql_vichele>("main_vichele");
@@ -342,6 +343,7 @@ public:
         ret.push_back(sqlite_orm_column("req_register", sqlite_orm_column::INTEGER, &req_register));
         ret.push_back(sqlite_orm_column("ticket_no", sqlite_orm_column::STRING, &ticket_no));
         ret.push_back(sqlite_orm_column("seal_no", sqlite_orm_column::STRING, &seal_no));
+        ret.push_back(sqlite_orm_column("has_p", sqlite_orm_column::INTEGER, &has_p));
 
         return ret;
     }

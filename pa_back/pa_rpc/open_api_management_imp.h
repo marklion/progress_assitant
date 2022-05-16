@@ -1145,6 +1145,29 @@ public:
 
         return ret;
     }
+    virtual bool record_p_weight(const std::string &token, const std::string &id)
+    {
+        bool ret = false;
+        log_audit_basedon_token(token, __FUNCTION__);
+
+        auto company = _get_token_company(token);
+        if (!company)
+        {
+            PA_RETURN_MSG(OPEN_API_MSG_NO_PERMISSION);
+        }
+        char last_tag = 'S';
+        last_tag = id[id.length() - 1];
+        std::string real_id = id.substr(0, id.length() - 1);
+
+        auto svr = sqlite_orm::search_record<pa_sql_single_vichele>(std::stol(real_id));
+        if (svr)
+        {
+            svr->has_p = 1;
+            svr->update_record();
+        }
+
+        return ret;
+    }
 };
 
 #endif // _OPEN_API_MANAGEMENT_H_

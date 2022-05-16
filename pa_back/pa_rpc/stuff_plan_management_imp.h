@@ -387,15 +387,21 @@ public:
             auto orig_vichele_info = plan_in_sql->get_all_children<pa_sql_single_vichele>("belong_plan");
             for (auto &itr : orig_vichele_info)
             {
+                std::string main_vichele_number;
+                auto main_vn = itr.get_parent<pa_sql_vichele>("main_vichele");
+                if (main_vn)
+                {
+                    main_vichele_number = main_vn->number;
+                }
                 if (itr.finish == 1)
                 {
-                    std::string main_vichele_number;
-                    auto main_vn = itr.get_parent<pa_sql_vichele>("main_vichele");
-                    if (main_vn)
-                    {
-                        main_vichele_number = main_vn->number;
-                    }
+
                     PA_RETURN_CANNOT_CANCLE((main_vichele_number + "已经完成出货"));
+                }
+                if (itr.has_p)
+                {
+
+                    PA_RETURN_CANNOT_CANCLE((main_vichele_number + "正在称重无法更新"));
                 }
                 auto update_ret = PA_DATAOPT_post_sync_change_register(itr);
                 if (update_ret.length() > 0)
@@ -650,7 +656,7 @@ public:
         return pri_confirm_deliver(plan_id, *opt_user, deliver_infos, reason);
     }
 
-    void change_balance_by_deliver(pa_sql_company &a_company,pa_sql_company &b_company, double minus_balance)
+    void change_balance_by_deliver(pa_sql_company &a_company, pa_sql_company &b_company, double minus_balance)
     {
         company_management_handler ch;
         if (ch.company_customize_need(b_company.name, company_management_handler::need_balance_auto_change))
@@ -701,6 +707,7 @@ public:
                 vehicle->deliver_timestamp = "";
                 vehicle->ticket_no = "";
                 vehicle->seal_no = "";
+                vehicle->has_p = 1;
                 vehicle->update_record();
                 if (plan->status == 4 && PA_STATUS_RULE_can_be_change(*plan, *get_sysadmin_user(), 3))
                 {
@@ -709,11 +716,11 @@ public:
                     auto arch_plan = plan->get_parent<pa_sql_archive_plan>("archived");
                     if (arch_plan)
                     {
-                        for (auto &itr:arch_plan->get_all_children<pa_sql_archive_status_in_plan>("belong_plan"))
+                        for (auto &itr : arch_plan->get_all_children<pa_sql_archive_status_in_plan>("belong_plan"))
                         {
                             itr.remove_record();
                         }
-                        for (auto &itr:arch_plan->get_all_children<pa_sql_archive_vichele_plan>("belong_plan"))
+                        for (auto &itr : arch_plan->get_all_children<pa_sql_archive_vichele_plan>("belong_plan"))
                         {
                             itr.remove_record();
                         }
@@ -761,6 +768,7 @@ public:
                 }
                 found_vichele_info->ticket_no = itr.ticket_no;
                 found_vichele_info->seal_no = itr.seal_no;
+                found_vichele_info->has_p = 0;
                 found_vichele_info->update_record();
                 if (a_comapny_info && b_comapny_info)
                 {
@@ -1734,6 +1742,10 @@ public:
                         if (related_register_info)
                         {
                             related_register_info->remove_record();
+                        }
+                        if (single_vichele->finish == 1 || single_vichele->has_p)
+                        {
+                            PA_RETURN_MSG("无法取消");
                         }
                         single_vichele->remove_record();
                         if (main_vichele && behind_vichele && opt_user)
