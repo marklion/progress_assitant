@@ -204,6 +204,14 @@ struct bidding_params {
     10:list<bidding_status> all_status,
 }
 
+struct price_timer_param {
+    1:i64 id,
+    2:string stuff_name,
+    3:i64 hours,
+    4:double price,
+    5:string expired_time,
+}
+
 service stuff_info {
     list<stuff_detail> get_today(1:string ssid) throws (1:gen_exp e),
     list<stuff_detail> get_today_unfollow(1:string ssid) throws (1:gen_exp e),
@@ -219,6 +227,9 @@ service stuff_info {
     bool close_bidding(1:string ssid, 2:i64 bidding_id) throws (1:gen_exp e),
     bool call_bidding(1:string ssid, 2:i64 bidding_id, 3:double price) throws (1:gen_exp e),
     bidding_params get_bidding(1:string ssid, 2:i64 bidding_id) throws (1:gen_exp e),
+    bool create_price_timer(1:string ssid, 2:price_timer_param timer_p) throws (1:gen_exp e),
+    void remove_price_timer(1:string ssid, 2:i64 id) throws (1:gen_exp e),
+    list<price_timer_param> get_all_price_timer(1:string ssid) throws (1:gen_exp e),
 }
 
 struct plan_confirm_info {

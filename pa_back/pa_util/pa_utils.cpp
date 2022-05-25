@@ -1056,3 +1056,79 @@ std::unique_ptr<pa_sql_driver> PA_DATAOPT_link_driver(const std::string &_driver
     }
     return sqlite_orm::search_record<pa_sql_driver>("phone == '%s'", _driver_phone.c_str());
 }
+
+struct price_timer_node{
+    double price = 0;
+    int fd = -1;
+    std::string expired_time;
+};
+
+static std::map<long, price_timer_node> g_price_time_map;
+
+bool PA_DATAOPT_create_price_timer(pa_sql_stuff_info &_stuff, int _hours, double _price)
+{
+    bool ret = false;
+
+    PA_DATAOPT_remove_price_timer(_stuff);
+    price_timer_node tmp;
+    tmp.expired_time = PA_DATAOPT_date_2_timestring(time(nullptr) + _hours * 3600);
+    tmp.price = _price;
+    tmp.fd = tdf_main::get_inst().start_timer(
+        _hours * 3600 + 10,
+        [](void *_private)
+        {
+            auto stuff_id = (int *)_private;
+            if (g_price_time_map.end() != g_price_time_map.find(*stuff_id))
+            {
+                auto timer_param = g_price_time_map[*stuff_id];
+                auto stuff = sqlite_orm::search_record<pa_sql_stuff_info>(*stuff_id);
+                if (stuff)
+                {
+                    auto orig_price = stuff->price;
+                    stuff->price = timer_param.price;
+                    stuff->update_record();
+                    std::string remark = "调整了该计划中的货品单价，原价" + std::to_string(orig_price) + "，现价" + std::to_string(stuff->price);
+                    auto related_plans = stuff->get_all_children<pa_sql_plan>("belong_stuff","status < 4");
+                    for (auto &itr : related_plans)
+                    {
+                        itr.price = stuff->price;
+                        itr.update_record();
+                        itr.send_wechat_msg(*get_sysadmin_user(), remark);
+                    }
+                }
+                g_price_time_map.erase(*stuff_id);
+            }
+            delete stuff_id;
+        },
+        new int(_stuff.get_pri_id()), true);
+
+    if (tmp.fd >= 0)
+    {
+        g_price_time_map[_stuff.get_pri_id()] = tmp;
+        ret = true;
+    }
+
+    return ret;
+}
+void PA_DATAOPT_remove_price_timer(pa_sql_stuff_info &_stuff)
+{
+    if (g_price_time_map.end() != g_price_time_map.find(_stuff.get_pri_id()))
+    {
+        tdf_main::get_inst().stop_timer(g_price_time_map[_stuff.get_pri_id()].fd);
+        g_price_time_map.erase(_stuff.get_pri_id());
+    }
+}
+bool PA_DATAOPT_get_price_timer(pa_sql_stuff_info &_stuff, std::string &expired_time, double &_price)
+{
+    bool ret = false;
+
+    if (g_price_time_map.end() != g_price_time_map.find(_stuff.get_pri_id()))
+    {
+        auto price_param = g_price_time_map[_stuff.get_pri_id()];
+        expired_time = price_param.expired_time;
+        _price = price_param.price;
+        ret = true;
+    }
+
+    return ret;
+}
