@@ -30,10 +30,7 @@
         </el-card>
         <el-card class="info-panel" v-if="isLogin">
             <el-input class="search-input" placeholder="输入公司名或拼音首字母查询" v-model="search" @input="doFilter">
-                <i v-if="search"
-                    class="el-icon-circle-close el-input__icon"
-                    slot="suffix"
-                    @click="search = '';tableData = allCustomers">
+                <i v-if="search" class="el-icon-circle-close el-input__icon" slot="suffix" @click="search = '';tableData = allCustomers">
                 </i>
                 <el-button slot="append" icon="el-icon-search" @click="doFilter"></el-button>
             </el-input>
@@ -95,8 +92,8 @@ export default {
             form: {
                 token: ''
             },
-            search : '',
-            allCustomers : [],
+            search: '',
+            allCustomers: [],
             tableData: [],
             showBalanceDialog: false,
             balanceForm: {
@@ -183,7 +180,11 @@ export default {
                     background: 'rgba(0, 0, 0, 0.7)'
                 });
                 try {
-                    this.balanceForm.balance = parseFloat(this.balanceForm.balance) + parseFloat(this.balanceForm.plus_value);
+                    await this.loadData(this.token)
+                    var latest_balance = this.allCustomers.find(element => {
+                        return element.customerName == this.balanceForm.customerName;
+                    }).balance
+                    this.balanceForm.balance = parseFloat(latest_balance) + parseFloat(this.balanceForm.plus_value);
                     await this.$call_remote_process_no_toast('open_api_management', 'proc_push_balance', [this.balanceForm, this.token])
                     await this.loadData(this.token)
                     this.showBalanceDialog = false
@@ -197,7 +198,7 @@ export default {
             console.log(this.$refs['exportBtn' + index].disabled = true)
             console.log(row)
         },
-        doFilter(){
+        doFilter() {
             this.tableData = this.allCustomers.filter(item => {
                 return PinyinMatch.match(item.customerName, this.search) || item.customerName.match(new RegExp(this.search))
             })
@@ -229,6 +230,7 @@ body {
     display: inline-block;
     width: 210px;
 }
+
 .sidebar-title {
     display: inline-block;
     margin: 0;
@@ -239,23 +241,27 @@ body {
     font-family: Avenir, Helvetica Neue, Arial, Helvetica, sans-serif;
     vertical-align: middle;
 }
+
 .main-content {
     width: 70%;
     margin: 0 auto;
 }
+
 .main-content .login-panel {
     width: 500px;
     margin: 50px auto 0 auto;
 }
+
 .main-content .info-panel {
     margin: 20px 0;
 }
-.search-input{
+
+.search-input {
     float: right;
     width: 35%;
 }
 
-@media screen and (max-width: 420px){
+@media screen and (max-width: 420px) {
     .sidebar-title {
         display: none;
         margin: 0;
@@ -271,27 +277,33 @@ body {
         width: 90%;
         margin: 150px auto 0 auto;
     }
+
     .nav-bar .logo-container {
         display: inline-block;
         width: 50px;
     }
+
     .main-content {
         width: 100%;
         margin: 0;
     }
-    .search-input{
+
+    .search-input {
         float: none;
         width: 100%;
     }
-    .main-content .op-btn{
+
+    .main-content .op-btn {
         font-size: 12px;
         padding: 6px;
     }
+
     .nav-bar .menu-container li {
         line-height: 50px;
         padding: 0 8px;
         font-size: 12px;
     }
+
     .nav-bar .logout {
         float: right;
         color: #FFFFFF;
@@ -300,8 +312,9 @@ body {
         cursor: pointer;
         font-size: 12px;
     }
-    .setting-dialog .el-dialog{
-        width : 90%
+
+    .setting-dialog .el-dialog {
+        width: 90%
     }
 }
 
@@ -341,7 +354,4 @@ body {
     position: relative;
     top: -2px
 }
-
-
-
 </style>

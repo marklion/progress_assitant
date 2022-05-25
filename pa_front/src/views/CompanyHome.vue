@@ -89,35 +89,66 @@
     </div>
     <div v-else-if="active_index == 2">
         <van-divider>今日装车状态</van-divider>
-        <van-collapse v-model="expend_statistics">
-            <van-collapse-item v-for="(single_stuff_vehicle, index) in vs_from_stuff" :key="index" :title="single_stuff_vehicle.stuff_name" :value="'共' + single_stuff_vehicle.vehicle_list.length + '车  出货' + count_undeliver_vehicle(single_stuff_vehicle.vehicle_list) + '车'" :name="index + '今日'">
-                <vxe-table size="small" stripe align="center" :data="single_stuff_vehicle.vehicle_list">
-                    <vxe-table-column field="vichele.company" title="公司" width="34%" sortable></vxe-table-column>
-                    <vxe-table-column field="vichele.main_vichele" title="主车" width="24%"></vxe-table-column>
-                    <vxe-table-column field="vichele.delivered" title="状态" width="18%" sortable :formatter="formater_status_vichele"></vxe-table-column>
-                    <vxe-table-column title="操作">
-                        <template #default="{ row }">
-                            <van-button plain size="small" type="info" @click="cancel_vichele_from_plan(row)">取消</van-button>
-                        </template>
-                    </vxe-table-column>
-                </vxe-table>
-            </van-collapse-item>
-
-            <van-divider>明日装车状态</van-divider>
-            <van-collapse-item v-for="(single_stuff_vehicle, index) in vs_from_stuff_tomorrow" :key="index" :title="single_stuff_vehicle.stuff_name" :value="'共' + single_stuff_vehicle.vehicle_list.length + '车'" :name="index + '明日'">
-                <vxe-table size="small" stripe align="center" :data="single_stuff_vehicle.vehicle_list">
-                    <vxe-table-column field="vichele.company" title="公司" width="34%" sortable></vxe-table-column>
-                    <vxe-table-column field="vichele.main_vichele" title="主车" width="24%"></vxe-table-column>
-                    <vxe-table-column field="vichele.delivered" title="状态" width="18%" sortable :formatter="formater_status_vichele"></vxe-table-column>
-                    <vxe-table-column title="操作">
-                        <template #default="{ row }">
-                            <van-button plain size="small" type="info" @click="cancel_vichele_from_plan(row)">取消</van-button>
-                        </template>
-                    </vxe-table-column>
-                </vxe-table>
-            </van-collapse-item>
-
-        </van-collapse>
+        <van-tabs v-model="statistics_mode">
+            <van-tab title="按物料">
+                <van-collapse v-model="expend_statistics">
+                    <van-collapse-item v-for="(single_stuff_vehicle, index) in vs_from_stuff" :key="index" :title="single_stuff_vehicle.stuff_name" :value="'共' + single_stuff_vehicle.vehicle_list.length + '车  出货' + count_undeliver_vehicle(single_stuff_vehicle.vehicle_list) + '车'" :name="index + '今日'">
+                        <vxe-table size="small" stripe align="center" :data="single_stuff_vehicle.vehicle_list">
+                            <vxe-table-column field="vichele.company" title="公司" width="34%" sortable></vxe-table-column>
+                            <vxe-table-column field="vichele.main_vichele" title="主车" width="24%"></vxe-table-column>
+                            <vxe-table-column field="vichele.delivered" title="状态" width="18%" sortable :formatter="formater_status_vichele"></vxe-table-column>
+                            <vxe-table-column title="操作">
+                                <template #default="{ row }">
+                                    <van-button plain size="small" type="info" @click="cancel_vichele_from_plan(row)">取消</van-button>
+                                </template>
+                            </vxe-table-column>
+                        </vxe-table>
+                    </van-collapse-item>
+                    <van-divider>明日装车状态</van-divider>
+                    <van-collapse-item v-for="(single_stuff_vehicle, index) in vs_from_stuff_tomorrow" :key="index" :title="single_stuff_vehicle.stuff_name" :value="'共' + single_stuff_vehicle.vehicle_list.length + '车'" :name="index + '明日'">
+                        <vxe-table size="small" stripe align="center" :data="single_stuff_vehicle.vehicle_list">
+                            <vxe-table-column field="vichele.company" title="公司" width="34%" sortable></vxe-table-column>
+                            <vxe-table-column field="vichele.main_vichele" title="主车" width="24%"></vxe-table-column>
+                            <vxe-table-column field="vichele.delivered" title="状态" width="18%" sortable :formatter="formater_status_vichele"></vxe-table-column>
+                            <vxe-table-column title="操作">
+                                <template #default="{ row }">
+                                    <van-button plain size="small" type="info" @click="cancel_vichele_from_plan(row)">取消</van-button>
+                                </template>
+                            </vxe-table-column>
+                        </vxe-table>
+                    </van-collapse-item>
+                </van-collapse>
+            </van-tab>
+            <van-tab title="按客户">
+                <van-collapse v-model="expend_statistics">
+                    <van-collapse-item v-for="(single_stuff_vehicle, index) in today_statistic_by_company" :key="index" :title="single_stuff_vehicle.company" :value="'共' + single_stuff_vehicle.vehicle_list.length + '车  出货' + count_undeliver_vehicle(single_stuff_vehicle.vehicle_list) + '车'" :name="index + '今日'">
+                        <vxe-table size="small" stripe align="center" :data="single_stuff_vehicle.vehicle_list">
+                            <vxe-table-column field="stuff_name" title="物料" width="34%" sortable></vxe-table-column>
+                            <vxe-table-column field="vichele.main_vichele" title="主车" width="24%"></vxe-table-column>
+                            <vxe-table-column field="vichele.delivered" title="状态" width="18%" sortable :formatter="formater_status_vichele"></vxe-table-column>
+                            <vxe-table-column title="操作">
+                                <template #default="{ row }">
+                                    <van-button plain size="small" type="info" @click="cancel_vichele_from_plan(row)">取消</van-button>
+                                </template>
+                            </vxe-table-column>
+                        </vxe-table>
+                    </van-collapse-item>
+                    <van-divider>明日装车状态</van-divider>
+                    <van-collapse-item v-for="(single_stuff_vehicle, index) in tomorrow_statistic_by_company" :key="index" :title="single_stuff_vehicle.company" :value="'共' + single_stuff_vehicle.vehicle_list.length + '车'" :name="index + '明日'">
+                        <vxe-table size="small" stripe align="center" :data="single_stuff_vehicle.vehicle_list">
+                            <vxe-table-column field="stuff_name" title="物料" width="34%" sortable></vxe-table-column>
+                            <vxe-table-column field="vichele.main_vichele" title="主车" width="24%"></vxe-table-column>
+                            <vxe-table-column field="vichele.delivered" title="状态" width="18%" sortable :formatter="formater_status_vichele"></vxe-table-column>
+                            <vxe-table-column title="操作">
+                                <template #default="{ row }">
+                                    <van-button plain size="small" type="info" @click="cancel_vichele_from_plan(row)">取消</van-button>
+                                </template>
+                            </vxe-table-column>
+                        </vxe-table>
+                    </van-collapse-item>
+                </van-collapse>
+            </van-tab>
+        </van-tabs>
     </div>
     <div v-else-if="active_index == 3">
         <van-divider>访客记录</van-divider>
@@ -238,6 +269,7 @@ export default {
     name: 'CompanyHome',
     data: function () {
         return {
+            statistics_mode: '',
             access_search_key: '',
             real_access_users_show: [],
             all_access_users_show: [],
@@ -304,6 +336,44 @@ export default {
         "contract-cell": ContractCell,
     },
     computed: {
+        today_statistic_by_company: function () {
+            var ret = [];
+
+            this.vichele_statistics.forEach(element => {
+                if (!ret.find(item => {
+                        return item.company == element.vichele.company;
+                    })) {
+                    ret.push({
+                        company: element.vichele.company,
+                        vehicle_list: [],
+                    });
+                }
+                ret.find(item => {
+                    return item.company == element.vichele.company;
+                }).vehicle_list.push(element);
+            });
+
+            return ret;
+        },
+        tomorrow_statistic_by_company: function () {
+            var ret = [];
+
+            this.tomorrow_vichele.forEach(element => {
+                if (!ret.find(item => {
+                        return item.company == element.vichele.company;
+                    })) {
+                    ret.push({
+                        company: element.vichele.company,
+                        vehicle_list: [],
+                    });
+                }
+                ret.find(item => {
+                    return item.company == element.vichele.company;
+                }).vehicle_list.push(element);
+            });
+
+            return ret;
+        },
         access_company_after_filter: function () {
             var ret = [];
             var vue_this = this;

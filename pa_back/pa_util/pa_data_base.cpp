@@ -709,6 +709,7 @@ bool pa_sql_vichele_behind::license_is_valid()
     bool ret = false;
 
     auto vehicles = sqlite_orm::search_record_all<pa_sql_vichele_behind>("number == '%s'", number.c_str());
+    auto an_vl =  sqlite_orm::search_record_all<pa_sql_vichele>("number == '%s'", number.c_str());
     for (auto &single_vehicle : vehicles)
     {
         auto vl = single_vehicle.get_all_children<pa_sql_vehicle_license>("belong_behind_vehicle");
@@ -723,8 +724,28 @@ bool pa_sql_vichele_behind::license_is_valid()
                     break;
                 }
             }
+            break;
         }
-        break;
+    }
+    if (ret == false)
+    {
+        for (auto &single_vehicle : an_vl)
+        {
+            auto vl = single_vehicle.get_all_children<pa_sql_vehicle_license>("belong_main_vehicle");
+            if (vl.size() > 0)
+            {
+                ret = true;
+                for (auto &itr : vl)
+                {
+                    if (!itr.is_valid())
+                    {
+                        ret = false;
+                        break;
+                    }
+                }
+                break;
+            }
+        }
     }
 
     return ret;
