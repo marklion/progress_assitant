@@ -28,7 +28,7 @@
             </span>
         </template>
         <template #num v-if="plan_count != 0">
-            {{plan_count}}吨
+            {{plan_count.toFixed(2)}}吨
         </template>
         <template #tags>
             <div>

@@ -1,7 +1,7 @@
 <template>
 <div class="deliver_show">
     <van-cell-group title="计划内容">
-        <van-cell :title="buy_company" :label="name" :value="'已提货' + count + '吨'" />
+        <van-cell :title="buy_company" :label="name" :value="'已提货' + count.toFixed(2) + '吨'" />
         <van-cell title="提货人" :value="user_name"></van-cell>
     </van-cell-group>
     <van-checkbox-group v-model="pre_deliver_vichele_index">
@@ -67,7 +67,7 @@
 
     <van-cell-group title="已出货车辆">
         <van-collapse v-model="expend_weight">
-            <van-collapse-item name="1" v-for="(item, index) in delivered_vichele" center :value="item.count + '吨'" :key="index" :title="item.main_vichele + '-' + item.behind_vichele" :label="item.driver_name + '-' + item.driver_phone">
+            <van-collapse-item name="1" v-for="(item, index) in delivered_vichele" center :value="item.count.toFixed(2) + '吨'" :key="index" :title="item.main_vichele + '-' + item.behind_vichele" :label="item.driver_name + '-' + item.driver_phone">
                 <van-cell :title="'皮重：' + item.p_weight" :value="item.p_time"></van-cell>
                 <van-cell :title="'毛重：' + item.m_weight" :value="item.deliver_timestamp"></van-cell>
                 <van-cell title="查看磅单" is-link :to="{name:'Ticket', params:{id:item.vichele_id + 'S'}}"></van-cell>
