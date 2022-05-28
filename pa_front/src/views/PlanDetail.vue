@@ -23,7 +23,7 @@
         <van-collapse v-model="extern_company_info">
             <van-collapse-item :title="plan_detail.name" name="1" :label="plan_detail.sale_company">
                 <template #value v-if="plan_detail.count != 0">
-                    {{plan_detail.count}}吨
+                    {{plan_detail.count.toFixed(2)}}吨
                 </template>
                 <van-field v-model="company_address" rows="1" autosize label="公司地址" type="textarea" readonly>
                 </van-field>
@@ -39,7 +39,7 @@
                 </div>
             </template>
         </van-cell>
-        <van-cell title="总价" v-if="plan_detail.total_price != 0" :value="plan_detail.total_price" />
+        <van-cell title="总价" v-if="plan_detail.total_price != 0" :value="plan_detail.total_price.toFixed(1)" />
         <van-cell title="计划到厂" :value="plan_detail.plan_time" />
     </van-cell-group>
     <van-cell-group>

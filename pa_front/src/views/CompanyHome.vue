@@ -46,6 +46,13 @@
                 </template>
             </van-cell>
         </van-cell-group>
+        <van-cell-group title="定时调价">
+            <van-cell v-for="(single_timer, index) in  all_price_timer" :key="index" :title="single_timer.stuff_name" :value="single_timer.price" :label="single_timer.expired_time">
+                <template #right-icon>
+                    <van-button size="small" type="danger" @click="remove_price_timer(single_timer.id)">取消</van-button>
+                </template>
+            </van-cell>
+        </van-cell-group>
         <van-dialog :show-confirm-button="false" close-on-click-overlay v-model="show_add_stuff" title="添加商品">
             <van-form @submit="add_stuff">
                 <van-field v-model="add_stuff_name" name="商品名" label="商品名" placeholder="请输入商品名" :rules="[{ required: true, message: '请填写商品名' }]" />
@@ -182,6 +189,16 @@
             </van-collapse>
         </van-cell-group>
     </div>
+    <van-dialog :show-confirm-button="false" close-on-click-overlay v-model="show_price_timer_diag" :title="fucos_price_timer_stuff.name">
+        <van-form @submit="create_price_timer">
+            <van-field v-model="fucos_price_timer_stuff.price" type="number" name="价格" label="价格" placeholder="请输入价格" :rules="[{ required: true, message: '请填写价格' }]" />
+            <van-field v-model="fucos_price_timer_stuff.hours" name="小时" label="小时" placeholder="指定几小时后调价" />
+            <div style="margin: 16px;">
+                <van-button round block type="info" native-type="submit">确认</van-button>
+            </div>
+        </van-form>
+    </van-dialog>
+
 </div>
 </template>
 
@@ -269,6 +286,7 @@ export default {
     name: 'CompanyHome',
     data: function () {
         return {
+            all_price_timer: [],
             statistics_mode: '',
             access_search_key: '',
             real_access_users_show: [],
@@ -330,6 +348,8 @@ export default {
 
                 return ret;
             },
+            fucos_price_timer_stuff: {},
+            show_price_timer_diag: false,
         };
     },
     components: {
@@ -474,11 +494,38 @@ export default {
             ret.push({
                 text: '创建竞价',
                 operate: this.go_create_bidding
+            });
+            ret.push({
+                text: '定时调价',
+                operate: this.create_price_timer_show
             })
             return ret;
         }
     },
     methods: {
+        remove_price_timer: function (_id) {
+            var vue_this = this;
+            vue_this.$call_remote_process("stuff_info", "remove_price_timer", [vue_this.$cookies.get('pa_ssid'), _id]).then(function () {
+                vue_this.init_price_timer();
+            });
+        },
+        create_price_timer: function () {
+            var vue_this = this;
+            vue_this.$call_remote_process("stuff_info", "create_price_timer", [vue_this.$cookies.get('pa_ssid'), {
+                id: vue_this.fucos_price_timer_stuff.type_id,
+                price: vue_this.fucos_price_timer_stuff.price,
+                hours: parseInt(vue_this.fucos_price_timer_stuff.hours),
+            }]).then(function (resp) {
+                if (resp) {
+                    vue_this.init_price_timer();
+                    vue_this.show_price_timer_diag = false;
+                }
+            });
+        },
+        create_price_timer_show: function (_type) {
+            this.show_price_timer_diag = true;
+            this.fucos_price_timer_stuff = _type;
+        },
         go_create_bidding(type) {
             this.$router.push({
                 name: 'BiddingForm',
@@ -691,7 +738,16 @@ export default {
                     vue_this.$set(vue_this.all_access_users, index, element);
                 });
             });
-        }
+        },
+        init_price_timer: function () {
+            var vue_this = this;
+            vue_this.$call_remote_process("stuff_info", "get_all_price_timer", [vue_this.$cookies.get('pa_ssid')]).then(function (resp) {
+                vue_this.all_price_timer = [];
+                resp.forEach((element, index) => {
+                    vue_this.$set(vue_this.all_price_timer, index, element);
+                });
+            });
+        },
     },
     beforeMount: function () {
         this.init_company_data();
@@ -701,6 +757,7 @@ export default {
         });
         vue_this.init_vichele_statistices();
         vue_this.init_tomorrow_vichele();
+        vue_this.init_price_timer();
     },
     watch: {
         "$store.state.userinfo.company": function (_val) {

@@ -530,5 +530,60 @@ public:
         }
         _return = *make_resp_param(*bidding, *company);
     }
+
+    virtual bool create_price_timer(const std::string &ssid, const price_timer_param &timer_p)
+    {
+        bool ret = false;
+
+        auto user = PA_DATAOPT_get_online_user(ssid);
+        if (!user || user->buyer)
+        {
+            PA_RETURN_NOPRIVA_MSG();
+        }
+
+        auto stuff = sqlite_orm::search_record<pa_sql_stuff_info>(timer_p.id);
+        if (stuff)
+        {
+            if (PA_DATAOPT_create_price_timer(*stuff, timer_p.hours, timer_p.price))
+            {
+                ret = true;
+            }
+        }
+
+        return ret;
+    }
+    virtual void remove_price_timer(const std::string &ssid, const int64_t id)
+    {
+        auto user = PA_DATAOPT_get_online_user(ssid);
+        if (!user || user->buyer)
+        {
+            PA_RETURN_NOPRIVA_MSG();
+        }
+        auto stuff = sqlite_orm::search_record<pa_sql_stuff_info>(id);
+        if (!stuff)
+        {
+            PA_RETURN_NOPRIVA_MSG();
+        }
+        PA_DATAOPT_remove_price_timer(*stuff);
+    }
+    virtual void get_all_price_timer(std::vector<price_timer_param> &_return, const std::string &ssid)
+    {
+        auto company = PA_DATAOPT_get_company_by_ssid(ssid);
+        if (!company || !company->is_sale)
+        {
+            PA_RETURN_NOPRIVA_MSG();
+        }
+        auto all_stuff = company->get_all_children<pa_sql_stuff_info>("belong_company");
+        for (auto &itr:all_stuff)
+        {
+            price_timer_param tmp;
+            if (PA_DATAOPT_get_price_timer(itr, tmp.expired_time, tmp.price))
+            {
+                tmp.id = itr.get_pri_id();
+                tmp.stuff_name = itr.name;
+                _return.push_back(tmp);
+            }
+        }
+    }
 };
 #endif // _STUFF_INFO_IMP_H_

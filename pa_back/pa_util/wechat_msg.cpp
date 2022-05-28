@@ -230,7 +230,7 @@ void PA_WECHAT_send_plan_msg(pa_sql_userinfo &_touser, pa_sql_plan &_plan, const
     std::string total_price = "未知";
     if (count > 0)
     {
-        total_price = std::to_string(_plan.calcu_all_count() * _plan.price);
+        total_price = pa_double2string_reserve2(_plan.calcu_all_count() * _plan.price);
     }
 
     std::string status = "";

@@ -69,4 +69,8 @@ bool PA_DATAOPT_vichele_ready_to_post(pa_sql_vichele_stay_alone &_vichele, bool 
 std::unique_ptr<pa_sql_driver> PA_DATAOPT_link_driver(const std::string &_driver_phone);
 std::string pa_double2string_reserve2(double _value);
 
+bool PA_DATAOPT_create_price_timer(pa_sql_stuff_info &_stuff, int _hours, double _price);
+void PA_DATAOPT_remove_price_timer(pa_sql_stuff_info &_stuff);
+bool PA_DATAOPT_get_price_timer(pa_sql_stuff_info &_stuff, std::string &expired_time, double &_price);
+
 #endif // _PA_UTILS_H_

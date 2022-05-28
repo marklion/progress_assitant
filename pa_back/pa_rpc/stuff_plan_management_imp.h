@@ -338,6 +338,53 @@ public:
             PA_RETURN_NOPLAN_MSG();
         }
     }
+    bool vehcile_info_is_same(const vichele_in_plan &_a, const vichele_in_plan &_b)
+    {
+        bool ret = false;
+        if (_a.main_vichele == _b.main_vichele && _a.behind_vichele == _b.behind_vichele)
+        {
+            ret = true;
+        }
+        return ret;
+    }
+    std::string vehicle_change_detail(const std::vector<vichele_in_plan> &_orig_list, const std::vector<vichele_in_plan> &_new_list)
+    {
+        std::string ret;
+
+        for (auto &itr : _new_list)
+        {
+            auto found_same = std::find_if(
+                _orig_list.begin(), _orig_list.end(),
+                [&](const vichele_in_plan &item)
+                { return vehcile_info_is_same(itr, item); });
+            if (found_same == _orig_list.end())
+            {
+                ret.append(itr.main_vichele + "-" + itr.behind_vichele + " ");
+            }
+        }
+        if (ret.size() > 0)
+        {
+            ret.insert(0, "\n新增了车辆:");
+        }
+        std::string del_ret;
+        for (auto &itr : _orig_list)
+        {
+            auto found_same = std::find_if(
+                _new_list.begin(), _new_list.end(),
+                [&](const vichele_in_plan &item)
+                { return vehcile_info_is_same(itr, item); });
+            if (found_same == _new_list.end())
+            {
+                del_ret.append(itr.main_vichele + "-" + itr.behind_vichele + " ");
+            }
+        }
+        if (del_ret.size() > 0)
+        {
+            del_ret.insert(0, "\n删除了车辆:");
+        }
+
+        return ret + del_ret;
+    }
     virtual bool update_plan(const stuff_plan &plan, const std::string &ssid)
     {
         bool ret = false;
@@ -414,6 +461,9 @@ public:
                 }
             }
 
+            stuff_plan orig_plan_info;
+            get_plan(orig_plan_info, plan.plan_id);
+
             for (auto &itr : orig_vichele_info)
             {
                 auto related_register_info = itr.get_children<pa_sql_driver_register>("belong_vichele");
@@ -450,7 +500,10 @@ public:
             ret = plan_in_sql->update_record();
             if (ret)
             {
-                plan_in_sql->send_wechat_msg(*opt_user, "更新了该计划");
+                stuff_plan new_plan_info;
+                get_plan(new_plan_info, plan.plan_id);
+                auto vehicle_change_msg = vehicle_change_detail(orig_plan_info.vichele_info, new_plan_info.vichele_info);
+                plan_in_sql->send_wechat_msg(*opt_user, "更新了该计划" + vehicle_change_msg);
             }
         }
         else
@@ -648,7 +701,6 @@ public:
         }
 
         return ret;
-
     }
 
     virtual bool confirm_pay(const int64_t plan_id, const std::string &ssid, const std::string &comment)
