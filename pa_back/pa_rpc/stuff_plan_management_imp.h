@@ -621,6 +621,24 @@ public:
             auto has_cash = contract.balance;
             auto req_cash = tmp.vichele_info.size() * 20 * tmp.price;
 
+            auto buyer_company = sqlite_orm::search_record<pa_sql_company>("name == '%s'", tmp.buy_company.c_str());
+            if (buyer_company)
+            {
+                auto exist_plan = PA_RPC_get_all_plans_related_by_company(*buyer_company, "status == 3");
+                int pre_pay_count = 0;
+                for (auto &itr : exist_plan)
+                {
+                    stuff_plan cur_plan;
+                    get_plan(cur_plan, itr.get_pri_id());
+                    if (cur_plan.sale_company == tmp.sale_company)
+                    {
+                        auto vehicles = itr.get_all_children<pa_sql_single_vichele>("belong_plan", "finish == 0");
+                        pre_pay_count += vehicles.size();
+                    }
+                }
+                req_cash += tmp.price * 20 * pre_pay_count;
+            }
+
             if (has_cash > req_cash)
             {
                 ret = true;
@@ -876,7 +894,7 @@ public:
                         auto delivered_main_vehicle = delivered_vichele_info->get_parent<pa_sql_vichele>("main_vichele");
                         if (delivered_main_vehicle)
                         {
-                            deliver_vichele_numbers.append(delivered_main_vehicle->number + " 出货 " + std::to_string(delivered_vichele_info->count) + " 吨");
+                            deliver_vichele_numbers.append(delivered_main_vehicle->number + " 出货 " + pa_double2string_reserve2(delivered_vichele_info->count) + " 吨");
                         }
                     }
                 }
@@ -1614,7 +1632,9 @@ public:
         {
             filter_condition.append(" OR behind_vichele_ext_key = " + std::to_string(itr.get_pri_id()));
         }
-        auto plan_scope = PA_RPC_get_all_plans_related_by_user(ssid, "status < 4");
+        auto current_time = PA_DATAOPT_current_time();
+        auto date_only = current_time.substr(0, 10);
+        auto plan_scope = PA_RPC_get_all_plans_related_by_user(ssid, "status < 4 OR plan_time LIKE '%s%%'", date_only.c_str());
         std::string plan_filter = "belong_plan_ext_key = 0";
         for (auto &itr : plan_scope)
         {
