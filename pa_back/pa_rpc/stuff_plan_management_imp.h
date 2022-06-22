@@ -432,6 +432,45 @@ public:
             auto new_vehicle_in_plan = plan.vichele_info;
             plan_in_sql->plan_time = plan.plan_time;
             auto orig_vichele_info = plan_in_sql->get_all_children<pa_sql_single_vichele>("belong_plan");
+            auto tmp_orig = orig_vichele_info;
+            auto tmp_new = new_vehicle_in_plan;
+            new_vehicle_in_plan.clear();
+            for (auto &itr:tmp_new)
+            {
+                if (tmp_orig.end() == std::find_if(tmp_orig.begin(),tmp_orig.end(), [&](pa_sql_single_vichele &_item){
+                    bool ret = false;
+                    auto main_vehicle = _item.get_parent<pa_sql_vichele>("main_vichele");
+                    if (main_vehicle && main_vehicle->number == itr.main_vichele)
+                    {
+                        ret = true;
+                    }
+
+                    return ret;
+                }))
+                {
+                    new_vehicle_in_plan.push_back(itr);
+                }
+            }
+            orig_vichele_info.clear();
+            for (auto &itr : tmp_orig)
+            {
+                auto main_vehicle = itr.get_parent<pa_sql_vichele>("main_vichele");
+                if (main_vehicle)
+                {
+                    if (tmp_new.end() == std::find_if(tmp_new.begin(), tmp_new.end(), [&](vichele_in_plan &_item)
+                                                   {
+                    bool ret = false;
+                    if (_item.main_vichele == main_vehicle->number)
+                    {
+                        ret = true;
+                    }
+
+                    return ret; }))
+                    {
+                        orig_vichele_info.push_back(itr);
+                    }
+                }
+            }
             for (auto &itr : orig_vichele_info)
             {
                 std::string main_vichele_number;
@@ -442,12 +481,10 @@ public:
                 }
                 if (itr.finish == 1)
                 {
-
                     PA_RETURN_CANNOT_CANCLE((main_vichele_number + "已经完成出货"));
                 }
                 if (itr.has_p)
                 {
-
                     PA_RETURN_CANNOT_CANCLE((main_vichele_number + "正在称重无法更新"));
                 }
                 auto update_ret = PA_DATAOPT_post_sync_change_register(itr);
@@ -619,7 +656,7 @@ public:
             ch.get_contract(contract, tmp.buy_company, tmp.sale_company);
 
             auto has_cash = contract.balance;
-            auto req_cash = tmp.vichele_info.size() * 20 * tmp.price;
+            auto req_cash = tmp.vichele_info.size() * 22 * tmp.price;
 
             auto buyer_company = sqlite_orm::search_record<pa_sql_company>("name == '%s'", tmp.buy_company.c_str());
             if (buyer_company)
@@ -636,7 +673,7 @@ public:
                         pre_pay_count += vehicles.size();
                     }
                 }
-                req_cash += tmp.price * 20 * pre_pay_count;
+                req_cash += tmp.price * 22 * pre_pay_count;
             }
 
             if (has_cash > req_cash)
@@ -1835,7 +1872,16 @@ public:
                         {
                             related_plan->send_wechat_msg(*opt_user, "取消了该计划中的车辆：" + main_vichele->number + "-" + behind_vichele->number);
                         }
-
+                        stuff_plan tmp_info;
+                        get_plan(tmp_info, related_plan->get_pri_id());
+                        company_management_handler ch;
+                        if (ch.company_customize_need(tmp_info.sale_company, company_management_handler::need_balance_auto_change))
+                        {
+                            if (related_plan->status == 2 && plan_cash_enough(*related_plan))
+                            {
+                                pri_confirm_pay(related_plan->get_pri_id(), *get_sysadmin_user(), "余额充足");
+                            }
+                        }
                         auto total_count = related_plan->get_all_children<pa_sql_single_vichele>("belong_plan").size();
                         auto deliver_count = related_plan->get_all_children<pa_sql_single_vichele>("belong_plan", "finish = 1").size();
                         PA_STATUS_RULE_action(*related_plan, *get_sysadmin_user(), PA_DATAOPT_current_time(), "已出货" + std::to_string(deliver_count) + "车/共" + std::to_string(total_count) + "车");

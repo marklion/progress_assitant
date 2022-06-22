@@ -192,7 +192,11 @@
     <van-dialog :show-confirm-button="false" close-on-click-overlay v-model="show_price_timer_diag" :title="fucos_price_timer_stuff.name">
         <van-form @submit="create_price_timer">
             <van-field v-model="fucos_price_timer_stuff.price" type="number" name="价格" label="价格" placeholder="请输入价格" :rules="[{ required: true, message: '请填写价格' }]" />
-            <van-field v-model="fucos_price_timer_stuff.hours" name="小时" label="小时" placeholder="指定几小时后调价" />
+            <van-field readonly clickable name="datetimePicker" :value="date_to_change_price" label="调价时间" placeholder="点击选择时间" @click="show_change_price_time = true" />
+            <van-popup v-model="show_change_price_time" position="bottom">
+                <van-datetime-picker type="datehour" :min-date="new Date()" @confirm="calcu_hours" @cancel="show_change_price_time = false" />
+            </van-popup>
+            <van-field disabled v-model="fucos_price_timer_stuff.hours" name="小时" label="间隔" placeholder="指定几小时后调价" />
             <div style="margin: 16px;">
                 <van-button round block type="info" native-type="submit">确认</van-button>
             </div>
@@ -286,6 +290,8 @@ export default {
     name: 'CompanyHome',
     data: function () {
         return {
+            show_change_price_time: false,
+            date_to_change_price: '',
             all_price_timer: [],
             statistics_mode: '',
             access_search_key: '',
@@ -503,6 +509,29 @@ export default {
         }
     },
     methods: {
+        formatDateTime: function (date) {
+            var y = date.getFullYear();
+            var m = date.getMonth() + 1;
+            m = m < 10 ? ('0' + m) : m;
+            var d = date.getDate();
+            d = d < 10 ? ('0' + d) : d;
+            var h = date.getHours();
+            h = h < 10 ? ('0' + h) : h;
+            var minute = date.getMinutes();
+            minute = minute < 10 ? ('0' + minute) : minute;
+            var second = date.getSeconds();
+            second = second < 10 ? ('0' + second) : second;
+            return y + '-' + m + '-' + d + ' ' + h + ':' + minute + ':' + second;
+        },
+        calcu_hours: function (_value) {
+            var expect_hours = _value.getTime() / 1000 / 3600;
+            var now_hours = new Date().getTime() / 1000 / 3600;
+            this.fucos_price_timer_stuff.hours = Math.floor(expect_hours) - Math.floor(now_hours);
+            var dest_time = new Date();
+            dest_time.setTime(new Date().getTime() + this.fucos_price_timer_stuff.hours * 3600 * 1000);
+            this.date_to_change_price = this.formatDateTime(dest_time);
+            this.show_change_price_time = false;
+        },
         remove_price_timer: function (_id) {
             var vue_this = this;
             vue_this.$call_remote_process("stuff_info", "remove_price_timer", [vue_this.$cookies.get('pa_ssid'), _id]).then(function () {
