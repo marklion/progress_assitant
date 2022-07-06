@@ -728,7 +728,7 @@ public:
         return ret;
     }
 
-    bool pri_confirm_pay(const int64_t plan_id, pa_sql_userinfo &_user, const std::string &comment)
+    bool pri_confirm_pay(const int64_t plan_id, pa_sql_userinfo &_user, const std::string &comment, bool send_wechat_msg = true)
     {
         bool ret = false;
 
@@ -751,7 +751,10 @@ public:
 
         if (ret)
         {
-            plan->send_wechat_msg(*opt_user, "确认收款, 附言：" + status_comment);
+            if (send_wechat_msg)
+            {
+                plan->send_wechat_msg(*opt_user, "确认收款, 附言：" + status_comment);
+            }
             PA_DATAOPT_post_save_register(*plan);
         }
 
@@ -1112,7 +1115,7 @@ public:
         }
     }
 
-    bool my_except_close(pa_sql_plan &plan, pa_sql_userinfo &opt_user, const std::string &reason)
+    bool my_except_close(pa_sql_plan &plan, pa_sql_userinfo &opt_user, const std::string &reason, bool need_send_msg = true)
     {
         bool ret = false;
         bool is_auto = false;
@@ -1152,6 +1155,23 @@ public:
                     tmp.translate_from_plan(plan);
                     plan.set_parent(tmp, "archived");
                     plan.update_record();
+                }
+            }
+        }
+        if (ret)
+        {
+            stuff_plan tmp;
+            get_plan(tmp, plan.get_pri_id());
+            auto cust_company = PA_DATAOPT_fetch_company(tmp.buy_company);
+            if (cust_company)
+            {
+                auto need_check_plans = PA_RPC_get_all_plans_related_by_company(*cust_company, "status == 2");
+                for (auto &itr : need_check_plans)
+                {
+                    if (plan_cash_enough(itr))
+                    {
+                        pri_confirm_pay(itr.get_pri_id(), *get_sysadmin_user(), "余额足够，自动确认", need_send_msg);
+                    }
                 }
             }
         }
@@ -1489,7 +1509,7 @@ public:
     virtual void clean_unclose_plan()
     {
         auto today_str = PA_DATAOPT_date_2_timestring(time(nullptr)).substr(0, 10);
-        auto plans_need_close = sqlite_orm::search_record_all<pa_sql_plan>("status != 4 AND plan_time NOT LIKE '%s%%'", today_str.c_str());
+        auto plans_need_close = sqlite_orm::search_record_all<pa_sql_plan>("status != 4 AND date(substr(plan_time, 1, 10)) < date('%s')", today_str.c_str());
         for (auto &itr : plans_need_close)
         {
             usleep(200000);
@@ -1500,7 +1520,7 @@ public:
             }
             try
             {
-                my_except_close(itr, *get_sysadmin_user(), "超过计划日期，自动关闭");
+                my_except_close(itr, *get_sysadmin_user(), "超过计划日期，自动关闭", false);
             }
             catch (gen_exp &e)
             {
@@ -2548,6 +2568,40 @@ public:
                 }
             }
         }
+    }
+
+    virtual void export_plan_by_deliver_date(std::string &_return, const std::string &ssid, const std::string &deliver_date)
+    {
+        auto opt_user = PA_DATAOPT_get_online_user(ssid);
+        if (!opt_user)
+        {
+            PA_RETURN_UNLOGIN_MSG();
+        }
+        std::list<pa_sql_plan> plans;
+        if (opt_user->buyer)
+        {
+            plans = opt_user->get_all_children<pa_sql_plan>("created_by", "date('%s') == date(substr(plan_time, 1, 10)) AND is_cancel = 0", deliver_date.c_str());
+        }
+        else
+        {
+            auto company = opt_user->get_parent<pa_sql_company>("belong_company");
+            if (!company)
+            {
+                PA_RETURN_NOCOMPANY_MSG();
+            }
+            auto all_stuff = company->get_all_children<pa_sql_stuff_info>("belong_company");
+            for (auto &itr : all_stuff)
+            {
+                auto one_kind_plan = itr.get_all_children<pa_sql_plan>("belong_stuff", "date('%s') == date(substr(plan_time, 1, 10)) AND is_cancel = 0", deliver_date.c_str());
+                plans.insert(plans.end(), one_kind_plan.begin(), one_kind_plan.end());
+            }
+        }
+        std::vector<int64_t> plan_ids;
+        for (auto &itr : plans)
+        {
+            plan_ids.push_back(itr.get_pri_id());
+        }
+        this->export_plan(_return, ssid, plan_ids);
     }
 };
 

@@ -548,6 +548,7 @@ export default {
                 if (resp) {
                     vue_this.init_price_timer();
                     vue_this.show_price_timer_diag = false;
+                    vue_this.init_company_data();
                 }
             });
         },

@@ -438,6 +438,7 @@ service stuff_plan_management {
     vehicle_license_info add_vehicle_license(1:string silent_id, 2:string license_attachment_base64, 3:string expire_date, 4:string plate_no) throws (1:gen_exp e)
     void del_vehicle_license(1:string silent_id, 2:i64 data_id) throws (1:gen_exp e),
     list<vehicle_license_info> get_license_by_vehicle_number(1:string plate_no) throws (1:gen_exp e),
+    string export_plan_by_deliver_date(1:string ssid, 2:string deliver_date) throws (1:gen_exp e),
 }
 
 struct api_extra_transformation {
