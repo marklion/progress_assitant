@@ -24,6 +24,10 @@
         <van-calendar v-model="show_date" get-container="body" position="right" type="range" @confirm="onConfirm" :min-date="minDate" :max-date="maxDate" />
     </van-cell-group>
     <export-file :remote_file="download_url" v-model="show_export_file"></export-file>
+    <van-cell-group title="按计划日期导出">
+        <van-field readonly clickable name="calendar" :value="plan_search_date" label="计划日期" placeholder="点击选择日期" @click="show_plan_search_date = true" />
+        <van-calendar v-model="show_plan_search_date" @confirm="confirm_search_date" :min-date="new Date(new Date().setDate(new Date().getDate() - 61))" />
+    </van-cell-group>
 </div>
 </template>
 
@@ -65,6 +69,8 @@ export default {
     name: 'Statistics',
     data: function () {
         return {
+            plan_search_date: '',
+            show_plan_search_date: false,
             begin_date: 0,
             end_date: 0,
             date: '',
@@ -81,6 +87,18 @@ export default {
         "export-file": ExportFile,
     },
     methods: {
+        confirm_search_date: function (_date) {
+            var vue_this = this;
+            vue_this.show_plan_search_date = false;
+            vue_this.$call_remote_process("stuff_plan_management", "export_plan_by_deliver_date", [vue_this.$cookies.get('pa_ssid'), vue_this.formatDateTime(_date)]).then(function (resp) {
+                if (resp) {
+                    vue_this.download_url = vue_this.$remote_url + resp;
+                    vue_this.show_export_file = true;
+                } else {
+                    vue_this.$toast("无交易信息");
+                }
+            });
+        },
         formatDateTime: function (date) {
             var y = date.getFullYear();
             var m = date.getMonth() + 1;

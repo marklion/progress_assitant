@@ -1,6 +1,7 @@
 #include "pa_rpc_util.h"
 #include "../pa_util/pa_utils.h"
 #include "stuff_plan_management_imp.h"
+#include "company_management_imp.h"
 
 static std::list<pa_sql_plan> PA_RPC_get_all_plans_related_by_user_info(pa_sql_userinfo &_user, const char *_query, ...)
 {
@@ -8,7 +9,7 @@ static std::list<pa_sql_plan> PA_RPC_get_all_plans_related_by_user_info(pa_sql_u
     va_start(vl, _query);
     auto tmpbuff = get_string_from_format(_query, vl);
     va_end(vl);
-    
+
     if (_user.buyer)
     {
         return _user.get_all_children<pa_sql_plan>("created_by", "%s", tmpbuff.c_str());
@@ -105,3 +106,11 @@ std::list<pa_sql_plan> PA_RPC_get_all_plans_related_by_company(pa_sql_company &_
     return ret;
 }
 
+void company_management_handler::check_related_balance(pa_sql_plan &_plan)
+{
+    stuff_plan_management_handler spmh;
+    if (_plan.status == 2 && spmh.plan_cash_enough(_plan))
+    {
+        spmh.pri_confirm_pay(_plan.get_pri_id(), *get_sysadmin_user(), "余额已够，自动确认收款");
+    }
+}

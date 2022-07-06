@@ -11,6 +11,7 @@
 #include "../external_src/writer.hpp"
 #include "pa_rpc_util.h"
 #include "../pa_util/pa_advance.h"
+#include "stuff_plan_management_imp.h"
 
 #define SALE_CONFIG_FILE "/conf/data_config.json"
 class company_management_handler : virtual public company_managementIf
@@ -78,7 +79,9 @@ public:
 
         return ret;
     }
-    virtual bool edit_type(const stuff_detail& stuff, const std::string& ssid) {
+    void check_related_balance(pa_sql_plan &_plan);
+    virtual bool edit_type(const stuff_detail &stuff, const std::string &ssid)
+    {
         bool ret = false;
         auto user = PA_DATAOPT_get_online_user(ssid);
         if (user)
@@ -97,11 +100,12 @@ public:
                     ret = stuff_need_edit->update_record();
                     std::string remark = "调整了该计划中的货品单价，原价" + std::to_string(orig_price) + "，现价" + std::to_string(stuff_need_edit->price);
                     auto related_plans = PA_RPC_get_all_plans_related_by_user(ssid, "belong_stuff_ext_key == %ld AND status < 4", stuff_need_edit->get_pri_id());
-                    for (auto &itr:related_plans)
+                    for (auto &itr : related_plans)
                     {
                         itr.price = stuff.price;
                         itr.update_record();
                         itr.send_wechat_msg(*user, remark);
+                        check_related_balance(itr);
                     }
                 }
                 else
@@ -151,12 +155,13 @@ public:
         }
     }
 
-    virtual void get_all_apply(std::vector<user_apply> &_return, const std::string &ssid)  {
+    virtual void get_all_apply(std::vector<user_apply> &_return, const std::string &ssid)
+    {
         auto opt_user = PA_DATAOPT_get_online_user(ssid);
         if (opt_user)
         {
             auto all_apply = opt_user->get_all_children<pa_sql_user_apply>("assignee");
-            for (auto &itr:all_apply)
+            for (auto &itr : all_apply)
             {
                 auto assigner_user = itr.get_parent<pa_sql_userinfo>("assigner");
                 if (assigner_user)
@@ -176,7 +181,8 @@ public:
             PA_RETURN_UNLOGIN_MSG();
         }
     }
-    virtual bool approve_apply(const int64_t apply_id, const std::string &ssid, const bool approve) {
+    virtual bool approve_apply(const int64_t apply_id, const std::string &ssid, const bool approve)
+    {
         bool ret = false;
         auto apply = sqlite_orm::search_record<pa_sql_user_apply>(apply_id);
         auto opt_user = PA_DATAOPT_get_online_user(ssid);
@@ -212,7 +218,7 @@ public:
                     PA_WECHAT_send_process_apply_msg(*assigner, *apply);
                 }
                 auto other_apply = assigner->get_all_children<pa_sql_user_apply>("assigner");
-                for (auto &itr:other_apply)
+                for (auto &itr : other_apply)
                 {
                     itr.status = apply->status;
                     itr.update_record();
@@ -322,8 +328,10 @@ public:
             std::string py_converter =
                 "import pandas as pd\n"
                 "import sys\n"
-                "csv = pd.read_csv('/dist/logo_res/" + file_name + "', encoding='utf-8')\n"
-                "csv.to_excel('/dist/logo_res/" + file_name_no_ext + ".xlsx', sheet_name='data', index=False)\n";
+                "csv = pd.read_csv('/dist/logo_res/" +
+                file_name + "', encoding='utf-8')\n"
+                            "csv.to_excel('/dist/logo_res/" +
+                file_name_no_ext + ".xlsx', sheet_name='data', index=False)\n";
 
             if (Py_IsInitialized())
             {
@@ -342,9 +350,11 @@ public:
     {
         bool ret = false;
         auto user = PA_DATAOPT_get_online_user(ssid);
-        if (user) {
+        if (user)
+        {
             auto company = user->get_parent<pa_sql_company>("belong_company");
-            if (company) {
+            if (company)
+            {
                 company->notice = notice;
                 ret = company->update_record();
             }
@@ -391,7 +401,7 @@ public:
         }
 
         auto all_users = company->get_all_children<pa_sql_userinfo>("belong_company");
-        for (auto &itr:all_users)
+        for (auto &itr : all_users)
         {
             user_info tmp;
             tmp.buyer = itr.buyer;
@@ -502,21 +512,22 @@ public:
         _return.contact = company->contact;
     }
 
-    void update_company_attachment_pic(pa_sql_company &_company) {
+    void update_company_attachment_pic(pa_sql_company &_company)
+    {
         auto attachments = _company.get_all_children<pa_sql_company_attachment>("belong_company");
         std::string params;
-        for (auto &itr:attachments)
+        for (auto &itr : attachments)
         {
             params += "/dist" + itr.pic_path + " ";
         }
-        std::string cmd = "flock /tmp/script_lock -c \"/script/long_pic_make.sh "  + params + "\"";
+        std::string cmd = "flock /tmp/script_lock -c \"/script/long_pic_make.sh " + params + "\"";
         auto fp = popen(cmd.c_str(), "r");
         if (fp)
         {
             char buff[1024];
             std::string content;
             unsigned int read_len = 0;
-            while (0 < (read_len =  fread(buff, 1, sizeof(buff), fp)))
+            while (0 < (read_len = fread(buff, 1, sizeof(buff), fp)))
             {
                 content.append(buff, read_len);
             }
@@ -594,7 +605,7 @@ public:
     {
         auto company = get_belong_company(ssid);
         auto all_attach = company->get_all_children<pa_sql_company_attachment>("belong_company");
-        for (auto &itr:all_attach)
+        for (auto &itr : all_attach)
         {
             company_attachment tmp;
             tmp.id = itr.get_pri_id();
@@ -663,7 +674,7 @@ public:
             auto all_buyer = sqlite_orm::search_record_all<pa_sql_userinfo>("buyer != 0");
             for (auto &itr : all_buyer)
             {
-                auto access_record = make_access_record(itr );
+                auto access_record = make_access_record(itr);
                 if (access_record)
                 {
                     _return.push_back(*access_record);
@@ -768,7 +779,7 @@ public:
             query = "a_side";
         }
         auto all_contract = company->get_all_children<pa_sql_contract>(query, "PRI_ID != 0 ORDER BY PRI_ID DESC");
-        for (auto &itr:all_contract)
+        for (auto &itr : all_contract)
         {
             itr.update_status();
             auto a_side_company = itr.get_parent<pa_sql_company>("a_side");
@@ -789,7 +800,6 @@ public:
                 _return.push_back(tmp);
             }
         }
-
     }
 
     virtual void get_contract(common_contract &_return, const std::string &a_side_company, const std::string &b_side_company)
@@ -934,7 +944,7 @@ public:
         if (opt_user->buyer == 0)
         {
             auto related_plan = PA_RPC_get_all_plans_related_by_user(ssid, "proxy_company == '' AND status < 4 GROUP BY created_by_ext_key");
-            for (auto &itr:related_plan)
+            for (auto &itr : related_plan)
             {
                 auto created_user = itr.get_parent<pa_sql_userinfo>("created_by");
                 if (created_user)
@@ -947,7 +957,7 @@ public:
                 }
             }
             related_plan = PA_RPC_get_all_plans_related_by_user(ssid, "proxy_company != '' AND status < 4 GROUP BY proxy_company");
-            for (auto &itr:related_plan)
+            for (auto &itr : related_plan)
             {
                 _return.push_back(itr.proxy_company);
             }
@@ -959,7 +969,7 @@ public:
         else
         {
             auto related_plan = PA_RPC_get_all_plans_related_by_user(ssid, "status < 4 GROUP BY belong_stuff_ext_key");
-            for (auto &itr:related_plan)
+            for (auto &itr : related_plan)
             {
                 auto belong_stuff = itr.get_parent<pa_sql_stuff_info>("belong_stuff");
                 if (belong_stuff)
@@ -1130,12 +1140,14 @@ public:
             }
         }
     }
-    enum company_customize_need_en {
+    enum company_customize_need_en
+    {
         need_driver_register,
         need_driver_license,
         need_balance_auto_change,
     };
-    bool company_customize_need(const std::string &_company_name, company_customize_need_en _need) {
+    bool company_customize_need(const std::string &_company_name, company_customize_need_en _need)
+    {
         bool ret = false;
 
         company_customize tmp;
