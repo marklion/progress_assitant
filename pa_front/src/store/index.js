@@ -11,7 +11,8 @@ export default new Vuex.Store({
       company: '',
       logo: '',
       phone:'',
-      user_id:0
+      user_id:0,
+      groupid:0,
     },
     is_login:false,
     enter_company:false,

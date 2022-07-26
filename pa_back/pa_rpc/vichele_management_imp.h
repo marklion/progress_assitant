@@ -85,7 +85,7 @@ public:
             ret = tmp.insert_record();
             if (ret)
             {
-                auto company_user = dest_company->get_all_children<pa_sql_userinfo>("belong_company", "(groupid == 0 OR groupid == 2)");
+                auto company_user = dest_company->get_all_children<pa_sql_userinfo>("belong_company", "groupid == 2");
                 for (auto &itr : company_user)
                 {
                     PA_WECHAT_send_extra_vichele_msg(tmp, itr.openid, opt_user->name + "创建了进厂申请");
@@ -137,7 +137,7 @@ public:
         ret = extra_vichele->update_record();
         if (ret)
         {
-            auto company_user = dest_company->get_all_children<pa_sql_userinfo>("belong_company", "(groupid == 0 OR groupid == 2)");
+            auto company_user = dest_company->get_all_children<pa_sql_userinfo>("belong_company", "groupid == 2");
             for (auto &itr : company_user)
             {
                 PA_WECHAT_send_extra_vichele_msg(*extra_vichele, itr.openid, opt_user->name + "取消了进厂申请");
@@ -196,7 +196,7 @@ public:
         ret = extra_vichele->update_record();
         if (ret)
         {
-            auto company_user = dest_company->get_all_children<pa_sql_userinfo>("belong_company", "(groupid == 0 OR groupid == 2)");
+            auto company_user = dest_company->get_all_children<pa_sql_userinfo>("belong_company", "groupid == 2");
             for (auto &itr : company_user)
             {
                 PA_WECHAT_send_extra_vichele_msg(*extra_vichele, itr.openid, opt_user->name + "更新了进厂申请");
@@ -842,7 +842,7 @@ public:
         PA_DATAOPT_post_save_register(tmp, true);
         if (dest_company)
         {
-            auto company_staff = dest_company->get_all_children<pa_sql_userinfo>("belong_company", "(groupid == 0 OR groupid == 2)");
+            auto company_staff = dest_company->get_all_children<pa_sql_userinfo>("belong_company", "OR groupid == 2");
             for (auto &itr : company_staff)
             {
                 PA_WECHAT_send_extra_vichele_msg(*vichele_info, itr.openid, "司机指定了拉货公司:" + company_name);

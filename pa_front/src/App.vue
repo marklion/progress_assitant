@@ -17,7 +17,7 @@
         <van-tabbar route fixed v-if="!$route.meta.extra_page">
             <van-tabbar-item v-if="$store.state.userinfo.buyer" replace :to="{name:'Home'}" icon="home-o">主页</van-tabbar-item>
             <van-tabbar-item v-else replace :to="{name:'CompanyHome'}" icon="home-o">主页</van-tabbar-item>
-            <van-tabbar-item replace :to="{name:'CompanyOrder'}" icon="orders-o">订单</van-tabbar-item>
+            <van-tabbar-item v-if="(!$store.state.userinfo.buyer && $store.state.userinfo.groupid == 1) || $store.state.userinfo.buyer" replace :to="{name:'CompanyOrder'}" icon="orders-o">订单</van-tabbar-item>
             <van-tabbar-item replace :to="{name:'Myself'}" icon="user-o">我的</van-tabbar-item>
         </van-tabbar>
         <van-dialog v-model="show_share" title="长按图片发送给联系人">

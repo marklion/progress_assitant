@@ -86,6 +86,10 @@ public:
         auto user = PA_DATAOPT_get_online_user(ssid);
         if (user)
         {
+            if (user->groupid != 1)
+            {
+                PA_RETURN_NOPRIVA_MSG();
+            }
             auto company = user->get_parent<pa_sql_company>("belong_company");
             auto stuff_need_edit = sqlite_orm::search_record<pa_sql_stuff_info>(stuff.type_id);
             if (stuff_need_edit)

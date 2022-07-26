@@ -25,7 +25,7 @@ void pa_sql_plan::send_wechat_msg(pa_sql_userinfo &_opt_user, const std::string 
         auto company = stuff->get_parent<pa_sql_company>("belong_company");
         if (company)
         {
-            auto all_user_in_company = company->get_all_children<pa_sql_userinfo>("belong_company", "PRI_ID != %d AND (groupid == 0 OR groupid == 1)", created_user->get_pri_id());
+            auto all_user_in_company = company->get_all_children<pa_sql_userinfo>("belong_company", "PRI_ID != %d AND groupid == 1", created_user->get_pri_id());
             for (auto &itr : all_user_in_company)
             {
                 if (_opt_user.get_pri_id() != itr.get_pri_id())

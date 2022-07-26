@@ -2346,6 +2346,10 @@ public:
         {
             PA_RETURN_UNLOGIN_MSG();
         }
+        if (opt_user->groupid != 1)
+        {
+            PA_RETURN_NOPRIVA_MSG();
+        }
         std::string query_cmd = "PRI_ID == 0";
         for (auto &itr : plan_id)
         {

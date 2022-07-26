@@ -36,6 +36,7 @@ public:
             }
             _return.phone = user->phone;
             _return.user_id = user->get_pri_id();
+            _return.groupid = user->groupid;
         }
         else
         {
