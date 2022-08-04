@@ -1131,7 +1131,7 @@ public:
             for (auto &itr : all_vichele)
             {
                 auto update_ret = PA_DATAOPT_post_sync_change_register(itr, is_auto);
-                if (update_ret.length() > 0)
+                if (update_ret.length() > 0 || itr.has_p)
                 {
                     PA_RETURN_CANNOT_CANCLE(update_ret);
                 }
