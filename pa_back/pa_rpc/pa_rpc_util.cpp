@@ -33,7 +33,7 @@ static std::list<pa_sql_plan> PA_RPC_get_all_plans_related_by_user_info(pa_sql_u
         }
         else
         {
-            return sqlite_orm::search_record_all<pa_sql_plan>("(%s) AND %s", connect_param.c_str(), tmpbuff.c_str());
+            return sqlite_orm::search_record_all<pa_sql_plan>("(%s) AND (%s)", connect_param.c_str(), tmpbuff.c_str());
         }
     }
 }

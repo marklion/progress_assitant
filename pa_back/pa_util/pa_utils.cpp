@@ -897,7 +897,6 @@ static void proc_que_info_back(neb::CJsonObject &ret)
                 {
                     exist_register_info->enter_location = ret["data"]("stationName");
                     exist_register_info->number = ret["data"]("index");
-                    exist_register_info->timestamp = PA_DATAOPT_current_time();
                     exist_register_info->order_number = ret["data"]("order");
                     exist_register_info->update_record();
                     return;

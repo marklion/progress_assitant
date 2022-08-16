@@ -283,6 +283,11 @@ public:
             ret.price = plan->price;
 
             ret.createTime = plan->plan_time.substr(0, 13) + ":00:00";
+            auto register_info = _vichele.get_children<pa_sql_driver_register>("belong_vichele");
+            if (register_info)
+            {
+                ret.createTime = register_info->timestamp;
+            }
             ret.orderNo = std::to_string(plan->create_time) + std::to_string(plan->get_pri_id());
         }
 
