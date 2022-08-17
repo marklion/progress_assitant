@@ -1691,7 +1691,7 @@ public:
         }
         auto current_time = PA_DATAOPT_current_time();
         auto date_only = current_time.substr(0, 10);
-        auto plan_scope = PA_RPC_get_all_plans_related_by_user(ssid, "status < 4 OR plan_time LIKE '%s%%'", date_only.c_str());
+        auto plan_scope = PA_RPC_get_all_plans_related_by_user(ssid, "(status < 4 OR plan_time LIKE '%s%%')", date_only.c_str());
         std::string plan_filter = "belong_plan_ext_key = 0";
         for (auto &itr : plan_scope)
         {
