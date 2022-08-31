@@ -656,7 +656,14 @@ public:
             ch.get_contract(contract, tmp.buy_company, tmp.sale_company);
 
             auto has_cash = contract.balance;
-            auto req_cash = tmp.vichele_info.size() * 22 * tmp.price;
+            double req_cash = 0;
+            for (auto &single_v:tmp.vichele_info)
+            {
+                if (!single_v.finish)
+                {
+                    req_cash += tmp.price * 22;
+                }
+            }
 
             auto buyer_company = sqlite_orm::search_record<pa_sql_company>("name == '%s'", tmp.buy_company.c_str());
             if (buyer_company)
