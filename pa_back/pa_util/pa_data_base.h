@@ -21,6 +21,8 @@ public:
     std::string third_dms_url;
     std::string third_token;
     std::string stamp_pic;
+    std::string zc_url;
+    std::string zh_ssid;
 
     virtual std::vector<sqlite_orm_column> self_columns_defined()
     {
@@ -39,6 +41,8 @@ public:
         ret.push_back(sqlite_orm_column("third_dms_url", sqlite_orm_column::STRING, &third_dms_url));
         ret.push_back(sqlite_orm_column("third_token", sqlite_orm_column::STRING, &third_token));
         ret.push_back(sqlite_orm_column("stamp_pic", sqlite_orm_column::STRING, &stamp_pic));
+        ret.push_back(sqlite_orm_column("zc_url", sqlite_orm_column::STRING, &zc_url));
+        ret.push_back(sqlite_orm_column("zh_ssid", sqlite_orm_column::STRING, &zh_ssid));
 
         return ret;
     }
