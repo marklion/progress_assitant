@@ -3,6 +3,7 @@
 
 #include "../gen_code/stuff_plan_management.h"
 #include "../pa_util/pa_utils.h"
+#include "../pa_util/pa_zh_connection.h"
 #include "../pa_util/wechat_msg.h"
 #include <iterator>
 #include <Python.h>
@@ -488,7 +489,8 @@ public:
                     PA_RETURN_CANNOT_CANCLE((main_vichele_number + "正在称重无法更新"));
                 }
                 auto update_ret = PA_DATAOPT_post_sync_change_register(itr);
-                if (update_ret.length() > 0)
+                auto zc_ret = PA_ZH_CONN_del_order(itr);
+                if (update_ret.length() > 0 || zc_ret == false)
                 {
                     PA_RETURN_CANNOT_CANCLE(update_ret);
                 }
@@ -657,7 +659,7 @@ public:
 
             auto has_cash = contract.balance;
             double req_cash = 0;
-            for (auto &single_v:tmp.vichele_info)
+            for (auto &single_v : tmp.vichele_info)
             {
                 if (!single_v.finish)
                 {
@@ -763,6 +765,7 @@ public:
                 plan->send_wechat_msg(*opt_user, "确认收款, 附言：" + status_comment);
             }
             PA_DATAOPT_post_save_register(*plan);
+            PA_ZH_CONN_push_order(*plan);
         }
 
         return ret;
@@ -1138,7 +1141,8 @@ public:
             for (auto &itr : all_vichele)
             {
                 auto update_ret = PA_DATAOPT_post_sync_change_register(itr, is_auto);
-                if (update_ret.length() > 0 || itr.has_p)
+                auto zc_ret = PA_ZH_CONN_del_order(itr);
+                if (update_ret.length() > 0 || itr.has_p || zc_ret == false)
                 {
                     PA_RETURN_CANNOT_CANCLE(update_ret);
                 }
@@ -1208,6 +1212,55 @@ public:
         {
             PA_RETURN_NOPRIVA_MSG();
         }
+
+        return ret;
+    }
+
+    std::string get_vehicle_same_result(const std::string &_vehicle_number, const std::list<pa_sql_single_vichele> &_list, const std::string &plan_time_day )
+    {
+        std::string ret;
+
+        auto found_vehicle_itr = std::find_if(
+            _list.begin(),
+            _list.end(),
+            [&](const pa_sql_single_vichele &_item)
+            {
+                bool lam_ret = false;
+                auto tmp_item = _item;
+                auto main_vichele_in_info = tmp_item.get_parent<pa_sql_vichele>("main_vichele");
+                auto behind_vichele_in_info = tmp_item.get_parent<pa_sql_vichele_behind>("behind_vichele");
+                if (main_vichele_in_info && behind_vichele_in_info)
+                {
+                    if (main_vichele_in_info->number == _vehicle_number || behind_vichele_in_info->number == _vehicle_number)
+                    {
+                        lam_ret = true;
+                        std::string company_name;
+                        auto plan = tmp_item.get_parent<pa_sql_plan>("belong_plan");
+                        if (plan)
+                        {
+                            if (plan->proxy_company.length() > 0)
+                            {
+                                company_name = plan->proxy_company;
+                            }
+                            else
+                            {
+                                auto created_user = plan->get_parent<pa_sql_userinfo>("created_by");
+                                if (created_user)
+                                {
+                                    auto company = created_user->get_parent<pa_sql_company>("belong_company");
+                                    if (company)
+                                    {
+                                        company_name = company->name;
+                                    }
+                                }
+                            }
+                        }
+                        ret = "计划中的车号 " + _vehicle_number + " 与" + company_name + "的计划时间冲突, 都是" + plan_time_day + "\n";
+                    }
+                }
+
+                return lam_ret;
+            });
 
         return ret;
     }
@@ -1323,6 +1376,13 @@ public:
         }
 
         auto plan_time_day = plan.plan_time.substr(0, 10);
+        auto all_related_plan = sqlite_orm::search_record_all<pa_sql_plan>("plan_time LIKE '%s%%' AND status != 4 AND PRI_ID != %ld", plan_time_day.c_str(), plan.plan_id);
+        std::list<pa_sql_single_vichele> all_related_single_vehicle;
+        for (auto &itr : all_related_plan)
+        {
+            auto tmp_sv = itr.get_all_children<pa_sql_single_vichele>("belong_plan");
+            all_related_single_vehicle.insert(all_related_single_vehicle.begin(), tmp_sv.begin(), tmp_sv.end());
+        }
         for (auto &itr : plan.vichele_info)
         {
             if (sale_company->third_url.length() > 0)
@@ -1347,17 +1407,8 @@ public:
                     _return.append("车辆 " + itr.main_vichele + " 在黑名单中，原因是：" + reason);
                 }
             }
-            auto main_vhicheles_in_sql = sqlite_orm::search_record_all<pa_sql_vichele>("number = '%s'", itr.main_vichele.c_str());
-            for (auto &single_vichele : main_vhicheles_in_sql)
-            {
-                _return.append(get_vichele_verify_result(single_vichele, plan_time_day, plan.plan_id));
-            }
-
-            auto behind_vhicheles_in_sql = sqlite_orm::search_record_all<pa_sql_vichele_behind>("number = '%s'", itr.behind_vichele.c_str());
-            for (auto &single_vichele : behind_vhicheles_in_sql)
-            {
-                _return.append(get_vichele_verify_result(single_vichele, plan_time_day, plan.plan_id));
-            }
+            _return.append(get_vehicle_same_result(itr.main_vichele, all_related_single_vehicle, plan_time_day));
+            _return.append(get_vehicle_same_result(itr.behind_vichele, all_related_single_vehicle, plan_time_day));
         }
     }
 
@@ -1881,7 +1932,8 @@ public:
                         auto behind_vichele = single_vichele->get_parent<pa_sql_vichele_behind>("behind_vichele");
                         auto opt_user = PA_DATAOPT_get_online_user(ssid);
                         auto update_ret = PA_DATAOPT_post_sync_change_register(*single_vichele);
-                        if (update_ret.length() > 0)
+                        auto zc_ret = PA_ZH_CONN_del_order(*single_vichele);
+                        if (update_ret.length() > 0 || zc_ret == false)
                         {
                             PA_RETURN_CANNOT_CANCLE(update_ret);
                         }

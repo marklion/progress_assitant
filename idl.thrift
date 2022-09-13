@@ -120,6 +120,8 @@ struct third_dev_info {
     2:string ctrl_url,
     3:string dms_url,
     4:string token,
+    5:string zc_url,
+    6:string zh_ssid,
 }
 
 struct company_customize {

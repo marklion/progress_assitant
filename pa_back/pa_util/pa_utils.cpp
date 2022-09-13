@@ -27,6 +27,9 @@ std::string PA_DATAOPT_rest_post(const std::string &_url, const std::string &_js
     auto curlhandle = curl_easy_init();
     if (nullptr != curlhandle)
     {
+        struct curl_slist *header = nullptr;
+        header = curl_slist_append(header, "Content-Type: Application/json");
+        curl_easy_setopt(curlhandle, CURLOPT_HTTPHEADER, header);
         curl_easy_setopt(curlhandle, CURLOPT_URL, _url.c_str());
         curl_easy_setopt(curlhandle, CURLOPT_WRITEDATA, &in_buff);
         curl_easy_setopt(curlhandle, CURLOPT_WRITEFUNCTION, pa_proc_curl);
@@ -36,10 +39,12 @@ std::string PA_DATAOPT_rest_post(const std::string &_url, const std::string &_js
         curl_easy_setopt(curlhandle, CURLOPT_POSTFIELDS, _json.c_str());
         curl_easy_perform(curlhandle);
         curl_easy_cleanup(curlhandle);
+        curl_slist_free_all(header);
     }
 
     return in_buff;
 }
+
 std::string PA_DATAOPT_rest_post(const std::string &_url, const std::string &_json, const std::string &_key, const std::string &_token)
 {
     std::string in_buff;
@@ -508,6 +513,22 @@ std::unique_ptr<pa_sql_company> PA_DATAOPT_get_sale_company(pa_sql_single_vichel
     return std::unique_ptr<pa_sql_company>();
 }
 static tdf_log g_audit_log("api_audit", "/log/audit.log", "/log/audit.log");
+neb::CJsonObject call_third_though_rest(const std::string &url, const std::string &json)
+{
+    g_audit_log.log("calling %s, content:%s", url.c_str(), json.c_str());
+    auto ret = PA_DATAOPT_rest_post(url, json);
+    neb::CJsonObject j_ret(ret);
+    if (!j_ret.KeyExist("err_msg") || j_ret("err_msg") == "")
+    {
+        g_audit_log.log("calling %s success, result:%s", url.c_str(), j_ret.ToString().c_str());
+    }
+    else
+    {
+        g_audit_log.err("calling %s failed, message:%s", url.c_str(), j_ret("err_msg").c_str());
+    }
+
+    return j_ret;
+}
 
 static neb::CJsonObject call_third_though_rest(const std::string &url, const std::string &key, const std::string &token, const std::string &json)
 {
@@ -526,7 +547,7 @@ static neb::CJsonObject call_third_though_rest(const std::string &url, const std
     return j_ret;
 }
 
-static void post_json_to_third(const std::string &url, const std::string &json, const std::string &key, const std::string &token, proc_third_ret callback = nullptr)
+void PA_UTILS_post_json_to_third(const std::string &url, const std::string &json, const std::string &key, const std::string &token, proc_third_ret callback)
 {
     auto p_req = new third_dev_req_param();
     p_req->url = url;
@@ -538,7 +559,15 @@ static void post_json_to_third(const std::string &url, const std::string &json, 
         [](void *_private, const std::string &chrct) -> void
         {
             auto req = (third_dev_req_param *)(_private);
-            auto j_ret = call_third_though_rest(req->url, req->key, req->token, chrct);
+            neb::CJsonObject j_ret;
+            if (req->key.empty())
+            {
+                j_ret = call_third_though_rest(req->url, chrct);
+            }
+            else
+            {
+                j_ret = call_third_though_rest(req->url, req->key, req->token, chrct);
+            }
             if (req->callback)
             {
                 req->callback(j_ret, *req, chrct);
@@ -604,7 +633,7 @@ void PA_DATAOPT_post_save_register(pa_sql_plan &_plan)
         neb::CJsonObject fin_req;
         fin_req.Add("data", req);
 
-        post_json_to_third(ctrl_url, fin_req.ToString(), key, token);
+        PA_UTILS_post_json_to_third(ctrl_url, fin_req.ToString(), key, token);
     }
 }
 
@@ -711,7 +740,7 @@ void PA_DATAOPT_post_save_register(std::list<pa_sql_vichele_stay_alone> &_vichel
 
         if (!req.IsEmpty())
         {
-            post_json_to_third(ctrl_url, fin_req.ToString(), key, token);
+            PA_UTILS_post_json_to_third(ctrl_url, fin_req.ToString(), key, token);
         }
     }
 }
@@ -790,7 +819,7 @@ std::string PA_DATAOPT_post_sync_change_register(pa_sql_single_vichele &_vichele
 
         if (is_auto)
         {
-            post_json_to_third(ctrl_url, fin_req.ToString(), key, token);
+            PA_UTILS_post_json_to_third(ctrl_url, fin_req.ToString(), key, token);
         }
         else
         {
@@ -937,7 +966,7 @@ static void proc_check_in_ret(neb::CJsonObject &_ret, third_dev_req_param &req, 
     {
         std::string que_url = req.url;
         que_url = que_url.substr(0, que_url.find("checkIn")) + "getQueuingInfo";
-        post_json_to_third(que_url, json, req.key, req.token, proc_que_get_ret);
+        PA_UTILS_post_json_to_third(que_url, json, req.key, req.token, proc_que_get_ret);
     }
 }
 
@@ -996,7 +1025,26 @@ void PA_DATAOPT_post_checkin(pa_sql_single_vichele &_vichele)
         _vichele.req_register = 1;
         _vichele.update_record();
 
-        post_json_to_third(ctrl_url, fin_req.ToString(), key, token, proc_check_in_ret);
+        if (key.length() > 0 && token.length() > 0)
+        {
+            PA_UTILS_post_json_to_third(ctrl_url, fin_req.ToString(), key, token, proc_check_in_ret);
+        }
+        else
+        {
+            if (PA_ZH_CONN_check_in(_vichele, false))
+            {
+                auto que_info = PA_ZH_CONN_get_que_info(_vichele);
+                pa_sql_driver_register tmp;
+                tmp.set_parent(_vichele, "belong_vichele");
+                tmp.enter_location = que_info.enter_location;
+                tmp.number = std::to_string(que_info.wait_count + 1);
+                tmp.order_number = std::to_string(que_info.wait_count);
+                tmp.timestamp = que_info.checkin_time;
+                tmp.insert_record();
+                _vichele.req_register = 0;
+                _vichele.update_record();
+            }
+        }
     }
 }
 
@@ -1024,7 +1072,30 @@ void PA_DATAOPT_post_get_queue(pa_sql_single_vichele &_vichele)
         token = company.third_token;
         ctrl_url += company.third_url + "/thirdParty/zyzl/getQueuingInfo";
 
-        post_json_to_third(ctrl_url, req.ToString(), key, token, proc_que_get_ret);
+        if (key.length() > 0 && token.length() > 0)
+        {
+            PA_UTILS_post_json_to_third(ctrl_url, req.ToString(), key, token, proc_que_get_ret);
+        }
+        else if (company.zh_ssid.length() > 0 && company.zc_url.length() > 0)
+        {
+            auto que_info = PA_ZH_CONN_get_que_info(_vichele);
+            auto register_info = _vichele.get_children<pa_sql_driver_register>("belong_vichele");
+            if (register_info)
+            {
+                if (que_info.checkin_time.length() > 0)
+                {
+                    register_info->enter_location = que_info.enter_location;
+                    register_info->timestamp = que_info.checkin_time;
+                    register_info->number = std::to_string(que_info.wait_count + 1);
+                    register_info->order_number = std::to_string(que_info.wait_count);
+                    register_info->update_record();
+                }
+                else
+                {
+                    register_info->remove_record();
+                }
+            }
+        }
     }
 }
 
@@ -1056,7 +1127,8 @@ std::unique_ptr<pa_sql_driver> PA_DATAOPT_link_driver(const std::string &_driver
     return sqlite_orm::search_record<pa_sql_driver>("phone == '%s'", _driver_phone.c_str());
 }
 
-struct price_timer_node{
+struct price_timer_node
+{
     double price = 0;
     int fd = -1;
     std::string expired_time;
@@ -1087,7 +1159,7 @@ bool PA_DATAOPT_create_price_timer(pa_sql_stuff_info &_stuff, int _hours, double
                     stuff->price = timer_param.price;
                     stuff->update_record();
                     std::string remark = "调整了该计划中的货品单价，原价" + std::to_string(orig_price) + "，现价" + std::to_string(stuff->price);
-                    auto related_plans = stuff->get_all_children<pa_sql_plan>("belong_stuff","status < 4");
+                    auto related_plans = stuff->get_all_children<pa_sql_plan>("belong_stuff", "status < 4");
                     for (auto &itr : related_plans)
                     {
                         itr.price = stuff->price;

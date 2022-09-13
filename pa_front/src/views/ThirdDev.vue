@@ -5,6 +5,8 @@
         <van-field v-model="token" label="token" />
         <van-field v-model="ctrl_url" label="ctrl_url" />
         <van-field v-model="dms_url" label="dms_url" />
+        <van-field v-model="zc_url" label="zc_url" />
+        <van-field v-model="zh_ssid" label="zh_ssid" />
         <div style="margin: 16px;">
             <van-button round block type="info" native-type="submit">提交</van-button>
         </div>
@@ -77,6 +79,8 @@ export default {
             ctrl_url: '',
             dms_url: '',
             token: '',
+            zh_ssid:"",
+            zc_url:"",
             gps_stuff: [],
             new_stuff: '',
             show_new_stuff_diag: false,
@@ -90,6 +94,8 @@ export default {
                 vue_this.ctrl_url = resp.ctrl_url;
                 vue_this.dms_url = resp.dms_url;
                 vue_this.token = resp.token;
+                vue_this.zc_url = resp.zc_url;
+                vue_this.zh_ssid = resp.zh_ssid;
             });
         },
         set_dev_info: function () {
@@ -99,6 +105,8 @@ export default {
                 ctrl_url: vue_this.ctrl_url,
                 dms_url: vue_this.dms_url,
                 token: vue_this.token,
+                zh_ssid: vue_this.zh_ssid,
+                zc_url: vue_this.zc_url,
             }, vue_this.$cookies.get('pa_ssid')]).then(function (resp) {
                 if (resp) {
                     vue_this.init_dev_info();

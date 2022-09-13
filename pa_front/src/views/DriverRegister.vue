@@ -25,8 +25,8 @@
                 <van-cell :title="single_trans.main_vichele + '-' + single_trans.behind_vichele" :value="single_trans.stuff_name" :label="single_trans.order_company?single_trans.order_company:'(未指定拉货公司)'" />
 
                 <div v-if="single_trans.need_license">
-                <licenseCollapse title="主车证件" icon="logistics" :belong="single_trans.main_vichele" :show-expire-date-edit="false" :licenseList="vehicleLicense[single_trans.main_vichele]" @open="loadVehicleLicense(single_trans.main_vichele)" @submit="onSubmitVehicleLicense" @delete="doDeleteVehicleLicense"></licenseCollapse>
-                <licenseCollapse title="挂车证件" icon="cart-o" :belong="single_trans.behind_vichele" :show-expire-date-edit="false" :licenseList="vehicleLicense[single_trans.behind_vichele]" @open="loadVehicleLicense(single_trans.behind_vichele)" @submit="onSubmitVehicleLicense" @delete="doDeleteVehicleLicense"></licenseCollapse>
+                    <licenseCollapse title="主车证件" icon="logistics" :belong="single_trans.main_vichele" :show-expire-date-edit="false" :licenseList="vehicleLicense[single_trans.main_vichele]" @open="loadVehicleLicense(single_trans.main_vichele)" @submit="onSubmitVehicleLicense" @delete="doDeleteVehicleLicense"></licenseCollapse>
+                    <licenseCollapse title="挂车证件" icon="cart-o" :belong="single_trans.behind_vichele" :show-expire-date-edit="false" :licenseList="vehicleLicense[single_trans.behind_vichele]" @open="loadVehicleLicense(single_trans.behind_vichele)" @submit="onSubmitVehicleLicense" @delete="doDeleteVehicleLicense"></licenseCollapse>
                 </div>
 
                 <van-cell v-if="!single_trans.is_buy" :title="single_trans.destination_company" center>
@@ -37,10 +37,17 @@
                         </div>
                     </template>
                     <div v-if="single_trans.is_registered">
-                        进厂序号：{{ single_trans.register_number }}
-                    </div>
-                    <div v-if="single_trans.is_registered">
-                        还需等待：{{ single_trans.register_order }}个
+                        <div v-if="single_trans.register_number != '0'">
+                            <div>
+                                进厂序号：{{ single_trans.register_number }}
+                            </div>
+                            <div>
+                                还需等待：{{ single_trans.register_order }}个
+                            </div>
+                        </div>
+                        <div v-else>
+                            已叫号，请进场
+                        </div>
                     </div>
                 </van-cell>
                 <div v-if="single_trans.is_buy">

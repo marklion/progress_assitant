@@ -914,6 +914,8 @@ public:
         company->third_url = _info.ctrl_url;
         company->third_dms_url = _info.dms_url;
         company->third_token = _info.token;
+        company->zc_url = _info.zc_url;
+        company->zh_ssid = _info.zh_ssid;
 
         ret = company->update_record();
 
@@ -936,6 +938,8 @@ public:
         _return.ctrl_url = company->third_url;
         _return.dms_url = company->third_dms_url;
         _return.token = company->third_token;
+        _return.zc_url = company->zc_url;
+        _return.zh_ssid = company->zh_ssid;
     }
 
     virtual void get_related_company(std::vector<std::string> &_return, const std::string &ssid)

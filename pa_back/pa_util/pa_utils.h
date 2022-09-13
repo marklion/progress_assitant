@@ -59,6 +59,7 @@ void PA_DATAOPT_post_save_register(std::list<pa_sql_vichele_stay_alone> &_vichel
 std::unique_ptr<pa_sql_company> PA_DATAOPT_get_sale_company(pa_sql_single_vichele &_vichele);
 std::string PA_DATAOPT_search_base_id_info_by_name(const std::string &name, const std::string &type, pa_sql_company &_company);
 std::string PA_DATAOPT_post_sync_change_register(pa_sql_single_vichele &_vichele, bool is_auto = false);
+neb::CJsonObject call_third_though_rest(const std::string &url, const std::string &json);
 std::string PA_DATAOPT_post_sync_change_register(pa_sql_vichele_stay_alone &_vicheles, bool is_auto = false);
 void PA_DATAOPT_post_checkin(pa_sql_single_vichele &_vichele);
 void PA_DATAOPT_post_get_queue(pa_sql_single_vichele &_vichele);
@@ -72,5 +73,6 @@ std::string pa_double2string_reserve2(double _value);
 bool PA_DATAOPT_create_price_timer(pa_sql_stuff_info &_stuff, int _hours, double _price);
 void PA_DATAOPT_remove_price_timer(pa_sql_stuff_info &_stuff);
 bool PA_DATAOPT_get_price_timer(pa_sql_stuff_info &_stuff, std::string &expired_time, double &_price);
+void PA_UTILS_post_json_to_third(const std::string &url, const std::string &json, const std::string &key, const std::string &token, proc_third_ret callback = nullptr);
 
 #endif // _PA_UTILS_H_
