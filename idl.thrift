@@ -42,6 +42,8 @@ service user_management{
     bool send_sms_verify(1:string ssid, 2:string phone) throws (1:gen_exp e),
     string get_user_email(1:string ssid) throws (1:gen_exp e),
     bool has_apply(1:string ssid) throws (1:gen_exp e),
+    string exchange_ssid(1:string enc_text) throws (1:gen_exp e),
+    string exchange_enc_text(1:string ssid) throws (1:gen_exp e),
 }
 
 struct stuff_detail {
@@ -128,6 +130,7 @@ struct company_customize {
     1:bool need_driver_license,
     2:bool need_driver_register,
     3:bool need_balance_auto_change,
+    4:bool need_sec_check,
 }
 
 service company_management {
@@ -322,6 +325,7 @@ struct vichele_statistics {
     7:i64 plan_id,
     8:string plan_order,
     9:i64 vichele_id,
+    10:bool sec_check_passed,
 }
 
 struct vichele_stuff_statistics {
@@ -372,6 +376,8 @@ struct today_driver_info {
     21:bool upload_permit,
     22:bool need_license,
     23:bool need_checkin,
+    24:bool sec_check_passed,
+    25:bool need_sec_check,
 }
 
 struct driver_detail_info {
@@ -441,6 +447,8 @@ service stuff_plan_management {
     void del_vehicle_license(1:string silent_id, 2:i64 data_id) throws (1:gen_exp e),
     list<vehicle_license_info> get_license_by_vehicle_number(1:string plate_no) throws (1:gen_exp e),
     string export_plan_by_deliver_date(1:string ssid, 2:string deliver_date) throws (1:gen_exp e),
+    bool sec_check_pass(1:string ssid, 2:i64 vehicle_id) throws (1:gen_exp e),
+    bool sec_check_reject(1:string ssid, 2:i64 vehicle_id) throws (1:gen_exp e),
 }
 
 struct api_extra_transformation {

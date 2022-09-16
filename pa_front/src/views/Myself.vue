@@ -24,6 +24,7 @@
             <van-cell icon="info-o" is-link :to="{name:'BoundInfo'}" title="公司数据"></van-cell>
             <van-cell icon="sign" is-link :to="{name:'Contract'}" title="合同管理"></van-cell>
             <van-cell icon="aim" is-link :to="{name:'BiddingList'}" title="竞价管理"></van-cell>
+            <van-cell v-if="!$store.state.userinfo.buyer" icon="flag-o" is-link @click="show_auth_code" title="授权码"></van-cell>
             <van-cell v-if="!$store.state.userinfo.buyer" icon="notes-o" is-link :to="{name:'CompanyExtraVichele'}" title="采购进厂"></van-cell>
             <van-cell v-if="!$store.state.userinfo.buyer" icon="hotel-o" is-link :to="{name:'SupplierInfo'}" title="供应商"></van-cell>
             <van-cell v-if="!$store.state.userinfo.buyer" icon="apps-o" is-link :to="{name:'ThirdDev'}" title="开发选项"></van-cell>
@@ -68,8 +69,13 @@ import {
 import {
     Divider
 } from 'vant';
-import { Dialog } from 'vant';
+import {
+    Dialog
+} from 'vant';
 
+import VueClipboard from 'vue-clipboard2'
+
+Vue.use(VueClipboard)
 Vue.use(Divider);
 Vue.use(Icon);
 Vue.use(Button);
@@ -86,9 +92,20 @@ export default {
         };
     },
     methods: {
+        show_auth_code: function () {
+            var vue_this = this;
+            vue_this.$call_remote_process("user_management", "exchange_enc_text", [vue_this.$cookies.get('pa_ssid')]).then(function (resp) {
+                vue_this.$dialog.alert({
+                    message: resp,
+                    confirmButtonText: '复制'
+                }).then(function () {
+                    vue_this.$copyText(resp);
+                });
+            });
+        },
         show_service_diag: function () {
             Dialog({
-                message:'杨经理\n电话/微信: 18547707666'
+                message: '杨经理\n电话/微信: 18547707666'
             });
         },
         logoff: function () {

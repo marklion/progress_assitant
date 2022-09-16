@@ -475,6 +475,33 @@ public:
 
         return ret;
     }
+
+    virtual void exchange_ssid(std::string &_return, const std::string &enc_text)
+    {
+        auto base_time = time(nullptr) / 60 / 20;
+        std::string pla_text;
+        Base64::Decode(enc_text, &pla_text);
+        auto tar_user_id = base_time - atoi(pla_text.c_str());
+        auto user = sqlite_orm::search_record<pa_sql_userinfo>(tar_user_id);
+        if (user)
+        {
+            auto login_info = user->get_children<pa_sql_userlogin>("online_user");
+            if (login_info)
+            {
+                _return = login_info->ssid;
+            }
+        }
+    }
+    virtual void exchange_enc_text(std::string &_return, const std::string &ssid)
+    {
+        auto user = PA_DATAOPT_get_online_user(ssid);
+        if (user)
+        {
+            auto base_time = time(nullptr) / 60 / 20;
+            auto pla_number = std::to_string(base_time - user->get_pri_id());
+            Base64::Encode(pla_number, &_return);
+        }
+    }
 };
 
 #endif // _USER_MANAGEMENT_IMP_H_

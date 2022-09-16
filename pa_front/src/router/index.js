@@ -4,6 +4,15 @@ import VueRouter from 'vue-router'
 Vue.use(VueRouter)
 
 const routes = [
+{
+    path: '/pc/sec_check',
+    name: 'SecCheck',
+    component: () => import('../views/SecCheck'),
+    meta: {
+      isPC : true,
+      extra_page : true,
+    },
+  },
   {
     path: '/pc/customers',
     name: 'customers',

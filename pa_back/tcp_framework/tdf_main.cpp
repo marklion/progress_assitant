@@ -29,13 +29,15 @@ tdf_main tdf_main::m_inst;
 static int g_main2work[2];
 static int g_work2main[2];
 
-struct tdf_async_data {
+struct tdf_async_data
+{
     tdf_async_proc m_proc;
     void *m_private;
     std::string m_chrct;
 };
 
 static int cur_thread_count = 0;
+static pthread_mutex_t g_thread_pool_lock = PTHREAD_MUTEX_INITIALIZER;
 static void work_thread_main_loop()
 {
     std::cout << "sssss" << std::endl;
@@ -48,7 +50,9 @@ static void work_thread_main_loop()
         {
             sleep(1);
         }
+        pthread_mutex_lock(&g_thread_pool_lock);
         cur_thread_count++;
+        pthread_mutex_unlock(&g_thread_pool_lock);
         std::thread wt(
             [=](tdf_async_data *_private)
             {
@@ -57,8 +61,11 @@ static void work_thread_main_loop()
                     _private->m_proc(_private->m_private, _private->m_chrct);
                 }
                 delete _private;
+                pthread_mutex_lock(&g_thread_pool_lock);
                 cur_thread_count--;
-            }, pcoming);
+                pthread_mutex_unlock(&g_thread_pool_lock);
+            },
+            pcoming);
         wt.detach();
     }
 }

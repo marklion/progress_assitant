@@ -1642,6 +1642,11 @@ public:
                         tmp.plan_id = single_plan.get_pri_id();
                         tmp.plan_order = std::to_string(single_plan.create_time) + std::to_string(single_plan.get_pri_id());
                         tmp.vichele_id = vichele.get_pri_id();
+                        auto lic_set = get_lic_set(vichele.get_pri_id(), true);
+                        if (lic_set.size() > 0 && pa_sql_sec_check_set::lic_is_valid(lic_set, *company))
+                        {
+                            tmp.sec_check_passed = true;
+                        }
                         vichele_stuff_statistics one_item;
                         one_item.vichele = tmp;
                         one_item.stuff_name = itr.name;
@@ -2103,6 +2108,60 @@ public:
         }
     }
 
+    std::vector<std::string> get_lic_set(int _id, bool care_expired = false)
+    {
+        std::vector<std::string> ret;
+        bool expired = false;
+
+        auto svi = sqlite_orm::search_record<pa_sql_single_vichele>(_id);
+        if (svi)
+        {
+            auto tmp_driver = svi->get_parent<pa_sql_driver>("driver");
+            auto mv = svi->get_parent<pa_sql_vichele>("main_vichele");
+            auto bv = svi->get_parent<pa_sql_vichele_behind>("behind_vichele");
+            if (tmp_driver && mv && bv)
+            {
+                auto driver = sqlite_orm::search_record<pa_sql_driver>("silent_id IS NOT NULL AND silent_id != '' AND phone == '%s'", tmp_driver->phone.c_str());
+                if (driver)
+                {
+                    if (!driver->license_is_valid())
+                    {
+
+                        expired = true;
+                    }
+                    std::vector<driver_license_info> tmp;
+                    get_self_all_license_info(tmp, driver->silent_id);
+                    for (auto &itr : tmp)
+                    {
+                        ret.push_back(itr.attachment_path);
+                    }
+                }
+                if (!mv->license_is_valid() || !bv->license_is_valid())
+                {
+                    expired = true;
+                }
+                std::vector<vehicle_license_info> tmp;
+                get_license_by_vehicle_number(tmp, mv->number);
+                for (auto &itr : tmp)
+                {
+                    ret.push_back(itr.attachment_path);
+                }
+                tmp.clear();
+                get_license_by_vehicle_number(tmp, bv->number);
+                for (auto &itr : tmp)
+                {
+                    ret.push_back(itr.attachment_path);
+                }
+            }
+        }
+        if (expired && care_expired)
+        {
+            ret.clear();
+        }
+
+        return ret;
+    }
+
     virtual void get_today_driver_info(std::vector<today_driver_info> &_return, const std::string &silent_id)
     {
         if (silent_id.length() <= 0)
@@ -2115,15 +2174,18 @@ public:
         {
             sample_phone = sample_driver->phone;
         }
+
         auto drivers = sqlite_orm::search_record_all<pa_sql_driver>("phone == '%s'", sample_phone.c_str());
         for (auto &itr : drivers)
         {
-            auto related_plans = sqlite_orm::search_record_all<pa_sql_plan>("status == 3 AND is_cancel == 0");
-            for (auto &single_plan : related_plans)
+            auto related_single_vicheles = itr.get_all_children<pa_sql_single_vichele>("driver", "finish == 0");
+            for (auto &single_sv : related_single_vicheles)
             {
-                auto related_single_vicheles = single_plan.get_all_children<pa_sql_single_vichele>("belong_plan", "finish == 0 AND driver_ext_key == %ld", itr.get_pri_id());
-                for (auto &info : related_single_vicheles)
+                auto p_single_plan = single_sv.get_parent<pa_sql_plan>("belong_plan");
+                if (p_single_plan && p_single_plan->status == 3 && p_single_plan->is_cancel == 0)
                 {
+                    auto &info = single_sv;
+                    auto &single_plan = *p_single_plan;
                     auto main_vichele = info.get_parent<pa_sql_vichele>("main_vichele");
                     auto behind_vichele = info.get_parent<pa_sql_vichele_behind>("behind_vichele");
                     auto stuff_info = single_plan.get_parent<pa_sql_stuff_info>("belong_stuff");
@@ -2182,12 +2244,28 @@ public:
                                     tmp.can_enter &= false;
                                 }
                             }
+                            if (ch.company_customize_need(sale_company->name, company_management_handler::need_sec_check))
+                            {
+                                tmp.need_sec_check = true;
+                                auto tmp_set = get_lic_set(single_sv.get_pri_id(), true);
+                                if (pa_sql_sec_check_set::lic_is_valid(tmp_set, *sale_company))
+                                {
+                                    tmp.can_enter &= true;
+                                    tmp.sec_check_passed = true;
+                                }
+                                else
+                                {
+                                    tmp.can_enter &= false;
+                                    tmp.sec_check_passed = false;
+                                }
+                            }
                             _return.push_back(tmp);
                         }
                     }
                 }
             }
         }
+
         auto related_stay_alone_vichele = sqlite_orm::search_record_all<pa_sql_vichele_stay_alone>("status == 1 AND is_drop == 0 AND driver_phone == '%s'", sample_phone.c_str());
         for (auto &itr : related_stay_alone_vichele)
         {
@@ -2665,6 +2743,37 @@ public:
             plan_ids.push_back(itr.get_pri_id());
         }
         this->export_plan(_return, ssid, plan_ids);
+    }
+
+    virtual bool sec_check_pass(const std::string &ssid, const int64_t vehicle_id)
+    {
+        bool ret = false;
+        auto company = PA_DATAOPT_get_company_by_ssid(ssid);
+        if (!company)
+        {
+            PA_RETURN_NOPRIVA_MSG();
+        }
+        auto lic_set = get_lic_set(vehicle_id, true);
+        if (lic_set.size() <= 0)
+        {
+            PA_RETURN_MSG("证件不合法无法审批");
+        }
+        ret = pa_sql_sec_check_set::approve_lic(lic_set, *company);
+
+        return ret;
+    }
+    virtual bool sec_check_reject(const std::string &ssid, const int64_t vehicle_id)
+    {
+        bool ret = false;
+        auto company = PA_DATAOPT_get_company_by_ssid(ssid);
+        if (!company)
+        {
+            PA_RETURN_NOPRIVA_MSG();
+        }
+        auto lic_set = get_lic_set(vehicle_id);
+        pa_sql_sec_check_set::reject_lic(lic_set, *company);
+
+        return true;
     }
 };
 

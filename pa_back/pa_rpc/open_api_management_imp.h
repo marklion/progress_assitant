@@ -1203,7 +1203,7 @@ public:
         if (svr)
         {
             svr->has_p = 1;
-            svr->update_record();
+            ret = svr->update_record();
         }
 
         return ret;

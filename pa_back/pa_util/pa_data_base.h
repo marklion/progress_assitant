@@ -891,10 +891,12 @@ public:
 struct license_data_abs : public sql_tree_base{
     std::string attachment_path;
     std::string expire_date;
+    int need_check = 0;
     virtual std::vector<sqlite_orm_column> self_columns_defined() {
         std::vector<sqlite_orm_column> ret;
         ret.push_back(sqlite_orm_column("attachment_path", sqlite_orm_column::STRING, &attachment_path));
         ret.push_back(sqlite_orm_column("expire_date", sqlite_orm_column::STRING, &expire_date));
+        ret.push_back(sqlite_orm_column("need_check", sqlite_orm_column::INTEGER, &need_check));
 
         return ret;
     }
@@ -911,16 +913,90 @@ public:
     }
 };
 
-class pa_sql_balance_history:public sql_tree_base {
+class pa_sql_sec_check_set : public sql_tree_base {
+public:
+    std::string lic_set;
+    pa_sql_sec_check_set() {
+        add_parent_type<pa_sql_company>("belong_company");
+    }
+    virtual std::vector<sqlite_orm_column> self_columns_defined() {
+        std::vector<sqlite_orm_column> ret;
+        ret.push_back(sqlite_orm_column("lic_set", sqlite_orm_column::STRING, &lic_set));
+
+        return ret;
+    }
+
+    virtual std::string table_name()
+    {
+        return "sec_check_set_table";
+    }
+    static void reject_lic(std::vector<std::string> lic_id_set, pa_sql_company &_company)
+    {
+        std::string lic_set_string;
+
+        std::sort(lic_id_set.begin(), lic_id_set.end());
+        for (auto &itr : lic_id_set)
+        {
+            lic_set_string += itr + "|";
+        }
+        lic_set_string = lic_set_string.substr(0, lic_set_string.length() - 1);
+        auto scs = _company.get_children<pa_sql_sec_check_set>("belong_company", "lic_set == '%s'", lic_set_string.c_str());
+        if (scs)
+        {
+            scs->remove_record();
+        }
+    }
+    static bool approve_lic(std::vector<std::string> lic_id_set, pa_sql_company &_company)
+    {
+        bool ret = true;
+        pa_sql_sec_check_set tmp;
+        std::string lic_set_string;
+
+        std::sort(lic_id_set.begin(), lic_id_set.end());
+        for (auto &itr : lic_id_set)
+        {
+            lic_set_string += itr + "|";
+        }
+        tmp.lic_set = lic_set_string.substr(0, lic_set_string.length() - 1);
+        tmp.set_parent(_company, "belong_company");
+        ret = tmp.insert_record();
+
+        return ret;
+    }
+    static bool lic_is_valid(std::vector<std::string> &_lic_set, pa_sql_company &_company)
+    {
+        bool ret = false;
+        std::sort(_lic_set.begin(), _lic_set.end());
+        std::string lic_set_string;
+        for (auto &itr : _lic_set)
+        {
+            lic_set_string += itr + "|";
+        }
+        lic_set_string = lic_set_string.substr(0, lic_set_string.length() - 1);
+
+        auto scs = _company.get_children<pa_sql_sec_check_set>("belong_company", "lic_set == '%s'", lic_set_string.c_str());
+        if (scs)
+        {
+            ret = true;
+        }
+
+        return ret;
+    }
+};
+
+class pa_sql_balance_history : public sql_tree_base
+{
 public:
     std::string account;
     std::string timestamp;
     std::string reason;
     double balance_before_change = 0;
-    pa_sql_balance_history() {
+    pa_sql_balance_history()
+    {
         add_parent_type<pa_sql_contract>("belong_contract");
     }
-    virtual std::vector<sqlite_orm_column> self_columns_defined() {
+    virtual std::vector<sqlite_orm_column> self_columns_defined()
+    {
         std::vector<sqlite_orm_column> ret;
         ret.push_back(sqlite_orm_column("account", sqlite_orm_column::STRING, &account));
         ret.push_back(sqlite_orm_column("timestamp", sqlite_orm_column::STRING, &timestamp));
@@ -1040,9 +1116,11 @@ public:
     }
 };
 
-class pa_sql_vehicle_license:public license_data_abs {
+class pa_sql_vehicle_license : public license_data_abs
+{
 public:
-    pa_sql_vehicle_license() {
+    pa_sql_vehicle_license()
+    {
         add_parent_type<pa_sql_vichele>("belong_main_vehicle");
         add_parent_type<pa_sql_vichele_behind>("belong_behind_vehicle");
     }
