@@ -314,12 +314,13 @@ export default {
             });
         },
         reset_user: function () {
+            var vue_this = this;
             this.$dialog.confirm({
                 title: '重置确认',
                 message: '只有电话或身份证等信息输入错误时才需要重置，确认重置吗？',
             }).then(() => {
-                this.$dialog.alert({
-                    message: "请联系送货或收货公司负责人操作重置"
+                vue_this.$call_remote_process("stuff_plan_management", "driver_silent_unregister", [vue_this.silent_id]).then(function () {
+                    vue_this.$router.go(0);
                 });
             });
         },
