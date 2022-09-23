@@ -6,6 +6,7 @@
 #include "../pa_util/pa_utils.h"
 #include "stuff_plan_management_imp.h"
 #include "company_management_imp.h"
+#include "user_management_imp.h"
 #include <sstream>
 
 #define OPEN_API_MSG_NOCOMPANY "company does not exist"
@@ -1204,6 +1205,120 @@ public:
         {
             svr->has_p = 1;
             ret = svr->update_record();
+        }
+
+        return ret;
+    }
+
+    std::unique_ptr<pa_sql_stuff_info> fetch_stuff_info(const std::string &_stuff_name, pa_sql_company &_company)
+    {
+        auto found_stuff = _company.get_children<pa_sql_stuff_info>("belong_company", "name == '%s'", _stuff_name.c_str());
+        if (!found_stuff)
+        {
+            pa_sql_stuff_info tmp;
+            tmp.name = _stuff_name;
+            tmp.price = 1;
+            tmp.set_parent(_company, "belong_company");
+            tmp.insert_record();
+        }
+
+        return _company.get_children<pa_sql_stuff_info>("belong_company", "name == '%s'", _stuff_name.c_str());
+    }
+
+    virtual void proc_create_plan(std::string &_return, const std::string &token, const create_plan_req &_req)
+    {
+        log_audit_basedon_token(token, __FUNCTION__);
+        auto company = _get_token_company(token);
+        if (!company)
+        {
+            PA_RETURN_MSG(OPEN_API_MSG_NO_PERMISSION);
+        }
+        auto si = fetch_stuff_info(_req.stuffName, *company);
+        if (!si)
+        {
+            PA_RETURN_MSG("failed to specify stuff");
+        }
+        vichele_in_plan single_vehicle;
+        single_vehicle.main_vichele = _req.plateNo;
+        single_vehicle.behind_vichele = _req.behindPlateNo;
+        single_vehicle.driver_name = _req.driverName;
+        single_vehicle.driver_id = _req.driverID;
+        single_vehicle.driver_phone = _req.driverPhone;
+        single_vehicle.drop_address = _req.deliverAddress;
+        single_vehicle.use_for = _req.userFor == "气站"?_req.userFor:"气化";
+        stuff_plan tmp;
+        tmp.type_id = si->get_pri_id();
+        tmp.plan_time = _req.arriveDate.length()>0?_req.arriveDate:PA_DATAOPT_current_time().substr(0, 10);
+        tmp.name = _req.customerName;
+        tmp.price = 1;
+        tmp.comment = "第三方接口调用";
+        tmp.vichele_info.push_back(single_vehicle);
+        auto pric_user = company->get_children<pa_sql_userinfo>("belong_company");
+        if (pric_user)
+        {
+            auto lg_info = pric_user->get_children<pa_sql_userlogin>("online_user");
+            if (lg_info)
+            {
+                stuff_plan_management_handler spmh;
+                user_management_handler umh;
+                driver_info tmp_driver;
+                tmp_driver.name = _req.driverName;
+                tmp_driver.phone = _req.driverPhone;
+                try
+                {
+                    umh.bind_new_vichele(lg_info->ssid, _req.plateNo, true);
+                }
+                catch (...)
+                {
+                }
+                try
+                {
+                    umh.bind_new_vichele(lg_info->ssid, _req.behindPlateNo, false);
+                }
+                catch (...)
+                {
+                }
+                try
+                {
+                    umh.bind_new_driver(lg_info->ssid, tmp_driver);
+                }
+                catch (...)
+                {
+                }
+                std::string vrf_result;
+                spmh.verify_plan(vrf_result, tmp, lg_info->ssid);
+                if (vrf_result.size() > 0)
+                {
+                    PA_RETURN_MSG(vrf_result);
+                }
+                auto order_number = spmh.create_plan(tmp, lg_info->ssid, _req.customerName);
+                if (order_number > 0)
+                {
+                    _return = std::to_string(order_number);
+                    spmh.confirm_plan(order_number, lg_info->ssid, "第三方接口调用");
+                    spmh.confirm_pay(order_number, lg_info->ssid,"第三方接口调用");
+                }
+            }
+        }
+    }
+    virtual bool proc_cancel_plan(const std::string &token, const std::string &_order_number)
+    {
+        bool ret = false;
+        log_audit_basedon_token(token, __FUNCTION__);
+        auto company = _get_token_company(token);
+        if (!company)
+        {
+            PA_RETURN_MSG(OPEN_API_MSG_NO_PERMISSION);
+        }
+        auto pric_user = company->get_children<pa_sql_userinfo>("belong_company");
+        if (pric_user)
+        {
+            auto lg_info = pric_user->get_children<pa_sql_userlogin>("online_user");
+            if (lg_info)
+            {
+                stuff_plan_management_handler spmh;
+                ret = spmh.except_close(atoi(_order_number.c_str()), lg_info->ssid, "第三方调用关闭");
+            }
         }
 
         return ret;

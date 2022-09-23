@@ -901,6 +901,7 @@ public:
                 found_vichele_info->seal_no = itr.seal_no;
                 found_vichele_info->has_p = 0;
                 found_vichele_info->update_record();
+                PA_DATAOPT_deliver_event_deliver(*found_vichele_info);
                 if (a_comapny_info && b_comapny_info)
                 {
                     change_balance_by_deliver(*a_comapny_info, *b_comapny_info, found_vichele_info->count * plan->price);
@@ -2595,18 +2596,17 @@ public:
             PA_RETURN_NOPRIVA_MSG();
         }
         auto driver = sqlite_orm::search_record<pa_sql_driver>("phone == '%s' AND silent_id != ''", phone.c_str());
-        if (!driver)
+        if (driver)
         {
-            PA_RETURN_NOPRIVA_MSG();
-        }
-        auto all_dl = driver->get_all_children<pa_sql_driver_license>("belong_driver");
-        for (auto &itr : all_dl)
-        {
-            driver_license_info tmp;
-            tmp.attachment_path = itr.attachment_path;
-            tmp.expire_date = itr.expire_date;
-            tmp.id = itr.get_pri_id();
-            _return.push_back(tmp);
+            auto all_dl = driver->get_all_children<pa_sql_driver_license>("belong_driver");
+            for (auto &itr : all_dl)
+            {
+                driver_license_info tmp;
+                tmp.attachment_path = itr.attachment_path;
+                tmp.expire_date = itr.expire_date;
+                tmp.id = itr.get_pri_id();
+                _return.push_back(tmp);
+            }
         }
     }
     virtual void get_self_all_license_info(std::vector<driver_license_info> &_return, const std::string &silent_id)

@@ -23,6 +23,8 @@ public:
     std::string stamp_pic;
     std::string zc_url;
     std::string zh_ssid;
+    std::string event_types;
+    std::string remote_event_url;
 
     virtual std::vector<sqlite_orm_column> self_columns_defined()
     {
@@ -43,6 +45,8 @@ public:
         ret.push_back(sqlite_orm_column("stamp_pic", sqlite_orm_column::STRING, &stamp_pic));
         ret.push_back(sqlite_orm_column("zc_url", sqlite_orm_column::STRING, &zc_url));
         ret.push_back(sqlite_orm_column("zh_ssid", sqlite_orm_column::STRING, &zh_ssid));
+        ret.push_back(sqlite_orm_column("event_types", sqlite_orm_column::STRING, &event_types));
+        ret.push_back(sqlite_orm_column("remote_event_url", sqlite_orm_column::STRING, &remote_event_url));
 
         return ret;
     }
@@ -1128,6 +1132,26 @@ public:
     virtual std::string table_name()
     {
         return "vehicle_license_table";
+    }
+};
+
+class pa_sql_event_que_item:public sql_tree_base{
+public:
+    std::string req_itself;
+    pa_sql_event_que_item() {
+        add_parent_type<pa_sql_company>("belong_company");
+    }
+    virtual std::vector<sqlite_orm_column> self_columns_defined()
+    {
+        std::vector<sqlite_orm_column> ret;
+        ret.push_back(sqlite_orm_column("req_itself", sqlite_orm_column::STRING, &req_itself));
+
+        return ret;
+    }
+
+    virtual std::string table_name()
+    {
+        return "event_que_item_table";
     }
 };
 
