@@ -7,10 +7,28 @@
         <van-field v-model="dms_url" label="dms_url" />
         <van-field v-model="zc_url" label="zc_url" />
         <van-field v-model="zh_ssid" label="zh_ssid" />
+        <van-field v-model="remote_event_url" label="事件服务url" />
         <div style="margin: 16px;">
             <van-button round block type="info" native-type="submit">提交</van-button>
         </div>
     </van-form>
+    <van-row type="flex" align="center" justify="space-between">
+        <van-col :span="20">
+            <van-divider>订阅事件</van-divider>
+        </van-col>
+        <van-col :span="4">
+            <van-button block type="primary" size="small" @click="add_event_pop_show = true">增加</van-button>
+        </van-col>
+    </van-row>
+    <van-cell v-for="(single_event, index) in event_types" :key="index" :title="single_event">
+        <template #right-icon>
+            <van-button type="danger" size="small" @click="del_event(single_event)">删除</van-button>
+        </template>
+    </van-cell>
+    <van-popup v-model="add_event_pop_show" position="bottom">
+        <van-picker show-toolbar :columns="['p_weight', 'm_weight','deliever']" @confirm="add_event" @cancel="add_event_pop_show = false" />
+    </van-popup>
+
     <van-row type="flex" align="center" justify="space-between">
         <van-col :span="20">
             <van-divider>GPS定位物料</van-divider>
@@ -79,14 +97,34 @@ export default {
             ctrl_url: '',
             dms_url: '',
             token: '',
-            zh_ssid:"",
-            zc_url:"",
+            zh_ssid: "",
+            remote_event_url: "",
+            zc_url: "",
             gps_stuff: [],
             new_stuff: '',
             show_new_stuff_diag: false,
+            add_event_pop_show: false,
+            event_types: [],
         };
     },
     methods: {
+        add_event: function (_event_name) {
+            var vue_this = this;
+            vue_this.$call_remote_process("company_management", "add_event_sub", [vue_this.$cookies.get('pa_ssid'), _event_name]).then(function (resp) {
+                if (resp) {
+                    vue_this.init_event_types();
+                    vue_this.add_event_pop_show = false;
+                }
+            });
+        },
+        del_event: function (_event_name) {
+            var vue_this = this;
+            vue_this.$call_remote_process("company_management", "del_event_sub", [vue_this.$cookies.get('pa_ssid'), _event_name]).then(function (resp) {
+                if (resp) {
+                    vue_this.init_event_types();
+                }
+            });
+        },
         init_dev_info: function () {
             var vue_this = this;
             vue_this.$call_remote_process("company_management", 'get_third_info', [vue_this.$cookies.get('pa_ssid')]).then(function (resp) {
@@ -96,6 +134,7 @@ export default {
                 vue_this.token = resp.token;
                 vue_this.zc_url = resp.zc_url;
                 vue_this.zh_ssid = resp.zh_ssid;
+                vue_this.remote_event_url = resp.remote_event_url;
             });
         },
         set_dev_info: function () {
@@ -107,6 +146,7 @@ export default {
                 token: vue_this.token,
                 zh_ssid: vue_this.zh_ssid,
                 zc_url: vue_this.zc_url,
+                remote_event_url: vue_this.remote_event_url,
             }, vue_this.$cookies.get('pa_ssid')]).then(function (resp) {
                 if (resp) {
                     vue_this.init_dev_info();
@@ -140,10 +180,20 @@ export default {
                 });
             });
         },
+        init_event_types: function () {
+            var vue_this = this;
+            vue_this.$call_remote_process("company_management", "get_event_sub", [vue_this.$store.state.userinfo.company]).then(function (resp) {
+                vue_this.event_types = [];
+                resp.forEach((element, index) => {
+                    vue_this.$set(vue_this.event_types, index, element);
+                });
+            });
+        },
     },
     beforeMount: function () {
         this.init_dev_info();
         this.init_gps_stuff();
+        this.init_event_types();
     },
 }
 </script>

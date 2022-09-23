@@ -916,6 +916,7 @@ public:
         company->third_token = _info.token;
         company->zc_url = _info.zc_url;
         company->zh_ssid = _info.zh_ssid;
+        company->remote_event_url = _info.remote_event_url;
 
         ret = company->update_record();
 
@@ -940,6 +941,7 @@ public:
         _return.token = company->third_token;
         _return.zc_url = company->zc_url;
         _return.zh_ssid = company->zh_ssid;
+        _return.remote_event_url = company->remote_event_url;
     }
 
     virtual void get_related_company(std::vector<std::string> &_return, const std::string &ssid)
@@ -1180,6 +1182,57 @@ public:
             break;
         }
         return ret;
+    }
+
+    virtual bool add_event_sub(const std::string &ssid, const std::string &event_name)
+    {
+        bool ret = false;
+        auto company = PA_DATAOPT_get_company_by_ssid(ssid);
+        if (!company)
+        {
+            PA_RETURN_NOCOMPANY_MSG();
+        }
+
+        auto evts = company->event_types;
+        std::vector<std::string> evt_vs;
+        if (std::string::npos == evts.find(event_name))
+        {
+            evts.append(event_name + ";");
+        }
+        company->event_types = evts;
+        ret = company->update_record();
+
+        return ret;
+    }
+    virtual bool del_event_sub(const std::string &ssid, const std::string &event_name)
+    {
+        auto company = PA_DATAOPT_get_company_by_ssid(ssid);
+        if (!company)
+        {
+            PA_RETURN_NOCOMPANY_MSG();
+        }
+        auto pos = company->event_types.find(event_name);
+        if (pos != std::string::npos)
+        {
+            company->event_types.erase(pos, event_name.length() + 1);
+        }
+
+        return company->update_record();
+    }
+    virtual void get_event_sub(std::vector<std::string> &_return, const std::string &company_name)
+    {
+        auto company = sqlite_orm::search_record<pa_sql_company>("name = '%s'", company_name.c_str());
+        if (company)
+        {
+            auto last_events = company->event_types;
+            auto found_pos = last_events.find_first_of(';');
+            while (found_pos!= std::string::npos)
+            {
+                _return.push_back(last_events.substr(0, found_pos));
+                last_events.erase(0, found_pos + 1);
+                found_pos = last_events.find_first_of(';');
+            }
+        }
     }
 };
 #endif // _COMPANY_MANAGEMENT_IMP_H_

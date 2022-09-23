@@ -272,6 +272,39 @@ app.post('/pa_rest/push_p', async (req, res) => {
 
     res.send(ret);
 });
+
+app.post('/pa_rest/create_plan', async (req, res)=>{
+    var token = req.query.token;
+    var ret = { err_msg: '无权限' };
+    try {
+        var resp = await request_rpc("open_api_management", 'proc_create_plan', [token, req.body]);
+        if (resp) {
+            ret.err_msg = "";
+            ret.result = { orderNumber: resp };
+        }
+    } catch (error) {
+        ret = { err_msg: error.msg };
+    }
+
+    res.send(ret);
+
+});
+app.post('/pa_rest/cancel_plan', async (req, res)=>{
+    var token = req.query.token;
+    var ret = { err_msg: '无权限' };
+    try {
+        var resp = await request_rpc("open_api_management", 'proc_cancel_plan', [token, req.body.orderNumber]);
+        if (resp) {
+            ret.err_msg = "";
+        }
+    } catch (error) {
+        ret = { err_msg: error.msg };
+    }
+
+    res.send(ret);
+
+});
+
 app.listen(port, () => {
     console.log('rest is runing');
 });

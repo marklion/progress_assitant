@@ -124,6 +124,7 @@ struct third_dev_info {
     4:string token,
     5:string zc_url,
     6:string zh_ssid,
+    7:string remote_event_url,
 }
 
 struct company_customize {
@@ -178,6 +179,9 @@ service company_management {
     bool del_stamp_pic(1:string ssid) throws (1:gen_exp e),
     string get_stamp_pic(1:string company_name) throws (1:gen_exp e),
     company_customize get_customize(1:string company_name) throws (1:gen_exp e),
+    bool add_event_sub(1:string ssid, 2:string event_name) throws (1:gen_exp e),
+    bool del_event_sub(1:string ssid, 2:string event_name) throws (1:gen_exp e),
+    list<string> get_event_sub(1:string company_name) throws (1:gen_exp e),
 }
 
 struct bidding_customer{
@@ -576,6 +580,19 @@ struct today_plan_brief_info{
     1:string total_vehicle;
 }
 
+struct create_plan_req {
+    1:string plateNo,
+	2:string behindPlateNo,
+	3:string driverName,
+	4:string driverPhone,
+	5:string driverID,
+	6:string userFor,
+	7:string deliverAddress,
+	8:string arriveDate,
+	9:string customerName,
+    10:string stuffName,
+}
+
 service open_api_management {
     bool register_api_user(1:string company_name, 2:string email, 3:string password) throws (1:gen_exp e),
     bool verify_email_code(1:string email, 2:string code) throws (1:gen_exp e),
@@ -599,6 +616,8 @@ service open_api_management {
     today_plan_brief_info get_today_brief_info(1:string token) throws (1:gen_exp e),
     bool undo_vehicle_weight(1:string token, 2:string id) throws (1:gen_exp e),
     bool record_p_weight(1:string token, 2:string id) throws (1:gen_exp e),
+    string proc_create_plan(1:string token, 2:create_plan_req _req) throws (1:gen_exp e),
+    bool proc_cancel_plan(1:string token, 2:string _order_number) throws (1:gen_exp e),
 }
 
 struct vichele_stay_alone {

@@ -1203,3 +1203,45 @@ bool PA_DATAOPT_get_price_timer(pa_sql_stuff_info &_stuff, std::string &expired_
 
     return ret;
 }
+void PA_DATAOPT_deliver_event_deliver(pa_sql_single_vichele &_single_vehicle)
+{
+    auto mv = _single_vehicle.get_parent<pa_sql_vichele>("main_vichele");
+    auto bv = _single_vehicle.get_parent<pa_sql_vichele_behind>("behind_vichele");
+    auto driver = _single_vehicle.get_parent<pa_sql_driver>("driver");
+    auto plan = _single_vehicle.get_parent<pa_sql_plan>("belong_plan");
+    auto company = PA_DATAOPT_get_sale_company(_single_vehicle);
+
+    if (mv && bv && driver && plan && company && company->remote_event_url.length() > 0 && company->event_types.find("deliver") != std::string::npos)
+    {
+        neb::CJsonObject req;
+        req.Add("orderNumber", std::to_string(plan->get_pri_id()));
+        req.Add("plateNo", mv->number);
+        req.Add("pWeight", _single_vehicle.p_weight);
+        req.Add("mWeight", _single_vehicle.m_weight);
+        req.Add("pTime", _single_vehicle.deliver_p_timestamp);
+        req.Add("mTime", _single_vehicle.deliver_timestamp);
+        req.Add("jWeight",std::abs(_single_vehicle.p_weight - _single_vehicle.m_weight));
+
+        pa_sql_event_que_item tmp;
+        tmp.req_itself = req.ToString();
+        tmp.set_parent(*company, "belong_company");
+        tmp.insert_record();
+        PA_UTILS_post_json_to_third(
+            company->remote_event_url + "/deliver",
+            req.ToString(), "", "",
+            [](neb::CJsonObject &_resp, third_dev_req_param &, const std::string &_req){
+                if (_resp("finishHandle") == "true")
+                {
+                    auto item = sqlite_orm::search_record<pa_sql_event_que_item>("req_itself == '%s'", _req.c_str());
+                    if (item)
+                    {
+                        item->remove_record();
+                    }
+                }
+                else
+                {
+                    g_audit_log.err("deliver event failure. req:%s, resp:%s", _req.c_str(), _resp.ToString().c_str());
+                }
+        });
+    }
+}
