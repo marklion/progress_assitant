@@ -50,6 +50,11 @@
                 </van-row>
 
             </div>
+            <van-cell title="近七日执行率">
+                <div>计划{{single_contract.vehicle_count}}车</div>
+                <div>实拉{{single_contract.deliver_count}}车</div>
+                <div v-if="single_contract.vehicle_count != 0">执行率:{{Math.round(single_contract.deliver_count/ single_contract.vehicle_count * 10000) / 100 + "%"}}</div>
+            </van-cell>
         </div>
     </van-cell-group>
     <van-action-sheet v-model="popover_switch" :actions="actions" @select="onSelect" />
@@ -273,7 +278,15 @@ export default {
                                 single_contract.follow_stuff.push(element.name);
                             }
                         });
-                        vue_this.$set(vue_this.contract, index, single_contract);
+                        var end_date = new Date();
+                        var end_date_string = vue_this.formatDateTime(end_date);
+                        end_date.setDate(end_date.getDate() - 7);
+                        var begin_date_string = vue_this.formatDateTime(end_date);
+                        vue_this.$call_remote_process("company_management", "get_execute_record", [single_contract.id, begin_date_string, end_date_string]).then(function (resp) {
+                            single_contract.vehicle_count = resp.vehicle_count;
+                            single_contract.deliver_count = resp.deliver_count;
+                            vue_this.$set(vue_this.contract, index, single_contract);
+                        });
                     });
                 });
             });

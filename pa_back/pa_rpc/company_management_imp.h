@@ -1234,5 +1234,23 @@ public:
             }
         }
     }
+
+    virtual void get_execute_record(execute_record_info &_return, const int64_t contract_id, const std::string &begin_date, const std::string &end_date)
+    {
+        auto contract = sqlite_orm::search_record<pa_sql_contract>(contract_id);
+        if (contract)
+        {
+            auto ers = contract->get_all_children<pa_sql_execute_record>("belong_contract", "date(plan_date) >= ('%s') AND date(plan_date) <= date('%s')", begin_date.c_str(), end_date.c_str());
+            int64_t vc = 0;
+            int64_t dc = 0;
+            for (auto &itr : ers)
+            {
+                vc += itr.plan_vehicle_count;
+                dc += itr.deliver_count;
+            }
+            _return.deliver_count = dc;
+            _return.vehicle_count = vc;
+        }
+    }
 };
 #endif // _COMPANY_MANAGEMENT_IMP_H_
