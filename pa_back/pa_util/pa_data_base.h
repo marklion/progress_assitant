@@ -315,6 +315,7 @@ public:
     }
 };
 
+class pa_sql_contract;
 class pa_sql_single_vichele : public sql_tree_base
 {
 public:
@@ -355,7 +356,10 @@ public:
 
         return ret;
     }
+    bool insert_record();
+    bool update_record();
     bool has_been_register();
+    std::unique_ptr<pa_sql_contract> get_related_contract();
 
     virtual std::string table_name()
     {
@@ -1152,6 +1156,30 @@ public:
     virtual std::string table_name()
     {
         return "event_que_item_table";
+    }
+};
+
+class pa_sql_execute_record: public sql_tree_base {
+public:
+    std::string plan_date;
+    int plan_vehicle_count = 0;
+    int deliver_count = 0;
+    pa_sql_execute_record() {
+        add_parent_type<pa_sql_contract>("belong_contract");
+    }
+    virtual std::vector<sqlite_orm_column> self_columns_defined()
+    {
+        std::vector<sqlite_orm_column> ret;
+        ret.push_back(sqlite_orm_column("plan_date", sqlite_orm_column::STRING, &plan_date));
+        ret.push_back(sqlite_orm_column("plan_vehicle_count", sqlite_orm_column::INTEGER, &plan_vehicle_count));
+        ret.push_back(sqlite_orm_column("deliver_count", sqlite_orm_column::INTEGER, &deliver_count));
+
+        return ret;
+    }
+
+    virtual std::string table_name()
+    {
+        return "execute_record_table";
     }
 };
 

@@ -198,6 +198,108 @@ void pa_sql_archive_plan::translate_from_plan(pa_sql_plan &_plan)
     }
 }
 
+std::unique_ptr<pa_sql_execute_record> fetch_execute_record(const std::string &_plan_date, pa_sql_contract &_contract)
+{
+    auto exist_record = _contract.get_children<pa_sql_execute_record>("belong_contract", "plan_date == '%s'", _plan_date.c_str());
+    if (exist_record)
+    {
+        return exist_record;
+    }
+    auto ret = new pa_sql_execute_record();
+    ret->plan_date = _plan_date;
+    ret->set_parent(_contract, "belong_contract");
+    ret->insert_record();
+
+    return std::unique_ptr<pa_sql_execute_record>(ret);
+}
+
+std::unique_ptr<pa_sql_contract> pa_sql_single_vichele::get_related_contract()
+{
+    auto sale_company = PA_DATAOPT_get_sale_company(*this);
+    std::unique_ptr<pa_sql_company> buy_company;
+    auto plan = get_parent<pa_sql_plan>("belong_plan");
+    if (plan)
+    {
+        if (plan->proxy_company.length() > 0)
+        {
+            buy_company.reset(PA_DATAOPT_fetch_company(plan->proxy_company).release());
+        }
+        else
+        {
+            auto user = plan->get_parent<pa_sql_userinfo>("created_by");
+            if (user)
+            {
+                buy_company.reset(user->get_parent<pa_sql_company>("belong_company").release());
+            }
+        }
+    }
+    if (sale_company && buy_company)
+    {
+        return sale_company->get_children<pa_sql_contract>("b_side", "a_side_ext_key == %d", buy_company->get_pri_id());
+    }
+    return std::unique_ptr<pa_sql_contract>();
+}
+
+bool pa_sql_single_vichele::insert_record()
+{
+    bool ret = false;
+    if (sql_tree_base::insert_record())
+    {
+        auto contract = get_related_contract();
+        auto plan = get_parent<pa_sql_plan>("belong_plan");
+        if (contract && plan)
+        {
+            auto er = fetch_execute_record(plan->plan_time.substr(0, 10), *contract);
+            if (er)
+            {
+                er->plan_vehicle_count++;
+                er->update_record();
+            }
+        }
+        ret = true;
+    }
+
+    return ret;
+}
+
+bool pa_sql_single_vichele::update_record()
+{
+    bool ret = false;
+    bool need_inc_deliver = false;
+    auto orig_item = sqlite_orm::search_record<pa_sql_single_vichele>(get_pri_id());
+    if (orig_item)
+    {
+        if (orig_item->finish != finish)
+        {
+            if (finish)
+            {
+                need_inc_deliver = true;
+            }
+
+            auto contract = get_related_contract();
+            auto plan = get_parent<pa_sql_plan>("belong_plan");
+            if (contract && plan)
+            {
+                auto er = fetch_execute_record(plan->plan_time.substr(0, 10), *contract);
+                if (er)
+                {
+                    if (need_inc_deliver)
+                    {
+                        er->deliver_count++;
+                    }
+                    else
+                    {
+                        er->deliver_count--;
+                    }
+                    er->update_record();
+                }
+            }
+        }
+    }
+    ret = sql_tree_base::update_record();
+
+    return ret;
+}
 std::unique_ptr<pa_sql_userinfo> get_sysadmin_user()
 {
     std::unique_ptr<pa_sql_userinfo> ret(new pa_sql_userinfo());
@@ -709,7 +811,7 @@ bool pa_sql_vichele_behind::license_is_valid()
     bool ret = false;
 
     auto vehicles = sqlite_orm::search_record_all<pa_sql_vichele_behind>("number == '%s'", number.c_str());
-    auto an_vl =  sqlite_orm::search_record_all<pa_sql_vichele>("number == '%s'", number.c_str());
+    auto an_vl = sqlite_orm::search_record_all<pa_sql_vichele>("number == '%s'", number.c_str());
     for (auto &single_vehicle : vehicles)
     {
         auto vl = single_vehicle.get_all_children<pa_sql_vehicle_license>("belong_behind_vehicle");

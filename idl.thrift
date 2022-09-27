@@ -98,6 +98,11 @@ struct common_contract {
     10:i64 max_vehicle_limit,
 }
 
+struct execute_record_info {
+    1:i64 vehicle_count,
+    2:i64 deliver_count,
+}
+
 struct real_access_record {
     1:string name,
     2:string logo,
@@ -182,6 +187,7 @@ service company_management {
     bool add_event_sub(1:string ssid, 2:string event_name) throws (1:gen_exp e),
     bool del_event_sub(1:string ssid, 2:string event_name) throws (1:gen_exp e),
     list<string> get_event_sub(1:string company_name) throws (1:gen_exp e),
+    execute_record_info get_execute_record(1:i64 contract_id, 2:string begin_date, 3:string end_date) throws (1:gen_exp e),
 }
 
 struct bidding_customer{
