@@ -242,7 +242,7 @@ std::unique_ptr<pa_sql_contract> pa_sql_single_vichele::get_related_contract()
 
 bool pa_sql_single_vichele::insert_record()
 {
-    bool ret;
+    bool ret = false;
     if (sql_tree_base::insert_record())
     {
         auto contract = get_related_contract();
