@@ -1277,7 +1277,7 @@ public:
 
         return ret;
     }
-    virtual void del_driver_license(const std::string &ssid, const int64_t id)
+    virtual void del_license_require(const std::string &ssid, const int64_t id)
     {
         auto company = PA_DATAOPT_get_company_by_ssid(ssid);
         if (!company || !company->is_sale)
