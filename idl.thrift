@@ -139,6 +139,11 @@ struct company_customize {
     4:bool need_sec_check,
 }
 
+struct license_require_info{
+    1:i64 id,
+    2:string name,
+}
+
 service company_management {
     list<i64> get_all_type(1:string ssid) throws (1:gen_exp e),
     i64 add_type(1:string name, 2:i64 price, 3:string last,  4:string ssid) throws (1:gen_exp e),
@@ -188,6 +193,9 @@ service company_management {
     bool del_event_sub(1:string ssid, 2:string event_name) throws (1:gen_exp e),
     list<string> get_event_sub(1:string company_name) throws (1:gen_exp e),
     execute_record_info get_execute_record(1:i64 contract_id, 2:string begin_date, 3:string end_date) throws (1:gen_exp e),
+    bool add_license_require(1:string ssid, 2:string name) throws (1:gen_exp e),
+    void del_driver_license(1:string ssid, 2:i64 id) throws (1:gen_exp e),
+    list<license_require_info> get_license_require(1:string company_name) throws (1:gen_exp e),
 }
 
 struct bidding_customer{
