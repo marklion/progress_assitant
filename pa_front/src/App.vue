@@ -18,6 +18,7 @@
             <van-tabbar-item v-if="$store.state.userinfo.buyer" replace :to="{name:'Home'}" icon="home-o">主页</van-tabbar-item>
             <van-tabbar-item v-else replace :to="{name:'CompanyHome'}" icon="home-o">主页</van-tabbar-item>
             <van-tabbar-item v-if="(!$store.state.userinfo.buyer && $store.state.userinfo.groupid == 1) || $store.state.userinfo.buyer" replace :to="{name:'CompanyOrder'}" icon="orders-o">订单</van-tabbar-item>
+            <van-tabbar-item v-if="(!$store.state.userinfo.buyer && $store.state.need_sec_check == 1)" replace :to="{name:'SecCheckMobile'}" icon="eye-o">安检</van-tabbar-item>
             <van-tabbar-item replace :to="{name:'Myself'}" icon="user-o">我的</van-tabbar-item>
         </van-tabbar>
         <van-dialog v-model="show_share" title="长按图片发送给联系人">
@@ -94,6 +95,9 @@ export default {
                             }
                         })
                     }
+                    vue_this.$call_remote_process("company_management", "get_customize", [vue_this.$store.state.userinfo.company]).then(function (resp) {
+                        vue_this.$store.commit('set_sec_check', resp.need_sec_check);
+                    });
                 } else {
                     vue_this.$store.commit('set_userinfo', {
                         buyer: true,

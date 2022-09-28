@@ -17,6 +17,7 @@ export default new Vuex.Store({
     is_login:false,
     enter_company:false,
     verify_count_down:0,
+    need_sec_check:false,
   },
   mutations: {
     set_userinfo(state, userinfo){
@@ -30,6 +31,9 @@ export default new Vuex.Store({
     },
     set_verify_count_down(state, _count_down) {
       state.verify_count_down = _count_down;
+    },
+    set_sec_check(state, need_sec_check) {
+      state.need_sec_check = need_sec_check;
     },
   },
   actions: {

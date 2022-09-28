@@ -1183,4 +1183,25 @@ public:
     }
 };
 
+class pa_sql_license_require:public sql_tree_base{
+public:
+    std::string name;
+    pa_sql_license_require() {
+        add_parent_type<pa_sql_company>("belong_company");
+    }
+    virtual std::vector<sqlite_orm_column> self_columns_defined()
+    {
+        std::vector<sqlite_orm_column> ret;
+        ret.push_back(sqlite_orm_column("name", sqlite_orm_column::STRING, &name));
+
+        return ret;
+    }
+
+    virtual std::string table_name()
+    {
+        return "license_require_table";
+    }
+};
+
+
 #endif // _PA_DATABSE_H_

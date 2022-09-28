@@ -85,6 +85,15 @@ const routes = [
       has_go_back: true,
     },
   },
+{
+    path: '/sec_check_mobile',
+    name: 'SecCheckMobile',
+    component: () => import('../views/SecCheckMobile.vue'),
+    meta: {
+      private_title: '安检',
+      has_go_back: true,
+    },
+  },
   {
     path: '/plan_update/:plan_id',
     name: 'PlanUpdate',

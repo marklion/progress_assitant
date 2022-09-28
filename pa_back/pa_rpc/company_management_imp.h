@@ -1252,5 +1252,59 @@ public:
             _return.vehicle_count = vc;
         }
     }
+
+    virtual bool add_license_require(const std::string &ssid, const std::string &name)
+    {
+        bool ret = false;
+        auto company = PA_DATAOPT_get_company_by_ssid(ssid);
+        if (!company || !company->is_sale)
+        {
+            PA_RETURN_NOPRIVA_MSG();
+        }
+
+        auto exist_record = company->get_children<pa_sql_license_require>("belong_company", "name == '%s'", name.c_str());
+        if (exist_record)
+        {
+            ret = true;
+        }
+        else
+        {
+            pa_sql_license_require tmp;
+            tmp.name = name;
+            tmp.set_parent(*company, "belong_company");
+            ret = tmp.insert_record();
+        }
+
+        return ret;
+    }
+    virtual void del_license_require(const std::string &ssid, const int64_t id)
+    {
+        auto company = PA_DATAOPT_get_company_by_ssid(ssid);
+        if (!company || !company->is_sale)
+        {
+            PA_RETURN_NOPRIVA_MSG();
+        }
+
+        auto exist_record = company->get_children<pa_sql_license_require>("belong_company", "PRI_ID == %d", id);
+        if (exist_record)
+        {
+            exist_record->remove_record();
+        }
+    }
+    virtual void get_license_require(std::vector<license_require_info> &_return, const std::string &company_name)
+    {
+        auto company = sqlite_orm::search_record<pa_sql_company>("name = '%s'", company_name.c_str());
+        if (company)
+        {
+            auto lrs = company->get_all_children<pa_sql_license_require>("belong_company");
+            for (auto &itr:lrs)
+            {
+                license_require_info tmp;
+                tmp.name = itr.name;
+                tmp.id = itr.get_pri_id();
+                _return.push_back(tmp);
+            }
+        }
+    }
 };
 #endif // _COMPANY_MANAGEMENT_IMP_H_
