@@ -139,9 +139,23 @@ struct company_customize {
     4:bool need_sec_check,
 }
 
+enum license_use_for {
+    driver,
+    main_vehicle,
+    behind_vehicle,
+}
+
+enum license_input_method {
+    input_content,
+    upload_picture,
+}
+
 struct license_require_info{
     1:i64 id,
     2:string name,
+    3:license_use_for use_for,
+    4:list<license_input_method> input_method,
+    5:string prompt,
 }
 
 service company_management {
@@ -193,7 +207,8 @@ service company_management {
     bool del_event_sub(1:string ssid, 2:string event_name) throws (1:gen_exp e),
     list<string> get_event_sub(1:string company_name) throws (1:gen_exp e),
     execute_record_info get_execute_record(1:i64 contract_id, 2:string begin_date, 3:string end_date) throws (1:gen_exp e),
-    bool add_license_require(1:string ssid, 2:string name) throws (1:gen_exp e),
+    bool add_license_require(1:string ssid, 2:license_require_info lic_info) throws (1:gen_exp e),
+    bool update_license_require(1:string ssid, 2:license_require_info lic_info) throws (1:gen_exp e),
     void del_license_require(1:string ssid, 2:i64 id) throws (1:gen_exp e),
     list<license_require_info> get_license_require(1:string company_name) throws (1:gen_exp e),
 }
@@ -415,6 +430,16 @@ struct vehicle_license_info {
     3:string attachment_path,
 }
 
+struct license_common_data {
+    1:i64 id,
+    2:string expired_date,
+    3:string input_content,
+    4:string attachment_path,
+    5:string related_info,
+    6:i64 related_type_id,
+    7:bool has_confirmed,
+}
+
 service stuff_plan_management {
     i64 create_plan(1:stuff_plan plan, 2:string ssid, 3:string proxy_company) throws (1:gen_exp e),
     list<plan_status> get_created_plan(1:string ssid, 2:i64 anchor, 3:i64 status, 4:string stuff_name, 5:string company_name, 6:string plan_date) throws (1:gen_exp e),
@@ -467,6 +492,10 @@ service stuff_plan_management {
     string export_plan_by_deliver_date(1:string ssid, 2:string deliver_date) throws (1:gen_exp e),
     bool sec_check_pass(1:string ssid, 2:i64 vehicle_id) throws (1:gen_exp e),
     bool sec_check_reject(1:string ssid, 2:i64 vehicle_id) throws (1:gen_exp e),
+    bool add_sec_check_data(1:string silent_id, 2:license_common_data lcd) throws (1:gen_exp e),
+    bool update_sec_check_data(1:string silent_id, 2:license_common_data lcd) throws (1:gen_exp e),
+    bool del_sec_check_data(1:string silent_id, 2:license_common_data lcd) throws (1:gen_exp e),
+    license_common_data get_all_sec_check_data(1:i64 related_type_id, 2:string related_info) throws (1:gen_exp e),
 }
 
 struct api_extra_transformation {

@@ -33,7 +33,9 @@
                     <template #right-icon>
                         <div style="margin-left:8px;">
                             <div v-if="single_trans.need_sec_check && !single_trans.sec_check_passed">
-                                需要安检
+                                <van-button type="info" plain size="mini" @click="enter_sec_check_prepare(single_trans.destination_company, single_trans.main_vichele, single_trans.behind_vichele, driver_phone)">
+                                    需要安检
+                                </van-button>
                             </div>
                             <div v-else>
                                 <div v-if="single_trans.need_checkin">
@@ -107,6 +109,10 @@
             </div>
         </van-form>
     </div>
+
+    <van-dialog v-model="sec_check_diag_show" title="安检" closeOnClickOverlay :showConfirmButton="false">
+        <sec-check-diag :company="sec_check_company" :mv="sec_check_mv" :bv="sec_check_bv" :driver="sec_check_driver"></sec-check-diag>
+    </van-dialog>
 </div>
 </template>
 
@@ -127,14 +133,21 @@ import {
     ImagePreview
 } from 'vant';
 import licenseCollapse from '@/components/LicenseCollapse'
+import SecCheckDiag from '@/components/SecCheckDiag'
 
 export default {
     name: 'DriverRegister',
     components: {
-        licenseCollapse
+        licenseCollapse,
+        "sec-check-diag": SecCheckDiag,
     },
     data: function () {
         return {
+            sec_check_company: '',
+            sec_check_mv: '',
+            sec_check_bv: '',
+            sec_check_driver: '',
+            sec_check_diag_show: false,
             driverLicenseList: [],
             vehicleLicense: {},
             is_login: false,
@@ -183,6 +196,13 @@ export default {
         }
     },
     methods: {
+        enter_sec_check_prepare: function (_company, _mv, _bv, _driver) {
+            this.sec_check_company = _company;
+            this.sec_check_mv = _mv;
+            this.sec_check_bv = _bv;
+            this.sec_check_driver = _driver;
+            this.sec_check_diag_show = true;
+        },
         formatDateTime: function (date = new Date()) {
             let y = date.getFullYear();
             let m = date.getMonth() + 1;
