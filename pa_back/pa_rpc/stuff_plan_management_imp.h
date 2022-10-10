@@ -2775,6 +2775,85 @@ public:
 
         return true;
     }
+
+    virtual bool add_sec_check_data(const std::string &silent_id, const license_common_data &lcd)
+    {
+        bool ret = false;
+        auto driver = sqlite_orm::search_record<pa_sql_driver>("silent_id = '%s'", silent_id.c_str());
+        if (!driver)
+        {
+            PA_RETURN_NOPRIVA_MSG();
+        }
+
+        auto lr = sqlite_orm::search_record<pa_sql_license_require>(lcd.related_type_id);
+        if (!lr)
+        {
+            PA_RETURN_NOPRIVA_MSG();
+        }
+
+        auto exist_record = lr->get_children<pa_sql_sec_check_data>("belong_lr", "related_info == '%s'", lcd.related_info.c_str());
+        if (exist_record)
+        {
+            PA_RETURN_NOPRIVA_MSG();
+        }
+
+        pa_sql_sec_check_data tmp;
+        tmp.attachment_path = lcd.attachment_path;
+        tmp.expired_date = lcd.expired_date;
+        tmp.input_content = lcd.input_content;
+        tmp.related_info = lcd.related_info;
+        tmp.set_parent(*lr, "belong_lr");
+        tmp.has_confirmed = 0;
+        ret = tmp.insert_record();
+
+        if (lcd.attachment_path.length() > 0)
+        {
+            std::string file_content;
+            Base64::Decode(lcd.attachment_path, &file_content);
+            auto tmp_path = PA_DATAOPT_store_attach_file(file_content, false, "sec_data_attach" + std::to_string(tmp.get_pri_id()));
+            tmp.attachment_path = tmp_path;
+            ret = tmp.update_record();
+        }
+
+        return ret;
+    }
+    virtual bool update_sec_check_data(const std::string &silent_id, const license_common_data &lcd)
+    {
+        return true;
+    }
+    virtual bool del_sec_check_data(const std::string &silent_id, const license_common_data &lcd)
+    {
+        auto driver = sqlite_orm::search_record<pa_sql_driver>("silent_id = '%s'", silent_id.c_str());
+        if (!driver)
+        {
+            PA_RETURN_NOPRIVA_MSG();
+        }
+        auto exist_record = sqlite_orm::search_record<pa_sql_sec_check_data>(lcd.id);
+        if (exist_record)
+        {
+            exist_record->remove_record();
+        }
+        return true;
+    }
+    virtual void get_all_sec_check_data(license_common_data &_return, const int64_t related_type_id, const std::string &related_info)
+    {
+        auto lr = sqlite_orm::search_record<pa_sql_license_require>(related_type_id);
+        if (lr)
+        {
+            auto scd = lr->get_children<pa_sql_sec_check_data>("belong_lr", "related_info == '%s'", related_info.c_str());
+            if (scd)
+            {
+                _return.attachment_path = scd->attachment_path;
+                _return.expired_date = scd->expired_date;
+                _return.id = scd->get_pri_id();
+                _return.input_content = scd->input_content;
+                _return.related_info = scd->related_info;
+                _return.has_confirmed = scd->has_confirmed;
+                _return.related_type_id = lr->get_pri_id();
+            }
+
+        }
+    }
 };
 
 #endif // _STUFF_PLAN_MANAGEMENT_H_

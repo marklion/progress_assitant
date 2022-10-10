@@ -1253,9 +1253,10 @@ public:
         }
     }
 
-    virtual bool add_license_require(const std::string &ssid, const std::string &name)
+
+    virtual int add_license_require_by_name(const std::string &ssid, const std::string &name)
     {
-        bool ret = false;
+        int ret = -1;
         auto company = PA_DATAOPT_get_company_by_ssid(ssid);
         if (!company || !company->is_sale)
         {
@@ -1265,15 +1266,55 @@ public:
         auto exist_record = company->get_children<pa_sql_license_require>("belong_company", "name == '%s'", name.c_str());
         if (exist_record)
         {
-            ret = true;
+            ret = exist_record->get_pri_id();
         }
         else
         {
             pa_sql_license_require tmp;
             tmp.name = name;
             tmp.set_parent(*company, "belong_company");
-            ret = tmp.insert_record();
+            if (tmp.insert_record())
+            {
+                ret = tmp.get_pri_id();
+            }
         }
+
+        return ret;
+    }
+    virtual bool add_license_require(const std::string &ssid, const license_require_info &lic_info)
+    {
+        bool ret = false;
+        auto tmp = lic_info;
+        tmp.id = add_license_require_by_name(ssid, lic_info.name);
+        ret = update_license_require(ssid, tmp);
+
+        return ret;
+    }
+    virtual bool update_license_require(const std::string &ssid, const license_require_info &lic_info)
+    {
+        bool ret = false;
+
+        auto company = PA_DATAOPT_get_company_by_ssid(ssid);
+        if (!company || !company->is_sale)
+        {
+            PA_RETURN_NOPRIVA_MSG();
+        }
+
+        auto lr = sqlite_orm::search_record<pa_sql_license_require>(lic_info.id);
+        if (!lr)
+        {
+            PA_RETURN_NOPRIVA_MSG();
+        }
+        lr->name = lic_info.name;
+        lr->prompt = lic_info.prompt;
+        lr->input_method = "";
+        for (auto &itr:lic_info.input_method)
+        {
+            lr->input_method.append(std::to_string(itr));
+        }
+        lr->use_for = lic_info.use_for;
+
+        ret = lr->update_record();
 
         return ret;
     }
@@ -1297,11 +1338,17 @@ public:
         if (company)
         {
             auto lrs = company->get_all_children<pa_sql_license_require>("belong_company");
-            for (auto &itr:lrs)
+            for (auto &itr : lrs)
             {
                 license_require_info tmp;
                 tmp.name = itr.name;
                 tmp.id = itr.get_pri_id();
+                for (auto &si:itr.input_method)
+                {
+                    tmp.input_method.push_back(license_input_method::type( si - '0'));
+                }
+                tmp.prompt = itr.prompt;
+                tmp.use_for = license_use_for::type(itr.use_for);
                 _return.push_back(tmp);
             }
         }

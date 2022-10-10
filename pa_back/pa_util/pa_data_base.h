@@ -1186,6 +1186,11 @@ public:
 class pa_sql_license_require:public sql_tree_base{
 public:
     std::string name;
+    std::string prompt;
+    //0:driver 1:main vehicle 2:behind_vehicle
+    int use_for = 0;
+    // 1:content 2:picture
+    std::string input_method;
     pa_sql_license_require() {
         add_parent_type<pa_sql_company>("belong_company");
     }
@@ -1193,6 +1198,9 @@ public:
     {
         std::vector<sqlite_orm_column> ret;
         ret.push_back(sqlite_orm_column("name", sqlite_orm_column::STRING, &name));
+        ret.push_back(sqlite_orm_column("prompt", sqlite_orm_column::STRING, &prompt));
+        ret.push_back(sqlite_orm_column("use_for", sqlite_orm_column::INTEGER, &use_for));
+        ret.push_back(sqlite_orm_column("input_method", sqlite_orm_column::STRING, &input_method));
 
         return ret;
     }
@@ -1200,6 +1208,33 @@ public:
     virtual std::string table_name()
     {
         return "license_require_table";
+    }
+};
+class pa_sql_sec_check_data:public sql_tree_base {
+public:
+    std::string input_content;
+    std::string attachment_path;
+    std::string expired_date;
+    std::string related_info;
+    int has_confirmed = 0;
+    pa_sql_sec_check_data() {
+        add_parent_type<pa_sql_license_require>("belong_lr");
+    }
+    virtual std::vector<sqlite_orm_column> self_columns_defined()
+    {
+        std::vector<sqlite_orm_column> ret;
+        ret.push_back(sqlite_orm_column("input_content", sqlite_orm_column::STRING, &input_content));
+        ret.push_back(sqlite_orm_column("attachment_path", sqlite_orm_column::STRING, &attachment_path));
+        ret.push_back(sqlite_orm_column("expired_date", sqlite_orm_column::STRING, &expired_date));
+        ret.push_back(sqlite_orm_column("related_info", sqlite_orm_column::STRING, &related_info));
+        ret.push_back(sqlite_orm_column("has_confirmed", sqlite_orm_column::INTEGER, &has_confirmed));
+
+        return ret;
+    }
+
+    virtual std::string table_name()
+    {
+        return "sec_check_data_table";
     }
 };
 
