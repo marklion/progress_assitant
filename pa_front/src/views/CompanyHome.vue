@@ -128,7 +128,7 @@
             </van-tab>
             <van-tab title="按客户">
                 <van-collapse v-model="expend_statistics">
-                    <van-collapse-item v-for="(single_stuff_vehicle, index) in today_statistic_by_company" :key="index" :title="single_stuff_vehicle.company" :value="'共' + single_stuff_vehicle.vehicle_list.length + '车  出货' + count_undeliver_vehicle(single_stuff_vehicle.vehicle_list) + '车'" :name="index + '今日'">
+                    <van-collapse-item v-for="(single_stuff_vehicle, index) in today_statistic_by_company" :key="index" :title="single_stuff_vehicle.company" :label="single_stuff_vehicle.rate_info" :value="'共' + single_stuff_vehicle.vehicle_list.length + '车  出货' + count_undeliver_vehicle(single_stuff_vehicle.vehicle_list) + '车'" :name="index + '今日'">
                         <vxe-table size="small" stripe align="center" :data="single_stuff_vehicle.vehicle_list">
                             <vxe-table-column field="stuff_name" title="物料" width="34%" sortable></vxe-table-column>
                             <vxe-table-column field="vichele.main_vichele" title="主车" width="24%"></vxe-table-column>
@@ -290,6 +290,7 @@ export default {
     name: 'CompanyHome',
     data: function () {
         return {
+            exe_rate_map: [],
             show_change_price_time: false,
             date_to_change_price: '',
             all_price_timer: [],
@@ -369,9 +370,17 @@ export default {
                 if (!ret.find(item => {
                         return item.company == element.vichele.company;
                     })) {
+                    var rate_info = "";
+                    var ri = this.exe_rate_map.find(item => {
+                        return item.company_name == element.vichele.company
+                    });
+                    if (ri && ri.vehicle_count > 0) {
+                        rate_info = '计划' + ri.vehicle_count + '车,完成' + ri.deliver_count + '车, 执行率' + (ri.deliver_count * 100 / ri.vehicle_count).toFixed(0) + '%';
+                    }
                     ret.push({
                         company: element.vichele.company,
                         vehicle_list: [],
+                        rate_info: rate_info,
                     });
                 }
                 ret.find(item => {
@@ -601,8 +610,24 @@ export default {
             var vue_this = this;
             vue_this.$call_remote_process("stuff_plan_management", "get_today_statistics", [vue_this.$cookies.get('pa_ssid')]).then(function (resp) {
                 vue_this.vichele_statistics = [];
+                vue_this.exe_rate_map = [];
                 resp.forEach((element, index) => {
                     vue_this.$set(vue_this.vichele_statistics, index, element);
+                    if (!vue_this.exe_rate_map.find(item => {
+                            return item.company_name == element.vichele.company;
+                        })) {
+                        vue_this.exe_rate_map.push({
+                            company_name: element.vichele.company,
+                            vehicle_count: 0,
+                            deliver_count: 0,
+                        });
+                    }
+                });
+                vue_this.exe_rate_map.forEach(element => {
+                    vue_this.$call_remote_process("company_management", "get_execute_rate_by_name", [vue_this.$cookies.get('pa_ssid'), element.company_name]).then(function (resp) {
+                        element.vehicle_count = resp.vehicle_count;
+                        element.deliver_count = resp.deliver_count;
+                    });
                 });
             });
         },

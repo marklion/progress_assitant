@@ -211,6 +211,8 @@ service company_management {
     bool update_license_require(1:string ssid, 2:license_require_info lic_info) throws (1:gen_exp e),
     void del_license_require(1:string ssid, 2:i64 id) throws (1:gen_exp e),
     list<license_require_info> get_license_require(1:string company_name) throws (1:gen_exp e),
+    execute_record_info get_execute_rate_by_name(1:string ssid, 2:string name) throws (1:gen_exp e),
+    string export_exe_rate(1:string ssid, 2:string begin_date, 3:string end_date) throws (1:gen_exp e),
 }
 
 struct bidding_customer{

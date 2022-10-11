@@ -28,6 +28,11 @@
         <van-field readonly clickable name="calendar" :value="plan_search_date" label="计划日期" placeholder="点击选择日期" @click="show_plan_search_date = true" />
         <van-calendar v-model="show_plan_search_date" @confirm="confirm_search_date" :min-date="new Date(new Date().setDate(new Date().getDate() - 61))" />
     </van-cell-group>
+    <van-cell-group title="导出执行率">
+        <van-cell title="选择日期区间" :value="date" @click="show_date = true" center>
+        </van-cell>
+        <van-calendar v-model="show_date" get-container="body" position="right" type="range" @confirm="export_exe_rate" :min-date="minDate" :max-date="maxDate" />
+    </van-cell-group>
 </div>
 </template>
 
@@ -136,6 +141,25 @@ export default {
                     vue_this.show_export_file = true;
                 } else {
                     vue_this.$toast("无交易信息");
+                }
+            });
+
+        },
+        export_exe_rate: function (_date) {
+            const [start, end] = _date;
+            this.show_date = false;
+            this.date = `${start.getFullYear()}/${start.getMonth() + 1}/${start.getDate()}-${end.getFullYear()}/${end.getMonth() + 1}/${end.getDate()}`
+            var begin_date = this.formatDateTime(start);
+            var end_date = this.formatDateTime(end);
+            console.log(begin_date);
+            console.log(end_date);
+            var vue_this = this;
+            vue_this.$call_remote_process("company_management", "export_exe_rate", [vue_this.$cookies.get("pa_ssid"), begin_date, end_date]).then(function (resp) {
+                if (resp) {
+                    vue_this.download_url = vue_this.$remote_url + resp;
+                    vue_this.show_export_file = true;
+                } else {
+                    vue_this.$toast("无信息");
                 }
             });
 
