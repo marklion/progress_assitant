@@ -1353,5 +1353,99 @@ public:
             }
         }
     }
+
+    virtual void get_execute_rate_by_name(execute_record_info &_return, const std::string &ssid, const std::string &name)
+    {
+        auto company = PA_DATAOPT_get_company_by_ssid(ssid);
+        auto customer = sqlite_orm::search_record<pa_sql_company>("name == '%s'", name.c_str());
+        if (!company || !customer)
+        {
+            PA_RETURN_NOPLAN_MSG();
+        }
+
+        auto contract = company->get_children<pa_sql_contract>("b_side", "a_side_ext_key == %ld", customer->get_pri_id());
+        if (!contract)
+        {
+            PA_RETURN_NOPLAN_MSG();
+        }
+        auto today = PA_DATAOPT_current_time().substr(0, 10);
+        get_execute_record(_return, contract->get_pri_id(), today, today);
+    }
+
+    virtual void export_exe_rate(std::string &_return, const std::string &ssid, const std::string &begin_date, const std::string &end_date)
+    {
+        auto company = PA_DATAOPT_get_company_by_ssid(ssid);
+        if (!company)
+        {
+            PA_RETURN_NOPRIVA_MSG();
+        }
+        struct export_exe_item
+        {
+            std::string company_name;
+            int vehicle_count = 0;
+            int deliver_count = 0;
+        };
+        std::vector<export_exe_item> export_items;
+        auto related_customers = company->get_all_children<pa_sql_contract>("b_side");
+        for (auto &itr : related_customers)
+        {
+            execute_record_info tmp;
+            get_execute_record(tmp, itr.get_pri_id(), begin_date, end_date);
+            export_exe_item tmp_item;
+            auto customer = itr.get_parent<pa_sql_company>("a_side");
+            if (customer)
+            {
+                tmp_item.company_name = customer->name;
+            }
+            tmp_item.deliver_count = tmp.deliver_count;
+            tmp_item.vehicle_count = tmp.vehicle_count;
+            export_items.push_back(tmp_item);
+        }
+        std::string file_name_no_ext = "exe_rate_export" + std::to_string(time(NULL)) + std::to_string(company->get_pri_id());
+        std::string file_name = "/dist/logo_res/" + file_name_no_ext + ".csv";
+        std::ofstream stream(file_name);
+        std::string csv_bom = {
+            (char)0xef, (char)0xbb, (char)0xbf};
+        stream << csv_bom;
+        csv2::Writer<csv2::delimiter<','>> writer(stream);
+        std::vector<std::string> table_header = {
+            "客户名称", "计划数", "完成数", "完成率"};
+        writer.write_row(table_header);
+        for (auto &itr : export_items)
+        {
+            std::vector<std::string> one_record;
+            one_record.push_back(itr.company_name);
+            one_record.push_back(std::to_string(itr.vehicle_count));
+            one_record.push_back(std::to_string(itr.deliver_count));
+            if (itr.vehicle_count > 0)
+            {
+                one_record.push_back(std::to_string(itr.deliver_count * 100 / itr.vehicle_count) + "%");
+            }
+            else
+            {
+                one_record.push_back("无");
+            }
+            writer.write_row(one_record);
+        }
+        stream.close();
+        std::string py_converter =
+            "import pandas as pd\n"
+            "import sys\n"
+            "csv = pd.read_csv('" +
+            file_name + "', encoding='utf-8')\n"
+                        "csv.index = csv.index + 1\n"
+                        "csv.to_excel('/dist/logo_res/" +
+            file_name_no_ext + ".xlsx', sheet_name='data')\n";
+
+        if (Py_IsInitialized())
+        {
+            PyRun_SimpleString(py_converter.c_str());
+            _return = "/logo_res/" + file_name_no_ext + ".xlsx";
+        }
+        else
+        {
+            PA_RETURN_MSG("导出失败");
+        }
+    }
 };
 #endif // _COMPANY_MANAGEMENT_IMP_H_
