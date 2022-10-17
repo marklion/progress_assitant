@@ -100,16 +100,20 @@ public:
                     stuff_need_edit->last = stuff.last;
                     auto orig_price = stuff_need_edit->price;
                     stuff_need_edit->price = stuff.price;
+                    stuff_need_edit->need_sec_check = stuff.need_sec_check;
 
                     ret = stuff_need_edit->update_record();
-                    std::string remark = "调整了该计划中的货品单价，原价" + std::to_string(orig_price) + "，现价" + std::to_string(stuff_need_edit->price);
-                    auto related_plans = PA_RPC_get_all_plans_related_by_user(ssid, "belong_stuff_ext_key == %ld AND status < 4", stuff_need_edit->get_pri_id());
-                    for (auto &itr : related_plans)
+                    if (orig_price != stuff_need_edit->price)
                     {
-                        itr.price = stuff.price;
-                        itr.update_record();
-                        itr.send_wechat_msg(*user, remark);
-                        check_related_balance(itr);
+                        std::string remark = "调整了该计划中的货品单价，原价" + std::to_string(orig_price) + "，现价" + std::to_string(stuff_need_edit->price);
+                        auto related_plans = PA_RPC_get_all_plans_related_by_user(ssid, "belong_stuff_ext_key == %ld AND status < 4", stuff_need_edit->get_pri_id());
+                        for (auto &itr : related_plans)
+                        {
+                            itr.price = stuff.price;
+                            itr.update_record();
+                            itr.send_wechat_msg(*user, remark);
+                            check_related_balance(itr);
+                        }
                     }
                 }
                 else
@@ -1226,7 +1230,7 @@ public:
         {
             auto last_events = company->event_types;
             auto found_pos = last_events.find_first_of(';');
-            while (found_pos!= std::string::npos)
+            while (found_pos != std::string::npos)
             {
                 _return.push_back(last_events.substr(0, found_pos));
                 last_events.erase(0, found_pos + 1);
@@ -1252,7 +1256,6 @@ public:
             _return.vehicle_count = vc;
         }
     }
-
 
     virtual int add_license_require_by_name(const std::string &ssid, const std::string &name)
     {
@@ -1308,7 +1311,7 @@ public:
         lr->name = lic_info.name;
         lr->prompt = lic_info.prompt;
         lr->input_method = "";
-        for (auto &itr:lic_info.input_method)
+        for (auto &itr : lic_info.input_method)
         {
             lr->input_method.append(std::to_string(itr));
         }
@@ -1343,9 +1346,9 @@ public:
                 license_require_info tmp;
                 tmp.name = itr.name;
                 tmp.id = itr.get_pri_id();
-                for (auto &si:itr.input_method)
+                for (auto &si : itr.input_method)
                 {
-                    tmp.input_method.push_back(license_input_method::type( si - '0'));
+                    tmp.input_method.push_back(license_input_method::type(si - '0'));
                 }
                 tmp.prompt = itr.prompt;
                 tmp.use_for = license_use_for::type(itr.use_for);
@@ -1360,13 +1363,13 @@ public:
         auto customer = sqlite_orm::search_record<pa_sql_company>("name == '%s'", name.c_str());
         if (!company || !customer)
         {
-            PA_RETURN_NOPLAN_MSG();
+            PA_RETURN_NOPRIVA_MSG();
         }
 
         auto contract = company->get_children<pa_sql_contract>("b_side", "a_side_ext_key == %ld", customer->get_pri_id());
         if (!contract)
         {
-            PA_RETURN_NOPLAN_MSG();
+            PA_RETURN_NOPRIVA_MSG();
         }
         auto today = PA_DATAOPT_current_time().substr(0, 10);
         get_execute_record(_return, contract->get_pri_id(), today, today);

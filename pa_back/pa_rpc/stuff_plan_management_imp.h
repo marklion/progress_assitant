@@ -1643,8 +1643,7 @@ public:
                         tmp.plan_id = single_plan.get_pri_id();
                         tmp.plan_order = std::to_string(single_plan.create_time) + std::to_string(single_plan.get_pri_id());
                         tmp.vichele_id = vichele.get_pri_id();
-                        auto lic_set = get_lic_set(vichele.get_pri_id(), true);
-                        if (lic_set.size() > 0 && pa_sql_sec_check_set::lic_is_valid(lic_set, *company))
+                        if (sec_check_all_confirmed(*company, driver->phone, main_vichele->number, behind_vichele->number))
                         {
                             tmp.sec_check_passed = true;
                         }
@@ -2245,11 +2244,10 @@ public:
                                     tmp.can_enter &= false;
                                 }
                             }
-                            if (ch.company_customize_need(sale_company->name, company_management_handler::need_sec_check))
+                            if (stuff_info->need_sec_check && ch.company_customize_need(sale_company->name, company_management_handler::need_sec_check))
                             {
                                 tmp.need_sec_check = true;
-                                auto tmp_set = get_lic_set(single_sv.get_pri_id(), true);
-                                if (pa_sql_sec_check_set::lic_is_valid(tmp_set, *sale_company))
+                                if (sec_check_all_confirmed(*sale_company, itr.phone, main_vichele->number, behind_vichele->number))
                                 {
                                     tmp.can_enter &= true;
                                     tmp.sec_check_passed = true;
@@ -2829,9 +2827,13 @@ public:
             PA_RETURN_NOPRIVA_MSG();
         }
         auto exist_record = sqlite_orm::search_record<pa_sql_sec_check_data>(lcd.id);
-        if (exist_record)
+        if (!exist_record->has_confirmed)
         {
             exist_record->remove_record();
+        }
+        else
+        {
+            PA_RETURN_MSG("已审核无法删除，请先联系安检负责人取消审核");
         }
         return true;
     }
@@ -2851,8 +2853,25 @@ public:
                 _return.has_confirmed = scd->has_confirmed;
                 _return.related_type_id = lr->get_pri_id();
             }
-
         }
+    }
+
+    virtual bool confirm_sec_check_data(const std::string &ssid, const int64_t lcd_id, const bool is_confirm)
+    {
+        bool ret = false;
+
+        auto user = PA_DATAOPT_get_online_user(ssid);
+        auto lcd = sqlite_orm::search_record<pa_sql_sec_check_data>(lcd_id);
+        if (!user || !lcd)
+        {
+            PA_RETURN_NOPRIVA_MSG();
+        }
+
+        lcd->has_confirmed = is_confirm ? 1 : 0;
+
+        ret = lcd->update_record();
+
+        return ret;
     }
 };
 

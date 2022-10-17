@@ -32,10 +32,17 @@
                 <van-cell v-if="!single_trans.is_buy" :title="single_trans.destination_company" center>
                     <template #right-icon>
                         <div style="margin-left:8px;">
-                            <div v-if="single_trans.need_sec_check && !single_trans.sec_check_passed">
-                                <van-button type="info" plain size="mini" @click="enter_sec_check_prepare(single_trans.destination_company, single_trans.main_vichele, single_trans.behind_vichele, driver_phone)">
-                                    需要安检
+                            <div v-if="single_trans.need_sec_check  ">
+                                <van-button v-if="!single_trans.sec_check_passed" type="info" plain size="mini" @click="enter_sec_check_prepare(single_trans.destination_company, single_trans.main_vichele, single_trans.behind_vichele, driver_phone)">
+                                    上传安检信息
                                 </van-button>
+                                <div v-else>
+                                    <van-button type="warning" plain size="mini" @click="enter_sec_check_prepare(single_trans.destination_company, single_trans.main_vichele, single_trans.behind_vichele, driver_phone)">
+                                        更改安检信息
+                                    </van-button>
+                                    <van-button v-if="should_checkin(single_trans.date) && !single_trans.is_registered && single_trans.destination_company" type="info" size="small" @click="register_vichele(single_trans.destination_company, single_trans.id)">排号
+                                    </van-button>
+                                </div>
                             </div>
                             <div v-else>
                                 <div v-if="single_trans.need_checkin">

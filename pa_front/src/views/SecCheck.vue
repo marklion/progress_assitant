@@ -35,7 +35,7 @@
             <el-table highlight-current-row @current-change="handleCurrentChange" :data="today_vehicle" style="width: 100%" :row-class-name="tableRowClassName">>
                 <el-table-column prop="vichele.main_vichele" label="主车号">
                 </el-table-column>
-                <el-table-column prop="vichele.behind_vichele" label="主车号">
+                <el-table-column prop="vichele.behind_vichele" label="挂车号">
                 </el-table-column>
                 <el-table-column label="司机">
                     <template slot-scope="scope">
@@ -53,17 +53,40 @@
             </el-descriptions>
             <div style="text-align: center;">
                 <el-divider>证件列表</el-divider>
-                <vue-grid align="stretch" justify="start">
-                    <vue-cell v-for="(single_license, index) in focus_vehicle.lic_set" :key="index" width="6of12">
-                        <el-image :preview-src-list="getPrivewImages(index)" style="width: 100px; height: 100px" :src="$remote_url + single_license.attachment_path" fit="fill"></el-image>
-                        <div>到期时间:{{single_license.expire_date}}</div>
-                    </vue-cell>
-                </vue-grid>
-                <div v-if="focus_vehicle.lic_set.length > 0">
-                    <el-divider></el-divider>
-                    <el-button type="success" v-if="!focus_vehicle.sec_check_passed" @click="pass_sec">审核通过</el-button>
-                    <el-button type="danger" v-else @click="reject_sec">撤销审核</el-button>
-                </div>
+                <el-table :data="sec_check_item" stripe style="width: 100%">
+                    <el-table-column prop="name" label="证件名称">
+                        <template slot-scope="scope">
+                            <span>{{scope.row.name}}</span>
+                            <span>
+                                <el-tag v-if="scope.row.content_id == undefined || scope.row.content_id <= 0" type="danger">
+                                    未上传
+                                </el-tag>
+                                <el-tag v-else-if="scope.row.has_confirmed" type="success">
+                                    已审核
+                                </el-tag>
+                                <el-tag v-else type="warning">
+                                    待审核
+                                </el-tag>
+                            </span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column prop="input_content" label="内容">
+                    </el-table-column>
+                    <el-table-column label="附件">
+                        <template slot-scope="scope">
+                            <el-image v-if="scope.row.attachment_path" style="width: 60px; height: 40px;" :src="$remote_url + scope.row.attachment_path" :preview-src-list="[$remote_url + scope.row.attachment_path]">
+                            </el-image>
+                        </template>
+                    </el-table-column>
+                    <el-table-column prop="expired_date" label="有效期">
+                    </el-table-column>
+                    <el-table-column label="操作">
+                        <template slot-scope="scope">
+                            <el-button v-if="!scope.row.has_confirmed" type="primary" size="small" @click="confirm_lcd(scope.row, true)">审核</el-button>
+                            <el-button v-else type="danger" size="small" @click="confirm_lcd(scope.row, false)">反审</el-button>
+                        </template>
+                    </el-table-column>
+                </el-table>
             </div>
         </el-col>
     </el-row>
@@ -74,26 +97,25 @@
 import Vue from 'vue';
 import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
-import {
-    VueGrid,
-    VueCell
-} from 'vue-grd';
+// import {
+//     VueGrid,
+//     VueCell
+// } from 'vue-grd';
 import XLSX from 'xlsx';
 Vue.use(ElementUI);
 // import PinyinMatch from "pinyin-match";
 export default {
     name: "SecCheck",
-    components: {
-        VueGrid,
-        VueCell
-    },
+    // components: {
+    //     VueGrid,
+    //     VueCell
+    // },
     data: function () {
         return {
             user_info: {
                 name: '',
                 logo: '',
                 is_login: false,
-                company_name: ''
             },
             sec_check_open: false,
             today_vehicle: [],
@@ -102,40 +124,28 @@ export default {
                 bv_number: "",
                 driver_name: "",
                 driver_phone: "",
-                lic_set: []
-            }
+            },
+            sec_check_item: [],
+            company_name: '',
+            saved_cur_row: {},
         };
     },
+    watch: {
+        company_name: function () {
+            this.init_sec_check_require();
+        },
+    },
     methods: {
+        confirm_lcd: function (_lcd, is_confirm) {
+            var vue_this = this;
+            vue_this.$call_remote_process("stuff_plan_management", "confirm_sec_check_data", [vue_this.$cookies.get("pa_ssid"), _lcd.content_id, is_confirm]).then(function (resp) {
+                if (resp) {
+                    vue_this.handleCurrentChange(vue_this.saved_cur_row);
+                }
+            });
+        },
         refresh_page: function () {
             this.$router.go(0);
-        },
-        pass_sec: function () {
-            var vue_this = this;
-            vue_this.$call_remote_process("stuff_plan_management", "sec_check_pass", [vue_this.$cookies.get('pa_ssid'), vue_this.focus_vehicle.id]).then(function (resp) {
-                if (resp) {
-                    vue_this.refresh_page();
-                }
-            });
-        },
-        reject_sec: function () {
-            var vue_this = this;
-            vue_this.$call_remote_process("stuff_plan_management", "sec_check_reject", [vue_this.$cookies.get('pa_ssid'), vue_this.focus_vehicle.id]).then(function (resp) {
-                if (resp) {
-                    vue_this.refresh_page();
-                }
-            });
-        },
-        getPrivewImages: function (_index) {
-            var li_array = [];
-            this.focus_vehicle.lic_set.forEach(element => {
-                li_array.push(this.$remote_url + element.attachment_path);
-            });
-            let tempImgList = [...li_array];
-            if (_index == 0) return tempImgList;
-            let start = tempImgList.splice(_index);
-            let remain = tempImgList.splice(0, _index);
-            return start.concat(remain);
         },
         init_check_data: function () {
             var vue_this = this;
@@ -152,6 +162,7 @@ export default {
                 vue_this.user_info.name = resp.name;
                 vue_this.user_info.logo = resp.logo;
                 vue_this.company_name = resp.company;
+                console.log(vue_this.company_name);
                 vue_this.$call_remote_process("company_management", "get_customize", [vue_this.company_name]).then(function (resp) {
                     if (resp) {
                         vue_this.sec_check_open = resp.need_sec_check;
@@ -182,22 +193,41 @@ export default {
             });
         },
         async handleCurrentChange(val) {
-            console.log(val);
             var vue_this = this;
+            vue_this.saved_cur_row = {
+                ...val
+            };
             vue_this.focus_vehicle = {
                 mv_number: val.vichele.main_vichele,
                 bv_number: val.vichele.behind_vichele,
                 driver_name: val.vichele.driver_name,
                 driver_phone: val.vichele.driver_phone,
                 sec_check_passed: val.vichele.sec_check_passed,
-                lic_set: [],
-                id: val.vichele.vichele_id,
             };
-            var mv_lic = await vue_this.$call_remote_process("stuff_plan_management", "get_license_by_vehicle_number", [vue_this.focus_vehicle.mv_number]);
-            var bv_lic = await vue_this.$call_remote_process("stuff_plan_management", "get_license_by_vehicle_number", [vue_this.focus_vehicle.bv_number]);
-            var driver_lic = await vue_this.$call_remote_process("stuff_plan_management", "get_all_license_info_by_driver_phone", [vue_this.$cookies.get('pa_ssid'), vue_this.focus_vehicle.driver_phone]);
-            vue_this.focus_vehicle.lic_set = [];
-            vue_this.focus_vehicle.lic_set.push(...mv_lic, ...bv_lic, ...driver_lic);
+            for (let index = 0; index < vue_this.sec_check_item.length; index++) {
+                const element = vue_this.sec_check_item[index];
+                var relate_info = "";
+                switch (element.use_for) {
+                    case 0:
+                        relate_info = val.vichele.driver_phone;
+                        break;
+
+                    case 1:
+                        relate_info = val.vichele.main_vichele;
+                        break;
+                    case 2:
+                        relate_info = val.vichele.behind_vichele;
+                        break;
+                    default:
+                        break;
+                }
+                var tmp_lic = await vue_this.$call_remote_process("stuff_plan_management", "get_all_sec_check_data", [element.id, relate_info]);
+                vue_this.$set(element, "input_content", tmp_lic.input_content);
+                vue_this.$set(element, "attachment_path", tmp_lic.attachment_path);
+                vue_this.$set(element, "expired_date", tmp_lic.expired_date);
+                vue_this.$set(element, "content_id", tmp_lic.id);
+                vue_this.$set(element, "has_confirmed", tmp_lic.has_confirmed);
+            }
         },
         tableRowClassName({
             row,
@@ -214,7 +244,9 @@ export default {
                 mv_number: '主车',
                 bv_number: '挂车',
                 driver_name: '司机',
-                lic_set: "证件"
+            });
+            this.sec_check_item.forEach(element => {
+                fin_json[0][element.name] = element.name;
             });
 
             for (var i = 0; i < this.today_vehicle.length; i++) {
@@ -222,16 +254,34 @@ export default {
                     mv_number: this.today_vehicle[i].vichele.main_vichele,
                     bv_number: this.today_vehicle[i].vichele.behind_vichele,
                     driver_name: this.today_vehicle[i].vichele.driver_name,
-                    lic_set: ''
                 };
-                var mv_lic = await this.$call_remote_process("stuff_plan_management", "get_license_by_vehicle_number", [tmp.mv_number]);
-                var bv_lic = await this.$call_remote_process("stuff_plan_management", "get_license_by_vehicle_number", [tmp.bv_number]);
-                var driver_lic = await this.$call_remote_process("stuff_plan_management", "get_all_license_info_by_driver_phone", [this.$cookies.get('pa_ssid'), this.today_vehicle[i].vichele.driver_phone]);
-                var all_lic = [];
-                all_lic.push(...mv_lic, ...bv_lic, ...driver_lic);
-                all_lic.forEach(item => {
-                    tmp.lic_set = tmp.lic_set + this.$remote_url + item.attachment_path + ";\r\n";
-                });
+                for (var j = 0; j < this.sec_check_item.length; j++) {
+                    var cur_lr = this.sec_check_item[j];
+                    var related_info = "";
+                    switch (cur_lr.use_for) {
+                        case 0:
+                            related_info = this.today_vehicle[i].vichele.driver_phone;
+                            break;
+                        case 1:
+                            related_info = this.today_vehicle[i].vichele.main_vichele;
+                            break;
+                        case 2:
+                            related_info = this.today_vehicle[i].vichele.behind_vichele;
+                            break;
+                        default:
+                            break;
+                    }
+                    var tmp_lcd = await this.$call_remote_process("stuff_plan_management", "get_all_sec_check_data", [cur_lr.id, related_info]);
+                    var lcd_content = "无";
+                    if (tmp_lcd.id > 0) {
+                        lcd_content = tmp_lcd.input_content;
+                        if (tmp_lcd.attachment_path) {
+                            lcd_content += '<->' + this.$remote_url + tmp_lcd.attachment_path;
+                        }
+                    }
+                    tmp[cur_lr.name] = lcd_content;
+                }
+
                 fin_json.push(tmp);
             }
 
@@ -245,10 +295,20 @@ export default {
                 }
             };
             XLSX.writeFile(wb, "审核记录.xlsx");
-        }
+        },
+        init_sec_check_require: function () {
+            var vue_this = this;
+            vue_this.$call_remote_process("company_management", "get_license_require", [vue_this.company_name]).then(function (resp) {
+                vue_this.sec_check_item = [];
+                resp.forEach((element, index) => {
+                    vue_this.$set(vue_this.sec_check_item, index, element);
+                });
+            });
+        },
     },
     beforeMount: function () {
         this.init_user_data();
+        this.init_sec_check_require();
     },
 }
 </script>

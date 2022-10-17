@@ -852,3 +852,35 @@ bool pa_sql_vichele_behind::license_is_valid()
 
     return ret;
 }
+bool sec_check_all_confirmed(pa_sql_company &_company, const std::string &_driver_phone, const std::string &_mv, const std::string &_bv)
+{
+    bool ret = true;
+
+    auto lrs = _company.get_all_children<pa_sql_license_require>("belong_company");
+    for (auto &itr:lrs)
+    {
+        std::string relate_info;
+        switch (itr.use_for)
+        {
+        case 0:
+            relate_info = _driver_phone;
+            break;
+
+        case 1:
+            relate_info = _mv;
+            break;
+        case 2:
+            relate_info = _bv;
+            break;
+        default:
+            break;
+        }
+        if (!itr.get_children<pa_sql_sec_check_data>("belong_lr", "related_info == '%s' AND has_confirmed == 1", relate_info.c_str()))
+        {
+            ret = false;
+            break;
+        }
+    }
+
+    return ret;
+}
