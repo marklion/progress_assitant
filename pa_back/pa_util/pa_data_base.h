@@ -164,6 +164,7 @@ public:
     int price = 0;
     std::string last;
     int saling = 0;
+    int need_sec_check = 0;
 
     pa_sql_stuff_info() {
         add_parent_type<pa_sql_company>("belong_company");
@@ -175,6 +176,7 @@ public:
         ret.push_back(sqlite_orm_column("price", sqlite_orm_column::INTEGER, &price));
         ret.push_back(sqlite_orm_column("saling", sqlite_orm_column::INTEGER, &saling));
         ret.push_back(sqlite_orm_column("last", sqlite_orm_column::STRING, &last));
+        ret.push_back(sqlite_orm_column("need_seck_check", sqlite_orm_column::INTEGER, &need_sec_check));
 
         return ret;
     }
@@ -1237,6 +1239,7 @@ public:
         return "sec_check_data_table";
     }
 };
+bool sec_check_all_confirmed(pa_sql_company &_company, const std::string &_driver_phone, const std::string &_mv, const std::string &_bv);
 
 
 #endif // _PA_DATABSE_H_

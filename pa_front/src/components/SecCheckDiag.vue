@@ -1,5 +1,6 @@
 <template>
 <div class="sec_check_diag_show">
+    <van-notice-bar scrollable text="请完善信息，并等待审批" />
     <sec-check-cell v-for="(single_lr, index) in  lrs" :key="index" :lr="single_lr" :mv="mv" :bv="bv" :driver="driver"></sec-check-cell>
 </div>
 </template>

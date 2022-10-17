@@ -68,6 +68,11 @@
                 <van-field v-model="stuff_in_edit.name" name="商品名" label="商品名" readonly />
                 <van-field v-model="stuff_in_edit.price" name="价格" label="价格" placeholder="请输入价格" :rules="[{ required: true, message: '请填写价格' }]" />
                 <van-field v-model="stuff_in_edit.last" name="存量" label="备注" placeholder="请输入备注信息" />
+                <van-field name="switch" label="需要安检">
+                    <template #input>
+                        <van-switch v-model="stuff_in_edit.need_sec_check" size="20" />
+                    </template>
+                </van-field>
                 <div style="margin: 16px;">
                     <van-button round block type="info" native-type="submit">确认</van-button>
                 </div>
@@ -324,6 +329,7 @@ export default {
                 name: '',
                 price: 0,
                 last: '',
+                need_sec_check: false,
             },
             show_edit_stuff: false,
             show_remove_stuff: false,
@@ -624,7 +630,7 @@ export default {
                     }
                 });
                 vue_this.exe_rate_map.forEach(element => {
-                    vue_this.$call_remote_process("company_management", "get_execute_rate_by_name", [vue_this.$cookies.get('pa_ssid'), element.company_name]).then(function (resp) {
+                    vue_this.$call_remote_process_no_toast("company_management", "get_execute_rate_by_name", [vue_this.$cookies.get('pa_ssid'), element.company_name]).then(function (resp) {
                         element.vehicle_count = resp.vehicle_count;
                         element.deliver_count = resp.deliver_count;
                     });

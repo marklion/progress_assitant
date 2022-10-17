@@ -61,6 +61,7 @@ public:
                 _return.saling = stuff_info->saling == 1 ? true : false;
                 _return.company_address = company->address;
                 _return.company_contact = company->contact;
+                _return.need_sec_check = stuff_info->need_sec_check;
             }
         }
     }
