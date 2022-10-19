@@ -2873,6 +2873,124 @@ public:
 
         return ret;
     }
+
+    virtual void export_sec_check_history(std::string &_return, const std::string &ssid, const std::string &begin_date, const std::string &end_date)
+    {
+        std::string file_name_no_ext = "sec_check_export" + std::to_string(time(NULL));
+        std::string file_name = "/dist/logo_res/" + file_name_no_ext + ".csv";
+        std::ofstream stream(file_name);
+        std::string csv_bom = {
+            (char)0xef, (char)0xbb, (char)0xbf};
+        stream << csv_bom;
+        csv2::Writer<csv2::delimiter<','>> writer(stream);
+        std::vector<std::string> table_header = {
+            "主车车牌",
+            "挂车车牌",
+            "驾驶员",
+            "驾驶员电话",
+            "皮重",
+            "毛重",
+            "净重",
+            "提货公司",
+            "空车过磅时间",
+            "重车过磅时间",
+        };
+        auto company = PA_DATAOPT_get_company_by_ssid(ssid);
+        if (!company)
+        {
+            PA_RETURN_NOPRIVA_MSG();
+        }
+        auto lrs = company->get_all_children<pa_sql_license_require>("belong_company");
+        for (auto &itr : lrs)
+        {
+            table_header.push_back(itr.name);
+        }
+        writer.write_row(table_header);
+
+        auto plans = PA_RPC_get_all_plans_related_by_user(ssid, "date(substr(plan_time, 1, 10)) >= date('%s') AND date(substr(plan_time, 1, 10)) <= date('%s')", begin_date.c_str(), end_date.c_str());
+        for (auto &itr : plans)
+        {
+            std::string company_name = itr.proxy_company;
+            auto cust_user = itr.get_parent<pa_sql_userinfo>("created_by");
+            if (cust_user)
+            {
+                auto cust_comp = cust_user->get_parent<pa_sql_company>("belong_company");
+                if (cust_comp)
+                {
+                    company_name = cust_comp->name;
+                }
+            }
+            auto deliver_vehicles = itr.get_all_children<pa_sql_single_vichele>("belong_plan", "finish == 1");
+            for (auto &single_vehicle : deliver_vehicles)
+            {
+                std::vector<std::string> single_record;
+                auto driver = single_vehicle.get_parent<pa_sql_driver>("driver");
+                auto mv = single_vehicle.get_parent<pa_sql_vichele>("main_vichele");
+                auto bv = single_vehicle.get_parent<pa_sql_vichele_behind>("behind_vichele");
+                if (driver && mv && bv)
+                {
+                    single_record.push_back(mv->number);
+                    single_record.push_back(bv->number);
+                    single_record.push_back(driver->name);
+                    single_record.push_back(driver->phone);
+                    single_record.push_back(pa_double2string_reserve2(single_vehicle.p_weight));
+                    single_record.push_back(pa_double2string_reserve2(single_vehicle.m_weight));
+                    single_record.push_back(pa_double2string_reserve2(single_vehicle.m_weight - single_vehicle.p_weight));
+                    single_record.push_back(company_name);
+                    single_record.push_back(single_vehicle.deliver_p_timestamp);
+                    single_record.push_back(single_vehicle.deliver_timestamp);
+                    for (auto &single_lr : lrs)
+                    {
+                        std::string related_info;
+                        switch (single_lr.use_for)
+                        {
+                        case 0:
+                            related_info = driver->phone;
+                            break;
+                        case 1:
+                            related_info = mv->number;
+                            break;
+                        case 2:
+                            related_info = bv->number;
+                            break;
+
+                        default:
+                            break;
+                        }
+                        auto lcd = single_lr.get_children<pa_sql_sec_check_data>("belong_lr", "related_info == '%s'", related_info.c_str());
+                        if (lcd)
+                        {
+                            single_record.push_back(lcd->input_content + "<----> https://www.d8sis.cn/pa_web" + lcd->attachment_path + "<---->到期时间:" + lcd->expired_date);
+                        }
+                        else
+                        {
+                            single_record.push_back("");
+                        }
+                    }
+                    writer.write_row(single_record);
+                }
+            }
+        }
+        stream.close();
+        std::string py_converter =
+            "import pandas as pd\n"
+            "import sys\n"
+            "csv = pd.read_csv('" +
+            file_name + "', encoding='utf-8')\n"
+                        "csv.index = csv.index + 1\n"
+                        "csv.to_excel('/dist/logo_res/" +
+            file_name_no_ext + ".xlsx', sheet_name='data')\n";
+
+        if (Py_IsInitialized())
+        {
+            PyRun_SimpleString(py_converter.c_str());
+            _return = "/logo_res/" + file_name_no_ext + ".xlsx";
+        }
+        else
+        {
+            PA_RETURN_MSG("导出失败");
+        }
+    }
 };
 
 #endif // _STUFF_PLAN_MANAGEMENT_H_
