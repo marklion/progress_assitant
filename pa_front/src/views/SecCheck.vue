@@ -30,6 +30,14 @@
                 <span>
                     <el-button type="primary" @click="refresh_page">刷新</el-button>
                     <el-button type="warning" @click="export_record">导出</el-button>
+                    <el-popover placement="bottom" title="选择日期范围" trigger="click">
+                        <el-button slot="reference" type="text">历史数据导出</el-button>
+                        <el-date-picker v-model="date_range" type="daterange" align="right" unlink-panels range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" :picker-options="pickerOptions">
+                        </el-date-picker>
+                        <div>
+                            <el-button type="primary" size="small" @click="export_sec_check">导出</el-button>
+                        </div>
+                    </el-popover>
                 </span>
             </div>
             <el-table highlight-current-row @current-change="handleCurrentChange" :data="today_vehicle" style="width: 100%" :row-class-name="tableRowClassName">>
@@ -112,6 +120,33 @@ export default {
     // },
     data: function () {
         return {
+            pickerOptions: {
+                shortcuts: [{
+                    text: '最近一周',
+                    onClick(picker) {
+                        const end = new Date();
+                        const start = new Date();
+                        start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
+                        picker.$emit('pick', [start, end]);
+                    }
+                }, {
+                    text: '最近一个月',
+                    onClick(picker) {
+                        const end = new Date();
+                        const start = new Date();
+                        start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
+                        picker.$emit('pick', [start, end]);
+                    }
+                }, {
+                    text: '最近三个月',
+                    onClick(picker) {
+                        const end = new Date();
+                        const start = new Date();
+                        start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
+                        picker.$emit('pick', [start, end]);
+                    }
+                }]
+            },
             user_info: {
                 name: '',
                 logo: '',
@@ -128,6 +163,7 @@ export default {
             sec_check_item: [],
             company_name: '',
             saved_cur_row: {},
+            date_range: '',
         };
     },
     watch: {
@@ -136,6 +172,23 @@ export default {
         },
     },
     methods: {
+        formatDateTime: function (date) {
+            var y = date.getFullYear();
+            var m = date.getMonth() + 1;
+            m = m < 10 ? ('0' + m) : m;
+            var d = date.getDate();
+            d = d < 10 ? ('0' + d) : d;
+            return y + '-' + m + '-' + d;
+        },
+        export_sec_check: function () {
+            var vue_this = this;
+            var begin_date = this.formatDateTime(this.date_range[0]);
+            var end_date = this.formatDateTime(this.date_range[1]);
+            vue_this.$call_remote_process("stuff_plan_management", "export_sec_check_history", [vue_this.$cookies.get("pa_ssid"), begin_date, end_date]).then(function (resp) {
+                console.log(resp);
+                window.open(vue_this.$remote_url + resp);
+            });
+        },
         confirm_lcd: function (_lcd, is_confirm) {
             var vue_this = this;
             vue_this.$call_remote_process("stuff_plan_management", "confirm_sec_check_data", [vue_this.$cookies.get("pa_ssid"), _lcd.content_id, is_confirm]).then(function (resp) {
