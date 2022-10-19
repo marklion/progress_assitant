@@ -10,7 +10,7 @@
             <van-cell icon="phone-o" title="电话号" :value="driver_phone"></van-cell>
             <van-cell icon="idcard" title="身份证号" :value="driver_id"></van-cell>
 
-            <licenseCollapse title="证件" icon="passed" :licenseList="driverLicenseList" @open="loadDriverLicense" @submit="onSubmitLicense" @update="doLicenseUpdate" @delete="doLicenseDelete"></licenseCollapse>
+            <licenseCollapse v-if="need_driver_license" title="证件" icon="passed" :licenseList="driverLicenseList" @open="loadDriverLicense" @submit="onSubmitLicense" @update="doLicenseUpdate" @delete="doLicenseDelete"></licenseCollapse>
 
         </van-cell-group>
 
@@ -32,13 +32,16 @@
                 <van-cell v-if="!single_trans.is_buy" :title="single_trans.destination_company" center>
                     <template #right-icon>
                         <div style="margin-left:8px;">
-                            <div v-if="single_trans.need_sec_check  ">
-                                <van-button v-if="!single_trans.sec_check_passed" type="info" plain size="mini" @click="enter_sec_check_prepare(single_trans.destination_company, single_trans.main_vichele, single_trans.behind_vichele, driver_phone)">
-                                    上传安检信息
-                                </van-button>
+                            <div v-if="single_trans.need_sec_check">
+                                <div v-if="!single_trans.sec_check_passed">
+                                    <span>安检未通过</span>
+                                    <van-button type="info" plain size="mini" @click="enter_sec_check_prepare(single_trans.destination_company, single_trans.main_vichele, single_trans.behind_vichele, driver_phone)">
+                                        上传安检信息
+                                    </van-button>
+                                </div>
                                 <div v-else>
                                     <van-button type="warning" plain size="mini" @click="enter_sec_check_prepare(single_trans.destination_company, single_trans.main_vichele, single_trans.behind_vichele, driver_phone)">
-                                        更改安检信息
+                                        查看证件信息
                                     </van-button>
                                     <van-button v-if="should_checkin(single_trans.date) && !single_trans.is_registered && single_trans.destination_company" type="info" size="small" @click="register_vichele(single_trans.destination_company, single_trans.id)">排号
                                     </van-button>
@@ -117,7 +120,7 @@
         </van-form>
     </div>
 
-    <van-dialog v-model="sec_check_diag_show" title="安检" closeOnClickOverlay :showConfirmButton="false">
+    <van-dialog show-cancel-button cancel-button-text="关闭" v-model="sec_check_diag_show" title="安检" closeOnClickOverlay :showConfirmButton="false">
         <sec-check-diag :company="sec_check_company" :mv="sec_check_mv" :bv="sec_check_bv" :driver="sec_check_driver"></sec-check-diag>
     </van-dialog>
 </div>
@@ -187,6 +190,15 @@ export default {
         };
     },
     computed: {
+        need_driver_license: function () {
+            var ret = false;
+            this.trans_info.forEach(element => {
+                if (element.need_license) {
+                    ret = true;
+                }
+            });
+            return ret;
+        },
         company_for_select: function () {
             let ret = [];
             if (this.trans_info.length > 0) {

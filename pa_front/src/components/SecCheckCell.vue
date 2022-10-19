@@ -7,9 +7,13 @@
             <van-tag v-else-if="scd_online.has_confirmed" type="success">已安检</van-tag>
             <van-tag v-else type="warning">已上传</van-tag>
         </template>
+        <template #right-icon>
+            <van-button size="mini" v-if="scd_online.id == 0" type="info">上传</van-button>
+            <van-button size="mini" v-else type="warning">查看</van-button>
+        </template>
     </van-cell>
 
-    <van-dialog v-model="upload_diag" title="上传信息" get-container="body" closeOnClickOverlay :showConfirmButton="false">
+    <van-dialog show-cancel-button cancel-button-text="取消" v-model="upload_diag" title="上传信息" get-container="body" closeOnClickOverlay @confirm="add_scd">
         <van-notice-bar left-icon="volume-o" :text="lr.prompt" />
         <van-form @submit="add_scd">
             <van-field v-if="lr.input_method.indexOf(1) != -1" v-model="new_scd.input_content" label="填写信息" :placeholder="'请填写' + lr.name" :rules="[{ required: true, message: '请填写' }]" />
@@ -22,10 +26,9 @@
             <van-popup v-model="showPicker" position="bottom">
                 <van-datetime-picker :minDate="new Date()" type="date" @confirm="onConfirm" @cancel="showPicker = false" />
             </van-popup>
-            <van-button plain block>确认</van-button>
         </van-form>
     </van-dialog>
-    <van-dialog v-model="show_lcd_detail" title="详细信息" get-container="body" closeOnClickOverlay :showConfirmButton="false">
+    <van-dialog show-cancel-button cancel-button-text="关闭" v-model="show_lcd_detail" title="详细信息" get-container="body" closeOnClickOverlay confirm-button-text="删除" @confirm="delete_lcd">
         <van-cell-group :title="lr.name">
             <van-cell v-if="scd_online.input_content" title="内容" :value="scd_online.input_content"></van-cell>
             <van-cell v-if="scd_online.attachment_path" title="照片">
@@ -33,7 +36,6 @@
             </van-cell>
             <van-cell title="有效期" :value="scd_online.expired_date"></van-cell>
         </van-cell-group>
-        <van-button plain block @click="delete_lcd">删除重传</van-button>
     </van-dialog>
 </div>
 </template>
