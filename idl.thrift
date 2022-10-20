@@ -660,7 +660,7 @@ service open_api_management {
     ticket_detail get_vehicle_info_by_id(1:string id) throws (1:gen_exp e),
     bool modify_vehicle_info_from_ticket(1:string ssid, 2:ticket_detail ticket) throws (1:gen_exp e),
     list<push_balance_req> get_all_customer_balance(1:string token) throws (1:gen_exp e),
-    string export_balance_audit_log(1:string token, 2:string company_name) throws (1:gen_exp e),
+    string export_balance_audit_log(1:string token, 2:string company_name, 3:string begin_date, 4:string end_date) throws (1:gen_exp e),
     today_plan_brief_info get_today_brief_info(1:string token) throws (1:gen_exp e),
     bool undo_vehicle_weight(1:string token, 2:string id) throws (1:gen_exp e),
     bool record_p_weight(1:string token, 2:string id) throws (1:gen_exp e),

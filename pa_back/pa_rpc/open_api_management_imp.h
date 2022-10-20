@@ -1070,7 +1070,7 @@ public:
         }
     }
 
-    virtual void export_balance_audit_log(std::string &_return, const std::string &token, const std::string &company_name)
+    virtual void export_balance_audit_log(std::string &_return, const std::string &token, const std::string &company_name, const std::string &begin_date, const std::string &end_date)
     {
         log_audit_basedon_token(token, __FUNCTION__);
         auto company = _get_token_company(token);
@@ -1088,7 +1088,7 @@ public:
         {
             PA_RETURN_MSG(OPEN_API_MSG_NO_PERMISSION);
         }
-        auto all_history = contract->get_all_children<pa_sql_balance_history>("belong_contract");
+        auto all_history = contract->get_all_children<pa_sql_balance_history>("belong_contract", "datetime(timestamp) >= date('%s') AND datetime(timestamp) <= date('%s')", begin_date.c_str(), end_date.c_str());
         std::string file_name_no_ext = "balance_autdig_export" + std::to_string(time(NULL)) + token;
         std::string file_name = "/dist/logo_res/" + file_name_no_ext + ".csv";
         std::ofstream stream(file_name);
@@ -1245,10 +1245,10 @@ public:
         single_vehicle.driver_id = _req.driverID;
         single_vehicle.driver_phone = _req.driverPhone;
         single_vehicle.drop_address = _req.deliverAddress;
-        single_vehicle.use_for = _req.userFor == "气站"?_req.userFor:"气化";
+        single_vehicle.use_for = _req.userFor == "气站" ? _req.userFor : "气化";
         stuff_plan tmp;
         tmp.type_id = si->get_pri_id();
-        tmp.plan_time = _req.arriveDate.length()>0?_req.arriveDate:PA_DATAOPT_current_time().substr(0, 10);
+        tmp.plan_time = _req.arriveDate.length() > 0 ? _req.arriveDate : PA_DATAOPT_current_time().substr(0, 10);
         tmp.name = _req.customerName;
         tmp.price = 1;
         tmp.comment = "第三方接口调用";
@@ -1296,7 +1296,7 @@ public:
                 {
                     _return = std::to_string(order_number);
                     spmh.confirm_plan(order_number, lg_info->ssid, "第三方接口调用");
-                    spmh.confirm_pay(order_number, lg_info->ssid,"第三方接口调用");
+                    spmh.confirm_pay(order_number, lg_info->ssid, "第三方接口调用");
                 }
             }
         }

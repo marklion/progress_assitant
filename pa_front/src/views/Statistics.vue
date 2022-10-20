@@ -19,9 +19,9 @@
         </div>
     </van-cell-group>
     <van-cell-group title="按计划创建时间导出">
-        <van-cell title="选择日期区间" :value="date" @click="show_date = true" center>
+        <van-cell title="选择日期区间" :value="date" @click="show_date_plan = true" center>
         </van-cell>
-        <van-calendar v-model="show_date" get-container="body" position="right" type="range" @confirm="onConfirm" :min-date="minDate" :max-date="maxDate" />
+        <van-calendar v-model="show_date_plan" get-container="body" position="right" type="range" @confirm="onConfirm" :min-date="minDate" :max-date="maxDate" />
     </van-cell-group>
     <export-file :remote_file="download_url" v-model="show_export_file"></export-file>
     <van-cell-group title="按计划日期导出">
@@ -80,6 +80,7 @@ export default {
             end_date: 0,
             date: '',
             show_date: false,
+            show_date_plan: false,
             minDate: new Date(),
             maxDate: new Date(),
             download_url: '',
@@ -166,7 +167,7 @@ export default {
         },
         onConfirm: function (_date) {
             const [start, end] = _date;
-            this.show_date = false;
+            this.show_date_plan = false;
             this.begin_date = start.valueOf() / 1000;
             this.end_date = end.valueOf() / 1000 + 60 * 60 * 24;
             this.date = `${start.getFullYear()}/${start.getMonth() + 1}/${start.getDate()}-${end.getFullYear()}/${end.getMonth() + 1}/${end.getDate()}`
