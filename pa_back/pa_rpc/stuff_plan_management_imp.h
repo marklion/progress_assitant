@@ -973,7 +973,7 @@ public:
             stream << csv_bom;
             csv2::Writer<csv2::delimiter<','>> writer(stream);
             std::vector<std::string> table_header = {
-                "装液日期", "客户名称", "货名", "车牌", "车挂", "司机姓名", "司机电话", "当前状态", "卸车地点", "用途", "净重", "单价", "金额"};
+                "计划日期", "客户名称", "货名", "车牌", "车挂", "司机姓名", "司机电话", "当前状态", "卸车地点", "用途", "净重", "单价", "金额", "磅单号", "装车时间"};
             if (!user->buyer)
             {
                 table_header.insert(table_header.begin() + 1, "客户编码");
@@ -1059,6 +1059,8 @@ public:
                             single_rec.push_back(itr.count);
                             single_rec.push_back(archive_plan->unit_price);
                             single_rec.push_back(pa_double2string_reserve2(std::stod(archive_plan->unit_price) * std::stod(itr.count)));
+                            single_rec.push_back(itr.ticket_no);
+                            single_rec.push_back(itr.deliver_timestamp);
 
                             writer.write_row(single_rec);
                         }
@@ -1095,6 +1097,8 @@ public:
                             single_rec.push_back(pa_double2string_reserve2(vichele_itr.count));
                             single_rec.push_back(pa_double2string_reserve2(plan->price));
                             single_rec.push_back(pa_double2string_reserve2(vichele_itr.count * plan->price));
+                            single_rec.push_back(vichele_itr.ticket_no);
+                            single_rec.push_back(vichele_itr.deliver_timestamp);
                             writer.write_row(single_rec);
                         }
                     }
@@ -1217,7 +1221,7 @@ public:
         return ret;
     }
 
-    std::string get_vehicle_same_result(const std::string &_vehicle_number, const std::list<pa_sql_single_vichele> &_list, const std::string &plan_time_day )
+    std::string get_vehicle_same_result(const std::string &_vehicle_number, const std::list<pa_sql_single_vichele> &_list, const std::string &plan_time_day)
     {
         std::string ret;
 
@@ -2845,13 +2849,21 @@ public:
             auto scd = lr->get_children<pa_sql_sec_check_data>("belong_lr", "related_info == '%s'", related_info.c_str());
             if (scd)
             {
-                _return.attachment_path = scd->attachment_path;
-                _return.expired_date = scd->expired_date;
-                _return.id = scd->get_pri_id();
-                _return.input_content = scd->input_content;
-                _return.related_info = scd->related_info;
-                _return.has_confirmed = scd->has_confirmed;
-                _return.related_type_id = lr->get_pri_id();
+                auto lic_date = PA_DATAOPT_timestring_2_date(scd->expired_date + " 00:00:00");
+                if (lic_date < time(nullptr))
+                {
+                    scd->remove_record();
+                }
+                else
+                {
+                    _return.attachment_path = scd->attachment_path;
+                    _return.expired_date = scd->expired_date;
+                    _return.id = scd->get_pri_id();
+                    _return.input_content = scd->input_content;
+                    _return.related_info = scd->related_info;
+                    _return.has_confirmed = scd->has_confirmed;
+                    _return.related_type_id = lr->get_pri_id();
+                }
             }
         }
     }
