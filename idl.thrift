@@ -11,6 +11,7 @@ struct user_info {
     5:bool buyer,
     6:string phone,
     7:i64 groupid,
+    8:bool is_read_only,
 }
 
 struct driver_info {
@@ -214,6 +215,7 @@ service company_management {
     list<license_require_info> get_license_require(1:string company_name) throws (1:gen_exp e),
     execute_record_info get_execute_rate_by_name(1:string ssid, 2:string name) throws (1:gen_exp e),
     string export_exe_rate(1:string ssid, 2:string begin_date, 3:string end_date) throws (1:gen_exp e),
+    bool change_user_read_only(1:string ssid, 2:i64 user_id) throws (1:gen_exp e),
 }
 
 struct bidding_customer{
@@ -501,6 +503,7 @@ service stuff_plan_management {
     license_common_data get_all_sec_check_data(1:i64 related_type_id, 2:string related_info) throws (1:gen_exp e),
     bool confirm_sec_check_data(1:string ssid, 2:i64 lcd_id, 3:bool is_confirm) throws (1:gen_exp e);
     string export_sec_check_history(1:string ssid, 2:string begin_date, 3:string end_date) throws (1:gen_exp e),
+    string export_plan_by_deliver_date_range(1:string ssid, 2:string begin_date, 3:string end_date) throws(1:gen_exp e),
 }
 
 struct api_extra_transformation {

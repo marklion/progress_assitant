@@ -185,7 +185,7 @@ public:
     virtual std::vector<sqlite_orm_column> columns_defined() = 0;
     virtual std::string table_name() = 0;
 
-    int get_pri_id() {
+    int get_pri_id() const {
         return m_pri_id;
     }
     void remove_table() {

@@ -23,6 +23,12 @@
         </van-cell>
         <van-calendar v-model="show_date_plan" get-container="body" position="right" type="range" @confirm="onConfirm" :min-date="minDate" :max-date="maxDate" />
     </van-cell-group>
+    <van-cell-group title="按装车时间导出">
+        <van-cell title="选择日期区间" :value="date" @click="show_date_deliver = true" center>
+        </van-cell>
+        <van-calendar v-model="show_date_deliver" get-container="body" position="right" type="range" @confirm="export_plan_deliver" :min-date="minDate" :max-date="maxDate" />
+    </van-cell-group>
+
     <export-file :remote_file="download_url" v-model="show_export_file"></export-file>
     <van-cell-group title="按计划日期导出">
         <van-field readonly clickable name="calendar" :value="plan_search_date" label="计划日期" placeholder="点击选择日期" @click="show_plan_search_date = true" />
@@ -81,6 +87,7 @@ export default {
             date: '',
             show_date: false,
             show_date_plan: false,
+            show_date_deliver: false,
             minDate: new Date(),
             maxDate: new Date(),
             download_url: '',
@@ -93,6 +100,23 @@ export default {
         "export-file": ExportFile,
     },
     methods: {
+        export_plan_deliver: function (_date) {
+            const [start, end] = _date;
+            this.show_date_deliver = false;
+            this.date = `${start.getFullYear()}/${start.getMonth() + 1}/${start.getDate()}-${end.getFullYear()}/${end.getMonth() + 1}/${end.getDate()}`
+            end.setDate(end.getDate() + 1);
+            var begin_date = this.formatDateTime(start);
+            var end_date = this.formatDateTime(end);
+            var vue_this = this;
+            vue_this.$call_remote_process("stuff_plan_management", "export_plan_by_deliver_date_range", [vue_this.$cookies.get("pa_ssid"), begin_date, end_date]).then(function (resp) {
+                if (resp) {
+                    vue_this.download_url = vue_this.$remote_url + resp;
+                    vue_this.show_export_file = true;
+                } else {
+                    vue_this.$toast("无信息");
+                }
+            });
+        },
         confirm_search_date: function (_date) {
             var vue_this = this;
             vue_this.show_plan_search_date = false;

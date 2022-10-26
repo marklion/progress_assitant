@@ -120,7 +120,7 @@
         </van-form>
     </div>
 
-    <van-dialog show-cancel-button cancel-button-text="关闭" v-model="sec_check_diag_show" title="安检" closeOnClickOverlay :showConfirmButton="false">
+    <van-dialog get-container="body" show-cancel-button cancel-button-text="关闭" v-model="sec_check_diag_show" title="安检" closeOnClickOverlay :showConfirmButton="false">
         <sec-check-diag :company="sec_check_company" :mv="sec_check_mv" :bv="sec_check_bv" :driver="sec_check_driver"></sec-check-diag>
     </van-dialog>
 </div>

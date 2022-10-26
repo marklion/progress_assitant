@@ -91,7 +91,6 @@ const routes = [
     component: () => import('../views/SecCheckMobile.vue'),
     meta: {
       private_title: '安检',
-      has_go_back: true,
     },
   },
   {

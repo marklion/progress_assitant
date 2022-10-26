@@ -25,9 +25,16 @@
             </van-cell>
         </van-tab>
         <van-tab title="所有员工">
-            <van-cell v-for="(single_user, index) in all_user" :key="index" :label="'手机号' + single_user.phone" :title="single_user.name">
+            <van-cell v-for="(single_user, index) in all_user" :key="index" :label="'手机号' + single_user.phone">
+                <template #title>
+                    <span>{{single_user.name}}</span>
+                    <van-tag v-if="single_user.is_read_only" type="warning">只读</van-tag>
+                </template>
                 <template #right-icon>
                     <van-row :gutter="10" type="flex" align="center">
+                        <van-col>
+                            <van-button type="warning" plain size="small" @click="set_user_read_only(single_user)">更改只读</van-button>
+                        </van-col>
                         <van-col>
                             <van-popover v-model="showPopover[index]" trigger="click" :actions="actions" @select="onSelect" @open="focus_user = single_user.user_id" @close="focus_user = 0">
                                 <template #reference>
@@ -167,6 +174,14 @@ export default {
         };
     },
     methods: {
+        set_user_read_only: function (_user) {
+            var vue_this = this;
+            vue_this.$call_remote_process("company_management", "change_user_read_only", [vue_this.$cookies.get("pa_ssid"), _user.user_id]).then(function (resp) {
+                if (resp) {
+                    vue_this.init_all_user();
+                }
+            });
+        },
         del_stamp: function () {
             var vue_this = this;
             vue_this.$call_remote_process("company_management", "del_stamp_pic", [vue_this.$cookies.get('pa_ssid')]).then(function (resp) {

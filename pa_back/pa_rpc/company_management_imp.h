@@ -51,7 +51,7 @@ public:
     virtual int64_t add_type(const std::string &name, const int64_t price, const std::string &last, const std::string &ssid)
     {
         int64_t ret = 0;
-        auto user = PA_DATAOPT_get_online_user(ssid);
+        auto user = PA_DATAOPT_get_online_user(ssid,true);
         if (user) {
             auto company = user->get_parent<pa_sql_company>("belong_company");
             if (company) {
@@ -83,7 +83,7 @@ public:
     virtual bool edit_type(const stuff_detail &stuff, const std::string &ssid)
     {
         bool ret = false;
-        auto user = PA_DATAOPT_get_online_user(ssid);
+        auto user = PA_DATAOPT_get_online_user(ssid, true);
         if (user)
         {
             if (user->groupid != 1)
@@ -134,7 +134,7 @@ public:
     }
     virtual void remove_type(const stuff_detail &stuff, const std::string &ssid)
     {
-        auto user = PA_DATAOPT_get_online_user(ssid);
+        auto user = PA_DATAOPT_get_online_user(ssid, true);
         if (user)
         {
             auto company = user->get_parent<pa_sql_company>("belong_company");
@@ -193,7 +193,7 @@ public:
     {
         bool ret = false;
         auto apply = sqlite_orm::search_record<pa_sql_user_apply>(apply_id);
-        auto opt_user = PA_DATAOPT_get_online_user(ssid);
+        auto opt_user = PA_DATAOPT_get_online_user(ssid, true);
         if (!opt_user)
         {
             PA_RETURN_UNLOGIN_MSG();
@@ -240,7 +240,7 @@ public:
     virtual bool readd_type(const stuff_detail &stuff, const std::string &ssid)
     {
         bool ret = false;
-        auto user = PA_DATAOPT_get_online_user(ssid);
+        auto user = PA_DATAOPT_get_online_user(ssid, true);
         if (user)
         {
             auto company = user->get_parent<pa_sql_company>("belong_company");
@@ -357,7 +357,7 @@ public:
     virtual bool set_notice(const std::string &ssid, const std::string &notice)
     {
         bool ret = false;
-        auto user = PA_DATAOPT_get_online_user(ssid);
+        auto user = PA_DATAOPT_get_online_user(ssid, true);
         if (user)
         {
             auto company = user->get_parent<pa_sql_company>("belong_company");
@@ -419,13 +419,14 @@ public:
             tmp.phone = itr.phone;
             tmp.user_id = itr.get_pri_id();
             tmp.groupid = itr.groupid;
+            tmp.is_read_only = itr.is_read_only;
             _return.push_back(tmp);
         }
     }
 
     virtual bool remove_user_from_company(const std::string &ssid, const int64_t user_id)
     {
-        auto user = PA_DATAOPT_get_online_user(ssid);
+        auto user = PA_DATAOPT_get_online_user(ssid, true);
         if (!user)
         {
             PA_RETURN_UNLOGIN_MSG();
@@ -695,7 +696,7 @@ public:
     {
         bool ret = false;
 
-        auto user = PA_DATAOPT_get_online_user(ssid);
+        auto user = PA_DATAOPT_get_online_user(ssid, true);
         if (!user)
         {
             PA_RETURN_UNLOGIN_MSG();
@@ -745,7 +746,7 @@ public:
     }
     virtual void del_contract(const std::string &ssid, const int64_t id)
     {
-        auto user = PA_DATAOPT_get_online_user(ssid);
+        auto user = PA_DATAOPT_get_online_user(ssid, true);
         if (!user)
         {
             PA_RETURN_UNLOGIN_MSG();
@@ -838,7 +839,7 @@ public:
 
     virtual bool set_work_time(const std::string &ssid, const int64_t start_work_time, const int64_t end_work_time)
     {
-        auto user = PA_DATAOPT_get_online_user(ssid);
+        auto user = PA_DATAOPT_get_online_user(ssid, true);
         if (!user)
         {
             PA_RETURN_UNLOGIN_MSG();
@@ -904,7 +905,7 @@ public:
     virtual bool set_third_info(const third_dev_info &_info, const std::string &ssid)
     {
         bool ret = false;
-        auto opt_user = PA_DATAOPT_get_online_user(ssid);
+        auto opt_user = PA_DATAOPT_get_online_user(ssid, true);
         if (!opt_user)
         {
             PA_RETURN_UNLOGIN_MSG();
@@ -1004,7 +1005,7 @@ public:
     {
         bool ret = false;
 
-        auto opt_user = PA_DATAOPT_get_online_user(ssid);
+        auto opt_user = PA_DATAOPT_get_online_user(ssid, true);
         if (!opt_user)
         {
             PA_RETURN_UNLOGIN_MSG();
@@ -1080,7 +1081,7 @@ public:
 
     virtual bool add_stamp_pic(const std::string &ssid, const std::string &pic_base64)
     {
-        auto user = PA_DATAOPT_get_online_user(ssid);
+        auto user = PA_DATAOPT_get_online_user(ssid, true);
         if (!user)
         {
             PA_RETURN_UNLOGIN_MSG();
@@ -1101,7 +1102,7 @@ public:
     }
     virtual bool del_stamp_pic(const std::string &ssid)
     {
-        auto user = PA_DATAOPT_get_online_user(ssid);
+        auto user = PA_DATAOPT_get_online_user(ssid, true);
         if (!user)
         {
             PA_RETURN_UNLOGIN_MSG();
@@ -1256,6 +1257,30 @@ public:
             _return.vehicle_count = vc;
         }
     }
+    struct exe_rate_each_day {
+        std::string date;
+        int deliver_count = 0;
+        int vehicle_count = 0;
+    };
+    std::list<exe_rate_each_day> pri_get_exe_rate(int64_t contract_id, const std::string &begin_date, const std::string &end_date )
+    {
+        std::list<exe_rate_each_day> ret;
+        auto contract = sqlite_orm::search_record<pa_sql_contract>(contract_id);
+        if (contract)
+        {
+            auto ers = contract->get_all_children<pa_sql_execute_record>("belong_contract", "date(plan_date) >= ('%s') AND date(plan_date) <= date('%s')", begin_date.c_str(), end_date.c_str());
+            for (auto &itr:ers)
+            {
+                exe_rate_each_day tmp;
+                tmp.deliver_count = itr.deliver_count;
+                tmp.vehicle_count = itr.plan_vehicle_count;
+                tmp.date = itr.plan_date;
+                ret.push_back(tmp);
+            }
+        }
+
+        return ret;
+    }
 
     virtual int add_license_require_by_name(const std::string &ssid, const std::string &name)
     {
@@ -1374,6 +1399,100 @@ public:
         auto today = PA_DATAOPT_current_time().substr(0, 10);
         get_execute_record(_return, contract->get_pri_id(), today, today);
     }
+        struct export_exe_item
+        {
+            std::string company_name;
+            int vehicle_count = 0;
+            int deliver_count = 0;
+        };
+    void append_each_day_rate(const std::string &_file_name, std::list<pa_sql_contract> &_customers, const std::string &_begin_date, const std::string &_end_date)
+    {
+        std::map<std::string,std::list<export_exe_item>> all_record;
+        for (auto &itr : _customers)
+        {
+            export_exe_item tmp;
+            auto cust = itr.get_parent<pa_sql_company>("a_side");
+            if (cust)
+            {
+                tmp.company_name = cust->name;
+            }
+            auto items = pri_get_exe_rate(itr.get_pri_id(), _begin_date, _end_date);
+            for (auto &single_item : items)
+            {
+                tmp.deliver_count = single_item.deliver_count;
+                tmp.vehicle_count = single_item.vehicle_count;
+                all_record[single_item.date].push_back(tmp);
+            }
+        }
+        struct date_exe_rate_map {
+            std::string date;
+            std::list<export_exe_item> item;
+        };
+        std::list<date_exe_rate_map> sorted_map;
+        for (auto itr = all_record.begin(); itr != all_record.end(); ++itr)
+        {
+            date_exe_rate_map tmp;
+            tmp.date = itr->first;
+            tmp.item = itr->second;
+            sorted_map.push_back(tmp);
+        }
+        sorted_map.sort([](const date_exe_rate_map &_first, const date_exe_rate_map &_second){
+            return _first.date > _second.date;
+        });
+        for (auto &itr:sorted_map)
+        {
+            std::string file_name_no_ext = "each_day_exe_rate_export" + std::to_string(time(NULL)) + itr.date;
+            std::string file_name = "/dist/logo_res/" + file_name_no_ext + ".csv";
+            std::ofstream stream(file_name);
+            std::string csv_bom = {
+                (char)0xef, (char)0xbb, (char)0xbf};
+            stream << csv_bom;
+            csv2::Writer<csv2::delimiter<','>> writer(stream);
+            std::vector<std::string> table_header = {
+                "客户名称", "计划数", "完成数", "完成率"};
+            writer.write_row(table_header);
+            for (auto &sub_itr : itr.item)
+            {
+                std::vector<std::string> one_record;
+                one_record.push_back(sub_itr.company_name);
+                one_record.push_back(std::to_string(sub_itr.vehicle_count));
+                one_record.push_back(std::to_string(sub_itr.deliver_count));
+                if (sub_itr.vehicle_count > 0)
+                {
+                    one_record.push_back(std::to_string(sub_itr.deliver_count * 100 / sub_itr.vehicle_count) + "%");
+                }
+                else
+                {
+                    one_record.push_back("无");
+                }
+                writer.write_row(one_record);
+            }
+            stream.close();
+            std::string py_converter =
+                "import pandas as pd\n"
+                "import sys\n"
+                "from openpyxl import load_workbook\n"
+                "book = load_workbook('/dist/logo_res/" + _file_name + ".xlsx')\n"
+                "csv = pd.read_csv('" +
+                file_name + "', encoding='utf-8')\n"
+                            "csv.index = csv.index + 1\n"
+                            "with pd.ExcelWriter('/dist/logo_res/" + _file_name + ".xlsx', engine='openpyxl') as writer:\n"
+                            "\twriter.book = book\n"
+                            "\tcsv.to_excel(writer, '" + itr.date +"')\n"
+                            "\twriter.save()\n";
+                tdf_log tmp_log("python_exec");
+                tmp_log.log(py_converter);
+
+            if (Py_IsInitialized())
+            {
+                PyRun_SimpleString(py_converter.c_str());
+            }
+            else
+            {
+                PA_RETURN_MSG("导出失败");
+            }
+        }
+    }
 
     virtual void export_exe_rate(std::string &_return, const std::string &ssid, const std::string &begin_date, const std::string &end_date)
     {
@@ -1382,12 +1501,7 @@ public:
         {
             PA_RETURN_NOPRIVA_MSG();
         }
-        struct export_exe_item
-        {
-            std::string company_name;
-            int vehicle_count = 0;
-            int deliver_count = 0;
-        };
+
         std::vector<export_exe_item> export_items;
         auto related_customers = company->get_all_children<pa_sql_contract>("b_side");
         for (auto &itr : related_customers)
@@ -1404,7 +1518,7 @@ public:
             tmp_item.vehicle_count = tmp.vehicle_count;
             export_items.push_back(tmp_item);
         }
-        std::string file_name_no_ext = "exe_rate_export" + std::to_string(time(NULL)) + std::to_string(company->get_pri_id());
+        std::string file_name_no_ext = "执行率" + begin_date + "-" + end_date + "===" + std::to_string(time(NULL)) + std::to_string(company->get_pri_id());
         std::string file_name = "/dist/logo_res/" + file_name_no_ext + ".csv";
         std::ofstream stream(file_name);
         std::string csv_bom = {
@@ -1438,17 +1552,41 @@ public:
             file_name + "', encoding='utf-8')\n"
                         "csv.index = csv.index + 1\n"
                         "csv.to_excel('/dist/logo_res/" +
-            file_name_no_ext + ".xlsx', sheet_name='data')\n";
+            file_name_no_ext + ".xlsx', sheet_name='总体')\n";
 
         if (Py_IsInitialized())
         {
             PyRun_SimpleString(py_converter.c_str());
             _return = "/logo_res/" + file_name_no_ext + ".xlsx";
+            append_each_day_rate(file_name_no_ext, related_customers, begin_date, end_date);
         }
         else
         {
             PA_RETURN_MSG("导出失败");
         }
+    }
+
+    virtual bool change_user_read_only(const std::string &ssid, const int64_t user_id)
+    {
+        bool ret = false;
+
+        auto opt_user = PA_DATAOPT_get_online_user(ssid);
+        auto company = PA_DATAOPT_get_company_by_ssid(ssid);
+        if (!opt_user || !company || !PA_DATAOPT_is_admin(opt_user->phone, company->name))
+        {
+            PA_RETURN_NOPRIVA_MSG();
+        }
+
+        auto dest_user = company->get_children<pa_sql_userinfo>("belong_company", "PRI_ID == %ld", user_id);
+        if (!dest_user)
+        {
+            PA_RETURN_NOPRIVA_MSG();
+        }
+        dest_user->is_read_only = !dest_user->is_read_only;
+
+        ret = dest_user->update_record();
+
+        return ret;
     }
 };
 #endif // _COMPANY_MANAGEMENT_IMP_H_
