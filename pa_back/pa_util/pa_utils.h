@@ -34,7 +34,7 @@ struct third_dev_req_param{
     proc_third_ret callback = nullptr;
 };
 
-std::unique_ptr<pa_sql_userinfo> PA_DATAOPT_get_online_user(const std::string &_ssid);
+std::unique_ptr<pa_sql_userinfo> PA_DATAOPT_get_online_user(const std::string &_ssid, bool _need_read_pri = false);
 std::string PA_DATAOPT_store_logo_to_file(const std::string &_logo, const std::string &_upid);
 std::string PA_DATAOPT_store_attach_file(const std::string &_content, bool _is_pdf, const std::string &_name);
 std::unique_ptr<pa_sql_userlogin> PA_DATAOPT_pull_user_info_from_wechat(const std::string &_acctok, const std::string &_open_id);

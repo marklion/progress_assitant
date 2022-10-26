@@ -69,7 +69,7 @@ public:
     virtual bool add_company_follow_stuff(const std::string &company_name, const int64_t type_id, const std::string &ssid)
     {
         bool ret = false;
-        auto opt_user = PA_DATAOPT_get_online_user(ssid);
+        auto opt_user = PA_DATAOPT_get_online_user(ssid, true);
         if (!opt_user)
         {
             PA_RETURN_UNLOGIN_MSG();
@@ -110,7 +110,7 @@ public:
     virtual bool cancle_company_follow_stuff(const std::string &company_name, const int64_t type_id, const std::string &ssid)
     {
         bool ret = false;
-        auto opt_user = PA_DATAOPT_get_online_user(ssid);
+        auto opt_user = PA_DATAOPT_get_online_user(ssid, true);
         if (!opt_user)
         {
             PA_RETURN_UNLOGIN_MSG();
@@ -473,7 +473,7 @@ public:
         {
             PA_RETURN_NOPRIVA_MSG();
         }
-        auto user = PA_DATAOPT_get_online_user(ssid);
+        auto user = PA_DATAOPT_get_online_user(ssid, true);
         if (!user)
         {
             PA_RETURN_NOPRIVA_MSG();
@@ -536,7 +536,7 @@ public:
     {
         bool ret = false;
 
-        auto user = PA_DATAOPT_get_online_user(ssid);
+        auto user = PA_DATAOPT_get_online_user(ssid, true);
         if (!user || user->buyer)
         {
             PA_RETURN_NOPRIVA_MSG();
@@ -555,7 +555,7 @@ public:
     }
     virtual void remove_price_timer(const std::string &ssid, const int64_t id)
     {
-        auto user = PA_DATAOPT_get_online_user(ssid);
+        auto user = PA_DATAOPT_get_online_user(ssid, true);
         if (!user || user->buyer)
         {
             PA_RETURN_NOPRIVA_MSG();

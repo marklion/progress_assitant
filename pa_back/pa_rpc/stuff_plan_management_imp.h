@@ -701,7 +701,7 @@ public:
     virtual bool confirm_plan(const int64_t plan_id, const std::string &ssid, const std::string &comment)
     {
         bool ret = false;
-        auto opt_user = PA_DATAOPT_get_online_user(ssid);
+        auto opt_user = PA_DATAOPT_get_online_user(ssid, true);
         if (!opt_user)
         {
             PA_RETURN_UNLOGIN_MSG();
@@ -773,7 +773,7 @@ public:
 
     virtual bool confirm_pay(const int64_t plan_id, const std::string &ssid, const std::string &comment)
     {
-        auto user = PA_DATAOPT_get_online_user(ssid);
+        auto user = PA_DATAOPT_get_online_user(ssid, true);
         if (!user)
         {
             PA_RETURN_NOPRIVA_MSG();
@@ -783,7 +783,7 @@ public:
 
     virtual bool confirm_deliver(const int64_t plan_id, const std::string &ssid, const std::vector<deliver_info> &deliver_infos, const std::string &reason)
     {
-        auto opt_user = PA_DATAOPT_get_online_user(ssid);
+        auto opt_user = PA_DATAOPT_get_online_user(ssid, true);
         return pri_confirm_deliver(plan_id, *opt_user, deliver_infos, reason);
     }
 
@@ -960,169 +960,187 @@ public:
         return ret;
     }
 
+    struct export_plan_deliver_date_range {
+        std::string begin_date;
+        std::string end_date;
+    };
+
+    std::string pri_export_plan(pa_sql_userinfo &_user, const std::vector<int64> &plan_ids, const export_plan_deliver_date_range &_date_range)
+    {
+        std::string ret;
+        std::string file_name_no_ext = "plan_export" + std::to_string(time(NULL)) + std::to_string(_user.get_pri_id());
+        std::string file_name = "/dist/logo_res/" + file_name_no_ext + ".csv";
+        std::ofstream stream(file_name);
+        std::string csv_bom = {
+            (char)0xef, (char)0xbb, (char)0xbf};
+        stream << csv_bom;
+        csv2::Writer<csv2::delimiter<','>> writer(stream);
+        std::vector<std::string> table_header = {
+            "计划日期", "客户名称", "货名", "车牌", "车挂", "司机姓名", "司机电话", "当前状态", "卸车地点", "用途", "净重", "单价", "金额", "磅单号", "装车时间"};
+        if (!_user.buyer)
+        {
+            table_header.insert(table_header.begin() + 1, "客户编码");
+        }
+        writer.write_row(table_header);
+        for (auto &itr : plan_ids)
+        {
+            auto plan = sqlite_orm::search_record<pa_sql_plan>(itr);
+            if (plan)
+            {
+                std::unique_ptr<pa_sql_archive_plan> archive_plan;
+                if (plan->status == 4)
+                {
+                    archive_plan.reset(plan->get_parent<pa_sql_archive_plan>("archived").release());
+                    if (!archive_plan)
+                    {
+                        PA_RETURN_NOPLAN_MSG();
+                    }
+                }
+                std::string company_name = "";
+                if (archive_plan)
+                {
+                    company_name = archive_plan->buy_company;
+                }
+                else
+                {
+                    if (plan->proxy_company.length() > 0)
+                    {
+                        company_name = plan->proxy_company;
+                    }
+                    else
+                    {
+                        auto created_user = plan->get_parent<pa_sql_userinfo>("created_by");
+                        if (created_user)
+                        {
+                            auto company = created_user->get_parent<pa_sql_company>("belong_company");
+                            if (company)
+                            {
+                                company_name = company->name;
+                            }
+                        }
+                    }
+                }
+
+                std::string customer_code;
+                if (!_user.buyer)
+                {
+                    auto a_side_company = sqlite_orm::search_record<pa_sql_company>("name = '%s'", company_name.c_str());
+                    auto b_side_company = _user.get_parent<pa_sql_company>("belong_company");
+                    if (a_side_company && b_side_company)
+                    {
+                        auto contract = a_side_company->get_children<pa_sql_contract>("a_side", "b_side_ext_key = %ld", b_side_company->get_pri_id());
+                        if (contract)
+                        {
+                            customer_code = contract->customer_code;
+                        }
+                    }
+                }
+
+                std::vector<std::string> single_rec_sample = {plan->plan_time, company_name, plan->name};
+                if (!_user.buyer)
+                {
+                    single_rec_sample.insert(single_rec_sample.begin() + 1, customer_code);
+                }
+                std::string sv_filter = "PRI_ID != 0";
+                if (_date_range.begin_date.length() > 0 && _date_range.end_date.length() > 0)
+                {
+                    sv_filter += " AND datetime(deliver_timestamp) >= date('" + _date_range.begin_date + "') AND datetime(deliver_timestamp) <= date('" + _date_range.end_date + "')";
+                }
+                if (archive_plan)
+                {
+                    auto archive_vichele = archive_plan->get_all_children<pa_sql_archive_vichele_plan>("belong_plan", "%s", sv_filter.c_str());
+                    for (auto &itr : archive_vichele)
+                    {
+                        auto single_rec = single_rec_sample;
+                        single_rec.push_back(itr.main_vichele);
+                        single_rec.push_back(itr.behind_vichele);
+                        single_rec.push_back(itr.driver_name);
+                        single_rec.push_back(itr.driver_phone);
+                        auto status_string = "已提货";
+                        if (itr.finish == 0)
+                        {
+                            status_string = "未提货";
+                        }
+                        single_rec.push_back(status_string);
+                        single_rec.push_back(itr.drop_address);
+                        single_rec.push_back(itr.use_for);
+                        single_rec.push_back(itr.count);
+                        single_rec.push_back(archive_plan->unit_price);
+                        single_rec.push_back(pa_double2string_reserve2(std::stod(archive_plan->unit_price) * std::stod(itr.count)));
+                        single_rec.push_back(itr.ticket_no);
+                        single_rec.push_back(itr.deliver_timestamp);
+
+                        writer.write_row(single_rec);
+                    }
+                }
+                else
+                {
+                    auto all_vichele = plan->get_all_children<pa_sql_single_vichele>("belong_plan", "%s", sv_filter.c_str());
+                    for (auto &vichele_itr : all_vichele)
+                    {
+                        auto single_rec = single_rec_sample;
+                        auto main_vichele = vichele_itr.get_parent<pa_sql_vichele>("main_vichele");
+                        auto behind_vichele = vichele_itr.get_parent<pa_sql_vichele_behind>("behind_vichele");
+                        auto driver = vichele_itr.get_parent<pa_sql_driver>("driver");
+                        if (main_vichele && behind_vichele && driver)
+                        {
+                            single_rec.push_back(main_vichele->number);
+                            single_rec.push_back(behind_vichele->number);
+                            single_rec.push_back(driver->name);
+                            single_rec.push_back(driver->phone);
+                        }
+                        std::string status_str = "未提货";
+                        auto status_rule = PA_STATUS_RULE_get_all();
+                        if (plan->status >= 0 && plan->status < 3 && status_rule[plan->status])
+                        {
+                            status_str = status_rule[plan->status]->get_name();
+                        }
+                        else if (vichele_itr.finish != 0)
+                        {
+                            status_str = "已提货";
+                        }
+                        single_rec.push_back(status_str);
+                        single_rec.push_back(vichele_itr.drop_address);
+                        single_rec.push_back(vichele_itr.use_for);
+                        single_rec.push_back(pa_double2string_reserve2(vichele_itr.count));
+                        single_rec.push_back(pa_double2string_reserve2(plan->price));
+                        single_rec.push_back(pa_double2string_reserve2(vichele_itr.count * plan->price));
+                        single_rec.push_back(vichele_itr.ticket_no);
+                        single_rec.push_back(vichele_itr.deliver_timestamp);
+                        writer.write_row(single_rec);
+                    }
+                }
+            }
+        }
+        stream.close();
+        std::string py_converter =
+            "import pandas as pd\n"
+            "import sys\n"
+            "csv = pd.read_csv('" +
+            file_name + "', encoding='utf-8')\n"
+                        "csv.index = csv.index + 1\n"
+                        "csv.to_excel('/dist/logo_res/" +
+            file_name_no_ext + ".xlsx', sheet_name='data')\n";
+
+        if (Py_IsInitialized())
+        {
+            PyRun_SimpleString(py_converter.c_str());
+            ret = "/logo_res/" + file_name_no_ext + ".xlsx";
+        }
+        else
+        {
+            PA_RETURN_MSG("导出失败");
+        }
+
+        return ret;
+    }
+
     virtual void export_plan(std::string &_return, const std::string &ssid, const std::vector<int64_t> &plan_ids)
     {
         auto user = PA_DATAOPT_get_online_user(ssid);
         if (user)
         {
-            std::string file_name_no_ext = "plan_export" + std::to_string(time(NULL)) + std::to_string(user->get_pri_id());
-            std::string file_name = "/dist/logo_res/" + file_name_no_ext + ".csv";
-            std::ofstream stream(file_name);
-            std::string csv_bom = {
-                (char)0xef, (char)0xbb, (char)0xbf};
-            stream << csv_bom;
-            csv2::Writer<csv2::delimiter<','>> writer(stream);
-            std::vector<std::string> table_header = {
-                "计划日期", "客户名称", "货名", "车牌", "车挂", "司机姓名", "司机电话", "当前状态", "卸车地点", "用途", "净重", "单价", "金额", "磅单号", "装车时间"};
-            if (!user->buyer)
-            {
-                table_header.insert(table_header.begin() + 1, "客户编码");
-            }
-            writer.write_row(table_header);
-            for (auto &itr : plan_ids)
-            {
-                auto plan = sqlite_orm::search_record<pa_sql_plan>(itr);
-                if (plan)
-                {
-                    std::unique_ptr<pa_sql_archive_plan> archive_plan;
-                    if (plan->status == 4)
-                    {
-                        archive_plan.reset(plan->get_parent<pa_sql_archive_plan>("archived").release());
-                        if (!archive_plan)
-                        {
-                            PA_RETURN_NOPLAN_MSG();
-                        }
-                    }
-                    std::string company_name = "";
-                    if (archive_plan)
-                    {
-                        company_name = archive_plan->buy_company;
-                    }
-                    else
-                    {
-                        if (plan->proxy_company.length() > 0)
-                        {
-                            company_name = plan->proxy_company;
-                        }
-                        else
-                        {
-                            auto created_user = plan->get_parent<pa_sql_userinfo>("created_by");
-                            if (created_user)
-                            {
-                                auto company = created_user->get_parent<pa_sql_company>("belong_company");
-                                if (company)
-                                {
-                                    company_name = company->name;
-                                }
-                            }
-                        }
-                    }
-
-                    std::string customer_code;
-                    if (!user->buyer)
-                    {
-                        auto a_side_company = sqlite_orm::search_record<pa_sql_company>("name = '%s'", company_name.c_str());
-                        auto b_side_company = user->get_parent<pa_sql_company>("belong_company");
-                        if (a_side_company && b_side_company)
-                        {
-                            auto contract = a_side_company->get_children<pa_sql_contract>("a_side", "b_side_ext_key = %ld", b_side_company->get_pri_id());
-                            if (contract)
-                            {
-                                customer_code = contract->customer_code;
-                            }
-                        }
-                    }
-
-                    std::vector<std::string> single_rec_sample = {plan->plan_time, company_name, plan->name};
-                    if (!user->buyer)
-                    {
-                        single_rec_sample.insert(single_rec_sample.begin() + 1, customer_code);
-                    }
-                    if (archive_plan)
-                    {
-                        auto archive_vichele = archive_plan->get_all_children<pa_sql_archive_vichele_plan>("belong_plan");
-                        for (auto &itr : archive_vichele)
-                        {
-                            auto single_rec = single_rec_sample;
-                            single_rec.push_back(itr.main_vichele);
-                            single_rec.push_back(itr.behind_vichele);
-                            single_rec.push_back(itr.driver_name);
-                            single_rec.push_back(itr.driver_phone);
-                            auto status_string = "已提货";
-                            if (itr.finish == 0)
-                            {
-                                status_string = "未提货";
-                            }
-                            single_rec.push_back(status_string);
-                            single_rec.push_back(itr.drop_address);
-                            single_rec.push_back(itr.use_for);
-                            single_rec.push_back(itr.count);
-                            single_rec.push_back(archive_plan->unit_price);
-                            single_rec.push_back(pa_double2string_reserve2(std::stod(archive_plan->unit_price) * std::stod(itr.count)));
-                            single_rec.push_back(itr.ticket_no);
-                            single_rec.push_back(itr.deliver_timestamp);
-
-                            writer.write_row(single_rec);
-                        }
-                    }
-                    else
-                    {
-                        auto all_vichele = plan->get_all_children<pa_sql_single_vichele>("belong_plan");
-                        for (auto &vichele_itr : all_vichele)
-                        {
-                            auto single_rec = single_rec_sample;
-                            auto main_vichele = vichele_itr.get_parent<pa_sql_vichele>("main_vichele");
-                            auto behind_vichele = vichele_itr.get_parent<pa_sql_vichele_behind>("behind_vichele");
-                            auto driver = vichele_itr.get_parent<pa_sql_driver>("driver");
-                            if (main_vichele && behind_vichele && driver)
-                            {
-                                single_rec.push_back(main_vichele->number);
-                                single_rec.push_back(behind_vichele->number);
-                                single_rec.push_back(driver->name);
-                                single_rec.push_back(driver->phone);
-                            }
-                            std::string status_str = "未提货";
-                            auto status_rule = PA_STATUS_RULE_get_all();
-                            if (plan->status >= 0 && plan->status < 3 && status_rule[plan->status])
-                            {
-                                status_str = status_rule[plan->status]->get_name();
-                            }
-                            else if (vichele_itr.finish != 0)
-                            {
-                                status_str = "已提货";
-                            }
-                            single_rec.push_back(status_str);
-                            single_rec.push_back(vichele_itr.drop_address);
-                            single_rec.push_back(vichele_itr.use_for);
-                            single_rec.push_back(pa_double2string_reserve2(vichele_itr.count));
-                            single_rec.push_back(pa_double2string_reserve2(plan->price));
-                            single_rec.push_back(pa_double2string_reserve2(vichele_itr.count * plan->price));
-                            single_rec.push_back(vichele_itr.ticket_no);
-                            single_rec.push_back(vichele_itr.deliver_timestamp);
-                            writer.write_row(single_rec);
-                        }
-                    }
-                }
-            }
-            stream.close();
-            std::string py_converter =
-                "import pandas as pd\n"
-                "import sys\n"
-                "csv = pd.read_csv('" +
-                file_name + "', encoding='utf-8')\n"
-                            "csv.index = csv.index + 1\n"
-                            "csv.to_excel('/dist/logo_res/" +
-                file_name_no_ext + ".xlsx', sheet_name='data')\n";
-
-            if (Py_IsInitialized())
-            {
-                PyRun_SimpleString(py_converter.c_str());
-                _return = "/logo_res/" + file_name_no_ext + ".xlsx";
-            }
-            else
-            {
-                PA_RETURN_MSG("导出失败");
-            }
+            _return = pri_export_plan(*user, plan_ids, export_plan_deliver_date_range());
         }
         else
         {
@@ -1198,7 +1216,7 @@ public:
     {
         bool ret = false;
 
-        auto opt_user = PA_DATAOPT_get_online_user(ssid);
+        auto opt_user = PA_DATAOPT_get_online_user(ssid, true);
         if (!opt_user)
         {
             PA_RETURN_UNLOGIN_MSG();
@@ -1445,7 +1463,7 @@ public:
     virtual bool reject_plan(const int64_t plan_id, const std::string &ssid, const std::string &reject_reason)
     {
         bool ret = false;
-        auto user = PA_DATAOPT_get_online_user(ssid);
+        auto user = PA_DATAOPT_get_online_user(ssid, true);
         if (!user)
         {
             PA_RETURN_UNLOGIN_MSG();
@@ -1926,6 +1944,11 @@ public:
 
     virtual bool cancel_vichele_from_plan(const std::string &ssid, const std::vector<int64_t> &ids)
     {
+        auto opt_user = PA_DATAOPT_get_online_user(ssid, true);
+        if (!opt_user)
+        {
+            PA_RETURN_NOPRIVA_MSG();
+        }
         for (auto &itr : ids)
         {
             auto single_vichele = sqlite_orm::search_record<pa_sql_single_vichele>(itr);
@@ -1939,7 +1962,6 @@ public:
                     {
                         auto main_vichele = single_vichele->get_parent<pa_sql_vichele>("main_vichele");
                         auto behind_vichele = single_vichele->get_parent<pa_sql_vichele_behind>("behind_vichele");
-                        auto opt_user = PA_DATAOPT_get_online_user(ssid);
                         auto update_ret = PA_DATAOPT_post_sync_change_register(*single_vichele);
                         auto zc_ret = PA_ZH_CONN_del_order(*single_vichele);
                         if (update_ret.length() > 0 || zc_ret == false)
@@ -2481,7 +2503,7 @@ public:
 
     virtual bool change_plan_price(const std::string &ssid, const std::vector<int64_t> &plan_id, const double new_price)
     {
-        auto opt_user = PA_DATAOPT_get_online_user(ssid);
+        auto opt_user = PA_DATAOPT_get_online_user(ssid, true);
         if (!opt_user)
         {
             PA_RETURN_UNLOGIN_MSG();
@@ -2509,7 +2531,7 @@ public:
 
     virtual void driver_silent_reset(const std::string &ssid, const std::string &silent_id)
     {
-        auto user = PA_DATAOPT_get_online_user(ssid);
+        auto user = PA_DATAOPT_get_online_user(ssid, true);
         if (!user)
         {
             PA_RETURN_UNLOGIN_MSG();
@@ -2872,7 +2894,7 @@ public:
     {
         bool ret = false;
 
-        auto user = PA_DATAOPT_get_online_user(ssid);
+        auto user = PA_DATAOPT_get_online_user(ssid, true);
         auto lcd = sqlite_orm::search_record<pa_sql_sec_check_data>(lcd_id);
         if (!user || !lcd)
         {
@@ -3002,6 +3024,48 @@ public:
         {
             PA_RETURN_MSG("导出失败");
         }
+    }
+
+    virtual void export_plan_by_deliver_date_range(std::string &_return, const std::string &ssid, const std::string &begin_date, const std::string &end_date)
+    {
+        auto opt_user = PA_DATAOPT_get_online_user(ssid);
+        auto company = PA_DATAOPT_get_company_by_ssid(ssid);
+        if (!opt_user || !company)
+        {
+            PA_RETURN_NOPRIVA_MSG();
+        }
+        auto single_svs = sqlite_orm::search_record_all<pa_sql_single_vichele>("datetime(deliver_timestamp) >= date('%s') AND datetime(deliver_timestamp) <= date('%s') GROUP BY belong_plan_ext_key", begin_date.c_str(), end_date.c_str());
+        std::vector<int64_t> plan_ids;
+        auto stuffs = company->get_all_children<pa_sql_stuff_info>("belong_company");
+        auto owned_by_company = [&](pa_sql_plan &_plan) -> bool
+        {
+            bool ret = false;
+            auto plan_stuff = _plan.get_parent<pa_sql_stuff_info>("belong_stuff");
+            if (plan_stuff)
+            {
+                if (std::find_if(
+                        stuffs.begin(), stuffs.end(),
+                        [&](const pa_sql_stuff_info &_fcs_stuff)
+                        { return _fcs_stuff.get_pri_id() == plan_stuff->get_pri_id(); }) != stuffs.end())
+                {
+                    ret = true;
+                }
+            }
+
+            return ret;
+        };
+        for (auto &itr : single_svs)
+        {
+            auto tmp_plan = itr.get_parent<pa_sql_plan>("belong_plan");
+            if (tmp_plan && owned_by_company(*tmp_plan))
+            {
+                plan_ids.push_back(tmp_plan->get_pri_id());
+            }
+        }
+        export_plan_deliver_date_range ddr = {
+            .begin_date = begin_date,
+            .end_date = end_date};
+        _return = pri_export_plan(*opt_user, plan_ids, ddr);
     }
 };
 

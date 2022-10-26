@@ -473,7 +473,7 @@ public:
     }
     virtual bool confirm_vichele(const std::string &ssid, const std::vector<vichele_stay_alone> &info, const std::vector<std::string> &company_for_select, const bool all_select, const std::string &enter_date, const std::string &stuff_name, const std::string &supplier_name)
     {
-        auto user = PA_DATAOPT_get_online_user(ssid);
+        auto user = PA_DATAOPT_get_online_user(ssid, true);
         if (!user)
         {
             PA_RETURN_UNLOGIN_MSG();
@@ -543,7 +543,7 @@ public:
     }
     virtual bool cancel_vichele(const std::string &ssid, const std::vector<vichele_stay_alone> &info, const bool all_select, const std::string &enter_date, const std::string &stuff_name, const std::string &supplier_name)
     {
-        auto user = PA_DATAOPT_get_online_user(ssid);
+        auto user = PA_DATAOPT_get_online_user(ssid, true);
         if (!user)
         {
             PA_RETURN_UNLOGIN_MSG();
@@ -768,7 +768,7 @@ public:
 
     virtual bool change_company_name(const std::string &ssid, const int64_t vichele_id, const std::string &company_name)
     {
-        auto opt_user = PA_DATAOPT_get_online_user(ssid);
+        auto opt_user = PA_DATAOPT_get_online_user(ssid, true);
         if (!opt_user)
         {
             PA_RETURN_UNLOGIN_MSG();
@@ -1255,7 +1255,7 @@ public:
 
     virtual bool change_price(const std::string &ssid, const std::vector<vichele_stay_alone> &info, const bool all_select, const std::string &enter_date, const std::string &stuff_name, const std::string &supplier_name, const double new_price)
     {
-        auto user = PA_DATAOPT_get_online_user(ssid);
+        auto user = PA_DATAOPT_get_online_user(ssid, true);
         if (!user)
         {
             PA_RETURN_UNLOGIN_MSG();

@@ -105,6 +105,7 @@ public:
     std::string email;
     bool is_sys_admin = false;
     int groupid = 0;
+    int is_read_only = 0;
     pa_sql_userinfo()
     {
         add_parent_type<pa_sql_company>("belong_company");
@@ -119,6 +120,7 @@ public:
         ret.push_back(sqlite_orm_column("buyer", sqlite_orm_column::INTEGER, &buyer));
         ret.push_back(sqlite_orm_column("email", sqlite_orm_column::STRING, &email));
         ret.push_back(sqlite_orm_column("groupid", sqlite_orm_column::INTEGER, &groupid));
+        ret.push_back(sqlite_orm_column("is_read_only", sqlite_orm_column::INTEGER, &is_read_only));
 
         return ret;
     }

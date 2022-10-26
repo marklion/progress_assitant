@@ -203,7 +203,7 @@ std::unique_ptr<pa_sql_userlogin> PA_DATAOPT_pull_user_info_from_wechat(const st
 
     return ret;
 }
-std::unique_ptr<pa_sql_userinfo> PA_DATAOPT_get_online_user(const std::string &_ssid)
+std::unique_ptr<pa_sql_userinfo> PA_DATAOPT_get_online_user(const std::string &_ssid, bool _need_read_pri)
 {
     auto login_user = sqlite_orm::search_record<pa_sql_userlogin>("ssid = '%s'", _ssid.c_str());
     if (login_user)
@@ -217,7 +217,21 @@ std::unique_ptr<pa_sql_userinfo> PA_DATAOPT_get_online_user(const std::string &_
         {
             login_user->timestamp = cur_time;
             login_user->update_record();
-            return login_user->get_parent<pa_sql_userinfo>("online_user");
+            auto opt_user =  login_user->get_parent<pa_sql_userinfo>("online_user");
+            if (opt_user)
+            {
+                if (_need_read_pri)
+                {
+                    if (!opt_user->is_read_only)
+                    {
+                        return opt_user;
+                    }
+                }
+                else
+                {
+                    return opt_user;
+                }
+            }
         }
     }
 

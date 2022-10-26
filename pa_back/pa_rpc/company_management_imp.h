@@ -51,7 +51,7 @@ public:
     virtual int64_t add_type(const std::string &name, const int64_t price, const std::string &last, const std::string &ssid)
     {
         int64_t ret = 0;
-        auto user = PA_DATAOPT_get_online_user(ssid);
+        auto user = PA_DATAOPT_get_online_user(ssid,true);
         if (user) {
             auto company = user->get_parent<pa_sql_company>("belong_company");
             if (company) {
@@ -83,7 +83,7 @@ public:
     virtual bool edit_type(const stuff_detail &stuff, const std::string &ssid)
     {
         bool ret = false;
-        auto user = PA_DATAOPT_get_online_user(ssid);
+        auto user = PA_DATAOPT_get_online_user(ssid, true);
         if (user)
         {
             if (user->groupid != 1)
@@ -134,7 +134,7 @@ public:
     }
     virtual void remove_type(const stuff_detail &stuff, const std::string &ssid)
     {
-        auto user = PA_DATAOPT_get_online_user(ssid);
+        auto user = PA_DATAOPT_get_online_user(ssid, true);
         if (user)
         {
             auto company = user->get_parent<pa_sql_company>("belong_company");
@@ -193,7 +193,7 @@ public:
     {
         bool ret = false;
         auto apply = sqlite_orm::search_record<pa_sql_user_apply>(apply_id);
-        auto opt_user = PA_DATAOPT_get_online_user(ssid);
+        auto opt_user = PA_DATAOPT_get_online_user(ssid, true);
         if (!opt_user)
         {
             PA_RETURN_UNLOGIN_MSG();
@@ -240,7 +240,7 @@ public:
     virtual bool readd_type(const stuff_detail &stuff, const std::string &ssid)
     {
         bool ret = false;
-        auto user = PA_DATAOPT_get_online_user(ssid);
+        auto user = PA_DATAOPT_get_online_user(ssid, true);
         if (user)
         {
             auto company = user->get_parent<pa_sql_company>("belong_company");
@@ -357,7 +357,7 @@ public:
     virtual bool set_notice(const std::string &ssid, const std::string &notice)
     {
         bool ret = false;
-        auto user = PA_DATAOPT_get_online_user(ssid);
+        auto user = PA_DATAOPT_get_online_user(ssid, true);
         if (user)
         {
             auto company = user->get_parent<pa_sql_company>("belong_company");
@@ -419,13 +419,14 @@ public:
             tmp.phone = itr.phone;
             tmp.user_id = itr.get_pri_id();
             tmp.groupid = itr.groupid;
+            tmp.is_read_only = itr.is_read_only;
             _return.push_back(tmp);
         }
     }
 
     virtual bool remove_user_from_company(const std::string &ssid, const int64_t user_id)
     {
-        auto user = PA_DATAOPT_get_online_user(ssid);
+        auto user = PA_DATAOPT_get_online_user(ssid, true);
         if (!user)
         {
             PA_RETURN_UNLOGIN_MSG();
@@ -695,7 +696,7 @@ public:
     {
         bool ret = false;
 
-        auto user = PA_DATAOPT_get_online_user(ssid);
+        auto user = PA_DATAOPT_get_online_user(ssid, true);
         if (!user)
         {
             PA_RETURN_UNLOGIN_MSG();
@@ -745,7 +746,7 @@ public:
     }
     virtual void del_contract(const std::string &ssid, const int64_t id)
     {
-        auto user = PA_DATAOPT_get_online_user(ssid);
+        auto user = PA_DATAOPT_get_online_user(ssid, true);
         if (!user)
         {
             PA_RETURN_UNLOGIN_MSG();
@@ -838,7 +839,7 @@ public:
 
     virtual bool set_work_time(const std::string &ssid, const int64_t start_work_time, const int64_t end_work_time)
     {
-        auto user = PA_DATAOPT_get_online_user(ssid);
+        auto user = PA_DATAOPT_get_online_user(ssid, true);
         if (!user)
         {
             PA_RETURN_UNLOGIN_MSG();
@@ -904,7 +905,7 @@ public:
     virtual bool set_third_info(const third_dev_info &_info, const std::string &ssid)
     {
         bool ret = false;
-        auto opt_user = PA_DATAOPT_get_online_user(ssid);
+        auto opt_user = PA_DATAOPT_get_online_user(ssid, true);
         if (!opt_user)
         {
             PA_RETURN_UNLOGIN_MSG();
@@ -1004,7 +1005,7 @@ public:
     {
         bool ret = false;
 
-        auto opt_user = PA_DATAOPT_get_online_user(ssid);
+        auto opt_user = PA_DATAOPT_get_online_user(ssid, true);
         if (!opt_user)
         {
             PA_RETURN_UNLOGIN_MSG();
@@ -1080,7 +1081,7 @@ public:
 
     virtual bool add_stamp_pic(const std::string &ssid, const std::string &pic_base64)
     {
-        auto user = PA_DATAOPT_get_online_user(ssid);
+        auto user = PA_DATAOPT_get_online_user(ssid, true);
         if (!user)
         {
             PA_RETURN_UNLOGIN_MSG();
@@ -1101,7 +1102,7 @@ public:
     }
     virtual bool del_stamp_pic(const std::string &ssid)
     {
-        auto user = PA_DATAOPT_get_online_user(ssid);
+        auto user = PA_DATAOPT_get_online_user(ssid, true);
         if (!user)
         {
             PA_RETURN_UNLOGIN_MSG();
@@ -1449,6 +1450,29 @@ public:
         {
             PA_RETURN_MSG("导出失败");
         }
+    }
+
+    virtual bool change_user_read_only(const std::string &ssid, const int64_t user_id)
+    {
+        bool ret = false;
+
+        auto opt_user = PA_DATAOPT_get_online_user(ssid);
+        auto company = PA_DATAOPT_get_company_by_ssid(ssid);
+        if (!opt_user || !company || !PA_DATAOPT_is_admin(opt_user->phone, company->name))
+        {
+            PA_RETURN_NOPRIVA_MSG();
+        }
+
+        auto dest_user = company->get_children<pa_sql_userinfo>("belong_company", "PRI_ID == %ld", user_id);
+        if (!dest_user)
+        {
+            PA_RETURN_NOPRIVA_MSG();
+        }
+        dest_user->is_read_only = !dest_user->is_read_only;
+
+        ret = dest_user->update_record();
+
+        return ret;
     }
 };
 #endif // _COMPANY_MANAGEMENT_IMP_H_
