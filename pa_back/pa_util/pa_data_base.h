@@ -1242,6 +1242,6 @@ public:
     }
 };
 bool sec_check_all_confirmed(pa_sql_company &_company, const std::string &_driver_phone, const std::string &_mv, const std::string &_bv);
-
+std::unique_ptr<pa_sql_execute_record> fetch_execute_record(const std::string &_plan_date, pa_sql_contract &_contract);
 
 #endif // _PA_DATABSE_H_

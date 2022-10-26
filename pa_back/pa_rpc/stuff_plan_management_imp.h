@@ -435,6 +435,7 @@ public:
             auto orig_vichele_info = plan_in_sql->get_all_children<pa_sql_single_vichele>("belong_plan");
             auto tmp_orig = orig_vichele_info;
             auto tmp_new = new_vehicle_in_plan;
+            auto pure_added  = new_vehicle_in_plan.size() - orig_vichele_info.size();
             new_vehicle_in_plan.clear();
             for (auto &itr:tmp_new)
             {
@@ -513,6 +514,7 @@ public:
                 itr.remove_record();
             }
             PA_STATUS_RULE_change_status(*plan_in_sql, 0, *opt_user);
+            std::unique_ptr<pa_sql_contract> cur_contract;
             for (auto &itr : new_vehicle_in_plan)
             {
                 auto main_vhichele = company->get_children<pa_sql_vichele>("belong_company", "number = '%s'", itr.main_vichele.c_str());
@@ -529,6 +531,20 @@ public:
                     tmp_single.set_parent(*driver, "driver");
                     tmp_single.set_parent(*plan_in_sql, "belong_plan");
                     tmp_single.insert_record();
+                    if (!cur_contract)
+                    {
+                        cur_contract.reset(tmp_single.get_related_contract().release());
+                    }
+                }
+            }
+            pure_added = new_vehicle_in_plan.size() - pure_added;
+            if (pure_added > 0 && cur_contract)
+            {
+                auto er = fetch_execute_record(plan_in_sql->plan_time.substr(0, 10), *cur_contract);
+                if (er)
+                {
+                    er->plan_vehicle_count -= pure_added;
+                    er->update_record();
                 }
             }
             PA_STATUS_RULE_action(*plan_in_sql, *opt_user, PA_DATAOPT_current_time(), plan.comment);
@@ -960,7 +976,8 @@ public:
         return ret;
     }
 
-    struct export_plan_deliver_date_range {
+    struct export_plan_deliver_date_range
+    {
         std::string begin_date;
         std::string end_date;
     };
