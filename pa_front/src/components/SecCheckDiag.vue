@@ -39,6 +39,9 @@ export default {
 }
 </script>
 
-<style>
-
+<style scoped>
+.sec_check_diag_show {
+    overflow: auto;
+    height: 80vh;
+}
 </style>
