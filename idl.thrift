@@ -158,6 +158,7 @@ struct license_require_info{
     3:license_use_for use_for,
     4:list<license_input_method> input_method,
     5:string prompt,
+    6:bool ltv,
 }
 
 service company_management {
@@ -364,6 +365,8 @@ struct vichele_statistics {
     8:string plan_order,
     9:i64 vichele_id,
     10:bool sec_check_passed,
+    11:double p_weight,
+    12:double m_weight,
 }
 
 struct vichele_stuff_statistics {

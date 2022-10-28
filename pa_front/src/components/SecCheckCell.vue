@@ -1,6 +1,6 @@
 <template>
 <div class="sec_check_cell">
-    <van-cell is-link @click="show_scd_edit" :icon="ap" :value="scd_online.expired_date" :label="scd_online.input_content">
+    <van-cell is-link @click="show_scd_edit" :icon="ap" :value="expire_date_show(scd_online.expired_date)" :label="scd_online.input_content">
         <template #title>
             <span>{{lr.name}}</span>
             <van-tag v-if="scd_online.id == 0" type="danger">未上传</van-tag>
@@ -22,7 +22,7 @@
                     <van-uploader :after-read="upload_attachment" v-model="file_list" @delete="new_scd.attachment_path = ''" :max-count="1" />
                 </template>
             </van-field>
-            <van-field readonly clickable name="datetimePicker" :value="new_scd.expired_date" label="有效日期" placeholder="点击选择日期" @click="showPicker = true" :rules="[{ required: true, message: '请填写有效期' }]" />
+            <van-field v-if="!lr.ltv" readonly clickable name="datetimePicker" :value="new_scd.expired_date" label="有效日期" placeholder="点击选择日期" @click="showPicker = true" :rules="[{ required: true, message: '请填写有效期' }]" />
             <van-popup v-model="showPicker" position="bottom">
                 <van-datetime-picker :minDate="new Date()" type="date" @confirm="onConfirm" @cancel="showPicker = false" />
             </van-popup>
@@ -34,7 +34,7 @@
             <van-cell v-if="scd_online.attachment_path" title="照片">
                 <van-image width="100" height="100" fit="contain" :src="$remote_url + scd_online.attachment_path" @click="preview_lcd_pic([$remote_url+scd_online.attachment_path]);" />
             </van-cell>
-            <van-cell title="有效期" :value="scd_online.expired_date"></van-cell>
+            <van-cell title="有效期" :value="expire_date_show(scd_online.expired_date)"></van-cell>
         </van-cell-group>
     </van-dialog>
 </div>
@@ -69,6 +69,15 @@ export default {
                 attachment_path: '',
             },
             show_lcd_detail: false,
+            expire_date_show: function (_ed) {
+                var ret = _ed;
+
+                if (_ed == '5000-01-01') {
+                    ret = '长期';
+                }
+
+                return ret;
+            },
         };
     },
     computed: {

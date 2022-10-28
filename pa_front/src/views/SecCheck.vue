@@ -40,7 +40,8 @@
                     </el-popover>
                 </span>
             </div>
-            <el-table highlight-current-row @current-change="handleCurrentChange" :data="today_vehicle" style="width: 100%" :row-class-name="tableRowClassName">>
+            <el-input v-model="search_key" placeholder="输入车号过滤"></el-input>
+            <el-table highlight-current-row @current-change="handleCurrentChange" :data="all_vehicle_show" style="width: 100%" :row-class-name="tableRowClassName">>
                 <el-table-column prop="vichele.main_vichele" label="主车号">
                 </el-table-column>
                 <el-table-column prop="vichele.behind_vichele" label="挂车号">
@@ -53,11 +54,19 @@
             </el-table>
         </el-col>
         <el-col :span="12">
-            <el-descriptions title="车辆信息" border :column="2">
+            <el-descriptions title="车辆信息" border :column="3">
                 <el-descriptions-item label="司机姓名">{{focus_vehicle.driver_name}}</el-descriptions-item>
                 <el-descriptions-item label="手机号">{{focus_vehicle.driver_phone}}</el-descriptions-item>
                 <el-descriptions-item label="主车">{{focus_vehicle.mv_number}}</el-descriptions-item>
                 <el-descriptions-item label="挂车">{{focus_vehicle.bv_number}}</el-descriptions-item>
+                <el-descriptions-item label="皮重">{{focus_vehicle.p_weight.toFixed(2)}}</el-descriptions-item>
+                <el-descriptions-item label="毛重">{{focus_vehicle.m_weight.toFixed(2)}}</el-descriptions-item>
+                <el-descriptions-item label="净重">{{(focus_vehicle.m_weight - focus_vehicle.p_weight).toFixed(2)}}</el-descriptions-item>
+                <el-descriptions-item label="最大充装量">{{max_load.toFixed(2)}}</el-descriptions-item>
+                <el-descriptions-item label="是否超量">
+                    <div v-if="max_load < (focus_vehicle.m_weight - focus_vehicle.p_weight)" style="color:red;">是</div>
+                    <div v-else>否</div>
+                </el-descriptions-item>
             </el-descriptions>
             <div style="text-align: center;">
                 <el-divider>证件列表</el-divider>
@@ -111,7 +120,7 @@ import 'element-ui/lib/theme-chalk/index.css';
 // } from 'vue-grd';
 import XLSX from 'xlsx';
 Vue.use(ElementUI);
-// import PinyinMatch from "pinyin-match";
+import PinyinMatch from "pinyin-match";
 export default {
     name: "SecCheck",
     // components: {
@@ -120,6 +129,7 @@ export default {
     // },
     data: function () {
         return {
+            search_key: '',
             pickerOptions: {
                 shortcuts: [{
                     text: '最近一周',
@@ -159,6 +169,8 @@ export default {
                 bv_number: "",
                 driver_name: "",
                 driver_phone: "",
+                p_weight: 0,
+                m_weight: 0,
             },
             sec_check_item: [],
             company_name: '',
@@ -169,6 +181,40 @@ export default {
     watch: {
         company_name: function () {
             this.init_sec_check_require();
+        },
+    },
+    computed: {
+        max_load: function () {
+            var std_load_item = this.sec_check_item.find(item => {
+                return item.name == '槽车核载量'
+            });
+            var std_count_item = this.sec_check_item.find(item => {
+                return item.name == '槽车容积'
+            });
+            var std_load = 0;
+            var std_count = 0;
+            if (std_load_item && std_load_item.input_content) {
+                std_load = parseFloat(std_load_item.input_content);
+            }
+            if (std_count_item && std_count_item.input_content) {
+                std_count = parseFloat(std_count_item.input_content);
+            }
+            return this.$calc_max_load(std_load, std_count, this.focus_vehicle.p_weight);
+        },
+        all_vehicle_show: function () {
+            var ret = this.today_vehicle;
+
+            if (this.search_key) {
+                var tmp_ret = ret;
+                ret = [];
+                tmp_ret.forEach(element => {
+                    if (PinyinMatch.match(element.vichele.behind_vichele, this.search_key) || PinyinMatch.match(element.vichele.main_vichele, this.search_key)) {
+                        ret.push(element);
+                    }
+                });
+            }
+
+            return ret;
         },
     },
     methods: {
@@ -256,6 +302,8 @@ export default {
                 driver_name: val.vichele.driver_name,
                 driver_phone: val.vichele.driver_phone,
                 sec_check_passed: val.vichele.sec_check_passed,
+                p_weight: val.vichele.p_weight,
+                m_weight: val.vichele.m_weight,
             };
             for (let index = 0; index < vue_this.sec_check_item.length; index++) {
                 const element = vue_this.sec_check_item[index];

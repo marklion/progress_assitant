@@ -1195,6 +1195,7 @@ public:
     int use_for = 0;
     // 1:content 2:picture
     std::string input_method;
+    int ltv = 0;
     pa_sql_license_require() {
         add_parent_type<pa_sql_company>("belong_company");
     }
@@ -1205,6 +1206,7 @@ public:
         ret.push_back(sqlite_orm_column("prompt", sqlite_orm_column::STRING, &prompt));
         ret.push_back(sqlite_orm_column("use_for", sqlite_orm_column::INTEGER, &use_for));
         ret.push_back(sqlite_orm_column("input_method", sqlite_orm_column::STRING, &input_method));
+        ret.push_back(sqlite_orm_column("ltv", sqlite_orm_column::INTEGER, &ltv));
 
         return ret;
     }

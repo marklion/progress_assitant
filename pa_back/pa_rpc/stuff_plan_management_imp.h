@@ -1682,6 +1682,8 @@ public:
                         tmp.plan_id = single_plan.get_pri_id();
                         tmp.plan_order = std::to_string(single_plan.create_time) + std::to_string(single_plan.get_pri_id());
                         tmp.vichele_id = vichele.get_pri_id();
+                        tmp.p_weight = vichele.p_weight;
+                        tmp.m_weight = vichele.m_weight;
                         if (sec_check_all_confirmed(*company, driver->phone, main_vichele->number, behind_vichele->number))
                         {
                             tmp.sec_check_passed = true;
@@ -2840,7 +2842,14 @@ public:
 
         pa_sql_sec_check_data tmp;
         tmp.attachment_path = lcd.attachment_path;
-        tmp.expired_date = lcd.expired_date;
+        if (lr->ltv)
+        {
+            tmp.expired_date = "5000-01-01";
+        }
+        else
+        {
+            tmp.expired_date = lcd.expired_date;
+        }
         tmp.input_content = lcd.input_content;
         tmp.related_info = lcd.related_info;
         tmp.set_parent(*lr, "belong_lr");
@@ -2954,7 +2963,18 @@ public:
         auto lrs = company->get_all_children<pa_sql_license_require>("belong_company");
         for (auto &itr : lrs)
         {
-            table_header.push_back(itr.name);
+            if (itr.input_method.find('1') != std::string::npos)
+            {
+                table_header.push_back(itr.name + " 内容");
+            }
+            if (itr.input_method.find('0') != std::string::npos)
+            {
+                table_header.push_back(itr.name + " 附件");
+            }
+            if (!itr.ltv)
+            {
+                table_header.push_back(itr.name + " 有效期");
+            }
         }
         writer.write_row(table_header);
 
@@ -2963,7 +2983,7 @@ public:
         {
             std::string company_name = itr.proxy_company;
             auto cust_user = itr.get_parent<pa_sql_userinfo>("created_by");
-            if (cust_user)
+            if (cust_user && cust_user->buyer)
             {
                 auto cust_comp = cust_user->get_parent<pa_sql_company>("belong_company");
                 if (cust_comp)
@@ -2971,7 +2991,7 @@ public:
                     company_name = cust_comp->name;
                 }
             }
-            auto deliver_vehicles = itr.get_all_children<pa_sql_single_vichele>("belong_plan", "finish == 1");
+            auto deliver_vehicles = itr.get_all_children<pa_sql_single_vichele>("belong_plan");
             for (auto &single_vehicle : deliver_vehicles)
             {
                 std::vector<std::string> single_record;
@@ -3011,11 +3031,33 @@ public:
                         auto lcd = single_lr.get_children<pa_sql_sec_check_data>("belong_lr", "related_info == '%s'", related_info.c_str());
                         if (lcd)
                         {
-                            single_record.push_back(lcd->input_content + "<----> https://www.d8sis.cn/pa_web" + lcd->attachment_path + "<---->到期时间:" + lcd->expired_date);
+                            if (single_lr.input_method.find('1') != std::string::npos)
+                            {
+                                single_record.push_back(lcd->input_content);
+                            }
+                            if (single_lr.input_method.find('0') != std::string::npos)
+                            {
+                                single_record.push_back("https://www.d8sis.cn/pa_web" + lcd->attachment_path);
+                            }
+                            if (!single_lr.ltv)
+                            {
+                                single_record.push_back(lcd->expired_date);
+                            }
                         }
                         else
                         {
-                            single_record.push_back("");
+                            if (single_lr.input_method.find('1') != std::string::npos)
+                            {
+                                single_record.push_back("");
+                            }
+                            if (single_lr.input_method.find('0') != std::string::npos)
+                            {
+                                single_record.push_back("");
+                            }
+                            if (!single_lr.ltv)
+                            {
+                                single_record.push_back("");
+                            }
                         }
                     }
                     writer.write_row(single_record);

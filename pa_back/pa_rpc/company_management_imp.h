@@ -1341,6 +1341,7 @@ public:
             lr->input_method.append(std::to_string(itr));
         }
         lr->use_for = lic_info.use_for;
+        lr->ltv = lic_info.ltv;
 
         ret = lr->update_record();
 
@@ -1377,6 +1378,7 @@ public:
                 }
                 tmp.prompt = itr.prompt;
                 tmp.use_for = license_use_for::type(itr.use_for);
+                tmp.ltv = itr.ltv;
                 _return.push_back(tmp);
             }
         }

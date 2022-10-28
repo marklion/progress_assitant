@@ -9,6 +9,17 @@
                         <van-icon name="passed" size="1.2rem" v-if="single_item.sec_check_passed" color="green" />
                         <van-icon name="question-o" size="1.2rem" v-else color="red" />
                     </template>
+                    <van-cell :value=" max_load(single_item).toFixed(2)">
+                        <template #title>
+                            <span>最大充装量</span>
+                            <van-tag v-if="max_load(single_item) < (single_item.m_weight - single_item.p_weight)" type="danger">超量</van-tag>
+                        </template>
+                        <template #label>
+                            <div>皮重：{{single_item.p_weight.toFixed(2)}}</div>
+                            <div>毛重：{{single_item.m_weight.toFixed(2)}}</div>
+                            <div v-if="single_item.m_weight != 0 && single_item.p_weight != 0">净重：{{(single_item.m_weight - single_item.p_weight).toFixed(2)}}</div>
+                        </template>
+                    </van-cell>
                     <van-cell center v-for="(single_lr, lr_index) in  sec_items" :key="lr_index" :label="single_lr.expired_date">
                         <template #title>
                             <span>{{single_lr.name}}</span>
@@ -36,6 +47,10 @@
             <van-cell-group>
                 <van-swipe-cell v-for="(single_item, index) in sec_items" :key="index">
                     <van-cell :title="single_item.name" :border="false">
+                        <template #title>
+                            <span>{{single_item.name}}</span>
+                            <van-tag type="primary" v-if="single_item.ltv">长期</van-tag>
+                        </template>
                         <div>
                             {{conv_use_for(single_item.use_for)}}
                         </div>
@@ -66,6 +81,11 @@
         <van-form @submit="add_item">
             <van-field v-model="new_item_name" name="项目名称" label="项目名称" placeholder="请输入项目名称" :rules="[{ required: true, message: '请填写项目名称' }]" />
             <van-field v-model="new_item_prompt" label="项目提示" placeholder="请输入项目提示语句" :rules="[{ required: true, message: '请填写提示语句' }]" />
+            <van-field name="switch" label="长期有效">
+                <template #input>
+                    <van-switch v-model="ltv" size="20" />
+                </template>
+            </van-field>
             <van-field label="项目归属">
                 <template #input>
                     <van-radio-group v-model="new_item_use_for" direction="horizontal">
@@ -108,12 +128,31 @@ export default {
             add_item_diag: false,
             new_item_name: "",
             new_item_prompt: "",
+            ltv: false,
             new_item_use_for: 0,
             new_item_input_method: [],
             is_edit: false,
             focus_lr_id: 0,
             saved_cur_row: {},
             search_key: "",
+            max_load(_vehicle) {
+                var std_load = 0;
+                var std_count = 0;
+                var std_load_item = this.sec_items.find(item => {
+                    return item.name == '槽车核载量'
+                });
+                var std_count_item = this.sec_items.find(item => {
+                    return item.name == '槽车容积'
+                });
+                if (std_load_item && std_load_item.input_content) {
+                    std_load = parseFloat(std_load_item.input_content);
+                }
+                if (std_count_item && std_count_item.input_content) {
+                    std_count = parseFloat(std_count_item.input_content);
+                }
+
+                return this.$calc_max_load(std_load, std_count, _vehicle.p_weight);
+            },
             conv_use_for(_use_for) {
                 var ret = "";
                 switch (_use_for) {
@@ -167,6 +206,8 @@ export default {
                     driver_name: element.vichele.driver_name,
                     driver_phone: element.vichele.driver_phone,
                     sec_check_passed: element.vichele.sec_check_passed,
+                    p_weight: element.vichele.p_weight,
+                    m_weight: element.vichele.m_weight,
                 });
             });
 
@@ -236,6 +277,7 @@ export default {
             this.new_item_use_for = _item.use_for;
             this.new_item_input_method = _item.input_method;
             this.focus_lr_id = _item.id;
+            this.ltv = _item.ltv;
             this.add_item_diag = true;
         },
         add_item: function () {
@@ -246,6 +288,7 @@ export default {
                 use_for: vue_this.new_item_use_for,
                 input_method: vue_this.new_item_input_method,
                 id: vue_this.focus_lr_id,
+                ltv: vue_this.ltv,
             };
             console.log(req);
             var req_func = "add_license_require";
@@ -261,6 +304,7 @@ export default {
                     vue_this.new_item_input_method = [];
                     vue_this.add_item_diag = false;
                     vue_this.is_edit = false;
+                    vue_this.ltv = false;
                 }
             });
         },

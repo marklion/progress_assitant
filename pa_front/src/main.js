@@ -17,11 +17,24 @@ Vue.use(Vant)
 
 Vue.use(VXETable)
 
+function calc_max_load(_std_load, _std_count, _p_weight) {
+  var ret = 0;
+  ret = _std_load;
+  if (_std_count * 0.426 * 0.95 < ret) {
+    ret = _std_count * 0.426 * 0.95;
+  }
+  if (49 - _p_weight < ret) {
+    ret = 49 - _p_weight;
+  }
+  return ret;
+}
+
 Vue.prototype.$cookies = cookies;
 Vue.prototype.$get_client = get_client;
 Vue.prototype.$call_remote_process = call_remote_process;
 Vue.prototype.$call_remote_process_no_toast = call_remote_process_no_toast;
 Vue.prototype.$remote_url = process.env.VUE_APP_BACK_END_URL;
+Vue.prototype.$calc_max_load = calc_max_load;
 Vue.config.productionTip = false
 
 Vue.use(less)
