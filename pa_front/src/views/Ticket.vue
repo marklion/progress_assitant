@@ -31,7 +31,7 @@
     </div>
     <div v-else>
         <van-divider>长按磅单，保存到手机相册</van-divider>
-        <van-image :src="whole_pic"></van-image>
+        <van-image id="ticket_picture" :src="whole_pic"></van-image>
     </div>
     <div v-if="$store.state.is_login && !$store.state.userinfo.buyer && $store.state.userinfo.company == ticket_detail.title.split('\n')[0]">
         <van-button round block type="warning" @click="modify_ticket_show = true">修改</van-button>
