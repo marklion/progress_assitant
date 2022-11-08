@@ -464,12 +464,9 @@ public:
             auto all_vichele_info = plan.get_all_children<pa_sql_single_vichele>("belong_plan", "finish == 0");
             for (auto &itr : all_vichele_info)
             {
-                if (should_add_to_resp(itr, company->name))
-                {
-                    vehicle_info_resp tmp;
-                    tmp = make_resp_from_single_vichele(itr);
-                    _return.push_back(tmp);
-                }
+                vehicle_info_resp tmp;
+                tmp = make_resp_from_single_vichele(itr);
+                _return.push_back(tmp);
             }
         }
 
