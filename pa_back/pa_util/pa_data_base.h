@@ -1224,6 +1224,7 @@ public:
     std::string related_info;
     int has_confirmed = 0;
     std::string comment;
+    std::string confirmer;
     pa_sql_sec_check_data() {
         add_parent_type<pa_sql_license_require>("belong_lr");
     }
@@ -1236,6 +1237,7 @@ public:
         ret.push_back(sqlite_orm_column("related_info", sqlite_orm_column::STRING, &related_info));
         ret.push_back(sqlite_orm_column("has_confirmed", sqlite_orm_column::INTEGER, &has_confirmed));
         ret.push_back(sqlite_orm_column("comment", sqlite_orm_column::STRING, &comment));
+        ret.push_back(sqlite_orm_column("confirmer", sqlite_orm_column::STRING, &confirmer));
 
         return ret;
     }

@@ -1520,7 +1520,7 @@ public:
             tmp_item.vehicle_count = tmp.vehicle_count;
             export_items.push_back(tmp_item);
         }
-        std::string file_name_no_ext = "执行率" + begin_date + "-" + end_date + "===" + std::to_string(time(NULL)) + std::to_string(company->get_pri_id());
+        std::string file_name_no_ext = "zxl" + begin_date + "-" + end_date + "---" + std::to_string(time(NULL)) + std::to_string(company->get_pri_id());
         std::string file_name = "/dist/logo_res/" + file_name_no_ext + ".csv";
         std::ofstream stream(file_name);
         std::string csv_bom = {

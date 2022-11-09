@@ -24,6 +24,7 @@
                         <template #label>
                             <div v-if="single_lr.expired_date == '5000-01-01'">长期有效</div>
                             <div v-else>{{single_lr.expired_date}}</div>
+                            <div v-if="single_lr.confirmer">审核人:{{single_lr.confirmer}}</div>
                         </template>
                         <template #title>
                             <span>{{single_lr.name}}</span>
@@ -313,6 +314,7 @@ export default {
                 vue_this.$set(element, "content_id", tmp_lic.id);
                 vue_this.$set(element, "has_confirmed", tmp_lic.has_confirmed);
                 vue_this.$set(element, "comment", tmp_lic.comment);
+                vue_this.$set(element, "confirmer", tmp_lic.confirmer);
             }
         },
         handle_change_proc: function (_index) {

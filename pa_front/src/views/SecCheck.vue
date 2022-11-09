@@ -102,6 +102,8 @@
                             <div v-else>{{scope.row.expired_date}}</div>
                         </template>
                     </el-table-column>
+                    <el-table-column prop="confirmer" label="审核人">
+                    </el-table-column>
                     <el-table-column label="操作">
                         <template slot-scope="scope">
                             <div v-if="!scope.row.has_confirmed">
@@ -361,6 +363,7 @@ export default {
                 vue_this.$set(element, "content_id", tmp_lic.id);
                 vue_this.$set(element, "has_confirmed", tmp_lic.has_confirmed);
                 vue_this.$set(element, "comment", tmp_lic.comment);
+                vue_this.$set(element, "confirmer", tmp_lic.confirmer);
             }
         },
         tableRowClassName({

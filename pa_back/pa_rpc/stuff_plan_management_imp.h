@@ -2912,6 +2912,7 @@ public:
                     _return.has_confirmed = scd->has_confirmed;
                     _return.related_type_id = lr->get_pri_id();
                     _return.comment = scd->comment;
+                    _return.confirmer = scd->confirmer;
                 }
             }
         }
@@ -2933,6 +2934,7 @@ public:
         if (lcd->has_confirmed)
         {
             lcd->comment = "";
+            lcd->confirmer = user->name;
         }
         else
         {
@@ -2991,6 +2993,11 @@ public:
         auto plans = PA_RPC_get_all_plans_related_by_user(ssid, "date(substr(plan_time, 1, 10)) >= date('%s') AND date(substr(plan_time, 1, 10)) <= date('%s')", begin_date.c_str(), end_date.c_str());
         for (auto &itr : plans)
         {
+            auto stuff = itr.get_parent<pa_sql_stuff_info>("belong_stuff");
+            if (!stuff || !stuff->need_sec_check)
+            {
+                continue;
+            }
             std::string company_name = itr.proxy_company;
             auto cust_user = itr.get_parent<pa_sql_userinfo>("created_by");
             if (cust_user && cust_user->buyer)

@@ -447,6 +447,7 @@ struct license_common_data {
     6:i64 related_type_id,
     7:bool has_confirmed,
     8:string comment,
+    9:string confirmer,
 }
 
 service stuff_plan_management {
