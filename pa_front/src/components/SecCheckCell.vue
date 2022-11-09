@@ -98,6 +98,20 @@ export default {
         bv: String,
         driver: String,
     },
+    watch: {
+        lr: function () {
+            this.init_cell();
+        },
+        mv: function () {
+            this.init_cell();
+        },
+        bv: function () {
+            this.init_cell();
+        },
+        driver: function () {
+            this.init_cell();
+        },
+    },
     methods: {
         delete_lcd: function () {
             var vue_this = this;

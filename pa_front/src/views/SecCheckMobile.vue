@@ -20,7 +20,7 @@
                             <div v-if="single_item.m_weight != 0 && single_item.p_weight != 0">净重：{{(single_item.m_weight - single_item.p_weight).toFixed(2)}}</div>
                         </template>
                     </van-cell>
-                    <van-cell center v-for="(single_lr, lr_index) in  sec_items" :key="lr_index" >
+                    <van-cell center v-for="(single_lr, lr_index) in  sec_items" :key="lr_index">
                         <template #label>
                             <div v-if="single_lr.expired_date == '5000-01-01'">长期有效</div>
                             <div v-else>{{single_lr.expired_date}}</div>
@@ -46,6 +46,7 @@
                                 </div>
                                 <van-button v-else size="small" type="danger" @click="confirm_lcd(single_lr, false)">反审</van-button>
                             </div>
+                            <van-button size="small" type="primary" @click="edit_scd(single_lr, single_item)">编辑</van-button>
                         </template>
                     </van-cell>
                 </van-collapse-item>
@@ -115,6 +116,10 @@
             <van-button plain block>确认</van-button>
         </van-form>
     </van-dialog>
+
+    <van-dialog @close="handleCurrentChange(saved_cur_row)" get-container="body" show-cancel-button cancel-button-text="关闭" v-model="sec_check_diag_show" title="安检" closeOnClickOverlay :showConfirmButton="false">
+        <sec-check-cell :lr="edit_lr" :mv="sec_check_mv" :bv="sec_check_bv" :driver="sec_check_driver"></sec-check-cell>
+    </van-dialog>
 </div>
 </template>
 
@@ -127,11 +132,20 @@ import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 Vue.use(ElementUI);
 
+import SecCheckCell from '@/components/SecCheckCell'
 import PinyinMatch from 'pinyin-match';
 export default {
     name: "SecCheckMobile",
+    components: {
+        "sec-check-cell": SecCheckCell,
+    },
     data: function () {
         return {
+            sec_check_mv: '',
+            sec_check_bv: '',
+            sec_check_driver: '',
+            sec_check_diag_show: false,
+            edit_lr: {},
             sec_check_item: [],
             today_vehicle: [],
             focus_vehicle_sec_check: "",
@@ -235,6 +249,13 @@ export default {
         },
     },
     methods: {
+        edit_scd: function (_lcd_info, _vehicle_info) {
+            this.edit_lr = _lcd_info;
+            this.sec_check_mv = _vehicle_info.main_vehicle_number;
+            this.sec_check_bv = _vehicle_info.behind_vehicle_number;
+            this.sec_check_driver = _vehicle_info.driver_phone;
+            this.sec_check_diag_show = true;
+        },
         preview_lcd_pic: function (_pic) {
             ImagePreview(_pic)
         },
