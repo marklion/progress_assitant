@@ -2911,12 +2911,13 @@ public:
                     _return.related_info = scd->related_info;
                     _return.has_confirmed = scd->has_confirmed;
                     _return.related_type_id = lr->get_pri_id();
+                    _return.comment = scd->comment;
                 }
             }
         }
     }
 
-    virtual bool confirm_sec_check_data(const std::string &ssid, const int64_t lcd_id, const bool is_confirm)
+    virtual bool confirm_sec_check_data(const std::string &ssid, const int64_t lcd_id, const bool is_confirm, const std::string &comment)
     {
         bool ret = false;
 
@@ -2929,6 +2930,14 @@ public:
 
         lcd->has_confirmed = is_confirm ? 1 : 0;
 
+        if (lcd->has_confirmed)
+        {
+            lcd->comment = "";
+        }
+        else
+        {
+            lcd->comment = comment;
+        }
         ret = lcd->update_record();
 
         return ret;

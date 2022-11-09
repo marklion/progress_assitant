@@ -6,6 +6,7 @@
             <van-tag v-if="scd_online.id == 0" type="danger">未上传</van-tag>
             <van-tag v-else-if="scd_online.has_confirmed" type="success">已安检</van-tag>
             <van-tag v-else type="warning">已上传</van-tag>
+            <div style="color:red;" v-if="scd_online.comment">驳回，原因：{{scd_online.comment}}</div>
         </template>
         <template #right-icon>
             <van-button size="mini" v-if="scd_online.id == 0" type="info">上传</van-button>
@@ -61,6 +62,7 @@ export default {
                 expired_date: '',
                 id: 0,
                 has_confirmed: false,
+                comment: '',
             },
             upload_diag: false,
             new_scd: {
@@ -180,6 +182,7 @@ export default {
                 vue_this.scd_online.expired_date = resp.expired_date;
                 vue_this.scd_online.id = resp.id;
                 vue_this.scd_online.has_confirmed = resp.has_confirmed;
+                vue_this.scd_online.comment = resp.comment;
             });
         },
     },

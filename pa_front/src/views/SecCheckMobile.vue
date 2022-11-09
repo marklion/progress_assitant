@@ -28,6 +28,7 @@
                                 <van-tag type="success" v-else-if="single_lr.has_confirmed">已审核</van-tag>
                                 <van-tag type="warning" v-else>未审核</van-tag>
                             </span>
+                            <div style="color:red;" v-if="single_lr.comment">驳回附言{{single_lr.comment}}</div>
                         </template>
                         <div v-if="single_lr.input_content">
                             {{single_lr.input_content}}
@@ -35,7 +36,10 @@
                         <van-image @click="preview_lcd_pic([$remote_url+single_lr.attachment_path]);" v-if="single_lr.attachment_path" width="50" height="50" :src="$remote_url+single_lr.attachment_path" />
                         <template #right-icon>
                             <div v-if="single_lr.content_id && single_lr.content_id > 0">
-                                <van-button v-if="!single_lr.has_confirmed" size="small" type="info" @click="confirm_lcd(single_lr, true)">审核</van-button>
+                                <div v-if="!single_lr.has_confirmed">
+                                    <van-button size="small" type="info" @click="confirm_lcd(single_lr, true)">审核</van-button>
+                                    <van-button size="small" type="warning" @click="comment_lcd(single_lr)">驳回附言</van-button>
+                                </div>
                                 <van-button v-else size="small" type="danger" @click="confirm_lcd(single_lr, false)">反审</van-button>
                             </div>
                         </template>
@@ -111,9 +115,13 @@
 </template>
 
 <script>
+import Vue from 'vue';
 import {
     ImagePreview
 } from 'vant';
+import ElementUI from 'element-ui';
+import 'element-ui/lib/theme-chalk/index.css';
+Vue.use(ElementUI);
 
 import PinyinMatch from 'pinyin-match';
 export default {
@@ -218,6 +226,23 @@ export default {
         preview_lcd_pic: function (_pic) {
             ImagePreview(_pic)
         },
+        comment_lcd: function (_lcd) {
+            var vue_this = this;
+            this.$prompt('请输入驳回理由', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                customClass: "reason_input",
+                center: true,
+            }).then(({
+                value
+            }) => {
+                vue_this.$call_remote_process("stuff_plan_management", "confirm_sec_check_data", [vue_this.$cookies.get("pa_ssid"), _lcd.content_id, false, value]).then(function (resp) {
+                    if (resp) {
+                        vue_this.handleCurrentChange(vue_this.saved_cur_row);
+                    }
+                });
+            });
+        },
         confirm_lcd: function (_lcd, is_confirm) {
             var vue_this = this;
             vue_this.$call_remote_process("stuff_plan_management", "confirm_sec_check_data", [vue_this.$cookies.get("pa_ssid"), _lcd.content_id, is_confirm]).then(function (resp) {
@@ -254,6 +279,7 @@ export default {
                 vue_this.$set(element, "expired_date", tmp_lic.expired_date);
                 vue_this.$set(element, "content_id", tmp_lic.id);
                 vue_this.$set(element, "has_confirmed", tmp_lic.has_confirmed);
+                vue_this.$set(element, "comment", tmp_lic.comment);
             }
         },
         handle_change_proc: function (_index) {
@@ -340,5 +366,9 @@ export default {
 <style scoped>
 .swip-button {
     height: 100%;
+}
+
+.reason_input {
+    width: 90%;
 }
 </style>
