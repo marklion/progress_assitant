@@ -218,6 +218,15 @@ export default {
                 });
             }
 
+            ret.sort(function (a) {
+                var sort_ret = -1;
+                if (a.sec_check_passed) {
+                    sort_ret = 1;
+                }
+
+                return sort_ret;
+            });
+
             return ret;
         },
     },
