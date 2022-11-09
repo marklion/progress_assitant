@@ -2911,12 +2911,14 @@ public:
                     _return.related_info = scd->related_info;
                     _return.has_confirmed = scd->has_confirmed;
                     _return.related_type_id = lr->get_pri_id();
+                    _return.comment = scd->comment;
+                    _return.confirmer = scd->confirmer;
                 }
             }
         }
     }
 
-    virtual bool confirm_sec_check_data(const std::string &ssid, const int64_t lcd_id, const bool is_confirm)
+    virtual bool confirm_sec_check_data(const std::string &ssid, const int64_t lcd_id, const bool is_confirm, const std::string &comment)
     {
         bool ret = false;
 
@@ -2929,6 +2931,15 @@ public:
 
         lcd->has_confirmed = is_confirm ? 1 : 0;
 
+        if (lcd->has_confirmed)
+        {
+            lcd->comment = "";
+            lcd->confirmer = user->name;
+        }
+        else
+        {
+            lcd->comment = comment;
+        }
         ret = lcd->update_record();
 
         return ret;
@@ -2976,11 +2987,17 @@ public:
                 table_header.push_back(itr.name + " 有效期");
             }
         }
+        table_header.push_back("最大充装量");
         writer.write_row(table_header);
 
         auto plans = PA_RPC_get_all_plans_related_by_user(ssid, "date(substr(plan_time, 1, 10)) >= date('%s') AND date(substr(plan_time, 1, 10)) <= date('%s')", begin_date.c_str(), end_date.c_str());
         for (auto &itr : plans)
         {
+            auto stuff = itr.get_parent<pa_sql_stuff_info>("belong_stuff");
+            if (!stuff || !stuff->need_sec_check)
+            {
+                continue;
+            }
             std::string company_name = itr.proxy_company;
             auto cust_user = itr.get_parent<pa_sql_userinfo>("created_by");
             if (cust_user && cust_user->buyer)
@@ -3010,6 +3027,9 @@ public:
                     single_record.push_back(company_name);
                     single_record.push_back(single_vehicle.deliver_p_timestamp);
                     single_record.push_back(single_vehicle.deliver_timestamp);
+                    std::string max_count;
+                    double std_load = 0;
+                    double std_count = 0;
                     for (auto &single_lr : lrs)
                     {
                         std::string related_info;
@@ -3043,6 +3063,14 @@ public:
                             {
                                 single_record.push_back(lcd->expired_date);
                             }
+                            if (single_lr.name == "槽车核载量")
+                            {
+                                std_load = atof(lcd->input_content.c_str());
+                            }
+                            if (single_lr.name == "槽车容积")
+                            {
+                                std_count = atof(lcd->input_content.c_str());
+                            }
                         }
                         else
                         {
@@ -3060,6 +3088,17 @@ public:
                             }
                         }
                     }
+                    auto min_max_count = std_load;
+                    if (std_count * 0.426 * 0.95 < min_max_count)
+                    {
+                        min_max_count = std_count * 0.426 * 0.95;
+                    }
+                    if (49 - single_vehicle.p_weight < min_max_count)
+                    {
+                        min_max_count = 49 - single_vehicle.p_weight;
+                    }
+                    max_count = pa_double2string_reserve2(min_max_count);
+                    single_record.push_back(max_count);
                     writer.write_row(single_record);
                 }
             }

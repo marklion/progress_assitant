@@ -85,6 +85,7 @@
                                     待审核
                                 </el-tag>
                             </span>
+                            <div style="color:red;" v-if="scope.row.comment">驳回原因：{{scope.row.comment}}</div>
                         </template>
                     </el-table-column>
                     <el-table-column prop="input_content" label="内容">
@@ -95,11 +96,20 @@
                             </el-image>
                         </template>
                     </el-table-column>
-                    <el-table-column prop="expired_date" label="有效期">
+                    <el-table-column label="有效期">
+                        <template slot-scope="scope">
+                            <div v-if="scope.row.expired_date == '5000-01-01'">长期有效</div>
+                            <div v-else>{{scope.row.expired_date}}</div>
+                        </template>
+                    </el-table-column>
+                    <el-table-column prop="confirmer" label="审核人">
                     </el-table-column>
                     <el-table-column label="操作">
                         <template slot-scope="scope">
-                            <el-button v-if="!scope.row.has_confirmed" type="primary" size="small" @click="confirm_lcd(scope.row, true)">审核</el-button>
+                            <div v-if="!scope.row.has_confirmed">
+                                <el-button type="primary" size="small" @click="confirm_lcd(scope.row, true)">审核</el-button>
+                                <el-button type="text" size="small" @click="comment_lcd(scope.row)">驳回附言</el-button>
+                            </div>
                             <el-button v-else type="danger" size="small" @click="confirm_lcd(scope.row, false)">反审</el-button>
                         </template>
                     </el-table-column>
@@ -214,6 +224,15 @@ export default {
                 });
             }
 
+            ret.sort(function (a) {
+                var sort_ret = -1;
+                if (a.sec_check_passed) {
+                    sort_ret = 1;
+                }
+
+                return sort_ret;
+            });
+
             return ret;
         },
     },
@@ -233,6 +252,21 @@ export default {
             vue_this.$call_remote_process("stuff_plan_management", "export_sec_check_history", [vue_this.$cookies.get("pa_ssid"), begin_date, end_date]).then(function (resp) {
                 console.log(resp);
                 window.open(vue_this.$remote_url + resp);
+            });
+        },
+        comment_lcd: function (_lcd) {
+            var vue_this = this;
+            this.$prompt('请输入驳回理由', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+            }).then(({
+                value
+            }) => {
+                vue_this.$call_remote_process("stuff_plan_management", "confirm_sec_check_data", [vue_this.$cookies.get("pa_ssid"), _lcd.content_id, false, value]).then(function (resp) {
+                    if (resp) {
+                        vue_this.handleCurrentChange(vue_this.saved_cur_row);
+                    }
+                });
             });
         },
         confirm_lcd: function (_lcd, is_confirm) {
@@ -328,6 +362,8 @@ export default {
                 vue_this.$set(element, "expired_date", tmp_lic.expired_date);
                 vue_this.$set(element, "content_id", tmp_lic.id);
                 vue_this.$set(element, "has_confirmed", tmp_lic.has_confirmed);
+                vue_this.$set(element, "comment", tmp_lic.comment);
+                vue_this.$set(element, "confirmer", tmp_lic.confirmer);
             }
         },
         tableRowClassName({

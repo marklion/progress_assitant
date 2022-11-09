@@ -446,6 +446,8 @@ struct license_common_data {
     5:string related_info,
     6:i64 related_type_id,
     7:bool has_confirmed,
+    8:string comment,
+    9:string confirmer,
 }
 
 service stuff_plan_management {
@@ -504,7 +506,7 @@ service stuff_plan_management {
     bool update_sec_check_data(1:string silent_id, 2:license_common_data lcd) throws (1:gen_exp e),
     bool del_sec_check_data(1:string silent_id, 2:license_common_data lcd) throws (1:gen_exp e),
     license_common_data get_all_sec_check_data(1:i64 related_type_id, 2:string related_info) throws (1:gen_exp e),
-    bool confirm_sec_check_data(1:string ssid, 2:i64 lcd_id, 3:bool is_confirm) throws (1:gen_exp e);
+    bool confirm_sec_check_data(1:string ssid, 2:i64 lcd_id, 3:bool is_confirm, 4:string comment) throws (1:gen_exp e);
     string export_sec_check_history(1:string ssid, 2:string begin_date, 3:string end_date) throws (1:gen_exp e),
     string export_plan_by_deliver_date_range(1:string ssid, 2:string begin_date, 3:string end_date) throws(1:gen_exp e),
 }
