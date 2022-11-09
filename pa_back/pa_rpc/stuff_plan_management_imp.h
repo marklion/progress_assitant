@@ -2985,6 +2985,7 @@ public:
                 table_header.push_back(itr.name + " 有效期");
             }
         }
+        table_header.push_back("最大充装量");
         writer.write_row(table_header);
 
         auto plans = PA_RPC_get_all_plans_related_by_user(ssid, "date(substr(plan_time, 1, 10)) >= date('%s') AND date(substr(plan_time, 1, 10)) <= date('%s')", begin_date.c_str(), end_date.c_str());
@@ -3019,6 +3020,9 @@ public:
                     single_record.push_back(company_name);
                     single_record.push_back(single_vehicle.deliver_p_timestamp);
                     single_record.push_back(single_vehicle.deliver_timestamp);
+                    std::string max_count;
+                    double std_load = 0;
+                    double std_count = 0;
                     for (auto &single_lr : lrs)
                     {
                         std::string related_info;
@@ -3052,6 +3056,14 @@ public:
                             {
                                 single_record.push_back(lcd->expired_date);
                             }
+                            if (single_lr.name == "槽车核载量")
+                            {
+                                std_load = atof(lcd->input_content.c_str());
+                            }
+                            if (single_lr.name == "槽车容积")
+                            {
+                                std_count = atof(lcd->input_content.c_str());
+                            }
                         }
                         else
                         {
@@ -3069,6 +3081,17 @@ public:
                             }
                         }
                     }
+                    auto min_max_count = std_load;
+                    if (std_count * 0.426 * 0.95 < min_max_count)
+                    {
+                        min_max_count = std_count * 0.426 * 0.95;
+                    }
+                    if (49 - single_vehicle.p_weight < min_max_count)
+                    {
+                        min_max_count = 49 - single_vehicle.p_weight;
+                    }
+                    max_count = pa_double2string_reserve2(min_max_count);
+                    single_record.push_back(max_count);
                     writer.write_row(single_record);
                 }
             }
