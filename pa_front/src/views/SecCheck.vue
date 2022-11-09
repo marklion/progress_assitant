@@ -96,7 +96,11 @@
                             </el-image>
                         </template>
                     </el-table-column>
-                    <el-table-column prop="expired_date" label="有效期">
+                    <el-table-column label="有效期">
+                        <template slot-scope="scope">
+                            <div v-if="scope.row.expired_date == '5000-01-01'">长期有效</div>
+                            <div v-else>{{scope.row.expired_date}}</div>
+                        </template>
                     </el-table-column>
                     <el-table-column label="操作">
                         <template slot-scope="scope">

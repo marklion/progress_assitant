@@ -20,7 +20,11 @@
                             <div v-if="single_item.m_weight != 0 && single_item.p_weight != 0">净重：{{(single_item.m_weight - single_item.p_weight).toFixed(2)}}</div>
                         </template>
                     </van-cell>
-                    <van-cell center v-for="(single_lr, lr_index) in  sec_items" :key="lr_index" :label="single_lr.expired_date">
+                    <van-cell center v-for="(single_lr, lr_index) in  sec_items" :key="lr_index" >
+                        <template #label>
+                            <div v-if="single_lr.expired_date == '5000-01-01'">长期有效</div>
+                            <div v-else>{{single_lr.expired_date}}</div>
+                        </template>
                         <template #title>
                             <span>{{single_lr.name}}</span>
                             <span>
