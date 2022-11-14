@@ -1590,5 +1590,45 @@ public:
 
         return ret;
     }
+
+    virtual bool set_driver_notice(const std::string &ssid, const std::string &notice)
+    {
+        bool ret = false;
+        auto user = PA_DATAOPT_get_online_user(ssid, true);
+        if (user)
+        {
+            auto company = user->get_parent<pa_sql_company>("belong_company");
+            if (company)
+            {
+                company->driver_notice = notice;
+                ret = company->update_record();
+            }
+            else
+            {
+                PA_RETURN_NOCOMPANY_MSG();
+            }
+        }
+        else
+        {
+            PA_RETURN_UNLOGIN_MSG();
+        }
+        return ret;
+    }
+    virtual void get_driver_notice(std::string &_return, const std::string &company_name)
+    {
+        auto company = sqlite_orm::search_record<pa_sql_company>("name = '%s'", company_name.c_str());
+        if (company)
+        {
+            _return = company->driver_notice;
+        }
+        else
+        {
+            PA_RETURN_NOCOMPANY_MSG();
+        }
+    }
+    virtual void clear_driver_notice(const std::string &ssid)
+    {
+        set_driver_notice(ssid, "");
+    }
 };
 #endif // _COMPANY_MANAGEMENT_IMP_H_

@@ -88,7 +88,7 @@
         </van-dialog>
     </div>
     <div v-else-if="active_index == 1">
-        <van-divider>当前公告</van-divider>
+        <van-divider>货主公告</van-divider>
         <van-field v-model="notice" rows="2" autosize type="textarea" maxlength="300" placeholder="请输入公告" show-word-limit />
         <van-row type="flex" justify="center" align="center" :gutter="10">
             <van-col :span="10">
@@ -96,6 +96,16 @@
             </van-col>
             <van-col :span="10">
                 <van-button size="small" round block type="primary" @click="submit_notice(true)">发布</van-button>
+            </van-col>
+        </van-row>
+        <van-divider>司机公告</van-divider>
+        <van-field v-model="driver_notice" rows="2" autosize type="textarea" maxlength="300" placeholder="请输入公告" show-word-limit />
+        <van-row type="flex" justify="center" align="center" :gutter="10">
+            <van-col :span="10">
+                <van-button size="small" round block type="danger" @click="submit_driver_notice(false)">清除</van-button>
+            </van-col>
+            <van-col :span="10">
+                <van-button size="small" round block type="primary" @click="submit_driver_notice(true)">发布</van-button>
             </van-col>
         </van-row>
     </div>
@@ -341,6 +351,7 @@ export default {
                 return ret;
             },
             notice: '',
+            driver_notice: '',
             show_operate: [false],
             show_proxy_company_diag: false,
             focus_type: 0,
@@ -692,6 +703,20 @@ export default {
         do_operate: function (_op) {
             _op.operate(this.focus_type);
         },
+        submit_driver_notice: function (_val) {
+            var vue_this = this;
+            if (_val) {
+                vue_this.$call_remote_process("company_management", 'set_driver_notice', [vue_this.$cookies.get('pa_ssid'), vue_this.driver_notice]).then(function (resp) {
+                    if (resp) {
+                        vue_this.init_company_data();
+                    }
+                });
+            } else {
+                vue_this.$call_remote_process("company_management", 'clear_driver_notice', [vue_this.$cookies.get('pa_ssid')]).then(function () {
+                    vue_this.init_company_data();
+                });
+            }
+        },
         submit_notice: function (_val) {
             var vue_this = this;
             if (_val) {
@@ -785,6 +810,11 @@ export default {
                 });
             });
             if (vue_this.$store.state.userinfo.company) {
+                vue_this.$call_remote_process("company_management", 'get_driver_notice', [vue_this.$store.state.userinfo.company]).then(function (resp) {
+                    vue_this.driver_notice = resp;
+                });
+            }
+            if (vue_this.$store.state.userinfo.company) {
                 vue_this.$call_remote_process("company_management", 'get_notice', [vue_this.$store.state.userinfo.company]).then(function (resp) {
                     vue_this.notice = resp;
                 });
@@ -825,6 +855,9 @@ export default {
             var vue_this = this;
             vue_this.$call_remote_process("company_management", 'get_notice', [_val]).then(function (resp) {
                 vue_this.notice = resp;
+            });
+            vue_this.$call_remote_process("company_management", 'get_driver_notice', [vue_this.$store.state.userinfo.company]).then(function (resp) {
+                vue_this.driver_notice = resp;
             });
         },
     },

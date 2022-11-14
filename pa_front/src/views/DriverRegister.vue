@@ -395,6 +395,12 @@ export default {
             vue_this.$call_remote_process("stuff_plan_management", 'get_today_driver_info', [vue_this.$cookies.get('driver_silent_id')]).then(function (resp) {
                 resp.forEach((element, index) => {
                     vue_this.$set(vue_this.trans_info, index, element);
+                    if (element.notice) {
+                        vue_this.$dialog.alert({
+                            title: '提示',
+                            message: element.destination_company + '提示：' + element.notice,
+                        });
+                    }
                     if (element.can_enter) {
                         vue_this.$set(vue_this.input_enter_weight, index, element.count);
                     } else {

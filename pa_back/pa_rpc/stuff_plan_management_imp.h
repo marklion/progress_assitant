@@ -2245,6 +2245,7 @@ public:
                         if (create_company && sale_company)
                         {
                             today_driver_info tmp;
+                            tmp.notice = sale_company->driver_notice;
                             tmp.date = single_plan.plan_time;
                             tmp.behind_vichele = behind_vichele->number;
                             tmp.destination_address = sale_company->address;
