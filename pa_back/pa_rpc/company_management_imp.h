@@ -1152,6 +1152,7 @@ public:
                 company_customize_config.Get("need_register", _return.need_driver_register);
                 company_customize_config.Get("need_balance_auto_change", _return.need_balance_auto_change);
                 company_customize_config.Get("need_sec_check", _return.need_sec_check);
+                company_customize_config.Get("need_reg_sec_pal", _return.need_reg_sec_pal);
                 break;
             }
         }
@@ -1162,6 +1163,7 @@ public:
         need_driver_license,
         need_balance_auto_change,
         need_sec_check,
+        need_reg_sec_pal,
     };
     bool company_customize_need(const std::string &_company_name, company_customize_need_en _need)
     {
@@ -1182,6 +1184,9 @@ public:
             break;
         case need_sec_check:
             ret = tmp.need_sec_check;
+            break;
+        case need_reg_sec_pal:
+            ret = tmp.need_reg_sec_pal;
             break;
         default:
             break;
