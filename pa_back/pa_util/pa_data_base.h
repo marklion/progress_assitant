@@ -25,6 +25,7 @@ public:
     std::string zh_ssid;
     std::string event_types;
     std::string remote_event_url;
+    std::string driver_notice;
 
     virtual std::vector<sqlite_orm_column> self_columns_defined()
     {
@@ -47,6 +48,7 @@ public:
         ret.push_back(sqlite_orm_column("zh_ssid", sqlite_orm_column::STRING, &zh_ssid));
         ret.push_back(sqlite_orm_column("event_types", sqlite_orm_column::STRING, &event_types));
         ret.push_back(sqlite_orm_column("remote_event_url", sqlite_orm_column::STRING, &remote_event_url));
+        ret.push_back(sqlite_orm_column("driver_notice", sqlite_orm_column::STRING, &driver_notice));
 
         return ret;
     }
