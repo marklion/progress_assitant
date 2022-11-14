@@ -1486,7 +1486,7 @@ public:
                             "with pd.ExcelWriter('/dist/logo_res/" + _file_name + ".xlsx', engine='openpyxl') as writer:\n"
                             "\twriter.book = book\n"
                             "\tcsv.to_excel(writer, '" + itr.date +"')\n"
-                            "\twriter.save()\n";
+                            "\twriter.close()\n";
                 tdf_log tmp_log("python_exec");
                 tmp_log.log(py_converter);
 

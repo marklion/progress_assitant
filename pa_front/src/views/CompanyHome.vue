@@ -89,7 +89,7 @@
     </div>
     <div v-else-if="active_index == 1">
         <van-divider>货主公告</van-divider>
-        <van-field v-model="notice" rows="2" autosize type="textarea" maxlength="300" placeholder="请输入公告" show-word-limit />
+        <van-field v-model="notice" rows="2" autosize type="textarea" maxlength="1000" placeholder="请输入公告" show-word-limit />
         <van-row type="flex" justify="center" align="center" :gutter="10">
             <van-col :span="10">
                 <van-button size="small" round block type="danger" @click="submit_notice(false)">清除</van-button>
@@ -99,7 +99,7 @@
             </van-col>
         </van-row>
         <van-divider>司机公告</van-divider>
-        <van-field v-model="driver_notice" rows="2" autosize type="textarea" maxlength="300" placeholder="请输入公告" show-word-limit />
+        <van-field v-model="driver_notice" rows="2" autosize type="textarea" maxlength="1000" placeholder="请输入公告" show-word-limit />
         <van-row type="flex" justify="center" align="center" :gutter="10">
             <van-col :span="10">
                 <van-button size="small" round block type="danger" @click="submit_driver_notice(false)">清除</van-button>
