@@ -38,6 +38,10 @@
                                     <van-button type="info" plain size="mini" @click="enter_sec_check_prepare(single_trans.destination_company, single_trans.main_vichele, single_trans.behind_vichele, driver_phone)">
                                         上传安检信息
                                     </van-button>
+                                    <div v-if="single_trans.reg_sec_pal">
+                                        <van-button v-if="should_checkin(single_trans.date) && !single_trans.is_registered && single_trans.destination_company" type="info" size="small" @click="register_vichele(single_trans.destination_company, single_trans.id)">排号
+                                        </van-button>
+                                    </div>
                                 </div>
                                 <div v-else>
                                     <van-button type="warning" plain size="mini" @click="enter_sec_check_prepare(single_trans.destination_company, single_trans.main_vichele, single_trans.behind_vichele, driver_phone)">

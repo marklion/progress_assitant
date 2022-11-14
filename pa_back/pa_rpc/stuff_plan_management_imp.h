@@ -2304,6 +2304,10 @@ public:
                                     tmp.sec_check_passed = false;
                                 }
                             }
+                            if (ch.company_customize_need(sale_company->name, company_management_handler::need_reg_sec_pal))
+                            {
+                                tmp.reg_sec_pal = true;
+                            }
                             _return.push_back(tmp);
                         }
                     }

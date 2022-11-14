@@ -139,6 +139,7 @@ struct company_customize {
     2:bool need_driver_register,
     3:bool need_balance_auto_change,
     4:bool need_sec_check,
+    5:bool need_reg_sec_pal,
 }
 
 enum license_use_for {
@@ -423,6 +424,7 @@ struct today_driver_info {
     24:bool sec_check_passed,
     25:bool need_sec_check,
     26:string notice,
+    27:bool reg_sec_pal,
 }
 
 struct driver_detail_info {
