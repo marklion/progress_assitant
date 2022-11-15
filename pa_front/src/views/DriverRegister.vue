@@ -13,99 +13,105 @@
             <licenseCollapse v-if="need_driver_license" title="证件" icon="passed" :licenseList="driverLicenseList" @open="loadDriverLicense" @submit="onSubmitLicense" @update="doLicenseUpdate" @delete="doLicenseDelete"></licenseCollapse>
 
         </van-cell-group>
+        <van-tabs v-model="act_page">
+            <van-tab title="承运信息">
 
-        <van-divider>今日承运信息</van-divider>
-        <van-empty v-if="trans_info.length <= 0" description="当前无承运任务，请联系所属单位派车后点击刷新">
-        </van-empty>
-        <div v-else>
-            <div class="single_record_show" v-for="(single_trans, index) in trans_info" :key="index">
-                <div v-if="!single_trans.can_enter" style="color:red;">不可进</div>
-                <div v-else style="color:green;">可进</div>
-                <van-cell title="进厂时间" :value="single_trans.date"></van-cell>
-                <van-cell :title="single_trans.main_vichele + '-' + single_trans.behind_vichele" :value="single_trans.stuff_name" :label="single_trans.order_company?single_trans.order_company:'(未指定拉货公司)'" />
+                <van-empty v-if="trans_info.length <= 0" description="当前无承运任务，请联系所属单位派车后点击刷新">
+                </van-empty>
+                <div v-else>
+                    <div class="single_record_show" v-for="(single_trans, index) in trans_info" :key="index">
+                        <div v-if="!single_trans.can_enter" style="color:red;">不可进</div>
+                        <div v-else style="color:green;">可进</div>
+                        <van-cell title="进厂时间" :value="single_trans.date"></van-cell>
+                        <van-cell :title="single_trans.main_vichele + '-' + single_trans.behind_vichele" :value="single_trans.stuff_name" :label="single_trans.order_company?single_trans.order_company:'(未指定拉货公司)'" />
 
-                <div v-if="single_trans.need_license">
-                    <licenseCollapse title="主车证件" icon="logistics" :belong="single_trans.main_vichele" :show-expire-date-edit="false" :licenseList="vehicleLicense[single_trans.main_vichele]" @open="loadVehicleLicense(single_trans.main_vichele)" @submit="onSubmitVehicleLicense" @delete="doDeleteVehicleLicense"></licenseCollapse>
-                    <licenseCollapse title="挂车证件" icon="cart-o" :belong="single_trans.behind_vichele" :show-expire-date-edit="false" :licenseList="vehicleLicense[single_trans.behind_vichele]" @open="loadVehicleLicense(single_trans.behind_vichele)" @submit="onSubmitVehicleLicense" @delete="doDeleteVehicleLicense"></licenseCollapse>
-                </div>
+                        <div v-if="single_trans.need_license">
+                            <licenseCollapse title="主车证件" icon="logistics" :belong="single_trans.main_vichele" :show-expire-date-edit="false" :licenseList="vehicleLicense[single_trans.main_vichele]" @open="loadVehicleLicense(single_trans.main_vichele)" @submit="onSubmitVehicleLicense" @delete="doDeleteVehicleLicense"></licenseCollapse>
+                            <licenseCollapse title="挂车证件" icon="cart-o" :belong="single_trans.behind_vichele" :show-expire-date-edit="false" :licenseList="vehicleLicense[single_trans.behind_vichele]" @open="loadVehicleLicense(single_trans.behind_vichele)" @submit="onSubmitVehicleLicense" @delete="doDeleteVehicleLicense"></licenseCollapse>
+                        </div>
 
-                <van-cell v-if="!single_trans.is_buy" :title="single_trans.destination_company" center>
-                    <template #right-icon>
-                        <div style="margin-left:8px;">
-                            <div v-if="single_trans.need_sec_check">
-                                <div v-if="!single_trans.sec_check_passed">
-                                    <span>安检未通过</span>
-                                    <van-button type="info" plain size="mini" @click="enter_sec_check_prepare(single_trans.destination_company, single_trans.main_vichele, single_trans.behind_vichele, driver_phone)">
-                                        上传安检信息
-                                    </van-button>
-                                    <div v-if="single_trans.reg_sec_pal">
-                                        <van-button v-if="should_checkin(single_trans.date) && !single_trans.is_registered && single_trans.destination_company" type="info" size="small" @click="register_vichele(single_trans.destination_company, single_trans.id)">排号
-                                        </van-button>
+                        <van-cell v-if="!single_trans.is_buy" :title="single_trans.destination_company" center>
+                            <template #right-icon>
+                                <div style="margin-left:8px;">
+                                    <div v-if="single_trans.need_sec_check">
+                                        <div v-if="!single_trans.sec_check_passed">
+                                            <span>安检未通过</span>
+                                            <van-button type="info" plain size="mini" @click="enter_sec_check_prepare(single_trans.destination_company, single_trans.main_vichele, single_trans.behind_vichele, driver_phone)">
+                                                上传安检信息
+                                            </van-button>
+                                            <div v-if="single_trans.reg_sec_pal">
+                                                <van-button v-if="should_checkin(single_trans.date) && !single_trans.is_registered && single_trans.destination_company" type="info" size="small" @click="register_vichele(single_trans.destination_company, single_trans.id)">排号
+                                                </van-button>
+                                            </div>
+                                        </div>
+                                        <div v-else>
+                                            <van-button type="warning" plain size="mini" @click="enter_sec_check_prepare(single_trans.destination_company, single_trans.main_vichele, single_trans.behind_vichele, driver_phone)">
+                                                查看证件信息
+                                            </van-button>
+                                            <van-button v-if="should_checkin(single_trans.date) && !single_trans.is_registered && single_trans.destination_company" type="info" size="small" @click="register_vichele(single_trans.destination_company, single_trans.id)">排号
+                                            </van-button>
+                                        </div>
+                                    </div>
+                                    <div v-else>
+                                        <div v-if="single_trans.need_checkin">
+                                            <van-button v-if="should_checkin(single_trans.date) && !single_trans.is_registered && single_trans.destination_company" type="info" size="small" @click="register_vichele(single_trans.destination_company, single_trans.id)">排号
+                                            </van-button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </template>
+                            <div v-if="single_trans.is_registered">
+                                <div v-if="single_trans.register_number != '0'">
+                                    <div>
+                                        进厂序号：{{ single_trans.register_number }}
+                                    </div>
+                                    <div>
+                                        还需等待：{{ single_trans.register_order }}个
                                     </div>
                                 </div>
                                 <div v-else>
-                                    <van-button type="warning" plain size="mini" @click="enter_sec_check_prepare(single_trans.destination_company, single_trans.main_vichele, single_trans.behind_vichele, driver_phone)">
-                                        查看证件信息
-                                    </van-button>
-                                    <van-button v-if="should_checkin(single_trans.date) && !single_trans.is_registered && single_trans.destination_company" type="info" size="small" @click="register_vichele(single_trans.destination_company, single_trans.id)">排号
-                                    </van-button>
+                                    已叫号，请进场
                                 </div>
                             </div>
-                            <div v-else>
-                                <div v-if="single_trans.need_checkin">
-                                    <van-button v-if="should_checkin(single_trans.date) && !single_trans.is_registered && single_trans.destination_company" type="info" size="small" @click="register_vichele(single_trans.destination_company, single_trans.id)">排号
-                                    </van-button>
-                                </div>
-                            </div>
-                        </div>
-                    </template>
-                    <div v-if="single_trans.is_registered">
-                        <div v-if="single_trans.register_number != '0'">
-                            <div>
-                                进厂序号：{{ single_trans.register_number }}
-                            </div>
-                            <div>
-                                还需等待：{{ single_trans.register_order }}个
-                            </div>
-                        </div>
-                        <div v-else>
-                            已叫号，请进场
-                        </div>
-                    </div>
-                </van-cell>
-                <div v-if="single_trans.is_buy">
-                    <van-button v-if="!single_trans.order_company" type="info" size="small" @click="act_select_company = true;focus_vichele_index = index">指定拉货公司
-                    </van-button>
-                    <div v-else>
-                        <van-button v-if="single_trans.company_for_select.length > 0 && single_trans.is_buy" type="warning" size="small" @click="act_select_company = true;focus_vichele_index = index">修改拉货公司
-                        </van-button>
-                        <van-cell title="磅单照片" center :label="single_trans.upload_permit?'允许上传':'当前位置不允许上传'">
-                            <template #right-icon>
-                                <van-button v-if="single_trans.attach_url" size="small" type="info" @click="pre_view_attach(single_trans.attach_url)">预览
-                                </van-button>
-                                <van-uploader :after-read="upload_attachment" @click-upload="proc_focus(single_trans.id)" accept="image/*">
-                                    <van-button :disabled="!single_trans.upload_permit" icon="plus" size="small" type="primary">上传
-                                    </van-button>
-                                </van-uploader>
-                            </template>
                         </van-cell>
-                        <div v-if="single_trans.attach_url">
-                            <van-field label="出矿（厂）净重" type="number" v-model="input_enter_weight[index]" placeholder="请输入出厂净重"></van-field>
-                            <van-field label="确认出矿（厂）净重" type="number" v-model="input_enter_weight_confirm[index]" placeholder="请再次输入出厂净重"></van-field>
-                            <div style="margin:16px;">
-                                <van-button type="primary" block size="small" @click="fill_enter_weight(single_trans.id, index)">提交
+                        <div v-if="single_trans.is_buy">
+                            <van-button v-if="!single_trans.order_company" type="info" size="small" @click="act_select_company = true;focus_vichele_index = index">指定拉货公司
+                            </van-button>
+                            <div v-else>
+                                <van-button v-if="single_trans.company_for_select.length > 0 && single_trans.is_buy" type="warning" size="small" @click="act_select_company = true;focus_vichele_index = index">修改拉货公司
                                 </van-button>
+                                <van-cell title="磅单照片" center :label="single_trans.upload_permit?'允许上传':'当前位置不允许上传'">
+                                    <template #right-icon>
+                                        <van-button v-if="single_trans.attach_url" size="small" type="info" @click="pre_view_attach(single_trans.attach_url)">预览
+                                        </van-button>
+                                        <van-uploader :after-read="upload_attachment" @click-upload="proc_focus(single_trans.id)" accept="image/*">
+                                            <van-button :disabled="!single_trans.upload_permit" icon="plus" size="small" type="primary">上传
+                                            </van-button>
+                                        </van-uploader>
+                                    </template>
+                                </van-cell>
+                                <div v-if="single_trans.attach_url">
+                                    <van-field label="出矿（厂）净重" type="number" v-model="input_enter_weight[index]" placeholder="请输入出厂净重"></van-field>
+                                    <van-field label="确认出矿（厂）净重" type="number" v-model="input_enter_weight_confirm[index]" placeholder="请再次输入出厂净重"></van-field>
+                                    <div style="margin:16px;">
+                                        <van-button type="primary" block size="small" @click="fill_enter_weight(single_trans.id, index)">提交
+                                        </van-button>
+                                    </div>
+                                </div>
+
                             </div>
                         </div>
-
+                        <van-cell v-if="single_trans.destination_address" title="详细地址：" :value="single_trans.destination_address"></van-cell>
+                        <van-cell v-if="single_trans.is_registered" title="进厂位置：" :value="single_trans.enter_location" :label="'签到时间:' + single_trans.register_timestamp"></van-cell>
                     </div>
                 </div>
-                <van-cell v-if="single_trans.destination_address" title="详细地址：" :value="single_trans.destination_address"></van-cell>
-                <van-cell v-if="single_trans.is_registered" title="进厂位置：" :value="single_trans.enter_location" :label="'签到时间:' + single_trans.register_timestamp"></van-cell>
-            </div>
-        </div>
-        <van-button round type="info" block @click="refresh_cur_page">刷新</van-button>
-        <van-action-sheet v-model="act_select_company" :actions="company_for_select" @select="fill_company" />
+                <van-button round type="info" block @click="refresh_cur_page">刷新</van-button>
+                <van-action-sheet v-model="act_select_company" :actions="company_for_select" @select="fill_company" />
+            </van-tab>
+            <van-tab title="历史磅单">
+                <van-cell center is-link v-for="(single_his, index) in history_ticket" :key="index" :title="single_his.main_vichele" :value="single_his.stuff_name" :label="'皮重：' + single_his.p_weight.toFixed(2) + '   毛重：' + single_his.m_weight.toFixed(2) + '  净重：' + (Math.abs(single_his.p_weight - single_his.m_weight)).toFixed(2)" :to="{name:'Ticket', params:{id:single_his.id + (single_his.is_buy?'B':'S')}}"></van-cell>
+            </van-tab>
+        </van-tabs>
     </div>
     <div v-if="need_bind_info">
         <van-form @submit="register_driver">
@@ -157,6 +163,8 @@ export default {
     },
     data: function () {
         return {
+            act_page: 0,
+            history_ticket: [],
             sec_check_company: '',
             sec_check_mv: '',
             sec_check_bv: '',
@@ -219,6 +227,14 @@ export default {
         }
     },
     methods: {
+        init_history_ticket: function () {
+            var vue_this = this;
+            vue_this.$call_remote_process("stuff_plan_management", "get_history_weight_ticket", [vue_this.$cookies.get("driver_silent_id")]).then(function (resp) {
+                resp.forEach((element, index) => {
+                    vue_this.$set(vue_this.history_ticket, index, element);
+                });
+            });
+        },
         enter_sec_check_prepare: function (_company, _mv, _bv, _driver) {
             this.sec_check_company = _company;
             this.sec_check_mv = _mv;
@@ -506,6 +522,7 @@ export default {
                 }
             });
         }
+        this.init_history_ticket();
     }
 }
 </script>
