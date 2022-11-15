@@ -425,6 +425,8 @@ struct today_driver_info {
     25:bool need_sec_check,
     26:string notice,
     27:bool reg_sec_pal,
+    28:double p_weight,
+    29:double m_weight,
 }
 
 struct driver_detail_info {
@@ -515,6 +517,7 @@ service stuff_plan_management {
     bool confirm_sec_check_data(1:string ssid, 2:i64 lcd_id, 3:bool is_confirm, 4:string comment) throws (1:gen_exp e);
     string export_sec_check_history(1:string ssid, 2:string begin_date, 3:string end_date) throws (1:gen_exp e),
     string export_plan_by_deliver_date_range(1:string ssid, 2:string begin_date, 3:string end_date) throws(1:gen_exp e),
+    list<today_driver_info > get_history_weight_ticket(1:string silent_id) throws (1:gen_exp e),
 }
 
 struct api_extra_transformation {

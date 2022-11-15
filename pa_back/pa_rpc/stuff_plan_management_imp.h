@@ -3170,6 +3170,70 @@ public:
             .end_date = end_date};
         _return = pri_export_plan(*opt_user, plan_ids, ddr);
     }
+
+    virtual void get_history_weight_ticket(std::vector<today_driver_info> &_return, const std::string &silent_id)
+    {
+        if (silent_id.length() <= 0)
+        {
+            PA_RETURN_MSG("无数据");
+        }
+        auto sample_driver = sqlite_orm::search_record<pa_sql_driver>("silent_id == '%s'", silent_id.c_str());
+        std::string sample_phone = "xxxxxx";
+        if (sample_driver)
+        {
+            sample_phone = sample_driver->phone;
+        }
+
+        auto drivers = sqlite_orm::search_record_all<pa_sql_driver>("phone == '%s'", sample_phone.c_str());
+        for (auto &itr : drivers)
+        {
+            auto related_single_vicheles = itr.get_all_children<pa_sql_single_vichele>("driver", "finish == 1 ORDER BY datetime(deliver_timestamp) DESC LIMIT 5");
+            for (auto &single_sv : related_single_vicheles)
+            {
+                auto p_single_plan = single_sv.get_parent<pa_sql_plan>("belong_plan");
+                if (p_single_plan)
+                {
+                    auto &info = single_sv;
+                    auto &single_plan = *p_single_plan;
+                    auto main_vichele = info.get_parent<pa_sql_vichele>("main_vichele");
+                    auto stuff_info = single_plan.get_parent<pa_sql_stuff_info>("belong_stuff");
+                    std::string destination_company;
+                    std::string destination_address;
+                    std::string order_company;
+                    if (main_vichele && stuff_info)
+                    {
+                        auto sale_company = stuff_info->get_parent<pa_sql_company>("belong_company");
+                        if (sale_company)
+                        {
+                            today_driver_info tmp;
+                            tmp.destination_company = sale_company->name;
+                            tmp.id = info.get_pri_id();
+                            tmp.main_vichele = main_vichele->number;
+                            tmp.stuff_name = stuff_info->name;
+                            tmp.p_weight = info.p_weight;
+                            tmp.m_weight = info.m_weight;
+                            _return.push_back(tmp);
+                        }
+                    }
+                }
+            }
+        }
+
+        auto related_stay_alone_vichele = sqlite_orm::search_record_all<pa_sql_vichele_stay_alone>("status == 2 AND is_drop == 0 AND driver_phone == '%s' ORDER BY datetime(m_time) DESC LIMIT 5", sample_phone.c_str());
+        for (auto &itr : related_stay_alone_vichele)
+        {
+            today_driver_info tmp;
+            tmp.id = itr.get_pri_id();
+            tmp.order_company = itr.company_name;
+            tmp.stuff_name = itr.stuff_name;
+            tmp.main_vichele = itr.main_vichele_number;
+            tmp.date = itr.date;
+            tmp.is_buy = true;
+            tmp.p_weight = itr.p_weight;
+            tmp.m_weight = itr.m_weight;
+            _return.push_back(tmp);
+        }
+    }
 };
 
 #endif // _STUFF_PLAN_MANAGEMENT_H_
