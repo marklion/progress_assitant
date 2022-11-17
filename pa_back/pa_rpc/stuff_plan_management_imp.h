@@ -2010,6 +2010,18 @@ public:
                             {
                                 pri_confirm_pay(related_plan->get_pri_id(), *get_sysadmin_user(), "余额充足");
                             }
+                            auto cust_company = PA_DATAOPT_fetch_company(tmp_info.buy_company);
+                            if (cust_company)
+                            {
+                                auto need_check_plans = PA_RPC_get_all_plans_related_by_company(*cust_company, "status == 2");
+                                for (auto &itr : need_check_plans)
+                                {
+                                    if (plan_cash_enough(itr))
+                                    {
+                                        pri_confirm_pay(itr.get_pri_id(), *get_sysadmin_user(), "余额足够，自动确认", true);
+                                    }
+                                }
+                            }
                         }
                         auto total_count = related_plan->get_all_children<pa_sql_single_vichele>("belong_plan").size();
                         auto deliver_count = related_plan->get_all_children<pa_sql_single_vichele>("belong_plan", "finish = 1").size();
