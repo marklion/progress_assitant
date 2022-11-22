@@ -31,7 +31,7 @@
         </van-cell-group>
         <van-divider />
 
-        <van-cell title="联系客服" icon="service-o" is-link @click="show_service_diag"></van-cell>
+        <van-cell title="联系客服" icon="service-o" is-link url="https://work.weixin.qq.com/kfid/kfc2be35e14aff69f5f"></van-cell>
         <van-button type="danger" plain @click="logoff" block>退出登录</van-button>
     </div>
     <div v-else class="unlogin_show">
@@ -41,7 +41,7 @@
         <van-row type="flex" justify="center" align="center">
             <h1>掌易助理</h1>
         </van-row>
-        <van-cell title="联系客服" icon="service-o" is-link @click="show_service_diag"></van-cell>
+        <van-cell title="联系客服" icon="service-o" is-link url="https://work.weixin.qq.com/kfid/kfc2be35e14aff69f5f"></van-cell>
         <div style="margin: 16px;">
             <van-button type="primary" @click="login" block>微信登录</van-button>
         </div>

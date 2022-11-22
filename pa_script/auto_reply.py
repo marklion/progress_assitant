@@ -25,6 +25,10 @@ def plan_search(message):
 
     return ret
 
+@robot.key_click("work_ticket")
+def work_ticket_open():
+    return "复制链接到电脑浏览器即可提交工单：https://kegj20221117013909045.pingcode.com/ship/PRD_ZYZL/portal/1"
+
 @robot.subscribe
 def pop_mini_program(message):
     return '<a href="http://www.qq.com" data-miniprogram-appid="wxfbf41c757510dc4c" data-miniprogram-path="/pages/index/index">进入掌易</a>'
@@ -48,6 +52,19 @@ client.create_menu({
         "url": "https://www.d8sis.cn/pa_web/extra_vichele/",
         "appid": "wxfbf41c757510dc4c",
         "pagepath": extra_vehicle_path
+    },{
+        "name":"联系我们",
+        "sub_button":[
+            {
+                "type":"view",
+                "name":"在线客服",
+                "url":"https://work.weixin.qq.com/kfid/kfc2be35e14aff69f5f"
+            },{
+                "type":"click",
+                "name":"提交工单",
+                "key":"work_ticket"
+            }
+        ]
     }]
 })
 
