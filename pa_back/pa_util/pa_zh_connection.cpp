@@ -90,6 +90,43 @@ bool PA_ZH_CONN_del_order(pa_sql_single_vichele &_singel_plan)
     return ret;
 }
 
+
+static std::string calc_max_load(pa_sql_single_vichele &_single_vehicle)
+{
+    std::string ret;
+
+    auto bv = _single_vehicle.get_parent<pa_sql_vichele_behind>("behind_vichele");
+    auto company = PA_DATAOPT_get_sale_company(_single_vehicle);
+    if (bv && company)
+    {
+        auto lr_std_load = company->get_children<pa_sql_license_require>("belong_company", "name == '槽车核载量'");
+        auto lr_std_count = company->get_children<pa_sql_license_require>("belong_company", "name == '槽车容积'");
+        if (lr_std_load && lr_std_count)
+        {
+            stuff_plan_management_handler spmh;
+            license_common_data lcd_std_load;
+            license_common_data lcd_std_count;
+            spmh.get_all_sec_check_data(lcd_std_load, lr_std_load->get_pri_id(), bv->number);
+            spmh.get_all_sec_check_data(lcd_std_count, lr_std_count->get_pri_id(), bv->number);
+
+            auto std_load = atof(lcd_std_load.input_content.c_str());
+            auto std_count = atof(lcd_std_count.input_content.c_str());
+            auto min_max_count = std_load;
+            if (std_count * 0.426 * 0.95 < min_max_count)
+            {
+                min_max_count = std_count * 0.426 * 0.95;
+            }
+            if (49 - _single_vehicle.p_weight < min_max_count)
+            {
+                min_max_count = 49 - _single_vehicle.p_weight;
+            }
+            ret = pa_double2string_reserve2(min_max_count);
+        }
+    }
+
+    return ret;
+}
+
 bool PA_ZH_CONN_check_in(pa_sql_single_vichele &_singel_plan, bool is_cancel)
 {
     bool ret = false;
@@ -107,6 +144,7 @@ bool PA_ZH_CONN_check_in(pa_sql_single_vichele &_singel_plan, bool is_cancel)
         if (get_url.length() > 0 && check_in_url.length() > 0)
         {
             auto order = call_third_though_rest(get_url, "");
+            order["basic_info"].Add("max_load", calc_max_load(_singel_plan));
             auto result = call_third_though_rest(check_in_url, order["basic_info"].ToString());
             if (!result.KeyExist("err_msg") || result("err_msg") == "")
             {
