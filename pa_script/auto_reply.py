@@ -25,6 +25,17 @@ def plan_search(message):
 
     return ret
 
+@robot.image
+def ticket_verify(message):
+    transport = THttpClient('http://localhost:8123/pa_rpc')
+    protocol = TJSONProtocol(transport)
+    transport.open()
+    multi_protocol = TMultiplexedProtocol(protocol, "stuff_plan_management")
+    client = stuff_plan_management.Client(multi_protocol)
+    ret = client.verify_ticket(message.img, message.source)
+    transport.close()
+    return ret
+
 @robot.key_click("work_ticket")
 def work_ticket_open():
     return "复制链接到电脑浏览器即可提交工单：https://kegj20221117013909045.pingcode.com/ship/PRD_ZYZL/portal/1"

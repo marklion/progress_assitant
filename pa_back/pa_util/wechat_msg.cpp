@@ -401,3 +401,73 @@ void PA_WECHAT_send_bidding_msg(pa_sql_userinfo &_to_user, pa_sql_bidding &_bidd
 
     send_msg_to_wechat(_to_user.openid, "NlG21tpsDBdefio1qwDsvNwsAA3LWL4PSkQpRnQU0-g", title, keywords, "", "/bidding_info/" + std::to_string(_bidding.get_pri_id()));
 }
+void hexchar(unsigned char c, unsigned char &hex1, unsigned char &hex2)
+{
+    hex1 = c / 16;
+    hex2 = c % 16;
+    hex1 += hex1 <= 9 ? '0' : 'a' - 10;
+    hex2 += hex2 <= 9 ? '0' : 'a' - 10;
+}
+
+std::string urlencode(const std::string &s)
+{
+    const char *str = s.c_str();
+    std::vector<char> v(s.size());
+    v.clear();
+    for (size_t i = 0, l = s.size(); i < l; i++)
+    {
+        char c = str[i];
+        if ((c >= '0' && c <= '9') ||
+            (c >= 'a' && c <= 'z') ||
+            (c >= 'A' && c <= 'Z') ||
+            c == '-' || c == '_' || c == '.' || c == '!' || c == '~' ||
+            c == '*' || c == '\'' || c == '(' || c == ')')
+        {
+            v.push_back(c);
+        }
+        else if (c == ' ')
+        {
+            v.push_back('+');
+        }
+        else
+        {
+            v.push_back('%');
+            unsigned char d1, d2;
+            hexchar(c, d1, d2);
+            v.push_back(d1);
+            v.push_back(d2);
+        }
+    }
+
+    return std::string(v.cbegin(), v.cend());
+}
+std::string PA_WECHAT_decode_qr(const std::string &_pic_url, const std::string &_user_id)
+{
+    std::string ret;
+
+    auto acctok = g_acc_pub_tok.get_content();
+    std::string req = "https://api.weixin.qq.com/cv/img/qrcode?img_url=" + urlencode(_pic_url) + "&access_token=" + acctok;
+
+    auto res = PA_DATAOPT_rest_post(req, "");
+    g_log.log("recv from wechat qr interface:%s", res.c_str());
+    neb::CJsonObject wx_qr_ret(res);
+    if (wx_qr_ret("errcode") == "0")
+    {
+        ret = "验证失败";
+        std::string qr_url = wx_qr_ret["code_results"][0]("data");
+        if (qr_url.find("www.d8sis.cn") != std::string::npos)
+        {
+            auto last_id = qr_url.substr(qr_url.find_last_of('/') + 1, qr_url.length() - qr_url.find_last_of('/') - 1);
+            if (last_id.size() > 0)
+            {
+                PA_WECHAT_send_finish_ticket_msg(_user_id, last_id);
+                ret = "验证成功，请查看磅单";
+            }
+        }
+    }
+    else
+    {
+        ret = "无法验证";
+    }
+    return ret;
+}

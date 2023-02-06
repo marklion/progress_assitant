@@ -3246,6 +3246,10 @@ public:
             _return.push_back(tmp);
         }
     }
+    virtual void verify_ticket(std::string &_return, const std::string &pic_url, const std::string &user_id)
+    {
+        _return = PA_WECHAT_decode_qr(pic_url, user_id);
+    }
 };
 
 #endif // _STUFF_PLAN_MANAGEMENT_H_

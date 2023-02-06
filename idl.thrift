@@ -518,6 +518,7 @@ service stuff_plan_management {
     string export_sec_check_history(1:string ssid, 2:string begin_date, 3:string end_date) throws (1:gen_exp e),
     string export_plan_by_deliver_date_range(1:string ssid, 2:string begin_date, 3:string end_date) throws(1:gen_exp e),
     list<today_driver_info > get_history_weight_ticket(1:string silent_id) throws (1:gen_exp e),
+    string verify_ticket(1:string pic_url, 2:string user_id) throws (1:gen_exp e),
 }
 
 struct api_extra_transformation {
