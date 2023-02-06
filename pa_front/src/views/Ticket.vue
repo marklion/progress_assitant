@@ -17,6 +17,7 @@
             <ticket-item item_name="净重" :item_value="ticket_detail.j_weight"></ticket-item>
             <ticket-item item_name="过皮时间" :item_value="ticket_detail.p_date"></ticket-item>
             <ticket-item item_name="过毛时间" :item_value="ticket_detail.m_date"></ticket-item>
+            <ticket-item item_name="联系方式" :item_value="company_contact"></ticket-item>
         </div>
         <van-row>
             <van-col>
@@ -24,10 +25,12 @@
             </van-col>
             <van-col>
                 <div class="ticket_stamp_show" v-if="ticket_stamp">
-                    <img width="200" height="200" :src="$remote_url + ticket_stamp" crossorigin="anonymous" />
+                    <img width="180" height="180" :src="$remote_url + ticket_stamp" crossorigin="anonymous" />
                 </div>
             </van-col>
         </van-row>
+        <div>关注“掌易助理”公众号</div>
+        <div>发送电子磅单图片可以验真</div>
     </div>
     <div v-else>
         <van-divider>长按磅单，保存到手机相册</van-divider>
@@ -114,6 +117,7 @@ export default {
                 m_data: '',
                 p_date: '',
             },
+            company_contact: '',
         };
     },
     methods: {
@@ -142,11 +146,14 @@ export default {
                 vue_this.ticket_detail = resp;
                 vue_this.$call_remote_process("company_management", "get_stamp_pic", [resp.title.split('\n')[0]]).then(function (stamp_path) {
                     vue_this.ticket_stamp = stamp_path;
-                }).finally(function () {
-                    vue_this.make_pic();
-                    vue_this.submit_ticket = {
-                        ...vue_this.ticket_detail
-                    };
+                    vue_this.$call_remote_process("company_management", "get_address_contact", [resp.title.split('\n')[0]]).then(function (address_contact) {
+                        vue_this.company_contact = address_contact.contact;
+                    }).finally(function () {
+                        vue_this.make_pic();
+                        vue_this.submit_ticket = {
+                            ...vue_this.ticket_detail
+                        };
+                    });
                 });
             });
         },

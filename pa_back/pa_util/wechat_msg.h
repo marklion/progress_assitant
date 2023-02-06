@@ -15,4 +15,6 @@ void PA_WECHAT_send_finish_ticket_msg(const std::string &_to_user, const std::st
 //flag == 2 => 结束
 void PA_WECHAT_send_bidding_msg(pa_sql_userinfo &_to_user, pa_sql_bidding &_bidding, int _flag);
 std::string PA_WECHAT_wx_sign(const std::string& nonceStr, long timestamp, const std::string &url);
+std::string PA_WECHAT_decode_qr(const std::string &_pic_url, const std::string &_user_id);
+
 #endif // _WECHAT_MSG_H_
