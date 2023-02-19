@@ -145,6 +145,7 @@ bool PA_ZH_CONN_check_in(pa_sql_single_vichele &_singel_plan, bool is_cancel)
         {
             auto order = call_third_though_rest(get_url, "");
             order["basic_info"].Add("max_load", calc_max_load(_singel_plan));
+            order["basic_info"].ReplaceAdd("driver_id", driver->driver_id);
             auto result = call_third_though_rest(check_in_url, order["basic_info"].ToString());
             if (!result.KeyExist("err_msg") || result("err_msg") == "")
             {

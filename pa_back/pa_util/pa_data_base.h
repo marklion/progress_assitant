@@ -266,6 +266,7 @@ public:
     std::string conflict_reason;
     int is_cancel = 0;
     int from_bidding = 0;
+    int from_remote = 0;
     pa_sql_plan() {
         add_parent_type<pa_sql_userinfo>("created_by");
         add_parent_type<pa_sql_stuff_info>("belong_stuff");
@@ -283,6 +284,7 @@ public:
         ret.push_back(sqlite_orm_column("conflict_reason", sqlite_orm_column::STRING, &conflict_reason));
         ret.push_back(sqlite_orm_column("is_cancel", sqlite_orm_column::INTEGER, &is_cancel));
         ret.push_back(sqlite_orm_column("from_bidding", sqlite_orm_column::INTEGER, &from_bidding));
+        ret.push_back(sqlite_orm_column("from_remote", sqlite_orm_column::INTEGER, &from_remote));
 
         return ret;
     }

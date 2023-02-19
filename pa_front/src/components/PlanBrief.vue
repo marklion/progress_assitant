@@ -8,7 +8,7 @@
             <van-col>
                 <van-row type="flex" align="center" :gutter="10">
                     <van-col>
-                        计划单号：{{order_number}}
+                        单号：{{order_number}}
                     </van-col>
                     <van-col>
                         <van-checkbox shape="square" v-model="is_selected">选择</van-checkbox>
@@ -32,7 +32,8 @@
         </template>
         <template #tags>
             <div>
-                计划进厂时间：{{plan_time}}
+                <span>计划进厂时间：{{plan_time}}</span>
+                <span>{{first_vehicle_number}}...等</span>
             </div>
             <van-tag plain type="danger">{{status_prompt}}</van-tag>
             <div v-if="need_show_deliver_time">
@@ -107,6 +108,7 @@ export default {
             is_proxy: false,
             count_of_vichele: 0,
             is_selected: false,
+            first_vehicle_number: "",
         };
     },
     watch: {
@@ -221,6 +223,9 @@ export default {
                 vue_this.order_number = resp.created_time.toString() + vue_this.plan_id.toString();
                 vue_this.get_status_in_plan();
                 vue_this.count_of_vichele = resp.vichele_info.length;
+                if (vue_this.count_of_vichele > 0) {
+                    vue_this.first_vehicle_number = resp.vichele_info[0].main_vichele;
+                }
             });
         },
         get_status_in_plan: function () {

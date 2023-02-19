@@ -100,6 +100,11 @@ public:
         tmp.insert_record();
         PA_STATUS_RULE_action(tmp, *opt_user, PA_DATAOPT_date_2_timestring(tmp.create_time), plan.comment);
         PA_STATUS_RULE_change_status(tmp, *opt_user);
+        if (plan.comment == "第三方接口调用")
+        {
+            tmp.from_remote = 1;
+            tmp.update_record();
+        }
         for (auto &itr : plan.vichele_info)
         {
             auto main_vhichele = company->get_children<pa_sql_vichele>("belong_company", "number = '%s'", itr.main_vichele.c_str());
@@ -1610,6 +1615,10 @@ public:
         auto plans_need_close = sqlite_orm::search_record_all<pa_sql_plan>("status != 4 AND date(substr(plan_time, 1, 10)) < date('%s')", today_str.c_str());
         for (auto &itr : plans_need_close)
         {
+            if (itr.from_remote)
+            {
+                continue;
+            }
             usleep(200000);
             auto delivered_vichele = itr.get_all_children<pa_sql_single_vichele>("belong_plan", "finish = 1");
             if (delivered_vichele.size() == 0)
@@ -1644,7 +1653,8 @@ public:
         {
             auto current_time = PA_DATAOPT_current_time();
             auto date_only = current_time.substr(0, 10);
-            auto related_plans = itr.get_all_children<pa_sql_plan>("belong_stuff", "plan_time LIKE '%s%%' AND status > 1 AND is_cancel == 0", date_only.c_str());
+            auto yst_date = PA_DATAOPT_date_2_timestring(time(nullptr) - (3600 * 24)).substr(0, 10);
+            auto related_plans = itr.get_all_children<pa_sql_plan>("belong_stuff", "((plan_time LIKE '%s%%' AND status > 1 AND is_cancel == 0) OR (plan_time LIKE '%s%%' AND status == 3 ))", date_only.c_str(), yst_date.c_str());
             for (auto &single_plan : related_plans)
             {
                 std::string buyer_company;
