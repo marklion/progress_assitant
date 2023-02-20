@@ -192,9 +192,12 @@ export default {
             current_date: new Date(),
             should_checkin: function (_date) {
                 var ret = false;
+                var yst_date = new Date(this.current_date);
+                yst_date.setDate(yst_date.getDate() - 1);
                 var cur_date = this.formatDateTime(this.current_date);
+                var yst_date_string = this.formatDateTime(yst_date);
 
-                if (_date.split(' ')[0] == cur_date) {
+                if (_date.split(' ')[0] == cur_date || yst_date_string == _date.split(' ')[0]) {
                     ret = true;
                 }
                 return ret;

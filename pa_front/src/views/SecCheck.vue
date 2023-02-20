@@ -29,7 +29,6 @@
                 </span>
                 <span>
                     <el-button type="primary" @click="refresh_page">刷新</el-button>
-                    <el-button type="warning" @click="export_record">导出</el-button>
                     <el-popover placement="bottom" title="选择日期范围" trigger="click">
                         <el-button slot="reference" type="text">历史数据导出</el-button>
                         <el-date-picker v-model="date_range" type="daterange" align="right" unlink-panels range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" :picker-options="pickerOptions">
@@ -226,7 +225,7 @@ export default {
 
             ret.sort(function (a) {
                 var sort_ret = -1;
-                if (a.sec_check_passed) {
+                if (a.vichele.sec_check_passed) {
                     sort_ret = 1;
                 }
 

@@ -285,7 +285,7 @@ public:
 
             ret.createTime = plan->plan_time.substr(0, 13) + ":00:00";
             auto register_info = _vichele.get_children<pa_sql_driver_register>("belong_vichele");
-            if (register_info)
+            if (register_info && !plan->from_remote)
             {
                 ret.createTime = register_info->timestamp;
             }
@@ -1282,12 +1282,12 @@ public:
                 catch (...)
                 {
                 }
-                std::string vrf_result;
-                spmh.verify_plan(vrf_result, tmp, lg_info->ssid);
-                if (vrf_result.size() > 0)
-                {
-                    PA_RETURN_MSG(vrf_result);
-                }
+                // std::string vrf_result;
+                // spmh.verify_plan(vrf_result, tmp, lg_info->ssid);
+                // if (vrf_result.size() > 0)
+                // {
+                //     PA_RETURN_MSG(vrf_result);
+                // }
                 auto order_number = spmh.create_plan(tmp, lg_info->ssid, _req.customerName);
                 if (order_number > 0)
                 {
