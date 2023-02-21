@@ -95,16 +95,19 @@ public:
         tmp.set_parent(*opt_user, "created_by");
         tmp.set_parent(*stuff_type, "belong_stuff");
         std::string conflict_reason;
-        this->verify_plan(conflict_reason, plan, ssid);
+        if (plan.comment == "第三方接口调用")
+        {
+            tmp.from_remote = 1;
+        }
+        else
+        {
+            this->verify_plan(conflict_reason, plan, ssid);
+        }
         tmp.conflict_reason = conflict_reason;
         tmp.insert_record();
         PA_STATUS_RULE_action(tmp, *opt_user, PA_DATAOPT_date_2_timestring(tmp.create_time), plan.comment);
         PA_STATUS_RULE_change_status(tmp, *opt_user);
-        if (plan.comment == "第三方接口调用")
-        {
-            tmp.from_remote = 1;
-            tmp.update_record();
-        }
+
         for (auto &itr : plan.vichele_info)
         {
             auto main_vhichele = company->get_children<pa_sql_vichele>("belong_company", "number = '%s'", itr.main_vichele.c_str());
@@ -440,11 +443,12 @@ public:
             auto orig_vichele_info = plan_in_sql->get_all_children<pa_sql_single_vichele>("belong_plan");
             auto tmp_orig = orig_vichele_info;
             auto tmp_new = new_vehicle_in_plan;
-            auto pure_added  = new_vehicle_in_plan.size() - orig_vichele_info.size();
+            auto pure_added = new_vehicle_in_plan.size() - orig_vichele_info.size();
             new_vehicle_in_plan.clear();
-            for (auto &itr:tmp_new)
+            for (auto &itr : tmp_new)
             {
-                if (tmp_orig.end() == std::find_if(tmp_orig.begin(),tmp_orig.end(), [&](pa_sql_single_vichele &_item){
+                if (tmp_orig.end() == std::find_if(tmp_orig.begin(), tmp_orig.end(), [&](pa_sql_single_vichele &_item)
+                                                   {
                     bool ret = false;
                     auto main_vehicle = _item.get_parent<pa_sql_vichele>("main_vichele");
                     if (main_vehicle && main_vehicle->number == itr.main_vichele)
@@ -452,8 +456,7 @@ public:
                         ret = true;
                     }
 
-                    return ret;
-                }))
+                    return ret; }))
                 {
                     new_vehicle_in_plan.push_back(itr);
                 }
@@ -465,7 +468,7 @@ public:
                 if (main_vehicle)
                 {
                     if (tmp_new.end() == std::find_if(tmp_new.begin(), tmp_new.end(), [&](vichele_in_plan &_item)
-                                                   {
+                                                      {
                     bool ret = false;
                     if (_item.main_vichele == main_vehicle->number)
                     {
