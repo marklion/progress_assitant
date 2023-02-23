@@ -18,6 +18,7 @@
 #include <thrift/server/TThreadPoolServer.h>
 #include <sys/wait.h>
 #include <thrift/concurrency/ThreadManager.h>
+#include "../pa_util/pa_zh_connection.h"
 
 using namespace ::apache::thrift;
 using namespace ::apache::thrift::protocol;
@@ -106,6 +107,11 @@ int main(int argc, char **argv)
                                 {
                                     PA_DATAOPT_post_get_queue(*related_vichele);
                                 }
+                            }
+                            auto need_sync_to_zc = sqlite_orm::search_record_all<pa_sql_plan>("status == 3 AND from_remote == 1");
+                            for (auto &itr:need_sync_to_zc)
+                            {
+                                PA_ZH_CONN_push_order(itr);
                             }
                         }
                         if (st_time->tm_min == 1 && (st_time->tm_hour == 0 || st_time->tm_hour == 1))

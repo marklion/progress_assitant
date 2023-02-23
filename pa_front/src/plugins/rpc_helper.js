@@ -1,11 +1,11 @@
 import {
     Toast
 } from 'vant'
-export function get_client(_service_interface) {
+export function get_client(_service_interface, _host) {
         // eslint-disable-next-line
     var mp1 = new Thrift.Multiplexer();
         // eslint-disable-next-line
-    var transport = new Thrift.Transport(process.env.VUE_APP_BACK_END_URL + "/pa_rpc/");
+    var transport = new Thrift.Transport(_host?_host:(process.env.VUE_APP_BACK_END_URL + "/pa_rpc/"));
         // eslint-disable-next-line
     var protocol = new Thrift.Protocol(transport);
         // eslint-disable-next-line
@@ -13,8 +13,8 @@ export function get_client(_service_interface) {
     return client;
 }
 
-export function call_remote_process(_service_interface,process,args) {
-    var client = get_client(_service_interface);
+export function call_remote_process(_service_interface,process,args, _host) {
+    var client = get_client(_service_interface, _host);
     Toast.allowMultiple();
     const toast1 = Toast.loading({
         forbidClick: true,
@@ -38,8 +38,8 @@ export function call_remote_process(_service_interface,process,args) {
     });
 
 }
-export function call_remote_process_no_toast(_service_interface,process,args) {
-    var client = get_client(_service_interface);
+export function call_remote_process_no_toast(_service_interface,process,args, _host) {
+    var client = get_client(_service_interface, _host);
     return new Promise(function (resolve, reject) {
         client[process].apply(client, args).then(function (resp) {
             resolve(resp);

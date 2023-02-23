@@ -18,7 +18,7 @@ static std::string make_url(const std::string &_func_url, pa_sql_plan &_plan, co
     if (stuff)
     {
         auto company = stuff->get_parent<pa_sql_company>("belong_company");
-        if (company)
+        if (company && company->zc_url.length() > 0)
         {
             ret = company->zc_url + _func_url;
             if (ret.length() > 0)

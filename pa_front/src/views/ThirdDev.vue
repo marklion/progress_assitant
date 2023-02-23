@@ -8,6 +8,7 @@
         <van-field v-model="zc_url" label="zc_url" />
         <van-field v-model="zh_ssid" label="zh_ssid" />
         <van-field v-model="remote_event_url" label="事件服务url" />
+        <van-field v-model="zc_rpc_url" label="zc_rpc_url" />
         <div style="margin: 16px;">
             <van-button round block type="info" native-type="submit">提交</van-button>
         </div>
@@ -100,6 +101,7 @@ export default {
             zh_ssid: "",
             remote_event_url: "",
             zc_url: "",
+            zc_rpc_url: "",
             gps_stuff: [],
             new_stuff: '',
             show_new_stuff_diag: false,
@@ -133,6 +135,7 @@ export default {
                 vue_this.dms_url = resp.dms_url;
                 vue_this.token = resp.token;
                 vue_this.zc_url = resp.zc_url;
+                vue_this.zc_rpc_url = resp.zc_rpc_url;
                 vue_this.zh_ssid = resp.zh_ssid;
                 vue_this.remote_event_url = resp.remote_event_url;
             });
@@ -146,6 +149,7 @@ export default {
                 token: vue_this.token,
                 zh_ssid: vue_this.zh_ssid,
                 zc_url: vue_this.zc_url,
+                zc_rpc_url: vue_this.zc_rpc_url,
                 remote_event_url: vue_this.remote_event_url,
             }, vue_this.$cookies.get('pa_ssid')]).then(function (resp) {
                 if (resp) {

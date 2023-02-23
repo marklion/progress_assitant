@@ -257,6 +257,33 @@ const routes = [
       extra_page: true,
       permit_change:true,
     },
+  },{
+    path: '/device_status',
+    name: 'DeviceStatus',
+    component: () => import('../views/DeviceStatus.vue'),
+    meta: {
+      private_title: '设备管理',
+      has_go_back: true,
+      extra_page: false,
+    },
+  },{
+    path: '/app_panel',
+    name: 'AppPanel',
+    component: () => import('../views/AppPanel.vue'),
+    meta: {
+      private_title: '工作台',
+      has_go_back: true,
+      extra_page: false,
+    },
+  },{
+    path: '/vehicle_que',
+    name: 'VehicleQue',
+    component: () => import('../views/VehicleQue.vue'),
+    meta: {
+      private_title: '出入管理',
+      has_go_back: true,
+      extra_page: false,
+    },
   },
 ]
 

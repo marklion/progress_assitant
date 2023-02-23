@@ -18,6 +18,7 @@ export default new Vuex.Store({
     enter_company:false,
     verify_count_down:0,
     need_sec_check:false,
+    zc_rpc_url:''
   },
   mutations: {
     set_userinfo(state, userinfo){
@@ -34,6 +35,9 @@ export default new Vuex.Store({
     },
     set_sec_check(state, need_sec_check) {
       state.need_sec_check = need_sec_check;
+    },
+    set_zc_rpc_url(state, zc_rpc_url) {
+      state.zc_rpc_url = zc_rpc_url;
     },
   },
   actions: {

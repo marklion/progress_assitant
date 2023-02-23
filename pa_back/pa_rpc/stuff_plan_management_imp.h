@@ -1188,11 +1188,20 @@ public:
             auto all_vichele = plan.get_all_children<pa_sql_single_vichele>("belong_plan");
             for (auto &itr : all_vichele)
             {
+                std::string fail_reason = "车辆已入场过皮，不允许删除";
+                if (itr.has_p && !plan.from_remote)
+                {
+                    PA_RETURN_CANNOT_CANCLE(fail_reason);
+                }
                 auto update_ret = PA_DATAOPT_post_sync_change_register(itr, is_auto);
-                auto zc_ret = PA_ZH_CONN_del_order(itr);
-                if (update_ret.length() > 0 || itr.has_p || zc_ret == false)
+                if (update_ret.length() > 0)
                 {
                     PA_RETURN_CANNOT_CANCLE(update_ret);
+                }
+                auto zc_ret = PA_ZH_CONN_del_order(itr);
+                if (zc_ret == false)
+                {
+                    PA_RETURN_CANNOT_CANCLE(fail_reason);
                 }
                 auto related_register_info = itr.get_children<pa_sql_driver_register>("belong_vichele");
                 if (related_register_info)

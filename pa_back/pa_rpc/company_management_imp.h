@@ -922,6 +922,7 @@ public:
         company->zc_url = _info.zc_url;
         company->zh_ssid = _info.zh_ssid;
         company->remote_event_url = _info.remote_event_url;
+        company->zc_rpc_url = _info.zc_rpc_url;
 
         ret = company->update_record();
 
@@ -947,6 +948,7 @@ public:
         _return.zc_url = company->zc_url;
         _return.zh_ssid = company->zh_ssid;
         _return.remote_event_url = company->remote_event_url;
+        _return.zc_rpc_url = company->zc_rpc_url;
     }
 
     virtual void get_related_company(std::vector<std::string> &_return, const std::string &ssid)
