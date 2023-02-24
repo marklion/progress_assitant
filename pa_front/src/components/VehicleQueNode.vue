@@ -35,7 +35,7 @@
             <van-button v-else size="small" type="danger" @click="open_seal_no_diag(false)">取消确认</van-button>
         </template>
     </van-cell>
-
+    <van-cell title="一次称重" v-if="vq_node.status_code == 3">{{vq_node.p_weight}}</van-cell>
     <van-dialog v-model="seal_no_diag" title="输入铅封" closeOnClickOverlay @confirm="do_confirm(true)">
         <van-field v-model="seal_no" label="铅封号" />
     </van-dialog>

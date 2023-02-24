@@ -10,7 +10,7 @@ static void push_req_to_zc(const neb::CJsonObject &_req, const std::string &_url
     }
 }
 
-static std::string make_url(const std::string &_func_url, pa_sql_plan &_plan, const std::string &_phone = "")
+static std::string make_url(const std::string &_func_url, pa_sql_plan &_plan, const std::string &_phone = "", const std::string &_plate = "")
 {
     std::string ret;
 
@@ -27,6 +27,12 @@ static std::string make_url(const std::string &_func_url, pa_sql_plan &_plan, co
                 if (_phone.length() > 0)
                 {
                     ret += "&phone=" + _phone;
+                }
+                if (_plate.length() > 0)
+                {
+                    std::string plate_64;
+                    Base64::Encode(_plate, &plate_64);
+                    ret += "&plate=" + plate_64;
                 }
             }
         }
@@ -63,12 +69,13 @@ bool PA_ZH_CONN_push_order(pa_sql_plan &_plan)
 bool PA_ZH_CONN_del_order(pa_sql_single_vichele &_singel_plan)
 {
     bool ret = false;
+    auto vi = _singel_plan.get_parent<pa_sql_vichele>("main_vichele");
     auto driver = _singel_plan.get_parent<pa_sql_driver>("driver");
     auto plan = _singel_plan.get_parent<pa_sql_plan>("belong_plan");
-    if (driver && plan)
+    if (driver && plan && vi)
     {
         auto phone = driver->phone;
-        auto get_url = make_url("/vehicle_order/get", *plan, phone);
+        auto get_url = make_url("/vehicle_order/get", *plan, phone, vi->number);
         auto del_url = make_url("/vehicle_order/del", *plan);
         if (get_url.length() > 0 && del_url.length() > 0)
         {
@@ -130,12 +137,13 @@ static std::string calc_max_load(pa_sql_single_vichele &_single_vehicle)
 bool PA_ZH_CONN_check_in(pa_sql_single_vichele &_singel_plan, bool is_cancel)
 {
     bool ret = false;
+    auto vi = _singel_plan.get_parent<pa_sql_vichele>("main_vichele");
     auto driver = _singel_plan.get_parent<pa_sql_driver>("driver");
     auto plan = _singel_plan.get_parent<pa_sql_plan>("belong_plan");
-    if (driver && plan)
+    if (driver && plan && vi)
     {
         auto phone = driver->phone;
-        auto get_url = make_url("/vehicle_order/get", *plan, phone);
+        auto get_url = make_url("/vehicle_order/get", *plan, phone, vi->number);
         auto check_in_url = make_url("/order_register/add", *plan);
         if (is_cancel)
         {
@@ -166,10 +174,11 @@ PA_ZH_CONN_que_info PA_ZH_CONN_get_que_info(pa_sql_single_vichele &_singel_plan)
     PA_ZH_CONN_que_info ret;
     auto driver = _singel_plan.get_parent<pa_sql_driver>("driver");
     auto plan = _singel_plan.get_parent<pa_sql_plan>("belong_plan");
-    if (driver && plan)
+    auto vi = _singel_plan.get_parent<pa_sql_vichele>("main_vichele");
+    if (driver && plan && vi)
     {
         auto phone = driver->phone;
-        auto get_url = make_url("/order_register/get", *plan, phone);
+        auto get_url = make_url("/order_register/get", *plan, phone, vi->number);
 
         if (get_url.length() > 0)
         {

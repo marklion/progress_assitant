@@ -350,7 +350,7 @@ public:
                     {
                         if (main_vichele->number == plateNo)
                         {
-                            if (!should_add_to_resp(itr, company->name))
+                            if (!should_add_to_resp(itr, company->name) && !plan.from_remote)
                             {
                                 PA_RETURN_MSG("driver has not registered");
                             }

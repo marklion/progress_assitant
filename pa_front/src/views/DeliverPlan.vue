@@ -11,14 +11,14 @@
                     <template #icon>
                         <van-checkbox style="margin-right:10px" :name="index" ref="checkboxes" v-if="can_change_to(4)" />
                     </template>
-                    <van-row type="flex" align="center" justify="end" v-if="can_change_to(4)">
+                    <!-- <van-row type="flex" align="center" justify="end" v-if="can_change_to(4)">
                         <van-col>
                             <van-stepper v-model="item.count" />
                         </van-col>
                         <van-col>
                             吨
                         </van-col>
-                    </van-row>
+                    </van-row> -->
                 </van-cell>
                 <div v-if="item.register_number" class="register_info_show">
                     <van-row type="flex" align="center" justify="space-between">
@@ -36,8 +36,7 @@
                 <div v-else-if="!$store.state.userinfo.buyer" style="display : inline-block">
                     <van-button icon="exchange" type="primary" size="small" @click="open_change_driver(item.vichele_id)">换司机
                     </van-button>
-
-                    <van-button icon="replay" v-if="item.driver_silent_id" type="danger" size="small" @click="reset_driver_info(item.driver_silent_id)">重置信息
+                    <van-button icon="tosend" type="info" size="small" @click="proxy_check_in(item.vichele_id)">代替司机排队
                     </van-button>
                 </div>
             </div>
@@ -52,7 +51,7 @@
             </div>
         </van-form>
     </van-dialog>
-    <van-row :gutter="10" type="flex" justify="center" align="center" v-if="can_change_to(4)">
+    <!-- <van-row :gutter="10" type="flex" justify="center" align="center" v-if="can_change_to(4)">
         <van-col :span="8">
             <van-button block type="info" size="small" :disabled="pre_deliver_vichele_index.length == 0" @click="submit_confirm_deliver">确认出货选中车辆
             </van-button>
@@ -63,7 +62,7 @@
         <van-col :span="8">
             <van-button block type="danger" size="small" @click="fource_reason_diag = true;">完成出货</van-button>
         </van-col>
-    </van-row>
+    </van-row> -->
 
     <van-cell-group title="已出货车辆">
         <van-collapse v-model="expend_weight">
@@ -159,6 +158,17 @@ export default {
         },
     },
     methods: {
+        proxy_check_in: async function (_id) {
+            try {
+                await this.$call_remote_process("stuff_plan_management", 'register_vichele', [this.$cookies.get('pa_ssid'), _id]);
+                this.$toast("签到成功");
+                setTimeout(() => {
+                    this.$router.go(0);
+                }, 1200);
+            } catch (error) {
+                console.log(error);
+            }
+        },
         can_change_to: function (_index) {
             var ret = false;
             if (_index >= 0 && _index < this.status_change_rule.length) {
