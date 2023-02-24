@@ -12,6 +12,7 @@
 #include "pa_rpc_util.h"
 #include "company_management_imp.h"
 #include "vichele_management_imp.h"
+#include "user_management_imp.h"
 
 static std::vector<std::string> prepare_vichels(const std::string &_vicheles)
 {
@@ -835,9 +836,14 @@ public:
             }
         }
     }
-    bool pri_undo_vehicle_weight(long vehicle_id)
+    bool pri_undo_vehicle_weight(long vehicle_id, const std::string &_auth_code)
     {
         bool ret = false;
+
+        user_management_handler umh;
+        std::string ssid;
+        umh.exchange_ssid(ssid, _auth_code);
+        auto company = PA_DATAOPT_get_company_by_ssid(ssid);
 
         auto vehicle = sqlite_orm::search_record<pa_sql_single_vichele>(vehicle_id);
         if (vehicle)
@@ -847,43 +853,55 @@ public:
             {
                 stuff_plan plan_orig_info;
                 get_plan(plan_orig_info, plan->get_pri_id());
-                auto b_comapny_info = sqlite_orm::search_record<pa_sql_company>("name == '%s'", plan_orig_info.sale_company.c_str());
-                auto a_comapny_info = sqlite_orm::search_record<pa_sql_company>("name == '%s'", plan_orig_info.buy_company.c_str());
+                if (!company || plan_orig_info.sale_company != company->name)
+                {
+                    PA_RETURN_MSG("授权失败");
+                }
+                if (vehicle->finish)
+                {
+                    auto b_comapny_info = sqlite_orm::search_record<pa_sql_company>("name == '%s'", plan_orig_info.sale_company.c_str());
+                    auto a_comapny_info = sqlite_orm::search_record<pa_sql_company>("name == '%s'", plan_orig_info.buy_company.c_str());
 
-                if (a_comapny_info && b_comapny_info)
-                {
-                    change_balance_by_deliver(*a_comapny_info, *b_comapny_info, -(vehicle->count * plan->price));
-                }
-                vehicle->finish = 0;
-                vehicle->p_weight = 0;
-                vehicle->m_weight = 0;
-                vehicle->deliver_p_timestamp = "";
-                vehicle->count = 0;
-                vehicle->deliver_timestamp = "";
-                vehicle->ticket_no = "";
-                vehicle->seal_no = "";
-                vehicle->has_p = 1;
-                vehicle->update_record();
-                if (plan->status == 4 && PA_STATUS_RULE_can_be_change(*plan, *get_sysadmin_user(), 3))
-                {
-                    PA_STATUS_RULE_action(*plan, *get_sysadmin_user(), PA_DATAOPT_current_time(), "撤销称重");
-                    PA_STATUS_RULE_change_status(*plan, 3, *get_sysadmin_user());
-                    auto arch_plan = plan->get_parent<pa_sql_archive_plan>("archived");
-                    if (arch_plan)
+                    if (a_comapny_info && b_comapny_info)
                     {
-                        for (auto &itr : arch_plan->get_all_children<pa_sql_archive_status_in_plan>("belong_plan"))
-                        {
-                            itr.remove_record();
-                        }
-                        for (auto &itr : arch_plan->get_all_children<pa_sql_archive_vichele_plan>("belong_plan"))
-                        {
-                            itr.remove_record();
-                        }
-                        arch_plan->remove_record();
+                        change_balance_by_deliver(*a_comapny_info, *b_comapny_info, -(vehicle->count * plan->price));
                     }
+                    vehicle->finish = 0;
+                    vehicle->p_weight = 0;
+                    vehicle->m_weight = 0;
+                    vehicle->deliver_p_timestamp = "";
+                    vehicle->count = 0;
+                    vehicle->deliver_timestamp = "";
+                    vehicle->ticket_no = "";
+                    vehicle->seal_no = "";
+                    vehicle->has_p = 1;
+                    vehicle->update_record();
+                    if (plan->status == 4 && PA_STATUS_RULE_can_be_change(*plan, *get_sysadmin_user(), 3))
+                    {
+                        PA_STATUS_RULE_action(*plan, *get_sysadmin_user(), PA_DATAOPT_current_time(), "撤销称重");
+                        PA_STATUS_RULE_change_status(*plan, 3, *get_sysadmin_user());
+                        auto arch_plan = plan->get_parent<pa_sql_archive_plan>("archived");
+                        if (arch_plan)
+                        {
+                            for (auto &itr : arch_plan->get_all_children<pa_sql_archive_status_in_plan>("belong_plan"))
+                            {
+                                itr.remove_record();
+                            }
+                            for (auto &itr : arch_plan->get_all_children<pa_sql_archive_vichele_plan>("belong_plan"))
+                            {
+                                itr.remove_record();
+                            }
+                            arch_plan->remove_record();
+                        }
+                    }
+                    PA_STATUS_RULE_action(*plan, *get_sysadmin_user(), PA_DATAOPT_current_time(), "撤销称重");
+                    ret = true;
                 }
-                PA_STATUS_RULE_action(*plan, *get_sysadmin_user(), PA_DATAOPT_current_time(), "撤销称重");
-                ret = true;
+                else
+                {
+                    vehicle->has_p = 0;
+                    ret = vehicle->update_record();
+                }
             }
         }
 

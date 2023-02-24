@@ -1164,7 +1164,7 @@ public:
 
         _return.total_vehicle = std::to_string(tmp_count);
     }
-    virtual bool undo_vehicle_weight(const std::string &token, const std::string &id)
+    virtual bool undo_vehicle_weight(const std::string &token, const std::string &id, const std::string &auth_code)
     {
         bool ret = false;
         log_audit_basedon_token(token, __FUNCTION__);
@@ -1179,7 +1179,7 @@ public:
         std::string real_id = id.substr(0, id.length() - 1);
 
         stuff_plan_management_handler sp_handler;
-        ret = sp_handler.pri_undo_vehicle_weight(std::stol(real_id));
+        ret = sp_handler.pri_undo_vehicle_weight(std::stol(real_id), auth_code);
 
         return ret;
     }
