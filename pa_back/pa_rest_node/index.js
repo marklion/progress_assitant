@@ -246,7 +246,7 @@ app.post('/pa_rest/undo_vehicle', async (req, res) => {
     var token = req.query.token;
     var ret = { err_msg: '无权限' };
     try {
-        var resp = await request_rpc("open_api_management", 'undo_vehicle_weight', [token, req.body.id]);
+        var resp = await request_rpc("open_api_management", 'undo_vehicle_weight', [token, req.body.id, req.body.auth_code]);
         if (resp) {
             ret.err_msg = "";
             ret.result = resp;

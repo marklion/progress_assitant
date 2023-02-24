@@ -681,7 +681,7 @@ service open_api_management {
     list<push_balance_req> get_all_customer_balance(1:string token) throws (1:gen_exp e),
     string export_balance_audit_log(1:string token, 2:string company_name, 3:string begin_date, 4:string end_date) throws (1:gen_exp e),
     today_plan_brief_info get_today_brief_info(1:string token) throws (1:gen_exp e),
-    bool undo_vehicle_weight(1:string token, 2:string id) throws (1:gen_exp e),
+    bool undo_vehicle_weight(1:string token, 2:string id, 3:string auth_code) throws (1:gen_exp e),
     bool record_p_weight(1:string token, 2:string id) throws (1:gen_exp e),
     string proc_create_plan(1:string token, 2:create_plan_req _req) throws (1:gen_exp e),
     bool proc_cancel_plan(1:string token, 2:string _order_number) throws (1:gen_exp e),
