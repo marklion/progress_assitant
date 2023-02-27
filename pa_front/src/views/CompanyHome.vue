@@ -183,7 +183,7 @@
                     </template>
                     <van-cell title="联系电话" :value="single_record.phone"></van-cell>
                     <van-cell title="查看资质" is-link @click="show_attachment(single_record.attachment)"></van-cell>
-                    <contract-cell :a_side="single_record.company_name" :b_side="$store.state.userinfo.company"></contract-cell>
+                    <contract-cell :creator_phone="single_record.phone" :a_side="single_record.company_name" :b_side="$store.state.userinfo.company"></contract-cell>
                 </van-collapse-item>
             </van-collapse>
         </van-cell-group>

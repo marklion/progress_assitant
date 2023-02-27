@@ -1637,5 +1637,123 @@ public:
     {
         set_driver_notice(ssid, "");
     }
+
+    virtual bool add_author_contract_user(const std::string &ssid, const std::string &phone)
+    {
+        bool ret = false;
+        auto user = sqlite_orm::search_record<pa_sql_userinfo>("phone == '%s'", phone.c_str());
+        if (!user)
+        {
+            PA_RETURN_NOPRIVA_MSG();
+        }
+        auto cust_company = user->get_parent<pa_sql_company>("belong_company");
+        auto company = PA_DATAOPT_get_company_by_ssid(ssid);
+        if (!company || !cust_company)
+        {
+            PA_RETURN_NOCOMPANY_MSG();
+        }
+
+        auto contract = company->get_children<pa_sql_contract>("b_side", "a_side_ext_key == %ld", cust_company->get_pri_id());
+        if (!contract)
+        {
+            PA_RETURN_MSG("合同不存在");
+        }
+
+        auto exist_auth_user = contract->get_children<pa_sql_contract_user>("belong_contract", "belong_user_ext_key == %ld", user->get_pri_id());
+        if (exist_auth_user)
+        {
+            ret = true;
+        }
+        else
+        {
+            pa_sql_contract_user tmp;
+            tmp.set_parent(*user, "belong_user");
+            tmp.set_parent(*contract, "belong_contract");
+            ret = tmp.insert_record();
+        }
+
+        return ret;
+    }
+    virtual bool del_author_contract_user(const std::string &ssid, const std::string &phone)
+    {
+        bool ret = false;
+        auto user = sqlite_orm::search_record<pa_sql_userinfo>("phone == '%s'", phone.c_str());
+        if (!user)
+        {
+            PA_RETURN_NOPRIVA_MSG();
+        }
+        auto cust_company = user->get_parent<pa_sql_company>("belong_company");
+        auto company = PA_DATAOPT_get_company_by_ssid(ssid);
+        if (!company || !cust_company)
+        {
+            PA_RETURN_NOCOMPANY_MSG();
+        }
+
+        auto contract = company->get_children<pa_sql_contract>("b_side", "a_side_ext_key == %ld", cust_company->get_pri_id());
+        if (!contract)
+        {
+            PA_RETURN_MSG("合同不存在");
+        }
+
+        auto exist_auth_user = contract->get_children<pa_sql_contract_user>("belong_contract", "belong_user_ext_key == %ld", user->get_pri_id());
+        if (exist_auth_user)
+        {
+            exist_auth_user->remove_record();
+            ret = true;
+        }
+
+        return ret;
+    }
+    virtual void get_author_contract_user(std::vector<std::string> &_return, const std::string &ssid)
+    {
+        auto company = PA_DATAOPT_get_company_by_ssid(ssid);
+        if (!company)
+        {
+            PA_RETURN_NOCOMPANY_MSG();
+        }
+
+        auto contract = company->get_all_children<pa_sql_contract>("b_side");
+        for (auto &itr:contract)
+        {
+            auto user = itr.get_parent<pa_sql_userinfo>("belong_user");
+            if (user)
+            {
+                _return.push_back(user->phone);
+            }
+        }
+    }
+    virtual bool user_was_authored(const std::string &phone, const std::string &company_name)
+    {
+        bool ret = false;
+
+        auto company = sqlite_orm::search_record<pa_sql_company>("name == '%s' AND is_sale == 1", company_name.c_str());
+        auto user = sqlite_orm::search_record<pa_sql_userinfo>("phone == '%s'", phone.c_str());
+        if (company && user)
+        {
+            auto user_company = user->get_parent<pa_sql_company>("belong_company");
+            if (user_company && user_company->get_pri_id() == company->get_pri_id())
+            {
+                ret = true;
+            }
+            else
+            {
+                auto cust_company = user->get_parent<pa_sql_company>("belong_company");
+                if (cust_company)
+                {
+                    auto contract = company->get_children<pa_sql_contract>("b_side", "a_side_ext_key == %ld", cust_company->get_pri_id());
+                    if (contract)
+                    {
+                        auto exist_auth_user = contract->get_children<pa_sql_contract_user>("belong_contract", "belong_user_ext_key == %ld", user->get_pri_id());
+                        if (exist_auth_user)
+                        {
+                            ret = true;
+                        }
+                    }
+                }
+            }
+        }
+
+        return ret;
+    }
 };
 #endif // _COMPANY_MANAGEMENT_IMP_H_

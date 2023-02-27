@@ -25,6 +25,15 @@
         <van-col :span="12">
             <van-button block size="small" plain square type="primary" text="复制编码" @click="$copyText(contract.customer_code)" />
         </van-col>
+        <van-cell v-if="creator_phone">
+            <template #title>
+                <van-tag v-if="has_author" mark type="success">已授权</van-tag>
+                <van-tag v-else type="danger" mark>未授权</van-tag>
+                {{creator_phone}}
+            </template>
+            <van-button v-if="!has_author" size="mini" type="primary" @click="author_user(true)">授权</van-button>
+            <van-button v-else type="danger" size="mini" @click="author_user(false)">取消授权</van-button>
+        </van-cell>
     </van-row>
 
     <van-dialog v-model="add_contract_show" title="添加合同" :showConfirmButton="false" closeOnClickOverlay>
@@ -87,9 +96,11 @@ export default {
     props: {
         a_side: String,
         b_side: String,
+        creator_phone: String,
     },
     data: function () {
         return {
+            has_author: false,
             submit_contract: {
                 number: '',
                 a_side_company: '',
@@ -119,6 +130,18 @@ export default {
         };
     },
     methods: {
+        author_user: function (_is_auth) {
+            var vue_this = this;
+            var auth_func = "add_author_contract_user";
+            if (!_is_auth) {
+                auth_func = "del_author_contract_user"
+            }
+            vue_this.$call_remote_process("company_management", auth_func, [vue_this.$cookies.get("pa_ssid"), vue_this.creator_phone]).then(function (resp) {
+                if (resp) {
+                    vue_this.init_author();
+                }
+            });
+        },
         add_contract: function () {
             var vue_this = this;
             vue_this.$call_remote_process("company_management", "add_contract", [vue_this.$cookies.get('pa_ssid'), vue_this.submit_contract]).then(function (resp) {
@@ -148,10 +171,20 @@ export default {
             d = d < 10 ? ('0' + d) : d;
             return y + '-' + m + '-' + d;
         },
+        init_author: function () {
+            var vue_this = this;
+            vue_this.$call_remote_process("company_management", "user_was_authored", [this.creator_phone, this.b_side]).then(function (resp) {
+                vue_this.has_author = resp;
+            });
+        },
     },
     watch: {
+        "creator_phone":function() {
+            this.init_author();
+        },
         "a_side": function () {
             this.get_contract(this.a_side, this.b_side);
+            this.init_author();
         },
         "b_side": function () {
             this.get_contract(this.a_side, this.b_side);
@@ -159,7 +192,7 @@ export default {
     },
     beforeMount: function () {
         this.get_contract(this.a_side, this.b_side);
-
+        this.init_author();
         this.submit_contract.a_side_company = this.a_side;
     }
 
