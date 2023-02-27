@@ -54,7 +54,7 @@
     <van-popup v-model="showArea" position="bottom">
         <van-area :area-list="all_area" columns-num="2" @confirm="confirm_area" @cancel="showArea = false" />
     </van-popup>
-
+    <van-field name="comment" v-model="my_vichele_info.comment" label="备注" @input="change_to_parent" />
 </div>
 </template>
 

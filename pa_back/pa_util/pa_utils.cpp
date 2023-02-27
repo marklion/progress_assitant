@@ -818,6 +818,7 @@ std::string PA_DATAOPT_post_sync_change_register(pa_sql_single_vichele &_vichele
                 sub_req.Add("orderNo", std::to_string(tmp.created_time) + std::to_string(tmp.plan_id));
                 sub_req.AddEmptySubArray("multiStuff");
                 sub_req.Add("isMulti", false, false);
+                sub_req.Add("comment", itr.comment);
                 if (is_auto)
                 {
                     sub_req.Add("changeType", 2);
@@ -1030,6 +1031,7 @@ void PA_DATAOPT_post_checkin(pa_sql_single_vichele &_vichele)
                 req.Add("isMulti", false, false);
                 req.Add("dropAddress", itr.drop_address);
                 req.Add("useFor", itr.use_for);
+                req.Add("comment", itr.comment);
 
                 break;
             }

@@ -73,6 +73,7 @@
                 <van-cell v-if="single_vichele.finish" title="提货时间" :value="single_vichele.deliver_timestamp"></van-cell>
                 <van-cell title="卸车地" :value="single_vichele.drop_address"></van-cell>
                 <van-cell title="用途" :value="single_vichele.use_for"></van-cell>
+                <van-cell title="备注" :value="single_vichele.comment"></van-cell>
                 <van-button block type="danger" plain size="small" round icon="delete-o" @click="cancel_vichele_from_plan(single_vichele)">取消</van-button>
             </van-collapse-item>
         </van-collapse>

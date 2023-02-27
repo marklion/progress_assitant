@@ -341,6 +341,7 @@ public:
     std::string ticket_no;
     std::string seal_no;
     int has_p = 0;
+    std::string comment;
     pa_sql_single_vichele()
     {
         add_parent_type<pa_sql_vichele>("main_vichele");
@@ -363,6 +364,7 @@ public:
         ret.push_back(sqlite_orm_column("ticket_no", sqlite_orm_column::STRING, &ticket_no));
         ret.push_back(sqlite_orm_column("seal_no", sqlite_orm_column::STRING, &seal_no));
         ret.push_back(sqlite_orm_column("has_p", sqlite_orm_column::INTEGER, &has_p));
+        ret.push_back(sqlite_orm_column("comment", sqlite_orm_column::STRING, &comment));
 
         return ret;
     }
@@ -512,6 +514,7 @@ public:
     std::string ticket_no;
     std::string seal_no;
     std::string all_license_path;
+    std::string comment;
     pa_sql_archive_vichele_plan()
     {
         add_parent_type<pa_sql_archive_plan>("belong_plan");
@@ -534,6 +537,7 @@ public:
         ret.push_back(sqlite_orm_column("ticket_no", sqlite_orm_column::STRING, &ticket_no));
         ret.push_back(sqlite_orm_column("seal_no", sqlite_orm_column::STRING, &seal_no));
         ret.push_back(sqlite_orm_column("all_license_path", sqlite_orm_column::STRING, &all_license_path));
+        ret.push_back(sqlite_orm_column("comment", sqlite_orm_column::STRING, &comment));
 
         return ret;
     }

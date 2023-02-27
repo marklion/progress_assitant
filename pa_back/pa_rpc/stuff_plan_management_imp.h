@@ -119,6 +119,7 @@ public:
                 pa_sql_single_vichele tmp_single;
                 tmp_single.count = 0;
                 tmp_single.drop_address = itr.drop_address;
+                tmp_single.comment = itr.comment;
                 tmp_single.use_for = itr.use_for;
                 tmp_single.set_parent(*main_vhichele, "main_vichele");
                 tmp_single.set_parent(*behind_vhichele, "behind_vichele");
@@ -255,6 +256,7 @@ public:
                         tmp.p_weight = itr.p_weight;
                         tmp.vichele_id = itr.get_pri_id();
                         tmp.archive_license = itr.all_license_path;
+                        tmp.comment = itr.comment;
                         _return.vichele_info.push_back(tmp);
                     }
                 }
@@ -338,6 +340,7 @@ public:
                             tmp.driver_silent_id = silent_id_driver->silent_id;
                         }
                         tmp.vichele_id = itr.get_pri_id();
+                        tmp.comment = itr.comment;
                         _return.vichele_info.push_back(tmp);
                     }
                 }
@@ -534,6 +537,7 @@ public:
                     pa_sql_single_vichele tmp_single;
                     tmp_single.count = 0;
                     tmp_single.drop_address = itr.drop_address;
+                    tmp_single.comment = itr.comment;
                     tmp_single.use_for = itr.use_for;
                     tmp_single.set_parent(*main_vhichele, "main_vichele");
                     tmp_single.set_parent(*behind_vhichele, "behind_vichele");
@@ -1019,7 +1023,7 @@ public:
         stream << csv_bom;
         csv2::Writer<csv2::delimiter<','>> writer(stream);
         std::vector<std::string> table_header = {
-            "计划日期", "客户名称", "货名", "车牌", "车挂", "司机姓名", "司机电话", "当前状态", "卸车地点", "用途", "净重", "单价", "金额", "磅单号", "装车时间"};
+            "计划日期", "客户名称", "货名", "车牌", "车挂", "司机姓名", "司机电话", "当前状态", "卸车地点", "用途", "净重", "单价", "金额", "磅单号", "装车时间", "备注"};
         if (!_user.buyer)
         {
             table_header.insert(table_header.begin() + 1, "客户编码");
@@ -1112,6 +1116,7 @@ public:
                         single_rec.push_back(pa_double2string_reserve2(std::stod(archive_plan->unit_price) * std::stod(itr.count)));
                         single_rec.push_back(itr.ticket_no);
                         single_rec.push_back(itr.deliver_timestamp);
+                        single_rec.push_back(itr.comment);
 
                         writer.write_row(single_rec);
                     }
@@ -1150,6 +1155,7 @@ public:
                         single_rec.push_back(pa_double2string_reserve2(vichele_itr.count * plan->price));
                         single_rec.push_back(vichele_itr.ticket_no);
                         single_rec.push_back(vichele_itr.deliver_timestamp);
+                        single_rec.push_back(vichele_itr.comment);
                         writer.write_row(single_rec);
                     }
                 }

@@ -236,6 +236,7 @@ public:
         }
         ret.id = std::to_string(_vichele.get_pri_id()) + "S";
         ret.sale_address = _vichele.drop_address;
+        ret.comment = _vichele.comment;
         auto main_vichele = _vichele.get_parent<pa_sql_vichele>("main_vichele");
         auto this_driver = _vichele.get_parent<pa_sql_driver>("driver");
         auto behind_vichele = _vichele.get_parent<pa_sql_vichele_behind>("behind_vichele");

@@ -135,6 +135,7 @@ export default {
             var driver_phone_x = String.fromCharCode(ancher_x.charCodeAt() + 7);
             var drop_address_x = String.fromCharCode(ancher_x.charCodeAt() + 9);
             var use_for_x = String.fromCharCode(ancher_x.charCodeAt() + 10);
+            var comment_x= String.fromCharCode(ancher_x.charCodeAt() + 11);
             for (var i = ancher_y; i <= last_y; i++) {
                 if (current_sheetes[main_vichele_x + i] &&
                     current_sheetes[behind_vichele_x + i] &&
@@ -149,6 +150,7 @@ export default {
                         driver_phone: current_sheetes[driver_phone_x + i].w,
                         drop_address: current_sheetes[drop_address_x + i].w,
                         use_for: current_sheetes[use_for_x + i].w,
+                        comment: current_sheetes[comment_x + i].w,
                     };
                     if (one_plan.use_for.search('气化') != -1) {
                         one_plan.use_for = '气化';
