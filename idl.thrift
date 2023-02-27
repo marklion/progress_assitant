@@ -311,6 +311,7 @@ struct vichele_in_plan {
     17:string driver_id,
     18:string driver_silent_id,
     19:string archive_license,
+    20:string comment,
 }
 
 struct stuff_plan {
@@ -581,6 +582,7 @@ struct vehicle_info_resp {
     25:string sale_address,
     26:bool has_license,
     27:bool has_payed,
+    28:string comment,
 }
 
 struct push_weight_req {

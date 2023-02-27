@@ -163,6 +163,7 @@ void pa_sql_archive_plan::translate_from_plan(pa_sql_plan &_plan)
         }
         tmp.count = std::to_string(itr.count);
         tmp.drop_address = itr.drop_address;
+        tmp.comment = itr.comment;
         tmp.use_for = itr.use_for;
         tmp.finish = itr.finish;
         tmp.deliver_timestamp = itr.deliver_timestamp;
