@@ -277,6 +277,7 @@ public:
                     {
                         _return.buy_company = buy_company->name;
                     }
+                    _return.creator_phone = create_user->phone;
                 }
 
                 if (plan->proxy_company.length() > 0)
@@ -739,6 +740,14 @@ public:
         if (!plan)
         {
             PA_RETURN_NOPLAN_MSG();
+        }
+
+        company_management_handler cmh;
+        auto company = PA_DATAOPT_get_company_by_ssid(ssid);
+        auto creator = plan->get_parent<pa_sql_userinfo>("created_by");
+        if (!creator || !company || !cmh.user_was_authored(creator->phone, company->name))
+        {
+            PA_RETURN_MSG("报计划人未授权");
         }
 
         if (plan->status != 1 || !PA_STATUS_RULE_can_be_change(*plan, *opt_user, 2))

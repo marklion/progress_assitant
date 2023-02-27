@@ -7,7 +7,7 @@
                 <van-button class="preview_btn_show" size="small" type="info" plain @click="preview_buy_attach">查看买方资质</van-button>
             </template>
         </van-cell>
-        <contract-cell :a_side="plan_owner_info.company" :b_side="plan_detail.sale_company"></contract-cell>
+        <contract-cell :a_side="plan_owner_info.company" :b_side="plan_detail.sale_company" :creator_phone="plan_detail.creator_phone"></contract-cell>
     </van-cell-group>
     <van-cell-group title="计划内容">
         <template #title>
@@ -192,7 +192,8 @@ export default {
                 created_time: '',
                 status: 0,
                 vichele_info: [],
-                sale_company: ''
+                sale_company: '',
+                creator_phone:'',
             },
             plan_owner_info: {
                 name: '',
@@ -332,6 +333,7 @@ export default {
             vue_this.plan_detail.created_time = vue_this.formatDateTime(new Date(resp.created_time * 1000));
             vue_this.plan_detail.status = resp.status;
             vue_this.plan_detail.sale_company = resp.sale_company;
+            vue_this.plan_detail.creator_phone = resp.creator_phone;
             vue_this.$call_remote_process("company_management", "get_address_contact", [resp.sale_company]).then(function (company_resp) {
                 vue_this.company_address = company_resp.address;
                 vue_this.company_contact = company_resp.contact;

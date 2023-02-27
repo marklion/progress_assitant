@@ -222,6 +222,10 @@ service company_management {
     execute_record_info get_execute_rate_by_name(1:string ssid, 2:string name) throws (1:gen_exp e),
     string export_exe_rate(1:string ssid, 2:string begin_date, 3:string end_date) throws (1:gen_exp e),
     bool change_user_read_only(1:string ssid, 2:i64 user_id) throws (1:gen_exp e),
+    bool add_author_contract_user(1:string ssid, 2:string phone) throws (1:gen_exp e),
+    bool del_author_contract_user(1:string ssid, 2:string phone) throws (1:gen_exp e),
+    list<string> get_author_contract_user(1:string ssid) throws (1:gen_exp e),
+    bool user_was_authored(1:string phone, 2:string company_name) throws (1:gen_exp e),
 }
 
 struct bidding_customer{
@@ -331,6 +335,7 @@ struct stuff_plan {
     14:string comment,
     15:bool is_cancel,
     16:bool from_bidding,
+    17:string creator_phone,
 }
 
 struct plan_status {
