@@ -150,7 +150,7 @@ export default {
                         driver_phone: current_sheetes[driver_phone_x + i].w,
                         drop_address: current_sheetes[drop_address_x + i].w,
                         use_for: current_sheetes[use_for_x + i].w,
-                        comment: current_sheetes[comment_x + i].w,
+                        comment: current_sheetes[comment_x + i].w?current_sheetes[comment_x + i].w:'',
                     };
                     if (one_plan.use_for.search('气化') != -1) {
                         one_plan.use_for = '气化';

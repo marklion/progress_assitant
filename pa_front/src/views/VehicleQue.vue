@@ -1,5 +1,11 @@
 <template>
 <div class="vehicle_que_show">
+    <div>
+        已叫号{{called_count}}车,未叫号{{wait_for_call_count}}车
+    </div>
+    <div>
+        已进厂{{dropping}}车,可以出厂{{dropped}}车
+    </div>
     <van-search v-model="search_key" placeholder="过滤车号" />
     <vehicle-que-node v-for="(single_vqn, index) in vehicle_need_show" :key="index" :vq_node="single_vqn" @refresh="init_vq">
     </vehicle-que-node>
@@ -18,6 +24,39 @@ export default {
         };
     },
     computed: {
+        called_count: function () {
+            var ret = 0;
+            this.all_vq.forEach(item => {
+                if (item.has_called) {
+                    ret += 1;
+                }
+            });
+            return ret;
+        },
+        wait_for_call_count: function () {
+            var ret = 0;
+            ret = this.all_vq.length - this.called_count;
+            return ret;
+        },
+        dropping: function () {
+            var ret = 0;
+            this.all_vq.forEach(item => {
+                if (item.status_code > 1) {
+                    ret += 1;
+                }
+            });
+
+            return ret;
+        },
+        dropped: function () {
+            var ret = 0;
+            this.all_vq.forEach(item => {
+                if (!item.need_confirm) {
+                    ret += 1;
+                }
+            });
+            return ret;
+        },
         vehicle_need_show: function () {
             var ret = [];
             if (this.search_key) {

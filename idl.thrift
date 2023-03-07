@@ -588,6 +588,7 @@ struct vehicle_info_resp {
     26:bool has_license,
     27:bool has_payed,
     28:string comment,
+    29:string transCompanyName,
 }
 
 struct push_weight_req {
@@ -665,6 +666,7 @@ struct create_plan_req {
 	8:string arriveDate,
 	9:string customerName,
     10:string stuffName,
+    11:string trans_company_name,
 }
 
 service open_api_management {

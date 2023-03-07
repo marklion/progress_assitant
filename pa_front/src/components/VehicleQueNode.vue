@@ -31,7 +31,10 @@
             <div v-if="vq_node.has_called">叫号时间：{{vq_node.call_time}}</div>
         </template>
         <template #right-icon v-if="vq_node.has_called && vq_node.status_code <= 3">
-            <van-button v-if="vq_node.need_confirm" size="small" type="primary" @click="open_seal_no_diag(true)">铅封确认</van-button>
+            <div v-if="vq_node.need_confirm">
+                <van-button size="small" type="primary" @click="open_seal_no_diag(true)">铅封确认</van-button>
+                <van-button size="small" type="warning" @click="xy_confirm()">泄压确认</van-button>
+            </div>
             <van-button v-else size="small" type="danger" @click="open_seal_no_diag(false)">取消确认</van-button>
         </template>
     </van-cell>
@@ -98,6 +101,10 @@ export default {
             } else {
                 this.do_confirm(is_confirm);
             }
+        },
+        xy_confirm:function () {
+            this.seal_no = "正在泄压";
+            this.do_confirm(true);
         },
         do_confirm: async function (is_confirm) {
             var vue_this = this;

@@ -269,6 +269,7 @@ public:
     int is_cancel = 0;
     int from_bidding = 0;
     int from_remote = 0;
+    std::string trans_company_name;
     pa_sql_plan() {
         add_parent_type<pa_sql_userinfo>("created_by");
         add_parent_type<pa_sql_stuff_info>("belong_stuff");
@@ -287,6 +288,7 @@ public:
         ret.push_back(sqlite_orm_column("is_cancel", sqlite_orm_column::INTEGER, &is_cancel));
         ret.push_back(sqlite_orm_column("from_bidding", sqlite_orm_column::INTEGER, &from_bidding));
         ret.push_back(sqlite_orm_column("from_remote", sqlite_orm_column::INTEGER, &from_remote));
+        ret.push_back(sqlite_orm_column("trans_company_name", sqlite_orm_column::STRING, &trans_company_name));
 
         return ret;
     }
@@ -469,6 +471,7 @@ public:
     std::string sale_company;
     std::string buy_company;
     int is_cancel = 0;
+    std::string trans_company_name;
     virtual std::vector<sqlite_orm_column> self_columns_defined()
     {
         std::vector<sqlite_orm_column> ret;
@@ -483,6 +486,7 @@ public:
         ret.push_back(sqlite_orm_column("sale_company", sqlite_orm_column::STRING, &sale_company));
         ret.push_back(sqlite_orm_column("buy_company", sqlite_orm_column::STRING, &buy_company));
         ret.push_back(sqlite_orm_column("is_cancel", sqlite_orm_column::INTEGER, &is_cancel));
+        ret.push_back(sqlite_orm_column("trans_company_name", sqlite_orm_column::STRING, &trans_company_name));
 
         return ret;
     }

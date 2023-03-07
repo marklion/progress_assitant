@@ -291,6 +291,7 @@ public:
                 ret.createTime = register_info->timestamp;
             }
             ret.orderNo = std::to_string(plan->create_time) + std::to_string(plan->get_pri_id());
+            ret.transCompanyName = plan->trans_company_name;
         }
 
         company_management_handler ch;
@@ -963,6 +964,7 @@ public:
                 _return.stuff_name = aplan->stuff_name;
                 _return.seal_no = asv->seal_no;
                 _return.ticket_no = asv->ticket_no;
+                _return.transfor_company = aplan->trans_company_name;
                 _return.title = aplan->sale_company + "\n产品出厂称重单";
             }
             else
@@ -1011,6 +1013,7 @@ public:
                         _return.stuff_name = stuff_name;
                         _return.seal_no = sv->seal_no;
                         _return.ticket_no = sv->ticket_no;
+                        _return.transfor_company = plan->trans_company_name;
                         _return.title = title_comapny + "\n产品出厂称重单";
                     }
                 }
@@ -1292,6 +1295,12 @@ public:
                 auto order_number = spmh.create_plan(tmp, lg_info->ssid, _req.customerName);
                 if (order_number > 0)
                 {
+                    auto sp_created = sqlite_orm::search_record<pa_sql_plan>(order_number);
+                    if (sp_created)
+                    {
+                        sp_created->trans_company_name = _req.trans_company_name;
+                        sp_created->update_record();
+                    }
                     _return = std::to_string(order_number);
                     spmh.confirm_plan(order_number, lg_info->ssid, "第三方接口调用");
                     spmh.confirm_pay(order_number, lg_info->ssid, "第三方接口调用");

@@ -21,11 +21,11 @@
         </div>
         <van-row>
             <van-col>
-                <vue-qr :text="qr_url()" :size="150"></vue-qr>
+                <vue-qr :text="qr_url()" :size="130"></vue-qr>
             </van-col>
             <van-col>
                 <div class="ticket_stamp_show" v-if="ticket_stamp">
-                    <img width="180" height="180" :src="$remote_url + ticket_stamp" crossorigin="anonymous" />
+                    <img width="150" height="150" :src="$remote_url + ticket_stamp" crossorigin="anonymous" />
                 </div>
             </van-col>
         </van-row>

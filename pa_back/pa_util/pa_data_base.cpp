@@ -139,6 +139,7 @@ void pa_sql_archive_plan::translate_from_plan(pa_sql_plan &_plan)
     this->total_price = std::to_string(_plan.price * count);
     this->stuff_name = _plan.name;
     this->is_cancel = _plan.is_cancel;
+    this->trans_company_name = _plan.trans_company_name;
     this->insert_record();
 
     auto vichele_in_plan = _plan.get_all_children<pa_sql_single_vichele>("belong_plan");

@@ -265,7 +265,7 @@ export default {
                         default:
                             break;
                     }
-                    if (element.plan_time >= filter_begin && element.plan_time <= filter_end) {
+                    if (element.plan_time >= parseInt(filter_begin) && element.plan_time <= parseInt(filter_end)) {
                         filter_ret.push(element);
                     }
                 });
