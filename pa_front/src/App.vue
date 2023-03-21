@@ -82,7 +82,12 @@ export default {
             }
             var vue_this = this;
             var ssid = vue_this.$cookies.get('pa_ssid');
-            vue_this.$call_remote_process('user_management', 'get_user_info', [ssid]).then(function (resp) {
+            var req_func = vue_this.$call_remote_process;
+            if (this.$route.meta.permit_change)
+            {
+                req_func = vue_this.$call_remote_process_no_toast;
+            }
+            req_func('user_management', 'get_user_info', [ssid]).then(function (resp) {
                 console.log(resp);
                 if (resp.user_id != 0) {
                     vue_this.$store.commit('set_userinfo', resp);

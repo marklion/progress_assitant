@@ -1641,35 +1641,40 @@ public:
     virtual bool add_author_contract_user(const std::string &ssid, const std::string &phone)
     {
         bool ret = false;
-        auto user = sqlite_orm::search_record<pa_sql_userinfo>("phone == '%s'", phone.c_str());
-        if (!user)
+        auto users = sqlite_orm::search_record_all<pa_sql_userinfo>("phone == '%s'", phone.c_str());
+        if (users.size() <= 0)
         {
             PA_RETURN_NOPRIVA_MSG();
         }
-        auto cust_company = user->get_parent<pa_sql_company>("belong_company");
-        auto company = PA_DATAOPT_get_company_by_ssid(ssid);
-        if (!company || !cust_company)
+        for (auto &itr : users)
         {
-            PA_RETURN_NOCOMPANY_MSG();
-        }
+            auto cust_company = itr.get_parent<pa_sql_company>("belong_company");
+            auto company = PA_DATAOPT_get_company_by_ssid(ssid);
+            if (!company || !cust_company)
+            {
+                continue;
+            }
 
-        auto contract = company->get_children<pa_sql_contract>("b_side", "a_side_ext_key == %ld", cust_company->get_pri_id());
-        if (!contract)
-        {
-            PA_RETURN_MSG("合同不存在");
-        }
+            auto contract = company->get_children<pa_sql_contract>("b_side", "a_side_ext_key == %ld", cust_company->get_pri_id());
+            if (!contract)
+            {
+                continue;
+            }
 
-        auto exist_auth_user = contract->get_children<pa_sql_contract_user>("belong_contract", "belong_user_ext_key == %ld", user->get_pri_id());
-        if (exist_auth_user)
-        {
-            ret = true;
-        }
-        else
-        {
-            pa_sql_contract_user tmp;
-            tmp.set_parent(*user, "belong_user");
-            tmp.set_parent(*contract, "belong_contract");
-            ret = tmp.insert_record();
+            auto exist_auth_user = contract->get_children<pa_sql_contract_user>("belong_contract", "belong_user_ext_key == %ld", itr.get_pri_id());
+            if (exist_auth_user)
+            {
+                ret = true;
+                break;
+            }
+            else
+            {
+                pa_sql_contract_user tmp;
+                tmp.set_parent(itr, "belong_user");
+                tmp.set_parent(*contract, "belong_contract");
+                ret = tmp.insert_record();
+                break;
+            }
         }
 
         return ret;
@@ -1677,29 +1682,33 @@ public:
     virtual bool del_author_contract_user(const std::string &ssid, const std::string &phone)
     {
         bool ret = false;
-        auto user = sqlite_orm::search_record<pa_sql_userinfo>("phone == '%s'", phone.c_str());
-        if (!user)
+        auto users = sqlite_orm::search_record_all<pa_sql_userinfo>("phone == '%s'", phone.c_str());
+        if (users.size() <= 0)
         {
             PA_RETURN_NOPRIVA_MSG();
         }
-        auto cust_company = user->get_parent<pa_sql_company>("belong_company");
-        auto company = PA_DATAOPT_get_company_by_ssid(ssid);
-        if (!company || !cust_company)
+        for (auto &itr : users)
         {
-            PA_RETURN_NOCOMPANY_MSG();
-        }
+            auto cust_company = itr.get_parent<pa_sql_company>("belong_company");
+            auto company = PA_DATAOPT_get_company_by_ssid(ssid);
+            if (!company || !cust_company)
+            {
+                continue;
+            }
 
-        auto contract = company->get_children<pa_sql_contract>("b_side", "a_side_ext_key == %ld", cust_company->get_pri_id());
-        if (!contract)
-        {
-            PA_RETURN_MSG("合同不存在");
-        }
+            auto contract = company->get_children<pa_sql_contract>("b_side", "a_side_ext_key == %ld", cust_company->get_pri_id());
+            if (!contract)
+            {
+                continue;
+            }
 
-        auto exist_auth_user = contract->get_children<pa_sql_contract_user>("belong_contract", "belong_user_ext_key == %ld", user->get_pri_id());
-        if (exist_auth_user)
-        {
-            exist_auth_user->remove_record();
-            ret = true;
+            auto exist_auth_user = contract->get_children<pa_sql_contract_user>("belong_contract", "belong_user_ext_key == %ld", itr.get_pri_id());
+            if (exist_auth_user)
+            {
+                exist_auth_user->remove_record();
+                ret = true;
+                break;
+            }
         }
 
         return ret;
@@ -1713,7 +1722,7 @@ public:
         }
 
         auto contract = company->get_all_children<pa_sql_contract>("b_side");
-        for (auto &itr:contract)
+        for (auto &itr : contract)
         {
             auto user = itr.get_parent<pa_sql_userinfo>("belong_user");
             if (user)
@@ -1727,29 +1736,38 @@ public:
         bool ret = false;
 
         auto company = sqlite_orm::search_record<pa_sql_company>("name == '%s' AND is_sale == 1", company_name.c_str());
-        auto user = sqlite_orm::search_record<pa_sql_userinfo>("phone == '%s'", phone.c_str());
-        if (company && user)
+        auto users = sqlite_orm::search_record_all<pa_sql_userinfo>("phone == '%s'", phone.c_str());
+        for (auto &itr : users)
         {
-            auto user_company = user->get_parent<pa_sql_company>("belong_company");
-            if (user_company && user_company->get_pri_id() == company->get_pri_id())
+            if (company)
             {
-                ret = true;
-            }
-            else
-            {
-                auto cust_company = user->get_parent<pa_sql_company>("belong_company");
-                if (cust_company)
+                auto user_company = itr.get_parent<pa_sql_company>("belong_company");
+                if (user_company && user_company->get_pri_id() == company->get_pri_id())
                 {
-                    auto contract = company->get_children<pa_sql_contract>("b_side", "a_side_ext_key == %ld", cust_company->get_pri_id());
-                    if (contract)
+                    ret = true;
+                    break;
+                }
+                else
+                {
+                    auto cust_company = itr.get_parent<pa_sql_company>("belong_company");
+                    if (cust_company)
                     {
-                        auto exist_auth_user = contract->get_children<pa_sql_contract_user>("belong_contract", "belong_user_ext_key == %ld", user->get_pri_id());
-                        if (exist_auth_user)
+                        auto contract = company->get_children<pa_sql_contract>("b_side", "a_side_ext_key == %ld", cust_company->get_pri_id());
+                        if (contract)
                         {
-                            ret = true;
+                            auto exist_auth_user = contract->get_children<pa_sql_contract_user>("belong_contract", "belong_user_ext_key == %ld", itr.get_pri_id());
+                            if (exist_auth_user)
+                            {
+                                ret = true;
+                                break;
+                            }
                         }
                     }
                 }
+            }
+            else
+            {
+                break;
             }
         }
 

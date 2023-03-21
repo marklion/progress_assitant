@@ -108,7 +108,14 @@ export default {
         take_pic: function (name, is_enter) {
             var vue_this = this;
             vue_this.$call_remote_process("open_api", 'do_device_opt_take_pic', [vue_this.$store.state.userinfo.phone, name, is_enter], vue_this.$store.state.zc_rpc_url).then(function (resp) {
-                ImagePreview([resp]);
+                if (resp.indexOf("http") != -1) {
+                    ImagePreview([resp]);
+                }
+                else
+                {
+                    var whole_path = vue_this.$store.state.zc_rpc_url.substr(0, vue_this.$store.state.zc_rpc_url.indexOf("/zh_rpc/")) + resp;
+                    ImagePreview([whole_path]);
+                }
                 vue_this.pub_evt();
             });
         },
