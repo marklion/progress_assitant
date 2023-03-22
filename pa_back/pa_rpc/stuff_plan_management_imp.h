@@ -3142,7 +3142,7 @@ public:
                             }
                             if (single_lr.input_method.find('0') != std::string::npos)
                             {
-                                single_record.push_back("https://www.d8sis.cn/pa_web" + lcd->attachment_path);
+                                single_record.push_back("https://www.d8sis.cn/pa_web" + lcd->attachment_path );
                             }
                             if (!single_lr.ltv)
                             {
@@ -3189,24 +3189,8 @@ public:
             }
         }
         stream.close();
-        std::string py_converter =
-            "import pandas as pd\n"
-            "import sys\n"
-            "csv = pd.read_csv('" +
-            file_name + "', encoding='utf-8')\n"
-                        "csv.index = csv.index + 1\n"
-                        "csv.to_excel('/dist/logo_res/" +
-            file_name_no_ext + ".xlsx', sheet_name='data')\n";
 
-        if (Py_IsInitialized())
-        {
-            PyRun_SimpleString(py_converter.c_str());
-            _return = "/logo_res/" + file_name_no_ext + ".xlsx";
-        }
-        else
-        {
-            PA_RETURN_MSG("导出失败");
-        }
+        _return = "/logo_res/" + file_name_no_ext + ".csv";
     }
 
     virtual void export_plan_by_deliver_date_range(std::string &_return, const std::string &ssid, const std::string &begin_date, const std::string &end_date)
