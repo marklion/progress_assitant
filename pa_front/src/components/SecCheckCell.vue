@@ -148,6 +148,9 @@ export default {
             vue_this.$call_remote_process("stuff_plan_management", "add_sec_check_data", [vue_this.$cookies.get('driver_silent_id'), add_req]).then(function (resp) {
                 if (resp) {
                     vue_this.upload_diag = false;
+                    vue_this.new_scd.input_content = "";
+                    vue_this.new_scd.attachment_path = "";
+                    vue_this.new_scd.expired_date = "";
                     vue_this.init_cell();
                 }
             });
