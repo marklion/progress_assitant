@@ -2488,6 +2488,23 @@ public:
                                 PA_RETURN_MSG("今日已排号, 请" + itr.main_vichele + "出厂后再排号");
                             }
                         }
+                        company_management_handler cmh;
+                        if (!cmh.company_customize_need(belong_company->name, company_management_handler::need_reg_sec_pal))
+                        {
+                            auto mv = vichele_info->get_parent<pa_sql_vichele>("main_vichele");
+                            auto bv = vichele_info->get_parent<pa_sql_vichele_behind>("behind_vichele");
+                            if (mv && bv)
+                            {
+                                if (!sec_check_all_confirmed(*belong_company, real_driver->phone, mv->number, bv->number))
+                                {
+                                    PA_RETURN_MSG("请先完成安检");
+                                }
+                            }
+                            else
+                            {
+                                PA_RETURN_MSG("请先完成安检");
+                            }
+                        }
                         PA_DATAOPT_post_checkin(*vichele_info);
                         ret = true;
                     }
@@ -3142,7 +3159,7 @@ public:
                             }
                             if (single_lr.input_method.find('0') != std::string::npos)
                             {
-                                single_record.push_back("https://www.d8sis.cn/pa_web" + lcd->attachment_path );
+                                single_record.push_back("https://www.d8sis.cn/pa_web" + lcd->attachment_path);
                             }
                             if (!single_lr.ltv)
                             {

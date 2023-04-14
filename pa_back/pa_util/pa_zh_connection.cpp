@@ -59,6 +59,7 @@ bool PA_ZH_CONN_push_order(pa_sql_plan &_plan)
         single_req.Add("driver_name", itr.driver_name);
         single_req.Add("driver_id", itr.driver_id);
         single_req.Add("driver_phone", itr.driver_phone);
+        single_req.Add("trans_company", _plan.trans_company_name);
         req.Add(single_req);
     }
 
