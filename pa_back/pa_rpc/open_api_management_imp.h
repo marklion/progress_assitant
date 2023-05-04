@@ -1330,6 +1330,16 @@ public:
 
         return ret;
     }
+
+    virtual void set_dc_status(const std::string &mac, const bool has_vehicle)
+    {
+        auto dcs = sqlite_orm::search_record<pa_sql_dc_status>("mac == '%s'", mac.c_str());
+        if (dcs)
+        {
+            dcs->status = has_vehicle;
+            dcs->update_record();
+        }
+    }
 };
 
 #endif // _OPEN_API_MANAGEMENT_H_

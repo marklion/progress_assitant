@@ -1773,5 +1773,58 @@ public:
 
         return ret;
     }
+
+    virtual void get_dc_status(std::vector<wtsr_dc_status> &_return, const std::string &ssid)
+    {
+        auto company = PA_DATAOPT_get_company_by_ssid(ssid);
+        if (company && company->is_sale)
+        {
+            auto all_device = company->get_all_children<pa_sql_dc_status>("belong_company");
+            for (auto &itr:all_device)
+            {
+                wtsr_dc_status tmp;
+                tmp.has_vehicle = itr.status;
+                tmp.id = itr.get_pri_id();
+                tmp.mac = itr.mac;
+                tmp.name = itr.name;
+                _return.push_back(tmp);
+            }
+        }
+    }
+    virtual bool add_dc_device(const std::string &ssid, const std::string &name, const std::string &mac)
+    {
+        bool ret = false;
+
+        auto company = PA_DATAOPT_get_company_by_ssid(ssid);
+        if (!company || !company->is_sale)
+        {
+            PA_RETURN_NOCOMPANY_MSG();
+        }
+        auto exist_record = sqlite_orm::search_record<pa_sql_dc_status>("mac == '%s'", mac.c_str());
+        if (exist_record)
+        {
+            PA_RETURN_MSG("设备已经绑定过");
+        }
+        pa_sql_dc_status tmp;
+        tmp.mac = mac;
+        tmp.name = name;
+        tmp.set_parent(*company, "belong_company");
+        ret = tmp.insert_record();
+
+        return ret;
+    }
+    virtual void del_dec_device(const std::string &ssid, const int64_t id)
+    {
+        auto company = PA_DATAOPT_get_company_by_ssid(ssid);
+        if (!company || !company->is_sale)
+        {
+            PA_RETURN_NOCOMPANY_MSG();
+        }
+        auto exist_record = sqlite_orm::search_record<pa_sql_dc_status>(id);
+        if (exist_record)
+        {
+            exist_record->remove_record();
+        }
+    }
 };
 #endif // _COMPANY_MANAGEMENT_IMP_H_

@@ -2,7 +2,12 @@
 exception gen_exp {
     1:string msg,
 }
-
+struct wtsr_dc_status{
+    1:string mac,
+    2:bool has_vehicle,
+    3:i64 id,
+    4:string name,
+}
 struct user_info {
     1:i64 user_id,
     2:string name,
@@ -226,6 +231,9 @@ service company_management {
     bool del_author_contract_user(1:string ssid, 2:string phone) throws (1:gen_exp e),
     list<string> get_author_contract_user(1:string ssid) throws (1:gen_exp e),
     bool user_was_authored(1:string phone, 2:string company_name) throws (1:gen_exp e),
+    list<wtsr_dc_status> get_dc_status(1:string ssid) throws (1:gen_exp e),
+    bool add_dc_device(1:string ssid, 2:string name, 3:string mac) throws (1:gen_exp e),
+    void del_dec_device(1:string ssid, 2:i64 id) throws (1:gen_exp e),
 }
 
 struct bidding_customer{
@@ -669,6 +677,8 @@ struct create_plan_req {
     11:string trans_company_name,
 }
 
+
+
 service open_api_management {
     bool register_api_user(1:string company_name, 2:string email, 3:string password) throws (1:gen_exp e),
     bool verify_email_code(1:string email, 2:string code) throws (1:gen_exp e),
@@ -694,6 +704,7 @@ service open_api_management {
     bool record_p_weight(1:string token, 2:string id) throws (1:gen_exp e),
     string proc_create_plan(1:string token, 2:create_plan_req _req) throws (1:gen_exp e),
     bool proc_cancel_plan(1:string token, 2:string _order_number) throws (1:gen_exp e),
+    void set_dc_status(1:string mac, 2:bool has_vehicle) throws (1: gen_exp e),
 }
 
 struct vichele_stay_alone {

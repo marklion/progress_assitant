@@ -1318,6 +1318,33 @@ public:
         return "sec_check_data_table";
     }
 };
+
+class pa_sql_dc_status : public sql_tree_base
+{
+public:
+    std::string mac;
+    std::string name;
+    int status = 0;
+    pa_sql_dc_status()
+    {
+        add_parent_type<pa_sql_company>("belong_company");
+    }
+    virtual std::vector<sqlite_orm_column> self_columns_defined()
+    {
+        std::vector<sqlite_orm_column> ret;
+        ret.push_back(sqlite_orm_column("mac", sqlite_orm_column::STRING, &mac));
+        ret.push_back(sqlite_orm_column("name", sqlite_orm_column::STRING, &name));
+        ret.push_back(sqlite_orm_column("status", sqlite_orm_column::INTEGER, &status));
+
+        return ret;
+    }
+
+    virtual std::string table_name()
+    {
+        return "dc_status";
+    }
+};
+
 bool sec_check_all_confirmed(pa_sql_company &_company, const std::string &_driver_phone, const std::string &_mv, const std::string &_bv);
 std::unique_ptr<pa_sql_execute_record> fetch_execute_record(const std::string &_plan_date, pa_sql_contract &_contract);
 

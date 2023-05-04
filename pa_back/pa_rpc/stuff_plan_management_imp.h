@@ -2981,14 +2981,18 @@ public:
             PA_RETURN_NOPRIVA_MSG();
         }
         auto exist_record = sqlite_orm::search_record<pa_sql_sec_check_data>(lcd.id);
-        if (!exist_record->has_confirmed)
+        if (exist_record)
         {
-            exist_record->remove_record();
+            if (!exist_record->has_confirmed)
+            {
+                exist_record->remove_record();
+            }
+            else
+            {
+                PA_RETURN_MSG("已审核无法删除，请先联系安检负责人取消审核");
+            }
         }
-        else
-        {
-            PA_RETURN_MSG("已审核无法删除，请先联系安检负责人取消审核");
-        }
+
         return true;
     }
     virtual void get_all_sec_check_data(license_common_data &_return, const int64_t related_type_id, const std::string &related_info)

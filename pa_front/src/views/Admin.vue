@@ -72,8 +72,33 @@
             </van-image>
             <van-button v-if="stamp_pic" type="danger" block size="small" @click="del_stamp">删除</van-button>
         </van-tab>
+        <van-tab title="地磁设置">
+            <van-cell-group>
+                <template #title>
+                    <van-row type="flex" justify="space-between" align="center">
+                        <van-col>所有地磁</van-col>
+                        <van-col>
+                            <van-button size="small" type="primary" @click="add_dc_device_diag = true">增加</van-button>
+                        </van-col>
+                    </van-row>
+                </template>
+                <van-cell v-for="(single_dc, index) in all_dc_device" :key="index" :title="single_dc.name" :label="single_dc.mac">
+                    <template #right-icon>
+                        <van-button plain size="small" type="danger" icon="cross" @click="del_dc_device(single_dc)"></van-button>
+                    </template>
+                </van-cell>
+            </van-cell-group>
+        </van-tab>
     </van-tabs>
-
+    <van-dialog v-model="add_dc_device_diag" title="添加地磁" :showConfirmButton="false" closeOnClickOverlay>
+        <van-form @submit="add_dc_device">
+            <van-field v-model="new_dc.name" name="位置" label="位置" placeholder="请输入位置" :rules="[{ required:true, message:'请输入位置'}]" />
+            <van-field v-model="new_dc.mac" name="mac" label="mac" placeholder="请输入mac" :rules="[{ required:true, message:'请输入mac'}]" />
+            <div style="margin: 16px;">
+                <van-button round block type="info" native-type="submit">提交</van-button>
+            </div>
+        </van-form>
+    </van-dialog>
 </div>
 </template>
 
@@ -136,6 +161,12 @@ export default {
     name: 'Admin',
     data: function () {
         return {
+            new_dc: {
+                name: '',
+                mac: '',
+            },
+            all_dc_device: [],
+            add_dc_device_diag: false,
             stamp_pic: '',
             all_apply: [],
             active: 0,
@@ -174,6 +205,26 @@ export default {
         };
     },
     methods: {
+        del_dc_device: function (_device) {
+            var vue_this = this;
+            vue_this.$dialog.alert({
+                title: '删除地磁',
+                message: "确定要删除" + _device.name + "吗？"
+            }).then(() => {
+                vue_this.$call_remote_process("company_management", "del_dec_device", [vue_this.$cookies.get("pa_ssid"), _device.id]).then(function () {
+                    vue_this.init_dc_device();
+                });
+            });
+        },
+        add_dc_device: function () {
+            var vue_this = this;
+            vue_this.$call_remote_process("company_management", "add_dc_device", [vue_this.$cookies.get("pa_ssid"), vue_this.new_dc.name, vue_this.new_dc.mac]).then(function (resp) {
+                if (resp) {
+                    vue_this.init_dc_device();
+                    vue_this.add_dc_device_diag = false;
+                }
+            });
+        },
         set_user_read_only: function (_user) {
             var vue_this = this;
             vue_this.$call_remote_process("company_management", "change_user_read_only", [vue_this.$cookies.get("pa_ssid"), _user.user_id]).then(function (resp) {
@@ -295,12 +346,22 @@ export default {
                 vue_this.work_end_time = parseInt(resp.end_time / 60) + ':' + resp.end_time % 60;
             });
         },
+        init_dc_device: function () {
+            var vue_this = this;
+            vue_this.$call_remote_process("company_management", "get_dc_status", [vue_this.$cookies.get("pa_ssid")]).then(function (resp) {
+                vue_this.all_dc_device = [];
+                resp.forEach((element, index) => {
+                    vue_this.$set(vue_this.all_dc_device, index, element);
+                });
+            });
+        },
     },
     beforeMount: function () {
         this.init_apply_info();
         this.init_all_user();
         this.init_work_time();
         this.init_stamp();
+        this.init_dc_device();
     },
 }
 </script>

@@ -304,6 +304,22 @@ app.post('/pa_rest/cancel_plan', async (req, res)=>{
     res.send(ret);
 
 });
+app.get('/pa_rest/dc_api', async (req, res) => {
+    var token = req.query.verify;
+
+    res.send(token);
+
+});
+app.post('/pa_rest/dc_api', async (req, res) => {
+    console.log(req.body);
+    try {
+        await request_rpc("open_api_management", "set_dc_status", [req.body.mac, req.body.status]);
+    } catch (error) {
+        console.log(error)
+    }
+    res.send();
+
+});
 
 app.listen(port, () => {
     console.log('rest is runing');
