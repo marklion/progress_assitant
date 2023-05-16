@@ -18,7 +18,8 @@ export default new Vuex.Store({
     enter_company:false,
     verify_count_down:0,
     need_sec_check:false,
-    zc_rpc_url:''
+    zc_rpc_url:'',
+    need_buy_feature:false,
   },
   mutations: {
     set_userinfo(state, userinfo){
@@ -39,6 +40,9 @@ export default new Vuex.Store({
     set_zc_rpc_url(state, zc_rpc_url) {
       state.zc_rpc_url = zc_rpc_url;
     },
+    set_need_buy_feature(state, need_buy_feature) {
+      state.need_buy_feature = need_buy_feature;
+    }
   },
   actions: {
   },

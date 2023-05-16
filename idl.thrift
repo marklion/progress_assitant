@@ -50,6 +50,7 @@ service user_management{
     bool has_apply(1:string ssid) throws (1:gen_exp e),
     string exchange_ssid(1:string enc_text) throws (1:gen_exp e),
     string exchange_enc_text(1:string ssid) throws (1:gen_exp e),
+    string query_ssid_by_phone(1:string phone, 2:string password) throws (1:gen_exp e),
 }
 
 struct stuff_detail {
@@ -146,6 +147,7 @@ struct company_customize {
     3:bool need_balance_auto_change,
     4:bool need_sec_check,
     5:bool need_reg_sec_pal,
+    6:bool need_buy_feature,
 }
 
 enum license_use_for {
@@ -734,6 +736,7 @@ struct vichele_stay_alone {
     24:bool can_enter,
     25:bool upload_permit,
     26:string driver_silent_id,
+    27:string stuff_unit,
 }
 
 struct silent_user_info {
@@ -775,6 +778,12 @@ struct vichele_stay_alone_statistics {
     4:i64 today_total,
 }
 
+struct cust_unit_name {
+    1:string unit_name,
+    2:i64 id,
+    3:string stuff_name,
+}
+
 service vichele_management {
     bool create_vichele_info(1:string open_id, 2:list<vichele_stay_alone> vichele_info) throws (1:gen_exp e),
     bool delete_vichele_info(1:string open_id, 2:i64 vichele_id) throws (1:gen_exp e),
@@ -812,6 +821,11 @@ service vichele_management {
     vichele_stay_alone_statistics get_statistics(1:string ssid) throws (1:gen_exp e),
     bool change_price(1:string ssid, 2:list<vichele_stay_alone> info, 3:bool all_select, 4:string enter_date, 5:string stuff_name, 6:string supplier_name, 7:double new_price) throws (1:gen_exp e),
     string get_bound_stuff(1:string company_name, 2:string destination_company) throws (1:gen_exp e),
+    bool fillin_manual_count(1:string ssid, 2:i64 vichele_id, 3:double manual_count) throws (1:gen_exp e),
+    string export_buy_data(1:string ssid, 2:string begin_date, 3:string end_date) throws (1:gen_exp e),
+    bool add_cust_unit(1:string ssid, 2:string unit_name, 3:string stuff_name) throws (1:gen_exp e),
+    list<cust_unit_name> get_cust_unit(1:string ssid) throws (1:gen_exp e),
+    void del_cust_unit(1:string ssid, 2:i64 id) throws (1:gen_exp e),
 }
 struct device_status {
     1:string name,

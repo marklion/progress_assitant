@@ -42,6 +42,30 @@
             </template>
         </van-cell>
     </van-cell-group>
+    <van-cell-group>
+        <template #title>
+            <van-row type="flex" justify="space-between" align="center">
+                <van-col>自定义单位</van-col>
+                <van-col>
+                    <van-button type="primary" size="small" @click="show_cus_stuff = true">添加</van-button>
+                </van-col>
+            </van-row>
+        </template>
+        <van-cell v-for="(single_cust, index) in all_cust_unit" :key="index" :title="single_cust.stuff_name" :value="single_cust.unit_name">
+            <template #right-icon>
+                <van-button type="danger" size="small" @click="del_cust_unit(single_cust)">删除</van-button>
+            </template>
+        </van-cell>
+    </van-cell-group>
+    <van-dialog v-model="show_cus_stuff" title="自定义单位" :showConfirmButton="false" closeOnClickOverlay>
+        <van-form @submit="add_cus_stuff">
+            <van-field v-model="new_cus_stuff.stuff_name" label="物料名" placeholder="请输入物料名" :rules="[{ required: true, message: '请填写物料名' }]" />
+            <van-field v-model="new_cus_stuff.unit_name" label="单位" placeholder="请输入单位" :rules="[{ required: true, message: '请填写单位' }]" />
+            <div style="margin: 16px;">
+                <van-button round block type="info" native-type="submit">提交</van-button>
+            </div>
+        </van-form>
+    </van-dialog>
     <van-dialog v-model="edit_supplier_show" title="新增供应商" :showConfirmButton="false" closeOnClickOverlay>
         <van-form @submit="edit_supplier">
             <van-field v-model="focus_supplier.name" :disabled="!cur_opt_add" label="公司名称" placeholder="请输入公司名" :rules="[{ required: true, message: '请填写公司名' }]" />
@@ -92,20 +116,60 @@ export default {
     data: function () {
         return {
             cur_opt_add: true,
+            new_cus_stuff: {
+                stuff_name: '',
+                unit_name: ''
+            },
             focus_supplier: {
                 name: '',
                 reserves: '',
                 max_vichele: '',
-                bound_stuff_name:''
+                bound_stuff_name: ''
             },
             edit_supplier_show: false,
             all_suppliers: [],
             show_add_except: false,
             new_except: '',
             all_except: [],
+            show_cus_stuff: false,
+            all_cust_unit: [],
         };
     },
     methods: {
+        del_cust_unit: function (_cust_stuff) {
+            var vue_this = this;
+            vue_this.$dialog.confirm({
+                title: '删除',
+                message: '确定删除 ' + _cust_stuff.stuff_name + ' 自定义单位吗？',
+            }).then(() => {
+                vue_this.$call_remote_process("vichele_management", "del_cust_unit", [vue_this.$cookies.get('pa_ssid'), _cust_stuff.id]).then(function () {
+                    vue_this.$toast.success('删除成功');
+                    vue_this.init_cust_unit();
+                });
+            });
+        },
+        init_cust_unit: function () {
+            var vue_this = this;
+            vue_this.$call_remote_process("vichele_management", "get_cust_unit", [vue_this.$cookies.get('pa_ssid')]).then(function (resp) {
+                vue_this.all_cust_unit = [];
+                resp.forEach((element, index) => {
+                    vue_this.$set(vue_this.all_cust_unit, index, element);
+                });
+            });
+        },
+        add_cus_stuff: function () {
+            var vue_this = this;
+            vue_this.$call_remote_process("vichele_management", "add_cust_unit", [vue_this.$cookies.get('pa_ssid'), vue_this.new_cus_stuff.unit_name, vue_this.new_cus_stuff.stuff_name]).then(function (resp) {
+                if (resp) {
+                    vue_this.show_cus_stuff = false;
+                    vue_this.new_cus_stuff = {
+                        stuff_name: '',
+                        unit_name: ''
+                    };
+                    vue_this.init_cust_unit();
+                }
+            });
+        },
         add_except: function () {
             var vue_this = this;
             vue_this.$call_remote_process("vichele_management", "add_exception", [vue_this.$cookies.get('pa_ssid'), vue_this.new_except]).then(function (resp) {
@@ -190,6 +254,7 @@ export default {
     beforeMount: function () {
         this.init_supplier();
         this.init_except();
+        this.init_cust_unit();
     }
 }
 </script>

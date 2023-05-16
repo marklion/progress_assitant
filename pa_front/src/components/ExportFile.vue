@@ -56,6 +56,7 @@ export default {
                             vue_this.$toast("邮件已发送");
                         }
                     });
+                    vue_this.ask_email_diag = false;
                 });
             });
         },

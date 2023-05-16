@@ -55,7 +55,7 @@
                 <div class="vichele_show" v-for="(single_vichele, index) in new_vichele" :key="index" ref="new_vichele">
                     <history-input search_key="main_vichele_number" v-model="single_vichele.main_vichele_number" :formatter="convert_bigger" :rules="[{ required: true, message: '请填写车牌号' }, {pattern: vichele_number_patten, message: '请填写正确的车牌号'}]"></history-input>
                     <history-input search_key="behind_vichele_number" v-model="single_vichele.behind_vichele_number" :formatter="convert_bigger" :rules="[{validator:have_to_have_gua, message: '请输入正确挂车'}]"></history-input>
-                    <van-field v-model="single_vichele.count" type="number" name="重量" label="重量（吨）" placeholder="重量" :rules="[{ required: true, message: '请填写重量' }]" />
+                    <van-field v-model="single_vichele.count" type="number" name="发货量" label="发货量" placeholder="发货量" :rules="[{ required: true, message: '请填写发货量' }]" />
                     <history-input search_key="comment" v-model="single_vichele.comment"></history-input>
                     <history-input search_key="driver_name" v-model="single_vichele.driver_name" :rules="[{ required: true, message: '请填写司机姓名' }]"></history-input>
                     <history-input search_key="driver_id" v-model="single_vichele.driver_id" :rules="[{ required: true, message: '请填写司机身份证' }, {pattern:/^[1-9]\d{5}(18|19|20|(3\d))\d{2}((0[1-9])|(1[0-2]))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$/, message:'请输入正确的身份证'}]"></history-input>
@@ -87,8 +87,8 @@
                             <div v-if="item.behind_vichele_number">{{item.behind_vichele_number}}</div>
                         </template>
                         <div>单价:{{item.price}}</div>
-                        <div>发货净重{{item.count}}吨</div>
-                        <div v-if="item.status == 2">收货净重{{item.j_weight}}吨</div>
+                        <div>发货量{{item.count}}{{item.stuff_unit}}</div>
+                        <div v-if="item.status == 2">收货量{{item.j_weight}}{{item.stuff_unit}}</div>
                         <div v-if="item.comment">备注：{{item.comment}}</div>
                         <template #right-icon>
                             <div class="opt_button_show" v-if="item.status == 0 || item.status != 2">
@@ -132,7 +132,7 @@
                     <history-input search_key="behind_vichele_number" v-model="vichele_update_info.behind_vichele_number" :formatter="convert_bigger" :rules="[{validator:have_to_have_gua, message: '请输入正确挂车'}]"></history-input>
                     <history-input search_key="stuff_name" v-model="vichele_update_info.stuff_name" :rules="[{ required: true, message: '请填写货物名称' }]"></history-input>
                     <van-field v-model="vichele_update_info.price" label="单价" type="number" placeholder="请输入货品单价" :rules="[{ required: true, message: '请填写货品单价' }]" />
-                    <van-field v-model="vichele_update_info.count" type="number" name="重量" label="重量（吨）" placeholder="重量" :rules="[{ required: true, message: '请填写重量' }]" />
+                    <van-field v-model="vichele_update_info.count" type="number" name="发货量" label="发货量" placeholder="发货量" :rules="[{ required: true, message: '请填发货量' }]" />
                     <history-input search_key="comment" v-model="vichele_update_info.comment"></history-input>
                     <div style="margin: 16px;">
                         <van-button round block type="info" native-type="submit">提交</van-button>

@@ -3,6 +3,13 @@
 #include <iostream>
 #include <sqlite3.h>
 static tdf_log g_log("sql_execute");
+static void profile_callback(void* data, const char* query, sqlite3_uint64 time) {
+    auto sec = time/1000/1000;
+    if (sec > 1)
+    {
+        g_log.log("Query: %s\nTime: %llu s\n", query, sec);
+    }
+}
 extern bool execute_sql_cmd(const std::string &_sql_cmd, const std::string &_sql_file, std::vector<std::map<std::string, std::string>> *_ret)
 {
     static sqlite3 *db = nullptr;
@@ -32,6 +39,7 @@ extern bool execute_sql_cmd(const std::string &_sql_cmd, const std::string &_sql
             return 1; },
             (void *)(_sql_cmd.c_str()));
         char *errmsg = nullptr;
+        sqlite3_profile(db, profile_callback, nullptr);
         if (0 == sqlite3_exec(
             db, _sql_cmd.c_str(),
             [](void *_pQA, int argc, char **argv, char **_col) -> int
@@ -94,7 +102,6 @@ extern bool execute_sql_cmd(const std::string &_sql_cmd, const std::string &_sql
             {
                 output_log.append("success");
             }
-            g_log.log(output_log);
         }
         if (nullptr != errmsg)
         {

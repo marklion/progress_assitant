@@ -711,6 +711,7 @@ public:
     std::string attach_path;
     int upload_no_permit = 1;
     std::string ticket_no;
+    std::string manual_operator;
     pa_sql_vichele_stay_alone()
     {
         add_parent_type<pa_sql_silent_user>("created_by");
@@ -746,6 +747,7 @@ public:
         ret.push_back(sqlite_orm_column("attach_path", sqlite_orm_column::STRING, &attach_path));
         ret.push_back(sqlite_orm_column("upload_no_permit", sqlite_orm_column::INTEGER, &upload_no_permit));
         ret.push_back(sqlite_orm_column("ticket_no", sqlite_orm_column::STRING, &ticket_no));
+        ret.push_back(sqlite_orm_column("manual_operator", sqlite_orm_column::STRING, &manual_operator));
 
         return ret;
     }
@@ -1343,6 +1345,29 @@ public:
     {
         return "dc_status";
     }
+};
+class pa_sql_cus_stuff : public sql_tree_base
+{
+public:
+    std::string stuff_name;
+    std::string unit_name;
+    pa_sql_cus_stuff()
+    {
+        add_parent_type<pa_sql_company>("belong_company");
+    }
+    virtual std::vector<sqlite_orm_column> self_columns_defined()
+    {
+        std::vector<sqlite_orm_column> ret;
+        ret.push_back(sqlite_orm_column("stuff_name", sqlite_orm_column::STRING, &stuff_name));
+        ret.push_back(sqlite_orm_column("unit_name", sqlite_orm_column::STRING, &unit_name));
+
+        return ret;
+    }
+    virtual std::string table_name()
+    {
+        return "cus_stuff_table";
+    }
+    static std::string get_unit_name(const std::string &_stuff_name, pa_sql_company &_company);
 };
 
 bool sec_check_all_confirmed(pa_sql_company &_company, const std::string &_driver_phone, const std::string &_mv, const std::string &_bv);
