@@ -228,7 +228,7 @@ public:
         sql_cmd.pop_back();
         sql_cmd.append(");");
 
-        sql_cmd.append("SELECT last_insert_rowid() from " + table_name() + ";");
+        sql_cmd.append("SELECT last_insert_rowid() from " + table_name() + " LIMIT 10;");
         // execute sql and return
 
         std::vector<std::map<std::string,std::string>> pri_id_ret;

@@ -886,3 +886,14 @@ bool sec_check_all_confirmed(pa_sql_company &_company, const std::string &_drive
 
     return ret;
 }
+std::string pa_sql_cus_stuff::get_unit_name(const std::string &_stuff_name, pa_sql_company &_company)
+{
+    std::string ret = "吨";
+    auto stuff_unit = _company.get_children<pa_sql_cus_stuff>("belong_company", "stuff_name == '%s'", _stuff_name.c_str());
+    if (stuff_unit)
+    {
+        ret = stuff_unit->unit_name;
+    }
+
+    return ret;
+}

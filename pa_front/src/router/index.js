@@ -284,7 +284,34 @@ const routes = [
       has_go_back: true,
       extra_page: false,
     },
-  },
+  },{
+    path: '/pri_login',
+    name: 'PriLogin',
+    component: () => import('../views/PriLogin.vue'),
+    meta: {
+      private_title: '内部登录',
+      has_go_back: true,
+      extra_page: false,
+    },
+  },{
+    path: '/buy_vehicle_count',
+    name: 'BuyVehicleCount',
+    component: () => import('../views/BuyVehicleCount.vue'),
+    meta: {
+      private_title: '采购计量',
+      has_go_back: true,
+      extra_page: false,
+    },
+  }, {
+    path: '/buy_brief',
+    name: 'BuyBrief',
+    component: () => import('../views/BuyBrief.vue'),
+    meta: {
+      private_title: '采购统计',
+      has_go_back: true,
+      extra_page: false,
+    },
+  }
 ]
 
 const router = new VueRouter({

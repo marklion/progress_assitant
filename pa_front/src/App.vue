@@ -83,8 +83,7 @@ export default {
             var vue_this = this;
             var ssid = vue_this.$cookies.get('pa_ssid');
             var req_func = vue_this.$call_remote_process;
-            if (this.$route.meta.permit_change)
-            {
+            if (this.$route.meta.permit_change) {
                 req_func = vue_this.$call_remote_process_no_toast;
             }
             req_func('user_management', 'get_user_info', [ssid]).then(function (resp) {
@@ -103,6 +102,7 @@ export default {
                     }
                     vue_this.$call_remote_process("company_management", "get_customize", [vue_this.$store.state.userinfo.company]).then(function (resp) {
                         vue_this.$store.commit('set_sec_check', resp.need_sec_check);
+                        vue_this.$store.commit('set_need_buy_feature', resp.need_buy_feature);
                     });
                     vue_this.$call_remote_process("company_management", 'get_third_info', [vue_this.$cookies.get('pa_ssid')]).then(function (resp) {
                         vue_this.$store.commit('set_zc_rpc_url', resp.zc_rpc_url);

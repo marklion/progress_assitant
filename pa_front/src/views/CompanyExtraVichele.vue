@@ -38,8 +38,8 @@
                         <div>{{single_vichele.behind_vichele_number}}</div>
                     </template>
                     <div>单价：{{single_vichele.price}}</div>
-                    <div>发货净重：{{single_vichele.count}}吨</div>
-                    <div v-if="single_vichele.status == 2">收货净重：{{single_vichele.j_weight}}吨</div>
+                    <div>发货量：{{single_vichele.count}}{{single_vichele.stuff_unit}}</div>
+                    <div v-if="single_vichele.status == 2">收货量：{{single_vichele.j_weight}}{{single_vichele.stuff_unit}}</div>
                     <div v-if="single_vichele.comment">备注：{{single_vichele.comment}}</div>
                     <div v-if="single_vichele.repeated">
                         <van-tag plain type="warning">多次进厂</van-tag>
@@ -52,9 +52,6 @@
                 </van-cell>
                 <van-divider>司机信息</van-divider>
                 <van-cell :title="single_vichele.driver_name" :value="single_vichele.driver_phone" :label="single_vichele.driver_id" center>
-                    <template #right-icon>
-                        <van-button size="small" type="danger" v-if="single_vichele.driver_silent_id" @click="reset_driver_info(single_vichele.driver_silent_id)">重置信息</van-button>
-                    </template>
                 </van-cell>
                 <div class="extra_info_show">
                     <van-row type="flex" align="center" :gutter="10">

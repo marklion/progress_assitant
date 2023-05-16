@@ -1155,6 +1155,7 @@ public:
                 company_customize_config.Get("need_balance_auto_change", _return.need_balance_auto_change);
                 company_customize_config.Get("need_sec_check", _return.need_sec_check);
                 company_customize_config.Get("need_reg_sec_pal", _return.need_reg_sec_pal);
+                company_customize_config.Get("need_buy_feature", _return.need_buy_feature);
                 break;
             }
         }
@@ -1166,6 +1167,7 @@ public:
         need_balance_auto_change,
         need_sec_check,
         need_reg_sec_pal,
+        need_buy_feature,
     };
     bool company_customize_need(const std::string &_company_name, company_customize_need_en _need)
     {
@@ -1190,6 +1192,8 @@ public:
         case need_reg_sec_pal:
             ret = tmp.need_reg_sec_pal;
             break;
+        case need_buy_feature:
+            ret = tmp.need_buy_feature;
         default:
             break;
         }

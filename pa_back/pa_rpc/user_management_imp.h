@@ -502,6 +502,35 @@ public:
             Base64::Encode(pla_number, &_return);
         }
     }
+
+    virtual void query_ssid_by_phone(std::string &_return, const std::string &phone, const std::string &password)
+    {
+        auto user = sqlite_orm::search_record<pa_sql_userinfo>("phone = '%s'", phone.c_str());
+        //if user not exist, return
+        if (!user)
+        {
+            PA_RETURN_MSG("用户不存在");
+        }
+        // find login info if not exist, create one
+        auto login_info = user->get_children<pa_sql_userlogin>("online_user");
+        if (!login_info)
+        {
+            pa_sql_userlogin tmp;
+            tmp.set_parent(*user, "online_user");
+            login_info.reset(new pa_sql_userlogin(tmp));
+            //generate ssid
+            login_info->ssid = PA_DATAOPT_gen_ssid();
+            //set expire time
+            login_info->insert_record();
+        }
+        if (!login_info)
+        {
+            PA_RETURN_MSG("用户已过期");
+        }
+        login_info->timestamp = time(nullptr) / 3600;
+        login_info->update_record();
+        _return = login_info->ssid;
+    }
 };
 
 #endif // _USER_MANAGEMENT_IMP_H_

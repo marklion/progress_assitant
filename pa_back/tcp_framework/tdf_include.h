@@ -38,15 +38,16 @@ class tdf_log
     void output_2_fd(const std::string &_msg, int _fd)
     {
         std::string output;
-        char time_buffer[48];
-
-        time_t now;
-        time(&now);
-        strftime(time_buffer, 48, "%Y/%m/%d %H:%M:%S", localtime(&now));
+        struct timeval tv;
+        gettimeofday(&tv, NULL);
+        char s[64];
+        strftime(s, sizeof(s), "%Y-%m-%d %H:%M:%S", localtime(&tv.tv_sec));
+        char time_buffer[128];
+        sprintf(time_buffer, "%s.%03ld",s, tv.tv_usec/1000);
 
         output.append(time_buffer);
 
-        if (m_module.length() != 0)
+            if (m_module.length() != 0)
         {
             output.append(std::string(" [") + m_module + "]");
         }
@@ -117,7 +118,8 @@ public:
         va_end(vl);
         output_2_fd(tmpbuff, m_log_stdout);
     }
-    void log_package(const char *_data, int _len) {
+    void log_package(const char *_data, int _len)
+    {
         char tmp[4] = {0};
         std::string out_log;
         for (int i = 0; i < _len; i++)
@@ -141,16 +143,20 @@ public:
     }
 };
 
-class Itdf_epoll_channel {
+class Itdf_epoll_channel
+{
     bool need_remove = false;
+
 public:
     virtual bool proc_in() = 0;
     virtual void proc_err() = 0;
     virtual bool proc_out() = 0;
-    void set_remove_flag() {
+    void set_remove_flag()
+    {
         need_remove = true;
     }
-    bool get_remove_flag() {
+    bool get_remove_flag()
+    {
         return need_remove;
     }
 };
@@ -163,9 +169,11 @@ typedef void (*tdf_timer_proc)(void *_private);
 
 typedef void (*tdf_async_proc)(void *_private, const std::string &_chrct);
 
-class tdf_main {
+class tdf_main
+{
     static tdf_main m_inst;
     tdf_main();
+
 public:
     bool open_listen(unsigned short _port, tdf_after_con_hook _con_hook, tdf_before_hup_hook _hup_hook, tdf_data_proc _data_proc);
     void close_listen(unsigned short _port);
@@ -180,6 +188,5 @@ public:
     void Async_to_mainthread(tdf_async_proc _func, void *_private, const std::string &_chrct);
     ~tdf_main();
 };
-
 
 #endif // _TDF_INCLUDE_H_

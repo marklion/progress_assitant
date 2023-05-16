@@ -230,6 +230,7 @@ public:
             if (dest_company)
             {
                 tmp.destination = dest_company->name;
+                tmp.stuff_unit = pa_sql_cus_stuff::get_unit_name(itr.stuff_name, *dest_company);
             }
             tmp.main_vichele_number = itr.main_vichele_number;
             tmp.stuff_name = itr.stuff_name;
@@ -422,6 +423,7 @@ public:
             {
                 tmp.driver_silent_id = silent_id_driver->silent_id;
             }
+            tmp.stuff_unit = pa_sql_cus_stuff::get_unit_name(itr.stuff_name, *company);
             _return.push_back(tmp);
         }
     }
@@ -1305,6 +1307,135 @@ public:
             {
                 _return = supplier->bound_stuff;
             }
+        }
+    }
+
+    virtual bool fillin_manual_count(const std::string &ssid, const int64_t vichele_id, const double manual_count)
+    {
+        auto user = PA_DATAOPT_get_online_user(ssid, true);
+        if (!user)
+        {
+            PA_RETURN_NOPRIVA_MSG();
+        }
+        auto company = user->get_parent<pa_sql_company>("belong_company");
+        if (!company)
+        {
+            PA_RETURN_NOCOMPANY_MSG();
+        }
+        auto vichele = company->get_children<pa_sql_vichele_stay_alone>("destination", "PRI_ID == %ld", vichele_id);
+        if (!vichele)
+        {
+            PA_RETURN_NOPRIVA_MSG();
+        }
+        if (vichele->is_repeated != 0 && vichele->status == 1)
+        {
+            pa_sql_vichele_stay_alone new_one(*vichele);
+            new_one.tmd_no = "";
+            if (company->get_children<pa_sql_except_stuff>("belong_company", "name == '%s'", new_one.stuff_name.c_str()))
+            {
+                new_one.no_permission = 0;
+            }
+            else
+            {
+                new_one.no_permission = 1;
+            }
+            if (company->get_children<pa_sql_gps_stuff>("belong_company", "stuff_name == '%s'", new_one.stuff_name.c_str()))
+            {
+                new_one.upload_no_permit = 1;
+            }
+            new_one.attach_path = "";
+            new_one.count = 0;
+            new_one.date = PA_DATAOPT_current_time().substr(0, 10);
+            new_one.insert_record();
+            if (new_one.company_for_select.length() > 0)
+            {
+                new_one.company_name = "";
+                new_one.update_record();
+            }
+            std::list<pa_sql_vichele_stay_alone> tmp;
+            tmp.push_back(new_one);
+            PA_DATAOPT_post_save_register(tmp);
+        }
+        vichele->j_weight = manual_count;
+        vichele->status = 2;
+        vichele->manual_operator = user->name;
+        vichele->m_time = PA_DATAOPT_current_time();
+        return vichele->update_record();
+    }
+
+    virtual void export_buy_data(std::string &_return, const std::string &ssid, const std::string &begin_date, const std::string &end_date)
+    {
+        auto company = PA_DATAOPT_get_company_by_ssid(ssid);
+        if (!company)
+        {
+            PA_RETURN_NOCOMPANY_MSG();
+        }
+        auto all_data = company->get_all_children<pa_sql_vichele_stay_alone>("destination", "date(m_time) >= date('%s') AND date(m_time) <= date('%s') AND status == 2", begin_date.c_str(), end_date.c_str());
+        auto file_name = company->name + "_" + begin_date + "_" + end_date + ".csv";
+        std::ofstream ofs("/dist/logo_res/" + file_name);
+        ofs << "日期,货物名称,供应商,车牌号,司机,卸车量,单价,总价" << std::endl;
+        for (auto &itr : all_data)
+        {
+            ofs << itr.m_time << "," << itr.stuff_name << "," << itr.company_name << "," << itr.main_vichele_number << "," << itr.driver_name << "," << itr.j_weight << "," << itr.price << "," << itr.j_weight * itr.price << std::endl;
+        }
+        ofs.close();
+
+        _return = file_name;
+    }
+
+    virtual bool add_cust_unit(const std::string &ssid, const std::string &unit_name, const std::string &stuff_name)
+    {
+        bool ret = false;
+
+        auto company = PA_DATAOPT_get_company_by_ssid(ssid);
+        if (!company)
+        {
+            PA_RETURN_NOCOMPANY_MSG();
+        }
+        auto exist_record = company->get_children<pa_sql_cus_stuff>("stuff_name == '%s'", stuff_name.c_str());
+        if (exist_record)
+        {
+            exist_record->unit_name = unit_name;
+            ret = exist_record->update_record();
+        }
+        else
+        {
+            pa_sql_cus_stuff new_one;
+            new_one.stuff_name = stuff_name;
+            new_one.unit_name= unit_name;
+            new_one.set_parent(*company, "belong_company");
+            ret = new_one.insert_record();
+        }
+
+        return ret;
+    }
+    virtual void get_cust_unit(std::vector<cust_unit_name> &_return, const std::string &ssid)
+    {
+        auto company = PA_DATAOPT_get_company_by_ssid(ssid);
+        if (company)
+        {
+            auto all_data = company->get_all_children<pa_sql_cus_stuff>("belong_company");
+            for (auto &itr : all_data)
+            {
+                cust_unit_name tmp;
+                tmp.stuff_name = itr.stuff_name;
+                tmp.unit_name = itr.unit_name;
+                tmp.id = itr.get_pri_id();
+                _return.push_back(tmp);
+            }
+        }
+    }
+    virtual void del_cust_unit(const std::string &ssid, const int64_t id)
+    {
+        auto company = PA_DATAOPT_get_company_by_ssid(ssid);
+        if (!company)
+        {
+            PA_RETURN_NOCOMPANY_MSG();
+        }
+        auto exist_record = company->get_children<pa_sql_cus_stuff>("belong_company", "PRI_ID == %ld", id);
+        if (exist_record)
+        {
+            exist_record->remove_record();
         }
     }
 };
