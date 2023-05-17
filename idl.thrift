@@ -236,6 +236,7 @@ service company_management {
     list<wtsr_dc_status> get_dc_status(1:string ssid) throws (1:gen_exp e),
     bool add_dc_device(1:string ssid, 2:string name, 3:string mac) throws (1:gen_exp e),
     void del_dec_device(1:string ssid, 2:i64 id) throws (1:gen_exp e),
+    string export_driver_info(1:string ssid) throws (1:gen_exp e),
 }
 
 struct bidding_customer{

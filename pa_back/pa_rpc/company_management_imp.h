@@ -1830,5 +1830,73 @@ public:
             exist_record->remove_record();
         }
     }
+
+    virtual void export_driver_info(std::string &_return, const std::string &ssid)
+    {
+        auto company = PA_DATAOPT_get_company_by_ssid(ssid);
+        if (!company || !company->is_sale)
+        {
+            PA_RETURN_NOCOMPANY_MSG();
+        }
+        std::list<pa_sql_driver> related_driver;
+        auto related_vehicle = sqlite_orm::search_record_all<pa_sql_archive_vichele_plan>("PRI_ID != 0 GROUP BY driver_phone");
+        for (auto &v_itr : related_vehicle)
+        {
+            auto related_plan = v_itr.get_parent<pa_sql_archive_plan>("belong_plan");
+            if (related_plan && related_plan->sale_company == company->name)
+            {
+                auto driver = sqlite_orm::search_record<pa_sql_driver>("phone == '%s' AND silent_id != '' AND silent_id IS NOT NULL", v_itr.driver_phone.c_str());
+                if (driver)
+                {
+                    related_driver.push_back(*driver);
+                }
+            }
+        }
+        auto lrs = company->get_all_children<pa_sql_license_require>("belong_company");
+        std::string table_head = "姓名,电话,身份证,";
+        for (auto &itr : lrs)
+        {
+            if (itr.use_for == 0)
+            {
+                table_head += itr.name + "内容,";
+                table_head += itr.name + "附件,";
+            }
+        }
+        table_head.pop_back();
+        table_head.append("\n");
+        for (auto &itr : related_driver)
+        {
+            std::string tmp;
+            tmp += itr.name + ",";
+            tmp += itr.phone + ",";
+            tmp += itr.driver_id + ",";
+            for (auto &l_itr : lrs)
+            {
+                if (l_itr.use_for == 0)
+                {
+                    auto lr_content = l_itr.get_children<pa_sql_sec_check_data>("belong_lr", "related_info == '%s'", itr.phone.c_str());
+                    if (lr_content)
+                    {
+                        tmp += lr_content->input_content + ",";
+                        tmp += "https://www.d8sis.cn/pa_web" + lr_content->attachment_path + ",";
+                    }
+                    else
+                    {
+                        tmp += ",";
+                        tmp += ",";
+                    }
+                }
+            }
+            tmp.pop_back();
+            tmp.append("\n");
+            table_head += tmp;
+        }
+
+        auto file_name = company->name + "_司机台账_" + std::to_string(time(nullptr)) + ".csv";
+        std::ofstream ofs("/dist/logo_res/" + file_name);
+        ofs << table_head;
+        ofs.close();
+        _return = file_name;
+    }
 };
 #endif // _COMPANY_MANAGEMENT_IMP_H_

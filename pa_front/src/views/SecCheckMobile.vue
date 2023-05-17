@@ -76,10 +76,11 @@
                     </template>
                 </van-swipe-cell>
                 <template #title>
-                    <van-row>
-                        <van-col :span="20">安检项目</van-col>
-                        <van-col :span="4">
-                            <van-button type="primary" @click="add_item_diag = true" size="small">新增</van-button>
+                    <van-row type="flex" justify="space-between">
+                        <van-col :span="15">安检项目</van-col>
+                        <van-col :span="9">
+                            <van-button type="primary" @click="add_item_diag = true" size="mini">新增</van-button>
+                            <van-button type="info" @click="export_driver_info" size="mini">导出司机台账</van-button>
                         </van-col>
                     </van-row>
                 </template>
@@ -121,6 +122,8 @@
     <van-dialog @close="handleCurrentChange(saved_cur_row)" get-container="body" show-cancel-button cancel-button-text="关闭" v-model="sec_check_diag_show" title="安检" closeOnClickOverlay :showConfirmButton="false">
         <sec-check-cell :lr="edit_lr" :mv="sec_check_mv" :bv="sec_check_bv" :driver="sec_check_driver"></sec-check-cell>
     </van-dialog>
+
+    <export-file :remote_file="exported_file" v-model="show_finish_diag"></export-file>
 </div>
 </template>
 
@@ -135,13 +138,17 @@ Vue.use(ElementUI);
 
 import SecCheckCell from '@/components/SecCheckCell'
 import PinyinMatch from 'pinyin-match';
+import ExportFile from '../components/ExportFile.vue'
 export default {
     name: "SecCheckMobile",
     components: {
         "sec-check-cell": SecCheckCell,
+        "export-file": ExportFile
     },
     data: function () {
         return {
+            exported_file: "",
+            show_finish_diag: false,
             sec_check_mv: '',
             sec_check_bv: '',
             sec_check_driver: '',
@@ -250,6 +257,13 @@ export default {
         },
     },
     methods: {
+        export_driver_info: function () {
+            var vue_this = this;
+            vue_this.$call_remote_process("company_management", "export_driver_info", [vue_this.$cookies.get("pa_ssid")]).then(res => {
+                vue_this.exported_file = vue_this.$remote_url + '/logo_res/' + res;
+                vue_this.show_finish_diag = true;
+            });
+        },
         edit_scd: function (_lcd_info, _vehicle_info) {
             this.edit_lr = _lcd_info;
             this.sec_check_mv = _vehicle_info.main_vehicle_number;
