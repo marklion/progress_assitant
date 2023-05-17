@@ -655,7 +655,7 @@ std::string PA_DATAOPT_search_base_id_info_by_name(const std::string &name, cons
 {
     std::string ret;
 
-    auto base_info = _company.get_children<pa_sql_base_info>("belong_company", "name == '%s' AND type == '%s'", name.c_str(), type.c_str());
+    auto base_info = _company.get_children<pa_sql_base_info>("belong_company", "name == '%s'", name.c_str());
     if (base_info)
     {
         ret = base_info->id;
