@@ -76,5 +76,6 @@ bool PA_DATAOPT_get_price_timer(pa_sql_stuff_info &_stuff, std::string &expired_
 void PA_UTILS_post_json_to_third(const std::string &url, const std::string &json, const std::string &key, const std::string &token, proc_third_ret callback = nullptr);
 
 void PA_DATAOPT_deliver_event_deliver(pa_sql_single_vichele &_single_vehicle);
+std::vector<std::string> PA_DATAOPT_split(const std::string &str, const std::string &pattern);
 
 #endif // _PA_UTILS_H_

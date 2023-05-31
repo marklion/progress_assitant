@@ -78,6 +78,13 @@
                     </van-row>
                 </div>
                 <van-cell v-if="single_vichele.status == 2" title="查看磅单" :to="{name:'Ticket', params:{id:single_vichele.id + 'B'}}"></van-cell>
+                <van-divider>附件</van-divider>
+                <van-grid :border="false" :column-num="3">
+                    <van-grid-item v-for="(single_path, index) in single_vichele.scale_attach" :key="index">
+                        <van-image :src="$remote_url + single_path" @click="preview_scale_attach(single_vichele, index)" />
+                    </van-grid-item>
+
+                </van-grid>
             </div>
         </van-list>
     </van-checkbox-group>
@@ -176,6 +183,9 @@ import {
 import {
     NoticeBar
 } from 'vant';
+import {
+    ImagePreview
+} from 'vant';
 
 Vue.use(NoticeBar);
 Vue.use(Tab);
@@ -273,6 +283,16 @@ export default {
         },
     },
     methods: {
+        preview_scale_attach: function (_vichele, _index) {
+            var p_url = [];
+            _vichele.scale_attach.forEach(element => {
+                p_url.push(this.$remote_url + element);
+            });
+            ImagePreview({
+                images: p_url,
+                startPosition: _index,
+            });
+        },
         reset_driver_info: function (_silent_id) {
             var vue_this = this;
             vue_this.$call_remote_process("stuff_plan_management", "driver_silent_reset", [vue_this.$cookies.get('pa_ssid'), _silent_id]).then(function () {

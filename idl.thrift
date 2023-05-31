@@ -738,6 +738,7 @@ struct vichele_stay_alone {
     25:bool upload_permit,
     26:string driver_silent_id,
     27:string stuff_unit,
+    28:list<string> scale_attach,
 }
 
 struct silent_user_info {
@@ -827,6 +828,9 @@ service vichele_management {
     bool add_cust_unit(1:string ssid, 2:string unit_name, 3:string stuff_name) throws (1:gen_exp e),
     list<cust_unit_name> get_cust_unit(1:string ssid) throws (1:gen_exp e),
     void del_cust_unit(1:string ssid, 2:i64 id) throws (1:gen_exp e),
+    bool add_scale_attach(1:string ssid, 2:i64 vichele_id, 3:string scale_attach) throws (1:gen_exp e),
+    bool del_scale_attach(1:string ssid, 2:i64 vichele_id, 3:string scale_attach) throws (1:gen_exp e),
+    list<string> get_scale_attach(1:string ssid, 2:i64 vichele_id) throws (1:gen_exp e),
 }
 struct device_status {
     1:string name,
