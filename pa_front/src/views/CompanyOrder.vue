@@ -5,7 +5,7 @@
             <van-row type="flex" justify="center" align="center">
                 <van-col :span="20">
                     <van-dropdown-menu>
-                        <van-dropdown-item v-model="date_filter" :options="date_option" @close="recheck_list" />
+                        <van-dropdown-item v-model="date_filter" :options="date_option" @close="recheck_list" @change="date_filter_change" />
                         <van-dropdown-item v-model="cancel_filter" :options="cancel_option" @change="recheck_list" />
                     </van-dropdown-menu>
                     <van-dropdown-menu>
@@ -72,6 +72,9 @@
     </van-dialog>
 
     <export-file :remote_file="download_url" v-model="show_export_file"></export-file>
+    <van-popup v-model="manual_spec_date_show" position="bottom">
+        <van-datetime-picker type="date" @confirm="manual_spec_date" @cancel="manual_spec_date_show = false" />
+    </van-popup>
 </div>
 </template>
 
@@ -126,6 +129,8 @@ export default {
     name: 'CompanyOrder',
     data: function () {
         return {
+            manual_spec_date_value: '',
+            manual_spec_date_show: false,
             download_url: '',
             show_export_file: false,
             show_export: false,
@@ -168,6 +173,9 @@ export default {
             }, {
                 text: '本周进厂',
                 value: 3
+            }, {
+                text: '选择日期',
+                value: 4
             }],
             stuff_type_option: [{
                 text: '所有货品',
@@ -236,7 +244,7 @@ export default {
             var filter_ret = [];
             var filter_begin = 0;
             var filter_end = 0
-            if (vue_this.date_filter == 0) {
+            if (vue_this.date_filter == 0 || vue_this.date_filter == 4) {
                 filter_ret = ret;
             } else {
                 ret.forEach((element) => {
@@ -313,6 +321,18 @@ export default {
         "export-file": ExportFile,
     },
     methods: {
+        manual_spec_date: function (_date) {
+            this.manual_spec_date_value = this.formatDateTime(_date);
+            this.manual_spec_date_show = false;
+            this.recheck_list();
+        },
+        date_filter_change: function (_value) {
+            if (_value == 4) {
+                this.manual_spec_date_show = true;
+            } else {
+                this.manual_spec_date_value = "";
+            }
+        },
         proc_select: function () {
             this.item_selected();
             if (this.item_need_export.length > 0) {
@@ -358,7 +378,7 @@ export default {
         search_plan_by_vichele_number: function () {
             var vue_this = this;
             vue_this.search_result = [];
-            vue_this.$call_remote_process("stuff_plan_management", "search_plan_by_vichele_number", [vue_this.$cookies.get('pa_ssid'), vue_this.vichele_number_search]).then(function (resp) {
+            vue_this.$call_remote_process("stuff_plan_management", "search_plan_by_vichele_number", [vue_this.$cookies.get('pa_ssid'), vue_this.vichele_number_search, vue_this.manual_spec_date_value]).then(function (resp) {
                 resp.forEach((element, index) => {
                     vue_this.$set(vue_this.search_result, index, element);
                 });
@@ -393,6 +413,9 @@ export default {
             var req_date_string = vue_this.formatDateTime(req_date);
             if (vue_this.date_filter == 0 || vue_this.date_filter == 3) {
                 req_date_string = "";
+            }
+            if (vue_this.manual_spec_date_value != "") {
+                req_date_string = vue_this.manual_spec_date_value;
             }
 
             vue_this.$call_remote_process("stuff_plan_management", func, [vue_this.$cookies.get('pa_ssid'), vue_this.orders.length, vue_this.status_name_map[vue_this.active].status, stuff_name, company_search, req_date_string]).then(function (resp) {

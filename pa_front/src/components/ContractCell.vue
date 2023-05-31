@@ -29,7 +29,7 @@
             <template #title>
                 <van-tag v-if="has_author" mark type="success">已授权</van-tag>
                 <van-tag v-else type="danger" mark>未授权</van-tag>
-                {{creator_phone}}
+                <a :href="'tel:'+creator_phone">{{ creator_phone }}</a>
             </template>
             <van-button v-if="!has_author" size="mini" type="primary" @click="author_user(true)">授权</van-button>
             <van-button v-else type="danger" size="mini" @click="author_user(false)">取消授权</van-button>
@@ -179,7 +179,7 @@ export default {
         },
     },
     watch: {
-        "creator_phone":function() {
+        "creator_phone": function () {
             this.init_author();
         },
         "a_side": function () {

@@ -69,7 +69,9 @@
                     <div class="vichele_index_show">{{index + 1}}</div>
                 </template>
                 <van-cell title="司机" :value="single_vichele.driver_name"></van-cell>
-                <van-cell title="电话" :value="single_vichele.driver_phone"></van-cell>
+                <van-cell title="电话">
+                    <a :href="'tel:'+single_vichele.driver_phone">{{ single_vichele.driver_phone }}</a>
+                </van-cell>
                 <van-cell v-if="single_vichele.finish" title="提货时间" :value="single_vichele.deliver_timestamp"></van-cell>
                 <van-cell title="卸车地" :value="single_vichele.drop_address"></van-cell>
                 <van-cell title="用途" :value="single_vichele.use_for"></van-cell>
@@ -193,7 +195,7 @@ export default {
                 status: 0,
                 vichele_info: [],
                 sale_company: '',
-                creator_phone:'',
+                creator_phone: '',
             },
             plan_owner_info: {
                 name: '',

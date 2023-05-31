@@ -1834,7 +1834,7 @@ public:
         this->export_plan(_return, ssid, plan_ids);
     }
 
-    virtual void search_plan_by_vichele_number(std::vector<vichele_search_result> &_return, const std::string &ssid, const std::string &vichele_number)
+    virtual void search_plan_by_vichele_number(std::vector<vichele_search_result> &_return, const std::string &ssid, const std::string &vichele_number, const std::string &enter_date)
     {
         auto main_vichele = sqlite_orm::search_record_all<pa_sql_vichele>("number LIKE '%%%s%%'", vichele_number.c_str());
         auto behind_vichele = sqlite_orm::search_record_all<pa_sql_vichele_behind>("number LIKE '%%%s%%'", vichele_number.c_str());
@@ -1850,6 +1850,10 @@ public:
         }
         auto current_time = PA_DATAOPT_current_time();
         auto date_only = current_time.substr(0, 10);
+        if (enter_date.length() > 0)
+        {
+            date_only = enter_date;
+        }
         auto plan_scope = PA_RPC_get_all_plans_related_by_user(ssid, "(status < 4 OR plan_time LIKE '%s%%')", date_only.c_str());
         std::string plan_filter = "belong_plan_ext_key = 0";
         for (auto &itr : plan_scope)
