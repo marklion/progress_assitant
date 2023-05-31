@@ -24,7 +24,9 @@
             </div>
         </template>
     </van-cell>
-    <van-cell :title="vq_node.driver_name" :value="vq_node.driver_phone">
+    <van-cell :title="vq_node.driver_name">
+
+        <a :href="'tel:'+vq_node.driver_phone">{{ vq_node.driver_phone}}</a>
         <template #label>
             <div>{{vq_node.stuff_name}}</div>
             <div>排号时间：{{vq_node.check_in_time}}</div>
@@ -102,7 +104,7 @@ export default {
                 this.do_confirm(is_confirm);
             }
         },
-        xy_confirm:function () {
+        xy_confirm: function () {
             this.seal_no = "正在泄压";
             this.do_confirm(true);
         },

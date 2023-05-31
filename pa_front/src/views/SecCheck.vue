@@ -47,7 +47,7 @@
                 </el-table-column>
                 <el-table-column label="司机">
                     <template slot-scope="scope">
-                        {{scope.row.vichele.driver_name}}-{{scope.row.vichele.driver_phone}}
+                        <a :href="'tel:'+scope.row.vichele.driver_phone">{{scope.row.vichele.driver_name}}-{{scope.row.vichele.driver_phone}}</a>
                     </template>
                 </el-table-column>
             </el-table>

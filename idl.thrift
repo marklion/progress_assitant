@@ -498,7 +498,7 @@ service stuff_plan_management {
     bool plan_created_by_user(1:string ssid, 2:i64 plan_id) throws (1:gen_exp e),
     string export_plan_by_plan_date(1:string ssid, 2:string plan_date, 3:string create_date) throws (1:gen_exp e),
     string export_plan_by_create_date(1:string ssid, 2:i64 begin_date, 3:i64 end_date) throws (1:gen_exp e),
-    list<vichele_search_result> search_plan_by_vichele_number(1:string ssid, 2:string vichele_number) throws (1:gen_exp e),
+    list<vichele_search_result> search_plan_by_vichele_number(1:string ssid, 2:string vichele_number, 3:string enter_date) throws (1:gen_exp e),
     list<vichele_stuff_statistics> get_tomorrow_statistics(1:string ssid) throws (1:gen_exp e),
     list<company_stuff_plan_brief> get_company_brief(1:string ssid) throws (1:gen_exp e),
     bool push_user_pay(1:string ssid, 2:i64 plan_id) throws (1:gen_exp e),
