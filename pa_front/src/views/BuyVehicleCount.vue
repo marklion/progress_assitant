@@ -114,6 +114,8 @@ export default {
 
             compressAccurately(file.file, 400).then(function (res) {
                 vue_this.convert_2_base64_send(res);
+            }).catch(function (err) {
+                vue_this.$toast(err)
             });
         },
         open_count_diag: function (_vehicle) {
