@@ -712,6 +712,8 @@ public:
     int upload_no_permit = 1;
     std::string ticket_no;
     std::string manual_operator;
+    std::string scale_attach_path;
+
     pa_sql_vichele_stay_alone()
     {
         add_parent_type<pa_sql_silent_user>("created_by");
@@ -748,6 +750,7 @@ public:
         ret.push_back(sqlite_orm_column("upload_no_permit", sqlite_orm_column::INTEGER, &upload_no_permit));
         ret.push_back(sqlite_orm_column("ticket_no", sqlite_orm_column::STRING, &ticket_no));
         ret.push_back(sqlite_orm_column("manual_operator", sqlite_orm_column::STRING, &manual_operator));
+        ret.push_back(sqlite_orm_column("scale_attach_path", sqlite_orm_column::STRING, &scale_attach_path));
 
         return ret;
     }

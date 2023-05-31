@@ -21,6 +21,21 @@
 class vichele_management_handler : public vichele_managementIf
 {
 public:
+    std::vector<std::string> pri_get_scale_attach(int64_t vichel_id)
+    {
+        std::vector<std::string> ret;
+        auto vr = sqlite_orm::search_record<pa_sql_vichele_stay_alone>(vichel_id);
+        if (vr)
+        {
+            auto path = vr->scale_attach_path;
+            if (path.length() > 0)
+            {
+                path.pop_back();
+            }
+            ret = PA_DATAOPT_split(path, ";");
+        }
+        return ret;
+    }
     virtual bool create_vichele_info(const std::string &open_id, const std::vector<vichele_stay_alone> &vichele_info)
     {
         bool ret = false;
@@ -217,7 +232,7 @@ public:
         {
             defaut_key = "main_vichele_number LIKE '%" + query_key + "%' OR behind_vichele_number LIKE '%" + query_key + "%'";
         }
-        auto vichele_infos = opt_user->get_all_children<pa_sql_vichele_stay_alone>("created_by", "is_drop == 0 AND (%s) ORDER BY PRI_ID DESC LIMIT 15 OFFSET %ld", defaut_key.c_str(),ancher );
+        auto vichele_infos = opt_user->get_all_children<pa_sql_vichele_stay_alone>("created_by", "is_drop == 0 AND (%s) ORDER BY PRI_ID DESC LIMIT 15 OFFSET %ld", defaut_key.c_str(), ancher);
         for (auto &itr : vichele_infos)
         {
             auto dest_company = itr.get_parent<pa_sql_company>("destination");
@@ -247,6 +262,7 @@ public:
             tmp.m_weight = itr.m_weight;
             tmp.j_weight = itr.j_weight;
             tmp.price = itr.price;
+            tmp.scale_attach = pri_get_scale_attach(itr.get_pri_id());
             _return.push_back(tmp);
         }
     }
@@ -424,6 +440,7 @@ public:
                 tmp.driver_silent_id = silent_id_driver->silent_id;
             }
             tmp.stuff_unit = pa_sql_cus_stuff::get_unit_name(itr.stuff_name, *company);
+            tmp.scale_attach = pri_get_scale_attach(itr.get_pri_id());
             _return.push_back(tmp);
         }
     }
@@ -1345,6 +1362,7 @@ public:
             }
             new_one.attach_path = "";
             new_one.count = 0;
+            new_one.scale_attach_path = "";
             new_one.date = PA_DATAOPT_current_time().substr(0, 10);
             new_one.insert_record();
             if (new_one.company_for_select.length() > 0)
@@ -1402,7 +1420,7 @@ public:
         {
             pa_sql_cus_stuff new_one;
             new_one.stuff_name = stuff_name;
-            new_one.unit_name= unit_name;
+            new_one.unit_name = unit_name;
             new_one.set_parent(*company, "belong_company");
             ret = new_one.insert_record();
         }
@@ -1437,6 +1455,72 @@ public:
         {
             exist_record->remove_record();
         }
+    }
+
+    virtual bool add_scale_attach(const std::string &ssid, const int64_t vichele_id, const std::string &scale_attach)
+    {
+        bool ret = false;
+        auto user = PA_DATAOPT_get_online_user(ssid);
+        if (!user)
+        {
+            PA_RETURN_NOPRIVA_MSG();
+        }
+        auto vr = sqlite_orm::search_record<pa_sql_vichele_stay_alone>(vichele_id);
+        if (!vr)
+        {
+            PA_RETURN_NOPRIVA_MSG();
+        }
+        auto rid = PA_DATAOPT_gen_ssid();
+        std::string content;
+        Base64::Decode(scale_attach, &content);
+        auto path = PA_DATAOPT_store_attach_file(content, false, "scale_attach_" + std::to_string(vichele_id) + rid);
+        vr->scale_attach_path += path + ";";
+
+        ret = vr->update_record();
+
+        return ret;
+    }
+    virtual bool del_scale_attach(const std::string &ssid, const int64_t vichele_id, const std::string &scale_attach)
+    {
+        bool ret = false;
+        auto user = PA_DATAOPT_get_online_user(ssid);
+        if (!user)
+        {
+            PA_RETURN_NOPRIVA_MSG();
+        }
+        auto vr = sqlite_orm::search_record<pa_sql_vichele_stay_alone>(vichele_id);
+        if (!vr)
+        {
+            PA_RETURN_NOPRIVA_MSG();
+        }
+        auto path = vr->scale_attach_path;
+        if (path.length() > 0)
+        {
+            path.pop_back();
+        }
+        auto all_single_path = PA_DATAOPT_split(path, ";");
+        path = "";
+        for (auto &itr : all_single_path)
+        {
+            if (scale_attach != itr)
+            {
+                path += itr + ";";
+            }
+        }
+        vr->scale_attach_path = path;
+        ret = vr->update_record();
+
+        return ret;
+    }
+
+    virtual void get_scale_attach(std::vector<std::string> &_return, const std::string &ssid, const int64_t vichele_id)
+    {
+        auto user = PA_DATAOPT_get_online_user(ssid, true);
+        if (!user)
+        {
+            PA_RETURN_NOPRIVA_MSG();
+        }
+        _return = pri_get_scale_attach(vichele_id);
     }
 };
 
