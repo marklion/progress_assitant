@@ -12,6 +12,7 @@
 #include "pa_rpc_util.h"
 #include "../pa_util/pa_advance.h"
 #include "stuff_plan_management_imp.h"
+#include "stuff_info_imp.h"
 
 #define SALE_CONFIG_FILE "/conf/data_config.json"
 class company_management_handler : virtual public company_managementIf
@@ -806,6 +807,10 @@ public:
                 tmp.customer_code = itr.customer_code;
                 tmp.balance = itr.balance;
                 tmp.max_vehicle_limit = itr.max_vehicle_limit;
+                std::vector<stuff_detail> follow_stuff;
+                auto sih = stuff_info_handler();
+                sih.get_follow_stuff_by_company(follow_stuff, a_side_company->name);
+                tmp.follow_stuff = follow_stuff;
                 _return.push_back(tmp);
             }
         }

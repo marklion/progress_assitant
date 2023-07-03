@@ -260,6 +260,7 @@ public:
         bd_tmp.total_count = bp.total_count;
         bd_tmp.status = 0;
         bd_tmp.first_end_time = bp.all_status[0].end_time;
+        bd_tmp.bidding_comment = bp.bidding_comment;
         if (bd_tmp.bidding_times == 2)
         {
             bd_tmp.second_end_time = bp.all_status[1].end_time;
@@ -323,6 +324,7 @@ public:
         ret->id = _bidding.get_pri_id();
         ret->max_price = _bidding.max_price;
         ret->min_price = _bidding.min_price;
+        ret->bidding_comment = _bidding.bidding_comment;
         auto stuff = _bidding.get_parent<pa_sql_stuff_info>("belong_stuff");
         if (stuff)
         {

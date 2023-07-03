@@ -104,6 +104,7 @@ struct common_contract {
     8:string customer_code,
     9:double balance,
     10:i64 max_vehicle_limit,
+    11:list<stuff_detail> follow_stuff,
 }
 
 struct execute_record_info {
@@ -266,6 +267,7 @@ struct bidding_params {
     8:double total_count,
     9:i64 cur_status,
     10:list<bidding_status> all_status,
+    11:string bidding_comment,
 }
 
 struct price_timer_param {

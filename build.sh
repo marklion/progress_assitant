@@ -1,5 +1,5 @@
 #!/bin/bash
-
+export NODE_OPTIONS=--openssl-legacy-provider
 COMPS=("tcp_framework" "sqlite_orm" "external_src" "pa_util" "pa_rpc" "pa_automation")
 SRC_DIR=`dirname $(realpath $0)`
 BACK_SRC_DIR="${SRC_DIR}/pa_back"
