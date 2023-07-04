@@ -268,6 +268,7 @@ struct bidding_params {
     9:i64 cur_status,
     10:list<bidding_status> all_status,
     11:string bidding_comment,
+    12:string begin_time,
 }
 
 struct price_timer_param {

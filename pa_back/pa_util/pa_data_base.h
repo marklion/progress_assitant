@@ -1141,6 +1141,7 @@ public:
     long turn = 0;
     long status = 0;
     std::string end_time;
+    std::string begin_time;
     pa_sql_bidding_turn()
     {
         add_parent_type<pa_sql_bidding>("belong_bidding");
@@ -1151,6 +1152,7 @@ public:
         ret.push_back(sqlite_orm_column("turn", sqlite_orm_column::INTEGER, &turn));
         ret.push_back(sqlite_orm_column("status", sqlite_orm_column::INTEGER, &status));
         ret.push_back(sqlite_orm_column("end_time", sqlite_orm_column::STRING, &end_time));
+        ret.push_back(sqlite_orm_column("begin_time", sqlite_orm_column::STRING, &begin_time));
 
         return ret;
     }

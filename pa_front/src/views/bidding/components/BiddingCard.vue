@@ -3,7 +3,7 @@
     <van-cell :value="'总量：' + biddingInfo.total_count" :label="biddingInfo.bidding_comment">
         <template #title>
             <span class="custom-title">{{ biddingInfo.stuff_name }}</span>
-            <BiddingStatus :status="biddingInfo.cur_status"></BiddingStatus>
+            <BiddingStatus :status="biddingInfo.cur_status" :begin_time="biddingInfo.begin_time"></BiddingStatus>
         </template>
     </van-cell>
     <van-cell title="竞价区间" :value="biddingRange" :label="'保证金: ' + biddingInfo.deposit + '元'" />

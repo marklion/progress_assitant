@@ -625,6 +625,7 @@ void pa_sql_bidding::update_bidding_status()
                 tmp.status = 0;
                 tmp.turn = 2;
                 tmp.end_time = second_end_time;
+                tmp.begin_time = current_turn->begin_time;
                 tmp.set_parent(*this, "belong_bidding");
                 tmp.insert_record();
                 auto last_customer = 3;
@@ -646,7 +647,8 @@ void pa_sql_bidding::update_bidding_status()
                     }
                 }
                 auto expect_end_time = PA_DATAOPT_timestring_2_date(tmp.end_time, true);
-                if (expect_end_time > time(nullptr))
+                auto expect_begin_time = PA_DATAOPT_timestring_2_date(tmp.begin_time, true);
+                if (expect_end_time >= time(nullptr) && expect_begin_time <= time(nullptr))
                 {
                     tdf_main::get_inst().start_timer(
                         expect_end_time - time(nullptr) + 3,

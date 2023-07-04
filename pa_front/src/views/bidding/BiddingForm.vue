@@ -3,7 +3,11 @@
     <van-form validate-first @submit="onSubmit" @failed="onFailed">
         <van-field v-model="formData.stuff_name" name="stuff_name" label="竞价商品" placeholder="竞价商品名称" readonly :rules="[{ required: true, message: '请填写竞价商品名称' }]" />
         <van-field v-model="formData.total_count" type="number" name="total_count" label="商品总量" placeholder="竞价商品总供给量" :rules="[{ required: true, message: '请填写竞价商品供给总量' }]" />
-        <van-field v-model="formData.bidding_comment" type="text" name="bidding_comment" label=" 竞价备注" placeholder="请输入备注信息" />
+        <van-field v-model="formData.bidding_comment" type="text" name="bidding_comment" label="竞价备注" placeholder="请输入备注信息" />
+        <van-field v-model="formData.begin_time" type="text" name="begin_time" label="开始时间" readonly clickable placeholder="点击设定开始时间" :rules="[{ required: true, message: '请设定开始时间' }]" @click="show_begin_time = true" />
+        <van-popup v-model="show_begin_time" position="bottom">
+            <van-datetime-picker type="datetime" ref="Picker" title="选择截止时间" :min-date="new Date()" :filter="timeFilter" @confirm="confirm_begin_time" @cancel="show_begin_time = false" />
+        </van-popup>
         <van-divider content-position="left">竞价区间</van-divider>
         <van-field v-model="formData.min_price" type="number" name="min_price" label="最低价" placeholder="设置竞价下限" :rules="[{ required: true, message: '请填写接受的最低报价' }]" />
         <van-field v-model="formData.max_price" type="number" name="max_price" label="最高价" placeholder="设置竞价上限" :rules="[{ required: true, message: '请填写接受的最高报价' },{validator: validMaxPrice, message: '最高价应高于最低价'}]" />
@@ -71,6 +75,7 @@ export default {
                 customers: [],
                 deposit: 0,
                 bidding_comment: '',
+                begin_time:'',
                 total_count: undefined,
                 all_status: [{
                     end_time: moment().format('YYYY-MM-DD HH:mm:00'),
@@ -79,7 +84,8 @@ export default {
             showPicker: false,
             showCustomerPicker: false,
             allCustomers: [],
-            searchKey: ''
+            searchKey: '',
+            show_begin_time: false,
         }
     },
     computed: {
@@ -110,6 +116,7 @@ export default {
                 total_count: +this.formData.total_count,
                 all_status: this.formData.all_status,
                 bidding_comment: this.formData.bidding_comment,
+                begin_time: this.formData.begin_time,
             }
         }
     },
@@ -198,6 +205,10 @@ export default {
         onConfirmEndTime(endTime) {
             this.formData.all_status[this.editingTurn].end_time = moment(endTime).format('YYYY-MM-DD HH:mm:00')
             this.showPicker = false
+        },
+        confirm_begin_time: function (_time) {
+            this.formData.begin_time = moment(_time).format('YYYY-MM-DD HH:mm:00');
+            this.show_begin_time = false;
         },
     }
 }

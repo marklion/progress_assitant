@@ -272,6 +272,7 @@ public:
             bt_tmp.status = 0;
             bt_tmp.turn = 1;
             bt_tmp.end_time = bp.all_status[0].end_time;
+            bt_tmp.begin_time = bp.begin_time;
             bt_tmp.set_parent(bd_tmp, "belong_bidding");
             ret = bt_tmp.insert_record();
             for (auto &itr : bp.customers)
@@ -338,6 +339,7 @@ public:
             bs_tmp.status = single_turn.status;
             bs_tmp.bidding_turn = single_turn.turn;
             bs_tmp.end_time = single_turn.end_time;
+            ret->begin_time = single_turn.begin_time;
             double top_price = 0;
             std::string top_customer;
             auto all_bc = single_turn.get_all_children<pa_sql_bidding_customer>("belong_bidding_turn");
