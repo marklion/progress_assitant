@@ -487,6 +487,20 @@ public:
         {
             PA_RETURN_NOPRIVA_MSG();
         }
+        auto stuff = bidding->get_parent<pa_sql_stuff_info>("belong_stuff");
+        if (!stuff)
+        {
+            PA_RETURN_NOPRIVA_MSG();
+        }
+        auto sale_company = stuff->get_parent<pa_sql_company>("belong_company");
+        if (!sale_company)
+        {
+            PA_RETURN_NOPRIVA_MSG();
+        }
+        if (!PA_RPC_user_was_authored(ssid, sale_company->name))
+        {
+            PA_RETURN_MSG("未授权，请联系卖方授权");
+        }
         if (bidding->status == 0)
         {
             auto bt = bidding->get_children<pa_sql_bidding_turn>("belong_bidding", "status == 0");
@@ -579,7 +593,7 @@ public:
             PA_RETURN_NOPRIVA_MSG();
         }
         auto all_stuff = company->get_all_children<pa_sql_stuff_info>("belong_company");
-        for (auto &itr:all_stuff)
+        for (auto &itr : all_stuff)
         {
             price_timer_param tmp;
             if (PA_DATAOPT_get_price_timer(itr, tmp.expired_time, tmp.price))

@@ -24,8 +24,8 @@
         <van-field type="" :value="formData.customers && formData.customers.length + ' 个'" readonly is-link clickable label="参与客户" name="customers" @click="showCustomerPicker = true" :rules="[{validator: validCustomer, message: '至少要选定2家公司参与竞价'}]" placeholder="请选择可参与竞价的客户"></van-field>
         <van-popup :value="showCustomerPicker" position="bottom" closeable @click-overlay="onCloseCustomerPicker" @click-close-icon="onCloseCustomerPicker" class="customer_picker">
             <div class="button-ctn">
-                <van-button type="primary" size="small" @click="onClickCheckAll">全选</van-button>
-                <van-button type="info" size="small" @click="onClickToggleAll">反选</van-button>
+                <van-button type="primary" size="small" native-type="button" @click="onClickCheckAll">全选</van-button>
+                <van-button type="info" size="small" native-type="button" @click="onClickToggleAll">反选</van-button>
                 <van-search class="customer_name_search" @input="customerFilter" v-model="searchKey" placeholder="关键词或拼音首字母" />
             </div>
             <div class="list-ctn">
@@ -75,7 +75,7 @@ export default {
                 customers: [],
                 deposit: 0,
                 bidding_comment: '',
-                begin_time:'',
+                begin_time: '',
                 total_count: undefined,
                 all_status: [{
                     end_time: moment().format('YYYY-MM-DD HH:mm:00'),

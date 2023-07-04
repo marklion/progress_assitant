@@ -8,6 +8,7 @@ std::list<pa_sql_plan> PA_RPC_get_all_plans_related_by_user(const std::string &_
 std::unique_ptr<pa_sql_plan> PA_RPC_get_plan_related_by_user(const std::string &ssid, const char *_query, ...);
 bool PA_RPC_has_follow_stuff(const std::string &ssid, int64_t stuff_id);
 std::list<pa_sql_plan> PA_RPC_get_all_plans_related_by_company(pa_sql_company &_company, const char *_query, ...);
+bool PA_RPC_user_was_authored(const std::string &ssid, const std::string &company_name);
 
 
 #endif // _PA_RPC_UTIL_H_
