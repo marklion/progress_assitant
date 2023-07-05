@@ -312,6 +312,27 @@ public:
                 },
                 new int(bd_tmp.get_pri_id()), true);
         }
+        auto expect_begin_time = PA_DATAOPT_timestring_2_date(bp.begin_time, true);
+        if (expect_begin_time - time(nullptr) > 120)
+        {
+            tdf_main::get_inst().start_timer(
+                expect_begin_time - time(nullptr) - 120,
+                [](void *_private)
+                {
+                    auto bd_id = (int *)(_private);
+                    auto bd = sqlite_orm::search_record<pa_sql_bidding>(*bd_id);
+                    if (bd)
+                    {
+                        if (bd->status == 0)
+                        {
+                            bd->update_bidding_status();
+                            bd->send_out_wechat_msg(3);
+                        }
+                    }
+                    delete bd_id;
+                },
+                new int(bd_tmp.get_pri_id()), true);
+        }
 
         return ret;
     }

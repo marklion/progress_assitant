@@ -382,13 +382,29 @@ void PA_WECHAT_send_bidding_msg(pa_sql_userinfo &_to_user, pa_sql_bidding &_bidd
     case 2:
         title = "竞价结束";
         break;
+    case 3:
+        title = "竞价开始提醒";
+        break;
     default:
         break;
     }
 
     std::vector<std::string> keywords;
     std::string cur_status = "正在竞价";
-    if (_bidding.status == 1)
+    if (_bidding.status == 0)
+    {
+        auto now_time = time(nullptr);
+        auto bdt = _bidding.get_children<pa_sql_bidding_turn>("belong_bidding", "status == 0");
+        if (bdt)
+        {
+            auto begin_time = PA_DATAOPT_timestring_2_date(bdt->begin_time, true);
+            if (now_time < begin_time)
+            {
+                cur_status = "即将开始";
+            }
+        }
+    }
+    else if (_bidding.status == 1)
     {
         cur_status = "已结束";
     }

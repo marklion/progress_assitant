@@ -691,7 +691,7 @@ void pa_sql_bidding::update_bidding_status()
             }
         }
         update_record();
-        send_out_wechat_msg(3);
+        send_out_wechat_msg(2);
     }
 }
 
@@ -779,7 +779,7 @@ void pa_sql_bidding::send_out_wechat_msg(int _flag, const std::string &_company_
         }
         for (auto &itr : recver_list)
         {
-            PA_WECHAT_send_bidding_msg(itr, *this, _flag > 2 ? 2 : _flag);
+            PA_WECHAT_send_bidding_msg(itr, *this, _flag);
         }
     }
 }
