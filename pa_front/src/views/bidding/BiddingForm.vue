@@ -3,47 +3,36 @@
     <van-form validate-first @submit="onSubmit" @failed="onFailed">
         <van-field v-model="formData.stuff_name" name="stuff_name" label="竞价商品" placeholder="竞价商品名称" readonly :rules="[{ required: true, message: '请填写竞价商品名称' }]" />
         <van-field v-model="formData.total_count" type="number" name="total_count" label="商品总量" placeholder="竞价商品总供给量" :rules="[{ required: true, message: '请填写竞价商品供给总量' }]" />
+        <van-field v-model="formData.bidding_comment" type="text" name="bidding_comment" label="竞价备注" placeholder="请输入备注信息" />
+        <van-field v-model="formData.begin_time" type="text" name="begin_time" label="开始时间" readonly clickable placeholder="点击设定开始时间" :rules="[{ required: true, message: '请设定开始时间' }]" @click="show_begin_time = true" />
+        <van-popup v-model="show_begin_time" position="bottom">
+            <van-datetime-picker type="datetime" ref="Picker" title="选择截止时间" :min-date="new Date()" :filter="timeFilter" @confirm="confirm_begin_time" @cancel="show_begin_time = false" />
+        </van-popup>
         <van-divider content-position="left">竞价区间</van-divider>
-        <van-field v-model="formData.min_price" type="number" name="min_price" label="最低价" placeholder="设置竞价下限"
-                   :rules="[{ required: true, message: '请填写接受的最低报价' }]" />
-        <van-field v-model="formData.max_price" type="number" name="max_price" label="最高价" placeholder="设置竞价上限"
-                   :rules="[{ required: true, message: '请填写接受的最高报价' },{validator: validMaxPrice, message: '最高价应高于最低价'}]" />
+        <van-field v-model="formData.min_price" type="number" name="min_price" label="最低价" placeholder="设置竞价下限" :rules="[{ required: true, message: '请填写接受的最低报价' }]" />
+        <van-field v-model="formData.max_price" type="number" name="max_price" label="最高价" placeholder="设置竞价上限" :rules="[{ required: true, message: '请填写接受的最高报价' },{validator: validMaxPrice, message: '最高价应高于最低价'}]" />
         <van-field name="bidding_times" label="竞价轮次">
             <template #input>
-                <van-stepper v-model="formData.bidding_times" integer min="1" max="2" @change="onChangeBiddingTime"/>
+                <van-stepper v-model="formData.bidding_times" integer min="1" max="2" @change="onChangeBiddingTime" />
             </template>
         </van-field>
-        <van-field v-for="count in formData.bidding_times" v-bind:key="count" readonly clickable :name="'all_status['+ (count - 1) + '].end_time'"
-                   :value="formData.all_status[count - 1].end_time" :label="count+' 轮截止时间'" placeholder="点击选择截止时间" @click="onClickTimePicker(count)" />
+        <van-field v-for="count in formData.bidding_times" v-bind:key="count" readonly clickable :name="'all_status['+ (count - 1) + '].end_time'" :value="formData.all_status[count - 1].end_time" :label="count+' 轮截止时间'" placeholder="点击选择截止时间" @click="onClickTimePicker(count)" />
         <van-popup v-model="showPicker" position="bottom">
             <van-datetime-picker type="datetime" ref="Picker" title="选择截止时间" :min-date="new Date()" :filter="timeFilter" @confirm="onConfirmEndTime" @cancel="showPicker = false" />
         </van-popup>
         <van-field v-model="formData.deposit" type="number" name="deposit" label="保证金" placeholder="请设置参标保证金" :rules="[{ required: true, message: '不设置可填0' }]" />
-        <van-field type=""
-                   :value="formData.customers && formData.customers.length + ' 个'"
-                   readonly is-link clickable
-                   label="参与客户"
-                   name="customers"
-                   @click="showCustomerPicker = true"
-                   :rules="[{validator: validCustomer, message: '至少要选定2家公司参与竞价'}]"
-                   placeholder="请选择可参与竞价的客户"></van-field>
+        <van-field type="" :value="formData.customers && formData.customers.length + ' 个'" readonly is-link clickable label="参与客户" name="customers" @click="showCustomerPicker = true" :rules="[{validator: validCustomer, message: '至少要选定2家公司参与竞价'}]" placeholder="请选择可参与竞价的客户"></van-field>
         <van-popup :value="showCustomerPicker" position="bottom" closeable @click-overlay="onCloseCustomerPicker" @click-close-icon="onCloseCustomerPicker" class="customer_picker">
             <div class="button-ctn">
-                <van-button type="primary" size="small" @click="onClickCheckAll">全选</van-button>
-                <van-button type="info" size="small" @click="onClickToggleAll">反选</van-button>
+                <van-button type="primary" size="small" native-type="button" @click="onClickCheckAll">全选</van-button>
+                <van-button type="info" size="small" native-type="button" @click="onClickToggleAll">反选</van-button>
                 <van-search class="customer_name_search" @input="customerFilter" v-model="searchKey" placeholder="关键词或拼音首字母" />
             </div>
             <div class="list-ctn">
                 <van-loading v-if="allCustomers.length === 0" size="24px" vertical>加载中...</van-loading>
                 <van-checkbox-group v-model="formData.customers" ref="checkboxGroup">
                     <van-cell-group>
-                        <van-cell
-                            v-for="(item, index) in filteredCustomers"
-                            clickable
-                            :key="item.name"
-                            :title="item.name"
-                            @click="toggle(index)"
-                        >
+                        <van-cell v-for="(item, index) in filteredCustomers" clickable :key="item.name" :title="item.name" @click="toggle(index)">
                             <template #right-icon>
                                 <van-checkbox :name="item.name" ref="checkboxes" />
                             </template>
@@ -52,7 +41,6 @@
                 </van-checkbox-group>
             </div>
         </van-popup>
-
 
         <div style="margin: 16px;">
             <van-button round block type="info" native-type="submit">提交</van-button>
@@ -64,15 +52,21 @@
 <script>
 import moment from 'moment'
 import PinyinMatch from "pinyin-match";
-import {Notify} from "vant";
-import {getAllContract} from '@/api/company'
-import {createBidding} from '@/api/stuff'
+import {
+    Notify
+} from "vant";
+import {
+    getAllContract
+} from '@/api/company'
+import {
+    createBidding
+} from '@/api/stuff'
 
 export default {
-    name : 'BiddingForm',
+    name: 'BiddingForm',
     data() {
         return {
-            ssid : '',
+            ssid: '',
             formData: {
                 stuff_name: '',
                 min_price: undefined,
@@ -80,6 +74,8 @@ export default {
                 bidding_times: '1',
                 customers: [],
                 deposit: 0,
+                bidding_comment: '',
+                begin_time: '',
                 total_count: undefined,
                 all_status: [{
                     end_time: moment().format('YYYY-MM-DD HH:mm:00'),
@@ -88,21 +84,39 @@ export default {
             showPicker: false,
             showCustomerPicker: false,
             allCustomers: [],
-            filteredCustomers: [],
-            searchKey : ''
+            searchKey: '',
+            show_begin_time: false,
         }
     },
-    computed:{
-        submitForm(){
+    computed: {
+        filteredCustomers: function () {
+            var ret = [];
+            this.allCustomers.forEach(element => {
+                if (element.follow_stuff.indexOf(this.formData.stuff_name) !== -1) {
+                    ret.push(element);
+                }
+            });
+            var tmp_ret = ret;
+            ret = [];
+            tmp_ret.forEach(element => {
+                if (!this.searchKey || PinyinMatch.match(element.name, this.searchKey)) {
+                    ret.push(element);
+                }
+            });
+            return ret;
+        },
+        submitForm() {
             return {
-                stuff_name : this.formData.stuff_name,
+                stuff_name: this.formData.stuff_name,
                 min_price: +this.formData.min_price,
                 max_price: +this.formData.max_price,
                 bidding_times: +this.formData.bidding_times,
                 customers: this.formData.customers,
                 deposit: +this.formData.deposit,
                 total_count: +this.formData.total_count,
-                all_status : this.formData.all_status
+                all_status: this.formData.all_status,
+                bidding_comment: this.formData.bidding_comment,
+                begin_time: this.formData.begin_time,
             }
         }
     },
@@ -110,19 +124,32 @@ export default {
         this.formData.stuff_name = this.$route.query.name;
         this.ssid = this.$cookies.get('pa_ssid')
         getAllContract(this.ssid, false).then((resp) => {
-            this.allCustomers = resp.map((item) => {return {name : item.a_side_company}})
-            this.filteredCustomers = this.allCustomers
+            this.allCustomers = resp.map((item) => {
+                var ret = [];
+                item.follow_stuff.forEach(element => {
+                    ret.push(element.name);
+                });
+                return {
+                    name: item.a_side_company,
+                    follow_stuff: ret,
+                }
+            })
         })
     },
     methods: {
         async onSubmit() {
             let isDone = await createBidding(this.ssid, this.submitForm)
-            if(isDone){
-                await this.$router.push({name : 'BiddingList'})
+            if (isDone) {
+                await this.$router.push({
+                    name: 'BiddingList'
+                })
             }
         },
         onFailed() {
-            Notify({ type: 'danger', message: '请按照页面提示修改表单' });
+            Notify({
+                type: 'danger',
+                message: '请按照页面提示修改表单'
+            });
         },
         timeFilter(type, opt) {
             if (type === 'minute') {
@@ -132,36 +159,36 @@ export default {
             }
             return opt
         },
-        onCloseCustomerPicker(){
+        onCloseCustomerPicker() {
             this.showCustomerPicker = false
         },
         toggle(index) {
             this.$refs.checkboxes[index].toggle();
         },
-        onClickCheckAll(){
+        onClickCheckAll() {
             this.$refs.checkboxGroup.toggleAll(true);
         },
-        onClickToggleAll(){
+        onClickToggleAll() {
             this.$refs.checkboxGroup.toggleAll();
         },
-        validCustomer(){
+        validCustomer() {
             return this.formData.customers.length >= 2
         },
-        validMaxPrice(){
+        validMaxPrice() {
             return this.formData.max_price > this.formData.min_price
         },
-        customerFilter(keyword){
+        customerFilter(keyword) {
             this.filteredCustomers = this.allCustomers.filter(item => {
                 return PinyinMatch.match(item.name, keyword) || item.name.match(new RegExp(keyword))
             })
         },
-        onChangeBiddingTime(value){
-            if(this.formData.all_status.length < value){
+        onChangeBiddingTime(value) {
+            if (this.formData.all_status.length < value) {
                 let fillIn = Array(value - this.formData.all_status.length).fill({
-                    end_time : moment().format('YYYY-MM-DD HH:mm:00')
+                    end_time: moment().format('YYYY-MM-DD HH:mm:00')
                 })
                 this.formData.all_status = this.formData.all_status.concat(fillIn)
-            }else{
+            } else {
                 this.formData.all_status.splice(value)
             }
         },
@@ -179,28 +206,36 @@ export default {
             this.formData.all_status[this.editingTurn].end_time = moment(endTime).format('YYYY-MM-DD HH:mm:00')
             this.showPicker = false
         },
+        confirm_begin_time: function (_time) {
+            this.formData.begin_time = moment(_time).format('YYYY-MM-DD HH:mm:00');
+            this.show_begin_time = false;
+        },
     }
 }
 </script>
 
 <style scoped>
-.customer_picker{
+.customer_picker {
     height: 50%;
 }
-.button-ctn{
+
+.button-ctn {
     vertical-align: baseline;
     line-height: 52px;
     height: 52px;
 }
-.customer_name_search{
+
+.customer_name_search {
     display: inline-block;
 }
-.list-ctn{
+
+.list-ctn {
     height: 100%;
     overflow: scroll;
     padding-bottom: 20px;
 }
-.customer_picker button{
+
+.customer_picker button {
     vertical-align: super;
     margin: 10px 0 10px 10px;
 }

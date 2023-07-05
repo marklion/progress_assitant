@@ -1103,6 +1103,7 @@ public:
     long status = 0;
     std::string first_end_time;
     std::string second_end_time;
+    std::string bidding_comment;
     pa_sql_bidding()
     {
         add_parent_type<pa_sql_stuff_info>("belong_stuff");
@@ -1118,6 +1119,7 @@ public:
         ret.push_back(sqlite_orm_column("status", sqlite_orm_column::INTEGER, &status));
         ret.push_back(sqlite_orm_column("first_end_time", sqlite_orm_column::STRING, &first_end_time));
         ret.push_back(sqlite_orm_column("second_end_time", sqlite_orm_column::STRING, &second_end_time));
+        ret.push_back(sqlite_orm_column("bidding_comment", sqlite_orm_column::STRING, &bidding_comment));
 
         return ret;
     }
@@ -1139,6 +1141,7 @@ public:
     long turn = 0;
     long status = 0;
     std::string end_time;
+    std::string begin_time;
     pa_sql_bidding_turn()
     {
         add_parent_type<pa_sql_bidding>("belong_bidding");
@@ -1149,6 +1152,7 @@ public:
         ret.push_back(sqlite_orm_column("turn", sqlite_orm_column::INTEGER, &turn));
         ret.push_back(sqlite_orm_column("status", sqlite_orm_column::INTEGER, &status));
         ret.push_back(sqlite_orm_column("end_time", sqlite_orm_column::STRING, &end_time));
+        ret.push_back(sqlite_orm_column("begin_time", sqlite_orm_column::STRING, &begin_time));
 
         return ret;
     }
@@ -1174,6 +1178,7 @@ public:
     double price = 0;
     long has_call = 0;
     std::string timestamp;
+    long has_accept = 0;
     pa_sql_bidding_customer()
     {
         add_parent_type<pa_sql_bidding_turn>("belong_bidding_turn");
@@ -1186,6 +1191,7 @@ public:
         ret.push_back(sqlite_orm_column("price", sqlite_orm_column::REAL, &price));
         ret.push_back(sqlite_orm_column("has_call", sqlite_orm_column::INTEGER, &has_call));
         ret.push_back(sqlite_orm_column("timestamp", sqlite_orm_column::STRING, &timestamp));
+        ret.push_back(sqlite_orm_column("has_accept", sqlite_orm_column::INTEGER, &has_accept));
 
         return ret;
     }

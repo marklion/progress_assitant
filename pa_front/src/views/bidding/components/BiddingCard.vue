@@ -1,18 +1,18 @@
 <template>
-    <van-cell-group inset>
-        <van-cell :value="'总量：' + biddingInfo.total_count">
-            <template #title>
-                <span class="custom-title">{{ biddingInfo.stuff_name }}</span>
-                <BiddingStatus :status="biddingInfo.cur_status"></BiddingStatus>
-            </template>
-        </van-cell>
-        <van-cell title="竞价区间" :value="biddingRange" :label="'保证金: ' + biddingInfo.deposit + '元'"/>
-        <van-cell title="距离截止还剩" :label="curTurn.bidding_turn + ' 轮竞价'">
-            <template #default>
-                <van-count-down :time="restTime" />
-            </template>
-        </van-cell>
-    </van-cell-group>
+<van-cell-group inset>
+    <van-cell :value="'总量：' + biddingInfo.total_count" :label="biddingInfo.bidding_comment">
+        <template #title>
+            <span class="custom-title">{{ biddingInfo.stuff_name }}</span>
+            <BiddingStatus :status="biddingInfo.cur_status" :begin_time="biddingInfo.begin_time"></BiddingStatus>
+        </template>
+    </van-cell>
+    <van-cell title="竞价区间" :value="biddingRange" :label="'保证金: ' + biddingInfo.deposit + '元'" />
+    <van-cell title="距离截止还剩" :label="curTurn.bidding_turn + ' 轮竞价'">
+        <template #default>
+            <van-count-down :time="restTime" />
+        </template>
+    </van-cell>
+</van-cell-group>
 </template>
 
 <script>
@@ -21,18 +21,18 @@ import moment from "moment";
 
 export default {
     name: "BiddingCard",
-    components : {
+    components: {
         BiddingStatus
     },
-    props:['biddingInfo', 'curTurn'],
+    props: ['biddingInfo', 'curTurn'],
     computed: {
-        biddingRange(){
+        biddingRange() {
             return this.biddingInfo.min_price + ' ~ ' + this.biddingInfo.max_price
         },
-        restTime(){
-            if(this.biddingInfo.cur_status === 0 ){
+        restTime() {
+            if (this.biddingInfo.cur_status === 0) {
                 return moment(this.curTurn.end_time) - moment();
-            }else{
+            } else {
                 return 0
             }
 

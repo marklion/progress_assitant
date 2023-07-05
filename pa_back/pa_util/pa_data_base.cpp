@@ -625,6 +625,7 @@ void pa_sql_bidding::update_bidding_status()
                 tmp.status = 0;
                 tmp.turn = 2;
                 tmp.end_time = second_end_time;
+                tmp.begin_time = current_turn->begin_time;
                 tmp.set_parent(*this, "belong_bidding");
                 tmp.insert_record();
                 auto last_customer = 3;
@@ -636,6 +637,7 @@ void pa_sql_bidding::update_bidding_status()
                         pa_sql_bidding_customer bc_tmp(itr);
                         bc_tmp.has_call = 0;
                         bc_tmp.timestamp = "";
+                        bc_tmp.has_accept = 1;
                         bc_tmp.set_parent(tmp, "belong_bidding_turn");
                         bc_tmp.insert_record();
                         last_customer--;
@@ -646,7 +648,8 @@ void pa_sql_bidding::update_bidding_status()
                     }
                 }
                 auto expect_end_time = PA_DATAOPT_timestring_2_date(tmp.end_time, true);
-                if (expect_end_time > time(nullptr))
+                auto expect_begin_time = PA_DATAOPT_timestring_2_date(tmp.begin_time, true);
+                if (expect_end_time >= time(nullptr) && expect_begin_time <= time(nullptr))
                 {
                     tdf_main::get_inst().start_timer(
                         expect_end_time - time(nullptr) + 3,
@@ -689,7 +692,7 @@ void pa_sql_bidding::update_bidding_status()
             }
         }
         update_record();
-        send_out_wechat_msg(3);
+        send_out_wechat_msg(2);
     }
 }
 
@@ -737,6 +740,7 @@ void pa_sql_bidding::send_out_wechat_msg(int _flag, const std::string &_company_
     {
         return;
     }
+    std::string accept_cust_name = "";
     auto cur_turn = get_children<pa_sql_bidding_turn>("belong_bidding", "PRI_ID != 0 ORDER BY PRI_ID DESC");
     if (cur_turn)
     {
@@ -772,12 +776,17 @@ void pa_sql_bidding::send_out_wechat_msg(int _flag, const std::string &_company_
             }
             break;
         }
+        case 4:
+        {
+            accept_cust_name = _company_name;
+            break;
+        }
         default:
             break;
         }
         for (auto &itr : recver_list)
         {
-            PA_WECHAT_send_bidding_msg(itr, *this, _flag > 2 ? 2 : _flag);
+            PA_WECHAT_send_bidding_msg(itr, *this, _flag, accept_cust_name);
         }
     }
 }

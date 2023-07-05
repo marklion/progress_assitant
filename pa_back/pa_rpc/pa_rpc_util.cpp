@@ -114,3 +114,15 @@ void company_management_handler::check_related_balance(pa_sql_plan &_plan)
         spmh.pri_confirm_pay(_plan.get_pri_id(), *get_sysadmin_user(), "余额已够，自动确认收款");
     }
 }
+bool PA_RPC_user_was_authored(const std::string &ssid, const std::string &company_name)
+{
+    bool ret = false;
+    company_management_handler cmh;
+    auto opt_user = PA_DATAOPT_get_online_user(ssid);
+    if (opt_user && cmh.user_was_authored(opt_user->phone, company_name))
+    {
+        ret = true;
+    }
+
+    return ret;
+}
