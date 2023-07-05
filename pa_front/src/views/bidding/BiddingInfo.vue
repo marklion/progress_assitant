@@ -10,7 +10,7 @@
                     <BiddingStatus :status="turn.status" :begin_time="biddingInfo.begin_time"></BiddingStatus>
                 </template>
 
-                <van-cell v-for="customer in turn.all_customers_price" v-bind:key="customer.company_name" :value="customer.price" :label="customer.timestamp">
+                <van-cell v-for="customer in turn.all_customers_price" v-bind:key="customer.company_name" :value="customer.has_accept?customer.price:'未接受'" :label="customer.timestamp">
                     <template #title>
                         <span>{{customer.company_name}}</span>
                         <van-icon v-if="customer.company_name === turn.cur_top_customer" color="#ee0a24" size="20" name="award" />
@@ -27,6 +27,9 @@
                     <template #default>
                         <van-icon v-if="isWinBidding(turn)" color="#ee0a24" size="20" name="award" />
                         <span>{{biddingRecord(turn).price}}</span>
+                    </template>
+                    <template #right-icon v-if="!biddingRecord(turn).has_accept">
+                        <van-button size="mini" type="info" @click="accept_bidding">接受</van-button>
                     </template>
                 </van-cell>
             </van-cell-group>
@@ -121,6 +124,20 @@ export default {
     },
 
     methods: {
+        accept_bidding() {
+            Dialog.confirm({
+                title: '提示',
+                message: '确定接受竞价吗',
+            }).then(() => {
+                var vue_this = this;
+                vue_this.$call_remote_process("stuff_info", "accept_bidding", [vue_this.$cookies.get("pa_ssid"), parseInt(vue_this.biddingId)]).then(function (data) {
+                    if (data) {
+                        vue_this.$toast.success("接受竞价成功");
+                        vue_this.loadInitData();
+                    }
+                });
+            });
+        },
         async loadInitData() {
             this.biddingInfo = await getBiddingById(this.ssid, this.biddingId)
             if (this.user.buyer && !this.biddingRecord(this.curTurn)) {
@@ -172,7 +189,13 @@ export default {
             }
             //当前轮已报过价，不再报价
             let yourPrice = this.curTurn.all_customers_price.find(customer => customer.company_name === this.user.company)
-            return !yourPrice.timestamp
+            if (yourPrice.timestamp) {
+                return false;
+            }
+            if (!yourPrice.has_accpeted) {
+                return false
+            }
+            return true;
         },
         lastTurn() {
             let index = this.biddingInfo.all_status.length - 1;

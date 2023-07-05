@@ -637,6 +637,7 @@ void pa_sql_bidding::update_bidding_status()
                         pa_sql_bidding_customer bc_tmp(itr);
                         bc_tmp.has_call = 0;
                         bc_tmp.timestamp = "";
+                        bc_tmp.has_accept = 1;
                         bc_tmp.set_parent(tmp, "belong_bidding_turn");
                         bc_tmp.insert_record();
                         last_customer--;
@@ -739,6 +740,7 @@ void pa_sql_bidding::send_out_wechat_msg(int _flag, const std::string &_company_
     {
         return;
     }
+    std::string accept_cust_name = "";
     auto cur_turn = get_children<pa_sql_bidding_turn>("belong_bidding", "PRI_ID != 0 ORDER BY PRI_ID DESC");
     if (cur_turn)
     {
@@ -774,12 +776,17 @@ void pa_sql_bidding::send_out_wechat_msg(int _flag, const std::string &_company_
             }
             break;
         }
+        case 4:
+        {
+            accept_cust_name = _company_name;
+            break;
+        }
         default:
             break;
         }
         for (auto &itr : recver_list)
         {
-            PA_WECHAT_send_bidding_msg(itr, *this, _flag);
+            PA_WECHAT_send_bidding_msg(itr, *this, _flag, accept_cust_name);
         }
     }
 }
