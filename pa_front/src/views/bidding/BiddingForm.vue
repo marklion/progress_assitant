@@ -175,7 +175,7 @@ export default {
             return this.formData.customers.length >= 2
         },
         validMaxPrice() {
-            return this.formData.max_price > this.formData.min_price
+            return parseFloat(this.formData.max_price) > parseFloat(this.formData.min_price)
         },
         customerFilter(keyword) {
             this.filteredCustomers = this.allCustomers.filter(item => {
