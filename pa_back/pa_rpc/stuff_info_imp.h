@@ -692,5 +692,67 @@ public:
 
         return ret;
     }
+    void replace_item(const std::string &_file, const std::string &_item, const std::string &_data)
+    {
+        std::string cmd = "/script/replace.py '" + _file + "' '" + _item + "' '" + _data + "'";
+        system(cmd.c_str());
+    }
+    virtual void export_bidding_info(std::string &_return, const std::string &ssid, const int64_t bidding_id)
+    {
+        auto user = PA_DATAOPT_get_online_user(ssid, true);
+        auto company = PA_DATAOPT_get_company_by_ssid(ssid);
+        if (!user || user->buyer || !company)
+        {
+            PA_RETURN_NOPRIVA_MSG();
+        }
+        if (company->bidding_template.empty())
+        {
+            PA_RETURN_MSG("未设置竞价结果模板");
+        }
+        auto bi = sqlite_orm::search_record<pa_sql_bidding>(bidding_id);
+        if (!bi || bi->status != 1)
+        {
+            PA_RETURN_NOPRIVA_MSG();
+        }
+        auto stuff = bi->get_parent<pa_sql_stuff_info>("belong_stuff");
+        if (!stuff)
+        {
+            PA_RETURN_NOPRIVA_MSG();
+        }
+        std::map<std::string, std::string> item_need_excute;
+        item_need_excute["{竞价物料}"] = stuff->name;
+        item_need_excute["{竞价数量}"] = std::to_string(bi->total_count);
+        item_need_excute["{备注信息}"] = bi->bidding_comment;
+        item_need_excute["{竞价区间}"] = pa_double2string_reserve2(bi->min_price) + " ~ " + pa_double2string_reserve2(bi->max_price);
+        item_need_excute["{保证金}"] = pa_double2string_reserve2(bi->deposit);
+
+        auto bt = bi->get_all_children<pa_sql_bidding_turn>("belong_bidding", "status == 1");
+        for (auto &itr : bt)
+        {
+            std::string ti = std::to_string(itr.turn) + "轮";
+            item_need_excute["{" + ti + "竞价时间}"] = itr.begin_time + " ~ " + itr.end_time;
+            std::string tmp;
+            std::string win_company;
+            auto cust_info = itr.get_bidding_customer(1);
+            for (auto &single_cust : cust_info)
+            {
+                auto cust = single_cust.get_parent<pa_sql_company>("call_company");
+                if (cust)
+                {
+                    tmp += cust->name + "|" + pa_double2string_reserve2(single_cust.price) + "|" + single_cust.timestamp + "\n";
+                }
+            }
+            item_need_excute["{" + ti + "竞价结果}"] = tmp;
+        }
+        auto btf = company->bidding_template;
+        auto new_file = "/logo_res/btf" + std::to_string(company->get_pri_id()) + std::to_string(time(nullptr)) + ".docx";
+        auto cmd = "cp /dist" + btf + " /dist" + new_file;
+        system(cmd.c_str());
+        for (auto &itr : item_need_excute)
+        {
+            replace_item("/dist" + new_file, itr.first, itr.second);
+        }
+        _return = new_file;
+    }
 };
 #endif // _STUFF_INFO_IMP_H_

@@ -89,7 +89,7 @@ std::string PA_DATAOPT_rest_req(const std::string &_req)
 
     return in_buff;
 }
-std::string PA_DATAOPT_store_attach_file(const std::string &_content, bool _is_pdf, const std::string &_name)
+std::string PA_DATAOPT_store_attach_file(const std::string &_content, bool _is_pdf, const std::string &_name, bool is_doc)
 {
     std::string ret;
     std::string file_name("/dist/logo_res/logo_");
@@ -101,6 +101,11 @@ std::string PA_DATAOPT_store_attach_file(const std::string &_content, bool _is_p
     else
     {
         file_name.append(".jpg");
+    }
+
+    if (is_doc)
+    {
+        file_name.append(".docx");
     }
 
     std::fstream out_file;
@@ -1246,38 +1251,46 @@ void PA_DATAOPT_deliver_event_deliver(pa_sql_single_vichele &_single_vehicle)
     auto driver = _single_vehicle.get_parent<pa_sql_driver>("driver");
     auto plan = _single_vehicle.get_parent<pa_sql_plan>("belong_plan");
     auto company = PA_DATAOPT_get_sale_company(_single_vehicle);
+    auto driver_register = _single_vehicle.get_children<pa_sql_driver_register>("belong_vichele");
 
-    if (mv && bv && driver && plan && company && company->remote_event_url.length() > 0 && company->event_types.find("deliver") != std::string::npos)
+    if (mv && bv && driver && plan && company && company->remote_event_url.length() > 0 && company->event_types.find("deliver") != std::string::npos && driver_register)
     {
-        neb::CJsonObject req;
-        req.Add("orderNumber", std::to_string(plan->get_pri_id()));
-        req.Add("plateNo", mv->number);
-        req.Add("pWeight", _single_vehicle.p_weight);
-        req.Add("mWeight", _single_vehicle.m_weight);
-        req.Add("pTime", _single_vehicle.deliver_p_timestamp);
-        req.Add("mTime", _single_vehicle.deliver_timestamp);
-        req.Add("jWeight",std::abs(_single_vehicle.p_weight - _single_vehicle.m_weight));
-
-        pa_sql_event_que_item tmp;
-        tmp.req_itself = req.ToString();
-        tmp.set_parent(*company, "belong_company");
-        tmp.insert_record();
-        PA_UTILS_post_json_to_third(
-            company->remote_event_url + "/deliver",
-            req.ToString(), "", "",
-            [](neb::CJsonObject &_resp, third_dev_req_param &, const std::string &_req){
-                if (_resp("finishHandle") == "true")
-                {
-                    auto item = sqlite_orm::search_record<pa_sql_event_que_item>("req_itself == '%s'", _req.c_str());
-                    if (item)
-                    {
-                        item->remove_record();
-                    }
-                }
-                else
-                {
-                    g_audit_log.err("deliver event failure. req:%s, resp:%s", _req.c_str(), _resp.ToString().c_str());
-                }
-        });
+        PA_DATAOPT_deliver_event_deliver(std::to_string(plan->get_pri_id()), mv->number, _single_vehicle.deliver_p_timestamp, _single_vehicle.deliver_timestamp, _single_vehicle.p_weight, _single_vehicle.m_weight, *company, driver_register->enter_location);
     }
+}
+
+void PA_DATAOPT_deliver_event_deliver(const std::string &_order_number, const std::string &_plate_no, const std::string &_p_time, const std::string &_m_time, double _p_weight, double _m_weight, pa_sql_company &_company, const std::string &_enter_location)
+{
+    neb::CJsonObject req;
+    req.Add("orderNumber", _order_number);
+    req.Add("plateNo", _plate_no);
+    req.Add("pWeight", _p_weight);
+    req.Add("mWeight", _m_weight);
+    req.Add("pTime", _p_time);
+    req.Add("mTime", _m_time);
+    req.Add("jWeight", std::abs(_p_weight - _m_weight));
+    req.Add("enterLocation", _enter_location);
+
+    pa_sql_event_que_item tmp;
+    tmp.req_itself = req.ToString();
+    tmp.set_parent(_company, "belong_company");
+    tmp.insert_record();
+    PA_UTILS_post_json_to_third(
+        _company.remote_event_url + "/deliver",
+        req.ToString(), "", "",
+        [](neb::CJsonObject &_resp, third_dev_req_param &, const std::string &_req)
+        {
+            if (_resp("finishHandle") == "true")
+            {
+                auto item = sqlite_orm::search_record<pa_sql_event_que_item>("req_itself == '%s'", _req.c_str());
+                if (item)
+                {
+                    item->remove_record();
+                }
+            }
+            else
+            {
+                g_audit_log.err("deliver event failure. req:%s, resp:%s", _req.c_str(), _resp.ToString().c_str());
+            }
+        });
 }

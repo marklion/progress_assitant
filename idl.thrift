@@ -238,6 +238,9 @@ service company_management {
     bool add_dc_device(1:string ssid, 2:string name, 3:string mac) throws (1:gen_exp e),
     void del_dec_device(1:string ssid, 2:i64 id) throws (1:gen_exp e),
     string export_driver_info(1:string ssid) throws (1:gen_exp e),
+    bool add_bidding_template(1:string ssid, 2:string content64) throws (1:gen_exp e),
+    void del_bidding_template(1:string ssid) throws (1:gen_exp e),
+    string get_bidding_template(1:string ssid) throws (1:gen_exp e),
 }
 
 struct bidding_customer{
@@ -299,6 +302,7 @@ service stuff_info {
     void remove_price_timer(1:string ssid, 2:i64 id) throws (1:gen_exp e),
     list<price_timer_param> get_all_price_timer(1:string ssid) throws (1:gen_exp e),
     bool accept_bidding(1:string ssid, 2:i64 bidding_id) throws (1:gen_exp e),
+    string export_bidding_info(1:string ssid, 2:i64 bidding_id) throws (1:gen_exp e),
 }
 
 struct plan_confirm_info {
@@ -685,7 +689,15 @@ struct create_plan_req {
     11:string trans_company_name,
 }
 
-
+struct vehicle_detail_record {
+    1:string plateNo,
+    2:string color,
+    3:string driverName,
+    4:string idNum,
+    5:string vehicleLicenseUrl,
+    6:string LicenseExpireDate,
+    7:string roadTransportLicenseNum,
+}
 
 service open_api_management {
     bool register_api_user(1:string company_name, 2:string email, 3:string password) throws (1:gen_exp e),
@@ -713,6 +725,7 @@ service open_api_management {
     string proc_create_plan(1:string token, 2:create_plan_req _req) throws (1:gen_exp e),
     bool proc_cancel_plan(1:string token, 2:string _order_number) throws (1:gen_exp e),
     void set_dc_status(1:string mac, 2:bool has_vehicle) throws (1: gen_exp e),
+    vehicle_detail_record get_detail_record_by_vehicle_number(1:string plate_no, 2:string token) throws (1:gen_exp e),
 }
 
 struct vichele_stay_alone {

@@ -634,6 +634,7 @@ public:
             real_vichele_stay_alone->ticket_no = _req.ticketNo;
             real_vichele_stay_alone->status = 2;
             ret = real_vichele_stay_alone->update_record();
+            PA_DATAOPT_deliver_event_deliver(_req.ticketNo, _req.plateNo, _req.pTime, _req.mTime, _req.pWeight, _req.mWeight, *company, "");
             auto created_user = real_vichele_stay_alone->get_parent<pa_sql_silent_user>("created_by");
             if (created_user)
             {
@@ -1338,6 +1339,68 @@ public:
         {
             dcs->status = has_vehicle;
             dcs->update_record();
+        }
+    }
+
+    virtual void get_detail_record_by_vehicle_number(vehicle_detail_record &_return, const std::string &plate_no, const std::string &token)
+    {
+        log_audit_basedon_token(token, __FUNCTION__);
+        auto company = _get_token_company(token);
+        if (!company)
+        {
+            PA_RETURN_MSG(OPEN_API_MSG_NO_PERMISSION);
+        }
+        std::string bv_plate;
+        auto vehicle = sqlite_orm::search_record<pa_sql_vichele>("number == '%s'", plate_no.c_str());
+        if (vehicle)
+        {
+            auto sv = vehicle->get_children<pa_sql_single_vichele>("main_vichele");
+            if (sv)
+            {
+                auto driver = sv->get_parent<pa_sql_driver>("driver");
+                if (driver)
+                {
+                    _return.driverName = driver->name;
+                    _return.idNum = driver->driver_id;
+                    _return.color = "黑";
+                    _return.plateNo = plate_no;
+                }
+                auto bvs = sv->get_parent<pa_sql_vichele_behind>("behind_vichele");
+                if (bvs)
+                {
+                    bv_plate = bvs->number;
+                }
+            }
+            auto lr = company->get_children<pa_sql_license_require>("belong_company", "name LIKE '%%主车行驶证%%'");
+            if (lr)
+            {
+                auto scd = lr->get_children<pa_sql_sec_check_data>("belong_lr", "related_info == '%s'", plate_no.c_str());
+                if (scd)
+                {
+                    _return.vehicleLicenseUrl = "https://www.d8sis.cn/pa_web" + scd->attachment_path;
+                    _return.LicenseExpireDate = scd->expired_date;
+                }
+            }
+            lr = company->get_children<pa_sql_license_require>("belong_company", "name LIKE '%%运输证%%' AND input_method LIKE '%%1%%' AND use_for == 2");
+            if (lr)
+            {
+                auto scd = lr->get_children<pa_sql_sec_check_data>("belong_lr", "related_info == '%s'", bv_plate.c_str());
+                if (scd)
+                {
+                    _return.roadTransportLicenseNum = scd->input_content;
+                }
+            }
+        }
+        else
+        {
+            auto vsa = company->get_children<pa_sql_vichele_stay_alone>("destination", "main_vichele_number == '%s' ORDER BY PRI_ID DESC LIMIT 1", plate_no.c_str());
+            if (vsa)
+            {
+                _return.driverName = vsa->driver_name;
+                _return.idNum = vsa->driver_id;
+                _return.color = "黑";
+                _return.plateNo = plate_no;
+            }
         }
     }
 };

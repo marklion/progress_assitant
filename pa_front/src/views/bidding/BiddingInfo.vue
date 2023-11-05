@@ -19,6 +19,7 @@
             </van-collapse-item>
             <div style="margin: 10px;">
                 <van-button round block type="danger" @click="onCloseBidding" :disabled="biddingInfo.cur_status !== 0">终止竞价</van-button>
+                <van-button round block type="warning" @click="export_br" :disabled="biddingInfo.cur_status == 0">导出</van-button>
             </div>
         </van-collapse>
         <div v-else class="bidding-turns-ctn">
@@ -51,6 +52,8 @@
     <div v-else>
         <van-empty :image="emptyImage" :description="emptyHint" />
     </div>
+
+    <export-file :remote_file="download_url" v-model="show_export_file"></export-file>
 </div>
 </template>
 
@@ -70,14 +73,19 @@ import {
 } from 'vant'
 import moment from 'moment';
 
+import ExportFile from '../../components/ExportFile.vue'
+
 export default {
     name: "BiddingInfo",
     components: {
         BiddingCard,
-        BiddingStatus
+        BiddingStatus,
+        "export-file": ExportFile,
     },
     data() {
         return {
+            download_url: '',
+            show_export_file: false,
             showInfo: false,
             emptyImage: 'network',
             emptyHint: '数据加载中',
@@ -154,6 +162,13 @@ export default {
         },
         validPrice(value) {
             return value >= this.biddingInfo.min_price && value <= this.biddingInfo.max_price
+        },
+        export_br: function () {
+            var vue_this = this;
+            vue_this.$call_remote_process("stuff_info", "export_bidding_info", [vue_this.$cookies.get('pa_ssid'), parseInt(vue_this.biddingId)]).then(function (data) {
+                vue_this.download_url = vue_this.$remote_url + data;
+                vue_this.show_export_file = true;
+            });
         },
         async onSubmitPrice() {
             try {

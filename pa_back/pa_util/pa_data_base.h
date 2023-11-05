@@ -27,6 +27,7 @@ public:
     std::string remote_event_url;
     std::string driver_notice;
     std::string zc_rpc_url;
+    std::string bidding_template;
 
     virtual std::vector<sqlite_orm_column> self_columns_defined()
     {
@@ -51,6 +52,7 @@ public:
         ret.push_back(sqlite_orm_column("remote_event_url", sqlite_orm_column::STRING, &remote_event_url));
         ret.push_back(sqlite_orm_column("driver_notice", sqlite_orm_column::STRING, &driver_notice));
         ret.push_back(sqlite_orm_column("zc_rpc_url", sqlite_orm_column::STRING, &zc_rpc_url));
+        ret.push_back(sqlite_orm_column("bidding_template", sqlite_orm_column::STRING, &bidding_template));
 
         return ret;
     }

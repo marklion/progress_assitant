@@ -13,6 +13,25 @@
         <template #title>
             <van-row type="flex" justify="space-between" align="center">
                 <van-col>
+                    竞价结果模板
+                </van-col>
+                <van-col v-if="!cur_bt">
+                    <van-uploader :after-read="upload_bt" accept=".docx">
+                        <van-button icon="plus" size="small" type="primary">上传文件</van-button>
+                    </van-uploader>
+                </van-col>
+            </van-row>
+        </template>
+        <van-cell v-if="cur_bt" title="模板">
+            <template #right-icon>
+                <van-button size="small" type="danger" @click="remove_bt">删除</van-button>
+            </template>
+        </van-cell>
+    </van-cell-group>
+    <van-cell-group>
+        <template #title>
+            <van-row type="flex" justify="space-between" align="center">
+                <van-col>
                     <van-row type="flex" align="center">
                         <van-col>
                             资质证明
@@ -150,7 +169,9 @@ import {
 import {
     Popover
 } from 'vant';
-import { Icon } from 'vant';
+import {
+    Icon
+} from 'vant';
 
 Vue.use(Icon);
 Vue.use(Popover);
@@ -167,6 +188,7 @@ export default {
     name: 'BoundInfo',
     data: function () {
         return {
+            cur_bt: "",
             show_address_contact_update_button: false,
             main_vichele: [],
             behind_vichele: [],
@@ -188,6 +210,16 @@ export default {
     methods: {
         convert_bigger: function (_value) {
             return _value.toLocaleUpperCase();
+        },
+        remove_bt: function () {
+            var vue_this = this;
+            Dialog.confirm({
+                message: "确认要删除模板吗?",
+            }).then(function () {
+                vue_this.$call_remote_process("company_management", "del_bidding_template", [vue_this.$cookies.get('pa_ssid')]).then(function () {
+                    vue_this.init_bt();
+                });
+            });
         },
         remove_attach: function (_attach) {
             var vue_this = this;
@@ -215,6 +247,20 @@ export default {
                 vue_this.$call_remote_process("company_management", "add_attachment", [vue_this.$cookies.get('pa_ssid'), file_content, _is_pdf]).then(function (resp) {
                     if (resp) {
                         vue_this.init_attachment();
+                    }
+                });
+            };
+        },
+        upload_bt: function (_file) {
+            var vue_this = this;
+            var reader = new FileReader();
+            reader.readAsDataURL(_file.file);
+            reader.onloadend = function () {
+                var result = this.result;
+                var file_content = result.split(';base64,')[1];
+                vue_this.$call_remote_process("company_management", "add_bidding_template", [vue_this.$cookies.get('pa_ssid'), file_content]).then(function (resp) {
+                    if (resp) {
+                        vue_this.init_bt();
                     }
                 });
             };
@@ -327,6 +373,13 @@ export default {
                 vue_this.contact = resp;
             });
         },
+        init_bt: function () {
+            var vue_this = this;
+            vue_this.cur_bt = "";
+            vue_this.$call_remote_process("company_management", "get_bidding_template", [vue_this.$cookies.get('pa_ssid')]).then(function (resp) {
+                vue_this.cur_bt = resp;
+            });
+        },
         init_attachment: function () {
             var vue_this = this;
             vue_this.attachment = [];
@@ -348,6 +401,7 @@ export default {
         this.init_driver();
         this.init_address_contact();
         this.init_attachment();
+        this.init_bt();
     },
 }
 </script>
