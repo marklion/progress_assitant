@@ -36,7 +36,7 @@ struct third_dev_req_param{
 
 std::unique_ptr<pa_sql_userinfo> PA_DATAOPT_get_online_user(const std::string &_ssid, bool _need_read_pri = false);
 std::string PA_DATAOPT_store_logo_to_file(const std::string &_logo, const std::string &_upid);
-std::string PA_DATAOPT_store_attach_file(const std::string &_content, bool _is_pdf, const std::string &_name);
+std::string PA_DATAOPT_store_attach_file(const std::string &_content, bool _is_pdf, const std::string &_name, bool _is_doc = false);
 std::unique_ptr<pa_sql_userlogin> PA_DATAOPT_pull_user_info_from_wechat(const std::string &_acctok, const std::string &_open_id);
 std::string PA_DATAOPT_rest_req(const std::string &_req);
 std::string PA_DATAOPT_gen_ssid();
@@ -76,6 +76,7 @@ bool PA_DATAOPT_get_price_timer(pa_sql_stuff_info &_stuff, std::string &expired_
 void PA_UTILS_post_json_to_third(const std::string &url, const std::string &json, const std::string &key, const std::string &token, proc_third_ret callback = nullptr);
 
 void PA_DATAOPT_deliver_event_deliver(pa_sql_single_vichele &_single_vehicle);
+void PA_DATAOPT_deliver_event_deliver(const std::string &_order_number, const std::string &_plate_no, const std::string &_p_time, const std::string &_m_time, double _p_weight, double _m_weight, pa_sql_company &_company, const std::string &_enter_location);
 std::vector<std::string> PA_DATAOPT_split(const std::string &str, const std::string &pattern);
 
 #endif // _PA_UTILS_H_

@@ -1903,5 +1903,42 @@ public:
         ofs.close();
         _return = file_name;
     }
+
+    virtual bool add_bidding_template(const std::string &ssid, const std::string &content64)
+    {
+        bool ret = false;
+        auto company = PA_DATAOPT_get_company_by_ssid(ssid);
+        if (!company || !company->is_sale)
+        {
+            PA_RETURN_NOCOMPANY_MSG();
+        }
+
+        std::string content;
+        Base64::Decode(content64, &content);
+        company->bidding_template = PA_DATAOPT_store_attach_file(content, false, "bt" + company->name, true);
+
+        ret = company->update_record();
+
+        return ret;
+    }
+    virtual void del_bidding_template(const std::string &ssid)
+    {
+        auto company = PA_DATAOPT_get_company_by_ssid(ssid);
+        if (!company || !company->is_sale)
+        {
+            PA_RETURN_NOCOMPANY_MSG();
+        }
+        company->bidding_template = "";
+        company->update_record();
+    }
+    virtual void get_bidding_template(std::string &_return, const std::string &ssid)
+    {
+        auto company = PA_DATAOPT_get_company_by_ssid(ssid);
+        if (!company || !company->is_sale)
+        {
+            PA_RETURN_NOCOMPANY_MSG();
+        }
+        _return = company->bidding_template;
+    }
 };
 #endif // _COMPANY_MANAGEMENT_IMP_H_

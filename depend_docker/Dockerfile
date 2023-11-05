@@ -9,9 +9,10 @@ RUN sed -i '/domain="resource" name="height"/d' /etc/ImageMagick-6/policy.xml
 RUN sed -i '/domain="resource" name="width"/d' /etc/ImageMagick-6/policy.xml
 COPY mutool /bin/
 RUN pip3 install werobot
-RUN pip3 install thrift 
+RUN pip3 install thrift
 RUN  apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y nodejs
-RUN  apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y npm 
+RUN  apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y npm
 RUN npm install -g pm2
-ENV TIME_ZONE=Asia/Shanghai 
+ENV TIME_ZONE=Asia/Shanghai
 RUN ln -snf /usr/share/zoneinfo/$TIME_ZONE /etc/localtime && echo $TIME_ZONE > /etc/timezone
+RUN pip3 install python-docx

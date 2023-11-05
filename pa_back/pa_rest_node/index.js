@@ -320,7 +320,22 @@ app.post('/pa_rest/dc_api', async (req, res) => {
     res.send();
 
 });
+app.get('/pa_rest/vehicle_detail', async (req, res)=>{
+    var token = req.query.token;
+    var ret = { err_msg: '无权限' };
 
+    try {
+        var resp = await request_rpc("open_api_management", 'get_detail_record_by_vehicle_number', [req.query.plate_no, token]);
+        if (resp) {
+            ret.err_msg = "";
+            ret.result = resp;
+        }
+    } catch (error) {
+        ret = { err_msg: error.msg };
+    }
+
+    res.send(ret);
+});
 app.listen(port, () => {
     console.log('rest is runing');
 });

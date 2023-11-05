@@ -6,6 +6,8 @@ dist/
 build/
 install.sh
 logo_res/
+bank_plugin/build*
+bank_plugin/*/CMakeLists.txt.user*
 
 .travis.yml
 # local env files
