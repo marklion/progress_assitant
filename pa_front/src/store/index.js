@@ -20,6 +20,7 @@ export default new Vuex.Store({
     need_sec_check:false,
     zc_rpc_url:'',
     need_buy_feature:false,
+    zczh_back_end:''
   },
   mutations: {
     set_userinfo(state, userinfo){
@@ -42,6 +43,9 @@ export default new Vuex.Store({
     },
     set_need_buy_feature(state, need_buy_feature) {
       state.need_buy_feature = need_buy_feature;
+    },
+    set_zczh_back_end(state, zczh_back_end) {
+      state.zczh_back_end = zczh_back_end;
     }
   },
   actions: {

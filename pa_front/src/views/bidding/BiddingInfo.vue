@@ -207,7 +207,7 @@ export default {
             if (yourPrice.timestamp) {
                 return false;
             }
-            if (!yourPrice.has_accpeted) {
+            if (!yourPrice.has_accept) {
                 return false
             }
             return true;

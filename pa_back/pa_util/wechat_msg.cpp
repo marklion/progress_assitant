@@ -123,22 +123,17 @@ std::string PA_WECHAT_wx_sign(const std::string& nonceStr, long timestamp, const
 }
 static void send_msg_to_wechat(const std::string &_touser, const std::string &_tmp_id, const std::string &_first, const std::vector<std::string> &_keywords, const std::string &_remark, const std::string &_url = "/")
 {
-    std::string acc_tok = g_acc_tok.get_content();
+    std::string acc_tok = g_acc_pub_tok.get_content();
 
     neb::CJsonObject to_wechat;
-    to_wechat.Add("access_token", acc_tok);
     to_wechat.Add("touser", _touser);
-
-    neb::CJsonObject template_msg;
-    template_msg.Add("appid","wxa390f8b6f68e9c6d");
-    template_msg.Add("template_id", _tmp_id);
-    template_msg.Add("url", "https://www.d8sis.cn/pa_web" + _url);
+    to_wechat.Add("template_id", _tmp_id);
+    to_wechat.Add("url", "https://www.d8sis.cn/pa_web" + _url);
 
     neb::CJsonObject miniprogram_info;
     miniprogram_info.Add("appid", "wxfbf41c757510dc4c");
     miniprogram_info.Add("pagepath", "/pages/index/index?enter_url=" + _url);
-
-    template_msg.Add("miniprogram", miniprogram_info);
+    to_wechat.Add("miniprogram", miniprogram_info);
 
     neb::CJsonObject msg_data;
     neb::CJsonObject data_value;
@@ -155,12 +150,9 @@ static void send_msg_to_wechat(const std::string &_touser, const std::string &_t
 
     data_value.Replace("value", _remark);
     msg_data.Add("remark", data_value);
+    to_wechat.Add("data", msg_data);
 
-    template_msg.Add("data", msg_data);
-
-    to_wechat.Add("mp_template_msg", template_msg);
-
-    std::string uni_msg_url = "https://api.weixin.qq.com/cgi-bin/message/wxopen/template/uniform_send?access_token=" + acc_tok;
+    std::string uni_msg_url = "https://api.weixin.qq.com/cgi-bin/message/template/send?access_token=" + acc_tok;
     g_log.log("msg ready to send is :%s", to_wechat.ToFormattedString().c_str());
 
     tdf_main::get_inst().Async_to_workthread(
