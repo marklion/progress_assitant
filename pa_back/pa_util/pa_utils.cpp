@@ -569,12 +569,12 @@ neb::CJsonObject call_third_though_rest(const std::string &url, const std::strin
     return j_ret;
 }
 
-static neb::CJsonObject call_third_though_rest(const std::string &url, const std::string &key, const std::string &token, const std::string &json)
+neb::CJsonObject call_third_though_rest(const std::string &url, const std::string &key, const std::string &token, const std::string &json)
 {
     g_audit_log.log("calling %s, content:%s", url.c_str(), json.c_str());
     auto ret = PA_DATAOPT_rest_post(url, json, key, token);
     neb::CJsonObject j_ret(ret);
-    if (j_ret("code") == "0")
+    if (j_ret("code") == "0" || (j_ret.KeyExist("err_msg") && j_ret("err_msg") == ""))
     {
         g_audit_log.log("calling %s success, result:%s", url.c_str(), j_ret["data"].ToString().c_str());
     }
@@ -1081,6 +1081,10 @@ void PA_DATAOPT_post_checkin(pa_sql_single_vichele &_vichele)
                 tmp.number = std::to_string(que_info.wait_count + 1);
                 tmp.order_number = std::to_string(que_info.wait_count);
                 tmp.timestamp = que_info.checkin_time;
+                if (que_info.reg_no.length() > 0)
+                {
+                    tmp.number = que_info.reg_no;
+                }
                 tmp.insert_record();
                 _vichele.req_register = 0;
                 _vichele.update_record();
@@ -1117,7 +1121,7 @@ void PA_DATAOPT_post_get_queue(pa_sql_single_vichele &_vichele)
         {
             PA_UTILS_post_json_to_third(ctrl_url, req.ToString(), key, token, proc_que_get_ret);
         }
-        else if (company.zh_ssid.length() > 0 && company.zc_url.length() > 0)
+        else if ((company.zh_ssid.length() > 0 && company.zc_url.length() > 0) || company.zczh_back_end.length() > 0)
         {
             auto que_info = PA_ZH_CONN_get_que_info(_vichele);
             auto register_info = _vichele.get_children<pa_sql_driver_register>("belong_vichele");
@@ -1129,6 +1133,10 @@ void PA_DATAOPT_post_get_queue(pa_sql_single_vichele &_vichele)
                     register_info->timestamp = que_info.checkin_time;
                     register_info->number = std::to_string(que_info.wait_count + 1);
                     register_info->order_number = std::to_string(que_info.wait_count);
+                    if (que_info.reg_no.length() > 0)
+                    {
+                        register_info->number = que_info.reg_no;
+                    }
                     register_info->update_record();
                 }
                 else

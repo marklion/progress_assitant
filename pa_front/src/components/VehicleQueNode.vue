@@ -25,10 +25,8 @@
         </template>
     </van-cell>
     <van-cell :title="vq_node.driver_name">
-
         <a :href="'tel:'+vq_node.driver_phone">{{ vq_node.driver_phone}}</a>
         <template #label>
-            <div>{{vq_node.stuff_name}}</div>
             <div>排号时间：{{vq_node.check_in_time}}</div>
             <div v-if="vq_node.has_called">叫号时间：{{vq_node.call_time}}</div>
         </template>
@@ -83,19 +81,54 @@ export default {
         },
         do_call: function (is_call) {
             var vue_this = this;
-            vue_this.$call_remote_process("open_api", 'field_queue_call', [vue_this.$store.state.userinfo.phone, vue_this.vq_node.id, is_call], vue_this.$store.state.zc_rpc_url).then(function (resp) {
-                if (resp) {
-                    vue_this.pub_event();
-                }
-            });
+            if (vue_this.$store.state.zczh_back_end) {
+                vue_this.$axios.post(vue_this.$store.state.zczh_back_end + "/api/order/call", {
+                    order_number: vue_this.vq_node.id.toString(),
+                    is_call: is_call,
+                    opt_name: vue_this.$store.state.userinfo.name,
+                }, {
+                    headers: {
+                        "Content-Type": "application/json",
+                        "token": vue_this.$store.state.zczh_back_token,
+                    }
+                }).then(function (resp) {
+                    if (resp.data.result) {
+                        vue_this.pub_event();
+                    }
+                });
+            } else {
+                vue_this.$call_remote_process("open_api", 'field_queue_call', [vue_this.$store.state.userinfo.phone, vue_this.vq_node.id, is_call], vue_this.$store.state.zc_rpc_url).then(function (resp) {
+                    if (resp) {
+                        vue_this.pub_event();
+                    }
+                });
+            }
+
         },
         do_pass: function () {
             var vue_this = this;
-            vue_this.$call_remote_process("open_api", 'field_queue_pass', [vue_this.$store.state.userinfo.phone, vue_this.vq_node.id], vue_this.$store.state.zc_rpc_url).then(function (resp) {
-                if (resp) {
-                    vue_this.pub_event();
-                }
-            });
+            if (vue_this.$store.state.zczh_back_end) {
+                vue_this.$axios.post(vue_this.$store.state.zczh_back_end + "/api/order/check_in", {
+                    order_number: vue_this.vq_node.id.toString(),
+                    is_check_in: false,
+                    opt_name: vue_this.$store.state.userinfo.name,
+                }, {
+                    headers: {
+                        "Content-Type": "application/json",
+                        "token": vue_this.$store.state.zczh_back_token,
+                    }
+                }).then(function (resp) {
+                    if (resp.data.result) {
+                        vue_this.pub_event();
+                    }
+                });
+            } else {
+                vue_this.$call_remote_process("open_api", 'field_queue_pass', [vue_this.$store.state.userinfo.phone, vue_this.vq_node.id], vue_this.$store.state.zc_rpc_url).then(function (resp) {
+                    if (resp) {
+                        vue_this.pub_event();
+                    }
+                });
+            }
         },
         open_seal_no_diag: function (is_confirm) {
             if (is_confirm) {
@@ -116,10 +149,36 @@ export default {
             try {
                 var seal_resp = true;
                 if (is_confirm) {
-                    seal_resp = await vue_this.$call_remote_process("open_api", 'field_queue_set_seal', [vue_this.$store.state.userinfo.phone, vue_this.vq_node.id, vue_this.seal_no], vue_this.$store.state.zc_rpc_url);
+                    if (vue_this.$store.state.zczh_back_end) {
+                        seal_resp = await vue_this.$axios.post(vue_this.$store.state.zczh_back_end + "/api/order/set_seal_no", {
+                            order_number: vue_this.vq_node.id.toString(),
+                            seal_no: vue_this.seal_no,
+                            opt_name: vue_this.$store.state.userinfo.name,
+                        }, {
+                            headers: {
+                                "Content-Type": "application/json",
+                                "token": vue_this.$store.state.zczh_back_token,
+                            }
+                        });
+                    } else {
+                        seal_resp = await vue_this.$call_remote_process("open_api", 'field_queue_set_seal', [vue_this.$store.state.userinfo.phone, vue_this.vq_node.id, vue_this.seal_no], vue_this.$store.state.zc_rpc_url);
+                    }
                 }
                 if (seal_resp) {
-                    await vue_this.$call_remote_process("open_api", 'field_queue_confirm', [vue_this.$store.state.userinfo.phone, vue_this.vq_node.id, is_confirm], vue_this.$store.state.zc_rpc_url);
+                    if (vue_this.$store.state.zczh_back_end) {
+                        await vue_this.$axios.post(vue_this.$store.state.zczh_back_end + "/api/order/confirm", {
+                            order_number: vue_this.vq_node.id.toString(),
+                            is_confirm: is_confirm,
+                            opt_name: vue_this.$store.state.userinfo.name,
+                        }, {
+                            headers: {
+                                "Content-Type": "application/json",
+                                "token": vue_this.$store.state.zczh_back_token,
+                            }
+                        });
+                    } else {
+                        await vue_this.$call_remote_process("open_api", 'field_queue_confirm', [vue_this.$store.state.userinfo.phone, vue_this.vq_node.id, is_confirm], vue_this.$store.state.zc_rpc_url);
+                    }
                 }
             } catch (error) {
                 console.log(error);

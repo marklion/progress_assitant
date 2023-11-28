@@ -2340,7 +2340,7 @@ public:
                             if (ch.company_customize_need(sale_company->name, company_management_handler::need_driver_register))
                             {
                                 tmp.need_checkin = true;
-                                if (register_info)
+                                if (register_info && atoi(register_info->order_number.c_str()) <= 0)
                                 {
                                     tmp.can_enter &= true;
                                 }

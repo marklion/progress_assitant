@@ -140,6 +140,8 @@ struct third_dev_info {
     6:string zh_ssid,
     7:string remote_event_url,
     8:string zc_rpc_url,
+    9:string zczh_back_end,
+    10:string zczh_back_token,
 }
 
 struct company_customize {

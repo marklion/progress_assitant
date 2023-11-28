@@ -106,6 +106,8 @@ export default {
                     });
                     vue_this.$call_remote_process("company_management", 'get_third_info', [vue_this.$cookies.get('pa_ssid')]).then(function (resp) {
                         vue_this.$store.commit('set_zc_rpc_url', resp.zc_rpc_url);
+                        vue_this.$store.commit('set_zczh_back_end', resp.zczh_back_end);
+                        vue_this.$store.commit('set_zczh_back_token', resp.zczh_back_token);
                     });
                 } else {
                     vue_this.$store.commit('set_userinfo', {

@@ -9,6 +9,7 @@ struct PA_ZH_CONN_que_info {
     long wait_count = 0;
     std::string enter_location;
     std::string checkin_time;
+    std::string reg_no;
 };
 
 PA_ZH_CONN_que_info PA_ZH_CONN_get_que_info(pa_sql_single_vichele &_singel_plan);

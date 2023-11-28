@@ -78,6 +78,9 @@ export default {
         "$store.state.zc_rpc_url": function () {
             this.init_vq();
         },
+        "$store.state.zczh_back_end": function () {
+            this.init_vq();
+        },
     },
     methods: {
         init_vq: function () {
@@ -87,6 +90,39 @@ export default {
                     vue_this.all_vq = [];
                     resp.forEach((element, index) => {
                         vue_this.$set(vue_this.all_vq, index, element);
+                    });
+                });
+            } else if (vue_this.$store.state.zczh_back_end) {
+                vue_this.$axios.post(vue_this.$store.state.zczh_back_end + "/api/order/get_registered_order", {}, {
+                    headers: {
+                        "Content-Type": "application/json",
+                        "token": vue_this.$store.state.zczh_back_token,
+                    }
+                }).then(function (resp) {
+                    vue_this.all_vq = [];
+                    resp.data.result.forEach((element, index) => {
+                        var tmp_v = {};
+                        tmp_v.id = Number(element.order_number);
+                        tmp_v.plate = element.plate_number;
+                        tmp_v.back_plate = element.back_plate_number;
+                        tmp_v.stuff_name = element.stuff_name;
+                        tmp_v.driver_name = element.driver_name;
+                        tmp_v.driver_phone = element.driver_phone;
+                        tmp_v.p_weight = element.p_weight.toFixed(2);
+                        tmp_v.m_weight = element.m_weight.toFixed(2);
+                        tmp_v.seal_no = element.seal_no;
+                        tmp_v.need_confirm = (element.confirm_info.operator_time.length == 0) ? true : false;
+                        tmp_v.has_called = (element.call_info.operator_time.length == 0) ? false : true;
+                        tmp_v.check_in_time = element.reg_info.operator_time;
+                        tmp_v.call_time = element.call_info.operator_time;
+                        tmp_v.status_code = element.status;
+                        if (element.p_weight > 0) {
+                            tmp_v.status_code = 3;
+                        }
+                        if (element.m_weight > 0) {
+                            tmp_v.status_code = 4;
+                        }
+                        vue_this.$set(vue_this.all_vq, index, tmp_v);
                     });
                 });
             }

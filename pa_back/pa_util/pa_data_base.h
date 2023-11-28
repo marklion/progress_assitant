@@ -28,6 +28,8 @@ public:
     std::string driver_notice;
     std::string zc_rpc_url;
     std::string bidding_template;
+    std::string zczh_back_end;
+    std::string zczh_back_token;
 
     virtual std::vector<sqlite_orm_column> self_columns_defined()
     {
@@ -53,6 +55,8 @@ public:
         ret.push_back(sqlite_orm_column("driver_notice", sqlite_orm_column::STRING, &driver_notice));
         ret.push_back(sqlite_orm_column("zc_rpc_url", sqlite_orm_column::STRING, &zc_rpc_url));
         ret.push_back(sqlite_orm_column("bidding_template", sqlite_orm_column::STRING, &bidding_template));
+        ret.push_back(sqlite_orm_column("zczh_back_end", sqlite_orm_column::STRING, &zczh_back_end));
+        ret.push_back(sqlite_orm_column("zczh_back_token", sqlite_orm_column::STRING, &zczh_back_token));
 
         return ret;
     }

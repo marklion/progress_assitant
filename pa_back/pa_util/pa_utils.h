@@ -60,6 +60,7 @@ std::unique_ptr<pa_sql_company> PA_DATAOPT_get_sale_company(pa_sql_single_vichel
 std::string PA_DATAOPT_search_base_id_info_by_name(const std::string &name, const std::string &type, pa_sql_company &_company);
 std::string PA_DATAOPT_post_sync_change_register(pa_sql_single_vichele &_vichele, bool is_auto = false);
 neb::CJsonObject call_third_though_rest(const std::string &url, const std::string &json);
+neb::CJsonObject call_third_though_rest(const std::string &url, const std::string &key, const std::string &token, const std::string &json);
 std::string PA_DATAOPT_post_sync_change_register(pa_sql_vichele_stay_alone &_vicheles, bool is_auto = false);
 void PA_DATAOPT_post_checkin(pa_sql_single_vichele &_vichele);
 void PA_DATAOPT_post_get_queue(pa_sql_single_vichele &_vichele);
