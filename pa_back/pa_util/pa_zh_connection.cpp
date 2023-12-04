@@ -113,6 +113,7 @@ bool PA_ZH_CONN_push_order(pa_sql_plan &_plan)
 
     return true;
 }
+
 static std::string get_order_number(const std::string &_plate, const std::string &_phone, pa_sql_plan &_plan)
 {
     std::string ret;
@@ -130,6 +131,18 @@ static std::string get_order_number(const std::string &_plate, const std::string
 
     return ret;
 }
+
+static void update_drvier_id(const std::string &_id, pa_sql_plan &_plan, const std::string &_order_number)
+{
+    neb::CJsonObject req;
+    req.Add("order_number", _order_number);
+
+    auto order = call_third_though_rest(make_new_url("/api/order/get", _plan), get_new_token(_plan), get_new_token(_plan), req.ToString());
+    auto first_o = order["result"];
+    first_o.Replace("driver_id", _id);
+    call_third_though_rest(make_new_url("/api/order/update", _plan), get_new_token(_plan), get_new_token(_plan), first_o.ToString());
+}
+
 bool PA_ZH_CONN_del_order(pa_sql_single_vichele &_singel_plan)
 {
     bool ret = false;
@@ -241,8 +254,10 @@ bool PA_ZH_CONN_check_in(pa_sql_single_vichele &_singel_plan, bool is_cancel)
         check_in_url = make_new_url("/api/order/check_in", *plan);
         if (check_in_url.length() > 0)
         {
+            auto order_number = get_order_number(vi->number, driver->phone, *plan);
+            update_drvier_id(driver->driver_id, *plan, order_number);
             neb::CJsonObject tar_v;
-            tar_v.Add("order_number", get_order_number(vi->number, driver->phone, *plan));
+            tar_v.Add("order_number", order_number);
             tar_v.Add("is_check_in", !is_cancel, !is_cancel);
             tar_v.Add("opt_name", "司机");
             auto result = call_third_though_rest(check_in_url, get_new_token(*plan), get_new_token(*plan), tar_v.ToString());
