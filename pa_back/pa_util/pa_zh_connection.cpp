@@ -76,41 +76,49 @@ static std::string make_url(const std::string &_func_url, pa_sql_plan &_plan, co
 
 bool PA_ZH_CONN_push_order(pa_sql_plan &_plan)
 {
-    bool ret = false;
-
-    stuff_plan_management_handler sp;
-    stuff_plan tmp;
-    sp.get_plan(tmp, _plan.get_pri_id());
-    neb::CJsonObject req;
-    for (auto &itr : tmp.vichele_info)
+    if (_plan.plan_time.substr(0, 10) == PA_DATAOPT_current_time().substr(0, 10))
     {
-        neb::CJsonObject single_req;
-        single_req.Add("company_name", tmp.buy_company);
-        single_req.Add("stuff_name", tmp.name);
-        single_req.Add("main_vehicle_number", itr.main_vichele);
-        single_req.Add("behind_vehicle_number", itr.behind_vichele);
-        single_req.Add("driver_name", itr.driver_name);
-        single_req.Add("driver_id", itr.driver_id);
-        single_req.Add("driver_phone", itr.driver_phone);
-        single_req.Add("trans_company", _plan.trans_company_name);
-        req.Add(single_req);
-    }
+        bool ret = false;
 
-    push_req_to_zc(req, make_url("/vehicle_order/add", _plan));
-    for (auto &itr:tmp.vichele_info)
-    {
-        neb::CJsonObject single_req;
-        single_req.Add("back_plate_number", itr.behind_vichele);
-        single_req.Add("company_name", tmp.buy_company);
-        single_req.Add("driver_id", itr.driver_id);
-        single_req.Add("driver_name", itr.driver_name);
-        single_req.Add("driver_phone", itr.driver_phone);
-        single_req.Add("is_sale", true, true);
-        single_req.Add("plate_number", itr.main_vichele);
-        single_req.Add("stuff_name", tmp.name);
-        push_req_to_zc(single_req, make_new_url("/api/order/add", _plan), get_new_token(_plan), get_new_token(_plan));
-    }
+        stuff_plan_management_handler sp;
+        stuff_plan tmp;
+        sp.get_plan(tmp, _plan.get_pri_id());
+        neb::CJsonObject req;
+        for (auto &itr : tmp.vichele_info)
+        {
+            if (!itr.finish)
+            {
+                neb::CJsonObject single_req;
+                single_req.Add("company_name", tmp.buy_company);
+                single_req.Add("stuff_name", tmp.name);
+                single_req.Add("main_vehicle_number", itr.main_vichele);
+                single_req.Add("behind_vehicle_number", itr.behind_vichele);
+                single_req.Add("driver_name", itr.driver_name);
+                single_req.Add("driver_id", itr.driver_id);
+                single_req.Add("driver_phone", itr.driver_phone);
+                single_req.Add("trans_company", _plan.trans_company_name);
+                req.Add(single_req);
+            }
+        }
 
+        push_req_to_zc(req, make_url("/vehicle_order/add", _plan));
+        for (auto &itr : tmp.vichele_info)
+        {
+            if (!itr.finish)
+            {
+                neb::CJsonObject single_req;
+                single_req.Add("back_plate_number", itr.behind_vichele);
+                single_req.Add("company_name", tmp.buy_company);
+                single_req.Add("driver_id", itr.driver_id);
+                single_req.Add("driver_name", itr.driver_name);
+                single_req.Add("driver_phone", itr.driver_phone);
+                single_req.Add("is_sale", true, true);
+                single_req.Add("plate_number", itr.main_vichele);
+                single_req.Add("stuff_name", tmp.name);
+                push_req_to_zc(single_req, make_new_url("/api/order/add", _plan), get_new_token(_plan), get_new_token(_plan));
+            }
+        }
+    }
     return true;
 }
 

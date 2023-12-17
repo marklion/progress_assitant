@@ -569,6 +569,7 @@ public:
             ret = plan_in_sql->update_record();
             if (ret)
             {
+                PA_ZH_CONN_push_order(*plan_in_sql);
                 stuff_plan new_plan_info;
                 get_plan(new_plan_info, plan.plan_id);
                 auto vehicle_change_msg = vehicle_change_detail(orig_plan_info.vichele_info, new_plan_info.vichele_info);
@@ -966,6 +967,7 @@ public:
                 {
                     driver_register->remove_record();
                 }
+                PA_ZH_CONN_del_order(*found_vichele_info);
             }
             auto total_count = plan->get_all_children<pa_sql_single_vichele>("belong_plan").size();
             auto deliver_count = plan->get_all_children<pa_sql_single_vichele>("belong_plan", "finish = 1").size();

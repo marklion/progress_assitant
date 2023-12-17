@@ -108,7 +108,7 @@ int main(int argc, char **argv)
                                     PA_DATAOPT_post_get_queue(*related_vichele);
                                 }
                             }
-                            auto need_sync_to_zc = sqlite_orm::search_record_all<pa_sql_plan>("status == 3 AND from_remote == 1");
+                            auto need_sync_to_zc = sqlite_orm::search_record_all<pa_sql_plan>("status == 3");
                             for (auto &itr:need_sync_to_zc)
                             {
                                 PA_ZH_CONN_push_order(itr);
