@@ -16,7 +16,7 @@
         </van-col>
     </van-row>
     <van-grid>
-        <van-grid-item v-for="(single_grid, index) in all_grids" :key="index" :class="{grid_is_active: index == active_index, grid_is_not_active: index != active_index}" :icon="single_grid.icon" :text="single_grid.text" @click="active_index = index" />
+        <van-grid-item v-for="(single_grid, index) in all_grids" :key="index" :class="{grid_is_active: index == active_index, grid_is_not_active: index != active_index}" :icon="single_grid.icon" :text="single_grid.text" @click="change_grid(index)" />
     </van-grid>
     <div v-if="active_index == 0">
         <van-cell-group>
@@ -598,8 +598,7 @@ export default {
             }).then(function () {
                 vue_this.$call_remote_process("stuff_plan_management", 'cancel_vichele_from_plan', [vue_this.$cookies.get('pa_ssid'), [vichele_info.vichele.vichele_id]]).then(function (resp) {
                     if (resp) {
-                        vue_this.init_vichele_statistices();
-                        vue_this.init_tomorrow_vichele();
+                        vue_this.init_statistices();
                     }
                 });
             });
@@ -839,6 +838,16 @@ export default {
                 });
             });
         },
+        init_statistices: function () {
+            this.init_vichele_statistices();
+            this.init_tomorrow_vichele();
+        },
+        change_grid: function (_index) {
+            this.active_index = _index;
+            if (_index == 2) {
+                this.init_statistices();
+            }
+        },
     },
     beforeMount: function () {
         this.init_company_data();
@@ -846,8 +855,6 @@ export default {
         vue_this.$call_remote_process("company_management", 'get_company_logo', [vue_this.$cookies.get('pa_ssid')]).then(function (resp) {
             vue_this.company_logo = resp;
         });
-        vue_this.init_vichele_statistices();
-        vue_this.init_tomorrow_vichele();
         vue_this.init_price_timer();
     },
     watch: {

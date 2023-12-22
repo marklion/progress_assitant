@@ -868,7 +868,14 @@ bool sec_check_all_confirmed(pa_sql_company &_company, const std::string &_drive
     bool ret = true;
 
     auto lrs = _company.get_all_children<pa_sql_license_require>("belong_company");
-    for (auto &itr:lrs)
+    ret = sec_check_all_confirmed(lrs, _driver_phone, _mv, _bv);
+
+    return ret;
+}
+bool sec_check_all_confirmed(std::list<pa_sql_license_require> &_lrs, const std::string &_driver_phone, const std::string &_mv, const std::string &_bv)
+{
+    bool ret = true;
+    for (auto &itr : _lrs)
     {
         std::string relate_info;
         switch (itr.use_for)
@@ -892,7 +899,6 @@ bool sec_check_all_confirmed(pa_sql_company &_company, const std::string &_drive
             break;
         }
     }
-
     return ret;
 }
 std::string pa_sql_cus_stuff::get_unit_name(const std::string &_stuff_name, pa_sql_company &_company)

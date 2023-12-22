@@ -140,6 +140,38 @@ static std::string get_order_number(const std::string &_plate, const std::string
     return ret;
 }
 
+static std::string update_driver_order(const std::string &_phone, pa_sql_single_vichele &_single_vehicle)
+{
+    std::string ret;
+    auto plan = _single_vehicle.get_parent<pa_sql_plan>("belong_plan");
+    if (plan)
+    {
+        stuff_plan_management_handler sp;
+        stuff_plan tmp;
+        sp.get_plan(tmp, plan->get_pri_id());
+        std::string plate;
+        auto vi = _single_vehicle.get_parent<pa_sql_vichele>("main_vichele");
+        if (vi)
+        {
+            plate = vi->number;
+        }
+        neb::CJsonObject search_req;
+        search_req.Add("driver_phone", _phone);
+        search_req.Add("exp_status", 100);
+        auto order = call_third_though_rest(make_new_url("/api/order/search", *plan), get_new_token(*plan), get_new_token(*plan), search_req.ToString());
+        auto first_o = order["result"];
+        if (first_o.GetArraySize() > 0)
+        {
+            auto first_order = first_o[0];
+            ret = first_order("order_number");
+            first_order.Replace("plate_number", plate);
+            first_order.Replace("company_name", tmp.buy_company);
+            call_third_though_rest(make_new_url("/api/order/update", *plan), get_new_token(*plan), get_new_token(*plan), first_order.ToString());
+        }
+    }
+    return ret;
+}
+
 static void update_drvier_id(const std::string &_id, pa_sql_plan &_plan, const std::string &_order_number)
 {
     neb::CJsonObject req;
@@ -263,6 +295,10 @@ bool PA_ZH_CONN_check_in(pa_sql_single_vichele &_singel_plan, bool is_cancel)
         if (check_in_url.length() > 0)
         {
             auto order_number = get_order_number(vi->number, driver->phone, *plan);
+            if (order_number.length() == 0)
+            {
+                order_number = update_driver_order(driver->phone, _singel_plan);
+            }
             update_drvier_id(driver->driver_id, *plan, order_number);
             neb::CJsonObject tar_v;
             tar_v.Add("order_number", order_number);

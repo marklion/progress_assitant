@@ -1696,6 +1696,7 @@ public:
         }
 
         auto saled_stuff = company->get_all_children<pa_sql_stuff_info>("belong_company");
+        auto lrs = company->get_all_children<pa_sql_license_require>("belong_company");
         for (auto &itr : saled_stuff)
         {
             auto current_time = PA_DATAOPT_current_time();
@@ -1741,7 +1742,7 @@ public:
                         tmp.vichele_id = vichele.get_pri_id();
                         tmp.p_weight = vichele.p_weight;
                         tmp.m_weight = vichele.m_weight;
-                        if (sec_check_all_confirmed(*company, driver->phone, main_vichele->number, behind_vichele->number))
+                        if (sec_check_all_confirmed(lrs, driver->phone, main_vichele->number, behind_vichele->number))
                         {
                             tmp.sec_check_passed = true;
                         }
