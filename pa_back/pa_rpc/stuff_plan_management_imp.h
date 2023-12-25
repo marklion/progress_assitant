@@ -2049,14 +2049,14 @@ public:
                         {
                             PA_RETURN_CANNOT_CANCLE(update_ret);
                         }
+                        if (single_vichele->finish == 1 || single_vichele->has_p)
+                        {
+                            PA_RETURN_MSG("无法取消");
+                        }
                         auto related_register_info = single_vichele->get_children<pa_sql_driver_register>("belong_vichele");
                         if (related_register_info)
                         {
                             related_register_info->remove_record();
-                        }
-                        if (single_vichele->finish == 1 || single_vichele->has_p)
-                        {
-                            PA_RETURN_MSG("无法取消");
                         }
                         single_vichele->remove_record();
                         if (main_vichele && behind_vichele && opt_user)
