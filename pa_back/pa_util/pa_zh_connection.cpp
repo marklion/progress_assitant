@@ -215,10 +215,17 @@ bool PA_ZH_CONN_del_order(pa_sql_single_vichele &_singel_plan)
             ret = false;
             neb::CJsonObject tar_v;
             tar_v.Add("order_number", get_order_number(vi->number, driver->phone, *plan));
-            auto result = call_third_though_rest(del_url, get_new_token(*plan), get_new_token(*plan), tar_v.ToString());
-            if (!result.KeyExist("err_msg") || result("err_msg") == "")
+            if (tar_v("order_number").length() == 0)
             {
                 ret = true;
+            }
+            else
+            {
+                auto result = call_third_though_rest(del_url, get_new_token(*plan), get_new_token(*plan), tar_v.ToString());
+                if (!result.KeyExist("err_msg") || result("err_msg") == "")
+                {
+                    ret = true;
+                }
             }
         }
     }

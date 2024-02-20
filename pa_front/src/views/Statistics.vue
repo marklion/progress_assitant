@@ -21,12 +21,12 @@
     <van-cell-group title="按计划创建时间导出">
         <van-cell title="选择日期区间" :value="date" @click="show_date_plan = true" center>
         </van-cell>
-        <van-calendar v-model="show_date_plan" get-container="body" position="right" type="range" @confirm="onConfirm" :min-date="minDate" :max-date="maxDate" />
+        <van-calendar v-model="show_date_plan" get-container="body" position="right" allow-same-day type="range" @confirm="onConfirm" :min-date="minDate" :max-date="maxDate" />
     </van-cell-group>
     <van-cell-group title="按装车时间导出">
         <van-cell title="选择日期区间" :value="date" @click="show_date_deliver = true" center>
         </van-cell>
-        <van-calendar v-model="show_date_deliver" get-container="body" position="right" type="range" @confirm="export_plan_deliver" :min-date="minDate" :max-date="maxDate" />
+        <van-calendar v-model="show_date_deliver" get-container="body" position="right" type="range" allow-same-day @confirm="export_plan_deliver" :min-date="minDate" :max-date="maxDate" />
     </van-cell-group>
 
     <export-file :remote_file="download_url" v-model="show_export_file"></export-file>
@@ -37,8 +37,14 @@
     <van-cell-group title="导出执行率">
         <van-cell title="选择日期区间" :value="date" @click="show_date = true" center>
         </van-cell>
-        <van-calendar v-model="show_date" get-container="body" position="right" type="range" @confirm="export_exe_rate" :min-date="minDate" :max-date="maxDate" />
+        <van-calendar v-model="show_date" get-container="body" position="right" type="range" allow-same-day @confirm="export_exe_rate" :min-date="minDate" :max-date="maxDate" />
     </van-cell-group>
+    <van-cell-group title="导出磅单">
+        <van-cell title="选择日期区间" :value="date" @click="show_ticket_export= true" center>
+        </van-cell>
+        <van-calendar v-model="show_ticket_export" allow-same-day get-container="body" position="right" type="range" @confirm="export_ticket" :min-date="minDate" :max-date="maxDate" />
+    </van-cell-group>
+
 </div>
 </template>
 
@@ -76,6 +82,8 @@ Vue.use(Cell);
 Vue.use(CellGroup);
 Vue.use(Calendar);
 import ExportFile from '../components/ExportFile.vue'
+import VueClipboard from 'vue-clipboard2'
+Vue.use(VueClipboard)
 export default {
     name: 'Statistics',
     data: function () {
@@ -86,6 +94,7 @@ export default {
             end_date: 0,
             date: '',
             show_date: false,
+            show_ticket_export: false,
             show_date_plan: false,
             show_date_deliver: false,
             minDate: new Date(),
@@ -100,6 +109,19 @@ export default {
         "export-file": ExportFile,
     },
     methods: {
+        export_ticket: function (_date) {
+            console.log(_date);
+            var begin_date = this.formatDateTime(_date[0]);
+            var end_date = this.formatDateTime(_date[1]);
+            this.show_ticket_export = false;
+
+            this.$copyText(this.$remote_url + '/pc/ticket_export?date_begin=' + begin_date + '&date_end=' + end_date + '&ssid=' + this.$cookies.get('pa_ssid')).then(() => {
+                this.$dialog.alert({
+                    message: '链接已复制，请粘贴到PC浏览器打开'
+                });
+            });
+
+        },
         export_plan_deliver: function (_date) {
             const [start, end] = _date;
             this.show_date_deliver = false;

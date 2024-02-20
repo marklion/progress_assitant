@@ -121,7 +121,8 @@
                             <vxe-table-column field="vichele.delivered" title="状态" width="18%" sortable :formatter="formater_status_vichele"></vxe-table-column>
                             <vxe-table-column title="操作">
                                 <template #default="{ row }">
-                                    <van-button plain size="small" type="info" @click="cancel_vichele_from_plan(row)">取消</van-button>
+                                    <van-button v-if="!row.vichele.delivered" plain size="small" type="info" @click="cancel_vichele_from_plan(row)">取消</van-button>
+                                    <van-button v-else plain size="small" type="warning" @click="show_ticket(row)">磅单</van-button>
                                 </template>
                             </vxe-table-column>
                         </vxe-table>
@@ -134,7 +135,8 @@
                             <vxe-table-column field="vichele.delivered" title="状态" width="18%" sortable :formatter="formater_status_vichele"></vxe-table-column>
                             <vxe-table-column title="操作">
                                 <template #default="{ row }">
-                                    <van-button plain size="small" type="info" @click="cancel_vichele_from_plan(row)">取消</van-button>
+                                    <van-button v-if="!row.vichele.delivered" plain size="small" type="info" @click="cancel_vichele_from_plan(row)">取消</van-button>
+                                    <van-button v-else plain size="small" type="warning" @click="show_ticket(row)">磅单</van-button>
                                 </template>
                             </vxe-table-column>
                         </vxe-table>
@@ -150,7 +152,8 @@
                             <vxe-table-column field="vichele.delivered" title="状态" width="18%" sortable :formatter="formater_status_vichele"></vxe-table-column>
                             <vxe-table-column title="操作">
                                 <template #default="{ row }">
-                                    <van-button plain size="small" type="info" @click="cancel_vichele_from_plan(row)">取消</van-button>
+                                    <van-button v-if="!row.vichele.delivered" plain size="small" type="info" @click="cancel_vichele_from_plan(row)">取消</van-button>
+                                    <van-button v-else plain size="small" type="warning" @click="show_ticket(row)">磅单</van-button>
                                 </template>
                             </vxe-table-column>
                         </vxe-table>
@@ -163,7 +166,8 @@
                             <vxe-table-column field="vichele.delivered" title="状态" width="18%" sortable :formatter="formater_status_vichele"></vxe-table-column>
                             <vxe-table-column title="操作">
                                 <template #default="{ row }">
-                                    <van-button plain size="small" type="info" @click="cancel_vichele_from_plan(row)">取消</van-button>
+                                    <van-button v-if="!row.vichele.delivered" plain size="small" type="info" @click="cancel_vichele_from_plan(row)">取消</van-button>
+                                    <van-button v-else plain size="small" type="warning" @click="show_ticket(row)">磅单</van-button>
                                 </template>
                             </vxe-table-column>
                         </vxe-table>
@@ -535,6 +539,14 @@ export default {
         }
     },
     methods: {
+        show_ticket: function (_vehicle_info) {
+            this.$router.push({
+                name: 'Ticket',
+                params: {
+                    id: _vehicle_info.vichele.vichele_id + 'S'
+                }
+            });
+        },
         formatDateTime: function (date) {
             var y = date.getFullYear();
             var m = date.getMonth() + 1;

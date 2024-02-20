@@ -610,20 +610,20 @@ public:
                 {
                     connect_param += " AND plan_time LIKE '" + plan_date + "%'";
                 }
-                if (company_name.length() > 0)
-                {
-                    std::string company_cmd = "proxy_company == '" + company_name + "'";
-                    auto search_company = sqlite_orm::search_record<pa_sql_company>("name == '%s'", company_name.c_str());
-                    if (search_company)
-                    {
-                        auto all_users = search_company->get_all_children<pa_sql_userinfo>("belong_company");
-                        for (auto &itr : all_users)
-                        {
-                            company_cmd += " OR created_by_ext_key == " + std::to_string(itr.get_pri_id());
-                        }
-                    }
-                    connect_param += " AND (" + company_cmd + ")";
-                }
+                // if (company_name.length() > 0)
+                // {
+                //     std::string company_cmd = "proxy_company == '" + company_name + "'";
+                //     auto search_company = sqlite_orm::search_record<pa_sql_company>("name == '%s'", company_name.c_str());
+                //     if (search_company)
+                //     {
+                //         auto all_users = search_company->get_all_children<pa_sql_userinfo>("belong_company");
+                //         for (auto &itr : all_users)
+                //         {
+                //             company_cmd += " OR created_by_ext_key == " + std::to_string(itr.get_pri_id());
+                //         }
+                //     }
+                //     connect_param += " AND (" + company_cmd + ")";
+                // }
                 auto plans = sqlite_orm::search_record_all<pa_sql_plan>("%s ORDER BY create_time DESC LIMIT 15 OFFSET %ld", connect_param.c_str(), anchor);
                 for (auto &single_plan : plans)
                 {
@@ -660,6 +660,11 @@ public:
                                 tmp.company = created_company->name;
                             }
                         }
+                    }
+                    auto archive_plan = single_plan.get_parent<pa_sql_archive_plan>("archived");
+                    if (archive_plan)
+                    {
+                        tmp.company = archive_plan->buy_company;
                     }
                     _return.push_back(tmp);
                 }
@@ -3329,6 +3334,19 @@ public:
     virtual void verify_ticket(std::string &_return, const std::string &pic_url, const std::string &user_id)
     {
         _return = PA_WECHAT_decode_qr(pic_url, user_id);
+    }
+
+    virtual void get_single_vid(std::vector<int64_t> &_return, const std::string &ssid, const std::string &begin_date, const std::string &end_date)
+    {
+        auto plans = PA_RPC_get_all_plans_related_by_user(ssid, "date(substr(plan_time, 1, 10)) <= date('%s') AND date(substr(plan_time, 1, 10)) >= date('%s')", end_date.c_str(), begin_date.c_str());
+        for (auto &itr : plans)
+        {
+            auto svs = itr.get_all_children<pa_sql_single_vichele>("belong_plan", "finish == 1");
+            for (auto &sv : svs)
+            {
+                _return.push_back(sv.get_pri_id());
+            }
+        }
     }
 };
 

@@ -352,12 +352,11 @@ public:
                     {
                         if (main_vichele->number == plateNo)
                         {
-                            if (!should_add_to_resp(itr, company->name) && !plan.from_remote)
+                            if (should_add_to_resp(itr, company->name) || plan.from_remote)
                             {
-                                PA_RETURN_MSG("driver has not registered");
+                                _return = make_resp_from_single_vichele(itr);
+                                return;
                             }
-                            _return = make_resp_from_single_vichele(itr);
-                            return;
                         }
                     }
                     else
@@ -365,12 +364,11 @@ public:
                         auto has_id_driver = sqlite_orm::search_record<pa_sql_driver>("silent_id IS NOT NULL AND silent_id != '' AND phone == '%s'", driver->phone.c_str());
                         if (has_id_driver && has_id_driver->driver_id == driverId)
                         {
-                            if (!should_add_to_resp(itr, company->name))
+                            if (should_add_to_resp(itr, company->name))
                             {
-                                PA_RETURN_MSG("driver has not registered");
+                                _return = make_resp_from_single_vichele(itr);
+                                return;
                             }
-                            _return = make_resp_from_single_vichele(itr);
-                            return;
                         }
                     }
                 }
@@ -954,22 +952,22 @@ public:
             if (asv)
             {
                 auto aplan = asv->get_parent<pa_sql_archive_plan>("belong_plan");
-                _return.behind_vichele_number = asv->behind_vichele;
-                _return.main_vichele_number = asv->main_vichele;
-                _return.customer_name = aplan->buy_company;
-                _return.j_weight = pa_double2string_reserve2(asv->m_weight - asv->p_weight);
-                _return.m_weight = pa_double2string_reserve2(asv->m_weight);
-                _return.p_weight = pa_double2string_reserve2(asv->p_weight);
-                _return.m_date = asv->deliver_timestamp;
-                _return.p_date = asv->deliver_p_timestamp;
-                _return.stuff_name = aplan->stuff_name;
-                _return.seal_no = asv->seal_no;
-                _return.ticket_no = asv->ticket_no;
-                _return.transfor_company = aplan->trans_company_name;
-                _return.title = aplan->sale_company + "\n产品出厂称重单";
-            }
-            else
-            {
+                        _return.behind_vichele_number = asv->behind_vichele;
+                        _return.main_vichele_number = asv->main_vichele;
+                        _return.customer_name = aplan->buy_company;
+                        _return.j_weight = pa_double2string_reserve2(asv->m_weight - asv->p_weight);
+                        _return.m_weight = pa_double2string_reserve2(asv->m_weight);
+                        _return.p_weight = pa_double2string_reserve2(asv->p_weight);
+                        _return.m_date = asv->deliver_timestamp;
+                        _return.p_date = asv->deliver_p_timestamp;
+                        _return.stuff_name = aplan->stuff_name;
+                        _return.seal_no = asv->seal_no;
+                        _return.ticket_no = asv->ticket_no;
+                        _return.transfor_company = aplan->trans_company_name;
+                        _return.title = aplan->sale_company + "\n产品出厂称重单";
+                    }
+                    else
+{
                 auto sv = sqlite_orm::search_record<pa_sql_single_vichele>(atoi(ticket_id.c_str()));
                 if (sv)
                 {
