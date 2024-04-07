@@ -364,6 +364,7 @@ public:
             ret->begin_time = single_turn.begin_time;
             double top_price = 0;
             std::string top_customer;
+            long time_stamp_tmp = time(nullptr);
             auto all_bc = single_turn.get_all_children<pa_sql_bidding_customer>("belong_bidding_turn");
             for (auto &single_customer : all_bc)
             {
@@ -376,10 +377,27 @@ public:
                     {
                         bc_tmp.price = single_customer.price;
                         bc_tmp.timestamp = single_customer.timestamp;
-                        if (single_customer.price > top_price)
+                        long bid_time = PA_DATAOPT_timestring_2_date(bc_tmp.timestamp, true);
+                        if (single_customer.price >= top_price)
                         {
-                            top_price = single_customer.price;
-                            top_customer = customer->name;
+                            bool should_replace = false;
+                            if (single_customer.price == top_price)
+                            {
+                                if (bid_time < time_stamp_tmp)
+                                {
+                                    should_replace = true;
+                                }
+                            }
+                            else
+                            {
+                                should_replace = true;
+                            }
+                            if (should_replace)
+                            {
+                                top_price = single_customer.price;
+                                top_customer = customer->name;
+                                time_stamp_tmp = bid_time;
+                            }
                         }
                     }
                 }
